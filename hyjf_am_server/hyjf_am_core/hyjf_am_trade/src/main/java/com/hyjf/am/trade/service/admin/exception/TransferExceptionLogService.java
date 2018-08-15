@@ -14,7 +14,7 @@ import java.util.List;
  * @author jun
  * @version AdminTransferExceptionLogService, v0.1 2018/7/10 11:29
  */
-public interface AdminTransferExceptionLogService {
+public interface TransferExceptionLogService {
     /**
      * 银行转账异常列表
      * @param request

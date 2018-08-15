@@ -1,200 +1,254 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.util.*;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
-import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
+import com.hyjf.cs.user.result.SendSmsResultBean;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * App端绑卡
+ * App端绑卡(接口)
  * @author hesy
  * @version AppBindCardController, v0.1 2018/7/19 9:34
  */
-@Api(value = "app端-绑卡",tags = "app端-绑卡")
+@Api(value = "app端-绑卡（接口）",tags = "app端-绑卡（接口）")
 @RestController
-@RequestMapping("/hyjf-app/bank/user/bindCardPage")
+@RequestMapping("/user/bankCard")
 public class AppBindCardController extends BaseUserController {
+    /** 绑卡错误页面 */
+    public static final String JUMP_HTML_ERROR_PATH = "/user/bankCard/bind/result/failed";
+    /** 绑卡成功页面 */
+    public static final String JUMP_HTML_SUCCESS_PATH = "/user/bankCard/bind/result/success";
+    /** 绑卡处理中页面 */
+    public static final String JUMP_HTML_HANDLING_PATH = "/user/bankCard/bind/result/handing";
+
     @Autowired
     BindCardService bindCardService;
     @Autowired
     SystemConfig systemConfig;
 
     /**
-     * 页面请求绑卡
+     * 绑定银行卡发送短信验证码
      * @param request
+     * @return
      */
-    @PostMapping("/bindCardPage")
-    public ModelAndView bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
+    @PostMapping("/bind/smscode")
+    public BaseResultBeanFrontEnd sendSmsCode(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+        SendSmsResultBean result = new SendSmsResultBean();
 
-        ModelAndView modelAndView = new ModelAndView();
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
-        // 检查参数
-        String checkResult = bindCardService.checkParamBindCardPageAPP(webViewUserVO);
 
-        if (StringUtils.isNotBlank(checkResult)) {
-            logger.info("checkResult is:{}", checkResult);
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, checkResult);
-            baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/bind/result/failed");
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
+        if (webViewUserVO == null) {
+            result.setStatus(SendSmsResultBean.FAIL);
+            result.setStatusDesc("用户未登录");
+            return result;
         }
 
-        // 请求银行接口
-        try {
-            // 同步调用路径
-            String retUrl = systemConfig.appHost + request.getContextPath()
-                    + "/bank/user/bindCardPage/return.do";
-            // 异步调用路
-            String bgRetUrl = systemConfig.appHost + request.getContextPath()
-                    + "/bank/user/bindCardPage/notifyReturn.do";
-            // 拼装参数 调用江西银行
-            String forgetPassworedUrl = systemConfig.forgetpassword;
-            BindCardPageBean bean = new BindCardPageBean();
-            bean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
-            bean.setChannel(BankCallConstant.CHANNEL_APP);
-            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-            bean.setIdNo(webViewUserVO.getIdcard());
-            bean.setName(webViewUserVO.getTruename());
-            bean.setAccountId(webViewUserVO.getBankAccount());
-            bean.setUserIP(GetCilentIP.getIpAddr(request));
-            bean.setUserId(userId);
-            bean.setRetUrl(retUrl);
-            bean.setSuccessfulUrl(retUrl+"&isSuccess=1");
-            bean.setNotifyUrl(bgRetUrl);
-            bean.setForgetPassworedUrl(forgetPassworedUrl);
-            // 微官网 1
-            bean.setPlatform("1");
-            modelAndView = bindCardService.getCallbankMV(bean);
+        String mobile = request.getParameter("mobile"); // 手机号
+        if (StringUtils.isEmpty(mobile)) {
+            result.setStatus(SendSmsResultBean.FAIL);
+            result.setStatusDesc("手机号不能为空");
+            return result;
+        }
 
-            logger.info("绑卡调用页面end");
-            return modelAndView;
+        String cardNo = request.getParameter("cardNo"); // 银行卡号
+        if (StringUtils.isEmpty(cardNo)) {
+            result.setStatus(SendSmsResultBean.FAIL);
+            result.setStatusDesc("银行卡号不能为空");
+            return result;
+        }
+        // 请求发送短信验证码
+        BankCallBean bean = bindCardService.callSendCode(userId,mobile, BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_APP,cardNo);
+        if (bean == null) {
+            result.setStatus(SendSmsResultBean.FAIL);
+            result.setStatusDesc("发送短信验证码异常");
+            return result;
+        }
+        // 返回失败
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+            if("JX900651".equals(bean.getRetCode())){
+
+                result.setStatus(SendSmsResultBean.SUCCESS);
+                result.setStatusDesc(SendSmsResultBean.SUCCESS_MSG);
+                result.setSrvAuthCode(bean.getSrvAuthCode());
+                return result;
+            }
+            result.setStatus(SendSmsResultBean.FAIL);
+            result.setStatusDesc("发送短信验证码失败，失败原因：" + bindCardService.getBankRetMsg(bean.getRetCode()));
+            return result;
+        }
+        result.setStatus(SendSmsResultBean.SUCCESS);
+        result.setStatusDesc(SendSmsResultBean.SUCCESS_MSG);
+        result.setSrvAuthCode(bean.getSrvAuthCode());
+        return result;
+    }
+
+    /**
+     * 组装重定向url
+     * @auther: hesy
+     * @date: 2018/8/15
+     */
+    private String getRedirectUrl(String url, Map<String,String> paraMap){
+        StringBuilder resultUrl = new StringBuilder("redirect:" + systemConfig.AppFrontHost + url + "?");
+        try {
+            for(Map.Entry<String, String> entry : paraMap.entrySet()){
+                resultUrl.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue(), "utf-8")).append("&");
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.error("组装重定向url异常", e);
+        }
+        return resultUrl.toString();
+    }
+
+    private ModelAndView getErrorModel(String desc){
+        Map<String,String> paraMap=new HashMap<>();
+        paraMap.put(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+        paraMap.put(CustomConstants.APP_STATUS_DESC, desc);
+        return new ModelAndView(getRedirectUrl(JUMP_HTML_ERROR_PATH, paraMap));
+    }
+    /**
+     * 用户绑卡
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/bind")
+    public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        if (webViewUserVO == null) {
+            return getErrorModel("用户未登录");
+        }
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        String cardNo = request.getParameter("cardNo");
+        if (Validator.isNull(cardNo)) {
+            return getErrorModel("获取银行卡号为空");
+        }
+        if (userId == null || userId == 0) {
+            return getErrorModel("用户未登录");
+        }
+        // 检查验证码是否正确
+        String code = request.getParameter("code");
+        logger.info("输入验证码code is: {}", code);
+        if (Validator.isNull(code)) {
+            return getErrorModel("验证码无效");
+        }
+
+        // 检查验证码是否正确
+        String lastSrvAuthCode = request.getParameter("lastSrvAuthCode");
+        logger.info("输入验证码lastSrvAuthCode is: {}", lastSrvAuthCode);
+        if (Validator.isNull(lastSrvAuthCode)) {
+            return getErrorModel("请先发送短信");
+        }
+
+        String mobile = request.getParameter("telNo");
+        if (Validator.isNull(mobile)) {
+            return getErrorModel("手机号不能为空");
+        }
+        // 取得用户在汇付天下的客户号
+        if (Validator.isNull(webViewUserVO.getBankAccount())) {
+            return getErrorModel("用户未开户");
+        }
+        // 调用汇付接口(4.2.2 用户绑卡接口)
+        BankCallBean bean = new BankCallBean();
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogUserId(StringUtil.valueOf(userId));
+        bean.setLogRemark("用户绑卡增强");
+        bean.setTxCode(BankCallConstant.TXCODE_CARD_BIND_PLUS);
+        bean.setChannel(BankCallConstant.CHANNEL_APP);// 交易渠道
+        bean.setAccountId(webViewUserVO.getBankAccount());// 存管平台分配的账号
+        bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
+        bean.setIdNo(webViewUserVO.getIdcard());// 证件号
+        bean.setName(webViewUserVO.getTruename());// 姓名
+        bean.setMobile(mobile);// 手机号
+        bean.setCardNo(cardNo);// 银行卡号
+        bean.setLastSrvAuthCode(lastSrvAuthCode);
+        bean.setSmsCode(code);
+        bean.setUserIP(GetCilentIP.getIpAddr(request));// 客户IP
+        LogAcqResBean logAcq = new LogAcqResBean();
+        logAcq.setCardNo(cardNo);
+        bean.setLogAcqResBean(logAcq);
+        BankCallBean retBean=null;
+        // 跳转到江西银行画面
+        try {
+            retBean = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
             logger.error("调用银行接口失败", e);
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败");
-            baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/bind/result/failed");
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
+            return getErrorModel("调用银行接口失败");
+
         }
 
-    }
-
-    /**
-     * 页面绑卡同步回调
-     * @param request
-     * @param response
-     * @param bean
-     * @return
-     */
-    @PostMapping("/return")
-    public ModelAndView bindCardReturn(HttpServletRequest request, HttpServletResponse response,
-                                       @ModelAttribute BankCallBean bean) {
-
-        boolean checkTender = RedisUtils.tranactionSet("bindCard" + bean.getLogOrderId(), 600);
-        ModelAndView modelAndView = new ModelAndView();
-        String frontParams = request.getParameter("frontParams");
-        String isSuccess = request.getParameter("isSuccess");
-        if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
-            JSONObject jsonParm = JSONObject.parseObject(frontParams);
-            if(jsonParm.containsKey("RETCODE")){
-                bean.setRetCode(jsonParm.getString("RETCODE"));
-            }
-        }
-        BaseMapBean baseMapBean=new BaseMapBean();
-        bean.convert();
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        logger.info("绑卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");
-        // 绑卡后处理
-        try {
-            if(checkTender){
-                BankCardVO bankCardVO = bindCardService.queryUserCardValid(bean.getLogUserId(), bean.getCardNo());
-                if (bankCardVO == null) {
-                    UserVO users =bindCardService.getUsersById(Integer.parseInt(bean.getLogUserId()));
-                    bean.setAccountId(request.getParameter("account"));
-                    bean.setMobile(users.getMobile());
-                    // 保存银行卡信息
-                    bindCardService.updateAfterBindCard(bean);
-                }
+        // 回调数据处理
+        if (retBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
+            // 执行结果(失败)
+            String message = "";
+            if(retBean==null){
+                message = "绑卡失败，请重试";
             }else{
-                Thread.sleep(3000);
+                message = this.bindCardService.getBankRetMsg(retBean.getRetCode());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            return getErrorModel("失败原因:" + message);
         }
-        if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
-            // 成功
-            modelAndView = new ModelAndView("/jumpHTML");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "");//绑卡成功
-            baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/bind/result/success");
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        } else {
-            modelAndView = new ModelAndView("/jumpHTML");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "");//绑卡失败
-            baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/bind/result/failed");
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
-    }
 
-
-    /**
-     * 页面绑卡异步回调
-     * @param request
-     * @param bean
-     * @return
-     */
-    @PostMapping("/notifyReturn")
-    public BankCallResult bgreturn(HttpServletRequest request,
-                                   @ModelAttribute BankCallBean bean) {
-        // 上送的异步地址里面有
-        BankCallResult result = new BankCallResult();
-        String phone = request.getParameter("phone");
-        logger.info("页面绑卡异步回调start");
-        bean.setMobile(phone);
-        bean.convert();
-        int userId = Integer.parseInt(bean.getLogUserId());
-
-        // 绑卡后处理
         try {
-            boolean checkTender = RedisUtils.tranactionSet("bindCard" + bean.getLogOrderId(), 600);
-            if(checkTender){
-                // 保存银行卡信息
-                bindCardService.updateAfterBindCard(bean);
+            // 绑卡后处理
+            this.bindCardService.updateAfterBindCard(bean);
+            BankCardVO bankCardVO = bindCardService.queryUserCardValid(bean.getLogUserId(), bean.getCardNo());
+
+            if (bankCardVO != null) {
+                modelAndView = new ModelAndView("/jumpHTML");
+                BaseMapBean baseMapBean=new BaseMapBean();
+                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                baseMapBean.set(CustomConstants.APP_STATUS_DESC, "");
+                baseMapBean.setCallBackAction(systemConfig.appHost+ JUMP_HTML_SUCCESS_PATH);
+                modelAndView.addObject("callBackForm", baseMapBean);
+                return modelAndView;
+            } else {
+                modelAndView = new ModelAndView("/jumpHTML");
+                BaseMapBean baseMapBean=new BaseMapBean();
+                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                baseMapBean.set(CustomConstants.APP_STATUS_DESC, "银行处理中，请稍后查看");
+                baseMapBean.setCallBackAction(systemConfig.appHost+ JUMP_HTML_HANDLING_PATH);
+                modelAndView.addObject("callBackForm", baseMapBean);
+                return modelAndView;
+
             }
+
         } catch (Exception e) {
+            // 执行结果(失败)
             e.printStackTrace();
+            return getErrorModel("执行失败");
         }
-        logger.info("页面绑卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
-        result.setStatus(true);
-        return result;
+
     }
 }

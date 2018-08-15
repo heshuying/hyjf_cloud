@@ -11,7 +11,7 @@ import com.hyjf.am.vo.user.*;
  * admin 异常中心-银行转账异常 Create by jijun 20180710
  * service接口定义
  */
-public interface TransferExceptionLogService extends BaseAdminService{
+public interface AdminTransferExceptionLogService extends BaseAdminService{
 
     /**
      * 

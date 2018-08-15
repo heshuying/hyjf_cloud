@@ -10,7 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
+import com.hyjf.am.trade.service.admin.exception.TransferExceptionLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -31,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -39,7 +42,7 @@ import java.util.*;
  * @version AdminTransferExceptionLogServiceImpl, v0.1 2018/7/10 11:31
  */
 @Service
-public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implements AdminTransferExceptionLogService {
+public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements TransferExceptionLogService {
 
     /** 用户ID */
     private static final String USERID = "userId";
@@ -446,7 +449,7 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
         }
 
 
-        logger.info(AdminTransferExceptionLogServiceImpl.class.toString(), "transferAfter", "-----------重新执行还款结束---"+ borrowTender.getBorrowNid() +"---------"+recover.getTransferId()+"---------------");
+        logger.info(TransferExceptionLogServiceImpl.class.toString(), "transferAfter", "-----------重新执行还款结束---"+ borrowTender.getBorrowNid() +"---------"+recover.getTransferId()+"---------------");
 
         return true;
     }

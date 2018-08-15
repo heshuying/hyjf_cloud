@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 
 /**
@@ -17,7 +17,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
  * service接口实现类
  */
 @Service
-public class TransferExceptionLogServiceImpl extends BaseAdminServiceImpl implements TransferExceptionLogService {
+public class AdminTransferExceptionLogServiceImpl extends BaseAdminServiceImpl implements AdminTransferExceptionLogService {
 
     @Autowired
     private AmTradeClient amTradeClient;
