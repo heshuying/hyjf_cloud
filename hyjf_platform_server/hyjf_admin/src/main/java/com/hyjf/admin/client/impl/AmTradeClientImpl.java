@@ -3075,7 +3075,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccountDetailResponse findAccountDetailList(AccountDetailRequest request) {
         AccountDetailResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/accountdetaillist", request, AccountDetailResponse.class)
+                .postForEntity("http://AM-TRADE/am-trade/adminAccountDetail/accountDetailList", request, AccountDetailResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3093,7 +3093,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId) {
         AdminAccountDetailDataRepairResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailidbyuserid/" + userId, AdminAccountDetailDataRepairResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/adminAccountDetail/queryAccountDetailByUserId/" + userId, AdminAccountDetailDataRepairResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3110,7 +3110,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
         AdminAccountDetailDataRepairResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailerroruserlist", AdminAccountDetailDataRepairResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/adminAccountDetail/queryAccountDetailErrorUserList", AdminAccountDetailDataRepairResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3128,7 +3128,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccountListResponse selectAccountById(int accountId) {
         AccountListResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccountbyid/" + accountId, AccountListResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/adminAccountDetail/selectAccountById/" + accountId, AccountListResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3147,7 +3147,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccountListResponse selectNextAccountList(int accountId, int userId) {
         AccountListResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectnextaccountlist/" + userId + "/" + accountId, AccountListResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/adminAccountDetail/selectNextAccountList/" + userId + "/" + accountId, AccountListResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3165,7 +3165,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccountTradeResponse selectAccountTradeByValue(String tradeValue) {
         AccountTradeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccounttradebyvalue/" + tradeValue, AccountTradeResponse.class)
+                .getForEntity("http://AM-TRADE/am-trade/adminAccountDetail/selectAccountTradeByValue/" + tradeValue, AccountTradeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -3183,7 +3183,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int updateAccountList(AccountListRequest accountListRequest) {
         int intUpdFlg = restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/updateaccountlist", accountListRequest, Integer.class).
+                postForEntity("http://AM-TRADE/am-trade/adminAccountDetail/updateAccountList", accountListRequest, Integer.class).
                 getBody();
         return intUpdFlg;
     }
