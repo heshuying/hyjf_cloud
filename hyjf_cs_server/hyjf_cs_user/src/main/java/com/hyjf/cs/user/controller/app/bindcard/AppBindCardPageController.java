@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author hesy
  * @version AppBindCardController, v0.1 2018/7/19 9:34
  */
-@Api(value = "app端-绑卡",tags = "app端-绑卡")
+@Api(value = "app端-绑卡(页面)",tags = "app端-绑卡（页面）")
 @RestController
 @RequestMapping("/hyjf-app/bank/user/bindCardPage")
 public class AppBindCardPageController extends BaseUserController {

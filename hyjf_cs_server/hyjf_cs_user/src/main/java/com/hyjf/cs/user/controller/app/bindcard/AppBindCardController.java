@@ -138,7 +138,7 @@ public class AppBindCardController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping("/bind")
+    @PostMapping("/bind")
     public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
 
