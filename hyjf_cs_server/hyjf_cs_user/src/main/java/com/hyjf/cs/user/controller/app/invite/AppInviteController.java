@@ -8,6 +8,7 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.service.invite.InviteService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class AppInviteController {
      * 邀请记录
      */
     @PostMapping("/inviteRecord")
+    @ApiOperation(value = "邀请记录", notes = "邀请记录")
     public JSONObject inviteList(@RequestParam(value = "currentPage", defaultValue = "1") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
         JSONObject ret = new JSONObject();
@@ -78,14 +80,14 @@ public class AppInviteController {
         JSONArray jsonArray = new JSONArray();
         for (MyInviteListCustomizeVO user : list) {
             JSONObject detailsJson = new JSONObject();
-//            detailsJson.put("friendName", user.getUserName());
-//            detailsJson.put("date", GetDate.timestamptoStrYYYYMMDDHHMM(user.getRegTime().toString()));
+            detailsJson.put("friendName", user.getUsername());
+            detailsJson.put("date", GetDate.timestamptoStrYYYYMMDDHHMM(user.getInviteTime()));
 
-//            if (user.getBankOpenAccount() == 0) {
-//                detailsJson.put("openStatus", "未开户");
-//            } else {
-//                detailsJson.put("openStatus", "已开户");
-//            }
+            if ("0".equals(user.getUserStatus())) {
+                detailsJson.put("openStatus", "未开户");
+            } else {
+                detailsJson.put("openStatus", "已开户");
+            }
             jsonArray.add(detailsJson);
         }
         ret.put("list", jsonArray);
