@@ -38,7 +38,7 @@ import java.util.Map;
 @RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
 	
-	private Logger _log = LoggerFactory.getLogger(OperationalDataController.class);
+	private Logger logger = LoggerFactory.getLogger(OperationalDataController.class);
 	
 	@Autowired
 	private OperationMongoGroupDao operationMongoGroupDao;
@@ -182,7 +182,7 @@ public class OperationalDataController {
 			result.put("info", detail);
 
 		} catch (Exception e) {
-			_log.error("发生异常", e);
+			logger.error("发生异常", e);
 			result.put("status", "999");
 			result.put("statusDesc", "失败");
 		}
@@ -300,9 +300,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	private String getAgeRate(int startAge, int endAge) {
-		String rate = "";
-		// todo 暂时没有db
-		rate = "25.00";
+		String rate = "25.00";
 		return rate;
 	}
 
