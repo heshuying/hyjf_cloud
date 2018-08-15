@@ -1911,4 +1911,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 更新银行卡(admin后台异常中心-银行卡异常用)
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public String updateAccountBankByUserId(Integer userId) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId/" + userId;
+		AdminBankCardExceptionResponse response = restTemplate.getForEntity(url, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultMsg();
+		}
+		return "";
+	}
 }
