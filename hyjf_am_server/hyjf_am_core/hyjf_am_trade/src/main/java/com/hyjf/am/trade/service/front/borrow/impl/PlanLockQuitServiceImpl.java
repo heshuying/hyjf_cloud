@@ -144,10 +144,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             updatePlanData(hjhAccede, hjhRepay);
             //更新计划账户金额
             updatePlanTenderAccount(hjhAccede, hjhRepay);
+            // 重新获取hjhRepay
+            hjhRepay = this.hjhRepayMapper.selectByPrimaryKey(hjhRepay.getId());
             //发送计划还款短信
             sendSms(hjhRepay);
             //发送计划退出通知
-            sendMessage(hjhAccede);
+            sendMessage(hjhRepay);
             try {
                 couponRepay(hjhAccede);
             } catch (Exception e) {
@@ -329,6 +331,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountForst = accountForst.add(availableInvestAccount);
         //计算账户订单利息
         BigDecimal accountInterest = accountForst.subtract(hjhAccede.getAccedeAccount());
+
+        //实际年化收益率
+        BigDecimal reallyApr = getAccedeReallyApr(accountForst,hjhAccede.getAccedeAccount(),hjhAccede.getPlanNid(),hjhAccede.getLockPeriod(),hjhAccede.getAccedeOrderId());
+        BigDecimal lqdServiceFee = hjhAccede.getLqdServiceFee();//清算服务费
+        //获得投资服务费率
+        BigDecimal tenderFeeRate = getTenderFeeRate(lqdServiceFee,hjhAccede.getAccedeAccount());
+        //计划加入明细金额变更
+        hjhAccede.setActualApr(reallyApr);
         //计划加入明细金额变更
         hjhAccede.setWaitTotal(new BigDecimal(0));
         hjhAccede.setWaitCaptical(new BigDecimal(0));
@@ -347,6 +357,9 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         hjhAccede.setFrostAccount(BigDecimal.ZERO);
         //计划订单可用金额
         hjhAccede.setAvailableInvestAccount(BigDecimal.ZERO);
+        hjhAccede.setFairValue(accountForst);//订单退出时重新计算公允价值
+        hjhAccede.setInvestServiceApr(tenderFeeRate);//更新投资服务费率
+        hjhAccede.setLqdProgress(BigDecimal.ONE);//已退出时更新清算进度为 100%
         int count = this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
         if (count > 0) {
             logger.info("================ 计划退出更新计划加入明细成功!计划加入订单号: " + hjhAccede.getAccedeOrderId());
@@ -355,6 +368,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         HjhRepay newRepay = hjhRepayMapper.selectByPrimaryKey(hjhRepay.getId());
         newRepay.setRepayTotal(accountForst);
         newRepay.setRepayAlready(accountForst);
+        newRepay.setActualRevenue(accountInterest);//实际收益
+        newRepay.setActualPayTotal(accountForst);//实际回款总额
         newRepay.setPlanRepayCapital(hjhAccede.getAccedeAccount());
         newRepay.setPlanRepayInterest(accountInterest);
         this.hjhRepayMapper.updateByPrimaryKey(newRepay);
@@ -457,6 +472,58 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
 //				JSONObject.toJSONString(params));
     }
 
+
+
+    /**
+     * 获得投资服务费率
+     *
+     * @param lqdServiceFee
+     * 清算服务费
+     * @param accedeAccount
+     * 订单加入金额
+     * @return
+     */
+    private BigDecimal getTenderFeeRate(BigDecimal lqdServiceFee, BigDecimal accedeAccount) {
+        if(lqdServiceFee.compareTo(BigDecimal.ZERO) > 0){
+            BigDecimal lqdRate = lqdServiceFee.divide(accedeAccount, 4, BigDecimal.ROUND_DOWN);
+            return lqdRate;
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 获得订单的实际年化收益率
+     * @param accountForst
+     * @param accedeAccount
+     * @param planNid
+     * @param lockPeriod
+     * @param accedeOrderId
+     * @return
+     */
+    private BigDecimal getAccedeReallyApr(BigDecimal accountForst, BigDecimal accedeAccount, String planNid, Integer lockPeriod, String accedeOrderId) {
+        HjhPlanExample example = new HjhPlanExample();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> hjhPlans = this.hjhPlanMapper.selectByExample(example);
+        BigDecimal reallyApr = new BigDecimal(0);
+        if(hjhPlans != null && hjhPlans.size() == 1){
+            HjhPlan hjhPlan = hjhPlans.get(0);
+            Integer isMonth = hjhPlan.getIsMonth();
+            if(1 == isMonth){//按月计息
+                reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
+                        .divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
+                        .multiply(new BigDecimal(12)).multiply(new BigDecimal(100));
+            }else if(0 == isMonth){//按日计息
+                reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
+                        .divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
+                        .multiply(new BigDecimal(360)).multiply(new BigDecimal(100));
+            }
+        }
+        reallyApr = reallyApr.setScale(4,BigDecimal.ROUND_DOWN);
+        logger.info("--------------------开始计算订单实际年化收益率，订单号:" + accedeOrderId + ",accountForst：" + accountForst
+                + ",accedeAccount:" + accedeAccount + ",lockperiod:" + lockPeriod + ",实际年化收益率：" + reallyApr.toString());
+        return reallyApr;
+    }
+
     /**
      * 发送短信(计划还款成功)
      *
@@ -494,13 +561,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     /**
      * 计划退出推送消息
      *
-     * @param hjhAccede
+     * @param hjhRepay
      * @author Administrator
      */
-    private void sendMessage(HjhAccede hjhAccede) {
-        int userId = hjhAccede.getUserId();
-        BigDecimal amount = hjhAccede.getWaitTotal();
-        String planNid = hjhAccede.getPlanNid();
+    private void sendMessage(HjhRepay hjhRepay) {
+        int userId = hjhRepay.getUserId();
+        BigDecimal amount = hjhRepay.getRepayTotal();
+        String planNid = hjhRepay.getPlanNid();
         HjhPlanExample example = new HjhPlanExample();
         example.createCriteria().andPlanNidEqualTo(planNid);
         List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
