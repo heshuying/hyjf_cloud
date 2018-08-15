@@ -36,7 +36,7 @@ public class MessagePushMsgVO {
 
     private Integer preSendTime;
 
-    private Integer sendTime;
+    private String sendTime;
 
     private Integer createTime;
 
@@ -164,11 +164,11 @@ public class MessagePushMsgVO {
         this.preSendTime = preSendTime;
     }
 
-    public Integer getSendTime() {
+    public String getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(Integer sendTime) {
+    public void setSendTime(String sendTime) {
         this.sendTime = sendTime;
     }
 

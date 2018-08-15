@@ -27,9 +27,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public Integer countRecordList(MessagePushNoticesRequest form){
         Criteria criteria = new Criteria();
-        if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-            criteria.and("msgDestinationType").equals(form.getEndSendTimeSrch());
-        }
+
         if (form.getTagId() != null) {
             criteria.and("tagId").equals(form.getTagId());
         }
@@ -50,7 +48,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         }
         if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
             try {
-                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getNoticesCreateUserNameSrch());
+                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
                 criteria.and("sendTime").gte(time);
             } catch (Exception e) {
             }
@@ -59,6 +57,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             try {
                 Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
                 criteria.and("sendTime").lte(time);
+
             } catch (Exception e) {
             }
         }

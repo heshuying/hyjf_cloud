@@ -154,9 +154,10 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
 				criteria.and("sendTime").gte(time);
 			} catch (Exception e) {
+
 			}
 		}
-		if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
+			if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
 			try {
 				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
 				criteria.and("sendTime").lte(time);
@@ -169,7 +170,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			} catch (NumberFormatException e) {
 			}
 		}
-		criteria.and("msgSendStatus").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
+		criteria.and("msgDestinationType").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
 		Query query = new Query(criteria);
 		return (int)mongoTemplate.count(query,MessagePushMsgHistory.class);
 	}
@@ -219,7 +220,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			} catch (NumberFormatException e) {
 			}
 		}
-		criteria.and("msgSendStatus").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
+		criteria.and("msgDestinationType").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
 		Query query = new Query(criteria);
 		query.skip(offset).limit(limit);
 		query.with(new Sort(Sort.Direction.DESC, "createTime"));

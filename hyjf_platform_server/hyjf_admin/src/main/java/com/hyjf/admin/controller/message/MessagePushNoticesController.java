@@ -114,7 +114,7 @@ public class MessagePushNoticesController extends BaseController {
      * @param form
      * @return
      */
-    @ApiOperation(value = "发送列表添加", notes = "发送列表添加")
+    @ApiOperation(value = "画面迁移", notes = "画面迁移")
     @PostMapping(value = "/infoAction")
     @ResponseBody
     public JSONObject info(@RequestBody MessagePushNoticesRequest form) {
