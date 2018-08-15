@@ -57,6 +57,9 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="corporate_code" property="corporateCode" jdbcType="VARCHAR" />
+    <result column="registration_address" property="registrationAddress" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -124,7 +127,8 @@
     domicile, credit_level, useage, monthly_income, first_payment, second_payment, cost_introdution, 
     overdue_times, overdue_amount, litigation, asset_info, annual_income, overdue_report, 
     debt_situation, other_borrowed, is_funds, is_managed, is_ability, is_overdue, is_complaint, 
-    is_punished, create_user_id, update_user_id, create_time, update_time
+    is_punished, create_user_id, update_user_id, create_time, update_time, address, corporate_code, 
+    registration_address
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" >
     select
@@ -180,7 +184,8 @@
       debt_situation, other_borrowed, is_funds, 
       is_managed, is_ability, is_overdue, 
       is_complaint, is_punished, create_user_id, 
-      update_user_id, create_time, update_time
+      update_user_id, create_time, update_time, 
+      address, corporate_code, registration_address
       )
     values (#{assetId,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
       #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
@@ -199,7 +204,8 @@
       #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, 
       #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, 
       #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{address,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, #{registrationAddress,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
@@ -370,6 +376,15 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="corporateCode != null" >
+        corporate_code,
+      </if>
+      <if test="registrationAddress != null" >
+        registration_address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="assetId != null" >
@@ -533,6 +548,15 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateCode != null" >
+        #{corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationAddress != null" >
+        #{registrationAddress,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -710,6 +734,15 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.corporateCode != null" >
+        corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationAddress != null" >
+        registration_address = #{record.registrationAddress,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -771,7 +804,10 @@
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      address = #{record.address,jdbcType=VARCHAR},
+      corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
+      registration_address = #{record.registrationAddress,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -941,6 +977,15 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateCode != null" >
+        corporate_code = #{corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationAddress != null" >
+        registration_address = #{registrationAddress,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -999,7 +1044,10 @@
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      corporate_code = #{corporateCode,jdbcType=VARCHAR},
+      registration_address = #{registrationAddress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

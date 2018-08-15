@@ -919,7 +919,12 @@ public class AmConfigClientImpl implements AmConfigClient {
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
-    @Override
+	@Override
+	public ContentArticleResponse findById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
+	}
+
+	@Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/updateaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
@@ -1935,5 +1940,77 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 查询通知配置列表
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse initSmsNoticeConfig(){
+		return  restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/list", SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 查询通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse smsNoticeConfigInfo(SmsNoticeConfigRequest request) {
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/info", request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse insertSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/insert",request, SmsNoticeConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 修改通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse updateSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/update",request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 关闭通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse closeSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/close",request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 打开通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse openSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/open",request, SmsNoticeConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 唯一性验证
+	 * @param name
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public Integer onlyName(String name){
+		return  restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/onlyName/"+name, Integer.class).getBody();
 	}
 }

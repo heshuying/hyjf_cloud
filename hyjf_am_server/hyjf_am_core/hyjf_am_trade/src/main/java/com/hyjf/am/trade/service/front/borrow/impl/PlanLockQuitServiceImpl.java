@@ -11,10 +11,12 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -46,6 +48,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
 
     @Autowired
     private AppMessageProducer appMessageProducer;
+
+    private CommisionComputeService commisionComputeService;
     /**
      * 用户ID
      */
@@ -578,7 +582,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     }
 
     @Override
-    public void updateLockRepayInfo(String accedeOrderId) {
+    public void updateLockRepayInfo(HjhLockVo hjhLockVo) {
+        String accedeOrderId = hjhLockVo.getAccedeOrderId();
         //判断是否为计划最后一次复审
         //根据计划订单号判断是否为计划最后一次放款
         BorrowTenderExample example = new BorrowTenderExample();
@@ -648,7 +653,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             sendHjhLockMessage(hjhAccede);
             //发送短信
             sendSms(hjhAccede);
+            try {
+                //开始计算提成 add by cwyang 2018-5-24 汇计划3期由batch工程挪至此处处理
+                commisionCompute(hjhAccede,hjhLockVo);
 
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.info("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId());
+            }
             try {
                 //生成并签署加入计划投资服务协议 add by  2018-2-26
                 sendPlanContract(hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
@@ -660,6 +672,17 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 logger.info("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
             }
         }
+    }
+
+    /**
+     * 开始计算订单提成
+     * @param hjhAccede
+     */
+    private void commisionCompute(HjhAccede hjhAccede,HjhLockVo hjhLockVo) {
+        logger.info("----------开始生成计划订单的提成计算，订单号：" + hjhAccede.getAccedeOrderId());
+        commisionComputeService.commisionCompute(hjhAccede,hjhLockVo);
+        logger.info("----------生成计划订单的提成计算完毕，订单号：" + hjhAccede.getAccedeOrderId());
+
     }
 
     /**

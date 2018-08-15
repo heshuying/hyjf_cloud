@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountDetailDataRepairCustomize;
@@ -49,4 +50,10 @@ public interface AdminAccountDetailCustomizeMapper {
      */
     List<AccountTrade> selectAccountTrade(String tradValue);
 
+    /**
+     *询此用户的下一条交易明细
+     * @param param
+     * @return
+     */
+    AccountList selectNextAccountList(Map<String, Object> param);
 }

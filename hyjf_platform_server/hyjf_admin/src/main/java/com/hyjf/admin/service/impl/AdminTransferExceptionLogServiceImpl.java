@@ -1,8 +1,7 @@
 package com.hyjf.admin.service.impl;
 
-import java.util.List;
-
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,40 +9,32 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.service.TransferExceptionLogService;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
-import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 
 /**
  * 异常中心-银行转账异常 Create by jijun 20180710
  * service接口实现类
  */
 @Service
-public class TransferExceptionLogServiceImpl extends BaseAdminServiceImpl implements TransferExceptionLogService {
+public class AdminTransferExceptionLogServiceImpl extends BaseAdminServiceImpl implements AdminTransferExceptionLogService {
 
     @Autowired
     private AmTradeClient amTradeClient;
 
     @Override
-    public AdminTransferExceptionLogResponse getRecordList(AdminTransferExceptionLogRequest request) {
+    public AdminTransferExceptionLogResponse getRecordList(TransferExceptionLogVO request) {
        return amTradeClient.getAdminTransferExceptionLogCustomizeList(request);
     }
 
     @Override
-    public Integer countRecord(AdminTransferExceptionLogRequest request) {
+    public Integer countRecord(TransferExceptionLogVO request) {
         return amTradeClient.getAdminTransferExceptionLogCustomizeCountRecord(request);
     }
 
     @Override
-    public int updateRecordByUUID(AdminTransferExceptionLogRequest request) {
+    public int updateRecordByUUID(TransferExceptionLogVO request) {
         return amTradeClient.updateTransferExceptionLogByUUID(request);
-    }
-
-    @Override
-    public int updateRecordByUUID(TransferExceptionLogVO transferExceptionLog) {
-        return amTradeClient.updateTransferExceptionLogByUUID(transferExceptionLog);
     }
 
     @Override

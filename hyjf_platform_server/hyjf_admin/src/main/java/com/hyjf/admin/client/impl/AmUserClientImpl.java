@@ -1911,4 +1911,52 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 更新银行卡(admin后台异常中心-银行卡异常用)
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultMsg();
+		}
+		return "";
+	}
+
+	/**
+	 * 线下修改信息同步查询列表count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getModifyInfoCount(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/getModifyInfoCount";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 线下修改信息同步查询列表list
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/searchModifyInfoList";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

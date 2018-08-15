@@ -5,8 +5,7 @@ package com.hyjf.admin.beans.vo;
 
 import java.io.Serializable;
 
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -19,11 +18,6 @@ public class AdminTransferExceptionLogAPIVO extends TransferExceptionLogVO imple
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "用户名")
-    private String username;
-
-    @ApiModelProperty(value = "交易类型")
-    private String tradeType;
 
     @ApiModelProperty(value = "交易状态")
     private String tradeStatus;
@@ -31,21 +25,6 @@ public class AdminTransferExceptionLogAPIVO extends TransferExceptionLogVO imple
     @ApiModelProperty(value = "添加时间")
     private String addTimeView;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getTradeType() {
-        return tradeType;
-    }
-
-    public void setTradeType(String tradeType) {
-        this.tradeType = tradeType;
-    }
 
     public String getTradeStatus() {
         return tradeStatus;

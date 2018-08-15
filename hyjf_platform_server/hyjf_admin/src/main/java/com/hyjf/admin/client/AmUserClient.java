@@ -33,56 +33,14 @@ import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.AccountRecordRequest;
-import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
-import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.resquest.user.BankCardLogRequest;
-import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankOpenAccountRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
-import com.hyjf.am.resquest.user.ChangeLogRequest;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
-import com.hyjf.am.resquest.user.RegistRcordRequest;
-import com.hyjf.am.resquest.user.UpdCompanyRequest;
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.BindUserVo;
-import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.EmployeeCustomizeVO;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserBankOpenAccountVO;
-import com.hyjf.am.vo.user.UserChangeLogVO;
-import com.hyjf.am.vo.user.UserEvalationQuestionVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserManagerDetailVO;
-import com.hyjf.am.vo.user.UserManagerUpdateVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.am.vo.user.UserRecommendCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author zhangqingqing
@@ -1022,4 +980,28 @@ public interface AmUserClient {
      * @return
      */
     List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request);
+
+    /**
+     * 更新银行卡(admin后台异常中心-银行卡异常用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String updateAccountBankByUserId(BankCardExceptionRequest request);
+
+    /**
+     * 线下修改信息同步查询列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getModifyInfoCount(AccountMobileSynchRequest request);
+
+    /**
+     * 线下修改信息同步查询列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request);
 }
