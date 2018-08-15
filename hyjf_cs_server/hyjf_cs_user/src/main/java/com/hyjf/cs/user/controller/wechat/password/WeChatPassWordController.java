@@ -63,6 +63,8 @@ public class WeChatPassWordController {
             return ret;
         }
         passWordService.updatePassWd(user,newPassword);
+        ret.put("status", "000");
+        ret.put("statusDesc", "修改密码成功");
         return ret;
     }
 
