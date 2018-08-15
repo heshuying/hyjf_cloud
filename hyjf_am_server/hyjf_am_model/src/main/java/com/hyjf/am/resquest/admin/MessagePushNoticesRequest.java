@@ -217,4 +217,6 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     public void setUpdateOrReSend(String updateOrReSend) {
         this.updateOrReSend = updateOrReSend;
     }
+
+
 }

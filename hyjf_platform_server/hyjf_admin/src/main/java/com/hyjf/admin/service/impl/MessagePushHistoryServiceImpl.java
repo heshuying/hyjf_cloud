@@ -23,7 +23,6 @@ public class MessagePushHistoryServiceImpl implements MessagePushHistoryService 
      */
     @Override
     public MessagePushHistoryResponse getRecordList(MessagePushHistoryRequest request) {
-
         return amMarketClient.getRecordList(request);
     }
     /**
@@ -32,7 +31,6 @@ public class MessagePushHistoryServiceImpl implements MessagePushHistoryService 
      */
     @Override
     public MessagePushTagResponse getAllPushTagList() {
-
-        return null;
+        return amMarketClient.getAllPushTagList();
     }
 }

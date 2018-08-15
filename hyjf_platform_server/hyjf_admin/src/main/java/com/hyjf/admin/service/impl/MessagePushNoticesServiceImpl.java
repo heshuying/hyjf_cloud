@@ -101,6 +101,7 @@ public class MessagePushNoticesServiceImpl implements MessagePushNoticesService 
      * @return
      * @throws Exception
      */
+    @Override
     public String uploadFile(HttpServletRequest request) throws Exception {
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);

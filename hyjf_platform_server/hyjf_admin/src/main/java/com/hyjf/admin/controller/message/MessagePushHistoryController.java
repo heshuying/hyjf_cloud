@@ -14,9 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,8 @@ import java.util.Map;
  * @author lisheng
  * @version MessagePushHistoryController, v0.1 2018/8/14 19:58
  */
-@Api(value = "admin-消息中心-app消息推送-发送历史", tags = "发送历史")
+@Api(value = "admin-消息中心-app消息推送-发送历史", tags = "admin-消息中心-app消息推送-发送历史")
+@RestController
 @RequestMapping("/hyjf-admin/msgpush/history")
 public class MessagePushHistoryController extends BaseController {
     @Autowired
@@ -37,7 +36,7 @@ public class MessagePushHistoryController extends BaseController {
     @ApiOperation(value = "发送历史列表查询", notes = "发送历史列表查询")
     @PostMapping(value = "/init")
     @ResponseBody
-    public JSONObject init(MessagePushHistoryRequest form) {
+    public JSONObject init(@RequestBody  MessagePushHistoryRequest form) {
         JSONObject jsonObject = new JSONObject();
         MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);
         MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();

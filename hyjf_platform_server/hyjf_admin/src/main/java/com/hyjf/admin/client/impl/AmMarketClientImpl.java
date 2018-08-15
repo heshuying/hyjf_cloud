@@ -2,11 +2,8 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
-import com.hyjf.am.response.admin.ContentAdsResponse;
-import com.hyjf.am.response.admin.CouponTenderResponse;
-import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
@@ -22,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.admin.client.AmMarketClient;
-import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.vo.market.ActivityListVO;
 import java.util.List;
 
 /**

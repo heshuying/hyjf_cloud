@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -34,7 +35,7 @@ public class MessagePushTagMongoDao extends BaseMongoDao<MessagePushTag> {
         Criteria criteria = new Criteria();
         criteria.is("status").equals(1);
         Query query = new Query(criteria);
-        //example.setOrderByClause("sort asc");
+        query.with(new Sort(Sort.Direction.ASC, "sort"));
         return mongoTemplate.find(query,MessagePushTag.class);
     }
 

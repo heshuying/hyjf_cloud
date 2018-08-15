@@ -21,10 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +35,8 @@ import java.util.Map;
  * @author lisheng
  * @version MessagePushNoticesController, v0.1 2018/8/14 14:34
  */
-@Api(value = "admin-消息中心-app消息推送-通知发送", tags = "通知发送")
+@Api(value = "admin-消息中心-app消息推送-通知发送", tags = "admin-消息中心-app消息推送-通知发送")
+@RestController
 @RequestMapping("/hyjf-admin/msgpush/notices")
 public class MessagePushNoticesController extends BaseController {
 
@@ -52,7 +50,7 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "通知发送列表查询", notes = "通知发送列表查询")
     @PostMapping(value = "/init")
     @ResponseBody
-    public JSONObject init(MessagePushNoticesRequest messagePushNoticesRequest) {
+    public JSONObject init(@RequestBody MessagePushNoticesRequest messagePushNoticesRequest) {
         JSONObject jsonObject = new JSONObject();
         MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
         MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
