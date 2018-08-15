@@ -7,22 +7,27 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.user.dao.mapper.customize.AdminBankCardExceptionCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
 import com.hyjf.am.user.service.admin.exception.BankCardExceptionService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetSessionOrRequestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +37,13 @@ import java.util.List;
 @Service
 public class BankCardExceptionServiceImpl extends BaseServiceImpl implements BankCardExceptionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BankCardExceptionServiceImpl.class);
+
     @Autowired
     private AdminBankCardExceptionCustomizeMapper adminBankCardExceptionCustomizeMapper;
+
+    @Value("${hyjf.chinapnr.mercustid}")
+    private String PROP_MERCUSTID;
 
     /**
      * 银行卡异常count
@@ -64,9 +74,13 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
      * @return
      */
     @Override
-    public String updateAccountBankByUserId(Integer userId) {
+    public String updateAccountBankByUserId(BankCardExceptionRequest request) {
+        Integer userId = Integer.valueOf(request.getUserId());
+        List<BankConfigVO> bankConfigVOList = request.getBankConfigVOList();
+        // bank.setBankStatus(1)  这个字段改过了  不知道是不是对应status
+
         String respCode = "";
-        /*try {
+        try {
             AccountChinapnrExample example = new AccountChinapnrExample();
             example.createCriteria().andUserIdEqualTo(userId);
             List<AccountChinapnr> list = accountChinapnrMapper.selectByExample(example);
@@ -76,7 +90,7 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                     ChinapnrBean bean = new ChinapnrBean();
                     bean.setVersion(ChinaPnrConstant.VERSION_10);// 接口版本号
                     bean.setCmdId(ChinaPnrConstant.CMDID_QUERY_CARD_INFO); // 银行卡查询接口
-                    bean.setMerCustId(PropUtils.getSystem(ChinaPnrConstant.PROP_MERCUSTID)); // 商户客户号
+                    bean.setMerCustId(PROP_MERCUSTID); // 商户客户号
                     bean.setUsrCustId(String.valueOf(accountChinapnr.getChinapnrUsrcustid()));// 用户客户号
                     // bean.setBgRetUrl(ChinapnrUtil.getBgRetUrl()); //
                     // 商户后台应答地址(必须)
@@ -113,12 +127,12 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                                     AccountBank bank = new AccountBank();
                                     bank.setUserId(accountChinapnr.getUserId());
                                     bank.setCardType("0");// 普通卡
-                                    bank.setStatus(1);// 默认都是1
+                                    bank.setBankStatus(1);// 默认都是1
                                     if (obj.getString("IsDefault").equals("Y")) {
                                         bank.setCardType("1");// 默认卡
                                     }
                                     if (obj.getString("ExpressFlag").equals("Y")) {
-                                        bank.setStatus(0);// 快捷卡
+                                        bank.setBankStatus(0);// 快捷卡
                                         bank.setCardType("2");// 快捷卡
                                         hasExpress = true;
                                     }
@@ -127,38 +141,32 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                                     bank.setProvince(obj.getString("ProvId"));
                                     bank.setCity("0");
                                     bank.setArea(obj.getInteger("AreaId"));
-                                    bank.setAddip(getIp());
+                                    bank.setCreateIp(getIp());
                                     bank.setUpdateIp(getIp());
                                     if (StringUtils.isNotEmpty(obj.getString("UpdDateTime"))) {
-                                        bank.setAddtime(
-                                                GetDate.strYYYYMMDDTimestamp(obj.getString("UpdDateTime")) + "");
-                                        bank.setUpdateTime(
-                                                GetDate.strYYYYMMDDTimestamp(obj.getString("UpdDateTime")) + "");
+                                        bank.setCreateTime(GetDate.str2Date(obj.getString("UpdDateTime"),new SimpleDateFormat("yyyyMMddHHmmss")));
+                                        bank.setUpdateTime(GetDate.str2Date(obj.getString("UpdDateTime"),new SimpleDateFormat("yyyyMMddHHmmss")));
                                     } else {
-                                        bank.setAddtime(
-                                                GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(new Date()))
-                                                        + "");
-                                        bank.setUpdateTime(
-                                                GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(new Date()))
-                                                        + "");
+                                        bank.setCreateTime(GetDate.getNowTime());
+                                        bank.setUpdateTime(GetDate.getNowTime());
                                     }
                                     accountBankList.add(bank);
                                 }
                                 if (!hasExpress) {
                                     // 如果没有快捷卡,则将status都置为0
                                     for (AccountBank bank : accountBankList) {
-                                        bank.setStatus(0);
+                                        bank.setBankStatus(0);
                                     }
                                 }
 
                                 //补全银行卡操作记录
-                                BankAccountLogExample bankAccountLogExample = new BankAccountLogExample();
-                                BankAccountLogExample.Criteria aCriteria = bankAccountLogExample.createCriteria();
+                                BankCardLogExample bankCardLogExample = new BankCardLogExample();
+                                BankCardLogExample.Criteria aCriteria = bankCardLogExample.createCriteria();
                                 aCriteria.andUserIdEqualTo(accountChinapnr.getUserId());
-                                List<BankAccountLog> bankAccountLogList = bankAccountLogMapper.selectByExample(bankAccountLogExample);
+                                List<BankCardLog> bankCardLogList = bankCardLogMapper.selectByExample(bankCardLogExample);
                                 List<String> accountList = new ArrayList<String>();
-                                for(BankAccountLog bankAccountLog : bankAccountLogList){
-                                    accountList.add(bankAccountLog.getBankAccount());
+                                for(BankCardLog bankCardLog : bankCardLogList){
+                                    accountList.add(bankCardLog.getCardNo());
                                 }
                                 // 数据库操作
                                 accountBankMapper.deleteByExample(AccountBankExample);
@@ -166,33 +174,41 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                                     accountBankMapper.insertSelective(bank);
                                     if(!accountList.contains(bank.getAccount())){
                                         //插入操作记录表
-                                        BankAccountLog bankAccountLog = new BankAccountLog();
-                                        bankAccountLog.setUserId(bank.getUserId());
-                                        bankAccountLog.setUserName(this.getUsersByUserId(bank.getUserId()).getUsername());
-                                        bankAccountLog.setBankCode(bank.getBank());
-                                        bankAccountLog.setBankAccount(bank.getAccount());
+                                        BankCardLog bankCardLog = new BankCardLog();
+                                        bankCardLog.setUserId(bank.getUserId());
+                                        bankCardLog.setUserName(this.findUserByUserId(bank.getUserId()).getUsername());
+                                        bankCardLog.setBankCode(bank.getBank());
+                                        bankCardLog.setCardNo(bank.getAccount());
                                         //获取银行卡姓名
-                                        BankConfig config = this.getBankcardConfig(bankAccountLog.getBankCode());
-                                        if(config != null ){
-                                            bankAccountLog.setBankName(config.getName());
-                                        }else{
-                                            bankAccountLog.setBankName("");
+                                        for(BankConfigVO bankConfigVO:bankConfigVOList){
+                                            String bankConfigCode = bankConfigVO.getCode();
+                                            String userBankCode = bankCardLog.getBankCode();
+                                            if(StringUtils.isNotEmpty(bankConfigCode)){
+                                                if(StringUtils.isNotEmpty(userBankCode) && userBankCode.equals(bankConfigCode)){
+                                                    bankCardLog.setBankName(bankConfigVO.getName());
+                                                }else{
+                                                    bankCardLog.setBankName("");
+                                                }
+                                            }else{
+                                                bankCardLog.setBankName("");
+                                            }
                                         }
-                                        bankAccountLog.setCardType(bank.getStatus()==0?0:2);//卡类型 0普通提现卡1默认卡2快捷支付卡
-                                        bankAccountLog.setOperationType(0);//操作类型  0绑定 1删除
-                                        bankAccountLog.setStatus(0);//成功
-                                        bankAccountLog.setCreateTime(Integer.valueOf(bank.getAddtime().toString()));//操作时间
 
-                                        this.bankAccountLogMapper.insertSelective(bankAccountLog);
+                                        bankCardLog.setCardType(bank.getBankStatus()==0?0:2);//卡类型 0普通提现卡1默认卡2快捷支付卡
+                                        bankCardLog.setOperationType(0);//操作类型  0绑定 1删除
+                                        bankCardLog.setStatus(0);//成功
+                                        bankCardLog.setCreateTime(bank.getCreateTime());//操作时间
+
+                                        this.bankCardLogMapper.insertSelective(bankCardLog);
                                     }
                                 }
                                 {
                                     // 第二步,更新身份证号等等
-                                    UsersInfoExample uie = new UsersInfoExample();
+                                    UserInfoExample uie = new UserInfoExample();
                                     uie.createCriteria().andUserIdEqualTo(accountChinapnr.getUserId());
-                                    List<UsersInfo> l = usersInfoMapper.selectByExample(uie);
+                                    List<UserInfo> l = usersInfoMapper.selectByExample(uie);
                                     if (l != null && l.size() == 1) {
-                                        UsersInfo usersInfo = l.get(0);
+                                        UserInfo usersInfo = l.get(0);
                                         JSONObject obj = array.getJSONObject(0);
                                         // 身份证号
                                         String CertId = obj.getString("CertId");
@@ -232,10 +248,7 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                             if (StringUtils.isNotEmpty(chinapnrBean.getRespDesc())) {
                                 respDesc = chinapnrBean.getRespDesc();
                             }
-                            LogUtil.errorLog(BankCardExceptionServiceImpl.class.getSimpleName(),
-                                    "updateAccountChinapnrBank", "更新用户银行卡信息失败,用户ID:" + accountChinapnr.getUserId()
-                                            + ",错误代码:" + respCode + ",错误内容:" + respDesc,
-                                    null);
+                            logger.error("更新用户银行卡信息失败,用户ID:【{}】,错误代码:【{}】,错误内容:【{}】",accountChinapnr.getUserId(),respCode,respDesc);
                             return respDesc;
                         }
                     }
@@ -243,12 +256,27 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
             } else {
                 respCode = "无效的用户ID";
             }
-            LogUtil.endLog(BankCardExceptionServiceImpl.class.getSimpleName(), "updateAccountBankByUserId",
-                    "更新用户银行卡信息结束,用户ID:" + userId);
+            logger.info("更新用户银行卡信息结束,用户ID:" + userId);
         } catch (Exception e) {
-            LogUtil.errorLog(BankCardExceptionServiceImpl.class.getSimpleName(), "updateAccountBankByUserId",
-                    "更新用户银行卡信息失败,用户ID:" + userId, null);
-        }*/
+            logger.error("更新用户银行卡信息失败,用户ID:" + userId);
+        }
         return respCode;
+    }
+
+    /**
+     * 获取ip
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private static String getIp() {
+        String ip = "";
+        try {
+            ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
+        } catch (Exception e) {
+            // e.printStackTrace();
+            ip = "127.0.0.1";
+        }
+        return ip;
     }
 }

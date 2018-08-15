@@ -4,10 +4,12 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: sunpeikai
@@ -37,6 +39,8 @@ public class BankCardExceptionRequest extends BasePage implements Serializable {
     private int limitStart = -1;
     @ApiModelProperty(value = "分页limit结束(后台用)")
     private int limitEnd = -1;
+
+    private List<BankConfigVO> bankConfigVOList;
 
     public String getUserId() {
         return userId;
@@ -116,5 +120,13 @@ public class BankCardExceptionRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public List<BankConfigVO> getBankConfigVOList() {
+        return bankConfigVOList;
+    }
+
+    public void setBankConfigVOList(List<BankConfigVO> bankConfigVOList) {
+        this.bankConfigVOList = bankConfigVOList;
     }
 }

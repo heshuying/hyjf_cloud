@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -1177,7 +1178,7 @@ public interface AmTradeClient {
      * @Param transferExceptionLog
      * @return
      */
-    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+    Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog);
 
     /**
      * 判断用户所处的渠道如果不允许债转，可债转金额为0  start

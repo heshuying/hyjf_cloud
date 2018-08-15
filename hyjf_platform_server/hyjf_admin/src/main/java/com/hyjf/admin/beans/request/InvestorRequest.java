@@ -12,11 +12,6 @@ import java.io.Serializable;
  * @version InvestorRequest, v0.1 2018/7/11 17:07
  */
 public class InvestorRequest implements Serializable {
-    @ApiModelProperty(value = "开始时间")
-    private String startTime;
-
-    @ApiModelProperty(value = "结束时间")
-    private String endTime;
 
     @ApiModelProperty(value = "标的编号")
     private String borrowNid;
@@ -24,27 +19,11 @@ public class InvestorRequest implements Serializable {
     @ApiModelProperty(value = "用户ID")
     private String userId;
 
-    @ApiModelProperty(value = "nid")
+    @ApiModelProperty(value = "投资订单号")
     private String nid;
 
     @ApiModelProperty(value = "邮箱")
     private String email;
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 
     public String getBorrowNid() {
         return borrowNid;

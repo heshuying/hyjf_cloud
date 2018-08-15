@@ -36,6 +36,9 @@ public class ContentArticleVO extends BaseVO {
 
     private Date updateTime;
 
+    private String publishTime;
+
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -140,5 +143,13 @@ public class ContentArticleVO extends BaseVO {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPublishTime() {
+        return publishTime;
+    }
+
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
     }
 }

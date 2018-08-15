@@ -1919,9 +1919,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public String updateAccountBankByUserId(Integer userId) {
-		String url = userService + "/bankcardexception/updateAccountBankByUserId/" + userId;
-		AdminBankCardExceptionResponse response = restTemplate.getForEntity(url, AdminBankCardExceptionResponse.class).getBody();
+	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultMsg();
 		}

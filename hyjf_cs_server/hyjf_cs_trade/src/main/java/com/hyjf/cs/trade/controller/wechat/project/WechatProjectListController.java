@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.wechat.project;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.cs.trade.bean.WechatPlanBorrowResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -71,8 +72,12 @@ public class WechatProjectListController extends BaseTradeController {
     @GetMapping(value = "/plan/{planId}/borrowComposition.do", produces = "application/json; charset=utf-8")
     public Object getPlanBorrowList( @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                                      @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId){
-        Object jsonObject = wechatProjectListService.getPlanBorrowList(planId,currentPage,pageSize);
-        return jsonObject;
+       WechatPlanBorrowResultBean object = wechatProjectListService.getPlanBorrowList(planId,currentPage,pageSize);
+        JSONObject result = new JSONObject();
+        result.put("status","000");
+        result.put("statusDesc","成功");
+        result.put("object",object);
+        return result;
     }
 
 
@@ -87,7 +92,11 @@ public class WechatProjectListController extends BaseTradeController {
     public Object getPlanAccedeList( @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                                      @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId){
         Object jsonObject = wechatProjectListService.getPlanAccedeList(planId,currentPage,pageSize);
-        return jsonObject;
+        JSONObject result = new JSONObject();
+        result.put("status","000");
+        result.put("statusDesc","成功");
+        result.put("object",jsonObject);
+        return result;
     }
 
 
