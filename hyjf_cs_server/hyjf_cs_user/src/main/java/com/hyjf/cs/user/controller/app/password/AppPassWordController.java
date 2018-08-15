@@ -72,7 +72,7 @@ public class AppPassWordController extends BaseUserController {
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @ResponseBody
-    @RequestMapping(value = "/hyjf-app/appUser/updatePasswordAction", method = RequestMethod.POST)
+    @PostMapping(value = "/hyjf-app/appUser/updatePasswordAction")
     public JSONObject updatePasswordAction(@RequestHeader(value = "key") String key, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
 
         JSONObject ret = new JSONObject();
@@ -189,13 +189,12 @@ public class AppPassWordController extends BaseUserController {
     /**
      * 设置交易密码同步回调
      *
-     * @param request
-     * @param response
+     *
      * @return
      */
-    @RequestMapping("/bank/user/transpassword/passwordReturn.do")
-    public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
-                                       @ModelAttribute BankCallBean bean) {
+    @ApiOperation(value = "设置交易密码同步回调", notes = "设置交易密码同步回调")
+    @GetMapping("/bank/user/transpassword/passwordReturn.do")
+    public ModelAndView passwordReturn(@ModelAttribute BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
         BaseMapBean baseMapBean=new BaseMapBean();
@@ -261,7 +260,8 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/bank/user/transpassword/passwordBgreturn.do")
+    @ApiOperation(value = "设置交易密码异步回调")
+    @PostMapping(value = "/bank/user/transpassword/passwordBgreturn.do")
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
@@ -291,7 +291,8 @@ public class AppPassWordController extends BaseUserController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bank/user/transpassword/resetPassword.do")
+    @ApiOperation(value = "重置交易密码")
+    @PostMapping(value = "/bank/user/transpassword/resetPassword.do")
     public ModelAndView resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -359,7 +360,8 @@ public class AppPassWordController extends BaseUserController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bank/user/transpassword/resetPasswordReturn.do")
+    @ApiOperation(value = "重置交易密码同步回调")
+    @GetMapping(value = "/bank/user/transpassword/resetPasswordReturn.do")
     public ModelAndView resetPasswordReturn(HttpServletRequest request, HttpServletResponse response,
                                             @ModelAttribute BankCallBean bean) {
 
@@ -391,7 +393,8 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/bank/user/transpassword/resetPasswordBgreturn.do")
+    @ApiOperation(value = "重置交易密码异步回调")
+    @PostMapping(value = "/bank/user/transpassword/resetPasswordBgreturn.do")
     public String resetPasswordBgreturn(HttpServletRequest request, HttpServletResponse response,
                                         @ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
@@ -410,7 +413,7 @@ public class AppPassWordController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "找回密码",notes = "找回密码")
-    @RequestMapping(value = "/hyjf-app/appUser/getBackPasswordAction", method = RequestMethod.POST)
+    @PostMapping(value = "/hyjf-app/appUser/getBackPasswordAction")
     public JSONObject getBackPasswordAction(@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/getBackPasswordAction");

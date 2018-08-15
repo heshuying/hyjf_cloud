@@ -68,7 +68,7 @@ import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
 
 import io.swagger.annotations.Api;
 
-@Api(value = "app端我的资产",tags = "app端我的资产")
+@Api(value = "app端-我的资产",tags = "app端-我的资产")
 @Controller
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {

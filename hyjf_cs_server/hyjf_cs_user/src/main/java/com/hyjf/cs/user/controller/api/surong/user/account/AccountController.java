@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "api端融东风用户账户接口",tags = "api端融东风用户账户接口")
+@Api(value = "api端-融东风用户账户接口",tags = "api端-融东风用户账户接口")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("hyjf-api/surong/account")
@@ -42,7 +43,7 @@ public class AccountController extends BaseUserController{
 
 
     @ApiOperation(value = "获取用户余额", notes = "获取用户余额")
-    @RequestMapping("/getBalance")
+    @PostMapping("/getBalance")
     @ResponseBody
     public Object getBalance(HttpServletRequest request){
         String mobile = request.getParameter("mobile");
@@ -62,7 +63,7 @@ public class AccountController extends BaseUserController{
 
 
     @ApiOperation(value = "获取绑卡信息", notes = "获取绑卡信息")
-    @RequestMapping("/getBankCard")
+    @PostMapping("/getBankCard")
     @ResponseBody
     public Object getCard(HttpServletRequest request){
         String mobile = request.getParameter("mobile");
@@ -81,7 +82,7 @@ public class AccountController extends BaseUserController{
     }
 
     @ApiOperation(value = "获取线下充值信息", notes = "获取线下充值信息")
-    @RequestMapping("/getOfflineRechargeInfo")
+    @PostMapping("/getOfflineRechargeInfo")
     @ResponseBody
     public Object offLineRechageInfo(HttpServletRequest request, HttpServletResponse response) {
         String mobile = request.getParameter("mobile");
@@ -111,7 +112,7 @@ public class AccountController extends BaseUserController{
      * @return
      */
     @ApiOperation(value = "融东风余额同步", notes = "融东风余额同步")
-    @RequestMapping("/balanceSync")
+    @PostMapping("/balanceSync")
     @ResponseBody
     public Object balanceSync(HttpServletRequest request){
         String sign = request.getParameter("sign");
