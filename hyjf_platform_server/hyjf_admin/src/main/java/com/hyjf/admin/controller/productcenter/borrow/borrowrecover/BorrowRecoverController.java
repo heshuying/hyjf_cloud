@@ -8,6 +8,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRecoverService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -63,8 +64,8 @@ public class BorrowRecoverController extends BaseController {
         BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRecoverBean bean = borrowRecoverService.searchBorrowRecover(copyForm);
-        Map<String, String> map=CacheUtil.getParamNameMap("LOAN_STATUS");
-        bean.setLoanStarusList(map);
+        bean.setLoanStarusList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("LOAN_STATUS")));
+
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRecoverService.selectHjhInstConfigByInstCode("-1");
         bean.setHjhInstConfigList(hjhInstConfigList);
