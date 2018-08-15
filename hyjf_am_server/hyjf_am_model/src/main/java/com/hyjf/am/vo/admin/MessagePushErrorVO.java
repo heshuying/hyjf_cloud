@@ -149,8 +149,6 @@ public class MessagePushErrorVO extends BaseVO implements Serializable {
 
     private String updateuser;
 
-    private static final long serialVersionUID = 1L;
-
     public String getNameClass() {
         return nameClass;
     }
