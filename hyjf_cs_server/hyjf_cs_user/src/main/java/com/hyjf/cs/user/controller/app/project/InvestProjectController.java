@@ -10,40 +10,12 @@
  */
 package com.hyjf.cs.user.controller.app.project;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectContractDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectContractRecoverPlanCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayListCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayPlanListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderCreditRepayPlanListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
+import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
@@ -65,11 +37,29 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-@Api(value = "app端我的资产",tags = "app端我的资产")
-@Controller
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Api(value = "app端-我的资产",tags = "app端-我的资产")
+@RestController
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {
 
@@ -88,8 +78,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/getRepayList", produces = "application/json; charset=utf-8")
+	@PostMapping(value = "/getRepayList", produces = "application/json; charset=utf-8")
 	public JSONObject searchRepayList(@ModelAttribute RepayListBean form, HttpServletRequest request,
                                       HttpServletResponse response) {
 
@@ -140,8 +129,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.INVEST_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@PostMapping(value = InvestProjectDefine.INVEST_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchInvestList(@ModelAttribute InvestListBean form, HttpServletRequest request,
                                        HttpServletResponse response) {
 
@@ -190,8 +178,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.ALREADY_REPAY_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@PostMapping(value = InvestProjectDefine.ALREADY_REPAY_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchAlreadyRepayList(@ModelAttribute AlreadyRepayListBean form, HttpServletRequest request,
                                              HttpServletResponse response) {
 
@@ -241,8 +228,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.REPAY_PLAN_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@PostMapping(value = InvestProjectDefine.REPAY_PLAN_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchRepayPlanList(@ModelAttribute RepayPlanListBean form, HttpServletRequest request,
                                           HttpServletResponse response) {
 		JSONObject info = new JSONObject();
@@ -335,7 +321,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -371,7 +357,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -447,7 +433,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAY_CONTACT_ACTION)
+	@PostMapping(value = InvestProjectDefine.REPAY_CONTACT_ACTION)
 	public ModelAndView searchProjectInfo(@ModelAttribute ProjectContractDetailBean form, HttpServletRequest request,
                                           HttpServletResponse response) {
 
@@ -597,7 +583,7 @@ public class InvestProjectController extends BaseUserController {
 	 * 
 	 * 不分期债转对应的 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -636,7 +622,7 @@ public class InvestProjectController extends BaseUserController {
 	 * 
 	 * 分期债转对应的 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -680,7 +666,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAY_PROJECT_DETAIL_ACTION)
+	@PostMapping(value = InvestProjectDefine.REPAY_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchRepayProjectDetail(InvestProjectBean form, HttpServletRequest request,
                                                  HttpServletResponse response) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.REPAY_PROJECT_DETAIL_PATH);
@@ -731,7 +717,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION)
+	@PostMapping(value = InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchInvestProjectDetail(InvestProjectBean form, HttpServletRequest request,
                                                   HttpServletResponse response) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.INVEST_PROJECT_DETAIL_PATH);
@@ -924,10 +910,10 @@ public class InvestProjectController extends BaseUserController {
 	 * @author liuyang
 	 * @param form
 	 * @param request
-	 * @param response
+	 * @param
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION)
+	@PostMapping(value = InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchRepayedProjectDetail(InvestProjectBean form, HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.REPAYED_PROJECT_DETAIL_PATH);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -1021,7 +1007,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 适应客户端数据返回 - 投资中
 	 * 
-	 * @param appInvestListCustomizes
+	 * @param
 	 * @return
 	 */
 	private List<MyProjectVo> convertAppInvestListCustomizeToMyProjectVo(

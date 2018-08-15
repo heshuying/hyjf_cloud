@@ -9,7 +9,7 @@ import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
 import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
-import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
+import com.hyjf.am.trade.service.admin.exception.TransferExceptionLogService;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.common.util.CommonUtils;
@@ -26,24 +26,24 @@ import java.util.List;
  * @author jun
  * @version AdminTransferExceptionLogController, v0.1 2018/7/10 11:19
  */
-@Api(value = "异常中心-银行转账异常",tags ="异常中心-银行转账异常")
+@Api(value = "银行转账异常",tags ="银行转账异常")
 @RestController
 @RequestMapping("/am-trade/transferExceptionLog")
-public class AdminTransferExceptionLogController extends BaseController {
+public class TransferExceptionLogController extends BaseController {
 
     @Autowired
-    private AdminTransferExceptionLogService adminTransferExceptionLogService;
+    private TransferExceptionLogService transferExceptionLogService;
 
 
     @ApiOperation(value = "银行转账异常列表", notes = "银行转账异常列表")
     @PostMapping("/getRecordList")
     public AdminTransferExceptionLogResponse getRecordList(@RequestBody TransferExceptionLogVO request){
         AdminTransferExceptionLogResponse response = new AdminTransferExceptionLogResponse();
-        int count = adminTransferExceptionLogService.getCountRecord(request);
+        int count = transferExceptionLogService.getCountRecord(request);
         if(count==0){
             return response;
         }
-        List<AdminTransferExceptionLogCustomize> results=adminTransferExceptionLogService.getRecordList(request);
+        List<AdminTransferExceptionLogCustomize> results=transferExceptionLogService.getRecordList(request);
         String returnCode = "0";
         if (CollectionUtils.isNotEmpty(results)){
             response.setResultList(CommonUtils.convertBeanList(results,AdminTransferExceptionLogCustomizeVO.class));
@@ -57,14 +57,14 @@ public class AdminTransferExceptionLogController extends BaseController {
     @ApiOperation(value = "银行转账异常数据条数", notes = "银行转账异常数据条数")
     @PostMapping("/getCountRecord")
     public Integer getCountRecord(@RequestBody TransferExceptionLogVO request){
-        return adminTransferExceptionLogService.getCountRecord(request);
+        return transferExceptionLogService.getCountRecord(request);
     }
 
 
     @ApiOperation(value = "根据UUID更新admin转账异常日志", notes = "根据UUID更新admin转账异常日志")
     @PostMapping("/updateTransferExceptionLogByUUID")
     public Integer updateTransferExceptionLogByUUID(@RequestBody TransferExceptionLogVO request){
-        return adminTransferExceptionLogService.updateTransferExceptionLogByUUID(request);
+        return transferExceptionLogService.updateTransferExceptionLogByUUID(request);
     }
 
 
@@ -72,7 +72,7 @@ public class AdminTransferExceptionLogController extends BaseController {
     @GetMapping("/getTransferExceptionLogByUUID/{uuid}")
     public TransferExceptionLogResponse getTransferExceptionLogByUUID(@PathVariable String uuid){
         TransferExceptionLogResponse response=new TransferExceptionLogResponse();
-        TransferExceptionLog transferExceptionLog=adminTransferExceptionLogService.getTransferExceptionLogByUUID(uuid);
+        TransferExceptionLog transferExceptionLog=transferExceptionLogService.getTransferExceptionLogByUUID(uuid);
         if (Validator.isNotNull(transferExceptionLog)){
             response.setResult(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLogVO.class));
         }
@@ -84,7 +84,7 @@ public class AdminTransferExceptionLogController extends BaseController {
     public boolean transferAfter(@RequestBody JSONObject jsonObject){
         boolean ret = false;
         try {
-            ret = adminTransferExceptionLogService.transferAfter(jsonObject);
+            ret = transferExceptionLogService.transferAfter(jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
         }

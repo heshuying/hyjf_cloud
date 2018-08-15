@@ -32,7 +32,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.service.BankMerchantAccountService;
 import com.hyjf.admin.service.HjhCommissionService;
-import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
@@ -91,7 +91,7 @@ public class HjhCommissionController extends BaseController{
     private BankMerchantAccountService bankMerchantAccountService;
     
     @Autowired
-    private TransferExceptionLogService transferLogService;
+    private AdminTransferExceptionLogService transferLogService;
     
 	@Autowired
 	private SystemConfig systemConfig;

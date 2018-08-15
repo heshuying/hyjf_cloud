@@ -120,7 +120,7 @@ public class WebBankOpenController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
-    @RequestMapping("/bgReturn")
+    @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
@@ -134,7 +134,7 @@ public class WebBankOpenController extends BaseUserController {
      * @Author sunss
      */
     @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
-    @RequestMapping("/seachFiledMess")
+    @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
