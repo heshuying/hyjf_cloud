@@ -173,8 +173,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/userAuthCreditBgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthCreditBgreturn")
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_2);
         return result;
     }
