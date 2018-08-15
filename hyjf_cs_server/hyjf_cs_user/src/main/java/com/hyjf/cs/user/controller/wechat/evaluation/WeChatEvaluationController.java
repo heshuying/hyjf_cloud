@@ -27,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WeChatEvaluationController, v0.1 2018/7/3 19:24
  */
-@Api(value = "weChat端风险测评接口",tags = "weChat端风险测评接口")
+@Api(value = "weChat端-风险测评接口",tags = "weChat端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/financiaadvisor")
@@ -76,7 +76,7 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "计算测评结果",notes = "计算测评结果")
     @PostMapping(value = "/sumitResult.do")
-    public WXBaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, FinancialAdvisorSumitQO qo) {
+    public WXBaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"
