@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +54,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第一页面接口数据获取", notes = "app运营数据第一页面接口数据获取")
-	@RequestMapping("/getPlatformRealTimeData")
+	@GetMapping ("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
 		Calendar cal = Calendar.getInstance();
@@ -126,7 +127,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第二页面和第三页面数据统计", notes = "app运营数据第二页面和第三页面数据统计")
-	@RequestMapping("/getLoanInvestData")
+	@GetMapping("/getLoanInvestData")
 	@ResponseBody
 	public JSONObject getLoanInvestData() {
 		JSONObject result = new JSONObject();
@@ -196,7 +197,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第四页面数据统计", notes = "app运营数据第四页面数据统计")
-	@RequestMapping("/getInvestorRegionData")
+	@GetMapping("/getInvestorRegionData")
 	@ResponseBody
 	public JSONObject getInvestorRegionData() {
 		JSONObject result = new JSONObject();
@@ -235,7 +236,7 @@ public class OperationalDataController {
 	 */
 
 	@ApiOperation(value = "app运营数据第五页面数据统计", notes = "app运营数据第五页面数据统计")
-	@RequestMapping("/getInvestorSexAgeData")
+	@GetMapping("/getInvestorSexAgeData")
 	@ResponseBody
 	public JSONObject getSexAgeData() {
 		JSONObject result = new JSONObject();
