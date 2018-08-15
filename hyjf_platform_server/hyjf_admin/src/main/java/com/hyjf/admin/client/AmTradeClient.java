@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -1787,6 +1788,14 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
+
+    /**
+     * 资金中心 - 充值管理
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
      *

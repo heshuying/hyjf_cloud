@@ -3,6 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.account;
 
+
+import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -25,4 +29,20 @@ public interface AccountRecharge {
      * @return
      */
     List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> getAccountRechargeByUserId(Integer userId);
+
+    /**
+     * 资金中心 - 充值管理 - 获取充值列表条数
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    Integer getAccountRechargeListCount(AccountRechargeRequest request);
+
+    /**
+     * 资金中心 - 充值管理 - 获取充值列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    List<AccountRechargeVO> getAccountRechargeList(AccountRechargeRequest request);
 }
