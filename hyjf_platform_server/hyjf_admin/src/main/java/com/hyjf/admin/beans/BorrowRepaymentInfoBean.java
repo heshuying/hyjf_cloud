@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
@@ -10,17 +11,17 @@ import java.util.List;
  * @version BorrowRepaymentInfoBean, v0.1 2018/7/7 14:19
  */
 public class BorrowRepaymentInfoBean {
-    private List<HjhInstConfigVO> hjhInstConfigList;
+    private List<DropDownVO> hjhInstConfigList;
 
     private List<BorrowRepaymentInfoCustomizeVO> recordList;
     private BorrowRepaymentInfoCustomizeVO sumObject;
     private Integer total;
 
-    public List<HjhInstConfigVO> getHjhInstConfigList() {
+    public List<DropDownVO> getHjhInstConfigList() {
         return hjhInstConfigList;
     }
 
-    public void setHjhInstConfigList(List<HjhInstConfigVO> hjhInstConfigList) {
+    public void setHjhInstConfigList(List<DropDownVO> hjhInstConfigList) {
         this.hjhInstConfigList = hjhInstConfigList;
     }
 

@@ -3,19 +3,20 @@
  */
 package com.hyjf.cs.market.controller.batch;
 
-import java.util.Calendar;
-
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.market.service.StatisticsOperationReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.market.service.StatisticsOperationReportService;
+import java.util.Calendar;
 
 /**
  * @author fuqiang
  * @version StatisticsOperationReportController, v0.1 2018/7/18 9:54
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-market/statisticsoperationreport")
 public class StatisticsOperationReportController extends BaseController {

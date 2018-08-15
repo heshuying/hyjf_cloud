@@ -11,12 +11,14 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRepaymentService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -68,10 +70,10 @@ public class BorrowRepaymentController extends BaseController {
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentBean bean = borrowRepaymentService.searchBorrowRepayment(copyForm);
         List<BorrowStyleVO> repayTypeList = this.adminCommonService.selectBorrowStyleList();
-        bean.setRepayTypeList(repayTypeList);
+        bean.setRepayTypeList(ConvertUtils.convertListToDropDown(repayTypeList,"name","title"));
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentService.selectHjhInstConfigByInstCode("-1");
-        bean.setHjhInstConfigList(hjhInstConfigList);
+        bean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"instCode","instName"));
         AdminResult<BorrowRepaymentBean> result=new AdminResult<BorrowRepaymentBean> ();
         result.setData(bean);
         return result;

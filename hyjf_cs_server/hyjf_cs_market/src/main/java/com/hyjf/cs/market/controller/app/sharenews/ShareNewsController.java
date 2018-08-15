@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @Date: 2018/7/26 16:29
  * @Description: ShareNewsController
  */
-@Api(tags = "app分享信息")
+@Api(tags = "app端-app分享信息")
 @RestController
 @RequestMapping("/hyjf-app/shareNews")
 public class ShareNewsController extends BaseMarketController {

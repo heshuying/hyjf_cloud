@@ -8,6 +8,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRepaymentInfoService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -64,8 +65,9 @@ public class BorrowRepaymentInfoController extends BaseController {
         BorrowRepaymentInfoRequset copyForm=new BorrowRepaymentInfoRequset();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentInfoBean bean = borrowRepaymentInfoService.selectBorrowRepaymentInfoListForView(copyForm);
+        // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentInfoService.selectHjhInstConfigByInstCode("-1");
-        bean.setHjhInstConfigList(hjhInstConfigList);
+        bean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"instCode","instName"));
         AdminResult<BorrowRepaymentInfoBean> result=new AdminResult<BorrowRepaymentInfoBean> ();
         result.setData(bean);
         return result;

@@ -16,15 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.text.SimpleDateFormat;
+
 import static com.hyjf.am.bean.result.BaseResult.FAIL_DESC;
-import static com.hyjf.am.response.Response.FAIL;
 
 /**
  * @author dangzw
  * @version AppContentArticleController, v0.1 2018/7/30 23:13
  */
-@Api(description = "APP端", tags = "APP端")
+@Api(tags = "app端-APP端文章详情")
 @RestController
 @RequestMapping(value = "/hyjf-app/find/contentArticle")
 

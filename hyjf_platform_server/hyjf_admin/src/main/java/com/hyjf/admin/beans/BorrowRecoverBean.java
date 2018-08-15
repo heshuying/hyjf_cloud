@@ -1,10 +1,10 @@
 package com.hyjf.admin.beans;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -12,22 +12,18 @@ import java.util.Map;
  */
 public class BorrowRecoverBean  {
 
-    private Map<String, String> loanStarusList;
+    private List<DropDownVO> loanStarusList;
     private List<HjhInstConfigVO> hjhInstConfigList;
     private BorrowRecoverCustomizeVO sumAccount;
     private List<BorrowRecoverCustomizeVO> recordList;
     private Integer total;
 
-    public Map<String, String> getLoanStarusList() {
+    public Object getLoanStarusList() {
         return loanStarusList;
     }
 
-    public void setLoanStarusList(Map<String, String> loanStarusList) {
+    public void setLoanStarusList(List<DropDownVO> loanStarusList) {
         this.loanStarusList = loanStarusList;
-    }
-
-    public List<HjhInstConfigVO> getHjhInstConfigList() {
-        return hjhInstConfigList;
     }
 
     public void setHjhInstConfigList(List<HjhInstConfigVO> hjhInstConfigList) {
