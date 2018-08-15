@@ -93,10 +93,10 @@ public class WebRegistController extends BaseUserController {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
         WebResult result = new WebResult();
         // 1. 参数检查
-//        registerRequest.setPlatform(CommonConstant.CLIENT_PC);
-//        String password = registerRequest.getPassword();
-//        password = RSAJSPUtil.rsaToPassword(password);
-//        registerRequest.setPassword(password);
+        registerRequest.setPlatform(CommonConstant.CLIENT_PC);
+        String password = registerRequest.getPassword();
+        password = RSAJSPUtil.rsaToPassword(password);
+        registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
