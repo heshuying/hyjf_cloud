@@ -18,12 +18,10 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +56,8 @@ public class AppBindCardController extends BaseUserController {
      * @param request
      * @return
      */
-    @PostMapping("/bind/smscode")
+    @GetMapping("/bind/smscode")
+    @ApiOperation(value = "绑卡发送验证码", tags = "绑卡发送验证码")
     public BaseResultBeanFrontEnd sendSmsCode(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         SendSmsResultBean result = new SendSmsResultBean();
 
@@ -138,7 +137,8 @@ public class AppBindCardController extends BaseUserController {
      * @param request
      * @return
      */
-    @PostMapping("/bind")
+    @GetMapping("/bind")
+    @ApiOperation(value = "用户绑卡", tags = "用户绑卡")
     public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
 
