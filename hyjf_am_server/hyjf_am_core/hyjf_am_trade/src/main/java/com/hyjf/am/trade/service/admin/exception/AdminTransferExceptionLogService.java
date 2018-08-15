@@ -4,10 +4,9 @@
 package com.hyjf.am.trade.service.admin.exception;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
 import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 
 import java.util.List;
 
@@ -21,28 +20,21 @@ public interface AdminTransferExceptionLogService {
      * @param request
      * @return
      */
-    List<AdminTransferExceptionLogCustomize> getRecordList(AdminTransferExceptionLogRequest request);
+    List<AdminTransferExceptionLogCustomize> getRecordList(TransferExceptionLogVO request);
 
     /**
      * 银行转账异常数
      * @param request
      * @return
      */
-    Integer getCountRecord(AdminTransferExceptionLogRequest request);
+    Integer getCountRecord(TransferExceptionLogVO request);
 
     /**
      * 更新银行转账信息
      * @param request
      * @return
      */
-    Integer updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
-
-    /**
-     * 更新银行转账信息
-     * @param transferExceptionLog
-     * @return
-     */
-    Integer updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+    Integer updateTransferExceptionLogByUUID(TransferExceptionLogVO request);
 
     /**
      * 获取银行转账异常通过uuid
