@@ -40,7 +40,7 @@ import java.util.Map;
  * @version AdminAccountDetailController, v0.1 2018/6/29 13:53
  */
 @RestController
-@RequestMapping("/am-trade/adminaccountdetail")
+@RequestMapping("/am-trade/adminAccountDetail")
 public class AdminAccountDetailController {
 
     @Autowired
@@ -48,7 +48,7 @@ public class AdminAccountDetailController {
 
     private static Logger logger = LoggerFactory.getLogger(AdminAccountDetailController.class);
 
-    @RequestMapping(value = "/accountdetaillist", method = RequestMethod.POST)
+    @RequestMapping(value = "/accountDetailList", method = RequestMethod.POST)
     public AccountDetailResponse accountDetailList(@RequestBody @Valid AccountDetailRequest request) {
         logger.info("---accountdetaillist by param---  " + JSONObject.toJSON(request));
         AccountDetailResponse response = new AccountDetailResponse();
@@ -110,7 +110,7 @@ public class AdminAccountDetailController {
      * 查询出还款后,交易明细有问题的用户ID
      * @return
      */
-    @GetMapping("/queryaccountdetailerroruserlist")
+    @GetMapping("/queryAccountDetailErrorUserList")
     public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
         AdminAccountDetailDataRepairResponse repairResponse = new AdminAccountDetailDataRepairResponse();
         String returnCode = Response.FAIL;
@@ -125,7 +125,7 @@ public class AdminAccountDetailController {
     }
 
     //查询交易明细最小的id
-    @GetMapping("/queryaccountdetailidbyuserid/{userId}")
+    @GetMapping("/queryAccountDetailByUserId/{userId}")
     public AdminAccountDetailDataRepairResponse queryAccountDetailIdByUserId(@PathVariable String userId) {
         AdminAccountDetailDataRepairResponse repairResponse = new AdminAccountDetailDataRepairResponse();
         String returnCode = Response.FAIL;
@@ -144,7 +144,7 @@ public class AdminAccountDetailController {
     }
 
     // 根据Id查询此条交易明细
-    @GetMapping("/selectaccountbyid/{accountId}")
+    @GetMapping("/selectAccountById/{accountId}")
     public AccountListResponse selectAccountById(@PathVariable String accountId) {
         AccountListResponse accountListResponse = new AccountListResponse();
         String returnCode = Response.FAIL;
@@ -163,27 +163,23 @@ public class AdminAccountDetailController {
     }
 
     // 查询此用户的下一条交易明细
-    @RequestMapping(value = "/selectnextaccountlist/{userID}/{accountId}", method = RequestMethod.POST)
-    public AccountListResponse selectNextAccountList(@PathVariable String userId, @PathVariable String accountId) {
+    @GetMapping(value = "/selectNextAccountList/{userId}/{accountId}")
+    public AccountListResponse selectNextAccountList(@PathVariable int userId, @PathVariable int accountId) {
         AccountListResponse accountListResponse = new AccountListResponse();
         String returnCode = Response.FAIL;
-        if (StringUtils.isNotBlank(accountId) && StringUtils.isNotBlank(userId)) {
-            int intAccount = Integer.parseInt(accountId);
-            int intUserId = Integer.parseInt(userId);
-            AccountList accountList = accountDetailService.selectNextAccountList(intAccount, intUserId);
-            if (null != accountList) {
-                AccountListVO accountListVO = new AccountListVO();
-                BeanUtils.copyProperties(accountList, accountListVO);
-                accountListResponse.setResult(accountListVO);
-                returnCode = Response.SUCCESS;
-            }
+        AccountList accountList = accountDetailService.selectNextAccountList(accountId, userId);
+        if (null != accountList) {
+            AccountListVO accountListVO = new AccountListVO();
+            BeanUtils.copyProperties(accountList, accountListVO);
+            accountListResponse.setResult(accountListVO);
+            returnCode = Response.SUCCESS;
         }
         accountListResponse.setRtn(returnCode);
         return accountListResponse;
     }
 
     // 根据查询用交易类型查询用户操作金额
-    @RequestMapping(value = "/selectaccounttradebyvalue/{tradeValue}", method = RequestMethod.POST)
+    @GetMapping(value = "/selectAccountTradeByValue/{tradeValue}")
     public AccountTradeResponse selectAccountTradeByValue(@PathVariable String tradeValue) {
         AccountTradeResponse accountTradeResponse = new AccountTradeResponse();
         String returnCode = Response.FAIL;
@@ -201,7 +197,7 @@ public class AdminAccountDetailController {
     }
 
     // 更新用户的交易明细
-    @RequestMapping(value = "/updateaccountlist", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateAccountList", method = RequestMethod.POST)
     public int selectAccountTradeByValue(@RequestBody @Valid AccountListRequest request) {
         return accountDetailService.updateAccountList(request);
     }
