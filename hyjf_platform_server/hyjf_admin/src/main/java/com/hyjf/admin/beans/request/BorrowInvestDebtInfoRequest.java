@@ -9,9 +9,14 @@ import java.io.Serializable;
 
 /**
  * @author wangjun
- * @version InvestorRequest, v0.1 2018/7/11 17:07
+ * @version BorrowInvestDebtInfoRequest, v0.1 2018/7/11 17:07
  */
-public class InvestorRequest implements Serializable {
+public class BorrowInvestDebtInfoRequest implements Serializable {
+    @ApiModelProperty(value = "开始时间")
+    private String startTime;
+
+    @ApiModelProperty(value = "结束时间")
+    private String endTime;
 
     @ApiModelProperty(value = "标的编号")
     private String borrowNid;
@@ -19,11 +24,21 @@ public class InvestorRequest implements Serializable {
     @ApiModelProperty(value = "用户ID")
     private String userId;
 
-    @ApiModelProperty(value = "投资订单号")
-    private String nid;
+    public String getStartTime() {
+        return startTime;
+    }
 
-    @ApiModelProperty(value = "邮箱")
-    private String email;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public String getBorrowNid() {
         return borrowNid;
@@ -39,21 +54,5 @@ public class InvestorRequest implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getNid() {
-        return nid;
-    }
-
-    public void setNid(String nid) {
-        this.nid = nid;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
