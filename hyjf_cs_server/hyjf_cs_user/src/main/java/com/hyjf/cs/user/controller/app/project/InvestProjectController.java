@@ -10,38 +10,12 @@
  */
 package com.hyjf.cs.user.controller.app.project;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectContractDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectContractRecoverPlanCustomizeVO;
-import com.hyjf.am.vo.app.AppProjectDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayDetailCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayListCustomizeVO;
-import com.hyjf.am.vo.app.AppRepayPlanListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderCreditRepayPlanListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
+import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
@@ -63,10 +37,28 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
-@Api(value = "app端我的资产",tags = "app端我的资产")
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Api(value = "app端-我的资产",tags = "app端-我的资产")
 @RestController
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {
@@ -329,7 +321,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -365,7 +357,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -591,7 +583,7 @@ public class InvestProjectController extends BaseUserController {
 	 * 
 	 * 不分期债转对应的 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -630,7 +622,7 @@ public class InvestProjectController extends BaseUserController {
 	 * 
 	 * 分期债转对应的 创建相应的还款信息分页
 	 * 
-	 * @param request
+	 * @param
 	 * @param info
 	 * @param form
 	 */
@@ -918,7 +910,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @author liuyang
 	 * @param form
 	 * @param request
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@PostMapping(value = InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION)
@@ -1015,7 +1007,7 @@ public class InvestProjectController extends BaseUserController {
 	/**
 	 * 适应客户端数据返回 - 投资中
 	 * 
-	 * @param appInvestListCustomizes
+	 * @param
 	 * @return
 	 */
 	private List<MyProjectVo> convertAppInvestListCustomizeToMyProjectVo(

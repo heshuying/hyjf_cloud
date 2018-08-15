@@ -43,7 +43,7 @@ public class WeChatSynBalanceController extends BaseUserController {
     @Autowired
     RequestUtil requestUtil;
 
-    @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
+    @ApiOperation(value = "我的-刷新", notes = "我的-刷新")
     @PostMapping(value = "/init")
     public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId) {
         logger.info("请求用户ID：" + userId);

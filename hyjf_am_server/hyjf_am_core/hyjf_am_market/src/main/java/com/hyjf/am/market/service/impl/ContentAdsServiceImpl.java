@@ -56,10 +56,9 @@ public class ContentAdsServiceImpl implements ContentAdsService {
             List<AdsVO> recordList = CommonUtils.convertBeanList(asdList, AdsVO.class);
             contentAdsBeanVO.setRecordList(recordList);
 
-            List<AdsType> adsTypeList = getAdsTypeList();
-            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
-            contentAdsBeanVO.setAdsTypeList(towList);
-            contentAdsBeanVOList.add(contentAdsBeanVO);
+//            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
+//            contentAdsBeanVO.setAdsTypeList(towList);
+//            contentAdsBeanVOList.add(contentAdsBeanVO);
 
             response.setResult(contentAdsBeanVO);
             response.setResultList(contentAdsBeanVOList);

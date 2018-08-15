@@ -262,7 +262,8 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         if (request != null) {
             ContentArticle contentArticle = new ContentArticle();
             BeanUtils.copyProperties(request, contentArticle);
-            contentArticleMapper.updateByPrimaryKey(contentArticle);
+            contentArticle.setUpdateTime(GetDate.getDate());
+            contentArticleMapper.updateByPrimaryKeySelective(contentArticle);
         }
     }
 

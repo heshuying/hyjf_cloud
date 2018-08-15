@@ -163,7 +163,7 @@ public class AppRechargeController extends BaseUserController {
      * @param
      * @return
      */
-    @ApiOperation(value = "app获取充值信息接口",notes = "app获取充值信息接口")
+    @ApiOperation(value = "获取充值信息接口",notes = "获取充值信息接口")
     @PostMapping(value = "/getQpRechargeInfo")
     public AppRechargeInfoResult getQpRechargeInfo(@RequestHeader(value = "userId")Integer userId,AppRechargeRequestBean requestBean){
         AppRechargeInfoResult result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
