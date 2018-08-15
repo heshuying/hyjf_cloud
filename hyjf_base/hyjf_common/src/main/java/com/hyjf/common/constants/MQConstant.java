@@ -87,6 +87,12 @@ public interface MQConstant {
 	String HJH_COUPON_REPAY_GROUP = "HJH_COUPON_REPAY_GROUP";
 	String HJH_COUPON_REPAY_TOPIC = "HJH_COUPON_REPAY_TOPIC";
 
+	/**
+	 * 体验金按收益期限还款
+	 */
+	String TYJ_COUPON_REPAY_GROUP = "TYJ_COUPON_REPAY_GROUP";
+	String TYJ_COUPON_REPAY_TOPIC = "TYJ_COUPON_REPAY_TOPIC";
+
 	/** ------------------------------- 优惠券相关 end ------------------------- end */
 
 

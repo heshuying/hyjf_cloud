@@ -1919,6 +1919,121 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
+
+	/**
+	 * 根据条件查询消息推送标签管理表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public MessagePushTagResponse getMessagePushTagList(MessagePushTagRequest request) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/searchList";
+		MessagePushTagResponse response = restTemplate.postForEntity(url,request,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse getMessagePushTag(Integer id) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/getRecord/" + id;
+		MessagePushTagResponse response = restTemplate.getForEntity(url,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse insretMessagePushTag(MessagePushTagRequest request) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/insertMessagePushTag";
+		MessagePushTagResponse response = restTemplate.postForEntity(url,request,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse updateMessagePushTag(MessagePushTagRequest tagRequest) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/updateMessagePushTag";
+		MessagePushTagResponse response = restTemplate.postForEntity(url,tagRequest,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse deleteMessagePushTag(Integer id) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/deleteMessagePushTag/" + id;
+		MessagePushTagResponse response = restTemplate.getForEntity(url,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse updatePushTag(MessagePushTagVO record) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/updatePushTag";
+		MessagePushTagResponse response = restTemplate.postForEntity(url,record,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTagResponse countByTagCode(Integer id, String tagCode) {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/countByTagCode/" + id + "/" + tagCode;
+		MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request) {
+		String url = "http://AM-CONFIG/am-config/messagePushTemplate/serachList";
+		MessagePushTemplateResponse response = restTemplate.postForEntity(url,request,MessagePushTemplateResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public List<MessagePushTagVO> getAllPushTagList() {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/getAllPushTagList";
+		MessagePushTagResponse response = restTemplate.getForEntity(url,MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public MessagePushTemplateResponse findMsgPushTemplateById(Integer id) {
+		String url = "http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplateById/" + id;
+		MessagePushTemplateResponse response = restTemplate.getForEntity(url,MessagePushTemplateResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public List<MessagePushTagVO> getTagList() {
+		String url = "http://AM-CONFIG/am-config/messagePushTag/getTagList";
+		MessagePushTagResponse response = restTemplate.getForEntity(url, MessagePushTagResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 	/**
 	 * 查询短信加固数据
 	 * @param request

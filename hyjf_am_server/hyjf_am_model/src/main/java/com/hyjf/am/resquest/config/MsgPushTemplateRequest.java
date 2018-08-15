@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
  * @author fuqiang
  * @version MsgPushTemplateRequest, v0.1 2018/6/26 9:34
  */
-public class MsgPushTemplateRequest extends Request implements Serializable {
+public class MsgPushTemplateRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 9183336360106479183L;
 
     private Integer id;
@@ -36,6 +37,12 @@ public class MsgPushTemplateRequest extends Request implements Serializable {
     private Integer templateAction;
 
     private String templateActionUrl;
+
+    private String templateActionUrl1;
+
+    private String templateActionUrl2;
+
+    private String templateActionUrl3;
 
     private Integer status;
 
@@ -173,5 +180,29 @@ public class MsgPushTemplateRequest extends Request implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTemplateActionUrl1() {
+        return templateActionUrl1;
+    }
+
+    public void setTemplateActionUrl1(String templateActionUrl1) {
+        this.templateActionUrl1 = templateActionUrl1;
+    }
+
+    public String getTemplateActionUrl2() {
+        return templateActionUrl2;
+    }
+
+    public void setTemplateActionUrl2(String templateActionUrl2) {
+        this.templateActionUrl2 = templateActionUrl2;
+    }
+
+    public String getTemplateActionUrl3() {
+        return templateActionUrl3;
+    }
+
+    public void setTemplateActionUrl3(String templateActionUrl3) {
+        this.templateActionUrl3 = templateActionUrl3;
     }
 }

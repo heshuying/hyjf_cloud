@@ -27,6 +27,11 @@ public interface CouponRecoverCustomizeMapper {
      */
     List<CouponTenderCustomize> selectCouponRecoverAll(Map<String, Object> paramMap);
 
+    /**
+     * 根据订单编号取得该订单的还款列表
+     * @param paramMap
+     * @return
+     */
     CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> paramMap);
 
     /**

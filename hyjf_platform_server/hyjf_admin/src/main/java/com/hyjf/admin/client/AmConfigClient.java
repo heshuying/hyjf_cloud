@@ -1206,6 +1206,82 @@ public interface AmConfigClient {
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 
 	/**
+	 * 根据条件查询消息推送标签管理表
+	 * @param request
+	 * @return
+	 */
+    MessagePushTagResponse getMessagePushTagList(MessagePushTagRequest request);
+
+	/**
+	 * 根据id查询消息推送标签详情
+	 * @param id
+	 * @return
+	 */
+	MessagePushTagResponse getMessagePushTag(Integer id);
+
+	/**
+	 * 添加标签信息
+	 * @param request
+	 * @return
+	 */
+	MessagePushTagResponse insretMessagePushTag(MessagePushTagRequest request);
+
+	/**
+	 * 修改标签信息
+	 * @param tagRequest
+	 * @return
+	 */
+    MessagePushTagResponse updateMessagePushTag(MessagePushTagRequest tagRequest);
+
+	/**
+	 * 删除信息
+	 * @param id
+	 * @return
+	 */
+	MessagePushTagResponse deleteMessagePushTag(Integer id);
+
+	/**
+	 * 修改信息
+	 * @param record
+	 * @return
+	 */
+    MessagePushTagResponse updatePushTag(MessagePushTagVO record);
+
+	/**
+	 * 检查标签编码是否唯一
+	 *
+	 * @param id
+	 * @param tagCode
+	 */
+	MessagePushTagResponse countByTagCode(Integer id, String tagCode);
+
+	/**
+	 * 获取消息模板列表
+	 * @param request
+	 * @return
+	 */
+    MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request);
+
+	/**
+	 * 获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getAllPushTagList();
+
+	/**
+	 * 根据id获取模板
+	 * @param id
+	 * @return
+	 */
+    MessagePushTemplateResponse findMsgPushTemplateById(Integer id);
+
+	/**
+	 * 获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getTagList();
+
+	/**
 	 * 查询数据
 	 * @param request
 	 * @author xiehuili

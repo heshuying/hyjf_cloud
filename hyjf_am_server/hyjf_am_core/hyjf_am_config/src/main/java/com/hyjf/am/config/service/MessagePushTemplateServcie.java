@@ -41,4 +41,27 @@ public interface MessagePushTemplateServcie {
      * @param request
      */
     void insertMsgPushTemplate(MsgPushTemplateRequest request);
+
+    /**
+     * 获取查询模板条数
+     * @param request
+     * @return
+     */
+    Integer countRecord(MsgPushTemplateRequest request);
+
+    /**
+     * 获取列表
+     * @param request
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<MessagePushTemplate> searchList(MsgPushTemplateRequest request, int offset, int limit);
+
+    /**
+     * 根据id获取消息模板
+     * @param id
+     * @return
+     */
+    MessagePushTemplate findMsgPushTemplateById(Integer id);
 }

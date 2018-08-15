@@ -86,4 +86,54 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 		BeanUtils.copyProperties(request, messagePushTemplate);
 		templateMapper.insert(messagePushTemplate);
 	}
+
+	@Override
+	public Integer countRecord(MsgPushTemplateRequest request) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria criteria = example.createCriteria();
+		if (request.getTagId() != null) {
+			criteria.andTagIdEqualTo(request.getTagId());
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
+			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		return this.templateMapper.countByExample(example);
+	}
+
+	@Override
+	public List<MessagePushTemplate> searchList(MsgPushTemplateRequest request, int limitStart, int limitEnd) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+		if (request.getTagId() != null) {
+			criteria.andTagIdEqualTo(request.getTagId());
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
+			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		example.setOrderByClause("create_time DESC");
+		return this.templateMapper.selectByExample(example);
+	}
+
+	@Override
+	public MessagePushTemplate findMsgPushTemplateById(Integer id) {
+		MessagePushTemplate page = templateMapper.selectByPrimaryKey(id);
+		return page;
+	}
 }
