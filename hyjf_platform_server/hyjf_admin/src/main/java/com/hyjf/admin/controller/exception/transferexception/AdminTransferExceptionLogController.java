@@ -12,7 +12,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
-import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
@@ -48,10 +48,10 @@ import java.util.*;
 /**
  * 转账异常
  */
-@Api(value = "银行转账异常",tags = "银行转账异常")
+@Api(value = "admin异常中心-银行转账异常",tags = "admin异常中心-银行转账异常")
 @RestController
 @RequestMapping("/exception/transferexception")
-public class TransferExceptionLogController extends BaseController {
+public class AdminTransferExceptionLogController extends BaseController {
 
     /** 用户ID */
     private static final String USERID = "userId";
@@ -63,7 +63,7 @@ public class TransferExceptionLogController extends BaseController {
     private static final String PERMISSIONS = "transferexception";
 
     @Autowired
-    private TransferExceptionLogService transferLogService;
+    private AdminTransferExceptionLogService transferLogService;
 
     /**
      * 短信mq生产端
