@@ -348,28 +348,21 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
      * @param request
      * @return
      */
-    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(TransferExceptionLogVO request);
 
     /**
      * 更改银行转账信息
      * @param request
      * @return
      */
-    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
-
-    /**
-     * 更改银行转账信息
-     * @param transferExceptionLog
-     * @return
-     */
-    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO request);
 
     /**
      * 通过uuid银行转账异常

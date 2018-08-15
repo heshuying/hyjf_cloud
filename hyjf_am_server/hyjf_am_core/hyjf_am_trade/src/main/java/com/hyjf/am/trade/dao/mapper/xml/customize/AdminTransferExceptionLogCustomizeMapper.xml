@@ -24,7 +24,7 @@
 	</resultMap>
 	<sql id="Where_Clause">
 		<where>
-			el.del_flg = 0
+			el.del_flag = 0
 			AND el.`status` <![CDATA[<>]]> 0
 			<if test="orderId != null and orderId != ''">
 				AND el.order_id LIKE CONCAT('%', #{orderId}, '%')
@@ -95,7 +95,7 @@
 	    SELECT
 			count(1)
 		FROM ht_transfer_exception_log el
-		     LEFT JOIN ht_t_user u ON u.user_id = el.user_id
+		     LEFT JOIN ht_r_user u ON u.user_id = el.user_id
 		<include refid="Where_Clause" />
 	</select>
 	

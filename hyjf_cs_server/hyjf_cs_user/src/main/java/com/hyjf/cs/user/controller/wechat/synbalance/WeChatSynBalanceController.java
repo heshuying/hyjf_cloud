@@ -30,7 +30,7 @@ import java.text.DecimalFormat;
  * @author wangjun
  * @version WeChatSynBalanceController, v0.1 2018/7/31 9:19
  */
-@Api(value = "wechat端我的-刷新按钮", tags = "wechat端我的-刷新按钮")
+@Api(value = "weChat端-我的刷新按钮", tags = "weChat端-我的刷新按钮")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/bank/user/synbalance")
 public class WeChatSynBalanceController extends BaseUserController {
@@ -44,7 +44,7 @@ public class WeChatSynBalanceController extends BaseUserController {
     RequestUtil requestUtil;
 
     @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
-    @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/init")
     public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId) {
         logger.info("请求用户ID：" + userId);
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();

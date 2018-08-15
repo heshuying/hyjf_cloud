@@ -63,6 +63,8 @@ public class WeChatPassWordController {
             return ret;
         }
         passWordService.updatePassWd(user,newPassword);
+        ret.put("status", "000");
+        ret.put("statusDesc", "修改密码成功");
         return ret;
     }
 
@@ -155,6 +157,7 @@ public class WeChatPassWordController {
      * @param sendSmsVO
      * @return
      */
+    @ApiOperation(value = "微信端获取短信验证码",notes = "微信端获取短信验证码")
     @PostMapping(value = "/wx/user/resetpwd/sendVerificationCode.do")
     public JSONObject sendVerificationCode(SendSmsVO sendSmsVO) {
         return passWordService.sendCode(sendSmsVO);
@@ -167,7 +170,8 @@ public class WeChatPassWordController {
      * @param sendSmsVo
      * @return
      */
-    @RequestMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
+    @ApiOperation(value = "微信端验证短信验证码",notes = "微信端验证短信验证码")
+    @PostMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
     public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo) {
         return passWordService.validateVerificationCoden(sendSmsVo,false);
     }

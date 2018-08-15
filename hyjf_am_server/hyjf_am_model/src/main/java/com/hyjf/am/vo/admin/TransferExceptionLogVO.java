@@ -1,4 +1,7 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.am.vo.admin;
+
+import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,7 +11,7 @@ import java.util.Date;
  * @author jijun
  * @version AdminTransferExceptionLogRequest, v0.1 2018/07/10
  */
-public class AdminTransferExceptionLogRequest implements Serializable {
+public class TransferExceptionLogVO extends BaseVO implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -18,13 +21,11 @@ public class AdminTransferExceptionLogRequest implements Serializable {
 	 * 转账订单号
 	 */
 	private String orderId;
-	/**
-	 * 用户名
-	 */
+
+	@ApiModelProperty(value = "用户名")
 	private String username;
-	/**
-	 * 交易类型
-	 */
+
+	@ApiModelProperty(value = "交易类型")
 	private String tradeType;
 	/**
 	 * 检索条件 有效时间开始
@@ -60,6 +61,24 @@ public class AdminTransferExceptionLogRequest implements Serializable {
 	private String accountId;
 
 	private String seqNo;
+
+	private String cusId;
+
+	private String acctId;
+
+	private Integer userId;
+
+	private String remark;
+
+	private Integer delFlag;
+
+	private String addUser;
+
+	private String updateUser;
+
+	private Date addTime;
+
+	private Date updateTime;
 
 	public String getContent() {
 		return content;
@@ -196,38 +215,6 @@ public class AdminTransferExceptionLogRequest implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-
-	private String cusId;
-
-	private String acctId;
-
-	private Integer userId;
-
-	private String remark;
-
-	private Integer delFlag;
-
-	private String addUser;
-
-	private String updateUser;
-
-	private Date addTime;
-
-	private Date updateTime;
-
-	/**
-	 * 分页功能
-	 */
-	public int limit;
-
-	private int paginatorPage = 1;
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-
 
 	public String getOrderId() {
 		return orderId;

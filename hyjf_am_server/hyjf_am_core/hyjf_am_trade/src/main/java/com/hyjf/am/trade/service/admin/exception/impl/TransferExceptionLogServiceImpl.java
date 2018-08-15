@@ -5,17 +5,16 @@ package com.hyjf.am.trade.service.admin.exception.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
+import com.hyjf.am.trade.service.admin.exception.TransferExceptionLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
@@ -32,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -40,7 +42,7 @@ import java.util.*;
  * @version AdminTransferExceptionLogServiceImpl, v0.1 2018/7/10 11:31
  */
 @Service
-public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implements AdminTransferExceptionLogService {
+public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements TransferExceptionLogService {
 
     /** 用户ID */
     private static final String USERID = "userId";
@@ -55,7 +57,7 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
      * @return
      */
     @Override
-    public List<AdminTransferExceptionLogCustomize> getRecordList(AdminTransferExceptionLogRequest request) {
+    public List<AdminTransferExceptionLogCustomize> getRecordList(TransferExceptionLogVO request) {
         Map<String, Object> paraMap = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(request.getOrderId())){
             paraMap.put("orderId", request.getOrderId());
@@ -82,7 +84,7 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
      * @return
      */
     @Override
-    public Integer getCountRecord(AdminTransferExceptionLogRequest request) {
+    public Integer getCountRecord(TransferExceptionLogVO request) {
         Map<String, Object> paraMap = new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(request.getOrderId())){
             paraMap.put("orderId", request.getOrderId());
@@ -109,20 +111,10 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
      * @return
      */
     @Override
-    public Integer updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request) {
+    public Integer updateTransferExceptionLogByUUID(TransferExceptionLogVO request) {
         TransferExceptionLogWithBLOBs target = new TransferExceptionLogWithBLOBs();
         BeanUtils.copyProperties(request, target);
         return transferExceptionLogMapper.updateByPrimaryKeySelective(target);
-    }
-
-    /**
-     * 更新银行卡信息
-     * @param transferExceptionLog
-     * @return
-     */
-    @Override
-    public Integer updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog) {
-        return transferExceptionLogMapper.updateByPrimaryKey(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLog.class));
     }
 
     /**
@@ -457,7 +449,7 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
         }
 
 
-        logger.info(AdminTransferExceptionLogServiceImpl.class.toString(), "transferAfter", "-----------重新执行还款结束---"+ borrowTender.getBorrowNid() +"---------"+recover.getTransferId()+"---------------");
+        logger.info(TransferExceptionLogServiceImpl.class.toString(), "transferAfter", "-----------重新执行还款结束---"+ borrowTender.getBorrowNid() +"---------"+recover.getTransferId()+"---------------");
 
         return true;
     }

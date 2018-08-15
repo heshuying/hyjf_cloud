@@ -599,7 +599,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth jijun
      */
     @Override
-    public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
+    public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response = restTemplate.postForEntity(url, request, AdminTransferExceptionLogResponse.class).getBody();
         return response;
@@ -613,7 +613,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth jijun
      */
     @Override
-    public Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request) {
+    public Integer getAdminTransferExceptionLogCustomizeCountRecord(TransferExceptionLogVO request) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/getCountRecord";
         return restTemplate.postForEntity(url, request, Integer.class).getBody();
     }
@@ -626,23 +626,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth jijun
      */
     @Override
-    public int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request) {
+    public int updateTransferExceptionLogByUUID(TransferExceptionLogVO request) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
         return restTemplate.postForEntity(url, request, Integer.class).getBody();
     }
 
-    /**
-     * 更新银行转账信息
-     *
-     * @param transferExceptionLog
-     * @return
-     * @auth jijun
-     */
-    @Override
-    public int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID1";
-        return restTemplate.postForEntity(url, transferExceptionLog, Integer.class).getBody();
-    }
 
     /**
      * 获取银行转账异常通过uuid

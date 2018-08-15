@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.service.home;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
+import com.hyjf.cs.trade.bean.WechatPlanBorrowResultBean;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,7 +40,7 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/30 11:09
      */
-    public HjhPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize);
+    public WechatPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize);
 
     /**
      * 获取计划标的加入记录

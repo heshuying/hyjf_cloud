@@ -4,11 +4,10 @@
 package com.hyjf.am.trade.service.front.coupon;
 
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -162,7 +161,7 @@ public interface CouponConfigService {
      * @Param transferExceptionLog
      * @return
      */
-    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+    Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog);
 
     /**
      * @Author walter.limeng

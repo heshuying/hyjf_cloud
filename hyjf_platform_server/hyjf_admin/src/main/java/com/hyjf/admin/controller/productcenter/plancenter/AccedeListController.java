@@ -498,7 +498,7 @@ public class AccedeListController extends BaseController{
 			form.setAccedeOrderIdSrch(planOrderId);
 			// 调用
 			List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
-			if(resultList.size()>0){
+			if(CollectionUtils.isNotEmpty(resultList) && resultList.size()>0){
 				AccedeListCustomizeVO accede = resultList.get(0);
 				if(accede != null){
 					jsonObject.put("accedeOrderId", accede.getPlanOrderId());
@@ -509,6 +509,8 @@ public class AccedeListController extends BaseController{
 					jsonObject.put("orderStatus", accede.getOrderStatus());
 					jsonObject.put("createTime", accede.getCreateTime());
 				}
+			} else {
+				jsonObject.put("error", "该计划订单号查询的记录不存在！" + planOrderId);
 			}
 		}
 		// 查询用户信息放到画面上
@@ -575,16 +577,31 @@ public class AccedeListController extends BaseController{
 			// 原发送旧协议 
 			msg = this.resendMessageAction(String.valueOf(userid), planOrderId, debtPlanNid, email);
 		}
-		if (msg == null) {
+		if("用户不存在".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if ("用户邮箱不存在".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if ("系统异常".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if("发送状态已修改".equals(msg)){
 			jsonObject.put("result", "操作完成");
 			jsonObject.put("status", "success");
+		}
+/*		if (msg == null && "发送状态已修改".equals(msg)) {
+
 		} else if (!"系统异常".equals(msg)) {
 			jsonObject.put("result", msg);
 			jsonObject.put("status", "error");
 		} else {
 			jsonObject.put("result", "异常纪录，请刷新后后重试");
 			jsonObject.put("status", "error");
-		}
+		}*/
     	return jsonObject;
     }
 
@@ -658,14 +675,13 @@ public class AccedeListController extends BaseController{
 				if(flg> 0 ){
 					return "发送状态已修改";
 				}
-				return null; 
 			} else {
 				return "系统异常";
 			}
 		} catch (Exception e) {
 			_log.info(AccedeListController.class.getName(), "sendMail", e);
 		}
-		return "系统异常";
+		return "";
     }
     
 	/**
@@ -745,26 +761,27 @@ public class AccedeListController extends BaseController{
 					if(flg> 0 ){
 						return "发送状态已修改";
 					}
-					return null;
+					/*return null;*/
 				}
 			} else {
-				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。");
-				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。";
+				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败");
+				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败";
 			}
 		} catch (Exception e) {
 			_log.info(AccedeListController.class.getName(), "sendMail", e);
+			return "系统异常";
 		}
-		return "系统异常";
+		return "";
     }
     
 	/**
-	 * 带参跳转投资明细列表初始化下拉菜单   已测试
+	 * 带参跳转投资明细列表初始化下拉菜单   直接带参数请求汇直投的投资明细接口
 	 * 
 	 * @param request
 	 * @param form
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+/*	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转投资明细列表初始化以及查询")
 	@PostMapping(value = "/tenderinfo")
 	@ResponseBody
@@ -792,7 +809,7 @@ public class AccedeListController extends BaseController{
         Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
-	}
+	}*/
 
 	/**
 	 * PDF脱敏图片预览     已测试
