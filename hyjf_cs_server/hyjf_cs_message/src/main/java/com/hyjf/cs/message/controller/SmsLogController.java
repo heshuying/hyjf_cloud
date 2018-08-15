@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.SmsLogResponse;
 import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.SmsOntimeVO;
@@ -72,6 +73,21 @@ public class SmsLogController extends BaseController {
 		if (!CollectionUtils.isEmpty(list)) {
 			List<SmsOntimeVO> voList = CommonUtils.convertBeanList(list, SmsOntimeVO.class);
 			response.setResultList(voList);
+		}
+		return response;
+	}
+
+	/**
+	 * 查询条件查询短信记录列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/query_log_count")
+	public SmsLogResponse queryLogCount(SmsLogRequest request) {
+		SmsLogResponse response = new SmsLogResponse();
+		Integer logCount = smsLogService.queryLogCount(request);
+		if (logCount != null) {
+			response.setLogCount(logCount);
 		}
 		return response;
 	}

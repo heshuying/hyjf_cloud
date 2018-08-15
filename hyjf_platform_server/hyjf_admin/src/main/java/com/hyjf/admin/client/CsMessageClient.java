@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
@@ -193,4 +194,11 @@ public interface CsMessageClient {
      * @return
      */
     SmsOntimeResponse queryTime(SmsLogRequest request);
+
+    /**
+     * 条件查询短信记录列表
+     * @param requestBean
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequestBean requestBean);
 }

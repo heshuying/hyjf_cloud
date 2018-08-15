@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -57,7 +58,6 @@ public class SmsLogServiceImpl implements SmsLogService {
 		int pageSize = request.getPageSize();
 		int limitStart = (currPage - 1) * pageSize;
 		int limitEnd = limitStart + pageSize;
-		query.addCriteria(criteria);
 		query.skip(limitStart).limit(limitEnd);
 		return smsLogDao.find(query);
 	}
@@ -92,5 +92,36 @@ public class SmsLogServiceImpl implements SmsLogService {
 		query.addCriteria(criteria);
 		query.skip(limitStart).limit(limitEnd);
 		return smsOntimeMongoDao.find(query);
+	}
+
+	@Override
+	public Integer queryLogCount(SmsLogRequest request) {
+		String mobile = request.getMobile();
+		String postTimeBegin = request.getPostTimeBegin();
+		String postTimeEnd = request.getPostTimeEnd();
+		Integer status = request.getStatus();
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotBlank(mobile)) {
+			criteria.and("mobile").regex(mobile);
+		}
+		if (StringUtils.isNotBlank(postTimeBegin)) {
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
+			criteria.and("posttime").gte(begin);
+		}
+		if (StringUtils.isNotBlank(postTimeEnd)) {
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
+			criteria.and("posttime").lte(end);
+		}
+		if (status != 2) {
+			criteria.and("status").is(status);
+		}
+		query.addCriteria(criteria);
+		List<SmsLog> list = smsLogDao.find(query);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		} else {
+			return 0;
+		}
 	}
 }

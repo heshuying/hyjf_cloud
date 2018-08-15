@@ -1928,6 +1928,15 @@ public class AmUserClientImpl implements AmUserClient {
 		return "";
 	}
 
+	@Override
+	public UserVO getUserByMobile(String mobile) {
+		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 	/**
 	 * 线下修改信息同步查询列表count
 	 * @auth sunpeikai

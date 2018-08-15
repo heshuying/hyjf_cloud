@@ -27,4 +27,11 @@ public interface SmsLogService {
      * @return
      */
     List<SmsOntime> queryTime(SmsLogRequest request);
+
+    /**
+     *查询条件查询短信记录列表
+     * @param request
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequest request);
 }

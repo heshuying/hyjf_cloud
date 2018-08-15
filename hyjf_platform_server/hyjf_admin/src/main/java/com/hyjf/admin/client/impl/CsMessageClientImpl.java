@@ -4,6 +4,7 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
@@ -274,4 +275,15 @@ public class  CsMessageClientImpl  implements CsMessageClient {
         return null;
     }
 
+    @Override
+    public Integer queryLogCount(SmsLogRequestBean requestBean) {
+        SmsLogResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/sms_log/query_log_count",
+                        requestBean, SmsLogResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getLogCount();
+        }
+        return 0;
+    }
 }
