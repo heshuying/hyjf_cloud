@@ -57,7 +57,7 @@ public class AppLoginController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "登录", notes = "登录")
-    @RequestMapping(value = "/loginInAction")
+    @PostMapping(value = "/loginInAction")
     public JSONObject loginInAction(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/loginInAction");

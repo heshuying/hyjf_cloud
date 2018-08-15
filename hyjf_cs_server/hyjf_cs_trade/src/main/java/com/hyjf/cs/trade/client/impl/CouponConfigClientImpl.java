@@ -9,9 +9,8 @@ import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
-import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -118,7 +117,7 @@ public class CouponConfigClientImpl implements CouponConfigClient {
     }
 
     @Override
-    public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+    public Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog) {
         TransferExceptionLogResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/couponConfig/insertTransferexloghjh" ,transferExceptionLog, TransferExceptionLogResponse.class).getBody();
         if (response != null) {
             return response.getFlag();

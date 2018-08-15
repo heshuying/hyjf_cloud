@@ -37,5 +37,5 @@ public interface BankCardExceptionService extends BaseService {
      * @param
      * @return
      */
-    String updateAccountBankByUserId(Integer userId);
+    String updateAccountBankByUserId(BankCardExceptionRequest request);
 }

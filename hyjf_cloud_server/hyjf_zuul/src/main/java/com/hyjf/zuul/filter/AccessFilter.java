@@ -376,8 +376,6 @@ public class AccessFilter extends ZuulFilter {
 			String accountId = appUserToken.getAccountId();
 			// 需要刷新 sign
 			SecretUtil.refreshSign(sign);
-			request.setAttribute("userId", userId);
-			request.setAttribute("accountId", accountId);
 			ctx.addZuulRequestHeader("userId", userId + "");
 			ctx.addZuulRequestHeader("accountId", accountId);
 		} else {
