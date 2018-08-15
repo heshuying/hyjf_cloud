@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
@@ -22,6 +23,7 @@ import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
@@ -2030,5 +2032,19 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public void openAction(MailTemplateRequest request) {
 		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/open_action", request,
 				Object.class);
+	}
+
+	/**
+	 * 获取充值银行卡列表
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public List<BanksConfigVO> getBankcardList() {
+		BanksConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigList", BanksConfigResponse.class).getBody();
+		if (Validator.isNotNull(response)){
+			return response.getResultList();
+		}
+		return null;
 	}
 }
