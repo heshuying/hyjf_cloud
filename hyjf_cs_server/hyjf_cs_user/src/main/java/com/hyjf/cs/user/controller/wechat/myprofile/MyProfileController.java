@@ -16,6 +16,7 @@ import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class MyProfileController extends BaseUserController {
     @Autowired
     private SystemConfig systemConfig;
 
-
+    @ApiOperation(value = "查询用户账户信息", notes = "查询用户账户信息")
     @GetMapping("/profile")
     public WeChatResult myProfile(@RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
@@ -89,6 +90,7 @@ public class MyProfileController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
