@@ -23,7 +23,6 @@ import java.util.List;
 @Api(value = "app端-邀请记录",tags = "app端-邀请记录")
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/hyjf-app//user/reward")
 public class AppInviteController {
     @Autowired
     InviteService inviteService;
@@ -31,7 +30,7 @@ public class AppInviteController {
     /**
      * 邀请记录
      */
-    @PostMapping("/inviteRecord")
+    @PostMapping("/hyjf-app/user/reward/inviteRecord")
     @ApiOperation(value = "邀请记录", notes = "邀请记录")
     public JSONObject inviteList(@RequestParam(value = "currentPage", defaultValue = "1") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
