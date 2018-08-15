@@ -58,6 +58,10 @@ public class BankCardExceptionServiceImpl extends BaseAdminServiceImpl implement
      */
     @Override
     public String updateAccountBankByUserId(Integer userId) {
-        return null;
+        List<BankConfigVO> bankConfigVOList = amConfigClient.selectBankConfigList();
+        BankCardExceptionRequest request = new BankCardExceptionRequest();
+        request.setUserId(String.valueOf(userId));
+        request.setBankConfigVOList(bankConfigVOList);
+        return amUserClient.updateAccountBankByUserId(request);
     }
 }
