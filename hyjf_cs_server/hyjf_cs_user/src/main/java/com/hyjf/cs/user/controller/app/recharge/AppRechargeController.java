@@ -176,7 +176,8 @@ public class AppRechargeController extends BaseUserController {
         resultBean.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
         resultBean.setOtherUrl(systemConfig.webHost + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
 
-        String key = requestBean.getKey();
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(requestBean.getSign());
         if (StringUtils.isEmpty(key)) {
             result.setStatus(CustomConstants.SIGN_ERROR);
             result.setStatusDesc("获取数据加密秘钥失败");
