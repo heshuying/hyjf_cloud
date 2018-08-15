@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmMarketClient;
-import com.hyjf.admin.client.ContentAdsClient;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
@@ -38,5 +37,10 @@ public class ContentAdsServiceImpl implements ContentAdsService {
     @Override
     public ContentAdsResponse deleteById(Integer id) {
         return amMarketClient.deleteById(id);
+    }
+
+    @Override
+    public ContentAdsResponse adsTypeList() {
+        return amMarketClient.getAdsTypeList();
     }
 }
