@@ -1,17 +1,11 @@
-package com.hyjf.cs.message.bean.mc;
-
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serializable;
+package com.hyjf.am.vo.admin;
 
 /**
- * 消息推送-发送的消息接收记录表
- * @author xiasq
- * @version MessagePushMsgHistory, v0.1 2018/5/4 10:48
+ * @author lisheng
+ * @version MessagePushMsgHistoryVO, v0.1 2018/8/14 20:08
  */
 
-@Document(collection = "ht_message_push_history")
-public class MessagePushMsgHistory implements Serializable {
+public class MessagePushMsgHistoryVO {
     private Integer id;
 
     private Integer tagId;
@@ -363,6 +357,4 @@ public class MessagePushMsgHistory implements Serializable {
     public void setMsgJpushTestId(String msgJpushTestId) {
         this.msgJpushTestId = msgJpushTestId == null ? null : msgJpushTestId.trim();
     }
-
-
 }

@@ -1,6 +1,8 @@
 package com.hyjf.cs.message.mongo.mc;
 
+import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
@@ -119,5 +121,71 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 */
 	public void updateMsgPushMsgHistory(MessagePushMsgHistory msgHistory) {
 		mongoTemplate.save(msgHistory);
+	}
+
+	/**
+	 * 获取历史记录条数
+	 * @return
+	 */
+	public Integer countRecordList(MessagePushHistoryRequest form){
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
+			criteria.and("msgDestinationType").equals(form.getHistoryTagIdSrch());
+
+		}
+		if (StringUtils.isNotEmpty(form.getHistoryTitleSrch())) {
+			criteria.and("msgDestinationType").equals(form.getHistoryTitleSrch());
+		}
+		/*if (StringUtils.isNotEmpty(form.getHistoryCodeSrch())) {
+			criteria.andMsgCodeLike("%"+form.getHistoryCodeSrch()+"%");
+		}
+		if (StringUtils.isNotEmpty(form.getHistoryCreateUserNameSrch())) {
+			//	criteria.andCreateUserNameLike(form.getHistoryCreateUserNameSrch());
+			criteria.andMsgDestinationLike("%"+form.getHistoryCreateUserNameSrch()+"%");
+		}
+		if (StringUtils.isNotEmpty(form.getHistoryTerminalSrch())) {
+			criteria.andMsgTerminalLike(form.getHistoryTerminalSrch());
+		}
+		if (form.getHistorySendStatusSrch() != null) {
+			criteria.and("msgDestinationType").equals(form.getHistoryTagIdSrch());
+		}
+		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
+			try {
+				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getHistoryCreateUserNameSrch());
+				criteria.andSendTimeGreaterThanOrEqualTo(time);
+			} catch (Exception e) {
+			}
+		}
+		if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
+			try {
+				Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
+				criteria.andSendTimeLessThanOrEqualTo(time);
+			} catch (Exception e) {
+			}
+		}
+		if (form.getHistoryFirstReadTerminalSrch() != null) {
+			try {
+				criteria.andMsgFirstreadPlatEqualTo(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+			}
+		}
+		criteria.andMsgSendStatusNotEqualTo(CustomConstants.MSG_PUSH_SEND_STATUS_0);*/
+
+
+		Query query = new Query(criteria);
+		return (int)mongoTemplate.count(query,MessagePushMsgHistory.class);
+	}
+	/**
+	 * 获取历史记录信息
+	 * @param request
+	 * @return
+	 */
+	public List<MessagePushMsgHistory> getRecordList(MessagePushHistoryRequest request,Integer offset,Integer limit){
+		Criteria criteria = new Criteria();
+
+		Query query = new Query(criteria);
+		return mongoTemplate.find(query,MessagePushMsgHistory.class);
 	}
 }
