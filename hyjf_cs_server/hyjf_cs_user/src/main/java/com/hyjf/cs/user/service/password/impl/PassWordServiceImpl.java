@@ -230,8 +230,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     @Override
     public JSONObject weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
         JSONObject ret = new JSONObject();
-        oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
-        CheckUtil.check( StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
         checkPassword(newPassword);
         // 检查参数正确性
         if (Validator.isNull(userVO) || Validator.isNull(newPassword) || Validator.isNull(oldPassword)) {

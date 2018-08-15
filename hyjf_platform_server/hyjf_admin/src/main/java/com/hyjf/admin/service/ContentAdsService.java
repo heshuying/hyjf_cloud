@@ -18,4 +18,6 @@ public interface ContentAdsService {
 
     ContentAdsResponse deleteById(Integer id);
 
+    ContentAdsResponse adsTypeList();
+
 }

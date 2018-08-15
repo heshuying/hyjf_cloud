@@ -2,21 +2,16 @@ package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
-import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
-import java.util.List;
 
 /**
  * admin 异常中心-银行转账异常 Create by jijun 20180710
  * service接口定义
  */
-public interface TransferExceptionLogService extends BaseAdminService{
+public interface AdminTransferExceptionLogService extends BaseAdminService{
 
     /**
      * 
@@ -24,14 +19,14 @@ public interface TransferExceptionLogService extends BaseAdminService{
      * @author jijun
      * @return
      */
-	AdminTransferExceptionLogResponse getRecordList(AdminTransferExceptionLogRequest request);
+	AdminTransferExceptionLogResponse getRecordList(TransferExceptionLogVO request);
 
 	/**
 	 * 获取转账异常记录数
 	 * @author jijun
 	 * @return
 	 */
-	public Integer countRecord(AdminTransferExceptionLogRequest request);
+	public Integer countRecord(TransferExceptionLogVO request);
 
 
 	/**
@@ -39,14 +34,7 @@ public interface TransferExceptionLogService extends BaseAdminService{
 	 * @param request
 	 * @return
 	 */
-    int updateRecordByUUID(AdminTransferExceptionLogRequest request);
-
-	/**
-	 * 更新转账异常
-	 * @param transferExceptionLog
-	 * @return
-	 */
-    int updateRecordByUUID(TransferExceptionLogVO transferExceptionLog);
+    int updateRecordByUUID(TransferExceptionLogVO request);
 
 	/**
 	 * 获取银行转账异常通过uuid

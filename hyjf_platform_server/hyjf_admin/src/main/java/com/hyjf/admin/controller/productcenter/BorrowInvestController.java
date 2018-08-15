@@ -4,8 +4,10 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.InvestorDebtBean;
+import com.hyjf.admin.beans.request.BorrowInvestDebtInfoRequest;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
+import com.hyjf.admin.beans.request.PdfSignRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -331,9 +333,9 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
-    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody BorrowInvestDebtInfoRequest request) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(request, investorDebtBean);
         return borrowInvestService.debtInfo(investorDebtBean);
     }
 
@@ -348,9 +350,9 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdf_sign")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
-    public AdminResult pdfSign(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult pdfSign(@RequestBody PdfSignRequest pdfSignRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(pdfSignRequest, investorDebtBean);
         return borrowInvestService.pdfSign(investorDebtBean);
     }
 

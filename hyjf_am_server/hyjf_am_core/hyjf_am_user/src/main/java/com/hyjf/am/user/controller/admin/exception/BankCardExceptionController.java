@@ -80,10 +80,10 @@ public class BankCardExceptionController extends BaseController {
      * @param
      * @return
      */
-    @GetMapping(value = "/updateAccountBankByUserId/{userId}")
-    public AdminBankCardExceptionResponse updateAccountBankByUserId(@PathVariable Integer userId){
+    @PostMapping(value = "/updateAccountBankByUserId")
+    public AdminBankCardExceptionResponse updateAccountBankByUserId(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
-        String resultMsg = bankCardExceptionService.updateAccountBankByUserId(userId);
+        String resultMsg = bankCardExceptionService.updateAccountBankByUserId(request);
         response.setResultMsg(resultMsg);
         response.setRtn(Response.SUCCESS);
         return response;

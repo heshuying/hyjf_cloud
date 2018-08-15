@@ -83,6 +83,12 @@ public interface AmMarketClient {
     ContentAdsResponse deleteById(Integer id);
 
     /**
+     * 获取广告类型下拉列表
+     * @return
+     */
+    ContentAdsResponse getAdsTypeList();
+
+    /**
      * 根据活动ID获取活动title
      * @param activityId 活动ID
      * @return title

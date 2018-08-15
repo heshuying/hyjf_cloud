@@ -11,14 +11,13 @@ import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -403,7 +402,7 @@ public class CouponConfigController extends BaseController {
      * @return
      */
     @RequestMapping("/insertTransferexloghjh")
-    public TransferExceptionLogResponse insertTransferExLog(@RequestBody TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+    public TransferExceptionLogResponse insertTransferExLog(@RequestBody TransferExceptionLogVO transferExceptionLog) {
         TransferExceptionLogResponse response = new TransferExceptionLogResponse();
         Integer flag = couponConfigService.insertTransferExLog(transferExceptionLog);
         response.setFlag(flag);

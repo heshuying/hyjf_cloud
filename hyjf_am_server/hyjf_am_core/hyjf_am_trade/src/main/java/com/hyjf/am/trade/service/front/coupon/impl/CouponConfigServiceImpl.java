@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper;
 import com.hyjf.am.trade.dao.mapper.auto.TransferExceptionLogMapper;
@@ -14,8 +13,8 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponTenderCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -232,7 +231,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	}
 
 	@Override
-	public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+	public Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog) {
 		return transferExceptionLogMapper.insertSelective(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLogWithBLOBs.class));
 	}
 

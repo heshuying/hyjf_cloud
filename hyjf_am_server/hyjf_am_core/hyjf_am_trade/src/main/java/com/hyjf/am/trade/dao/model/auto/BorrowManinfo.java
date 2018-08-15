@@ -84,6 +84,8 @@ public class BorrowManinfo implements Serializable {
 
     private String isPunished;
 
+    private String address;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -404,5 +406,13 @@ public class BorrowManinfo implements Serializable {
 
     public void setIsPunished(String isPunished) {
         this.isPunished = isPunished == null ? null : isPunished.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
     }
 }

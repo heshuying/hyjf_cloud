@@ -56,15 +56,15 @@ public class WeChatAutoPlusController extends BaseUserController {
      * 请求地址: /wx/user/autoplus/sendcode.page
      * 需要参数: 授权类型userAutoType(0 自动投标授权 1 自动债转授权) mobile
      * @author sunss
-     * @param request
+     * @param
      * @param userAutoType
      * @param mobile
      * @return
      */
-    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
-    @RequestMapping(value = "/sendcode.do")
+    @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
+    @PostMapping(value = "/sendcode.do")
     @ResponseBody
-    public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, @RequestParam String userAutoType, String mobile) {
+    public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType, String mobile) {
         logger.info("发送授权短信验证码 接口,手机号为：【" + mobile + "】,授权类型为【" + userAutoType + "】,userid为：【" + userId + "】");
         String returnRequest = "/user/autoplus/sendcode";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
@@ -101,8 +101,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
-    @RequestMapping(value = "userAuthCredit.page")
+    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
+    @PostMapping(value = "userAuthCredit.page")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response){
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -147,7 +147,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthCreditReturn")
+    @ApiOperation(value = "用户授权自动债转同步回调")
+    @PostMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,@ModelAttribute BankCallBean bean, HttpServletRequest request) {
         bean.convert();
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
@@ -173,8 +174,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/userAuthCreditBgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthCreditBgreturn")
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -188,7 +189,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "自动投资授权接口")
-    @RequestMapping(value = "/userAuthInves.page")
+    @PostMapping(value = "/userAuthInves.page")
     public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -237,7 +238,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthInvesReturn")
+    @ApiOperation(value = "用户授权自动投资同步回调")
+    @PostMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         bean.convert();
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);

@@ -27,7 +27,6 @@ public class AssetListServiceImpl implements AssetListService {
 
 	/**
 	 * 获取资金来源
-	 *
 	 * @param 
 	 * @return List<HjhInstConfigVO>
 	 */

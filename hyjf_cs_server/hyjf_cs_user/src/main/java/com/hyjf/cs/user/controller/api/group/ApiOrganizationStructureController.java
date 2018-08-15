@@ -24,7 +24,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: ApiGroupQueryController, v0.1 2018/6/27 9:35
  */
-@Api(tags = "api端集团组织机构查询")
+@Api(tags = "api端-集团组织机构查询")
 @RestController
 @RequestMapping("/hyjf-api/user")
 public class ApiOrganizationStructureController extends BaseUserController {
