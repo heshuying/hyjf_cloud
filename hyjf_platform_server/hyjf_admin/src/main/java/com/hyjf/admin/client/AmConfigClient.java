@@ -403,6 +403,8 @@ public interface AmConfigClient {
 
 	ContentArticleResponse inserAction(ContentArticleRequest contentArticleRequestBean);
 
+	ContentArticleResponse findById(Integer id);
+
 	ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean);
 
 	ContentArticleResponse deleteContentArticleById(Integer id);

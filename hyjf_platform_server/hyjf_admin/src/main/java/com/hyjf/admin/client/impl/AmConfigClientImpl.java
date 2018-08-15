@@ -919,7 +919,12 @@ public class AmConfigClientImpl implements AmConfigClient {
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
-    @Override
+	@Override
+	public ContentArticleResponse findById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
+	}
+
+	@Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/updateaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
