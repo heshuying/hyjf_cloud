@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @Api(value = "app端-绑卡（接口）",tags = "app端-绑卡（接口）")
 @RestController
-@RequestMapping("/user/bankCard")
+@RequestMapping("/hyjf-app/user/bankCard")
 public class AppBindCardController extends BaseUserController {
     /** 绑卡错误页面 */
     public static final String JUMP_HTML_ERROR_PATH = "/user/bankCard/bind/result/failed";
