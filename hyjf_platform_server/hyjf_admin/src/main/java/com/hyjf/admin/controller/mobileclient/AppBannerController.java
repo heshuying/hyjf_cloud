@@ -38,6 +38,7 @@ public class AppBannerController extends BaseController {
     AppBannerService appBannerService;
     @Autowired
     ActivityListService activityListService;
+
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
     @ResponseBody
