@@ -4,10 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.admin.beans.request.EventRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -27,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version EventController, v0.1 2018/7/11 17:20
  */
-@Api(value = "公司管理-公司记事", tags = "公司管理-公司记事")
+@Api(tags = "公司管理-公司记事")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentevent")
 public class EventController extends BaseController {
@@ -35,7 +32,7 @@ public class EventController extends BaseController {
 	private EventService eventService;
 
 	@ApiOperation(value = "公司管理-公司记事条件列表查询", notes = "公司管理-公司记事条件列表查询")
-	@RequestMapping("/searchaction")
+	@PostMapping("/searchaction")
 	public AdminResult<ListResult<EventVO>> searchAction(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.searchAction(requestBean);
 		if (response == null) {
@@ -48,7 +45,7 @@ public class EventController extends BaseController {
 	}
 
 	@ApiOperation(value = "添加公司管理-公司记事", notes = "添加公司管理-公司记事")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.insertAction(requestBean);
 		if (response == null) {
@@ -61,7 +58,7 @@ public class EventController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.updateAction(requestBean);
 		if (response == null) {
@@ -74,7 +71,7 @@ public class EventController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
-	@RequestMapping("/updatestatus")
+	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.updateStatus(requestBean);
 		if (response == null) {
@@ -87,7 +84,7 @@ public class EventController extends BaseController {
 	}
 
 	@ApiOperation(value = "删除公司管理-公司记事", notes = "删除公司管理-公司记事")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		EventResponse response = eventService.deleteById(id);
 		if (response == null) {

@@ -6,28 +6,23 @@ package com.hyjf.cs.message.controller.app.report;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.vo.datacollect.OperationReportVO;
-import com.hyjf.am.vo.datacollect.QuarterOperationReportVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.report.OperationReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author tanyy
  * @version OperationReportController, v0.1 2018/8/3 14:10
  */
-@Api(value = "运营报告配置",description ="app运营报告配置接口")
+@Api(tags = "app端-运营报告配置接口")
 @RestController
 @RequestMapping("/hyjf-app/report")
 public class AppOperationReportController extends BaseController {

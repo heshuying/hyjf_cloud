@@ -4,16 +4,14 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.admin.MessagePushErrorResponse;
-import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
-import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
-import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
@@ -189,4 +187,18 @@ public interface CsMessageClient {
      * @return
      */
     MessagePushErrorResponse update(MessagePushErrorRequest request);
+
+    /**
+     *查询定时发送短信列表
+     * @param request
+     * @return
+     */
+    SmsOntimeResponse queryTime(SmsLogRequest request);
+
+    /**
+     * 条件查询短信记录列表
+     * @param requestBean
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequestBean requestBean);
 }

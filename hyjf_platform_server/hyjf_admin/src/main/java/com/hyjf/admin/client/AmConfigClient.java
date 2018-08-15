@@ -19,6 +19,7 @@ import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 
@@ -939,6 +940,14 @@ public interface AmConfigClient {
 	void insertMailTemplate(MailTemplateRequest request);
 
 	/**
+	 * 修改邮件模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	void updateMailTemplate(MailTemplateRequest request);
+
+	/**
 	 * 查询所有消息推送模板
 	 *
 	 * @return
@@ -1268,4 +1277,23 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public Integer onlyName(String name);
+
+	/**
+	 * 关闭模板
+	 * @param request
+	 */
+	void closeAction(MailTemplateRequest request);
+
+	/**
+	 * 开启模板
+	 * @param request
+	 */
+	void openAction(MailTemplateRequest request);
+
+	/**
+	 * 获取充值银行卡列表
+	 * @return
+	 * @Author : huanghui
+	 */
+	List<BanksConfigVO> getBankcardList();
 }

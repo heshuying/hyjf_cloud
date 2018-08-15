@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,12 +34,12 @@ import java.util.Map;
  * @author tanyy
  * @version OperationalDataController, v0.1 2018/8/6 17:39
  */
-@Api(value = "app运营数据",description ="app运营数据")
+@Api(tags ="app端-运营数据")
 @RestController
 @RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
 	
-	private Logger _log = LoggerFactory.getLogger(OperationalDataController.class);
+	private Logger logger = LoggerFactory.getLogger(OperationalDataController.class);
 	
 	@Autowired
 	private OperationMongoGroupDao operationMongoGroupDao;
@@ -53,7 +54,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第一页面接口数据获取", notes = "app运营数据第一页面接口数据获取")
-	@RequestMapping("/getPlatformRealTimeData")
+	@GetMapping ("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
 		Calendar cal = Calendar.getInstance();
@@ -126,7 +127,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第二页面和第三页面数据统计", notes = "app运营数据第二页面和第三页面数据统计")
-	@RequestMapping("/getLoanInvestData")
+	@GetMapping("/getLoanInvestData")
 	@ResponseBody
 	public JSONObject getLoanInvestData() {
 		JSONObject result = new JSONObject();
@@ -182,7 +183,7 @@ public class OperationalDataController {
 			result.put("info", detail);
 
 		} catch (Exception e) {
-			_log.error("发生异常", e);
+			logger.error("发生异常", e);
 			result.put("status", "999");
 			result.put("statusDesc", "失败");
 		}
@@ -196,7 +197,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第四页面数据统计", notes = "app运营数据第四页面数据统计")
-	@RequestMapping("/getInvestorRegionData")
+	@GetMapping("/getInvestorRegionData")
 	@ResponseBody
 	public JSONObject getInvestorRegionData() {
 		JSONObject result = new JSONObject();
@@ -235,7 +236,7 @@ public class OperationalDataController {
 	 */
 
 	@ApiOperation(value = "app运营数据第五页面数据统计", notes = "app运营数据第五页面数据统计")
-	@RequestMapping("/getInvestorSexAgeData")
+	@GetMapping("/getInvestorSexAgeData")
 	@ResponseBody
 	public JSONObject getSexAgeData() {
 		JSONObject result = new JSONObject();
@@ -300,9 +301,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	private String getAgeRate(int startAge, int endAge) {
-		String rate = "";
-		// todo 暂时没有db
-		rate = "25.00";
+		String rate = "25.00";
 		return rate;
 	}
 

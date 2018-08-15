@@ -10,25 +10,20 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.AboutUsService;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -39,7 +34,7 @@ import java.util.Map;
  * @author fuqiang
  * @version AboutUsController, v0.1 2018/7/9 9:40
  */
-@Api(value = "信息披露", tags = "信息披露")
+@Api(tags = "web端-信息披露")
 @RestController
 @RequestMapping("/web/cs-market/aboutus")
 public class AboutUsController extends BaseController {

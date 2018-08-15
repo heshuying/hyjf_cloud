@@ -26,7 +26,7 @@ public class WeChatLandingPageController extends BaseController {
     @Autowired
     private LandingPageService landingPageService;
 
-    @ApiOperation(value = "wechat端获取着陆页用户信息",notes = "wechat端获取着陆页用户信息")
+    @ApiOperation(value = "获取着陆页用户信息",notes = "获取着陆页用户信息")
     @GetMapping(value = "/userData")
     public BaseResultBean landingPageUserData(){
         LandingPageResulltVO landingPageResulltVO = landingPageService.getUserData();

@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.config.controller;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.model.auto.SmsMailTemplate;
+import com.hyjf.am.config.service.SmsMailTemplateService;
+import com.hyjf.am.response.config.SmsMailTemplateResponse;
+import com.hyjf.am.resquest.config.MailTemplateRequest;
+import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -13,12 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.SmsMailTemplate;
-import com.hyjf.am.config.service.SmsMailTemplateService;
-import com.hyjf.am.response.config.SmsMailTemplateResponse;
-import com.hyjf.am.resquest.config.MailTemplateRequest;
-import com.hyjf.am.vo.config.SmsMailTemplateVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -87,6 +86,35 @@ public class SmsMailTemplateController extends BaseConfigController{
     @RequestMapping("/insertMailTemplate")
     public void insertMailTemplate(@RequestBody MailTemplateRequest request) {
         smsMailTemplateService.insertMailTemplate(request);
+    }
+
+    /**
+     * 修改短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/update_mail_template")
+    public void updateMailTemplate(@RequestBody MailTemplateRequest request) {
+        smsMailTemplateService.updateMailTemplate(request);
+    }
+
+    /**
+     * 关闭短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/close_action")
+    public void closeMailTemplate(@RequestBody MailTemplateRequest request) {
+        smsMailTemplateService.closeMailTemplate(request);
+    }
+
+    /**
+     * 开启短信模板
+     * @param request
+     */
+    @RequestMapping("/open_action")
+    public void openMailTemplate(@RequestBody MailTemplateRequest request) {
+        smsMailTemplateService.openMailTemplate(request);
     }
 
 }

@@ -1928,6 +1928,15 @@ public class AmUserClientImpl implements AmUserClient {
 		return "";
 	}
 
+	@Override
+	public UserVO getUserByMobile(String mobile) {
+		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 	/**
 	 * 线下修改信息同步查询列表count
 	 * @auth sunpeikai
@@ -1958,5 +1967,37 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 添加信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/insertAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 5;
+	}
+
+	/**
+	 * 根据主键id删除一条信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/deleteAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
 	}
 }

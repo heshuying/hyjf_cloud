@@ -23,6 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ import java.util.List;
  * @author fuqiang
  * @version CouponDJController, v0.1 2018/7/18 18:18
  */
-@Api(value = "数据中心-代金券", tags = "数据中心-代金券")
+@Api(tags = "数据中心-代金券")
 @RestController
 @RequestMapping("/hyjf-admin/datacenter/coupon_dj")
 public class CouponDJController extends BaseController {
@@ -44,7 +45,7 @@ public class CouponDJController extends BaseController {
 	private DataCenterCouponService couponService;
 
 	@ApiOperation(value = "数据中心-代金券", notes = "数据中心-代金券列表查询")
-    @RequestMapping("/get_coupon_list")
+    @PostMapping("/get_coupon_list")
 	public AdminResult<ListResult<DataCenterCouponCustomizeVO>> getCouponList(DadaCenterCouponRequestBean requestBean) {
 		DataCenterCouponResponse response = couponService.searchAction(requestBean, "DJ");
 		if (response == null) {
@@ -57,7 +58,7 @@ public class CouponDJController extends BaseController {
 	}
 
     @ApiOperation(value = "导出代金券列表", notes = "导出代金券列表")
-	@RequestMapping("/export_dj_action")
+	@PostMapping("/export_dj_action")
 	public void exportDJAction(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
 		// 表格sheet名称
 		String sheetName = "代金券列表";
