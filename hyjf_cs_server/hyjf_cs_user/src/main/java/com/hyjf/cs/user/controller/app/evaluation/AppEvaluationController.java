@@ -43,7 +43,7 @@ public class AppEvaluationController {
     SystemConfig systemConfig;
 
 
-    @ApiOperation(value = "app用户测评初始化", notes = "用户测评初始化")
+    @ApiOperation(value = "用户测评初始化", notes = "用户测评初始化")
     @PostMapping(value = "/init")
     public ModelAndView init(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/financialAdvisor/evaluation");

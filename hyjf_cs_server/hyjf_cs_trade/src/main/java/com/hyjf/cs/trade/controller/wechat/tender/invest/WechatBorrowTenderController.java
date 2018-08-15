@@ -39,7 +39,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @Autowired
     private BorrowTenderService borrowTenderService;
 
-    @ApiOperation(value = "wechat端-散标投资", notes = "wechat端-散标投资")
+    @ApiOperation(value = "散标投资", notes = "散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
