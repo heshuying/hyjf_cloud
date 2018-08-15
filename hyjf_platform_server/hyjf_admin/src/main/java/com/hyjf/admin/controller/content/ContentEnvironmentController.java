@@ -4,10 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -27,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentEnvironmentController, v0.1 2018/7/11 11:13
  */
-@Api(value = "内容管理-办公环境", tags = "内容管理-办公环境")
+@Api(tags = "内容管理-办公环境")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentenvironment")
 public class ContentEnvironmentController extends BaseController {
@@ -35,7 +32,7 @@ public class ContentEnvironmentController extends BaseController {
 	private ContentEnvironmentService contentEnvironmentService;
 
 	@ApiOperation(value = "内容管理-办公环境列表查询", notes = "内容管理-办公环境列表查询")
-	@RequestMapping("/searchaction")
+	@PostMapping("/searchaction")
 	public AdminResult<ListResult<ContentEnvironmentVO>> searchAction(
 			@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.searchAction(requestBean);
@@ -49,7 +46,7 @@ public class ContentEnvironmentController extends BaseController {
 	}
 
 	@ApiOperation(value = "内容管理-办公环境", notes = "内容管理-办公环境")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.insertAction(requestBean);
 		if (response == null) {
@@ -62,7 +59,7 @@ public class ContentEnvironmentController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改内容管理-办公环境", notes = "修改内容管理-办公环境")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.updateAction(requestBean);
 		if (response == null) {
@@ -75,7 +72,7 @@ public class ContentEnvironmentController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改内容管理-办公环境状态", notes = "修改内容管理-办公环境状态")
-	@RequestMapping("/updatestatus")
+	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.updateStatus(requestBean);
 		if (response == null) {
@@ -88,7 +85,7 @@ public class ContentEnvironmentController extends BaseController {
 	}
 
 	@ApiOperation(value = "删除内容管理-办公环境", notes = "删除内容管理-办公环境")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		ContentEnvironmentResponse response = contentEnvironmentService.deleteById(id);
 		if (response == null) {

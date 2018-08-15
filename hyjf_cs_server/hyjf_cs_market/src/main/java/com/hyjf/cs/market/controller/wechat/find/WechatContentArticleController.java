@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lisheng
  * @version WechatContentArticleController, v0.1 2018/7/27 9:57
  */
-@Api(value = "wechat：根据文章类型获取文章列表", tags = "wechat：根据文章类型获取文章列表")
+@Api(tags = "wechat端-根据文章类型获取文章列表")
 @RestController
 @RequestMapping("/hyjf-wechat")
 public class WechatContentArticleController {

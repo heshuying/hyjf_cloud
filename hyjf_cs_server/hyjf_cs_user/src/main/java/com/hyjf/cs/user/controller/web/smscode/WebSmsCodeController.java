@@ -26,7 +26,7 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码",tags = "web端-验证码")
+@Api(tags = "web端-验证码")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user/sms")

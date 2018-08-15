@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@Api(value = "意见反馈",tags = "意见反馈")
+@Api(tags = "app端-意见反馈")
 @RestController
 @RequestMapping("/hyjf-app/submission")
 public class AppSubmissionController {

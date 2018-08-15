@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2018/7/24 16:38
  * @Description: AppChannelReconciliationController
  */
-@Api(value = "app渠道对账",tags ="app渠道对账")
+@Api(tags ="app渠道对账")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/app/channelreconciliation")
 public class AppChannelReconciliationController extends BaseController {
