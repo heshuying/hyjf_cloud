@@ -15,12 +15,10 @@ import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.TransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
-import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
@@ -41,11 +39,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -90,7 +85,7 @@ public class TransferExceptionLogController extends BaseController {
 	@PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogAPIRequest request) {
-        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,AdminTransferExceptionLogRequest.class));
+        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,TransferExceptionLogVO.class));
         if (response == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }else if(!Response.isSuccess(response)){
@@ -108,7 +103,7 @@ public class TransferExceptionLogController extends BaseController {
     @ApiOperation(value = "转账确认", notes = "转账确认")
 	@PostMapping("/transferConfirm")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_TRANSFER_EXCEPTION)
-    public String confirmAction(AdminTransferExceptionLogRequest request) {
+    public String confirmAction(TransferExceptionLogVO request) {
 	    if(StringUtils.isEmpty(request.getUuid()) || request.getStatus() == null){
 	        return "0";
 	    }
@@ -124,7 +119,7 @@ public class TransferExceptionLogController extends BaseController {
     @ApiOperation(value = "重新执行转账", notes = "重新执行转账")
     @PostMapping("/transferAgain")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_TRANSFER_EXCEPTION)
-    public String transferAgainAction(AdminTransferExceptionLogRequest request) {
+    public String transferAgainAction(TransferExceptionLogVO request) {
         if(StringUtils.isEmpty(request.getUuid())){
             return "0:参数错误";
         }

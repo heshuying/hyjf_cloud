@@ -26,6 +26,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -2678,7 +2679,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+    public Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog) {
         TransferExceptionLogResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/couponConfig/insertTransferexloghjh" ,transferExceptionLog, TransferExceptionLogResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
