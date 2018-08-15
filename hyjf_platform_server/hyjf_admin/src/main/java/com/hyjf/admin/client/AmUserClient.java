@@ -1029,5 +1029,5 @@ public interface AmUserClient {
      * @param
      * @return
      */
-    String updateAccountBankByUserId(Integer userId);
+    String updateAccountBankByUserId(BankCardExceptionRequest request);
 }
