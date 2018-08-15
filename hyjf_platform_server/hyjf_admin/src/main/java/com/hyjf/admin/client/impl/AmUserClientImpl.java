@@ -1959,4 +1959,36 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 添加信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/insertAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 5;
+	}
+
+	/**
+	 * 根据主键id删除一条信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/deleteAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
 }

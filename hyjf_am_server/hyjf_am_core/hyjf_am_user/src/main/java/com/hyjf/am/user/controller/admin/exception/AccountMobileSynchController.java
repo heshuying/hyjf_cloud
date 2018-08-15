@@ -80,4 +80,36 @@ public class AccountMobileSynchController extends BaseController {
         return response;
     }
 
+    /**
+     * 添加信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "插入一条信息",notes = "插入一条信息")
+    @PostMapping(value = "/insertAccountMobileSynch")
+    public AccountMobileSynchResponse insertAccountMobileSynch(@RequestBody AccountMobileSynchRequest request){
+        AccountMobileSynchResponse response = new AccountMobileSynchResponse();
+        int count = accountMobileSynchService.insertAccountMobileSynch(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 根据主键id删除一条信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "根据主键id删除一条信息",notes = "根据主键id删除一条信息")
+    @PostMapping(value = "/deleteAccountMobileSynch")
+    public AccountMobileSynchResponse deleteAccountMobileSynch(@RequestBody AccountMobileSynchRequest request){
+        AccountMobileSynchResponse response = new AccountMobileSynchResponse();
+        int count = accountMobileSynchService.deleteAccountMobileSynch(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
 }

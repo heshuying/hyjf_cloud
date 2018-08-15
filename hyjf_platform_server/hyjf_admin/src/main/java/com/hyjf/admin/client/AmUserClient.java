@@ -1004,4 +1004,20 @@ public interface AmUserClient {
      * @return
      */
     List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request);
+
+    /**
+     * 添加信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer insertAccountMobileSynch(AccountMobileSynchRequest request);
+
+    /**
+     * 根据主键id删除一条信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer deleteAccountMobileSynch(AccountMobileSynchRequest request);
 }
