@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-平台账户分佣",tags = "资金中心-平台账户分佣")
 @RestController
-@RequestMapping(value = "/hyjf-admin/subcommission")
+@RequestMapping(value = "/hyjf-admin/finance/subcommission")
 public class SubCommissionController extends BaseController {
 
     @Autowired

@@ -1,10 +1,11 @@
 package com.hyjf.admin.controller.exception.bankrepayfreeze;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.request.BankRepayFreezeRequest;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankRepayFreezeService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,15 +34,14 @@ public class BankRepayFreezeExceptionController extends BaseController {
      */
     @ApiOperation(value = "冻结异常列表", notes = "冻结异常列表")
     @PostMapping("/list")
-    public JSONObject getList(@RequestBody BankRepayFreezeRequest requestBean){
+    public AdminResult<ListResult<BankRepayFreezeLogVO>> getList(@RequestBody BankRepayFreezeRequest requestBean){
         Integer count = bankRepayFreezeService.getFreezeLogCount();
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         page.setTotal(count);
 
         List<BankRepayFreezeLogVO> recordList = bankRepayFreezeService.getFreezeLogList(page.getOffset(),page.getLimit());
 
-        JSONObject jsonObject = this.success(String.valueOf(count),recordList);
-        return jsonObject;
+        return new AdminResult<>(ListResult.build(recordList, count));
     }
 
     /**
@@ -51,23 +51,23 @@ public class BankRepayFreezeExceptionController extends BaseController {
      */
     @ApiOperation(value = "冻结撤销", notes = "冻结撤销")
     @GetMapping("/cancel/{orderId}")
-    public JSONObject repayFreezeCancel(@PathVariable String orderId){
+    public AdminResult repayFreezeCancel(@PathVariable String orderId){
         if(StringUtils.isBlank(orderId)){
-            return this.fail("请求参数错误");
+            return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         BankRepayFreezeLogVO freezeLogVO = bankRepayFreezeService.getFreezeLogByOrderId(orderId);
         if(freezeLogVO == null){
-            return this.fail("还款解冻失败，还款冻结可能已经解冻！");
+            return new AdminResult<>(FAIL, "还款解冻失败，还款冻结可能已经解冻！");
         }
         boolean repayUnFreezeFlag = this.bankRepayFreezeService.repayUnfreeze(freezeLogVO);
         if(repayUnFreezeFlag){
             boolean unfreezeFlag = this.bankRepayFreezeService.updateBankRepayFreeze(freezeLogVO);
             if (unfreezeFlag) {
-                return this.success();
+                return new AdminResult<>();
             }
         }
 
-        return this.fail("还款解冻失败，请联系客服！");
+        return new AdminResult<>(FAIL, "还款解冻失败，请联系客服！");
     }
 }

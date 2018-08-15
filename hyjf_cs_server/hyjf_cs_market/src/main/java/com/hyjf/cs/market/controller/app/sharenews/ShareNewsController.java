@@ -1,21 +1,18 @@
 package com.hyjf.cs.market.controller.app.sharenews;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.market.ShareNewsResponse;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.cs.market.config.SystemConfig;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.ShareNewsService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @Auther: walter.limeng
@@ -47,7 +44,7 @@ public class ShareNewsController extends BaseMarketController {
             response.setStatusDesc("成功");
             response.setTitle(shareNewsBean.getTitle());
             response.setContent(shareNewsBean.getContent());
-            response.setImg("https://www.hyjf.com" + shareNewsBean.getImg());
+            response.setImg("https://www.hyjf.com" + shareNewsBean.getImg());// 提供绝对路径
         } else {
             response.setStatus("2");
             response.setStatusDesc("获取分享信息失败");

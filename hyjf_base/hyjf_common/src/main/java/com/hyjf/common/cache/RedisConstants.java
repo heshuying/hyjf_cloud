@@ -191,7 +191,7 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USERID_KEY = "userId_";
+    public static final String USERID_KEY = "userId:";
 
     /**
      * 放款批次号key

@@ -167,9 +167,7 @@ public class AppRechargeController extends BaseUserController {
      */
     @ApiOperation(value = "app获取充值信息接口",notes = "app获取充值信息接口")
     @PostMapping(value = "/getQpRechargeInfo")
-    public AppResult getQpRechargeInfo(
-            @RequestHeader(value = "userId")Integer userId,
-            @RequestBody AppRechargeRequestBean requestBean){
+    public AppResult getQpRechargeInfo(@RequestHeader(value = "userId")Integer userId,AppRechargeRequestBean requestBean){
         AppResult result = new AppResult();
 /*        AppRechargeInfoResultVo resultVo = new AppRechargeInfoResultVo(AppRechargeDefine.GET_QP_RECHARGE_INFO, HOST_URL + AppRechargeDefine.RECHARGE_RULE_URL, HOST_URL
                 + AppRechargeDefine.RECHARGE_OTHER_URL + "?sign=" + vo.getSign());*/
@@ -300,7 +298,7 @@ public class AppRechargeController extends BaseUserController {
         resultBean.setKindlyReminder(KINDLY_REMINDER);
         resultBean.setHints(IMPORTANT_HINTS);
 
-        result.setData(requestBean);
+        result.setData(resultBean);
 
         return result;
     }

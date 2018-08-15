@@ -14,6 +14,7 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,16 +86,11 @@ public class AccountDetailServiceImpl extends BaseServiceImpl implements Account
      */
     @Override
     public AccountList selectNextAccountList(int accountId, int userId) {
-        AccountListExample accountListExample = new AccountListExample();
-        AccountListExample.Criteria cra = accountListExample.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        cra.andIdEqualTo(accountId);
-        accountListExample.setOrderByClause(" id asc ");
-        List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
-        if (null != accountLists && accountLists.size() > 0) {
-            return accountLists.get(0);
-        }
-        return null;
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", userId);
+        param.put("id", accountId);
+        AccountList accountList = adminAccountDetailCustomizeMapper.selectNextAccountList(param);
+        return accountList;
     }
 
     /**
