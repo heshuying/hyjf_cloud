@@ -140,7 +140,7 @@ public class AccessFilter extends ZuulFilter {
 					// 不对其进行路由
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
-				this.appNomalRequestProcess(request, ctx, sign);
+				this.appNomalRequestProcess(request, ctx, sign, secureVisitFlag);
 
 				this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
 
@@ -184,8 +184,13 @@ public class AccessFilter extends ZuulFilter {
 	 * @param sign
 	 * @return
 	 */
-	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
+	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign, boolean isNecessary) {
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
+		if(signValue == null){
+			logger.error("sign is invalid");
+			// 不对其进行路由
+			return this.buildErrorRequestContext(ctx, 400, "sign is invalid!");
+		}
 		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
 		ctx.addZuulRequestHeader(SIGN, sign);
 		ctx.addZuulRequestHeader(KEY, signValue.getKey());
@@ -277,6 +282,30 @@ public class AccessFilter extends ZuulFilter {
 	}
 
 	/**
+	 * 未登录请求响应
+	 * 
+	 * @param ctx
+	 * @param gatewayCode
+	 * @param errorMessage
+	 * @return
+	 */
+	private Object buildNoneLoginResponse(RequestContext ctx, String channel) {
+		ctx.setSendZuulResponse(false);
+		ctx.setResponseStatusCode(200);
+		JSONObject result = new JSONObject();
+
+		if (APP_CHANNEL.equals(channel)) {
+			result.put("status", "1");
+			result.put("statusDesc", "need login");
+		} else {
+			result.put("status", "999");
+			result.put("statusDesc", "need login");
+		}
+		ctx.setResponseBody(result.toJSONString());
+		return ctx;
+	}
+
+	/**
 	 * token查找用户
 	 * 
 	 * @param request
@@ -297,21 +326,21 @@ public class AccessFilter extends ZuulFilter {
 		// 需要安全访问的请求，token空不路由，否则直接返回
 		if (StringUtils.isBlank(token)) {
 			logger.error("token is empty...");
-			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 		}
 
 		// jwt解析token
 		AccessToken accessToken = JwtHelper.parseToken(token);
 		if (accessToken == null) {
 			logger.error("user is not exist...");
-			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 		} else {
 			Integer userId = accessToken.getUserId();
 			WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 			if (user == null) {
 				// 登陆过期
 				logger.error("login is invalid...");
-				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 			}
 			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
@@ -326,10 +355,10 @@ public class AccessFilter extends ZuulFilter {
 	 * @param isNecessary
 	 * @return
 	 */
-	private RequestContext buildReturnContextOfTokenInvalid(RequestContext ctx, boolean isNecessary) {
+	private RequestContext buildReturnContextOfTokenInvalid(RequestContext ctx, boolean isNecessary, String channel) {
 		if (isNecessary) {
 			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
+			this.buildNoneLoginResponse(ctx, channel);
 		}
 		return ctx;
 	}
@@ -337,7 +366,7 @@ public class AccessFilter extends ZuulFilter {
 	/**
 	 * @Author walter.limeng
 	 * @user walter.limeng
-	 * @Description  app特殊处理
+	 * @Description app特殊处理
 	 * @Date 10:35 2018/8/14
 	 * @Param
 	 * @return
@@ -345,8 +374,8 @@ public class AccessFilter extends ZuulFilter {
 	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
 		Integer userId = SecretUtil.getUserId(sign);
 		if (userId == null) {
-			logger.error("TokenInvalid");
-			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			logger.error("token invalid...");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary, APP_CHANNEL);
 		}
 		ctx.addZuulRequestHeader("userId", userId + "");
 		return ctx;
@@ -367,9 +396,9 @@ public class AccessFilter extends ZuulFilter {
 		if (StringUtils.isNotBlank(sign)) {
 			// 获取用户ID
 			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-			if (appUserToken == null || appUserToken.getUserId()==null) {
-				logger.error("TokenInvalid");
-				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			if (appUserToken == null || appUserToken.getUserId() == null) {
+				logger.error("token invalid...");
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
 			}
 
 			Integer userId = appUserToken.getUserId();
@@ -379,7 +408,7 @@ public class AccessFilter extends ZuulFilter {
 			ctx.addZuulRequestHeader("userId", userId + "");
 			ctx.addZuulRequestHeader("accountId", accountId);
 		} else {
-			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
 		}
 		return ctx;
 	}
