@@ -9,10 +9,9 @@ import java.io.Serializable;
 
 /**
  * @author wangjun
- * @version InvestorRequest, v0.1 2018/7/11 17:07
+ * @version PdfSignRequest, v0.1 2018/7/11 17:07
  */
-public class InvestorRequest implements Serializable {
-
+public class PdfSignRequest implements Serializable {
     @ApiModelProperty(value = "标的编号")
     private String borrowNid;
 
@@ -21,9 +20,6 @@ public class InvestorRequest implements Serializable {
 
     @ApiModelProperty(value = "投资订单号")
     private String nid;
-
-    @ApiModelProperty(value = "邮箱")
-    private String email;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -47,13 +43,5 @@ public class InvestorRequest implements Serializable {
 
     public void setNid(String nid) {
         this.nid = nid;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
