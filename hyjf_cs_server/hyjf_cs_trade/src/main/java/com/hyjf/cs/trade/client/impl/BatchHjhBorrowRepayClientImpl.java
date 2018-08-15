@@ -3,15 +3,10 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
+import com.hyjf.am.vo.trade.HjhLockVo;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.trade.client.BatchHjhBorrowRepayClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +26,22 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
 
     /**
      * 计划锁定
-     *
-     * @param accedeOrderId
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
      */
     @Override
-    public void updateForLock(String accedeOrderId) {
-        String url = "http://AM-TRADE/am-trade/planLockQuit/updateLockRepayInfo/" + accedeOrderId;
-        restTemplate.getForEntity(url, String.class);
+    public void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateLockRepayInfo";
+        HjhLockVo hjhLockVo = new HjhLockVo();
+        hjhLockVo.setAccedeOrderId(accedeOrderId);
+        hjhLockVo.setInverestUserInfo(inverestUserInfo);
+        hjhLockVo.setCommissioUserInfoVO(commissioUserInfoVO);
+        hjhLockVo.setBankOpenAccountVO(bankOpenAccountVO);
+        hjhLockVo.setUserInfoCustomizeVOS(userInfoCustomizeVOS);
+        restTemplate.postForEntity(url,hjhLockVo,null);
     }
 
     /**

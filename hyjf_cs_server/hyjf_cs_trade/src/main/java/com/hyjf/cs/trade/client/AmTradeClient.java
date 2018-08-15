@@ -42,6 +42,7 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1617,4 +1618,20 @@ public interface AmTradeClient {
     RepayBean getRepayBean(Map<String, String> paraMap);
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    /**
+     * 根据订单号获取汇计划加入明细
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId);
+
+
+    /**
+     * 获取提成配置信息
+     * @param map
+     * @return
+     */
+    Integer getCommisionConfig(HashMap map);
 }
