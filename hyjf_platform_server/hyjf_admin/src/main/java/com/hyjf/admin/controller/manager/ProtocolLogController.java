@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author：yinhui
  * @Date: 2018/8/10  11:42
  */
-@Api(value = "配置中心-协议模板日志管理", tags = "配置中心-协议模板日志管理")
+@Api(tags = "配置中心-协议模板日志管理")
 @RestController
 @RequestMapping("/hyjf-admin/manager/protocolog")
 public class ProtocolLogController extends BaseController {

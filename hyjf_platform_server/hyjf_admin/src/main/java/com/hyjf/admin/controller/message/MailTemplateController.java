@@ -20,7 +20,7 @@ import java.util.List;
  * @author fuqiang
  * @version MailTemplateController, v0.1 2018/6/25 14:46
  */
-@Api(value = "邮件模板", tags = "邮件模板")
+@Api(tags = "邮件模板")
 @RestController
 @RequestMapping("/hyjf-admin/mail/template")
 public class MailTemplateController {

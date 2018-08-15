@@ -42,7 +42,7 @@ import java.util.UUID;
  * @author fq
  * @version SmsCodeController, v0.1 2018/8/14 19:49
  */
-@Api(description = "发送短信", tags = "发送短信")
+@Api(tags = "发送短信")
 @RestController
 @RequestMapping("/hyjf-admin/message/message")
 public class SmsCodeController extends BaseController {
@@ -110,7 +110,7 @@ public class SmsCodeController extends BaseController {
         return jsonObject;
     }
 
-    @RequestMapping("/send_message_action")
+    @PostMapping("/send_message_action")
     public JSONObject send(HttpServletRequest request, SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);

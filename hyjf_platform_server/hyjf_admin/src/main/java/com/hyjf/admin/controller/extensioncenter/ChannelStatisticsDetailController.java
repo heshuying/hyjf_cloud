@@ -41,7 +41,7 @@ import java.util.List;
  * @author tanyy
  * @version ChannelStatisticsDetailController, v0.1 2018/7/16 16:03
  */
-@Api(value = "PC统计明细",tags ="PC统计明细")
+@Api(tags ="PC统计明细")
 @RestController
 @RequestMapping("/hyjf-admin/channelstatisticsdetail")
 public class ChannelStatisticsDetailController extends BaseController {

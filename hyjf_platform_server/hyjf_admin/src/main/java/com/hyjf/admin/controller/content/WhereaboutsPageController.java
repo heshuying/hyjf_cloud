@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.content;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -16,18 +15,19 @@ import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author tanyy
  * @version WhereaboutsPageController, v0.1 2018/7/20 10:35
  */
-@Api(value = "移动端着陆页管理",tags ="移动端着陆页管理")
+@Api(tags ="移动端着陆页管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/whereaboutspage")
 public class WhereaboutsPageController extends BaseController {
