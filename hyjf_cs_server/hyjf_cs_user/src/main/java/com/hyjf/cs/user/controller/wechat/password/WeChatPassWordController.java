@@ -21,10 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,7 +72,7 @@ public class WeChatPassWordController {
      * @return
      */
     @ApiOperation(value = " 重置登录密码",notes = " 重置登录密码")
-    @PostMapping(value = "/wx/user/resetpwd/resetLoginPassword")
+    @GetMapping(value = "/wx/user/resetpwd/resetLoginPassword")
     public JSONObject displayPhone(HttpServletRequest request, SendSmsVO sendSmsVo) {
         JSONObject ret = new JSONObject();
         String sign = sendSmsVo.getSign();
