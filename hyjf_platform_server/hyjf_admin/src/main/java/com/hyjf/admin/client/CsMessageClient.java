@@ -5,6 +5,7 @@ package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
+import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.response.admin.AccountWebListResponse;
@@ -173,4 +174,11 @@ public interface CsMessageClient {
      * @return
      */
     MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
+
+    /**
+     *查询定时发送短信列表
+     * @param request
+     * @return
+     */
+    SmsOntimeResponse queryTime(SmsLogRequest request);
 }

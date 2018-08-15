@@ -937,6 +937,14 @@ public interface AmConfigClient {
 	void insertMailTemplate(MailTemplateRequest request);
 
 	/**
+	 * 修改邮件模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	void updateMailTemplate(MailTemplateRequest request);
+
+	/**
 	 * 查询所有消息推送模板
 	 *
 	 * @return
@@ -1193,4 +1201,16 @@ public interface AmConfigClient {
 	 * @author: nxl
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
+	/**
+	 * 关闭模板
+	 * @param request
+	 */
+	void closeAction(MailTemplateRequest request);
+
+	/**
+	 * 开启模板
+	 * @param request
+	 */
+	void openAction(MailTemplateRequest request);
 }

@@ -1521,6 +1521,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
+	public void updateMailTemplate(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
+				Object.class);
+	}
+
+	@Override
 	public List<MessagePushTemplateVO> findAll() {
 		MessagePushTemplateResponse response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates",
@@ -1905,5 +1911,17 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+
+	@Override
+	public void closeAction(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/close_action", request,
+				Object.class);
+	}
+
+	@Override
+	public void openAction(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/open_action", request,
+				Object.class);
 	}
 }

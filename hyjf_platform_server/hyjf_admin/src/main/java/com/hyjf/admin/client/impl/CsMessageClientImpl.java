@@ -229,4 +229,16 @@ public class  CsMessageClientImpl  implements CsMessageClient {
         return null;
     }
 
+    @Override
+    public SmsOntimeResponse queryTime(SmsLogRequest request) {
+        SmsOntimeResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/sms_log/query_time",
+                        request, SmsOntimeResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
 }

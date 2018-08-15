@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,9 @@ public class SmsTemplateController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsTemplateVO> voList = smsTemplateService.findAll();
 		jsonObject.put("smsTemplateList", voList);
+		if (!CollectionUtils.isEmpty(voList)) {
+			jsonObject.put("totalCount", voList.size());
+		}
 		return jsonObject;
 	}
 
@@ -57,6 +61,9 @@ public class SmsTemplateController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsTemplateVO> voList = smsTemplateService.findSmsTemplate(request);
 		jsonObject.put("smsTemplateList", voList);
+		if (!CollectionUtils.isEmpty(voList)) {
+			jsonObject.put("totalCount", voList.size());
+		}
 		return jsonObject;
 	}
 

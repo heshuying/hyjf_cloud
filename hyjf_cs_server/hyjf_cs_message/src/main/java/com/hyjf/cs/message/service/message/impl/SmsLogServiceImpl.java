@@ -6,7 +6,9 @@ package com.hyjf.cs.message.service.message.impl;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.SmsLog;
+import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.mongo.mc.SmsLogDao;
+import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class SmsLogServiceImpl implements SmsLogService {
 
 	@Autowired
 	private SmsLogDao smsLogDao;
+	@Autowired
+	private SmsOntimeMongoDao smsOntimeMongoDao;
 
 	@Override
 	public List<SmsLog> findSmsLog(SmsLogRequest request) {
@@ -49,6 +53,44 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);
+		int currPage = request.getCurrPage();
+		int pageSize = request.getPageSize();
+		int limitStart = (currPage - 1) * pageSize;
+		int limitEnd = limitStart + pageSize;
+		query.addCriteria(criteria);
+		query.skip(limitStart).limit(limitEnd);
 		return smsLogDao.find(query);
+	}
+
+	@Override
+	public List<SmsOntime> queryTime(SmsLogRequest request) {
+		String mobile = request.getMobile();
+		String postTimeBegin = request.getPostTimeBegin();
+		String postTimeEnd = request.getPostTimeEnd();
+		Integer status = request.getStatus();
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotBlank(mobile)) {
+			criteria.and("mobile").is(mobile);
+		}
+		if (StringUtils.isNotBlank(postTimeBegin)) {
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
+			criteria.and("posttime").gte(begin);
+		}
+		if (StringUtils.isNotBlank(postTimeEnd)) {
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
+			criteria.and("posttime").lte(end);
+		}
+		if (status != null) {
+			criteria.and("status").is(status);
+		}
+		query.addCriteria(criteria);
+		int currPage = request.getCurrPage();
+		int pageSize = request.getPageSize();
+		int limitStart = (currPage - 1) * pageSize;
+		int limitEnd = limitStart + pageSize;
+		query.addCriteria(criteria);
+		query.skip(limitStart).limit(limitEnd);
+		return smsOntimeMongoDao.find(query);
 	}
 }
