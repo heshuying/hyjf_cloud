@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.common.result;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
 /**
@@ -11,8 +13,9 @@ import java.util.List;
  */
 public class ListResult<T> {
 
+    @ApiModelProperty(value = "列表数据")
     private List<T> list;
-
+    @ApiModelProperty(value = "列表count")
     private int count;
 
     public static <T> ListResult<T> build(List<T> list,int count) {
