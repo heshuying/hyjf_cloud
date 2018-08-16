@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.FreezeListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.FreezeList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="OrdId" property="ordid" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="RespCode" property="respcode" jdbcType="VARCHAR" />
+    <result column="UsrCustId" property="usrcustid" jdbcType="VARCHAR" />
+    <result column="TrxId" property="trxid" jdbcType="VARCHAR" />
+    <result column="xfrom" property="xfrom" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="unfreeze_manual" property="unfreezeManual" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, OrdId, borrow_nid, amount, RespCode, UsrCustId, TrxId, xfrom, create_time, 
+    unfreeze_manual, `status`
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_freeze_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_freeze_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_freeze_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeListExample" >
+    delete from ht_freeze_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_freeze_list (user_id, OrdId, borrow_nid, 
+      amount, RespCode, UsrCustId, 
+      TrxId, xfrom, create_time, 
+      unfreeze_manual, `status`)
+    values (#{userId,jdbcType=INTEGER}, #{ordid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=DECIMAL}, #{respcode,jdbcType=VARCHAR}, #{usrcustid,jdbcType=VARCHAR}, 
+      #{trxid,jdbcType=VARCHAR}, #{xfrom,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{unfreezeManual,jdbcType=TINYINT}, #{status,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_freeze_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="ordid != null" >
+        OrdId,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="respcode != null" >
+        RespCode,
+      </if>
+      <if test="usrcustid != null" >
+        UsrCustId,
+      </if>
+      <if test="trxid != null" >
+        TrxId,
+      </if>
+      <if test="xfrom != null" >
+        xfrom,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="unfreezeManual != null" >
+        unfreeze_manual,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="ordid != null" >
+        #{ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="respcode != null" >
+        #{respcode,jdbcType=VARCHAR},
+      </if>
+      <if test="usrcustid != null" >
+        #{usrcustid,jdbcType=VARCHAR},
+      </if>
+      <if test="trxid != null" >
+        #{trxid,jdbcType=VARCHAR},
+      </if>
+      <if test="xfrom != null" >
+        #{xfrom,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unfreezeManual != null" >
+        #{unfreezeManual,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_freeze_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_freeze_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.ordid != null" >
+        OrdId = #{record.ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.respcode != null" >
+        RespCode = #{record.respcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usrcustid != null" >
+        UsrCustId = #{record.usrcustid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trxid != null" >
+        TrxId = #{record.trxid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xfrom != null" >
+        xfrom = #{record.xfrom,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.unfreezeManual != null" >
+        unfreeze_manual = #{record.unfreezeManual,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_freeze_list
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      OrdId = #{record.ordid,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      RespCode = #{record.respcode,jdbcType=VARCHAR},
+      UsrCustId = #{record.usrcustid,jdbcType=VARCHAR},
+      TrxId = #{record.trxid,jdbcType=VARCHAR},
+      xfrom = #{record.xfrom,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      unfreeze_manual = #{record.unfreezeManual,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeList" >
+    update ht_freeze_list
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="ordid != null" >
+        OrdId = #{ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="respcode != null" >
+        RespCode = #{respcode,jdbcType=VARCHAR},
+      </if>
+      <if test="usrcustid != null" >
+        UsrCustId = #{usrcustid,jdbcType=VARCHAR},
+      </if>
+      <if test="trxid != null" >
+        TrxId = #{trxid,jdbcType=VARCHAR},
+      </if>
+      <if test="xfrom != null" >
+        xfrom = #{xfrom,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unfreezeManual != null" >
+        unfreeze_manual = #{unfreezeManual,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.FreezeList" >
+    update ht_freeze_list
+    set user_id = #{userId,jdbcType=INTEGER},
+      OrdId = #{ordid,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      RespCode = #{respcode,jdbcType=VARCHAR},
+      UsrCustId = #{usrcustid,jdbcType=VARCHAR},
+      TrxId = #{trxid,jdbcType=VARCHAR},
+      xfrom = #{xfrom,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      unfreeze_manual = #{unfreezeManual,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

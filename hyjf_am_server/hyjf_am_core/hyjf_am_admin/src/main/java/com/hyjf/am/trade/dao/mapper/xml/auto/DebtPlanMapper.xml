@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="debt_plan_type" property="debtPlanType" jdbcType="INTEGER" />
+    <result column="debt_plan_type_name" property="debtPlanTypeName" jdbcType="VARCHAR" />
+    <result column="debt_plan_nid" property="debtPlanNid" jdbcType="VARCHAR" />
+    <result column="debt_pre_plan_nid" property="debtPrePlanNid" jdbcType="INTEGER" />
+    <result column="debt_plan_name" property="debtPlanName" jdbcType="VARCHAR" />
+    <result column="debt_plan_money" property="debtPlanMoney" jdbcType="DECIMAL" />
+    <result column="debt_plan_money_yes" property="debtPlanMoneyYes" jdbcType="DECIMAL" />
+    <result column="debt_plan_money_wait" property="debtPlanMoneyWait" jdbcType="DECIMAL" />
+    <result column="debt_plan_account_scale" property="debtPlanAccountScale" jdbcType="DECIMAL" />
+    <result column="debt_plan_status" property="debtPlanStatus" jdbcType="TINYINT" />
+    <result column="round_amount" property="roundAmount" jdbcType="DECIMAL" />
+    <result column="accede_times" property="accedeTimes" jdbcType="INTEGER" />
+    <result column="expect_apr" property="expectApr" jdbcType="DECIMAL" />
+    <result column="actual_apr" property="actualApr" jdbcType="DECIMAL" />
+    <result column="investment_scope" property="investmentScope" jdbcType="VARCHAR" />
+    <result column="debt_quit_style" property="debtQuitStyle" jdbcType="TINYINT" />
+    <result column="debt_quit_period" property="debtQuitPeriod" jdbcType="INTEGER" />
+    <result column="is_audits" property="isAudits" jdbcType="VARCHAR" />
+    <result column="buy_begin_time" property="buyBeginTime" jdbcType="INTEGER" />
+    <result column="buy_end_time" property="buyEndTime" jdbcType="INTEGER" />
+    <result column="buy_period_day" property="buyPeriodDay" jdbcType="INTEGER" />
+    <result column="buy_period_hour" property="buyPeriodHour" jdbcType="INTEGER" />
+    <result column="buy_period" property="buyPeriod" jdbcType="INTEGER" />
+    <result column="debt_lock_period" property="debtLockPeriod" jdbcType="TINYINT" />
+    <result column="debt_min_investment" property="debtMinInvestment" jdbcType="DECIMAL" />
+    <result column="debt_investment_increment" property="debtInvestmentIncrement" jdbcType="DECIMAL" />
+    <result column="debt_max_investment" property="debtMaxInvestment" jdbcType="DECIMAL" />
+    <result column="debt_plan_balance" property="debtPlanBalance" jdbcType="DECIMAL" />
+    <result column="debt_plan_frost" property="debtPlanFrost" jdbcType="DECIMAL" />
+    <result column="full_expire_time" property="fullExpireTime" jdbcType="INTEGER" />
+    <result column="repay_account_all" property="repayAccountAll" jdbcType="DECIMAL" />
+    <result column="repay_account_interest" property="repayAccountInterest" jdbcType="DECIMAL" />
+    <result column="repay_account_capital" property="repayAccountCapital" jdbcType="DECIMAL" />
+    <result column="repay_account_yes" property="repayAccountYes" jdbcType="DECIMAL" />
+    <result column="repay_account_interest_yes" property="repayAccountInterestYes" jdbcType="DECIMAL" />
+    <result column="repay_account_capital_yes" property="repayAccountCapitalYes" jdbcType="DECIMAL" />
+    <result column="repay_account_wait" property="repayAccountWait" jdbcType="DECIMAL" />
+    <result column="repay_account_interest_wait" property="repayAccountInterestWait" jdbcType="DECIMAL" />
+    <result column="repay_account_capital_wait" property="repayAccountCapitalWait" jdbcType="DECIMAL" />
+    <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+    <result column="min_invest_number" property="minInvestNumber" jdbcType="TINYINT" />
+    <result column="max_invest_number" property="maxInvestNumber" jdbcType="TINYINT" />
+    <result column="cycle_times" property="cycleTimes" jdbcType="TINYINT" />
+    <result column="unable_cycle_times" property="unableCycleTimes" jdbcType="TINYINT" />
+    <result column="invest_account_limit" property="investAccountLimit" jdbcType="DECIMAL" />
+    <result column="min_surplus_invest_account" property="minSurplusInvestAccount" jdbcType="DECIMAL" />
+    <result column="liquidate_should_time" property="liquidateShouldTime" jdbcType="INTEGER" />
+    <result column="liquidate_fact_time" property="liquidateFactTime" jdbcType="INTEGER" />
+    <result column="repay_time" property="repayTime" jdbcType="INTEGER" />
+    <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+    <result column="audit_time" property="auditTime" jdbcType="INTEGER" />
+    <result column="audit_remark" property="auditRemark" jdbcType="VARCHAR" />
+    <result column="plan_lock_time" property="planLockTime" jdbcType="INTEGER" />
+    <result column="commission_status" property="commissionStatus" jdbcType="TINYINT" />
+    <result column="commission_total" property="commissionTotal" jdbcType="DECIMAL" />
+    <result column="liquidate_apr" property="liquidateApr" jdbcType="DECIMAL" />
+    <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
+    <result column="liquidate_arrival_amount" property="liquidateArrivalAmount" jdbcType="DECIMAL" />
+    <result column="repay_time_last" property="repayTimeLast" jdbcType="INTEGER" />
+    <result column="show_status" property="showStatus" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs" extends="BaseResultMap" >
+    <result column="plan_concept" property="planConcept" jdbcType="LONGVARCHAR" />
+    <result column="plan_principle" property="planPrinciple" jdbcType="LONGVARCHAR" />
+    <result column="safeguard_measures" property="safeguardMeasures" jdbcType="LONGVARCHAR" />
+    <result column="margin_measures" property="marginMeasures" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, debt_plan_type, debt_plan_type_name, debt_plan_nid, debt_pre_plan_nid, debt_plan_name, 
+    debt_plan_money, debt_plan_money_yes, debt_plan_money_wait, debt_plan_account_scale, 
+    debt_plan_status, round_amount, accede_times, expect_apr, actual_apr, investment_scope, 
+    debt_quit_style, debt_quit_period, is_audits, buy_begin_time, buy_end_time, buy_period_day, 
+    buy_period_hour, buy_period, debt_lock_period, debt_min_investment, debt_investment_increment, 
+    debt_max_investment, debt_plan_balance, debt_plan_frost, full_expire_time, repay_account_all, 
+    repay_account_interest, repay_account_capital, repay_account_yes, repay_account_interest_yes, 
+    repay_account_capital_yes, repay_account_wait, repay_account_interest_wait, repay_account_capital_wait, 
+    service_fee, min_invest_number, max_invest_number, cycle_times, unable_cycle_times, 
+    invest_account_limit, min_surplus_invest_account, liquidate_should_time, liquidate_fact_time, 
+    repay_time, audit_user_id, audit_time, audit_remark, plan_lock_time, commission_status, 
+    commission_total, liquidate_apr, coupon_config, liquidate_arrival_amount, repay_time_last, 
+    show_status, del_flag, create_user_id, create_user_name, update_user_id, update_user_name, 
+    create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    plan_concept, plan_principle, safeguard_measures, margin_measures
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_debt_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_debt_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanExample" >
+    delete from ht_debt_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan (debt_plan_type, debt_plan_type_name, debt_plan_nid, 
+      debt_pre_plan_nid, debt_plan_name, debt_plan_money, 
+      debt_plan_money_yes, debt_plan_money_wait, debt_plan_account_scale, 
+      debt_plan_status, round_amount, accede_times, 
+      expect_apr, actual_apr, investment_scope, 
+      debt_quit_style, debt_quit_period, is_audits, 
+      buy_begin_time, buy_end_time, buy_period_day, 
+      buy_period_hour, buy_period, debt_lock_period, 
+      debt_min_investment, debt_investment_increment, 
+      debt_max_investment, debt_plan_balance, debt_plan_frost, 
+      full_expire_time, repay_account_all, repay_account_interest, 
+      repay_account_capital, repay_account_yes, repay_account_interest_yes, 
+      repay_account_capital_yes, repay_account_wait, 
+      repay_account_interest_wait, repay_account_capital_wait, 
+      service_fee, min_invest_number, max_invest_number, 
+      cycle_times, unable_cycle_times, invest_account_limit, 
+      min_surplus_invest_account, liquidate_should_time, 
+      liquidate_fact_time, repay_time, audit_user_id, 
+      audit_time, audit_remark, plan_lock_time, 
+      commission_status, commission_total, liquidate_apr, 
+      coupon_config, liquidate_arrival_amount, repay_time_last, 
+      show_status, del_flag, create_user_id, 
+      create_user_name, update_user_id, update_user_name, 
+      create_time, update_time, plan_concept, 
+      plan_principle, safeguard_measures, 
+      margin_measures)
+    values (#{debtPlanType,jdbcType=INTEGER}, #{debtPlanTypeName,jdbcType=VARCHAR}, #{debtPlanNid,jdbcType=VARCHAR}, 
+      #{debtPrePlanNid,jdbcType=INTEGER}, #{debtPlanName,jdbcType=VARCHAR}, #{debtPlanMoney,jdbcType=DECIMAL}, 
+      #{debtPlanMoneyYes,jdbcType=DECIMAL}, #{debtPlanMoneyWait,jdbcType=DECIMAL}, #{debtPlanAccountScale,jdbcType=DECIMAL}, 
+      #{debtPlanStatus,jdbcType=TINYINT}, #{roundAmount,jdbcType=DECIMAL}, #{accedeTimes,jdbcType=INTEGER}, 
+      #{expectApr,jdbcType=DECIMAL}, #{actualApr,jdbcType=DECIMAL}, #{investmentScope,jdbcType=VARCHAR}, 
+      #{debtQuitStyle,jdbcType=TINYINT}, #{debtQuitPeriod,jdbcType=INTEGER}, #{isAudits,jdbcType=VARCHAR}, 
+      #{buyBeginTime,jdbcType=INTEGER}, #{buyEndTime,jdbcType=INTEGER}, #{buyPeriodDay,jdbcType=INTEGER}, 
+      #{buyPeriodHour,jdbcType=INTEGER}, #{buyPeriod,jdbcType=INTEGER}, #{debtLockPeriod,jdbcType=TINYINT}, 
+      #{debtMinInvestment,jdbcType=DECIMAL}, #{debtInvestmentIncrement,jdbcType=DECIMAL}, 
+      #{debtMaxInvestment,jdbcType=DECIMAL}, #{debtPlanBalance,jdbcType=DECIMAL}, #{debtPlanFrost,jdbcType=DECIMAL}, 
+      #{fullExpireTime,jdbcType=INTEGER}, #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccountInterest,jdbcType=DECIMAL}, 
+      #{repayAccountCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{repayAccountInterestYes,jdbcType=DECIMAL}, 
+      #{repayAccountCapitalYes,jdbcType=DECIMAL}, #{repayAccountWait,jdbcType=DECIMAL}, 
+      #{repayAccountInterestWait,jdbcType=DECIMAL}, #{repayAccountCapitalWait,jdbcType=DECIMAL}, 
+      #{serviceFee,jdbcType=DECIMAL}, #{minInvestNumber,jdbcType=TINYINT}, #{maxInvestNumber,jdbcType=TINYINT}, 
+      #{cycleTimes,jdbcType=TINYINT}, #{unableCycleTimes,jdbcType=TINYINT}, #{investAccountLimit,jdbcType=DECIMAL}, 
+      #{minSurplusInvestAccount,jdbcType=DECIMAL}, #{liquidateShouldTime,jdbcType=INTEGER}, 
+      #{liquidateFactTime,jdbcType=INTEGER}, #{repayTime,jdbcType=INTEGER}, #{auditUserId,jdbcType=INTEGER}, 
+      #{auditTime,jdbcType=INTEGER}, #{auditRemark,jdbcType=VARCHAR}, #{planLockTime,jdbcType=INTEGER}, 
+      #{commissionStatus,jdbcType=TINYINT}, #{commissionTotal,jdbcType=DECIMAL}, #{liquidateApr,jdbcType=DECIMAL}, 
+      #{couponConfig,jdbcType=VARCHAR}, #{liquidateArrivalAmount,jdbcType=DECIMAL}, #{repayTimeLast,jdbcType=INTEGER}, 
+      #{showStatus,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{planConcept,jdbcType=LONGVARCHAR}, 
+      #{planPrinciple,jdbcType=LONGVARCHAR}, #{safeguardMeasures,jdbcType=LONGVARCHAR}, 
+      #{marginMeasures,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="debtPlanType != null" >
+        debt_plan_type,
+      </if>
+      <if test="debtPlanTypeName != null" >
+        debt_plan_type_name,
+      </if>
+      <if test="debtPlanNid != null" >
+        debt_plan_nid,
+      </if>
+      <if test="debtPrePlanNid != null" >
+        debt_pre_plan_nid,
+      </if>
+      <if test="debtPlanName != null" >
+        debt_plan_name,
+      </if>
+      <if test="debtPlanMoney != null" >
+        debt_plan_money,
+      </if>
+      <if test="debtPlanMoneyYes != null" >
+        debt_plan_money_yes,
+      </if>
+      <if test="debtPlanMoneyWait != null" >
+        debt_plan_money_wait,
+      </if>
+      <if test="debtPlanAccountScale != null" >
+        debt_plan_account_scale,
+      </if>
+      <if test="debtPlanStatus != null" >
+        debt_plan_status,
+      </if>
+      <if test="roundAmount != null" >
+        round_amount,
+      </if>
+      <if test="accedeTimes != null" >
+        accede_times,
+      </if>
+      <if test="expectApr != null" >
+        expect_apr,
+      </if>
+      <if test="actualApr != null" >
+        actual_apr,
+      </if>
+      <if test="investmentScope != null" >
+        investment_scope,
+      </if>
+      <if test="debtQuitStyle != null" >
+        debt_quit_style,
+      </if>
+      <if test="debtQuitPeriod != null" >
+        debt_quit_period,
+      </if>
+      <if test="isAudits != null" >
+        is_audits,
+      </if>
+      <if test="buyBeginTime != null" >
+        buy_begin_time,
+      </if>
+      <if test="buyEndTime != null" >
+        buy_end_time,
+      </if>
+      <if test="buyPeriodDay != null" >
+        buy_period_day,
+      </if>
+      <if test="buyPeriodHour != null" >
+        buy_period_hour,
+      </if>
+      <if test="buyPeriod != null" >
+        buy_period,
+      </if>
+      <if test="debtLockPeriod != null" >
+        debt_lock_period,
+      </if>
+      <if test="debtMinInvestment != null" >
+        debt_min_investment,
+      </if>
+      <if test="debtInvestmentIncrement != null" >
+        debt_investment_increment,
+      </if>
+      <if test="debtMaxInvestment != null" >
+        debt_max_investment,
+      </if>
+      <if test="debtPlanBalance != null" >
+        debt_plan_balance,
+      </if>
+      <if test="debtPlanFrost != null" >
+        debt_plan_frost,
+      </if>
+      <if test="fullExpireTime != null" >
+        full_expire_time,
+      </if>
+      <if test="repayAccountAll != null" >
+        repay_account_all,
+      </if>
+      <if test="repayAccountInterest != null" >
+        repay_account_interest,
+      </if>
+      <if test="repayAccountCapital != null" >
+        repay_account_capital,
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes,
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        repay_account_interest_yes,
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        repay_account_capital_yes,
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait,
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        repay_account_interest_wait,
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        repay_account_capital_wait,
+      </if>
+      <if test="serviceFee != null" >
+        service_fee,
+      </if>
+      <if test="minInvestNumber != null" >
+        min_invest_number,
+      </if>
+      <if test="maxInvestNumber != null" >
+        max_invest_number,
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times,
+      </if>
+      <if test="unableCycleTimes != null" >
+        unable_cycle_times,
+      </if>
+      <if test="investAccountLimit != null" >
+        invest_account_limit,
+      </if>
+      <if test="minSurplusInvestAccount != null" >
+        min_surplus_invest_account,
+      </if>
+      <if test="liquidateShouldTime != null" >
+        liquidate_should_time,
+      </if>
+      <if test="liquidateFactTime != null" >
+        liquidate_fact_time,
+      </if>
+      <if test="repayTime != null" >
+        repay_time,
+      </if>
+      <if test="auditUserId != null" >
+        audit_user_id,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="auditRemark != null" >
+        audit_remark,
+      </if>
+      <if test="planLockTime != null" >
+        plan_lock_time,
+      </if>
+      <if test="commissionStatus != null" >
+        commission_status,
+      </if>
+      <if test="commissionTotal != null" >
+        commission_total,
+      </if>
+      <if test="liquidateApr != null" >
+        liquidate_apr,
+      </if>
+      <if test="couponConfig != null" >
+        coupon_config,
+      </if>
+      <if test="liquidateArrivalAmount != null" >
+        liquidate_arrival_amount,
+      </if>
+      <if test="repayTimeLast != null" >
+        repay_time_last,
+      </if>
+      <if test="showStatus != null" >
+        show_status,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="planConcept != null" >
+        plan_concept,
+      </if>
+      <if test="planPrinciple != null" >
+        plan_principle,
+      </if>
+      <if test="safeguardMeasures != null" >
+        safeguard_measures,
+      </if>
+      <if test="marginMeasures != null" >
+        margin_measures,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="debtPlanType != null" >
+        #{debtPlanType,jdbcType=INTEGER},
+      </if>
+      <if test="debtPlanTypeName != null" >
+        #{debtPlanTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPlanNid != null" >
+        #{debtPlanNid,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPrePlanNid != null" >
+        #{debtPrePlanNid,jdbcType=INTEGER},
+      </if>
+      <if test="debtPlanName != null" >
+        #{debtPlanName,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPlanMoney != null" >
+        #{debtPlanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanMoneyYes != null" >
+        #{debtPlanMoneyYes,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanMoneyWait != null" >
+        #{debtPlanMoneyWait,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanAccountScale != null" >
+        #{debtPlanAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanStatus != null" >
+        #{debtPlanStatus,jdbcType=TINYINT},
+      </if>
+      <if test="roundAmount != null" >
+        #{roundAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeTimes != null" >
+        #{accedeTimes,jdbcType=INTEGER},
+      </if>
+      <if test="expectApr != null" >
+        #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="actualApr != null" >
+        #{actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investmentScope != null" >
+        #{investmentScope,jdbcType=VARCHAR},
+      </if>
+      <if test="debtQuitStyle != null" >
+        #{debtQuitStyle,jdbcType=TINYINT},
+      </if>
+      <if test="debtQuitPeriod != null" >
+        #{debtQuitPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="isAudits != null" >
+        #{isAudits,jdbcType=VARCHAR},
+      </if>
+      <if test="buyBeginTime != null" >
+        #{buyBeginTime,jdbcType=INTEGER},
+      </if>
+      <if test="buyEndTime != null" >
+        #{buyEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriodDay != null" >
+        #{buyPeriodDay,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriodHour != null" >
+        #{buyPeriodHour,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriod != null" >
+        #{buyPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="debtLockPeriod != null" >
+        #{debtLockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="debtMinInvestment != null" >
+        #{debtMinInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="debtInvestmentIncrement != null" >
+        #{debtInvestmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="debtMaxInvestment != null" >
+        #{debtMaxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanBalance != null" >
+        #{debtPlanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanFrost != null" >
+        #{debtPlanFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="fullExpireTime != null" >
+        #{fullExpireTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayAccountAll != null" >
+        #{repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterest != null" >
+        #{repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapital != null" >
+        #{repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        #{repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        #{repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="minInvestNumber != null" >
+        #{minInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="maxInvestNumber != null" >
+        #{maxInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="cycleTimes != null" >
+        #{cycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="unableCycleTimes != null" >
+        #{unableCycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="investAccountLimit != null" >
+        #{investAccountLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="minSurplusInvestAccount != null" >
+        #{minSurplusInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidateShouldTime != null" >
+        #{liquidateShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="liquidateFactTime != null" >
+        #{liquidateFactTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        #{repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="auditUserId != null" >
+        #{auditUserId,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="auditRemark != null" >
+        #{auditRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="planLockTime != null" >
+        #{planLockTime,jdbcType=INTEGER},
+      </if>
+      <if test="commissionStatus != null" >
+        #{commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="commissionTotal != null" >
+        #{commissionTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidateApr != null" >
+        #{liquidateApr,jdbcType=DECIMAL},
+      </if>
+      <if test="couponConfig != null" >
+        #{couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="liquidateArrivalAmount != null" >
+        #{liquidateArrivalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTimeLast != null" >
+        #{repayTimeLast,jdbcType=INTEGER},
+      </if>
+      <if test="showStatus != null" >
+        #{showStatus,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planConcept != null" >
+        #{planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="planPrinciple != null" >
+        #{planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="safeguardMeasures != null" >
+        #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="marginMeasures != null" >
+        #{marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_plan
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_plan
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtPlanType != null" >
+        debt_plan_type = #{record.debtPlanType,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtPlanTypeName != null" >
+        debt_plan_type_name = #{record.debtPlanTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.debtPlanNid != null" >
+        debt_plan_nid = #{record.debtPlanNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.debtPrePlanNid != null" >
+        debt_pre_plan_nid = #{record.debtPrePlanNid,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtPlanName != null" >
+        debt_plan_name = #{record.debtPlanName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.debtPlanMoney != null" >
+        debt_plan_money = #{record.debtPlanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanMoneyYes != null" >
+        debt_plan_money_yes = #{record.debtPlanMoneyYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanMoneyWait != null" >
+        debt_plan_money_wait = #{record.debtPlanMoneyWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanAccountScale != null" >
+        debt_plan_account_scale = #{record.debtPlanAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanStatus != null" >
+        debt_plan_status = #{record.debtPlanStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.roundAmount != null" >
+        round_amount = #{record.roundAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accedeTimes != null" >
+        accede_times = #{record.accedeTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.expectApr != null" >
+        expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.actualApr != null" >
+        actual_apr = #{record.actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investmentScope != null" >
+        investment_scope = #{record.investmentScope,jdbcType=VARCHAR},
+      </if>
+      <if test="record.debtQuitStyle != null" >
+        debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
+      </if>
+      <if test="record.debtQuitPeriod != null" >
+        debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.isAudits != null" >
+        is_audits = #{record.isAudits,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyBeginTime != null" >
+        buy_begin_time = #{record.buyBeginTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyEndTime != null" >
+        buy_end_time = #{record.buyEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyPeriodDay != null" >
+        buy_period_day = #{record.buyPeriodDay,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyPeriodHour != null" >
+        buy_period_hour = #{record.buyPeriodHour,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyPeriod != null" >
+        buy_period = #{record.buyPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtLockPeriod != null" >
+        debt_lock_period = #{record.debtLockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="record.debtMinInvestment != null" >
+        debt_min_investment = #{record.debtMinInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtInvestmentIncrement != null" >
+        debt_investment_increment = #{record.debtInvestmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtMaxInvestment != null" >
+        debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanBalance != null" >
+        debt_plan_balance = #{record.debtPlanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.debtPlanFrost != null" >
+        debt_plan_frost = #{record.debtPlanFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fullExpireTime != null" >
+        full_expire_time = #{record.fullExpireTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayAccountAll != null" >
+        repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterest != null" >
+        repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapital != null" >
+        repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountYes != null" >
+        repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterestYes != null" >
+        repay_account_interest_yes = #{record.repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapitalYes != null" >
+        repay_account_capital_yes = #{record.repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountWait != null" >
+        repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterestWait != null" >
+        repay_account_interest_wait = #{record.repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapitalWait != null" >
+        repay_account_capital_wait = #{record.repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceFee != null" >
+        service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.minInvestNumber != null" >
+        min_invest_number = #{record.minInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="record.maxInvestNumber != null" >
+        max_invest_number = #{record.maxInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="record.cycleTimes != null" >
+        cycle_times = #{record.cycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.unableCycleTimes != null" >
+        unable_cycle_times = #{record.unableCycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.investAccountLimit != null" >
+        invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.minSurplusInvestAccount != null" >
+        min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidateShouldTime != null" >
+        liquidate_should_time = #{record.liquidateShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.liquidateFactTime != null" >
+        liquidate_fact_time = #{record.liquidateFactTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayTime != null" >
+        repay_time = #{record.repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditUserId != null" >
+        audit_user_id = #{record.auditUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditTime != null" >
+        audit_time = #{record.auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditRemark != null" >
+        audit_remark = #{record.auditRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planLockTime != null" >
+        plan_lock_time = #{record.planLockTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.commissionStatus != null" >
+        commission_status = #{record.commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.commissionTotal != null" >
+        commission_total = #{record.commissionTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidateApr != null" >
+        liquidate_apr = #{record.liquidateApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.couponConfig != null" >
+        coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="record.liquidateArrivalAmount != null" >
+        liquidate_arrival_amount = #{record.liquidateArrivalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayTimeLast != null" >
+        repay_time_last = #{record.repayTimeLast,jdbcType=INTEGER},
+      </if>
+      <if test="record.showStatus != null" >
+        show_status = #{record.showStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserName != null" >
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.planConcept != null" >
+        plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.planPrinciple != null" >
+        plan_principle = #{record.planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.safeguardMeasures != null" >
+        safeguard_measures = #{record.safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.marginMeasures != null" >
+        margin_measures = #{record.marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_debt_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      debt_plan_type = #{record.debtPlanType,jdbcType=INTEGER},
+      debt_plan_type_name = #{record.debtPlanTypeName,jdbcType=VARCHAR},
+      debt_plan_nid = #{record.debtPlanNid,jdbcType=VARCHAR},
+      debt_pre_plan_nid = #{record.debtPrePlanNid,jdbcType=INTEGER},
+      debt_plan_name = #{record.debtPlanName,jdbcType=VARCHAR},
+      debt_plan_money = #{record.debtPlanMoney,jdbcType=DECIMAL},
+      debt_plan_money_yes = #{record.debtPlanMoneyYes,jdbcType=DECIMAL},
+      debt_plan_money_wait = #{record.debtPlanMoneyWait,jdbcType=DECIMAL},
+      debt_plan_account_scale = #{record.debtPlanAccountScale,jdbcType=DECIMAL},
+      debt_plan_status = #{record.debtPlanStatus,jdbcType=TINYINT},
+      round_amount = #{record.roundAmount,jdbcType=DECIMAL},
+      accede_times = #{record.accedeTimes,jdbcType=INTEGER},
+      expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      actual_apr = #{record.actualApr,jdbcType=DECIMAL},
+      investment_scope = #{record.investmentScope,jdbcType=VARCHAR},
+      debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
+      debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
+      is_audits = #{record.isAudits,jdbcType=VARCHAR},
+      buy_begin_time = #{record.buyBeginTime,jdbcType=INTEGER},
+      buy_end_time = #{record.buyEndTime,jdbcType=INTEGER},
+      buy_period_day = #{record.buyPeriodDay,jdbcType=INTEGER},
+      buy_period_hour = #{record.buyPeriodHour,jdbcType=INTEGER},
+      buy_period = #{record.buyPeriod,jdbcType=INTEGER},
+      debt_lock_period = #{record.debtLockPeriod,jdbcType=TINYINT},
+      debt_min_investment = #{record.debtMinInvestment,jdbcType=DECIMAL},
+      debt_investment_increment = #{record.debtInvestmentIncrement,jdbcType=DECIMAL},
+      debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
+      debt_plan_balance = #{record.debtPlanBalance,jdbcType=DECIMAL},
+      debt_plan_frost = #{record.debtPlanFrost,jdbcType=DECIMAL},
+      full_expire_time = #{record.fullExpireTime,jdbcType=INTEGER},
+      repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{record.repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{record.repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{record.repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{record.repayAccountCapitalWait,jdbcType=DECIMAL},
+      service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      min_invest_number = #{record.minInvestNumber,jdbcType=TINYINT},
+      max_invest_number = #{record.maxInvestNumber,jdbcType=TINYINT},
+      cycle_times = #{record.cycleTimes,jdbcType=TINYINT},
+      unable_cycle_times = #{record.unableCycleTimes,jdbcType=TINYINT},
+      invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
+      min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
+      liquidate_should_time = #{record.liquidateShouldTime,jdbcType=INTEGER},
+      liquidate_fact_time = #{record.liquidateFactTime,jdbcType=INTEGER},
+      repay_time = #{record.repayTime,jdbcType=INTEGER},
+      audit_user_id = #{record.auditUserId,jdbcType=INTEGER},
+      audit_time = #{record.auditTime,jdbcType=INTEGER},
+      audit_remark = #{record.auditRemark,jdbcType=VARCHAR},
+      plan_lock_time = #{record.planLockTime,jdbcType=INTEGER},
+      commission_status = #{record.commissionStatus,jdbcType=TINYINT},
+      commission_total = #{record.commissionTotal,jdbcType=DECIMAL},
+      liquidate_apr = #{record.liquidateApr,jdbcType=DECIMAL},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      liquidate_arrival_amount = #{record.liquidateArrivalAmount,jdbcType=DECIMAL},
+      repay_time_last = #{record.repayTimeLast,jdbcType=INTEGER},
+      show_status = #{record.showStatus,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      plan_concept = #{record.planConcept,jdbcType=LONGVARCHAR},
+      plan_principle = #{record.planPrinciple,jdbcType=LONGVARCHAR},
+      safeguard_measures = #{record.safeguardMeasures,jdbcType=LONGVARCHAR},
+      margin_measures = #{record.marginMeasures,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_plan
+    set id = #{record.id,jdbcType=INTEGER},
+      debt_plan_type = #{record.debtPlanType,jdbcType=INTEGER},
+      debt_plan_type_name = #{record.debtPlanTypeName,jdbcType=VARCHAR},
+      debt_plan_nid = #{record.debtPlanNid,jdbcType=VARCHAR},
+      debt_pre_plan_nid = #{record.debtPrePlanNid,jdbcType=INTEGER},
+      debt_plan_name = #{record.debtPlanName,jdbcType=VARCHAR},
+      debt_plan_money = #{record.debtPlanMoney,jdbcType=DECIMAL},
+      debt_plan_money_yes = #{record.debtPlanMoneyYes,jdbcType=DECIMAL},
+      debt_plan_money_wait = #{record.debtPlanMoneyWait,jdbcType=DECIMAL},
+      debt_plan_account_scale = #{record.debtPlanAccountScale,jdbcType=DECIMAL},
+      debt_plan_status = #{record.debtPlanStatus,jdbcType=TINYINT},
+      round_amount = #{record.roundAmount,jdbcType=DECIMAL},
+      accede_times = #{record.accedeTimes,jdbcType=INTEGER},
+      expect_apr = #{record.expectApr,jdbcType=DECIMAL},
+      actual_apr = #{record.actualApr,jdbcType=DECIMAL},
+      investment_scope = #{record.investmentScope,jdbcType=VARCHAR},
+      debt_quit_style = #{record.debtQuitStyle,jdbcType=TINYINT},
+      debt_quit_period = #{record.debtQuitPeriod,jdbcType=INTEGER},
+      is_audits = #{record.isAudits,jdbcType=VARCHAR},
+      buy_begin_time = #{record.buyBeginTime,jdbcType=INTEGER},
+      buy_end_time = #{record.buyEndTime,jdbcType=INTEGER},
+      buy_period_day = #{record.buyPeriodDay,jdbcType=INTEGER},
+      buy_period_hour = #{record.buyPeriodHour,jdbcType=INTEGER},
+      buy_period = #{record.buyPeriod,jdbcType=INTEGER},
+      debt_lock_period = #{record.debtLockPeriod,jdbcType=TINYINT},
+      debt_min_investment = #{record.debtMinInvestment,jdbcType=DECIMAL},
+      debt_investment_increment = #{record.debtInvestmentIncrement,jdbcType=DECIMAL},
+      debt_max_investment = #{record.debtMaxInvestment,jdbcType=DECIMAL},
+      debt_plan_balance = #{record.debtPlanBalance,jdbcType=DECIMAL},
+      debt_plan_frost = #{record.debtPlanFrost,jdbcType=DECIMAL},
+      full_expire_time = #{record.fullExpireTime,jdbcType=INTEGER},
+      repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{record.repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{record.repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{record.repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{record.repayAccountCapitalWait,jdbcType=DECIMAL},
+      service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      min_invest_number = #{record.minInvestNumber,jdbcType=TINYINT},
+      max_invest_number = #{record.maxInvestNumber,jdbcType=TINYINT},
+      cycle_times = #{record.cycleTimes,jdbcType=TINYINT},
+      unable_cycle_times = #{record.unableCycleTimes,jdbcType=TINYINT},
+      invest_account_limit = #{record.investAccountLimit,jdbcType=DECIMAL},
+      min_surplus_invest_account = #{record.minSurplusInvestAccount,jdbcType=DECIMAL},
+      liquidate_should_time = #{record.liquidateShouldTime,jdbcType=INTEGER},
+      liquidate_fact_time = #{record.liquidateFactTime,jdbcType=INTEGER},
+      repay_time = #{record.repayTime,jdbcType=INTEGER},
+      audit_user_id = #{record.auditUserId,jdbcType=INTEGER},
+      audit_time = #{record.auditTime,jdbcType=INTEGER},
+      audit_remark = #{record.auditRemark,jdbcType=VARCHAR},
+      plan_lock_time = #{record.planLockTime,jdbcType=INTEGER},
+      commission_status = #{record.commissionStatus,jdbcType=TINYINT},
+      commission_total = #{record.commissionTotal,jdbcType=DECIMAL},
+      liquidate_apr = #{record.liquidateApr,jdbcType=DECIMAL},
+      coupon_config = #{record.couponConfig,jdbcType=VARCHAR},
+      liquidate_arrival_amount = #{record.liquidateArrivalAmount,jdbcType=DECIMAL},
+      repay_time_last = #{record.repayTimeLast,jdbcType=INTEGER},
+      show_status = #{record.showStatus,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs" >
+    update ht_debt_plan
+    <set >
+      <if test="debtPlanType != null" >
+        debt_plan_type = #{debtPlanType,jdbcType=INTEGER},
+      </if>
+      <if test="debtPlanTypeName != null" >
+        debt_plan_type_name = #{debtPlanTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPlanNid != null" >
+        debt_plan_nid = #{debtPlanNid,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPrePlanNid != null" >
+        debt_pre_plan_nid = #{debtPrePlanNid,jdbcType=INTEGER},
+      </if>
+      <if test="debtPlanName != null" >
+        debt_plan_name = #{debtPlanName,jdbcType=VARCHAR},
+      </if>
+      <if test="debtPlanMoney != null" >
+        debt_plan_money = #{debtPlanMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanMoneyYes != null" >
+        debt_plan_money_yes = #{debtPlanMoneyYes,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanMoneyWait != null" >
+        debt_plan_money_wait = #{debtPlanMoneyWait,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanAccountScale != null" >
+        debt_plan_account_scale = #{debtPlanAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanStatus != null" >
+        debt_plan_status = #{debtPlanStatus,jdbcType=TINYINT},
+      </if>
+      <if test="roundAmount != null" >
+        round_amount = #{roundAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeTimes != null" >
+        accede_times = #{accedeTimes,jdbcType=INTEGER},
+      </if>
+      <if test="expectApr != null" >
+        expect_apr = #{expectApr,jdbcType=DECIMAL},
+      </if>
+      <if test="actualApr != null" >
+        actual_apr = #{actualApr,jdbcType=DECIMAL},
+      </if>
+      <if test="investmentScope != null" >
+        investment_scope = #{investmentScope,jdbcType=VARCHAR},
+      </if>
+      <if test="debtQuitStyle != null" >
+        debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
+      </if>
+      <if test="debtQuitPeriod != null" >
+        debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="isAudits != null" >
+        is_audits = #{isAudits,jdbcType=VARCHAR},
+      </if>
+      <if test="buyBeginTime != null" >
+        buy_begin_time = #{buyBeginTime,jdbcType=INTEGER},
+      </if>
+      <if test="buyEndTime != null" >
+        buy_end_time = #{buyEndTime,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriodDay != null" >
+        buy_period_day = #{buyPeriodDay,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriodHour != null" >
+        buy_period_hour = #{buyPeriodHour,jdbcType=INTEGER},
+      </if>
+      <if test="buyPeriod != null" >
+        buy_period = #{buyPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="debtLockPeriod != null" >
+        debt_lock_period = #{debtLockPeriod,jdbcType=TINYINT},
+      </if>
+      <if test="debtMinInvestment != null" >
+        debt_min_investment = #{debtMinInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="debtInvestmentIncrement != null" >
+        debt_investment_increment = #{debtInvestmentIncrement,jdbcType=DECIMAL},
+      </if>
+      <if test="debtMaxInvestment != null" >
+        debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanBalance != null" >
+        debt_plan_balance = #{debtPlanBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="debtPlanFrost != null" >
+        debt_plan_frost = #{debtPlanFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="fullExpireTime != null" >
+        full_expire_time = #{fullExpireTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayAccountAll != null" >
+        repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterest != null" >
+        repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapital != null" >
+        repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        repay_account_interest_yes = #{repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        repay_account_capital_yes = #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        repay_account_interest_wait = #{repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        repay_account_capital_wait = #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="minInvestNumber != null" >
+        min_invest_number = #{minInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="maxInvestNumber != null" >
+        max_invest_number = #{maxInvestNumber,jdbcType=TINYINT},
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times = #{cycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="unableCycleTimes != null" >
+        unable_cycle_times = #{unableCycleTimes,jdbcType=TINYINT},
+      </if>
+      <if test="investAccountLimit != null" >
+        invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="minSurplusInvestAccount != null" >
+        min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidateShouldTime != null" >
+        liquidate_should_time = #{liquidateShouldTime,jdbcType=INTEGER},
+      </if>
+      <if test="liquidateFactTime != null" >
+        liquidate_fact_time = #{liquidateFactTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        repay_time = #{repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="auditUserId != null" >
+        audit_user_id = #{auditUserId,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="auditRemark != null" >
+        audit_remark = #{auditRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="planLockTime != null" >
+        plan_lock_time = #{planLockTime,jdbcType=INTEGER},
+      </if>
+      <if test="commissionStatus != null" >
+        commission_status = #{commissionStatus,jdbcType=TINYINT},
+      </if>
+      <if test="commissionTotal != null" >
+        commission_total = #{commissionTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidateApr != null" >
+        liquidate_apr = #{liquidateApr,jdbcType=DECIMAL},
+      </if>
+      <if test="couponConfig != null" >
+        coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="liquidateArrivalAmount != null" >
+        liquidate_arrival_amount = #{liquidateArrivalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTimeLast != null" >
+        repay_time_last = #{repayTimeLast,jdbcType=INTEGER},
+      </if>
+      <if test="showStatus != null" >
+        show_status = #{showStatus,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planConcept != null" >
+        plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="planPrinciple != null" >
+        plan_principle = #{planPrinciple,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="safeguardMeasures != null" >
+        safeguard_measures = #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="marginMeasures != null" >
+        margin_measures = #{marginMeasures,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs" >
+    update ht_debt_plan
+    set debt_plan_type = #{debtPlanType,jdbcType=INTEGER},
+      debt_plan_type_name = #{debtPlanTypeName,jdbcType=VARCHAR},
+      debt_plan_nid = #{debtPlanNid,jdbcType=VARCHAR},
+      debt_pre_plan_nid = #{debtPrePlanNid,jdbcType=INTEGER},
+      debt_plan_name = #{debtPlanName,jdbcType=VARCHAR},
+      debt_plan_money = #{debtPlanMoney,jdbcType=DECIMAL},
+      debt_plan_money_yes = #{debtPlanMoneyYes,jdbcType=DECIMAL},
+      debt_plan_money_wait = #{debtPlanMoneyWait,jdbcType=DECIMAL},
+      debt_plan_account_scale = #{debtPlanAccountScale,jdbcType=DECIMAL},
+      debt_plan_status = #{debtPlanStatus,jdbcType=TINYINT},
+      round_amount = #{roundAmount,jdbcType=DECIMAL},
+      accede_times = #{accedeTimes,jdbcType=INTEGER},
+      expect_apr = #{expectApr,jdbcType=DECIMAL},
+      actual_apr = #{actualApr,jdbcType=DECIMAL},
+      investment_scope = #{investmentScope,jdbcType=VARCHAR},
+      debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
+      debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
+      is_audits = #{isAudits,jdbcType=VARCHAR},
+      buy_begin_time = #{buyBeginTime,jdbcType=INTEGER},
+      buy_end_time = #{buyEndTime,jdbcType=INTEGER},
+      buy_period_day = #{buyPeriodDay,jdbcType=INTEGER},
+      buy_period_hour = #{buyPeriodHour,jdbcType=INTEGER},
+      buy_period = #{buyPeriod,jdbcType=INTEGER},
+      debt_lock_period = #{debtLockPeriod,jdbcType=TINYINT},
+      debt_min_investment = #{debtMinInvestment,jdbcType=DECIMAL},
+      debt_investment_increment = #{debtInvestmentIncrement,jdbcType=DECIMAL},
+      debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
+      debt_plan_balance = #{debtPlanBalance,jdbcType=DECIMAL},
+      debt_plan_frost = #{debtPlanFrost,jdbcType=DECIMAL},
+      full_expire_time = #{fullExpireTime,jdbcType=INTEGER},
+      repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      service_fee = #{serviceFee,jdbcType=DECIMAL},
+      min_invest_number = #{minInvestNumber,jdbcType=TINYINT},
+      max_invest_number = #{maxInvestNumber,jdbcType=TINYINT},
+      cycle_times = #{cycleTimes,jdbcType=TINYINT},
+      unable_cycle_times = #{unableCycleTimes,jdbcType=TINYINT},
+      invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
+      min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
+      liquidate_should_time = #{liquidateShouldTime,jdbcType=INTEGER},
+      liquidate_fact_time = #{liquidateFactTime,jdbcType=INTEGER},
+      repay_time = #{repayTime,jdbcType=INTEGER},
+      audit_user_id = #{auditUserId,jdbcType=INTEGER},
+      audit_time = #{auditTime,jdbcType=INTEGER},
+      audit_remark = #{auditRemark,jdbcType=VARCHAR},
+      plan_lock_time = #{planLockTime,jdbcType=INTEGER},
+      commission_status = #{commissionStatus,jdbcType=TINYINT},
+      commission_total = #{commissionTotal,jdbcType=DECIMAL},
+      liquidate_apr = #{liquidateApr,jdbcType=DECIMAL},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      liquidate_arrival_amount = #{liquidateArrivalAmount,jdbcType=DECIMAL},
+      repay_time_last = #{repayTimeLast,jdbcType=INTEGER},
+      show_status = #{showStatus,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      plan_concept = #{planConcept,jdbcType=LONGVARCHAR},
+      plan_principle = #{planPrinciple,jdbcType=LONGVARCHAR},
+      safeguard_measures = #{safeguardMeasures,jdbcType=LONGVARCHAR},
+      margin_measures = #{marginMeasures,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlan" >
+    update ht_debt_plan
+    set debt_plan_type = #{debtPlanType,jdbcType=INTEGER},
+      debt_plan_type_name = #{debtPlanTypeName,jdbcType=VARCHAR},
+      debt_plan_nid = #{debtPlanNid,jdbcType=VARCHAR},
+      debt_pre_plan_nid = #{debtPrePlanNid,jdbcType=INTEGER},
+      debt_plan_name = #{debtPlanName,jdbcType=VARCHAR},
+      debt_plan_money = #{debtPlanMoney,jdbcType=DECIMAL},
+      debt_plan_money_yes = #{debtPlanMoneyYes,jdbcType=DECIMAL},
+      debt_plan_money_wait = #{debtPlanMoneyWait,jdbcType=DECIMAL},
+      debt_plan_account_scale = #{debtPlanAccountScale,jdbcType=DECIMAL},
+      debt_plan_status = #{debtPlanStatus,jdbcType=TINYINT},
+      round_amount = #{roundAmount,jdbcType=DECIMAL},
+      accede_times = #{accedeTimes,jdbcType=INTEGER},
+      expect_apr = #{expectApr,jdbcType=DECIMAL},
+      actual_apr = #{actualApr,jdbcType=DECIMAL},
+      investment_scope = #{investmentScope,jdbcType=VARCHAR},
+      debt_quit_style = #{debtQuitStyle,jdbcType=TINYINT},
+      debt_quit_period = #{debtQuitPeriod,jdbcType=INTEGER},
+      is_audits = #{isAudits,jdbcType=VARCHAR},
+      buy_begin_time = #{buyBeginTime,jdbcType=INTEGER},
+      buy_end_time = #{buyEndTime,jdbcType=INTEGER},
+      buy_period_day = #{buyPeriodDay,jdbcType=INTEGER},
+      buy_period_hour = #{buyPeriodHour,jdbcType=INTEGER},
+      buy_period = #{buyPeriod,jdbcType=INTEGER},
+      debt_lock_period = #{debtLockPeriod,jdbcType=TINYINT},
+      debt_min_investment = #{debtMinInvestment,jdbcType=DECIMAL},
+      debt_investment_increment = #{debtInvestmentIncrement,jdbcType=DECIMAL},
+      debt_max_investment = #{debtMaxInvestment,jdbcType=DECIMAL},
+      debt_plan_balance = #{debtPlanBalance,jdbcType=DECIMAL},
+      debt_plan_frost = #{debtPlanFrost,jdbcType=DECIMAL},
+      full_expire_time = #{fullExpireTime,jdbcType=INTEGER},
+      repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      service_fee = #{serviceFee,jdbcType=DECIMAL},
+      min_invest_number = #{minInvestNumber,jdbcType=TINYINT},
+      max_invest_number = #{maxInvestNumber,jdbcType=TINYINT},
+      cycle_times = #{cycleTimes,jdbcType=TINYINT},
+      unable_cycle_times = #{unableCycleTimes,jdbcType=TINYINT},
+      invest_account_limit = #{investAccountLimit,jdbcType=DECIMAL},
+      min_surplus_invest_account = #{minSurplusInvestAccount,jdbcType=DECIMAL},
+      liquidate_should_time = #{liquidateShouldTime,jdbcType=INTEGER},
+      liquidate_fact_time = #{liquidateFactTime,jdbcType=INTEGER},
+      repay_time = #{repayTime,jdbcType=INTEGER},
+      audit_user_id = #{auditUserId,jdbcType=INTEGER},
+      audit_time = #{auditTime,jdbcType=INTEGER},
+      audit_remark = #{auditRemark,jdbcType=VARCHAR},
+      plan_lock_time = #{planLockTime,jdbcType=INTEGER},
+      commission_status = #{commissionStatus,jdbcType=TINYINT},
+      commission_total = #{commissionTotal,jdbcType=DECIMAL},
+      liquidate_apr = #{liquidateApr,jdbcType=DECIMAL},
+      coupon_config = #{couponConfig,jdbcType=VARCHAR},
+      liquidate_arrival_amount = #{liquidateArrivalAmount,jdbcType=DECIMAL},
+      repay_time_last = #{repayTimeLast,jdbcType=INTEGER},
+      show_status = #{showStatus,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
