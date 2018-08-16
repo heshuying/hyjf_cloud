@@ -42,11 +42,10 @@ public class AppContentArticleController extends BaseMarketController {
     @ApiOperation(value = "文章详情页", httpMethod = "POST", notes = "文章详情页")
     @PostMapping(value = GET_CONTENT_ARTICLE_ID_ACTION)
     @ResponseBody
-    public AppResult getContentArticleById(@PathVariable("articleId") Integer contentArticleId, @PathVariable("articleType") Integer type) {
+    public AppResult getContentArticleById(@PathVariable("articleType") Integer type, @PathVariable("articleId") Integer contentArticleId) {
         logger.info(AppContentArticleController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         AppContentArticleResponse response = new AppContentArticleResponse();
         response.setRtn("000");
-        response.setMessage(AppContentArticleResponse.SUCCESS_MSG);
         response.setTopTitle(getTopTitle(type));
         try {
             // 根据id返回文章详情
@@ -57,19 +56,17 @@ public class AppContentArticleController extends BaseMarketController {
                 details.put("content",contentArticle.getContent());
                 details.put("date",new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
                 response.setDetails(details);
+            }else{
+                return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
             }
         } catch (Exception e) {
-            response.setRtn(Response.ERROR);
-            response.setMessage(AppContentArticleResponse.FAIL_MSG);
+            return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
         }
-        if(response == null) {
-            return new AppResult<>(Response.ERROR, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AppResult<>(Response.ERROR, response.getMessage());
-        }
+        AppResult appResult = new AppResult<>(response);
+        appResult.setStatus("000");
+        appResult.setStatusDesc(Response.SUCCESS_MSG);
         logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
-        return new AppResult<>(response) ;
+        return appResult;
     }
 
     private String getTopTitle(Integer type) {
