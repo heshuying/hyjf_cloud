@@ -9,6 +9,7 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
@@ -2000,4 +2001,5 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
 }

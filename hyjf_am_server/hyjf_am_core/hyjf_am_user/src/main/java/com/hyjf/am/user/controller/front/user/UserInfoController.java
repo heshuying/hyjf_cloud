@@ -3,8 +3,10 @@ package com.hyjf.am.user.controller.front.user;
 import java.util.List;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +172,25 @@ public class UserInfoController extends BaseController {
 			List<UserInfoCustomizeVO> userInfoCustomizeVOS = CommonUtils.convertBeanList(userInfoCustomize, UserInfoCustomizeVO.class);
 			response.setResult(userInfoCustomizeVOS);
 		}
+		return response;
+	}
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@GetMapping("/getMobileCodeByNumber/{mobile}")
+	public MessagePushErrorResponse getMobileCodeByNumber(@PathVariable String mobile){
+		MessagePushErrorResponse response = new MessagePushErrorResponse();
+		MessagePushErrorVO essagePushErrorVO=userInfoService.getMobileCodeByNumber(mobile);
+		if(essagePushErrorVO != null){
+			response.setResult(CommonUtils.convertBean(essagePushErrorVO, MessagePushErrorVO.class));
+			return response;
+		}
+		response.setRtn(Response.FAIL);
+		response.setMessage(Response.FAIL_MSG);
 		return response;
 	}
 

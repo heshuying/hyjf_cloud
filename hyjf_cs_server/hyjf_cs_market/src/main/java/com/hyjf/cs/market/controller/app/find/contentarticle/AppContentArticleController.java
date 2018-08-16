@@ -59,14 +59,14 @@ public class AppContentArticleController extends BaseMarketController {
                 response.setDetails(details);
             }
         } catch (Exception e) {
-            response.setRtn("99");
+            response.setRtn(Response.ERROR);
             response.setMessage(AppContentArticleResponse.FAIL_MSG);
         }
         if(response == null) {
-            return new AppResult<>("99", FAIL_DESC);
+            return new AppResult<>(Response.ERROR, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
-            return new AppResult<>("99", response.getMessage());
+            return new AppResult<>(Response.ERROR, response.getMessage());
         }
         logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         return new AppResult<>(response) ;

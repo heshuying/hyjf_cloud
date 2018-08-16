@@ -3,8 +3,11 @@
  */
 package com.hyjf.am.trade.service.task;
 
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
+import com.hyjf.common.exception.MQException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,4 +50,24 @@ public interface CouponRepayService {
      * @return
      */
     List<String> selectNidForCouponOnly(Map<String, Object> paramMap);
+
+    /**
+     * 根据订单编号取得该订单的还款列表
+     * @param map
+     * @return
+     */
+    CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> map);
+
+    /**
+     * 更新优惠券还款
+     * @param couponRecover
+     */
+    void updateCouponRecover(CouponRecover couponRecover);
+
+    /**
+     * 体验金按收益期限还款
+     * @param request
+     * @return
+     */
+    Integer updateCouponOnlyRecover(CouponRecoverCustomizeRequest request) throws MQException;
 }

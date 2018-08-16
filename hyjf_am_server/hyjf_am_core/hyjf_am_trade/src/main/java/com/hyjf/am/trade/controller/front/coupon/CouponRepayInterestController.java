@@ -28,6 +28,7 @@ import com.hyjf.common.util.CommonUtils;
 /**
  * @author yaoy
  * @version CouponRepayInterestController, v0.1 2018/6/21 18:00
+ * 加息券还款统计定时任务
  */
 @RestController
 @RequestMapping("/am-trade/couponRepay")

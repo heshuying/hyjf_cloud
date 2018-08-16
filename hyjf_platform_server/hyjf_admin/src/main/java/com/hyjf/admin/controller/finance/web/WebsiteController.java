@@ -43,7 +43,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version WebsiteController, v0.1 2018/7/6 9:43
  */
-@Api(value = "网站收支", tags ="网站收支")
+@Api(value = "资金中心-平台账户-网站收支", tags ="资金中心-平台账户-网站收支")
 @RestController
 @RequestMapping("/hyjf-admin/finance/web")
 public class WebsiteController extends BaseController {
@@ -90,7 +90,7 @@ public class WebsiteController extends BaseController {
      * @param form
      * @return
      */
-    @ApiOperation(value = "网站收支  查询条件",notes = "网站收支  查询条件")
+    @ApiOperation(value = "网站收支-查询条件",notes = "网站收支-查询条件")
     @PostMapping(value = "/searchAction")
     //View
     public AdminResult initWithQ(@RequestBody WebBean form) {
@@ -124,7 +124,8 @@ public class WebsiteController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/exportWeblistExcel")
+    @ApiOperation(value = "导出网站收支列表")
+    @PostMapping(value = "/exportWeblistExcel")
     //EXPORT
     public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
         AccountWebListVO accountWebList = new AccountWebListVO();
