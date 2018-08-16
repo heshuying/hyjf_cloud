@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,34 +13,26 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: TenderCancelExceptionRequest, v0.1 2018/7/11 9:50
  */
+@ApiModel(value = "投资撤销请求参数")
 public class TenderCancelExceptionRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
-
     private static final long serialVersionUID = 657155690866140307L;
 
-    /**
-     * 冻结订单号
-     */
+    @ApiModelProperty(value = "冻结订单号")
     private String orderId;
-    /**
-     * 标的号
-     */
+
+    @ApiModelProperty(value = "标的号")
     private String borrowNid = "";
-    /**
-     * 用户名
-     */
+
+    @ApiModelProperty(value = "用户名")
     private String userName = "";
 
-    /**
-     * 检索条件 时间开始
-     */
+    @ApiModelProperty(value = "时间开始")
     private String timeStartSrch;
 
-    /**
-     * 检索条件 时间结束
-     */
+    @ApiModelProperty(value = "时间结束")
     private String timeEndSrch;
 
     /**
