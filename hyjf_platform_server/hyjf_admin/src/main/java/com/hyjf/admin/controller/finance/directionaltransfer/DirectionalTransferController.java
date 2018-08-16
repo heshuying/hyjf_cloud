@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.finance.directionaltransfer;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.DirectionalTransferService;
@@ -41,14 +42,11 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping(value = "/getdirectionaltransferlist")
-    public AdminResult getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<AccountDirectionalTransferVO>> getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
         Integer count = directionaltransferService.getDirectionalTransferCount(request);
         count = (count == null)?0:count;
-        map.put("count",count);
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = directionaltransferService.searchDirectionalTransferList(request);
-        map.put("accountDirectionalTransferList",accountDirectionalTransferVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(accountDirectionalTransferVOList,count));
     }
 
 
