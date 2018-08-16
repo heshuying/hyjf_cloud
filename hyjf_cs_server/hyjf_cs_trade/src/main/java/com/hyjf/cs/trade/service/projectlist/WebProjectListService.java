@@ -102,6 +102,13 @@ public interface WebProjectListService extends BaseTradeService {
      */
     public WebResult getPlanAccedeList(WebPlanRequestBean requestBean,  String userId);
 
+    /**
+     * 根据计划编号和用户id查询用户优惠券
+     * @author zhangyk
+     * @date 2018/8/16 11:08
+     */
+    public WebResult getProjectAvailableUserCoupon(WebPlanRequestBean requestBean,  Integer userId);
+
 
 
 }
