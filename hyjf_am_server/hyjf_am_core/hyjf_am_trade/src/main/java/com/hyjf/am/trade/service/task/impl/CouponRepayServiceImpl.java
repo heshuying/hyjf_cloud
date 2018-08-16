@@ -519,8 +519,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         transferExceptionLog.setOrderId(fromBean.getLogOrderId());
         // 备注
         transferExceptionLog.setRemark(errorMsg);
-        transferExceptionLog.setAddTime(nowTime);
-        transferExceptionLog.setAddUser(CustomConstants.OPERATOR_AUTO_REPAY);
+        transferExceptionLog.setCreateTime(nowTime);
+        transferExceptionLog.setCreateUser(CustomConstants.OPERATOR_AUTO_REPAY);
         transferExceptionLog.setUpdateTime(nowTime);
         transferExceptionLog.setUpdateUser(CustomConstants.OPERATOR_AUTO_REPAY);
         transferExceptionLog.setDelFlag(0);
