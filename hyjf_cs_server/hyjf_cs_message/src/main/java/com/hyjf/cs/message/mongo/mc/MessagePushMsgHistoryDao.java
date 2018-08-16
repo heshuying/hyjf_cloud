@@ -29,10 +29,15 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (startTime != null) {
 			criteria.and("sendTime").gte(startTime);
+			if (endTime != null) {
+				criteria.lte(endTime);
+			}
+		}else{
+			if (endTime != null) {
+				criteria.and("sendTime").lte(endTime);
+			}
 		}
-		if (endTime != null) {
-			criteria.and("sendTime").lte(endTime);
-		}
+
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}

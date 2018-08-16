@@ -46,21 +46,22 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         if (form.getNoticesSendStatusSrch() != null) {
             criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
         }
-        if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-            try {
-                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
-                criteria.and("sendTime").gte(time);
-            } catch (Exception e) {
-            }
-        }
-        if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-            try {
-                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.and("sendTime").lte(time);
 
-            } catch (Exception e) {
+        if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
+            Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
+            criteria.and("sendTime").gte(time);
+            if (form.getEndSendTimeSrch() != null) {
+                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
+                criteria.lte(time2);
+            }
+        }else{
+            if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
+                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
+                criteria.and("sendTime").lte(time2);
             }
         }
+
+
         criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
 
         Query query = new Query(criteria);
@@ -95,17 +96,16 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
         }
         if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
-            try {
-                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getNoticesCreateUserNameSrch());
-                criteria.and("sendTime").gte(time);
-            } catch (Exception e) {
+            Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
+            criteria.and("sendTime").gte(time);
+            if (form.getEndSendTimeSrch() != null) {
+                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
+                criteria.lte(time2);
             }
-        }
-        if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-            try {
-                Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
-                criteria.and("sendTime").lte(time);
-            } catch (Exception e) {
+        }else{
+            if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
+                Integer time2 = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getEndSendTimeSrch());
+                criteria.and("sendTime").lte(time2);
             }
         }
         criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
