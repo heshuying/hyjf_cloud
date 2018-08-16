@@ -5293,4 +5293,38 @@ public class AmTradeClientImpl implements AmTradeClient {
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest){
         return restTemplate.postForEntity( "http://AM-TRADE/am-trade/config/finmanchargenew/countRecordByProjectType",adminRequest,Integer.class).getBody();
     }
+
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    @Override
+    public List<BorrowStyleVO> selectCommonBorrowStyleList() {
+        String url = "http://AM-TRADE/am-trade/admin_common/select_borrow_style";
+        BorrowStyleResponse response = restTemplate.getForEntity(url, BorrowStyleResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 资产来源下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    @Override
+    public List<HjhInstConfigVO> selectCommonHjhInstConfigList() {
+        String url = "http://AM-TRADE/am-trade/admin_common/select_inst_config";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

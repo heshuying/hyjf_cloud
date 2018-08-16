@@ -25,7 +25,7 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     private String borrowClass;
 
-    private String investUserType;
+    private Integer investUserType;
 
     private Integer status;
 
@@ -37,13 +37,13 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     private String createGroupId;
 
-    private String createUserId;
+    private Integer createUserId;
 
     private Date createTime;
 
     private String updateGroupId;
 
-    private String updateUserId;
+    private Integer updateUserId;
 
     private Date updateTime;
     private Long increaseMoney;
@@ -115,12 +115,12 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.borrowClass = borrowClass == null ? null : borrowClass.trim();
     }
 
-    public String getInvestUserType() {
+    public Integer getInvestUserType() {
         return investUserType;
     }
 
-    public void setInvestUserType(String investUserType) {
-        this.investUserType = investUserType == null ? null : investUserType.trim();
+    public void setInvestUserType(Integer investUserType) {
+        this.investUserType = investUserType;
     }
 
     public Integer getStatus() {
@@ -163,14 +163,6 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.createGroupId = createGroupId == null ? null : createGroupId.trim();
     }
 
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId == null ? null : createUserId.trim();
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -187,12 +179,20 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.updateGroupId = updateGroupId == null ? null : updateGroupId.trim();
     }
 
-    public String getUpdateUserId() {
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
         return updateUserId;
     }
 
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId == null ? null : updateUserId.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getUpdateTime() {

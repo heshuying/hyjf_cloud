@@ -2523,5 +2523,23 @@ public interface AmTradeClient {
      * @return
      */
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
+
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    List<BorrowStyleVO> selectCommonBorrowStyleList();
+
+    /**
+     * 资产来源下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    List<HjhInstConfigVO> selectCommonHjhInstConfigList();
 }
 

@@ -127,7 +127,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BorrowProjectRepayExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowClassEqualTo(str);
         List<BorrowProjectRepay> borrowProjectRepayS=borrowProjectRepayMapper.selectByExample(example);
-        BeanUtils.copyProperties(borrowProjectRepayS,borrowProjectRepayVOS);
+        borrowProjectRepayVOS =CommonUtils.convertBeanList(borrowProjectRepayS,BorrowProjectRepayVO.class);
         return borrowProjectRepayVOS;
     }
     /**
