@@ -365,7 +365,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn" + "?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+mobile;
 		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
 
