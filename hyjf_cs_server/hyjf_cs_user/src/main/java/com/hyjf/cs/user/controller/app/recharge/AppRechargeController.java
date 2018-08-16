@@ -248,13 +248,15 @@ public class AppRechargeController extends BaseUserController {
                             //String moneyInfo = AppRechargeDefine.FEE + CustomConstants.DF_FOR_VIEW.format(fee) + AppRechargeDefine.RECHARGE_INFO_SUFFIX + AppRechargeDefine.BALANCE
                             //+ CustomConstants.DF_FOR_VIEW.format(balance) + AppRechargeDefine.RECHARGE_INFO_SUFFIX;
                             BankRechargeConfigVo bankRechargeConfigVo = appRechargeService.getBankRechargeConfigByBankId(bankId);
-                            if (banksConfig != null) {
+                            if (bankRechargeConfigVo != null) {
+/*                                BigDecimal timesLimit = bankRechargeConfigVo.getSingleQuota();
+                                timesLimit = (timesLimit == null)?BigDecimal.ZERO:timesLimit;
+                                BigDecimal dayLimit = bankRechargeConfigVo.getSingleCardQuota();
+                                dayLimit = (dayLimit == null)?BigDecimal.ZERO:dayLimit;*/
                                 // 每次限额 单位：万元
-                                BigDecimal timesLimitAmount = bankRechargeConfigVo.getSingleQuota()
-                                        .divide(new BigDecimal(AMOUNT_UNIT));
+                                BigDecimal timesLimitAmount = bankRechargeConfigVo.getSingleQuota().divide(new BigDecimal(AMOUNT_UNIT));
                                 // 每日限额 单位：万元
-                                BigDecimal dayLimitAmount = bankRechargeConfigVo.getSingleCardQuota()
-                                        .divide(new BigDecimal(AMOUNT_UNIT));
+                                BigDecimal dayLimitAmount = bankRechargeConfigVo.getSingleCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
                                 // 每月限额 单位: 万元
                                 // 月限额是否还有必要,因为数据库里没有
                                 //BigDecimal monthLimitAmount = bankRechargeConfigVo.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));

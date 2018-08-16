@@ -285,4 +285,34 @@ public class RedisConstants {
      * 群发短信--短信余额
      */
     public static final String REMAIN_MONEY = "remain_money";
+
+    /**
+     * 上海大屏幕运营数据
+     */
+    public static final String SH_OPERATIONAL_DATA = "SH_OPERATIONAL_DATA:";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资人
+     */
+    public static final String STATISTICAL_INVESTOR = "STATISTICAL_INVESTOR";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资
+     */
+    public static final String STATISTICAL_INVESTMENT = "STATISTICAL_INVESTMENT";
+
+    /**
+     * 上海大屏幕运营数据 : 统计充值
+     */
+    public static final String STATISTICAL_RECHARGE = "STATISTICAL_RECHARGE";
+
+    /**
+     * 上海大屏幕运营数据 : 注册人统计
+     */
+    public static final String REGISTRANT_STATISTICS = "REGISTRANT_STATISTICS";
+
+    /**
+     * 上海大屏幕运营数据 : 公司动态列表
+     */
+    public static final String ARTICLE_LIST = "ARTICLE_LIST";
 }

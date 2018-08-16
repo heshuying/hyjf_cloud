@@ -73,7 +73,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "已交保证金详细画面", notes = "已交保证金详细画面")
-    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/get_bail_info/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult<BorrowBailInfoResponseBean> getBailInfo(@PathVariable String borrowNid) {
@@ -81,7 +81,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "交保证金", notes = "交保证金")
-    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/insert_borrow_bail/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
@@ -93,7 +93,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
-    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult<BorrowFireInfoResponseBean> getBorrowFireInfo(@PathVariable String borrowNid) {
