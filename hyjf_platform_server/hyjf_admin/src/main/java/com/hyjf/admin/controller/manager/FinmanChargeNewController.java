@@ -96,7 +96,9 @@ public class FinmanChargeNewController extends BaseController {
         BorrowFinmanNewChargeVO vo= new BorrowFinmanNewChargeVO();
         if (StringUtils.isNotEmpty(adminRequest.getManChargeCd())) {
             response = this.finmanChargeNewService.getRecordInfo(adminRequest.getManChargeCd());
-            vo =response.getResult();
+            if(null != response.getResult()){
+                vo =response.getResult();
+            }
         }
         // 汇直投项目列表
         List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
