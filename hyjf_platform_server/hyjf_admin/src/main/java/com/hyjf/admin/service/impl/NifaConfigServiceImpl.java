@@ -3,9 +3,13 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.NifaConfigService;
+import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
+import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.resquest.admin.NifaContractTemplateAddRequest;
 import com.hyjf.am.resquest.admin.NifaFieldDefinitionAddRequest;
-import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
+import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
+import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +58,63 @@ public class NifaConfigServiceImpl extends BaseServiceImpl implements NifaConfig
     @Override
     public Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest nifaFieldDefinitionAddRequest){
         return  amTradeClient.updateNifaFieldDefinition(nifaFieldDefinitionAddRequest);
+    }
+
+    /**
+     * 添加合同模版约定条款表
+     * @param request
+     * @return
+     */
+    @Override
+    public Boolean insertNifaContractTemplate(NifaContractTemplateAddRequest request){
+        return amTradeClient.insertNifaContractTemplate(request);
+    }
+    /**
+     * 查找合同模板id
+     * @return
+     */
+    @Override
+    public FddTempletResponse selectFddTempletId(){
+        return amTradeClient.selectFddTempletId();
+    }
+    /**
+     * 修改合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean updateNifaContractTemplate(NifaContractTemplateAddRequest request){
+        return amTradeClient.updateNifaContractTemplate(request);
+    }
+    /**
+     * 根据id查找合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public NifaContractTemplateResponse selectNifaContractTemplateById(String nifaId){
+        return amTradeClient.selectNifaContractTemplateById(nifaId);
+    }
+    /**
+     * 根据id删除合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public Boolean deleteNifaContractTemplateById(int nifaId){
+        return amTradeClient.deleteNifaContractTemplateById(nifaId);
+    }
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public  NifaContractTemplateResponse selectNifaContractTemplateList(NifaContractTemplateRequest request){
+        return amTradeClient.selectNifaContractTemplateList(request);
     }
 }

@@ -27,9 +27,10 @@ import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
+import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -5378,4 +5379,77 @@ public class AmTradeClientImpl implements AmTradeClient {
         Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
         return response;
     }
+
+    /**
+     * 添加合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean insertNifaContractTemplate(NifaContractTemplateAddRequest request){
+        String url = tradeService + "/nifaConfig/insertNifaContractTemplate";
+        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 查找合同模板id
+     * @return
+     */
+    @Override
+    public FddTempletResponse selectFddTempletId() {
+        String url = tradeService + "/nifaConfig/selectTempletId";
+        FddTempletResponse response = restTemplate.getForEntity(url,FddTempletResponse.class).getBody();
+        return response;
+    }
+    /**
+     * 修改合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean updateNifaContractTemplate(NifaContractTemplateAddRequest request){
+        String url = tradeService + "/nifaConfig/updateNifaContractTemplate";
+        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
+        return response;
+    }
+    /**
+     * 根据id查找合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public NifaContractTemplateResponse selectNifaContractTemplateById(String nifaId) {
+        String url = tradeService + "/nifaConfig/selectNifaContractTemplateById/"+nifaId;
+        NifaContractTemplateResponse response = restTemplate.getForEntity(url,NifaContractTemplateResponse.class).getBody();
+        return response;
+    }
+    /**
+     * 根据id删除合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public Boolean deleteNifaContractTemplateById(int nifaId) {
+        String url = tradeService + "/nifaConfig/deleteNifaContractTemplateById/"+nifaId;
+        Boolean response = restTemplate.getForEntity(url,Boolean.class).getBody();
+        return response;
+    }
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public NifaContractTemplateResponse selectNifaContractTemplateList(NifaContractTemplateRequest request) {
+        String url = tradeService + "/nifaConfig/selectNifaContractTemplateList";
+        NifaContractTemplateResponse response = restTemplate.postForEntity(url,request,NifaContractTemplateResponse.class).getBody();
+        return response;
+    }
+
 }
