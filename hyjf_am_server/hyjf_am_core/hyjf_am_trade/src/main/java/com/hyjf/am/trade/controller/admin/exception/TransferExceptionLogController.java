@@ -12,6 +12,7 @@ import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.service.admin.exception.TransferExceptionLogService;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
@@ -42,6 +43,11 @@ public class TransferExceptionLogController extends BaseController {
         int count = transferExceptionLogService.getCountRecord(request);
         if(count==0){
             return response;
+        }
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
         }
         List<AdminTransferExceptionLogCustomize> results=transferExceptionLogService.getRecordList(request);
         String returnCode = "0";

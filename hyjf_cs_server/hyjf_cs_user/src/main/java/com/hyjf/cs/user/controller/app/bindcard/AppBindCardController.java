@@ -57,7 +57,7 @@ public class AppBindCardController extends BaseUserController {
      * @return
      */
     @GetMapping("/bind/smscode")
-    @ApiOperation(value = "绑卡发送验证码", tags = "绑卡发送验证码")
+    @ApiOperation(value = "绑卡发送验证码", notes = "绑卡发送验证码")
     public BaseResultBeanFrontEnd sendSmsCode(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         SendSmsResultBean result = new SendSmsResultBean();
 
@@ -138,7 +138,7 @@ public class AppBindCardController extends BaseUserController {
      * @return
      */
     @GetMapping("/bind")
-    @ApiOperation(value = "用户绑卡", tags = "用户绑卡")
+    @ApiOperation(value = "用户绑卡", notes = "用户绑卡")
     public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
 

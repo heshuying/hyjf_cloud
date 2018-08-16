@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +15,9 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
     /**
      * 接收还款方式
      */
+    @ApiModelProperty(value = "接收还款方式")
     private String methodName;
+    @ApiModelProperty(value = "修改标志")
     private String modifyFlag;
 
     private Integer id;
@@ -50,11 +53,11 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
     private Date updateTime;
 
     private Long increaseMoney;
-
+    @ApiModelProperty(value = "优惠券")
     private Integer interestCoupon;
 
     private Integer tasteMoney;
-
+    @ApiModelProperty(value = " 用户角色")
     private List<ParamNameVO> paramNameVO;
 
     private static final long serialVersionUID = 1L;
@@ -234,4 +237,5 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
     public void setParamNameVO(List<ParamNameVO> paramNameVO) {
         this.paramNameVO = paramNameVO;
     }
+
 }

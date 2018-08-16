@@ -49,7 +49,7 @@ public class ApiBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/bind")
-    @ApiOperation(value = "绑卡", tags = "绑卡")
+    @ApiOperation(value = "绑卡", notes = "绑卡")
     public ModelAndView userBindCardPlus(@RequestBody BindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
         logger.info("请求页面绑卡接口参数" + JSONObject.toJSONString(bankCardRequestBean, true) + "]");
@@ -151,7 +151,7 @@ public class ApiBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/bindCardReturn")
-    @ApiOperation(value = "绑卡同步回调", tags = "绑卡同步回调")
+    @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
     public ModelAndView openAccountReturn(HttpServletRequest request, HttpServletResponse response,
                                           @ModelAttribute BankCallBean bean) {
         BindCardPageResultBean repwdResult = new BindCardPageResultBean();
@@ -197,7 +197,7 @@ public class ApiBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/bindCardBgreturn")
-    @ApiOperation(value = "绑卡异步回调", tags = "绑卡异步回调")
+    @ApiOperation(value = "绑卡异步回调", notes = "绑卡异步回调")
     public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
                                    @ModelAttribute BankCallBean bean) {
         // 上送的异步地址里面有
