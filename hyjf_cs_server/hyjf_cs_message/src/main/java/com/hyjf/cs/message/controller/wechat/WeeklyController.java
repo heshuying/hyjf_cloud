@@ -12,13 +12,13 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.WeeklyreportEntity;
 import com.hyjf.cs.message.service.wechatWeekly.WeeklyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +43,7 @@ public class WeeklyController {
     SimpleDateFormat sddd= new SimpleDateFormat("dd");
 
     @ApiOperation(value = "上周周报", notes = "上周周报")
-    @RequestMapping("/data")
+    @GetMapping("/data")
     public WeeklyResponse getWeeklyData(@RequestHeader("userId") Integer userId) {
         //Integer userId=1;
         WeeklyResponse resultBean = new WeeklyResponse();
