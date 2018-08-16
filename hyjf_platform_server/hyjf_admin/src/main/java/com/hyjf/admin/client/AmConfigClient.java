@@ -1296,4 +1296,16 @@ public interface AmConfigClient {
 	 * @Author : huanghui
 	 */
 	List<BanksConfigVO> getBankcardList();
+
+	/**
+	 * 开启短信配置模板
+	 * @param request
+	 */
+    void openSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 关闭短信配置模板
+	 * @param request
+	 */
+	void closeSmsTemplate(SmsTemplateRequest request);
 }

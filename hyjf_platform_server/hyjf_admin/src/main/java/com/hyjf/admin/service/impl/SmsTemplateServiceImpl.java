@@ -4,7 +4,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.SmsTemplateClient;
 import com.hyjf.admin.service.SmsTemplateService;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
@@ -36,5 +35,15 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	@Override
 	public void insertSmsTemplate(SmsTemplateRequest request) {
 		amConfigClient.insertSmsTemplate(request);
+	}
+
+	@Override
+	public void openAction(SmsTemplateRequest request) {
+		amConfigClient.openSmsTemplate(request);
+	}
+
+	@Override
+	public void closeAction(SmsTemplateRequest request) {
+		amConfigClient.closeSmsTemplate(request);
 	}
 }

@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.config.controller;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.model.auto.SmsTemplate;
+import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.response.config.SmsTemplateResponse;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -13,12 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.SmsTemplate;
-import com.hyjf.am.config.service.SmsTemplateService;
-import com.hyjf.am.response.config.SmsTemplateResponse;
-import com.hyjf.am.resquest.config.SmsTemplateRequest;
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * 短信模板
@@ -95,5 +94,25 @@ public class SmsTemplateController extends BaseConfigController{
     @RequestMapping("/insertTemplate")
     public void insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
         smsTemplateService.insertSmsTemplate(request);
+    }
+
+    /**
+     * 开启短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/open_sms_template")
+    public void openSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        smsTemplateService.openSmsTemplate(request);
+    }
+
+    /**
+     * 关闭短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/close_sms_template")
+    public void closeSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        smsTemplateService.closeSmsTemplate(request);
     }
 }
