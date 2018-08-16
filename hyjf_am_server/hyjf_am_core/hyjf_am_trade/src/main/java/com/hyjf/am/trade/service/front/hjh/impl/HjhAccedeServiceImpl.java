@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -99,5 +100,35 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
     @Override
     public int updateHjhAccedeByPrimaryKey(HjhAccede hjhAccede) {
         return this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
+    }
+
+    /**
+     * 查询汇计划匹配期大于2天，短信预警
+     * @author zhangyk
+     * @date 2018/8/15 14:14
+     */
+    @Override
+    public List<HjhAccede> getPlanMatchPeriodList() {
+        // 计划订单进入匹配期时间超过2天给工作人员发送预警短信
+        HjhAccedeExample hjhAccedeExample = new HjhAccedeExample();
+        HjhAccedeExample.Criteria criteria = hjhAccedeExample.createCriteria();
+        criteria.andMatchDatesGreaterThanOrEqualTo(2);
+        criteria.andOrderStatusIn(Arrays.asList(0,2)); // 订单状态处于自动投资中和自动投资成功(0,2) 2018年6月27日14:16:05
+        List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(hjhAccedeExample);
+        return accedeList;
+    }
+
+
+    /**
+     * 订单投资异常短信预警
+     * @author zhangyk
+     * @date 2018/8/15 16:26
+     */
+    @Override
+    public List<HjhAccede> getPlanOrderInvestExceptionList() {
+        HjhAccedeExample hjhAccedeExample = new HjhAccedeExample();
+        hjhAccedeExample.createCriteria().andOrderStatusGreaterThanOrEqualTo(80);
+        List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(hjhAccedeExample);
+        return accedeList;
     }
 }

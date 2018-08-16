@@ -23,4 +23,11 @@ public interface HjhRepayService {
 
     List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
+    /**
+     * 订单退出超过两天邮件预警list
+     * @author zhangyk
+     * @date 2018/8/15 15:47
+     */
+    List<HjhRepay>  getPlanExitCheck();
+
 }
