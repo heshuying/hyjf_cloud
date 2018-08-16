@@ -22,6 +22,6 @@ public class BankPoundageAccountImpl implements BankPoundageAccountService {
 
     @Override
     public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request) {
-        return null;
+        return amTradeClient.selectBankMerchantAccountList(request);
     }
 }
