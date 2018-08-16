@@ -5,18 +5,18 @@ import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
 public class AdminTransferExceptionLogCustomize extends TransferExceptionLog {
 
     private static final long serialVersionUID = 1L;
-    
+
     //用户名
     private String username;
-    
+
     //交易类型
     private String tradeType;
-    
+
     //交易状态
     private String tradeStatus;
 
     //添加时间
-    private String addTimeView;
+    private String createTimeView;
 
     public String getUsername() {
         return username;
@@ -42,14 +42,11 @@ public class AdminTransferExceptionLogCustomize extends TransferExceptionLog {
         this.tradeStatus = tradeStatus;
     }
 
-    public String getAddTimeView() {
-        return addTimeView;
+    public String getCreateTimeView() {
+        return createTimeView;
     }
 
-    public void setAddTimeView(String addTimeView) {
-        this.addTimeView = addTimeView;
+    public void setCreateTimeView(String createTimeView) {
+        this.createTimeView = createTimeView;
     }
-
-    
-    
 }
