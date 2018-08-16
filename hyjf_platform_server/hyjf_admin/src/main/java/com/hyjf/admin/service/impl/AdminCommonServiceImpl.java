@@ -3,8 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AdminCommonService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -23,19 +25,37 @@ public class AdminCommonServiceImpl implements AdminCommonService {
     @Autowired
     AmTradeClient AmTradeClient;
 
+    /**
+     * 获取相应paramname数据
+     *
+     * @param param
+     * @return
+     */
     @Override
-    public Map<String, String> getParamNameMap(String param) {
+    public List<DropDownVO> getParamNameList(String param) {
         Map<String, String> resultMap = CacheUtil.getParamNameMap(param);
-        return resultMap;
+        return ConvertUtils.convertParamMapToDropDown(resultMap);
     }
 
+    /**
+     * 还款方式下拉列表
+     *
+     * @return
+     */
     @Override
-    public List<BorrowStyleVO> selectBorrowStyleList() {
-        return AmTradeClient.selectBorrowStyleList();
+    public List<DropDownVO> selectBorrowStyleList() {
+        List<BorrowStyleVO> borrowStyleVOList = AmTradeClient.selectCommonBorrowStyleList();
+        return ConvertUtils.convertListToDropDown(borrowStyleVOList,"nid","name");
     }
 
+    /**
+     * 资产来源下拉列表
+     *
+     * @return
+     */
     @Override
-    public List<HjhInstConfigVO> selectHjhInstConfigList() {
-        return AmTradeClient.selectHjhInstConfigList();
+    public List<DropDownVO> selectHjhInstConfigList() {
+        List<HjhInstConfigVO> hjhInstConfigVOList = AmTradeClient.selectCommonHjhInstConfigList();
+        return ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
     }
 }

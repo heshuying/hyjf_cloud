@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -16,7 +17,6 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -58,11 +57,11 @@ public class BorrowRegistController extends BaseController {
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
         responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
         //还款方式
-        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
-        responseBean.setBorrowStyleList(ConvertUtils.convertListToDropDown(borrowStyleList,"nid","name"));
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
+        responseBean.setBorrowStyleList(borrowStyleList);
         //备案状态
-        Map<String, String> borrowRegistStatusList = adminCommonService.getParamNameMap(CustomConstants.REGIST_STATUS);
-        responseBean.setBorrowRegistStatusList(ConvertUtils.convertParamMapToDropDown(borrowRegistStatusList));
+        List<DropDownVO> borrowRegistStatusList = adminCommonService.getParamNameList(CustomConstants.REGIST_STATUS);
+        responseBean.setBorrowRegistStatusList(borrowRegistStatusList);
 
         return new AdminResult(responseBean);
     }
