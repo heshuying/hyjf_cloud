@@ -56,6 +56,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -3844,6 +3845,47 @@ public class AmTradeClientImpl implements AmTradeClient {
             return 0;
         }
         return result;
+    }
+
+    /**
+     *根据订单编号取得该订单的还款列表
+     */
+    @Override
+    public CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow) {
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponperiodrepay/selectcurrentcouponrecover/" + couponTenderNid + "/" +periodNow,CouponRecoverCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新优惠券还款
+     * @param cr
+     * @return
+     */
+    @Override
+    public boolean updateCouponRecover(CouponRecoverVO cr) {
+        String url = "http://AM-TRADE//am-trade/couponPeriodRepay/updatecouponrecover";
+        Integer result = restTemplate.postForEntity(url,cr,Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
+
+    /**
+     * 体验金按收益期限还款
+     * @param request
+     */
+    @Override
+    public boolean updateCouponOnlyRecover(CouponRecoverCustomizeRequest request) {
+        String url = "http://AM-TRADE/am-trade/couponperiodrepay/updatecoupononlyrecover";
+        Integer result = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
     }
 
 

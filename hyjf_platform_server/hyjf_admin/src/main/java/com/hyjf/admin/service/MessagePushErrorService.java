@@ -3,8 +3,11 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
 
 /**
  * @author dangzw
@@ -12,7 +15,46 @@ import com.hyjf.am.resquest.config.MessagePushErrorRequest;
  */
 public interface MessagePushErrorService {
 
-    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+    /**
+     * 获取列表记录数
+     *
+     * @return
+     */
+    Integer getRecordCount(MessagePushErrorRequest request);
 
-    MessagePushErrorResponse update(MessagePushErrorRequest request);
+    /**
+     * 获取列表
+     *
+     * @return
+     */
+    List<MessagePushErrorVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    List<MessagePushErrorVO> getTagList();
+
+    /**
+     * 获取数据字典名称
+     *
+     * @return
+     */
+    List<ParamNameVO> getParamNameList(String msg_push_send_status);
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    MessagePushErrorVO getRecord(Integer id);
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    void sendMessage(MessagePushErrorVO msg);
 }

@@ -2,8 +2,10 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,6 +140,22 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId) {
 		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
 		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public MessagePushErrorVO getMobileCodeByNumber(String mobile) {
+		String url = "http://AM-USER/am-user/userInfo/getMobileCodeByNumber/" + mobile;
+		MessagePushErrorResponse response = restTemplate.getForEntity(url,MessagePushErrorResponse.class).getBody();
 		if (response!=null){
 			return response.getResult();
 		}

@@ -23,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,23 +51,28 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public JSONObject init(@RequestBody MessagePushNoticesRequest messagePushNoticesRequest) {
         JSONObject jsonObject = new JSONObject();
-        MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
-        MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
-        if (prs == null) {
+        try {
+            MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
+            MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
+            if (prs == null) {
+                jsonObject.put(FAIL, FAIL_DESC);
+                return jsonObject;
+            }
+            if (!Response.isSuccess(prs)) {
+                jsonObject.put(FAIL, prs.getMessage());
+                return jsonObject;
+            }
+            prepareDatas(jsonObject);
+            jsonObject.put("totalCount", prs.getRecordTotal());
+            jsonObject.put("list", prs.getResultList());
+            jsonObject.put("allPushTagList", allPushTagList.getResultList());
+            jsonObject.put("fileDomainUrl", url);
+            return jsonObject;
+        } catch (Exception e) {
             jsonObject.put(FAIL, FAIL_DESC);
             return jsonObject;
         }
-        if (!Response.isSuccess(prs)) {
-            jsonObject.put(FAIL, prs.getMessage());
-            return jsonObject;
-        }
-        prepareDatas(jsonObject);
-        jsonObject.put("totalCount", prs.getRecordTotal());
-        jsonObject.put("list", prs.getResultList());
-        jsonObject.put("allPushTagList", allPushTagList.getResultList());
-        jsonObject.put("fileDomainUrl", url);
 
-        return jsonObject;
     }
 
 
@@ -77,10 +80,14 @@ public class MessagePushNoticesController extends BaseController {
     @PostMapping(value = "/add")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form) {
-        MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.insertRecord(form);
-        if (Response.isSuccess(messagePushNoticesResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.insertRecord(form);
+            if (Response.isSuccess(messagePushNoticesResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -89,10 +96,14 @@ public class MessagePushNoticesController extends BaseController {
     @PostMapping(value = "/delete")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> delete(@RequestBody MessagePushNoticesRequest form) {
-        MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.deleteRecord(form);
-        if (Response.isSuccess(messagePushNoticesResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.deleteRecord(form);
+            if (Response.isSuccess(messagePushNoticesResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -101,10 +112,14 @@ public class MessagePushNoticesController extends BaseController {
     @PostMapping(value = "/update")
     @ResponseBody
     public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form) {
-        MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.updateRecord(form);
-        if (Response.isSuccess(messagePushNoticesResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.updateRecord(form);
+            if (Response.isSuccess(messagePushNoticesResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -120,6 +135,7 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public JSONObject info(@RequestBody MessagePushNoticesRequest form) {
         JSONObject jsonObject = new JSONObject();
+
         try {
             if (StringUtils.isNotEmpty(form.getIds())) {
                 MessagePushNoticesResponse response = this.messagePushNoticesService.getRecord(form);
@@ -154,15 +170,18 @@ public class MessagePushNoticesController extends BaseController {
                 }
             }
             jsonObject.put("msgPushNoticesForm", form);
+
+            // 标签类型
+            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+            List<MessagePushTagVO> resultList = tagList.getResultList();
+            jsonObject.put("noticesPushTags", resultList);
+            prepareDatas(jsonObject);
+            return jsonObject;
         } catch (Exception e) {
-            e.printStackTrace();
+            jsonObject.put(FAIL, FAIL_DESC);
+            return jsonObject;
+
         }
-        // 标签类型
-        MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-        List<MessagePushTagVO> resultList = tagList.getResultList();
-        jsonObject.put("noticesPushTags", resultList);
-        prepareDatas(jsonObject);
-        return jsonObject;
     }
 
 
@@ -198,7 +217,6 @@ public class MessagePushNoticesController extends BaseController {
     /**
      * 资料上传
      *
-     * @param request
      * @return
      * @throws Exception
      */
@@ -207,15 +225,21 @@ public class MessagePushNoticesController extends BaseController {
     @ResponseBody
     public JSONObject uploadFile(@RequestParam(value = "iconImg", required = false) MultipartFile iconImg) throws Exception {
         JSONObject ret = new JSONObject();
-        String returnMessage = messagePushNoticesService.uploadFile(iconImg);
-        if (!"上传文件成功！".equals(returnMessage)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", returnMessage);
-        }else{
-            ret.put("status", "0");
-            ret.put("statusDesc", returnMessage);
+        try {
+            String returnMessage = messagePushNoticesService.uploadFile(iconImg);
+            if (!"上传文件成功！".equals(returnMessage)) {
+                ret.put("status", "1");
+                ret.put("statusDesc", returnMessage);
+            } else {
+                ret.put("status", "0");
+                ret.put("statusDesc", returnMessage);
+            }
+            return ret;
+        } catch (Exception e) {
+            ret.put(FAIL, FAIL_DESC);
+            return ret;
+
         }
-        return ret;
     }
 
 

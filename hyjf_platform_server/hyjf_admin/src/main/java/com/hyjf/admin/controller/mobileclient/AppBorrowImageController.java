@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
-@Api(tags = "admin移动客户端")
+@Api(tags = "admin移动客户端-产品图片")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
@@ -53,11 +53,15 @@ public class AppBorrowImageController extends BaseController {
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody  AppBorrowImageRequest request) {
-        AppBorrowImageResponse recordList = appBorrowImageService.getRecordList(request);
-        if (!Response.isSuccess(recordList)) {
+        try {
+            AppBorrowImageResponse recordList = appBorrowImageService.getRecordList(request);
+            if (!Response.isSuccess(recordList)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<ListResult<AppBorrowImageVO>>(ListResult.build(recordList.getResultList(), recordList.getRecordTotal()));
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return new AdminResult<ListResult<AppBorrowImageVO>>(ListResult.build(recordList.getResultList(), recordList.getRecordTotal()));
     }
 
 
@@ -65,11 +69,15 @@ public class AppBorrowImageController extends BaseController {
     @PostMapping(value = "/searchinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
-        AppBorrowImageResponse record = appBorrowImageService.getRecord(request);
-        if (!Response.isSuccess(record)) {
+        try {
+            AppBorrowImageResponse record = appBorrowImageService.getRecord(request);
+            if (!Response.isSuccess(record)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<AppBorrowImageVO>(record.getResult());
+        }catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return new AdminResult<AppBorrowImageVO>(record.getResult());
     }
 
 
@@ -77,37 +85,45 @@ public class AppBorrowImageController extends BaseController {
     @PostMapping(value = "/insertinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
-        // TODO 校验参数方法
-        //this.validatorFieldCheck();
-        AppBorrowImageResponse response = appBorrowImageService.insertRecord(request);
-        if (!Response.isSuccess(response)) {
+        try {
+            AppBorrowImageResponse response = appBorrowImageService.insertRecord(request);
+            if (!Response.isSuccess(response)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     @ApiOperation(value = "产品图片:修改维护信息", notes = "产品图片:修改维护信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
-        // TODO 校验参数方法
-        //this.validatorFieldCheck();
-        AppBorrowImageResponse response = appBorrowImageService.updateRecord(request);
-        if (!Response.isSuccess(response)) {
+        try {
+            AppBorrowImageResponse response = appBorrowImageService.updateRecord(request);
+            if (!Response.isSuccess(response)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        }catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     @ApiOperation(value = "产品图片:刪除信息", notes = "产品图片:刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+        try {
         AppBorrowImageResponse response = appBorrowImageService.deleteRecord(request);
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        }catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
     }
 
     /**
@@ -125,11 +141,8 @@ public class AppBorrowImageController extends BaseController {
         //CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
        // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        //TODO PropUtils.getSystem("file.domain.url")
         String fileDomainUrl = DOMAIN_URL;
-        // TODO PropUtils.getSystem("file.physical.path")
         String filePhysicalPath = PHYSICAL_PATH;
-        // TODO PropUtils.getSystem("file.upload.temp.path")
         String fileUploadTempPath = TEMP_PATH;
 
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;

@@ -335,7 +335,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                         }
                         borrowRepayPlanBean.setNumber("第" + (i + 1) + "期");
-                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                        if (StringUtils.isNotBlank(borrowRepayPlan.getRepayTotal())){
+                            borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
+                        }
                         repayPlanList.add(borrowRepayPlanBean);
                     }
                 }
@@ -759,6 +761,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
+        result.setHomeXshProjectList(vo.getHomeXshProjectList());
         result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
         result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
