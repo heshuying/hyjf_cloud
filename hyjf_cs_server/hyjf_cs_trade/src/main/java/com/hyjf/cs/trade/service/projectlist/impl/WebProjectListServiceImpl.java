@@ -387,40 +387,40 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             //资产列表
             JSONArray json = new JSONArray();
             //基础信息
-            String baseTableData = "";
+            List<BorrowDetailBean> baseTableData = new ArrayList<>();
             //资产信息
-            String assetsTableData = "";
+            JSONArray assetsTableData = new JSONArray();
             //项目介绍
-            String intrTableData = "";
+            List<BorrowDetailBean> intrTableData = new ArrayList<>();
             //信用状况
-            String credTableData = "";
+            List<BorrowDetailBean> credTableData = new ArrayList<>();
             //审核信息
-            String reviewTableData = "";
+            List<BorrowDetailBean> reviewTableData = new ArrayList<>();
             //其他信息
-            String otherTableData = "";
+            List<BorrowDetailBean> otherTableData = new ArrayList<>();
             //借款类型
             int borrowType = Integer.parseInt(borrow.getComOrPer());
 
             if (borrowType == 1 && borrowUsers != null) {
                 //基础信息
-                baseTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel()));
+                baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
                 //信用状况
-                credTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel()));
+                credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
                 //审核信息
-                reviewTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel()));
+                reviewTableData = ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
                 //其他信息
-                otherTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel()));
+                otherTableData = ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
             } else {
                 if (borrowManinfo != null) {
                     //基础信息
-                    baseTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrow.getBorrowLevel()));
+                    baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrow.getBorrowLevel());
                     //信用状况
-                    credTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrow.getBorrowLevel()));
+                    credTableData = ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrow.getBorrowLevel());
                     //审核信息
-                    reviewTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrow.getBorrowLevel()));
+                    reviewTableData = ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrow.getBorrowLevel());
 
                     //其他信息
-                    otherTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel()));
+                    otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel());
                 }
             }
             //资产信息
@@ -434,9 +434,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     json.add(ProjectConstant.packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel()));
                 }
             }
-            assetsTableData = json.toString();
+            assetsTableData = json;
             //项目介绍
-            intrTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel()));
+            intrTableData = ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
 
             //基础信息
             other.put("baseTableData", baseTableData);
@@ -455,7 +455,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("updateTime", ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime()));
             } else {
                 //其他信息
-                other.put("otherTableData", JSONObject.toJSONString(new ArrayList<BorrowDetailBean>()));
+                other.put("otherTableData", otherTableData);
             }
 
         }
