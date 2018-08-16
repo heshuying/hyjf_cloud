@@ -11,13 +11,17 @@ import com.hyjf.am.user.dao.model.auto.UserPortrait;
 import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.front.user.UserPortraitManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -118,7 +122,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
             userPortrait.put("limitEnd", limitEnd);
         }
 
-        Jedis jedis = request.getJedis();
+        Jedis jedis = getJedis(redisKey,request);
 
         List<UserPortrait> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
         if (!CollectionUtils.isEmpty(usersPortraits)) {
@@ -347,6 +351,8 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                             customize.setIdentityLabel("老年投资者");
                         } else if (age1 >= 18 && age1 <= 34) {
                             customize.setIdentityLabel("青年投资者");
+                        }else if (loginTime > 30 && usersPortrait.getRechargeSum().compareTo(new BigDecimal(0)) == 0) {
+                            customize.setIdentityLabel("任务刷单者");
                         }  else {
                             customize.setIdentityLabel("无");
                         }
@@ -385,6 +391,24 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
             }
         }
         return list;
+    }
+
+    private Jedis getJedis(String redisKey,UserPortraitScoreRequest request) {
+
+        JedisPool pool = RedisUtils.getPool();
+        Jedis jedis = pool.getResource();
+        Boolean exists = jedis.exists(redisKey);
+        if (!exists) {
+            List<ParamName> list = CommonUtils.convertBeanList(request.getParamNameVOList(),ParamName.class);
+            Map<String, String> map = new HashMap<>();
+            for (ParamName paramName : list) {
+                String key = paramName.getNameClass() + paramName.getNameCd();
+                String value = paramName.getName();
+                map.put(key, value);
+            }
+            jedis.hmset(redisKey, map);
+        }
+        return jedis;
     }
 
 
