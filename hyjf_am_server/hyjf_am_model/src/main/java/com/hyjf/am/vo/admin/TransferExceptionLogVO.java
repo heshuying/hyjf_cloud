@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -11,7 +12,7 @@ import java.util.Date;
  * @author jijun
  * @version AdminTransferExceptionLogRequest, v0.1 2018/07/10
  */
-public class TransferExceptionLogVO extends BaseVO implements Serializable {
+public class TransferExceptionLogVO extends BasePage implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -79,6 +80,31 @@ public class TransferExceptionLogVO extends BaseVO implements Serializable {
 	private Date addTime;
 
 	private Date updateTime;
+
+	/**
+	 * 检索条件 limitStart
+	 */
+	private int limitStart = -1;
+	/**
+	 * 检索条件 limitEnd
+	 */
+	private int limitEnd = -1;
+
+	public int getLimitStart() {
+		return limitStart;
+	}
+
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
+	}
 
 	public String getContent() {
 		return content;
