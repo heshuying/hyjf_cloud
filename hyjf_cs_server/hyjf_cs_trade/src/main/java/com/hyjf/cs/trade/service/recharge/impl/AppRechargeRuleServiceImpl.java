@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.recharge.impl;
 
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.bean.app.AppRechargeDescResultBean;
+import com.hyjf.cs.trade.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.service.recharge.AppRechargeRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class AppRechargeRuleServiceImpl implements AppRechargeRuleService {
         List<JxBankConfigVO> jxBankConfigVOList = amConfigClient.getQuickPaymentJxBankConfig();
         if (!CollectionUtils.isEmpty(jxBankConfigVOList)) {
             this.conventBanksConfigToResult(result, jxBankConfigVOList);
+        } else {
+            result.setStatus(BaseResultBeanFrontEnd.FAIL);
+            result.setStatusDesc("获取充值规则失败。");
         }
         return result;
     }

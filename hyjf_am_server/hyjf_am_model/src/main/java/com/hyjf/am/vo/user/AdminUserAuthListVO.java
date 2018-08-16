@@ -14,77 +14,60 @@ package com.hyjf.am.vo.user;
 import java.io.Serializable;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author dongzeshan
  */
-
+@ApiModel(value = "授权明细")
 public class AdminUserAuthListVO  extends BaseVO implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 用戶id
-	 */
+
+	@ApiModelProperty(value = "用戶id")
 	public String userId;
-	/**
-	 * 用戶名
-	 */
+
+	@ApiModelProperty(value = "用戶名")
 	public String userName;
-	/**
-	 * 推荐人
-	 */
+
+	@ApiModelProperty(value = "推荐人")
 	public String recommendName;
-	/**
-	 * 手机号
-	 */
+
+	@ApiModelProperty(value = "手机号")
 	public String mobile;
-	/**
-	 * 自动投标授权状态
-	 */
+
+	@ApiModelProperty(value = "自动投标授权状态")
 	private String autoInvesStatus;
-	/**
-	 * 自动预约取现状态
-	 */
+
+	@ApiModelProperty(value = "自动预约取现状态")
 	private String autoWithdrawStatus;
-	/**
-	 * 自动无密消费状态
-	 */
+
+	@ApiModelProperty(value = "自动无密消费状态")
 	private String autoConsumeStatus;
-	/**
-	 * 自动投标授权状态
-	 */
+
+	@ApiModelProperty(value = "自动投标授权状态")
 	private String autoCreditStatus;
-	/**
-	 * 投标授权时间
-	 */
+
+	@ApiModelProperty(value = "投标授权时间")
 	private String autoCreateTime;
-	/**
-	 * 自动投资授权过期时间
-	 */
+
+	@ApiModelProperty(value = "自动投资授权过期时间")
 	private String autoInvesEndTime;
-	/**
-	 * 投标订单号
-	 */
+
+	@ApiModelProperty(value = "投标订单号")
 	private String autoOrderId;
 
-	// 查询条件
-	/**
-	 * 授权时间开始时间
-	 */
+	@ApiModelProperty(value = "授权时间开始时间")
 	private String invesAddTimeStart;
-	/**
-	 * 授权时间结束时间
-	 */
+
+	@ApiModelProperty(value = "授权时间结束时间")
 	private String invesAddTimeEnd;
-	/**
-	 * 签约到期日开始时间
-	 */
+
+	@ApiModelProperty(value = "签约到期日开始时间")
 	private String investEndTimeStart;
-	/**
-	 * 签约到期日结束时间
-	 */
+
+	@ApiModelProperty(value = "签约到期日结束时间")
 	private String investEndTimeEnd;
 
 

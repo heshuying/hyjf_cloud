@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class AccountMobileSynchRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "银行卡号手机号同步表查询请求参数")
     private AccountMobileSynchVO accountMobileSynchVO;
-
+    @ApiModelProperty(value = "银行卡请求参数")
     private BankCardRequest bankCardRequest;
 
     private int updateFlag;

@@ -42,6 +42,11 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
     @Autowired
     FddCertificateProducer fddProducer;
 
+    /**
+     * 法大大CA认证
+     * @throws ParseException
+     * @throws MQException
+     */
     @Override
     public void fddCertificateAuthority() throws ParseException, MQException {
         List<User> usersList = findAllUser();
@@ -62,6 +67,11 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
         }
     }
 
+    /**
+     * 更新用户CA认证信息
+     * @throws ParseException
+     * @throws MQException
+     */
     @Override
     public void updateUserCAInfo(Integer userId, User user, UserInfo userInfo) throws Exception {
         String throwInfo = "CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].";

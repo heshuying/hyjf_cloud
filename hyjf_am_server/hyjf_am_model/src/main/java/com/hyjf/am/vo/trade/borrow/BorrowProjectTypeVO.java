@@ -5,6 +5,8 @@ package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,48 +16,51 @@ import java.util.List;
  * @author fuqiang
  * @version BorrowProjectTypeVO, v0.1 2018/6/12 17:49
  */
+@ApiModel(value = "项目类型")
 public class BorrowProjectTypeVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "项目类型")
     private String borrowProjectType;
-
+    @ApiModelProperty(value = "参数唯一标识")
     private String borrowCd;
-
+    @ApiModelProperty(value = "名称")
     private String borrowName;
-
+    @ApiModelProperty(value = "项目编号")
     private String borrowClass;
-
+    @ApiModelProperty(value = "投资用户类型0:51老用户 1:新用户 2: 全部")
     private Integer investUserType;
-
+    @ApiModelProperty(value = "状态")
     private Integer status;
-
+    @ApiModelProperty(value = "投资起始值")
     private String investStart;
-
+    @ApiModelProperty(value = "投资最大值")
     private String investEnd;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "创建组id")
     private String createGroupId;
-
+    @ApiModelProperty(value = "建立用户id")
     private Integer createUserId;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "更新组id")
     private String updateGroupId;
-
+    @ApiModelProperty(value = "更新用户id")
     private Integer updateUserId;
-
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+    @ApiModelProperty(value = "递增金额")
     private Long increaseMoney;
-
+    @ApiModelProperty(value = "优惠券")
     private Integer interestCoupon;
-
+    @ApiModelProperty(value = "体验金")
     private Integer tasteMoney;
-    //modifyFlag
+    @ApiModelProperty(value = "修改标记")
     private String modifyFlag;
-
+    @ApiModelProperty(value = "还款名")
     private String repayName;
-    //modifyFlag
+
     private List<BorrowProjectRepayVO> repayNames;
     // 回显checkbox标签
     private  List<BorrowStyleVO> repayStyles;
