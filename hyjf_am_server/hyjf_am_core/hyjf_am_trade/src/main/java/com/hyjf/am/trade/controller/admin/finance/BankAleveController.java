@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Zha Daojian
+ * @version BankAleveController, v0.1 2018/6/29 13:55
+ */
 @RestController
 @RequestMapping("/am-trade/bankaleve")
 public class BankAleveController extends BaseController {
