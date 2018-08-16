@@ -28,7 +28,7 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(description = "app发现页", tags = "app发现页")
+@Api(tags = "app端-app发现页")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
@@ -36,7 +36,7 @@ public class AppFindController extends BaseMarketController {
     @Autowired
     private AppFindService appFindService;
 
-    @ApiOperation(value = "知识列表", httpMethod = "POST", notes = "知识列表")
+    @ApiOperation(value = "知识列表", notes = "知识列表")
     @PostMapping(value = "/contentArticle/getContentArticleListByType")
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
@@ -96,7 +96,7 @@ public class AppFindController extends BaseMarketController {
 
     }
 
-    @ApiOperation(value = "上下翻页", httpMethod = "POST", notes = "上下翻页")
+    @ApiOperation(value = "上下翻页", notes = "上下翻页")
     @PostMapping(value = "/contentArticle/getContentArticleFlip")
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
@@ -146,7 +146,8 @@ public class AppFindController extends BaseMarketController {
         return ret;
     }
 
-    @RequestMapping("/contentArticle/{type}/{contentArticleId}")
+    @ApiOperation(value = "根据文章编号查询对应文章", notes = "根据文章编号查询对应文章")
+    @GetMapping("/contentArticle/{type}/{contentArticleId}")
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {
         JSONObject ret = new JSONObject();

@@ -3552,6 +3552,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 资金中 - 充值管理
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public com.hyjf.am.response.trade.account.AccountRechargeResponse queryRechargeList(AccountRechargeRequest request) {
+        com.hyjf.am.response.trade.account.AccountRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeList/", request, com.hyjf.am.response.trade.account.AccountRechargeResponse.class).getBody();
+
+        if (response != null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 汇计划 -> 资金计划 -> 复投原始标的 总数
      * @param data
      * @param planNid
@@ -3728,8 +3744,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowProjectTypeVO> borrowProjectTypeList(String borrowTypeCd) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, List.class)
+        BorrowProjectTypeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, BorrowProjectTypeResponse.class)
                 .getBody();
+        if(response == null){
+            return null;
+        }
+        return response.getResultList();
     }
 
     /**
@@ -3740,8 +3760,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList", List.class)
+        HjhInstConfigResponse response =restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",HjhInstConfigResponse.class)
                 .getBody();
+        if(response == null){
+            return null;
+        }
+        return response.getResultList();
     }
 
     /**

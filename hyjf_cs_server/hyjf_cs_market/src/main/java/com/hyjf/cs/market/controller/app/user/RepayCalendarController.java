@@ -24,7 +24,7 @@ import java.util.*;
  * @author dangzw
  * @version RepayCalendarController, v0.1 2018/7/27 11:30
  */
-@Api(description = "app日历", tags = "app日历")
+@Api(tags = "app端-app日历")
 @RestController
 @RequestMapping(value = "/hyjf-app/user")
 public class RepayCalendarController extends BaseMarketController {

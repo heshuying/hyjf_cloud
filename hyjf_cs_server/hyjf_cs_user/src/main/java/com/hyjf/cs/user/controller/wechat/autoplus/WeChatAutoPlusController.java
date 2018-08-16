@@ -61,7 +61,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param mobile
      * @return
      */
-    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
+    @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
     @PostMapping(value = "/sendcode.do")
     @ResponseBody
     public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType, String mobile) {
@@ -101,7 +101,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
+    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
     @PostMapping(value = "userAuthCredit.page")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response){
         String srvAuthCode = request.getParameter("srvAuthCode");

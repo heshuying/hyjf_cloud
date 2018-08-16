@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author xiehuili on 2018/8/14.
  */
-@Api(value = "短信加固", tags = "短信加固")
+@Api(tags = "短信加固")
 @RestController
 @RequestMapping("/hyjf-admin/message/messageConfig")
 public class SmsConfigController extends BaseController {

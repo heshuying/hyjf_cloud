@@ -12,9 +12,9 @@
 	    <result column="acct_id" property="acctId" jdbcType="VARCHAR" />
 	    <result column="user_id" property="userId" jdbcType="INTEGER" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
-	    <result column="add_time" property="addTime" jdbcType="INTEGER" />
-	    <result column="add_time_view" property="addTimeView" jdbcType="INTEGER" />
-	    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+	    <result column="create_time_view" property="createTimeView" jdbcType="INTEGER" />
+	    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
 	    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
 	    <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
 	    <result column="username" property="username" jdbcType="VARCHAR" />
@@ -36,10 +36,10 @@
 				AND el.`type` = #{type}
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( el.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( el.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 	</sql>
@@ -74,10 +74,10 @@
 		 u.username,
 		 el.remark,
 		 FROM_UNIXTIME(
-			el.add_time,
+			el.create_time,
 			'%Y-%m-%d %H:%i:%S'
-		) AS add_time_view,
-		 el.add_user,
+		) AS create_time_view,
+		 el.create_user,
 		 el.update_time,
 		 el.update_user,
 		 el.del_flag

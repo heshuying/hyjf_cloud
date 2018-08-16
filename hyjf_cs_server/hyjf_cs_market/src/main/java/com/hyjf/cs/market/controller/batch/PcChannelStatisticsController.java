@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author fuqiang
  * @version PcChannelStatisticsController, v0.1 2018/7/16 10:25
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-market/pcchannelstatistics")
 public class PcChannelStatisticsController extends BaseController {

@@ -2,7 +2,6 @@ package com.hyjf.cs.message.controller.wechat;
 
 import com.hyjf.am.response.trade.WeeklyResponse;
 import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -33,7 +31,7 @@ import java.util.*;
  * @author lisheng
  * @version WeeklyController, v0.1 2018/7/27 14:25
  */
-@Api(value = "上周周报", tags = "上周周报")
+@Api(tags = "weChat端-上周周报")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/weekly")
 public class WeeklyController {
@@ -69,16 +67,22 @@ public class WeeklyController {
             //放入公共周数据
             EventVO eal = weeklyService.getEventsAll(date1, date2);
             String eventTime = eal.getEventTime();
-            BigDecimal benzhoutouzie = new BigDecimal(eventTime);
             String content = eal.getContent();
-            BigDecimal benzhoushouyi = new BigDecimal(eventTime);
+            BigDecimal benzhoutouzie=new BigDecimal("0.00");
+            BigDecimal benzhoushouyi=new BigDecimal("0.00");;
+            if (eventTime != null) {
+                benzhoutouzie= new BigDecimal(eventTime);
+            }
+            if (content != null) {
+                benzhoushouyi= new BigDecimal(content);
+            }
             resultBean.setBenzhoutouzie(benzhoutouzie.divide(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_DOWN).toString() + "万");
             resultBean.setBenzhoushouyi(benzhoushouyi.divide(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_DOWN).toString() + "万");
             resultBean.setChengjiaoshu(eal.getEventYear());
             WeeklyreportEntity wrt=new WeeklyreportEntity();
             wrt.setUserId(0);
             wrt.setBeginDate(dat1);
-            wrt.setTouzie(new BigDecimal(eventTime));
+            wrt.setTouzie(benzhoutouzie);
             //eal.getContent() 值判空
             wrt.setShouyi(new BigDecimal(StringUtils.isBlank(content)?"0.00": content));
             wrt.setBishu(eal.getEventYear());

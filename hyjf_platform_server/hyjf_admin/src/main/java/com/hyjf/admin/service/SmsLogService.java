@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 
 /**
@@ -25,4 +26,11 @@ public interface SmsLogService {
 	 * @return
 	 */
 	JSONObject findSmsLog(SmsLogRequest request);
+
+	/**
+	 *查询定时发送短信列表
+	 * @param request
+	 * @return
+	 */
+    SmsOntimeResponse queryTime(SmsLogRequest request);
 }

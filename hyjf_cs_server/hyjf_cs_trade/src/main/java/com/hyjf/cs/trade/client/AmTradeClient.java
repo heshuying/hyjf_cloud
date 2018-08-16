@@ -38,6 +38,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1619,6 +1620,26 @@ public interface AmTradeClient {
     RepayBean getRepayBean(Map<String, String> paraMap);
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    /**
+     *根据订单编号取得该订单的还款列表
+     * @param couponTenderNid
+     * @param periodNow
+     * @return
+     */
+    CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow);
+
+    /**
+     *更新优惠券还款
+     * @param cr
+     */
+    boolean updateCouponRecover(CouponRecoverVO cr);
+
+    /**
+     *体验金按收益期限还款
+     * @param request
+     */
+    boolean updateCouponOnlyRecover(CouponRecoverCustomizeRequest request);
 
     /**
      * 根据订单号获取汇计划加入明细

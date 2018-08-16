@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 
 /**
+ * 消息推送-发送的消息接收记录表
  * @author xiasq
  * @version MessagePushMsgHistory, v0.1 2018/5/4 10:48
  */

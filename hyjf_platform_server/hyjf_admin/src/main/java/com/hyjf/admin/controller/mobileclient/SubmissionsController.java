@@ -1,5 +1,7 @@
 package com.hyjf.admin.controller.mobileclient;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
@@ -7,6 +9,7 @@ import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -21,10 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
@@ -38,7 +38,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(value = "admin移动客户端",tags = "admin移动客户端")
+@Api(tags = "admin移动客户端-意见反馈")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {
@@ -53,27 +53,35 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
-    public SubmissionsResponse findAppBannerData(@RequestBody SubmissionsRequest form) {
-        SubmissionsResponse response = new SubmissionsResponse();
-        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
-        if(StringUtils.isNotBlank(form.getUserName())){
-            UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
-            if(user!=null&&user.getResult()!=null){
-                Integer userId = user.getResult().getUserId();
-                form.setUserId(userId);
+    @ResponseBody
+    public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
+        try {
+            SubmissionsResponse response = new SubmissionsResponse();
+            Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+            if (StringUtils.isNotBlank(form.getUserName())) {
+                UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
+                if (user != null && user.getResult() != null) {
+                    Integer userId = user.getResult().getUserId();
+                    form.setUserId(userId);
+                }
             }
+            SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
+            List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+            for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
+                String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+                submissionsCustomizeVO.setSysType(type);
+                Integer userId = submissionsCustomizeVO.getUserId();
+                UserResponse users = submissionsService.getUserIdByUserId(userId);
+                String userName = users.getResult() != null ? users.getResult().getUsername() : "";
+                submissionsCustomizeVO.setUserName(userName);
+            }
+
+            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(submissionList.getResultList(), submissionList.getRecordTotal()));
+
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
-        List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
-        for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
-            String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
-            submissionsCustomizeVO.setSysType(type);
-            Integer userId = submissionsCustomizeVO.getUserId();
-            UserResponse users = submissionsService.getUserIdByUserId(userId);
-            String userName = users.getResult() != null ? users.getResult().getUsername() : "";
-            submissionsCustomizeVO.setUserName(userName);
-        }
-        return submissionList;
+
     }
 
     /**
@@ -84,9 +92,13 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
-    public SubmissionsResponse updateSubmissions(@RequestBody SubmissionsRequest form) {
-        SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
-        return response;
+    public AdminResult<ListResult<SubmissionsCustomizeVO>> updateSubmissions(@RequestBody SubmissionsRequest form) {
+        try {
+            SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
+            return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
 
     }
 
@@ -98,7 +110,7 @@ public class SubmissionsController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
-    @RequestMapping("/exportListAction")
+    @PostMapping("/exportListAction")
     public void exportListAction(@RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");

@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -13,21 +14,19 @@ public class AccountBalanceMonitoringRequestBean {
      */
     private static final long serialVersionUID = -1967959761793508714L;
 
-    /**
-     * ids
-     */
+    @ApiModelProperty(value = "ids")
     private String ids;
 
-    /** 是否更新 */
+    @ApiModelProperty(value = "是否更新 ")
     private boolean isUpdateFlg;
 
-    /** 子账户名称(检索用) */
+    @ApiModelProperty(value = "子账户名称(检索用) ")
     private String subAccountNameSear;
 
-    /** 子账户类型(检索用) */
+    @ApiModelProperty(value = "子账户类型(检索用)")
     private String subAccountTypeSear;
 
-    /** 列表数据JSON */
+    @ApiModelProperty(value = "列表数据JSON")
     private String balanceDataJson;
 
     private Integer id;

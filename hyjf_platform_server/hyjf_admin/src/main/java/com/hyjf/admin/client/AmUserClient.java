@@ -1,36 +1,11 @@
 package com.hyjf.admin.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UserPortraitScoreResponse;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.admin.VipDetailListResponse;
-import com.hyjf.am.response.admin.VipManageResponse;
-import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.user.AdminPreRegistListResponse;
-import com.hyjf.am.response.user.AdminUserAuthListResponse;
-import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
-import com.hyjf.am.response.user.BankAccountRecordResponse;
-import com.hyjf.am.response.user.BankCardLogResponse;
-import com.hyjf.am.response.user.BankCardManagerResponse;
-import com.hyjf.am.response.user.CertificateAuthorityResponse;
-import com.hyjf.am.response.user.ChangeLogResponse;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.response.user.EvalationResultResponse;
-import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.response.user.LoanCoverUserResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
-import com.hyjf.am.response.user.RegistRecordResponse;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
@@ -41,6 +16,9 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1004,4 +982,28 @@ public interface AmUserClient {
      * @return
      */
     List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request);
+
+    /**
+     * 添加信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer insertAccountMobileSynch(AccountMobileSynchRequest request);
+
+    /**
+     * 根据主键id删除一条信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer deleteAccountMobileSynch(AccountMobileSynchRequest request);
+
+    /**
+     * 根据号码查询用户
+     * @param mobile
+     * @return
+     */
+    UserVO getUserByMobile(String mobile);
+
 }

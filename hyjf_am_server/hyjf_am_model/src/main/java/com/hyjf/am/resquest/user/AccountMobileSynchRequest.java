@@ -5,6 +5,8 @@ package com.hyjf.am.resquest.user;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,7 +14,9 @@ import java.io.Serializable;
  * @author wangjun
  * @version AccountMobileSynchRequest, v0.1 2018/6/22 18:39
  */
+@ApiModel(value = "银行卡号手机号同步表model")
 public class AccountMobileSynchRequest extends BasePage implements Serializable {
+    @ApiModelProperty(value = "银行卡号手机号同步表查询请求参数")
     private AccountMobileSynchVO accountMobileSynchVO;
 
     private BankCardRequest bankCardRequest;

@@ -43,7 +43,7 @@ public class ApiBankOpenController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-    @ApiOperation(value = "api端-用户开户", notes = "api端-用户开户")
+    @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount", produces = "application/json; charset=utf-8")
     public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
@@ -91,7 +91,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "第三方端用户同步回调", notes = "api端-用户开户")
+    @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
     @PostMapping(value = "/return")
     public Map<String, String> returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
