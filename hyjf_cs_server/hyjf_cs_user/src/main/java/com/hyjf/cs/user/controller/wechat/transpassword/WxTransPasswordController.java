@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "weChat端-密码相关服务",tags = "weChat端-密码相关服务")
 @Controller
-@RestController
 @RequestMapping("/hyjf-wechat/wx/transpassword")
 public class WxTransPasswordController extends BaseUserController {
 
