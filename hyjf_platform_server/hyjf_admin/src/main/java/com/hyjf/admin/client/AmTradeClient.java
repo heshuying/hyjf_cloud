@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -2523,5 +2524,34 @@ public interface AmTradeClient {
      * @return
      */
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
+    /**
+     * 添加互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean insertNifaFieldDefinition(NifaFieldDefinitionAddRequest request);
+
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @auth nxl
+     * @return
+     */
+    NifaFieldDefinitionResponse selectFieldDefinitionList(NifaFieldDefinitionRequest request);
+    /**
+     * 根据id查找互金定义
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    NifaFieldDefinitionResponse selectFieldDefinitionById(String nifaId);
+    /**
+     * 修改互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest request);
 }
 

@@ -29,6 +29,7 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -5284,5 +5285,56 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest){
         return restTemplate.postForEntity( "http://AM-TRADE/am-trade/config/finmanchargenew/countRecordByProjectType",adminRequest,Integer.class).getBody();
+    }
+
+    /**
+     * 添加互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean insertNifaFieldDefinition(NifaFieldDefinitionAddRequest request) {
+        String url = tradeService + "/nifaConfig/insertNifaFieldDefinition";
+        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public NifaFieldDefinitionResponse selectFieldDefinitionList(NifaFieldDefinitionRequest request) {
+        String url = tradeService + "/nifaConfig/selectFieldDefinitionList";
+        NifaFieldDefinitionResponse response = restTemplate.postForEntity(url,request,NifaFieldDefinitionResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据id查找互金定义
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public NifaFieldDefinitionResponse selectFieldDefinitionById(String nifaId) {
+        String url = tradeService + "/nifaConfig/selectFieldDefinitionById/"+nifaId;
+        NifaFieldDefinitionResponse response = restTemplate.getForEntity(url,NifaFieldDefinitionResponse.class).getBody();
+        return response;
+    }
+    /**
+     * 修改互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest request){
+        String url = tradeService + "/nifaConfig/updateNifaFieldDefinition";
+        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
+        return response;
     }
 }
