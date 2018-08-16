@@ -1,5 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,15 +18,10 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     private int pageSize = 10;
 
-    /**
-     * 检索条件 添加时间开始
-     */
+    @ApiModelProperty(value = "添加时间开始")
     private String addTimeStart;
 
-    /**
-     * 检索条件 添加时间结束
-
-     */
+    @ApiModelProperty(value = "添加时间结束")
     private String addTimeEnd;
 
     public int limitStart = -1;
@@ -38,50 +35,37 @@ public class HjhAccountBalanceRequest  implements Serializable {
         return paginatorPage;
     }
 
-    /**  日查询 **/
-    /**
-     * 主键查询条件
-     */
+    @ApiModelProperty(value = "主键查询条件")
     public java.lang.Integer idSer;
-    /**
-     * 日期查询条件
-     */
+
+    @ApiModelProperty(value = "日期查询条件")
     public java.sql.Date dateSer;
-    /**
-     * 原始资产交易额(元)查询条件
-     */
+
+    @ApiModelProperty(value = " 原始资产交易额(元)查询条件")
     public java.math.BigDecimal investAccountSer;
-    /**
-     * 债转资产交易额(元)查询条件
-     */
+
+    @ApiModelProperty(value = "债转资产交易额(元)查询条件")
     public java.math.BigDecimal creditAccountSer;
-    /**
-     * 复投资金额(元)查询条件
-     */
+
+    @ApiModelProperty(value = "复投资金额(元)查询条件")
     public java.math.BigDecimal reinvestAccountSer;
-    /**
-     * 新加入资金额(元)查询条件
-     */
+
+    @ApiModelProperty(value = "新加入资金额(元)查询条件")
     public java.math.BigDecimal addAccountSer;
-    /**
-     * 创建人id查询条件
-     */
+
+    @ApiModelProperty(value = "创建人id查询条件")
     public java.lang.Integer createUserSer;
-    /**
-     * 创建时间查询条件
-     */
+
+    @ApiModelProperty(value = "创建时间查询条件")
     public Date createTimeSer;
-    /**
-     * 更新人id查询条件
-     */
+
+    @ApiModelProperty(value = "更新人id查询条件")
     public Date updateUserSer;
-    /**
-     * 更新时间查询条件
-     */
+
+    @ApiModelProperty(value = "更新时间查询条件")
     public java.lang.Integer updateTimeSer;
-    /**
-     * 删除标识查询条件
-     */
+
+    @ApiModelProperty(value = "删除标识查询条件")
     public java.lang.Boolean delFlgSer;
 
 

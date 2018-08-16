@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -12,31 +13,30 @@ public class AdminSubConfigRequest extends BasePage {
      * 此处为属性说明
      */
     private static final long serialVersionUID = 8853785949572253967L;
-
     private String ids;
 
-    /** 用户名 */
+    @ApiModelProperty(value = "用户名")
     private String userNameSrch;
 
-    /** 姓名 */
+    @ApiModelProperty(value = "姓名")
     String trueNameSrch;
 
-    /** 角色 */
+    @ApiModelProperty(value = "角色 ")
     String roleNameSrch;
 
-    /** 用户类型 */
+    @ApiModelProperty(value = "用户类型 ")
     private String userTypeSrch;
 
-    /** 江西银行电子账号 */
+    @ApiModelProperty(value = " 江西银行电子账号")
     private String accountSrch;
 
-    /** 用户状态 */
+    @ApiModelProperty(value = "用户状态")
     private String statusSrch;
 
-    /** 添加时间 */
+    @ApiModelProperty(value = "添加时间 ")
     private String recieveTimeStartSrch;
 
-    /** 添加时间 */
+    @ApiModelProperty(value = "添加时间")
     private String recieveTimeEndSrch;
     private Integer id;
 

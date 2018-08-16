@@ -27,7 +27,7 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     private String investUserType;
 
-    private String status;
+    private Integer status;
 
     private String investStart;
 
@@ -123,12 +123,12 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.investUserType = investUserType == null ? null : investUserType.trim();
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getInvestStart() {

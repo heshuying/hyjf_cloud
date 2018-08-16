@@ -57,7 +57,7 @@ public class AppBindCardController extends BaseUserController {
      * @return
      */
     @GetMapping("/bind/smscode")
-    @ApiOperation(value = "绑卡发送验证码", tags = "绑卡发送验证码")
+    @ApiOperation(value = "绑卡发送验证码", notes = "绑卡发送验证码")
     public BaseResultBeanFrontEnd sendSmsCode(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         SendSmsResultBean result = new SendSmsResultBean();
 
@@ -92,6 +92,7 @@ public class AppBindCardController extends BaseUserController {
         // 返回失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
             if("JX900651".equals(bean.getRetCode())){
+
 
                 result.setStatus(SendSmsResultBean.SUCCESS);
                 result.setStatusDesc(SendSmsResultBean.SUCCESS_MSG);
@@ -138,7 +139,7 @@ public class AppBindCardController extends BaseUserController {
      * @return
      */
     @GetMapping("/bind")
-    @ApiOperation(value = "用户绑卡", tags = "用户绑卡")
+    @ApiOperation(value = "用户绑卡", notes = "用户绑卡")
     public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
 

@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -9,23 +10,23 @@ import java.io.Serializable;
  */
 public class VersionRequestBean extends BaseRequest implements Serializable {
     private static final long serialVersionUID = 387630498860089653L;
-    //删除条件
+    @ApiModelProperty(value = "删除条件 ")
     private String ids;
-    //系统名称--检索条件
+    @ApiModelProperty(value = "系统名称--检索条件")
     private String nameSrh;
-    //版本号--检索条件
+    @ApiModelProperty(value = "版本号--检索条件")
     private String versionSrh;
-    //版本id
+    @ApiModelProperty(value = "版本id")
     private Integer id;
-    //版本类型
+    @ApiModelProperty(value = "版本类型 ")
     private Integer type;
-    //版本号
+    @ApiModelProperty(value = "版本号")
     private String version;
-    //是否需要更新
+    @ApiModelProperty(value = "是否需要更新 ")
     private Integer isupdate;
-    //url
+    @ApiModelProperty(value = "url")
     private String url;
-    //版本描述
+    @ApiModelProperty(value = "版本描述")
     private String content;
 
     public String getIds() {

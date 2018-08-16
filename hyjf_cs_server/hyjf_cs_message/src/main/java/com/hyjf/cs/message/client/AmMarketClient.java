@@ -1,6 +1,8 @@
 package com.hyjf.cs.message.client;
 
+import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
+import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 
 import java.util.List;
@@ -13,5 +15,7 @@ import java.util.List;
 public interface AmMarketClient {
 
     ActivityListResponse getActivity(int day);
+
+
 
 }

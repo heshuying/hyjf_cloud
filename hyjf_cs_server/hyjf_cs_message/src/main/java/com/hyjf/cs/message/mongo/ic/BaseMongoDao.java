@@ -74,4 +74,5 @@ public abstract class BaseMongoDao<T> {
 			this.mongoTemplate.remove(list.get(i));
 		}
 	}
+
 }

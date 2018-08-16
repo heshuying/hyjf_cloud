@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,10 +13,11 @@ public class FeeConfigRequestBean extends BaseRequest implements Serializable{
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "查询的id")
     private String ids;
-
+    @ApiModelProperty(value = "查询的开始时间")
     private String startCreate;
-
+    @ApiModelProperty(value = "查询的结束时间")
     private String endCreate;
     private Integer id;
 

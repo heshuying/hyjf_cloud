@@ -6,12 +6,23 @@ package com.hyjf.am.trade.controller.front.hjh.hjhcheck;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
+import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
+import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.chatbot.dd.DDChatbot;
 import com.hyjf.common.chatbot.dd.DDChatbotBean;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 汇计划各计划开放额度校验预警
@@ -33,6 +46,14 @@ public class HjhAlarmController extends BaseController {
     private HjhPlanService hjhPlanService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private HjhAccedeService hjhAccedeService;
+    @Autowired
+    private HjhRepayService hjhRepayService;
+    @Autowired
+    private MailProducer mailProducer;
+    @Autowired
+    private SmsProducer smsProducer;
 
     /**
      * 汇计划各计划开放额度校验预警
@@ -91,5 +112,150 @@ public class HjhAlarmController extends BaseController {
             logger.info("汇计划各计划开放额度校验预警任务 结束... ");
         return true;
     }
+
+    /**
+     * hjh订单匹配期超过两天短信预警
+     * @author zhangyk
+     * @date 2018/8/15 14:03
+     */
+    @GetMapping("/batch/hjhOrderMatchPeriodCheck")
+    private Boolean hjhOrderMatchPeriodCheck() {
+        List<HjhAccede> accedeList = hjhAccedeService.getPlanMatchPeriodList();
+        if (CollectionUtils.isNotEmpty(accedeList)) {
+           try {
+               logger.info("获取到的size = "+ accedeList.size());
+               StringBuffer msg = new StringBuffer();
+               String title = "计划订单匹配期>=2消息通知";
+               for (int i=0;i<accedeList.size();i++) {
+                   String orderId = accedeList.get(i).getAccedeOrderId();
+                   msg.append("'");
+                   msg.append(orderId);
+                   msg.append("',");
+                   if (i % 3 == 0){
+                       msg.append("\r\n");
+                   }
+               }
+               msg.append("该计划订单匹配期已大于两天，请相关人员至后台查看并及时处理，谢谢");
+               Boolean env_test = systemConfig.isEnvTest();
+               logger.info("订单进入匹配期时间超过2天 evn_test is test ? " + env_test);
+               String emailList= "";
+               if (env_test){
+                   emailList = systemConfig.getHyjfAlertEmailTest();
+               }else{
+                   emailList = systemConfig.getHyjfAlertEmail();
+               }
+               String [] toMail = emailList.split(",");
+               MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
+                       null,
+                       MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
+               mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+               logger.info("邮件发送完成");
+           }catch (Exception e){
+               logger.error("计划订单匹配期>=2 邮件预警发送异常");
+               return false;
+           }
+        }else{
+            logger.info("计划订单匹配期>=2 目标数据为空,不发送预警");
+        }
+        return true;
+    }
+
+
+
+    /**
+     * 订单退出超过两天邮件预警
+     * @author zhangyk
+     * @date 2018/8/15 15:44
+     */
+    @GetMapping("/batch/hjhOrderExitCheck")
+    private Boolean hjhOrderExitCheck() {
+        List<HjhRepay> list = hjhRepayService.getPlanExitCheck();
+        if (CollectionUtils.isNotEmpty(list)){
+            try {
+                String title = "计划退出中时间>=2消息通知";
+                StringBuffer msg = new StringBuffer();
+                for (int i=0;i<list.size();i++) {
+                    String orderId = list.get(i).getAccedeOrderId();
+                    msg.append("'");
+                    msg.append(orderId);
+                    msg.append("'");
+                    if (i % 3 == 0){
+                        msg.append("\r\n");
+                    }
+                }
+                msg.append("该计划订单退出中已大于两天，请相关人员至后台查看并及时处理，谢谢");
+                Boolean env_test = systemConfig.isEnvTest();
+                logger.info("计划退出中时间>=2 evn_test is test ? " + env_test);
+                String emailList= "";
+                if (env_test){
+                    emailList = systemConfig.getHyjfAlertEmailTest();
+                }else{
+                    emailList = systemConfig.getHyjfAlertEmail();
+                }
+                String [] toMail = emailList.split(",");
+                MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
+                        null,
+                        MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
+                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                logger.info("邮件发送完成");
+                return true;
+            }catch (Exception e){
+                logger.error("计划退出中时间>=2 邮件预警发送异常 ");
+                return false;
+            }
+        }else {
+            logger.info("计划订单退出期>=2 目标数据为空,不发送预警");
+        }
+        return true;
+    }
+
+
+
+
+    /**
+     * 订单投资异常短信预警
+     * @author zhangyk
+     * @date 2018/8/15 16:23
+     */
+    @GetMapping("/batch/hjhOrderInvestExceptionCheck")
+    private Boolean hjhOrderInvestExceptionCheck() {
+       List<HjhAccede> accedeList = hjhAccedeService.getPlanOrderInvestExceptionList();
+        if (accedeList != null && accedeList.size() > 0) {
+            try {
+                // 发送邮件通知
+                String title = "计划订单投资异常消息通知";
+                StringBuffer msg = new StringBuffer();
+                msg.append("计划订单投资异常，请至网站后台“异常投资-汇计化自动投资异常”查看并及时处理，谢谢");
+
+                Boolean env_test = systemConfig.isEnvTest();
+                logger.info("计划订单投资异常 evn_test is test ? " + env_test);
+                String emailList= "";
+                if (env_test){
+                    emailList = systemConfig.getHyjfAlertEmailTest();
+                }else{
+                    emailList = systemConfig.getHyjfAlertEmail();
+                }
+                String [] toMail = emailList.split(",");
+                // 发送邮件
+                MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
+                        null,
+                        MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
+                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                // TODO: 2018/8/15   发送短信通知待完善
+               /* SmsMessage smsMessage = new SmsMessage(null, null, null, null, MessageDefine.SMSSENDFORMANAGER, null,
+                        CustomConstants.JYTZ_PLAN_ORDER_EXCECEPTION, CustomConstants.CHANNEL_TYPE_NORMAL);
+                smsProcesser.gather(smsMessage);*/
+                logger.info("短信发送成功");
+            }catch (Exception e){
+                logger.error("订单投资异常预警发送异常 ");
+                return  false;
+            }
+        }else {
+            logger.info("计划订单投资异常size为空, 不发送预警");
+        }
+        return true;
+    }
+
+
 
 }

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lisheng
  * @version VersionConfigController, v0.1 2018/7/11 11:24
  */
-@Api(tags = "admin移动客户端")
+@Api(tags = "admin移动客户端-版本管理")
 @RestController
 @RequestMapping("config/versionconfig")
 public class VersionConfigController extends BaseController {
@@ -64,7 +64,6 @@ public class VersionConfigController extends BaseController {
     @PostMapping(value = "/insertinfo")
     @ResponseBody
     public AdminResult<VersionVO> insertinfo(@RequestBody VersionConfigBeanRequest request) throws Exception {
-        // TODO 校验参数方法
         //this.validatorFieldCheck();
         VersionConfigBeanResponse response = versionConfigService.insertRecord(request);
         if (!Response.isSuccess(response)) {
@@ -78,7 +77,6 @@ public class VersionConfigController extends BaseController {
     @PostMapping(value = "/updateinfo")
     @ResponseBody
     public AdminResult<VersionVO> updateinfo(@RequestBody VersionConfigBeanRequest request) throws Exception {
-        // TODO 校验参数方法
         //this.validatorFieldCheck();
         VersionConfigBeanResponse response = versionConfigService.updateRecord(request);
         if (!Response.isSuccess(response)) {
