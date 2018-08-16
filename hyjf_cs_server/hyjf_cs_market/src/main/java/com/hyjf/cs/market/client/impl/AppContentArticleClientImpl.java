@@ -28,12 +28,12 @@ public class AppContentArticleClientImpl implements AppContentArticleClient {
 
     /**
      * 根据id获取网贷知识
-     * @param contentArticleId
+     * @param id
      * @return
      */
     @Override
-    public AppContentArticleVO getContentArticleById(Integer contentArticleId) {
-        String url = urlBase +"find/contentArticle/getContentArticleById/" + contentArticleId;
+    public AppContentArticleVO getContentArticleById(Integer id) {
+        String url = urlBase +"find/contentArticle/getContentArticleById/" + id;
         AppContentArticleResponse response = restTemplate.getForEntity(url,AppContentArticleResponse.class).getBody();
         if (response != null) {
             return response.getResult();

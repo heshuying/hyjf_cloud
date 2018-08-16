@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
 import com.hyjf.cs.message.bean.ic.SubEntity;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,10 +40,6 @@ public class OperationalDataController {
 	private Logger logger = LoggerFactory.getLogger(OperationalDataController.class);
 	
 	@Autowired
-	private OperationMongoGroupDao operationMongoGroupDao;
-	@Autowired
-	private OperationMongDao operationMongDao;
-	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
 
 	/**
@@ -65,7 +59,7 @@ public class OperationalDataController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
 			JSONObject info = new JSONObject();
 
@@ -90,7 +84,7 @@ public class OperationalDataController {
 			query = new BasicQuery(dbObject, fieldsObject);
 			query.limit(12);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			List<OperationReportEntity> list = operationMongDao.find(query);
+			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList(query);
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -137,7 +131,7 @@ public class OperationalDataController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
 			JSONObject detail = new JSONObject();
 			
@@ -160,19 +154,6 @@ public class OperationalDataController {
 			detail.put("overdueNum", 0);
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
-
-
-/*			//借款人相关数据统计：
-			BorrowUserStatistic borrowUserData = platDataStatisticsService.selectBorrowUserStatistic();
-			BigDecimal borrowuserMoneyTopone = BigDecimal.ZERO;
-			BigDecimal borrowuserMoneyTopten = BigDecimal.ZERO;
-//			if(borrowUserData.getBorrowuserMoneyTotal() != null && borrowUserData.getBorrowuserMoneyTotal().compareTo(BigDecimal.ZERO) > 0){
-				//borrowuserMoneyTopone = borrowUserData.getBorrowuserMoneyTopone().divide(borrowUserData.getBorrowuserMoneyTotal(), BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
-				//borrowuserMoneyTopten = borrowUserData.getBorrowuserMoneyTopten().divide(borrowUserData.getBorrowuserMoneyTotal(), BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
-//				borrowuserMoneyTopone = borrowUserData.getBorrowuserMoneyTopone().divide(borrowUserData.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP);
-//				borrowuserMoneyTopten = borrowUserData.getBorrowuserMoneyTopten().divide(borrowUserData.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP);
-
-//			}*/
 
 			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
 			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
@@ -207,7 +188,7 @@ public class OperationalDataController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -248,7 +229,7 @@ public class OperationalDataController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
