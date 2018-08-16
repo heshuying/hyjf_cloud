@@ -4,10 +4,11 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -15,78 +16,53 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: SubCommissionRequest, v0.1 2018/7/10 10:43
  */
+@ApiModel(value = "平台账户分佣请求参数")
 public class SubCommissionRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 1251849043086260227L;
 
-    /**
-     * 转入用户名检索
-     */
+    @ApiModelProperty(value = "转入用户名(检索用)")
     private String receiveUserNameSrch;
 
-    /**
-     * 转入姓名
-     */
+    @ApiModelProperty(value = "转入姓名(发起分佣)")
     private String truename;
 
-    /**
-     * 订单号检索用
-     */
+    @ApiModelProperty(value = "订单号(检索用)")
     private String orderIdSrch;
 
-    /**
-     * 转账状态检索用
-     */
+    @ApiModelProperty(value = "转账状态(检索用)")
     private String tradeStatusSrch;
 
-    /**
-     * 添加时间开始(检索用)
-     */
+    @ApiModelProperty(value = "添加时间开始(检索用)")
     private String timeStartSrch;
-    /**
-     * 添加时间结束(检索用)
-     */
+
+    @ApiModelProperty(value = "添加时间结束(检索用)")
     private String timeEndSrch;
 
-    /**
-     * 转出方用户电子账户号
-     */
+    @ApiModelProperty(value = "转出方用户电子账户号(发起分佣)")
     private String accountId;
 
-    /**
-     * 收款方用户ID
-     */
+    @ApiModelProperty(value = "收款方用户ID(发起分佣)")
     private Integer receiveUserId;
 
-    /**
-     * 收款方用户名
-     */
+    @ApiModelProperty(value = "收款方用户名(发起分佣)")
     private String receiveUserName;
 
-    /**
-     * 收款方用户电子账户号
-     */
+    @ApiModelProperty(value = "收款方用户电子账户号(发起分佣)")
     private String receiveAccountId;
 
-    /**
-     * 分佣金额
-     */
+    @ApiModelProperty(value = "分佣金额(发起分佣)")
     private String txAmount;
-    /**
-     * 交易密码
-     */
+
+    @ApiModelProperty(value = "交易密码(发起分佣)")
     private String password;
 
-    /**
-     * 账户余额
-     */
+    @ApiModelProperty(value = "账户余额(发起分佣)")
     private String balance;
 
-    /**
-     * 备注说明
-     */
+    @ApiModelProperty(value = "备注说明(发起分佣)")
     private String remark;
 
     /**
