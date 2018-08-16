@@ -78,10 +78,10 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
      */
     @Override
     public int updateFinmanChargeNew(FinmanChargeNewRequest adminRequest){
-        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
-            //ManChargeCd为必填字段
-            return 0;
-        }
+//        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
+//            //ManChargeCd为必填字段
+//            return 0;
+//        }
         BorrowFinmanNewCharge record = new BorrowFinmanNewCharge();
         BeanUtils.copyProperties(adminRequest, record);
         // 更新时间
@@ -95,10 +95,10 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
      */
     @Override
     public int deleteFinmanChargeNew(FinmanChargeNewRequest adminRequest){
-        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
-            //ManChargeCd为必填字段
-            return 0;
-        }
+//        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
+//            //ManChargeCd为必填字段
+//            return 0;
+//        }
         return borrowFinmanNewChargeMapper.deleteByPrimaryKey(adminRequest.getManChargeCd());
     }
     /**
