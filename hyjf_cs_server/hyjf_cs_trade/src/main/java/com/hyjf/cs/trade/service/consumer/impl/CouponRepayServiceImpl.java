@@ -26,6 +26,7 @@ import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.CouponRepayProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -74,6 +75,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     private BorrowTenderCpnClient borrowTenderCpnClient;
     @Autowired
     private BorrowClient borrowClient;
+    @Autowired
+    private CouponRepayProducer couponRepayProducer;
 
     /** 用户ID */
     private static final String USERID = "userId";
@@ -1161,6 +1164,20 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      */
     @Override
     public void couponOnlyRepay(List<String> recoverNidList) {
-            borrowTenderClient.couponOnlyRepay(recoverNidList);
+        try {
+            String timestamp = String.valueOf(GetDate.getNowTime10());
+//        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + timestamp + SOA_INTERFACE_KEY));
+            Map<String, String> params = new HashMap<String, String>();
+            // 借款项目编号
+            params.put("nidList", JSONObject.toJSONString(recoverNidList));
+            // 时间戳
+            params.put("timestamp", timestamp);
+            // 签名
+//        params.put("chkValue", chkValue);
+            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+        }catch (MQException e) {
+            e.printStackTrace();
+            logger.info("体验金按收益期限还款消息队列 失败");
+        }
     }
 }

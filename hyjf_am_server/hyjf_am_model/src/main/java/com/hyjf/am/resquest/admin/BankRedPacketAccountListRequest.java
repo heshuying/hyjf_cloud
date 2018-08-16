@@ -12,6 +12,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,27 +26,33 @@ public class BankRedPacketAccountListRequest implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;
-	//流水号
-	private String seqNo;
-	//订单号
+
+    @ApiModelProperty(value ="流水号")
+    private String seqNo;
+
+    @ApiModelProperty(value ="订单号")
 	private String orderId;
-	//电子帐号
+
+    @ApiModelProperty(value ="电子帐号")
 	private String accountId;
-	//收支类型
+
+    @ApiModelProperty(value ="收支类型")
 	private Integer type;
-	//交易类型
+
+    @ApiModelProperty(value ="交易类型")
 	private Integer transType;
-	//交易状态
+
+    @ApiModelProperty(value ="交易状态")
 	private Integer status;
-	
+    @ApiModelProperty(value ="")
 	private String bankAccountCode;
-
+    @ApiModelProperty(value ="")
 	private List<Integer> typeList;
-
+    @ApiModelProperty(value ="")
 	private List<Integer> transTypeList;
-
+    @ApiModelProperty(value ="")
 	private List<Integer> statusList;
-
+    @ApiModelProperty(value ="")
 	private List<BankMerchantAccountListCustomizeVO> recordList;
 
 	

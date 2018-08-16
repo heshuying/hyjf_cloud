@@ -35,4 +35,16 @@ public interface SmsTemplateService {
 	 * @return
 	 */
     void insertSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 开启短信模板
+	 * @param request
+	 */
+	void openAction(SmsTemplateRequest request);
+
+	/**
+	 * 关闭短信模板
+	 * @param request
+	 */
+	void closeAction(SmsTemplateRequest request);
 }

@@ -9,6 +9,7 @@ import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -141,6 +142,17 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	@Override
 	public List<UserInfoCustomize> queryDepartmentInfoByUserId(Integer userId){
 		return userInfoCustomizeMapper.queryDepartmentInfoByUserId(userId);
+	}
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public MessagePushErrorVO getMobileCodeByNumber(String mobile) {
+		return userInfoMapper.getMobileCodeByNumber(mobile);
 	}
 
 }

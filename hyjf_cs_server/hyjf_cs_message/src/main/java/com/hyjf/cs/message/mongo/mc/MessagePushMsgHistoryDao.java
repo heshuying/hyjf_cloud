@@ -1,5 +1,7 @@
 package com.hyjf.cs.message.mongo.mc;
 
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -29,10 +31,15 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (startTime != null) {
 			criteria.and("sendTime").gte(startTime);
+			if (endTime != null) {
+				criteria.lte(endTime);
+			}
+		}else{
+			if (endTime != null) {
+				criteria.and("sendTime").lte(endTime);
+			}
 		}
-		if (endTime != null) {
-			criteria.and("sendTime").lte(endTime);
-		}
+
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}
@@ -225,5 +232,88 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		query.skip(offset).limit(limit);
 		query.with(new Sort(Sort.Direction.DESC, "createTime"));
 		return mongoTemplate.find(query,MessagePushMsgHistory.class);
+	}
+
+	/**
+	 * 获取列表记录数
+	 *
+	 * @return
+	 */
+	public Integer getRecordCount(MessagePushErrorRequest request) {
+		Criteria criteria = new Criteria();
+		Query query = new Query();
+		// 条件查询
+		criteria.and("msgSendStatus").is(2);
+		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
+			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
+		}
+		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
+			criteria.and("tagIdSrch").is(Integer.valueOf(request.getTagIdSrch()));
+		}
+		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
+			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
+		}
+		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
+			criteria.and("startDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
+		}
+		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
+			criteria.and("endDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+		}
+		query.addCriteria(criteria);
+		return (int) mongoTemplate.count(query, MessagePushMsgHistory.class);
+	}
+
+	/**
+	 * 获取列表
+	 *
+	 * @return
+	 */
+	public List<MessagePushMsgHistory> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd) {
+		Criteria criteria = new Criteria();
+		Query query = new Query();
+		// 条件查询
+		criteria.and("msgSendStatus").is(2);
+		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
+			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
+		}
+		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
+			criteria.and("tagIdSrch").is(Integer.valueOf(request.getTagIdSrch()));
+		}
+		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
+			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
+		}
+		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
+			criteria.and("startDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
+		}
+		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
+			criteria.and("endDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+		}
+		if (limitStart != -1) {
+			query.skip(limitStart).limit(limitEnd);
+			query.addCriteria(criteria);
+		}
+		query.with(new Sort(Sort.Direction.DESC, "create_time"));
+		return mongoTemplate.find(query, MessagePushMsgHistory.class);
+	}
+
+	/**
+	 * 获取单个信息
+	 *
+	 * @return
+	 */
+	public MessagePushMsgHistory getRecord(Integer id) {
+		Criteria criteria = new Criteria();
+		Query query = new Query();
+		// 条件查询
+		if(id != null){
+			criteria.and("id").is(id);
+		}
+		List<MessagePushMsgHistory> list = mongoTemplate.find(query, MessagePushMsgHistory.class);
+		return list.get(0);
+	}
+
+
+	public void updateByPrimaryKeySelective(MessagePushErrorVO record) {
+		mongoTemplate.save(record);
 	}
 }

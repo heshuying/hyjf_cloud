@@ -43,7 +43,7 @@ public class AppBorrowImageController {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
         List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), -1, -1);
         if (recordList != null) {
-            String filePhysicalPath = DOMAIN_URL;//TODO  PropUtils.getSystem("file.domain.url")
+            String filePhysicalPath = DOMAIN_URL;
             Paginator paginator = new Paginator(form.getCurrPage(), recordList.size(), 12);
             recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), paginator.getOffset(), paginator.getLimit());
             List<AppBorrowImageVO> resultList = CommonUtils.convertBeanList(recordList, AppBorrowImageVO.class);
@@ -70,7 +70,7 @@ public class AppBorrowImageController {
         record.setId(form.getId());
         if (Validator.isNotNull(record.getId())) {
             // 根据主键检索数据
-            String filePhysicalPath = DOMAIN_URL;//TODO PropUtils.getSystem("file.domain.url")
+            String filePhysicalPath = DOMAIN_URL;
             record = appBorrowImageService.getRecord(form.getId());
             if (record != null) {
                 record.setBorrowImageUrl(filePhysicalPath + record.getBorrowImageUrl());

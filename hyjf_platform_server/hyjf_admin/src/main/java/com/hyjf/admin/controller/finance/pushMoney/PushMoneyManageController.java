@@ -219,7 +219,7 @@ public class PushMoneyManageController extends BaseController {
         result.put("pushMoneyVOList",pushMoneyVOList);
         Map<String,Object> totle = pushMoneyManageService.queryPushMoneyTotle(request);
         result.put("pushMoneyTotle",totle);
-        return new AdminResult(result);
+        return new AdminResult<>(result);
     }
 
     /**

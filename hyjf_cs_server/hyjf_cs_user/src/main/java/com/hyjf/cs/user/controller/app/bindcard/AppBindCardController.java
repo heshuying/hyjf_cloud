@@ -93,6 +93,7 @@ public class AppBindCardController extends BaseUserController {
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
             if("JX900651".equals(bean.getRetCode())){
 
+
                 result.setStatus(SendSmsResultBean.SUCCESS);
                 result.setStatusDesc(SendSmsResultBean.SUCCESS_MSG);
                 result.setSrvAuthCode(bean.getSrvAuthCode());

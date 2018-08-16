@@ -27,7 +27,7 @@ import java.util.Map;
  * @author liuyang
  * @version WebProjectListController, v0.1 2018/6/13 10:21
  */
-@Api(tags = "Web端项目列表")
+@Api(tags = "web端-项目列表")
 @RestController
 @RequestMapping("/hyjf-web/projectlist")
 public class WebProjectListController extends BaseTradeController {
@@ -84,7 +84,7 @@ public class WebProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/6/22 16:06
      */
-    @ApiOperation(value = "新手标和散标标的详情", notes = "web端新手标和散标标的详情")
+    @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")
     @PostMapping(value = "/getBorrowDetail", produces = "application/json; charset=utf-8")
     public Object webBorrowDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getBorrowDetail(map,userId);

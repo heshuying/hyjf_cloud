@@ -15,7 +15,7 @@ import com.hyjf.am.trade.service.front.coupon.CouponExpiredService;
  * @version CouponExpiredController, v0.1 2018/6/19 10:22 优惠劵过期提醒
  */
 @RestController
-@RequestMapping("/batch/coupon")
+@RequestMapping("/am-trade/batch/coupon")
 public class CouponExpiredController extends BaseController {
 
 	@Autowired

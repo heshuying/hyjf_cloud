@@ -52,7 +52,7 @@
 				AND a.`status` = #{statusSrch}
 			</if>
 			<if test="userProperty != null and userProperty != ''">
-				AND ui.attribute = #{userProperty,jdbcType=INTEGER}
+				AND u.attribute = #{userProperty,jdbcType=INTEGER}
 			</if>
 			<if test="statusExceptionSrch != null and statusExceptionSrch != ''">
 				AND a.`status` in (0, 1)
@@ -82,9 +82,8 @@
 		SELECT
 			count(a.id) as cnt
 		FROM
-			huiyingdai_account_withdraw a
-		LEFT JOIN huiyingdai_users u ON a.user_id = u.user_id
-		LEFT JOIN huiyingdai_users_info ui ON  a.user_id=ui.user_id
+			ht_account_withdraw a
+		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
 		<include refid="Withdraw_Where_Clause" />
 	</select>
 	<select id="selectWithdrawList" resultMap="selectWithdrawListMap" parameterType="com.hyjf.am.resquest.admin.WithdrawBeanRequest">
