@@ -15,6 +15,16 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
     /** 交易金额 */
     public String txAmount;
 
+    /**
+     * 银行名称
+     */
+    private String bankName;
+
+    /**
+     * 状态
+     */
+    private String statusName;
+
     private Integer id;
 
     private String nid;
@@ -29,7 +39,7 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     private Integer txTime;
 
-    private Integer seqNo;
+    private String seqNo;
 
     private String bankSeqNo;
 
@@ -173,11 +183,11 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
         this.txTime = txTime;
     }
 
-    public Integer getSeqNo() {
+    public String getSeqNo() {
         return seqNo;
     }
 
-    public void setSeqNo(Integer seqNo) {
+    public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
     }
 
@@ -403,5 +413,21 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 }

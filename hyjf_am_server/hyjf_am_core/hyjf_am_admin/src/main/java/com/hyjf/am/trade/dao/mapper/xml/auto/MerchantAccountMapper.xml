@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.MerchantAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sub_account_name" property="subAccountName" jdbcType="VARCHAR" />
+    <result column="sub_account_type" property="subAccountType" jdbcType="VARCHAR" />
+    <result column="sub_account_code" property="subAccountCode" jdbcType="VARCHAR" />
+    <result column="transfer_into_flg" property="transferIntoFlg" jdbcType="TINYINT" />
+    <result column="transfer_out_flg" property="transferOutFlg" jdbcType="TINYINT" />
+    <result column="balance_lower_limit" property="balanceLowerLimit" jdbcType="DECIMAL" />
+    <result column="auto_transfer_out" property="autoTransferOut" jdbcType="TINYINT" />
+    <result column="auto_transfer_into" property="autoTransferInto" jdbcType="TINYINT" />
+    <result column="transfer_into_ratio" property="transferIntoRatio" jdbcType="INTEGER" />
+    <result column="account_balance" property="accountBalance" jdbcType="DECIMAL" />
+    <result column="available_balance" property="availableBalance" jdbcType="DECIMAL" />
+    <result column="frost" property="frost" jdbcType="DECIMAL" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="SMALLINT" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, sub_account_name, sub_account_type, sub_account_code, transfer_into_flg, transfer_out_flg, 
+    balance_lower_limit, auto_transfer_out, auto_transfer_into, transfer_into_ratio, 
+    account_balance, available_balance, frost, purpose, sort, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccountExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_merchant_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_merchant_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_merchant_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccountExample" >
+    delete from ht_merchant_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_merchant_account (sub_account_name, sub_account_type, sub_account_code, 
+      transfer_into_flg, transfer_out_flg, balance_lower_limit, 
+      auto_transfer_out, auto_transfer_into, transfer_into_ratio, 
+      account_balance, available_balance, frost, 
+      purpose, sort, create_time, 
+      update_time)
+    values (#{subAccountName,jdbcType=VARCHAR}, #{subAccountType,jdbcType=VARCHAR}, #{subAccountCode,jdbcType=VARCHAR}, 
+      #{transferIntoFlg,jdbcType=TINYINT}, #{transferOutFlg,jdbcType=TINYINT}, #{balanceLowerLimit,jdbcType=DECIMAL}, 
+      #{autoTransferOut,jdbcType=TINYINT}, #{autoTransferInto,jdbcType=TINYINT}, #{transferIntoRatio,jdbcType=INTEGER}, 
+      #{accountBalance,jdbcType=DECIMAL}, #{availableBalance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
+      #{purpose,jdbcType=VARCHAR}, #{sort,jdbcType=SMALLINT}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_merchant_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="subAccountName != null" >
+        sub_account_name,
+      </if>
+      <if test="subAccountType != null" >
+        sub_account_type,
+      </if>
+      <if test="subAccountCode != null" >
+        sub_account_code,
+      </if>
+      <if test="transferIntoFlg != null" >
+        transfer_into_flg,
+      </if>
+      <if test="transferOutFlg != null" >
+        transfer_out_flg,
+      </if>
+      <if test="balanceLowerLimit != null" >
+        balance_lower_limit,
+      </if>
+      <if test="autoTransferOut != null" >
+        auto_transfer_out,
+      </if>
+      <if test="autoTransferInto != null" >
+        auto_transfer_into,
+      </if>
+      <if test="transferIntoRatio != null" >
+        transfer_into_ratio,
+      </if>
+      <if test="accountBalance != null" >
+        account_balance,
+      </if>
+      <if test="availableBalance != null" >
+        available_balance,
+      </if>
+      <if test="frost != null" >
+        frost,
+      </if>
+      <if test="purpose != null" >
+        purpose,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="subAccountName != null" >
+        #{subAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="subAccountType != null" >
+        #{subAccountType,jdbcType=VARCHAR},
+      </if>
+      <if test="subAccountCode != null" >
+        #{subAccountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transferIntoFlg != null" >
+        #{transferIntoFlg,jdbcType=TINYINT},
+      </if>
+      <if test="transferOutFlg != null" >
+        #{transferOutFlg,jdbcType=TINYINT},
+      </if>
+      <if test="balanceLowerLimit != null" >
+        #{balanceLowerLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="autoTransferOut != null" >
+        #{autoTransferOut,jdbcType=TINYINT},
+      </if>
+      <if test="autoTransferInto != null" >
+        #{autoTransferInto,jdbcType=TINYINT},
+      </if>
+      <if test="transferIntoRatio != null" >
+        #{transferIntoRatio,jdbcType=INTEGER},
+      </if>
+      <if test="accountBalance != null" >
+        #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="availableBalance != null" >
+        #{availableBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="purpose != null" >
+        #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccountExample" resultType="java.lang.Integer" >
+    select count(*) from ht_merchant_account
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_merchant_account
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.subAccountName != null" >
+        sub_account_name = #{record.subAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subAccountType != null" >
+        sub_account_type = #{record.subAccountType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subAccountCode != null" >
+        sub_account_code = #{record.subAccountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transferIntoFlg != null" >
+        transfer_into_flg = #{record.transferIntoFlg,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferOutFlg != null" >
+        transfer_out_flg = #{record.transferOutFlg,jdbcType=TINYINT},
+      </if>
+      <if test="record.balanceLowerLimit != null" >
+        balance_lower_limit = #{record.balanceLowerLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.autoTransferOut != null" >
+        auto_transfer_out = #{record.autoTransferOut,jdbcType=TINYINT},
+      </if>
+      <if test="record.autoTransferInto != null" >
+        auto_transfer_into = #{record.autoTransferInto,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferIntoRatio != null" >
+        transfer_into_ratio = #{record.transferIntoRatio,jdbcType=INTEGER},
+      </if>
+      <if test="record.accountBalance != null" >
+        account_balance = #{record.accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.availableBalance != null" >
+        available_balance = #{record.availableBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.frost != null" >
+        frost = #{record.frost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.purpose != null" >
+        purpose = #{record.purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=SMALLINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_merchant_account
+    set id = #{record.id,jdbcType=INTEGER},
+      sub_account_name = #{record.subAccountName,jdbcType=VARCHAR},
+      sub_account_type = #{record.subAccountType,jdbcType=VARCHAR},
+      sub_account_code = #{record.subAccountCode,jdbcType=VARCHAR},
+      transfer_into_flg = #{record.transferIntoFlg,jdbcType=TINYINT},
+      transfer_out_flg = #{record.transferOutFlg,jdbcType=TINYINT},
+      balance_lower_limit = #{record.balanceLowerLimit,jdbcType=DECIMAL},
+      auto_transfer_out = #{record.autoTransferOut,jdbcType=TINYINT},
+      auto_transfer_into = #{record.autoTransferInto,jdbcType=TINYINT},
+      transfer_into_ratio = #{record.transferIntoRatio,jdbcType=INTEGER},
+      account_balance = #{record.accountBalance,jdbcType=DECIMAL},
+      available_balance = #{record.availableBalance,jdbcType=DECIMAL},
+      frost = #{record.frost,jdbcType=DECIMAL},
+      purpose = #{record.purpose,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=SMALLINT},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
+    update ht_merchant_account
+    <set >
+      <if test="subAccountName != null" >
+        sub_account_name = #{subAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="subAccountType != null" >
+        sub_account_type = #{subAccountType,jdbcType=VARCHAR},
+      </if>
+      <if test="subAccountCode != null" >
+        sub_account_code = #{subAccountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="transferIntoFlg != null" >
+        transfer_into_flg = #{transferIntoFlg,jdbcType=TINYINT},
+      </if>
+      <if test="transferOutFlg != null" >
+        transfer_out_flg = #{transferOutFlg,jdbcType=TINYINT},
+      </if>
+      <if test="balanceLowerLimit != null" >
+        balance_lower_limit = #{balanceLowerLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="autoTransferOut != null" >
+        auto_transfer_out = #{autoTransferOut,jdbcType=TINYINT},
+      </if>
+      <if test="autoTransferInto != null" >
+        auto_transfer_into = #{autoTransferInto,jdbcType=TINYINT},
+      </if>
+      <if test="transferIntoRatio != null" >
+        transfer_into_ratio = #{transferIntoRatio,jdbcType=INTEGER},
+      </if>
+      <if test="accountBalance != null" >
+        account_balance = #{accountBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="availableBalance != null" >
+        available_balance = #{availableBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        frost = #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="purpose != null" >
+        purpose = #{purpose,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
+    update ht_merchant_account
+    set sub_account_name = #{subAccountName,jdbcType=VARCHAR},
+      sub_account_type = #{subAccountType,jdbcType=VARCHAR},
+      sub_account_code = #{subAccountCode,jdbcType=VARCHAR},
+      transfer_into_flg = #{transferIntoFlg,jdbcType=TINYINT},
+      transfer_out_flg = #{transferOutFlg,jdbcType=TINYINT},
+      balance_lower_limit = #{balanceLowerLimit,jdbcType=DECIMAL},
+      auto_transfer_out = #{autoTransferOut,jdbcType=TINYINT},
+      auto_transfer_into = #{autoTransferInto,jdbcType=TINYINT},
+      transfer_into_ratio = #{transferIntoRatio,jdbcType=INTEGER},
+      account_balance = #{accountBalance,jdbcType=DECIMAL},
+      available_balance = #{availableBalance,jdbcType=DECIMAL},
+      frost = #{frost,jdbcType=DECIMAL},
+      purpose = #{purpose,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=SMALLINT},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

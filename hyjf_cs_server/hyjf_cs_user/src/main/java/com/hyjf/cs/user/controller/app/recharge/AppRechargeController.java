@@ -15,9 +15,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.AppRechargeRequestBean;
-import com.hyjf.cs.user.bean.AppRechargeResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.AppRechargeInfoResult;
@@ -62,7 +60,7 @@ public class AppRechargeController extends BaseUserController {
     private final Integer AMOUNT_UNIT = 10000;
 
     @ApiOperation(value = "短信充值发送验证码", notes = "短信充值发送验证码")
-    @RequestMapping("/sendCode")
+    @PostMapping("/sendCode")
     public AppRechargeInfoResult sendCode(HttpServletRequest request, HttpServletResponse response) {
         logger.info("短信充值发送验证码开始......");
         AppRechargeInfoResult result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/sendCode");
@@ -165,18 +163,17 @@ public class AppRechargeController extends BaseUserController {
      * @param
      * @return
      */
-    @ApiOperation(value = "app获取充值信息接口",notes = "app获取充值信息接口")
+    @ApiOperation(value = "获取充值信息接口",notes = "获取充值信息接口")
     @PostMapping(value = "/getQpRechargeInfo")
-    public AppResult getQpRechargeInfo(@RequestHeader(value = "userId")Integer userId,AppRechargeRequestBean requestBean){
-        AppResult result = new AppResult();
-/*        AppRechargeInfoResultVo resultVo = new AppRechargeInfoResultVo(AppRechargeDefine.GET_QP_RECHARGE_INFO, HOST_URL + AppRechargeDefine.RECHARGE_RULE_URL, HOST_URL
-                + AppRechargeDefine.RECHARGE_OTHER_URL + "?sign=" + vo.getSign());*/
-        AppRechargeResultBean resultBean = new AppRechargeResultBean();
-        resultBean.setRequest("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
-        resultBean.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
-        resultBean.setOtherUrl(systemConfig.webHost + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
-
-        String key = requestBean.getKey();
+    public AppRechargeInfoResult getQpRechargeInfo(@RequestHeader(value = "userId")Integer userId,AppRechargeRequestBean requestBean){
+        AppRechargeInfoResult result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
+        //result.setRequest("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
+        //result.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
+        //result.setOtherUrl(systemConfig.webHost + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
+        result.setRechargeRuleUrl("http://frontapp1.hyjf.com/user/bank/recharge/rechargeRule");
+        result.setOtherUrl("http://frontapp1.hyjf.com/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(requestBean.getSign());
         if (StringUtils.isEmpty(key)) {
             result.setStatus(CustomConstants.SIGN_ERROR);
             result.setStatusDesc("获取数据加密秘钥失败");
@@ -190,7 +187,7 @@ public class AppRechargeController extends BaseUserController {
 
                     AccountVO account = this.appRechargeService.getAccountByUserId(userId);
                     if (account != null) {
-                        resultBean.setAvailableAmount(CommonUtils.formatAmount(account.getBankBalance()));
+                        result.setAvailableAmount(CommonUtils.formatAmount(account.getBankBalance()));
                     }
 
                     // 获取用户的快捷卡信息
@@ -198,31 +195,31 @@ public class AppRechargeController extends BaseUserController {
                     if (null != bankCard) {
                         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
                         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
-                        resultBean.setBank(StringUtils.isBlank(bankCard.getBank()) ? StringUtils.EMPTY : bankCard.getBank());
+                        result.setBank(StringUtils.isBlank(bankCard.getBank()) ? StringUtils.EMPTY : bankCard.getBank());
                         // 银行卡号
-                        resultBean.setCardNo(bankCard.getCardNo());
-                        resultBean.setCardNo_info(BankCardUtil.getCardNo(bankCard.getCardNo()));
-                        resultBean.setMobile(bankCard.getMobile());//成功充值手机号码
+                        result.setCardNo(bankCard.getCardNo());
+                        result.setCardNo_info(BankCardUtil.getCardNo(bankCard.getCardNo()));
+                        result.setMobile(bankCard.getMobile());//成功充值手机号码
                         // 银行代码
-                        resultBean.setCode("");
+                        result.setCode("");
                         Integer bankId = bankCard.getBankId();
                         BankConfigVO banksConfig = appRechargeService.getBankConfigByBankId(bankId);
 
                         if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getLogo())) {
-                            resultBean.setLogo(systemConfig.webHost + banksConfig.getLogo());
+                            result.setLogo(systemConfig.webHost + banksConfig.getLogo());
                         } else {
-                            resultBean.setLogo(systemConfig.webHost + "/data/upfiles/filetemp/image/bank_log.png");
+                            result.setLogo(systemConfig.webHost + "/data/upfiles/filetemp/image/bank_log.png");
                         }
 
                         if(banksConfig !=null && StringUtils.isNotEmpty(banksConfig.getName())){
-                            resultBean.setBank(banksConfig.getName());
+                            result.setBank(banksConfig.getName());
                         }
 
                         // 是否快捷卡
                         if(banksConfig != null && banksConfig.getQuickPayment() == 1){
-                            resultBean.setIsDefault("2");
+                            result.setIsDefault("2");
                         }else {
-                            resultBean.setIsDefault("0");
+                            result.setIsDefault("0");
                         }
 
                         if (!StringUtils.isEmpty(requestBean.getMoney())) {
@@ -231,12 +228,13 @@ public class AppRechargeController extends BaseUserController {
                             try {
                                 money = Long.parseLong(requestBean.getMoney());
                             } catch (Exception e) {
-                                resultBean = new AppRechargeResultBean();
-                                resultBean.setRequest("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
-                                resultBean.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
-                                resultBean.setOtherUrl(systemConfig.webHost + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
-/*                                resultVo = new AppRechargeInfoResultVo(AppRechargeDefine.GET_QP_RECHARGE_INFO, HOST_URL + AppRechargeDefine.RECHARGE_RULE_URL, HOST_URL
-                                        + AppRechargeDefine.RECHARGE_OTHER_URL + "?sign=" + vo.getSign());*/
+                                result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
+                                result.setRechargeRuleUrl("http://frontapp1.hyjf.com/user/bank/recharge/rechargeRule");
+                                result.setOtherUrl("http://frontapp1.hyjf.com/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
+
+                                //result.setRequest("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
+                                //result.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
+                                //result.setOtherUrl(systemConfig.webHost + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
                                 result.setStatusDesc("请输入有效的充值金额");
                                 return result;
                             }
@@ -244,8 +242,8 @@ public class AppRechargeController extends BaseUserController {
                             BigDecimal fee = BigDecimal.ZERO;
                             // 时间到账金额
                             BigDecimal balance = new BigDecimal(money);
-                            resultBean.setBalance(CustomConstants.DF_FOR_VIEW.format(balance));
-                            resultBean.setFee(CustomConstants.DF_FOR_VIEW.format(fee));
+                            result.setBalance(CustomConstants.DF_FOR_VIEW.format(balance));
+                            result.setFee(CustomConstants.DF_FOR_VIEW.format(fee));
                             // 拼接展示信息字符串
                             //String moneyInfo = AppRechargeDefine.FEE + CustomConstants.DF_FOR_VIEW.format(fee) + AppRechargeDefine.RECHARGE_INFO_SUFFIX + AppRechargeDefine.BALANCE
                             //+ CustomConstants.DF_FOR_VIEW.format(balance) + AppRechargeDefine.RECHARGE_INFO_SUFFIX;
@@ -269,7 +267,7 @@ public class AppRechargeController extends BaseUserController {
                                 String moneyInfo = MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0)?"不限":timesLimitAmount.toString() + "万元",
                                         (BigDecimal.ZERO.compareTo(dayLimitAmount)==0)?"不限":dayLimitAmount.toString() + "万元",
                                         (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"不限":monthLimitAmount.toString() + "万元");
-                                resultBean.setMoneyInfo(moneyInfo);
+                                result.setMoneyInfo(moneyInfo);
                             }
                         }
                     } else {
@@ -277,28 +275,26 @@ public class AppRechargeController extends BaseUserController {
                         result.setStatusDesc("未查询到用户快捷卡信息");
                     }
 
-                    resultBean.setButtonWord("确认充值".concat(CommonUtils.formatAmount(requestBean.getVersion(), requestBean.getMoney())).concat("元"));
+                    result.setButtonWord("确认充值".concat(CommonUtils.formatAmount(requestBean.getVersion(), requestBean.getMoney())).concat("元"));
 
                     //设置线下充值信息
-                    this.setOffLineRechageInfo(resultBean, userId);
+                    this.setOffLineRechageInfo(result, userId);
 
                 } else {
-                    result.setStatusInfo(MsgEnum.ERR_USER_AUTH);
-/*                    result.setStatus(CustomConstants.TOKEN_ERROR);
-                    result.setStatusDesc("用户认证失败");*/
+                    result.setStatus(MsgEnum.ERR_USER_AUTH.getCode());
+                    result.setStatusDesc(MsgEnum.ERR_USER_AUTH.getMsg());
                 }
             } else {
-                result.setStatusInfo(MsgEnum.ERR_DATA_VERIFICATION);
+                result.setStatus(MsgEnum.ERR_DATA_VERIFICATION.getCode());
+                result.setStatusDesc(MsgEnum.ERR_DATA_VERIFICATION.getMsg());
             }
         }
         /** 充值描述 */
-        resultBean.setRcvAccountName(RCV_ACCOUNT_NAME);
-        resultBean.setRcvAccount(RCV_ACCOUNT);
-        resultBean.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
-        resultBean.setKindlyReminder(KINDLY_REMINDER);
-        resultBean.setHints(IMPORTANT_HINTS);
-
-        result.setData(resultBean);
+        result.setRcvAccountName(RCV_ACCOUNT_NAME);
+        result.setRcvAccount(RCV_ACCOUNT);
+        result.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
+        result.setKindlyReminder(KINDLY_REMINDER);
+        result.setHints(IMPORTANT_HINTS);
 
         return result;
     }
@@ -307,7 +303,7 @@ public class AppRechargeController extends BaseUserController {
      * @param resultVo
      * @param userId
      */
-    private void setOffLineRechageInfo(AppRechargeResultBean resultVo, Integer userId) {
+    private void setOffLineRechageInfo(AppRechargeInfoResult resultVo, Integer userId) {
         resultVo.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
         resultVo.setKindlyReminder(RECHARGE_KINDLY_REMINDER);
 

@@ -5,6 +5,8 @@ package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,48 +16,51 @@ import java.util.List;
  * @author fuqiang
  * @version BorrowProjectTypeVO, v0.1 2018/6/12 17:49
  */
+@ApiModel(value = "项目类型")
 public class BorrowProjectTypeVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "项目类型")
     private String borrowProjectType;
-
+    @ApiModelProperty(value = "参数唯一标识")
     private String borrowCd;
-
+    @ApiModelProperty(value = "名称")
     private String borrowName;
-
+    @ApiModelProperty(value = "项目编号")
     private String borrowClass;
-
-    private String investUserType;
-
-    private String status;
-
+    @ApiModelProperty(value = "投资用户类型0:51老用户 1:新用户 2: 全部")
+    private Integer investUserType;
+    @ApiModelProperty(value = "状态")
+    private Integer status;
+    @ApiModelProperty(value = "投资起始值")
     private String investStart;
-
+    @ApiModelProperty(value = "投资最大值")
     private String investEnd;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "创建组id")
     private String createGroupId;
-
-    private String createUserId;
-
+    @ApiModelProperty(value = "建立用户id")
+    private Integer createUserId;
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "更新组id")
     private String updateGroupId;
-
-    private String updateUserId;
-
+    @ApiModelProperty(value = "更新用户id")
+    private Integer updateUserId;
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+    @ApiModelProperty(value = "递增金额")
     private Long increaseMoney;
-
+    @ApiModelProperty(value = "优惠券")
     private Integer interestCoupon;
-
+    @ApiModelProperty(value = "体验金")
     private Integer tasteMoney;
-    //modifyFlag
+    @ApiModelProperty(value = "修改标记")
     private String modifyFlag;
-
+    @ApiModelProperty(value = "还款名")
     private String repayName;
-    //modifyFlag
+
     private List<BorrowProjectRepayVO> repayNames;
     // 回显checkbox标签
     private  List<BorrowStyleVO> repayStyles;
@@ -115,20 +120,20 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.borrowClass = borrowClass == null ? null : borrowClass.trim();
     }
 
-    public String getInvestUserType() {
+    public Integer getInvestUserType() {
         return investUserType;
     }
 
-    public void setInvestUserType(String investUserType) {
-        this.investUserType = investUserType == null ? null : investUserType.trim();
+    public void setInvestUserType(Integer investUserType) {
+        this.investUserType = investUserType;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getInvestStart() {
@@ -163,14 +168,6 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.createGroupId = createGroupId == null ? null : createGroupId.trim();
     }
 
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId == null ? null : createUserId.trim();
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -187,12 +184,20 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.updateGroupId = updateGroupId == null ? null : updateGroupId.trim();
     }
 
-    public String getUpdateUserId() {
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
         return updateUserId;
     }
 
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId == null ? null : updateUserId.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getUpdateTime() {

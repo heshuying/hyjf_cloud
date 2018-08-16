@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper" >
+
+	<select id="getInterestSum" resultType="java.math.BigDecimal" parameterType="INTEGER">
+      SELECT
+      bank_interest_sum
+      FROM
+      ht_account
+      WHERE
+      user_id = #{userId,jdbcType=INTEGER}
+    </select>
+	<select id="getRechargeSum" resultType="java.math.BigDecimal" parameterType="INTEGER">
+		SELECT
+		SUM(balance)
+		FROM
+			ht_account_recharge
+		WHERE
+			user_id = #{userId,jdbcType=INTEGER}
+		AND STATUS = 2
+	</select>
+
+	<select id="getWithdrawSum" resultType="java.math.BigDecimal" parameterType="INTEGER">
+		SELECT
+		sum(total)
+		FROM
+		ht_account_withdraw
+		WHERE
+		user_id = #{userId,jdbcType=INTEGER}
+		AND status = 2
+	</select>
+
+	<select id="getTradeNumber" resultType="INTEGER" parameterType="INTEGER">
+		SELECT
+			sum(counts)
+		FROM
+			(
+				SELECT
+					count(1) AS counts
+				FROM
+					ht_borrow_tender br
+				WHERE
+				br.user_id = #{userId,jdbcType=INTEGER}
+                AND br.accede_order_id is NULL
+                AND br.status = 1
+				UNION ALL
+					SELECT
+						count(1) AS counts
+					FROM
+						ht_credit_tender hct
+					WHERE
+					hct.user_id = #{userId,jdbcType=INTEGER}
+
+				UNION ALL
+				  SELECT
+					count(1) AS counts
+				  FROM
+					ht_hjh_accede hha
+					WHERE
+					hha.user_id = #{userId,jdbcType=INTEGER}
+
+				UNION ALL
+					SELECT
+					  Count(1) as counts
+					FROM
+					  ht_debt_plan_accede hdpa  -- 汇添金计划加入明细表
+							left join ht_debt_plan hdp  --  汇添金计划总表
+							on hdpa.plan_nid=hdp. debt_plan_nid
+					WHERE
+					hdpa.user_id = #{userId,jdbcType=INTEGER}
+
+				UNION ALL
+				  SELECT
+					count(1) AS counts
+				  FROM
+					ht_product_list hpl  -- 理财产品购买明细-汇添利
+				  WHERE
+					hpl.user_id = #{userId,jdbcType=INTEGER}
+				  and invest_status = 0
+			) tmp
+	</select>
+
+	<select id="getInvestSum" resultType="java.math.BigDecimal" parameterType="INTEGER">
+	SELECT
+	SUM(COUNT)
+FROM
+	(
+		SELECT
+			IFNULL(
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					ROUND(
+						IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,
+						2
+					)
+				END,
+				0
+			) + IFNULL(
+				CASE
+				WHEN hb.borrow_style <![CDATA[<>]]>  'endday' THEN
+					ROUND(
+						IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,
+						2
+					)
+				END,
+				0
+			) AS COUNT
+		FROM
+			ht_borrow_tender hbt
+		LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+		WHERE
+			hbt.accede_order_id IS NULL AND hbt.status = 1
+		AND hbt.user_id = #{userId,jdbcType=INTEGER}
+		UNION ALL
+			SELECT
+				IFNULL(
+					CASE
+					WHEN hb.borrow_style = 'endday' THEN
+						ROUND(
+							IFNULL(hct.assign_capital, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,
+							2
+						)
+					END,
+					0
+				) + IFNULL(
+					CASE
+					WHEN hb.borrow_style != 'endday' THEN
+						ROUND(
+							IFNULL(hct.assign_capital, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,
+							2
+						)
+					END,
+					0
+				) AS COUNT
+			FROM
+				ht_credit_tender hct
+			LEFT JOIN ht_borrow hb ON hct.bid_nid = hb.borrow_nid
+			WHERE
+				hct.user_id = #{userId,jdbcType=INTEGER}
+	) t
+
+	</select>
+	<select id="getPlanSum" resultType="java.math.BigDecimal" parameterType="INTEGER">
+		 SELECT IFNULL(
+				(SELECT
+		    sum(IFNULL(
+		    CASE
+		    WHEN hhp.is_month = '0' THEN
+		    IFNULL(
+		    ROUND(
+		    IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 360,
+		    2
+		    ),
+		    0
+		    )
+		    END,
+		    0
+		    ) + IFNULL(
+		    CASE
+		    WHEN hhp.is_month = '1' THEN
+		    ROUND(
+		    IFNULL(hha.accede_account, 0) * CONVERT (hhp.lock_period, SIGNED) / 12,
+		    2
+		    )
+		    END,
+		    0
+		    ) )AS mPlanAccount
+		    FROM
+		    ht_hjh_plan hhp
+		    LEFT JOIN ht_hjh_accede hha ON hhp.plan_nid = hha.plan_nid
+		    WHERE
+		    hha.user_id = #{userId,jdbcType=INTEGER}),0)
+
+	</select>
+
+  
+  </mapper>

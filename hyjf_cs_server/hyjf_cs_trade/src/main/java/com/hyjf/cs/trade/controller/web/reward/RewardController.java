@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +32,6 @@ public class RewardController {
 
     /**
      * 我的奖励列表
-     * @param token
-     * @param param
-     * @param request
-     * @return
      */
     @ApiOperation(value = "我的奖励列表", notes = "我的奖励列表")
     @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")

@@ -9,6 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,8 +60,8 @@ public class BankSettingController {
                 response.setPaginator(paginator);
                 response.setResultList(jxBankConfigList);
                 response.setBanksettingForm(adminRequest);
-                //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
-                response.setFileDomainUrl(DOMAIN_URL);
+                String fileDomainUrl = UploadFileUtils.getDoPath(DOMAIN_URL);
+                response.setFileDomainUrl(fileDomainUrl);
                 return response;
             }
             response.setRtn(Response.FAIL);

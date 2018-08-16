@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.TenderAgreement" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
+    <result column="tender_nid" property="tenderNid" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="contract_number" property="contractNumber" jdbcType="VARCHAR" />
+    <result column="contract_name" property="contractName" jdbcType="VARCHAR" />
+    <result column="templet_id" property="templetId" jdbcType="VARCHAR" />
+    <result column="contract_create_time" property="contractCreateTime" jdbcType="INTEGER" />
+    <result column="contract_sign_time" property="contractSignTime" jdbcType="INTEGER" />
+    <result column="download_url" property="downloadUrl" jdbcType="VARCHAR" />
+    <result column="viewpdf_url" property="viewpdfUrl" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="pdf_url" property="pdfUrl" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, borrow_nid, tender_type, tender_nid, `status`, contract_number, 
+    contract_name, templet_id, contract_create_time, contract_sign_time, download_url, 
+    viewpdf_url, img_url, pdf_url, create_user_id, create_user_name, update_user_id, 
+    update_user_name, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreementExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_tender_agreement
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_tender_agreement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_tender_agreement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreementExample" >
+    delete from ht_tender_agreement
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreement" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_tender_agreement (user_id, user_name, borrow_nid, 
+      tender_type, tender_nid, `status`, 
+      contract_number, contract_name, templet_id, 
+      contract_create_time, contract_sign_time, download_url, 
+      viewpdf_url, img_url, pdf_url, 
+      create_user_id, create_user_name, update_user_id, 
+      update_user_name, create_time, update_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{tenderType,jdbcType=TINYINT}, #{tenderNid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{contractNumber,jdbcType=VARCHAR}, #{contractName,jdbcType=VARCHAR}, #{templetId,jdbcType=VARCHAR}, 
+      #{contractCreateTime,jdbcType=INTEGER}, #{contractSignTime,jdbcType=INTEGER}, #{downloadUrl,jdbcType=VARCHAR}, 
+      #{viewpdfUrl,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{pdfUrl,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreement" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_tender_agreement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="tenderType != null" >
+        tender_type,
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="contractNumber != null" >
+        contract_number,
+      </if>
+      <if test="contractName != null" >
+        contract_name,
+      </if>
+      <if test="templetId != null" >
+        templet_id,
+      </if>
+      <if test="contractCreateTime != null" >
+        contract_create_time,
+      </if>
+      <if test="contractSignTime != null" >
+        contract_sign_time,
+      </if>
+      <if test="downloadUrl != null" >
+        download_url,
+      </if>
+      <if test="viewpdfUrl != null" >
+        viewpdf_url,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+      <if test="pdfUrl != null" >
+        pdf_url,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderType != null" >
+        #{tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderNid != null" >
+        #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="contractNumber != null" >
+        #{contractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="templetId != null" >
+        #{templetId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCreateTime != null" >
+        #{contractCreateTime,jdbcType=INTEGER},
+      </if>
+      <if test="contractSignTime != null" >
+        #{contractSignTime,jdbcType=INTEGER},
+      </if>
+      <if test="downloadUrl != null" >
+        #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="viewpdfUrl != null" >
+        #{viewpdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pdfUrl != null" >
+        #{pdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreementExample" resultType="java.lang.Integer" >
+    select count(*) from ht_tender_agreement
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_tender_agreement
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderType != null" >
+        tender_type = #{record.tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="record.tenderNid != null" >
+        tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.contractNumber != null" >
+        contract_number = #{record.contractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractName != null" >
+        contract_name = #{record.contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.templetId != null" >
+        templet_id = #{record.templetId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractCreateTime != null" >
+        contract_create_time = #{record.contractCreateTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.contractSignTime != null" >
+        contract_sign_time = #{record.contractSignTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.downloadUrl != null" >
+        download_url = #{record.downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.viewpdfUrl != null" >
+        viewpdf_url = #{record.viewpdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgUrl != null" >
+        img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pdfUrl != null" >
+        pdf_url = #{record.pdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserName != null" >
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_tender_agreement
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      tender_type = #{record.tenderType,jdbcType=TINYINT},
+      tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      contract_number = #{record.contractNumber,jdbcType=VARCHAR},
+      contract_name = #{record.contractName,jdbcType=VARCHAR},
+      templet_id = #{record.templetId,jdbcType=VARCHAR},
+      contract_create_time = #{record.contractCreateTime,jdbcType=INTEGER},
+      contract_sign_time = #{record.contractSignTime,jdbcType=INTEGER},
+      download_url = #{record.downloadUrl,jdbcType=VARCHAR},
+      viewpdf_url = #{record.viewpdfUrl,jdbcType=VARCHAR},
+      img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      pdf_url = #{record.pdfUrl,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreement" >
+    update ht_tender_agreement
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderType != null" >
+        tender_type = #{tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="contractNumber != null" >
+        contract_number = #{contractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        contract_name = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="templetId != null" >
+        templet_id = #{templetId,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCreateTime != null" >
+        contract_create_time = #{contractCreateTime,jdbcType=INTEGER},
+      </if>
+      <if test="contractSignTime != null" >
+        contract_sign_time = #{contractSignTime,jdbcType=INTEGER},
+      </if>
+      <if test="downloadUrl != null" >
+        download_url = #{downloadUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="viewpdfUrl != null" >
+        viewpdf_url = #{viewpdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pdfUrl != null" >
+        pdf_url = #{pdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.TenderAgreement" >
+    update ht_tender_agreement
+    set user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      tender_type = #{tenderType,jdbcType=TINYINT},
+      tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      contract_number = #{contractNumber,jdbcType=VARCHAR},
+      contract_name = #{contractName,jdbcType=VARCHAR},
+      templet_id = #{templetId,jdbcType=VARCHAR},
+      contract_create_time = #{contractCreateTime,jdbcType=INTEGER},
+      contract_sign_time = #{contractSignTime,jdbcType=INTEGER},
+      download_url = #{downloadUrl,jdbcType=VARCHAR},
+      viewpdf_url = #{viewpdfUrl,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      pdf_url = #{pdfUrl,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

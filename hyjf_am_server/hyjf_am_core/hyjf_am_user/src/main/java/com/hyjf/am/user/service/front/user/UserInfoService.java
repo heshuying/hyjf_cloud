@@ -6,6 +6,7 @@ import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 
 import java.util.List;
 
@@ -75,4 +76,19 @@ public interface UserInfoService extends BaseService{
      * @return
      */
     UserInfo selectUserInfoByUserId(Integer userId);
+
+    /**
+     * 获取部门信息
+     * @param userId
+     * @return
+     */
+    List<UserInfoCustomize> queryDepartmentInfoByUserId(Integer userId);
+
+    /**
+     * 通过手机号获取设备标识码
+     *
+     * @param mobile
+     * @return
+     */
+    MessagePushErrorVO getMobileCodeByNumber(String mobile);
 }

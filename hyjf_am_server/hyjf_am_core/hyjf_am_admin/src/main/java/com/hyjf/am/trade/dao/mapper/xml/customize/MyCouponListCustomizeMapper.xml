@@ -1,0 +1,281 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.MyCouponListCustomizeMapper">
+
+   <resultMap id="MyCouponListResultMap" type="com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO" >
+	   <result column="id" property="id" />
+	   <result column="coupon_user_code" property="couponUserCode" />
+	   <result column="coupon_name" property="couponName" />
+	   <result column="coupon_type" property="couponType" />
+	   <result column="coupon_type_name" property="couponTypeName" />
+	   <result column="coupon_quota" property="couponQuota" />
+	   <result column="add_time" property="addTime" />
+	   <result column="end_time" property="endTime" />
+	   <result column="coupon_system" property="couponSystem" />
+	   <result column="project_type" property="projectType" />
+	   <result column="tender_quota" property="tenderQuota" />
+	   <result column="project_expiration_type" property="projectExpirationType" />
+	   <result column="used_flag" property="usedFlag" />
+	   <result column="tender_quota_min" property="tenderQuotaMin" />
+	   <result column="tender_quota_max" property="tenderQuotaMax" />
+	   <result column="expiration_type" property="expirationType" />
+	   <result column="project_expiration_length" property="projectExpirationLength" />
+	   <result column="project_expiration_length_min" property="projectExpirationLengthMin" />
+	   <result column="project_expiration_length_max" property="projectExpirationLengthMax" />
+	   <result column="add_flag" property="addFlag" />
+    </resultMap>
+
+    <select id="selectMyCouponList" resultMap="MyCouponListResultMap" parameterType="java.util.Map">
+		SELECT
+			cu.id,
+			cc.coupon_name,
+			cu.coupon_user_code,
+			cu.used_flag,
+			cc.coupon_type,
+			cc.tender_quota_min,
+			cc.add_flag add_flag,
+			cc.tender_quota_max,
+			CASE cc.coupon_type
+		WHEN 1 THEN
+			'体验金'
+		WHEN 2 THEN
+			'加息券'
+		WHEN 3 THEN
+			'代金券'
+		END AS coupon_type_name,
+		 CASE cc.coupon_type
+		WHEN 1 THEN
+			FORMAT(cc.coupon_quota, 0)
+		WHEN 3 THEN
+			FORMAT(cc.coupon_quota, 0)
+		ELSE
+			cc.coupon_quota
+		END AS coupon_quota,
+		DATE_FORMAT(cu.create_time, '%Y.%m.%d') AS add_time,
+		 FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
+		 cc.coupon_system coupon_system,
+		 cc.project_type project_type,
+		 CASE
+		WHEN cc.tender_quota_type = 0 THEN
+			'不限'
+		WHEN cc.tender_quota_type = 1 THEN
+			CONCAT(
+
+				IF (
+					(
+						cc.tender_quota_min >= 10000
+						AND cc.tender_quota_min MOD 10000 = 0
+					),
+					concat(
+						cc.tender_quota_min DIV 10000,
+						'万'
+					),
+					cc.tender_quota_min
+				),
+				'元~',
+
+			IF (
+				(
+					cc.tender_quota_max >= 10000
+					AND cc.tender_quota_max MOD 10000 = 0
+				),
+				concat(
+					cc.tender_quota_max DIV 10000,
+					'万'
+				),
+				cc.tender_quota_max
+			),
+			'元可用'
+			)
+		WHEN cc.tender_quota_type = 2 THEN
+			CONCAT(
+				'满',
+
+			IF (
+				(
+					cc.tender_quota >= 10000
+					AND cc.tender_quota MOD 10000 = 0
+				),
+				concat(
+					cc.tender_quota DIV 10000,
+					'万'
+				),
+				cc.tender_quota
+			),
+			'元可用'
+			)
+		WHEN cc.tender_quota_type = 3 THEN
+			CONCAT(
+
+				IF (
+					(
+						cc.tender_quota >= 10000
+						AND cc.tender_quota MOD 10000 = 0
+					),
+					concat(
+						cc.tender_quota DIV 10000,
+						'万'
+					),
+					cc.tender_quota
+				),
+				'元（含）内可用'
+			)
+		ELSE
+			'不限'
+		END tender_quota,
+		 CASE
+		WHEN cc.project_expiration_type = 0 THEN
+			'不限'
+		WHEN cc.project_expiration_type = 1 THEN
+			CONCAT(
+				'',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 2 THEN
+			CONCAT(
+				'',
+				cc.project_expiration_length_min,
+				'个月~',
+				cc.project_expiration_length_max,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 3 THEN
+			CONCAT(
+				'≥',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		WHEN cc.project_expiration_type = 4 THEN
+			CONCAT(
+				'≤',
+				cc.project_expiration_length,
+				'个月的项目'
+			)
+		ELSE
+			'不限'
+		END project_expiration_type,
+		cc.project_expiration_type expiration_type,
+		cc.project_expiration_length,
+		cc.project_expiration_length_min,
+		cc.project_expiration_length_max
+		FROM
+			ht_coupon_user cu
+		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		<include refid="Where_Clause" />
+		ORDER BY cu.update_time DESC, cu.coupon_code ASC
+		<if test="limitStart != null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+    </select>
+	<select id="countMyCouponList" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			IFNULL(count(cu.id),0)
+		FROM
+		ht_coupon_user cu
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
+		<include refid="Where_Clause" />
+	</select>
+	<sql id="Where_Clause">
+		<where>
+			cu.del_flag = 0
+			<if test="userId != null and userId != ''">
+				AND cu.user_id = #{userId}
+			</if>
+			<if test="usedFlag != null and usedFlag != ''">
+				AND cu.used_flag = #{usedFlag}
+			</if>
+		</where>
+	</sql>
+
+
+	<resultMap id="UserCouponConfigMap" type="com.hyjf.am.vo.trade.coupon.BestCouponListVO" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_coupon_id" property="userCouponId" jdbcType="VARCHAR" />
+		<result column="end_time" property="endTime" jdbcType="VARCHAR" />
+		<result column="coupon_add_time" property="couponAddTime" jdbcType="VARCHAR" />
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
+		<result column="coupon_quantity" property="couponQuantity" jdbcType="INTEGER" />
+		<result column="expiration_type" property="expirationType" jdbcType="INTEGER" />
+		<result column="expiration_date" property="expirationDate" jdbcType="INTEGER" />
+		<result column="expiration_length" property="expirationLength" jdbcType="INTEGER" />
+		<result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="INTEGER" />
+		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
+		<result column="project_expiration_type" property="projectExpirationType" jdbcType="INTEGER" />
+		<result column="project_expiration_length" property="projectExpirationLength" jdbcType="INTEGER" />
+		<result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="INTEGER" />
+		<result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="INTEGER" />
+		<result column="tender_quota_type" property="tenderQuotaType" jdbcType="INTEGER" />
+		<result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />
+		<result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />
+		<result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="audit_content" property="auditContent" jdbcType="VARCHAR" />
+		<result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+		<result column="audit_time" property="auditTime" jdbcType="INTEGER" />
+		<result column="add_time" property="addTime" jdbcType="INTEGER" />
+		<result column="add_user" property="addUser" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="INTEGER" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlg" jdbcType="INTEGER" />
+
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+
+		<result column="add_flg" property="addFlg" jdbcType="INTEGER" />
+		<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="getCouponConfigList" resultMap="UserCouponConfigMap" parameterType="java.util.Map">
+			SELECT
+			hcc.id,
+			hcc.coupon_code,
+			hcc.coupon_name,
+			hcc.coupon_quota,
+			hcc.coupon_quantity,
+			hcc.expiration_type,
+			hcc.expiration_date,
+			hcc.expiration_length,
+			hcc.coupon_system,
+			hcc.coupon_type,
+			hcc.project_type,
+			hcc.project_expiration_type,
+			hcc.project_expiration_length,
+			hcc.project_expiration_length_min,
+			hcc.project_expiration_length_max,
+			hcc.tender_quota_type,
+			hcc.tender_quota,
+			hcc.tender_quota_min,
+			hcc.tender_quota_max,
+			hcc.content,
+			hcc.`status`,
+			hcc.audit_content,
+			hcc.audit_user,
+			hcc.audit_time,
+			hcc.add_time,
+			hcc.add_user,
+			hcc.update_time,
+			hcc.update_user,
+			hcu.del_flag,
+			hcu.id user_coupon_id,
+			FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,
+			FROM_UNIXTIME(hcu.add_time,'%Y.%m.%d') coupon_add_time,
+			hcu.coupon_user_code coupon_user_code,
+			hcc.add_flg add_flg,
+			hcc.coupon_profit_time coupon_profit_time
+		FROM
+			ht_coupon_user hcu
+		LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE
+			hcu.user_id = #{userId}
+		AND hcu.used_flag = 0
+		AND hcu.del_flag = 0
+		ORDER BY
+			hcc.coupon_type,
+			hcc.coupon_quota DESC,
+			hcu.end_time,
+			hcc.id
+	</select>
+</mapper>

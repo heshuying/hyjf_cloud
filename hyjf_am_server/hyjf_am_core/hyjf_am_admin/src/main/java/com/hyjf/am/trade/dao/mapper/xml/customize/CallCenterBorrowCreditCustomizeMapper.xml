@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.CallcenterBorrowCreditCustomizeMapper">
+
+	<resultMap id="selectBorrowCreditListMap" type="com.hyjf.am.trade.dao.model.customize.CallCenterBorrowCreditCustomize">
+		<result column="credit_id" property="creditId" jdbcType="VARCHAR" />
+		<result column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+		<result column="bid_nid" property="bidNid" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
+		<result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
+		<result column="credit_capital_price" property="creditCapitalPrice" jdbcType="VARCHAR" />
+		<result column="credit_price" property="creditPrice" jdbcType="VARCHAR" />
+		<result column="credit_capital_assigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
+		<result column="credit_status_name" property="creditStatusName" jdbcType="VARCHAR" />
+		<result column="repay_status_name" property="repayStatusName" jdbcType="VARCHAR" />
+		<result column="credit_status" property="creditStatus" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
+		<result column="client" property="client" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Where_Clause">
+		<where>
+			<!-- 用户名 -->
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND info.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+			</if>	
+		</where>
+	</sql>
+	<select id="getBorrowCreditList" resultMap="selectBorrowCreditListMap" parameterType="com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest">
+		SELECT
+		   bc.credit_id,
+		   bc.credit_nid,
+		   CASE 
+		      WHEN bc.client = 1 THEN '微信'
+		       WHEN bc.client = 2 THEN 'android'
+		        WHEN bc.client = 3 THEN  'ios'
+		        WHEN bc.client = 0 THEN  'pc'
+		       ELSE '其他' END  as client,
+		   bc.bid_nid,
+		   info.borrow_user_name  AS username,
+		   FORMAT(bc.credit_capital, 2) AS credit_capital,
+		   FORMAT(bc.credit_capital, 2) AS credit_capital_price,
+		   CONCAT(credit_discount, '%') AS credit_discount,
+		   FORMAT(bc.credit_price, 2) AS credit_price,
+		   bc.credit_capital_assigned,
+		   CASE 
+		      WHEN bc.credit_status = '1' THEN '停止' 
+		      WHEN bc.credit_status = '2' THEN '完全承接' 
+		      ELSE 
+		          '进行中'
+		    END AS credit_status_name,
+		   CASE WHEN bc.repay_status= 0 THEN '未还款' 
+		   WHEN bc.repay_status = 1 THEN '还款中'
+		   WHEN bc.repay_status = 2 THEN '还款成功'
+		   ELSE '还款失败' END AS repay_status_name,
+		   CASE 
+		      WHEN bc.credit_status = '1' THEN '1' 
+		      WHEN bc.credit_status = '2' THEN '2' 
+		      ELSE 
+		        CASE
+		          WHEN bc.end_time  <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) THEN '1' 
+		        ELSE
+		          '0'
+		        END
+		    END AS credit_status,
+		   CASE WHEN bc.add_time != 0 AND bc.add_time IS NOT NULL THEN FROM_UNIXTIME( bc.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time,
+		   CASE WHEN b.repay_last_time != 0 AND b.repay_last_time IS NOT NULL THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS repay_last_time
+		FROM
+		    ht_borrow_credit bc
+		INNER JOIN ht_borrow b ON bc.bid_nid = b.borrow_nid
+		INNER JOIN ht_borrow_info info ON bc.bid_nid = info.borrow_nid
+	   <include refid="Where_Clause" />
+		ORDER BY
+		  bc.add_time DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitSize}
+	    </if>
+	</select>
+</mapper>

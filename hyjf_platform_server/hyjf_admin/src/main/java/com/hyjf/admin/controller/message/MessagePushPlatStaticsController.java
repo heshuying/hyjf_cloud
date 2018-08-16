@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author fq
  * @version MessagePushTagController, v0.1 2018/8/14 15:41
  */
-@Api(description = "app消息推送-平台消息统计报表", tags = "app消息推送-平台消息统计报表")
+@Api(tags = "app消息推送-平台消息统计报表")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/statics/plat")
 public class MessagePushPlatStaticsController extends BaseController {

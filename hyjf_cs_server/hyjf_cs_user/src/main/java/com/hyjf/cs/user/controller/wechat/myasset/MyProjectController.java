@@ -12,6 +12,7 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myproject.MyProjectService;
 import com.hyjf.cs.user.util.RequestUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * 我的资产接口，散标、计划......
  *  jijun on 20180727
  */
-@Api(value = "wechat端我的资产",tags = "wechat端我的资产")
+@Api(value = "weChat端-我的资产",tags = "weChat端-我的资产")
 @Controller
 @RequestMapping("/hyjf-wechat/myproject")
 public class MyProjectController extends BaseUserController {
@@ -38,6 +39,7 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "查询我的资产-散标")
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
@@ -90,6 +92,7 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "计划列表")
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {

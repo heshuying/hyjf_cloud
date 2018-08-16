@@ -16,10 +16,7 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,7 +59,7 @@ public class BankCardExceptionController extends BaseController {
         Integer count = bankCardExceptionService.getBankCardExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
@@ -74,6 +71,21 @@ public class BankCardExceptionController extends BaseController {
             response.setResultList(bankCardExceptionCustomizeVOList);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+    /**
+     * 更新银行卡(admin后台异常中心-银行卡异常用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/updateAccountBankByUserId")
+    public AdminBankCardExceptionResponse updateAccountBankByUserId(@RequestBody BankCardExceptionRequest request){
+        AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
+        String resultMsg = bankCardExceptionService.updateAccountBankByUserId(request);
+        response.setResultMsg(resultMsg);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 }

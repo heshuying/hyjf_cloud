@@ -48,7 +48,7 @@ public class AgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "微信端协议接口", notes = "跳转协议")
     @ResponseBody
-    @GetMapping(value = "/goDetail/{pageType}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/goDetail/{pageType}.do", produces = "application/json; charset=utf-8")
     public ModelAndView goDetail(String pageType) {
         ModelAndView modeAndView = null;
         if ("wx_hjh_contract".equals(pageType)) {
@@ -72,7 +72,7 @@ public class AgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "微信端协议接口", notes = "通过模板名字或者协议模板HTML")
     @ResponseBody
-    @GetMapping(value = "/goAgreementImg/{aliasName}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/goAgreementImg.do", produces = "application/json; charset=utf-8")
     public JSONObject getUrl(@RequestParam String aliasName) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(aliasName)) {

@@ -366,7 +366,7 @@ public class WebPassWordController extends BaseUserController{
      * @Description 调用银行失败原因
      * @Author
      */
-    @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
+    @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
     @PostMapping("/searchFiledMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody

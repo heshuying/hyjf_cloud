@@ -4,8 +4,11 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.paginator.Paginator;
 import redis.clients.jedis.Jedis;
+
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -15,7 +18,7 @@ public class UserPortraitScoreRequest extends BasePage {
 
     private String userName;
 
-    private Jedis jedis;
+    private List<ParamNameVO> paramNameVOList;
 
     /**
      * 翻页机能用的隐藏变量
@@ -54,11 +57,11 @@ public class UserPortraitScoreRequest extends BasePage {
         this.userName = userName;
     }
 
-    public Jedis getJedis() {
-        return jedis;
+    public List<ParamNameVO> getParamNameVOList() {
+        return paramNameVOList;
     }
 
-    public void setJedis(Jedis jedis) {
-        this.jedis = jedis;
+    public void setParamNameVOList(List<ParamNameVO> paramNameVOList) {
+        this.paramNameVOList = paramNameVOList;
     }
 }

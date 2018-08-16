@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -18,22 +19,22 @@ public class FinmanChargeNewRequest extends BasePage {
 //    /** 管理费列表list */
 //    private List<BorrowFinmanNewChargeCustomize> recordList;
 
-    /** 类型 */
+    @ApiModelProperty(value = "类型 ")
     private String manChargeTypeSear;
 
-    /** 资产来源 */
+    @ApiModelProperty(value = "资产来源 ")
     String instCodeSrch;
 
-    /** 产品类型 */
+    @ApiModelProperty(value = "产品类型 ")
     String assetTypeSrch;
 
-    /** 期限 */
+    @ApiModelProperty(value = "期限")
     private String manChargeTimeSear;
 
-    /** 项目类型 */
+    @ApiModelProperty(value = "项目类型 ")
     private String projectTypeSear;
 
-    /** 状态 */
+    @ApiModelProperty(value = "状态")
     private String statusSear;
     /**
      * 检索条件 limitStart

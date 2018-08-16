@@ -37,4 +37,12 @@ public interface BankCardExceptionService extends BaseAdminService {
      * @return
      */
     List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request);
+
+    /**
+     * 更新银行卡
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String updateAccountBankByUserId(Integer userId);
 }

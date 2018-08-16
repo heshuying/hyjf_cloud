@@ -4,17 +4,23 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -173,4 +179,103 @@ public interface CsMessageClient {
      * @return
      */
     MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
+
+    /**
+     * 获取列表记录数
+     *
+     * @return
+     */
+    Integer getRecordCount(MessagePushErrorRequest request);
+
+    /**
+     * 获取列表
+     *
+     * @return
+     */
+    List<MessagePushErrorVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    List<MessagePushErrorVO> getTagList();
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    MessagePushErrorVO getRecord(Integer id);
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    void sendMessage(MessagePushErrorVO msg);
+
+    /**
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse update(MessagePushErrorRequest request);
+
+    /**
+     *查询定时发送短信列表
+     * @param request
+     * @return
+     */
+    SmsOntimeResponse queryTime(SmsLogRequest request);
+
+    /**
+     * 条件查询短信记录列表
+     * @param requestBean
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequestBean requestBean);
+
+    /**
+     * 获取手动发放消息列表
+     * @param request
+     * @return
+     */
+    MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request);
+
+    /**
+     * 根据id获取手动发放消息
+     * @param id
+     * @return
+     */
+    MessagePushMsgResponse getMessagePushMsgById(Integer id);
+
+    /**
+     * 添加手动发送短信
+     * @param templateVO
+     * @return
+     */
+    MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO);
+
+    /**
+     * 修改手动发送短信
+     * @param templateRequest
+     * @return
+     */
+    MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest);
+
+    /**
+     * 删除手动发送短信
+     * @param recordList
+     * @return
+     */
+    MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList);
 }

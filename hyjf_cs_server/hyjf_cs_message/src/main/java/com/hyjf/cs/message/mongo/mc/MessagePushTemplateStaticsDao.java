@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,12 +66,12 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if (request.getStartDateSrch() != null) {
-			Date startTime = GetDate.stringToDate2(request.getStartDateSrch());
-			criteria.and("createTime").gte((int) (startTime.getTime() / 1000));
+			Integer startTime = GetDate.dateString2Timestamp(request.getStartDateSrch());
+			criteria.and("createTime").gte(startTime);
 		}
 		if (request.getEndDateSrch() != null) {
-			Date endTime = GetDate.stringToDate2(request.getEndDateSrch());
-			criteria.and("createTime").lte((int) (endTime.getTime() / 1000));
+			Integer endTime = GetDate.dateString2Timestamp(request.getEndDateSrch());
+			criteria.and("createTime").lte(endTime);
 		}
 		if (request.getMsgTitleSrch() != null) {
 			criteria.and("msgTitle").regex(request.getMsgTitleSrch());

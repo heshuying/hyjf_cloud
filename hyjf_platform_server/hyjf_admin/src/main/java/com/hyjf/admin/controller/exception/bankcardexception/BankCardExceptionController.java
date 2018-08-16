@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.exception.bankcardexception;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankCardExceptionService;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: BankCardExceptionController, v0.1 2018/8/14 9:56
  */
-@Api(value = "江西银行卡异常",tags = "江西银行卡异常")
+@Api(value = "异常中心-江西银行卡异常",tags = "异常中心-江西银行卡异常")
 @RestController
 @RequestMapping(value = "/hyjf-admin/exception/bankcardexception")
 public class BankCardExceptionController extends BaseController {
@@ -39,11 +40,9 @@ public class BankCardExceptionController extends BaseController {
 
     @ApiOperation(value = "银行卡异常列表",notes = "银行卡异常列表")
     @PostMapping(value = "/searchAction")
-    public AdminResult searchAction(@RequestBody BankCardExceptionRequest request){
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<AdminBankCardExceptionCustomizeVO>> searchAction(@RequestBody BankCardExceptionRequest request){
         // 数据总数
         Integer count = bankCardExceptionService.getBankCardExceptionCount(request);
-        map.put("count",count);
         // 异常列表list
         List<AdminBankCardExceptionCustomizeVO> bankCardExceptionCustomizeVOList = bankCardExceptionService.searchBankCardExceptionList(request);
         // 如果银行卡配置信息为空，重新获取
@@ -68,8 +67,7 @@ public class BankCardExceptionController extends BaseController {
 
             }
         }
-        map.put("bankCardExceptionCustomizeVOList",bankCardExceptionCustomizeVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(bankCardExceptionCustomizeVOList,count));
     }
 
     @ApiOperation(value = "银行卡配置下拉框",notes = "银行卡配置下拉框")
@@ -89,26 +87,27 @@ public class BankCardExceptionController extends BaseController {
     @ApiOperation(value = "更新银行卡，参数就一个userId",notes = "更新银行卡，参数就一个userId")
     @PostMapping(value = "/updateBankCardExceptionAction")
     public AdminResult updateBankCardExceptionAction(@RequestBody BankCardExceptionRequest request){
+        AdminResult adminResult = new AdminResult();
         // 验证
-/*        if (Validator.isNull(request.getUserId())) {
-            modelAndView.getModel().put(ContentArticleDefine.SUCCESS, false);
-            modelAndView.getModel().put(ContentArticleDefine.JSON_VALID_INFO_KEY, "空的用户ID");
-            return new AdminResult(MsgEnum);
+        if (Validator.isNull(request.getUserId())) {
+            adminResult.setStatusInfo(FAIL,"空的用户ID");
+            return adminResult;
         }
         if (!Validator.isNumber(request.getUserId())) {
-            modelAndView.getModel().put(ContentArticleDefine.SUCCESS, false);
-            modelAndView.getModel().put(ContentArticleDefine.JSON_VALID_INFO_KEY, "无效的用户ID");
+            // 无效的用户ID
+            adminResult.setStatusInfo(MsgEnum.ERR_OBJECT_INVALID,"用户ID");
+            return adminResult;
         }
         // 更新
-        String result = this.bankCardService.updateAccountBankByUserId(Integer.parseInt(form.getUserId()));
+        String result = bankCardExceptionService.updateAccountBankByUserId(Integer.parseInt(request.getUserId()));
         if (result.equals(ChinaPnrConstant.RESPCODE_SUCCESS)) {
             // 跳转页面用（info里面有）
-            modelAndView.getModel().put(ContentArticleDefine.SUCCESS, true);
+            adminResult.setStatus(SUCCESS);
         } else {
-            modelAndView.getModel().put(ContentArticleDefine.SUCCESS, false);
-            modelAndView.getModel().put(ContentArticleDefine.JSON_VALID_INFO_KEY, result);
-        }*/
-        return new AdminResult();
+            adminResult.setStatusInfo(FAIL,result);
+            return adminResult;
+        }
+        return adminResult;
     }
 
 }

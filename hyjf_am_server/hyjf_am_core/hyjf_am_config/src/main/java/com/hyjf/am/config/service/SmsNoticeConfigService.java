@@ -4,6 +4,9 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
+import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -17,4 +20,34 @@ public interface SmsNoticeConfigService {
      * @return
      */
     SmsNoticeConfig findSmsNoticeByCode(String tplCode);
+    /**
+     * 查询通知配置列表
+     * @author xiehuili
+     * @return
+     */
+    public List<SmsNoticeConfig> findSmsNoticeList();
+    /**
+     * 查询通知配置详情
+     * @author xiehuili
+     * @return
+     */
+    SmsNoticeConfig  smsNoticeConfigInfo(Integer id,String name);
+    /**
+     * 添加通知配置
+     * @author xiehuili
+     * @return
+     */
+    int insertSmsNoticeConfig(SmsNoticeConfigRequest request);
+    /**
+     * 修改通知配置
+     * @author xiehuili
+     * @return
+     */
+    int updateSmsNoticeConfig(SmsNoticeConfigRequest request);
+    /**
+     * 校验通知配置
+     * @author xiehuili
+     * @return
+     */
+    Integer onlyName(String name);
 }

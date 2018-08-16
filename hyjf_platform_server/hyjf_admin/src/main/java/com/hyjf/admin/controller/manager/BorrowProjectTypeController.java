@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/27.
  */
-@Api(value = "配置中心借款项目配置---项目流程的项目类型",tags = "配置中心借款项目配置---项目流程的项目类型")
+@Api(tags = "配置中心借款项目配置---项目流程的项目类型")
 @RestController
 @RequestMapping("/hyjf-admin/config/projecttype")
 public class BorrowProjectTypeController extends BaseController {
@@ -72,9 +72,9 @@ public class BorrowProjectTypeController extends BaseController {
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
         if (isExists) {
-            record.setModifyFlag("E");
             // 根据主键检索数据
             record = this.borrowProjectTypeService.getRecord(record);
+            record.setModifyFlag("E");
             // 根据项目编号查询
             selectRepay = this.borrowProjectTypeService.selectRepay(record.getBorrowClass());
         } else {
@@ -102,8 +102,8 @@ public class BorrowProjectTypeController extends BaseController {
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
         //表单字段校验
-         this.validatorFieldCheck(model, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(model)) {
+        String message =  this.validatorFieldCheck(model, adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             List<BorrowProjectRepayVO> selectRepay = new ArrayList<BorrowProjectRepayVO>();
             if (StringUtils.isNotEmpty(adminRequest.getMethodName())) {
                 String name[] = adminRequest.getMethodName().split(",");
@@ -142,8 +142,8 @@ public class BorrowProjectTypeController extends BaseController {
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
         //表单字段校验
-        this.validatorFieldCheck(model, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(model)) {
+        String message = this.validatorFieldCheck(model, adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             List<BorrowProjectRepayVO> selectRepay = new ArrayList<>();
             if (StringUtils.isNotEmpty(adminRequest.getMethodName())) {
                 String name[] = adminRequest.getMethodName().split(",");
@@ -207,8 +207,8 @@ public class BorrowProjectTypeController extends BaseController {
         form.setBorrowCd(borrowCd);
         int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
         if (cnt > 0) {
-            String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "项目编号");
+//            String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
+            String message = "{label}"+"项目编号重复了";
             ret.put("info", message);
         }
         // 没有错误时,返回y
@@ -223,7 +223,8 @@ public class BorrowProjectTypeController extends BaseController {
      * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, BorrowProjectTypeRequest form) {
+    private String validatorFieldCheck(ModelAndView modelAndView, BorrowProjectTypeRequest form) {
+        String message="";
         // 项目类型
         boolean borrowCdFlag = ValidatorFieldCheckUtil.validateRequired(modelAndView, "borrowCd", form.getBorrowCd());
         // 项目编号
@@ -245,9 +246,10 @@ public class BorrowProjectTypeController extends BaseController {
             // 检查唯一性
             int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
             if (cnt > 0) {
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "borrowCd", "repeat");
+                message="borrowCd重复了！";
             }
         }
+        return message;
     }
 
 }

@@ -4,9 +4,12 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.InvestorDebtBean;
+import com.hyjf.admin.beans.request.BorrowInvestDebtInfoRequest;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
+import com.hyjf.admin.beans.request.PdfSignRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -16,7 +19,6 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -38,7 +40,6 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -68,13 +69,13 @@ public class BorrowInvestController extends BaseController {
         borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         //还款方式
-        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //操作平台
-        Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
+        List<DropDownVO> clientList = adminCommonService.getParamNameList("CLIENT");
         responseBean.setClientList(clientList);
         //投资方式
-        Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
+        List<DropDownVO> investTypeList = adminCommonService.getParamNameList("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
     }
@@ -331,9 +332,9 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
-    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody BorrowInvestDebtInfoRequest request) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(request, investorDebtBean);
         return borrowInvestService.debtInfo(investorDebtBean);
     }
 
@@ -348,9 +349,9 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdf_sign")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
-    public AdminResult pdfSign(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult pdfSign(@RequestBody PdfSignRequest pdfSignRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(pdfSignRequest, investorDebtBean);
         return borrowInvestService.pdfSign(investorDebtBean);
     }
 

@@ -31,7 +31,7 @@ import java.util.List;
  *  @version FeeConfigController, v0.1 2018/7/18.
  *  银行配置 手续费配置
  */
-@Api(value = "配置中心银行配置-手续费配置", tags = "配置中心银行配置-手续费配置")
+@Api(tags = "配置中心银行配置-手续费配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/feeconfig")
 public class FeeConfigController extends BaseController {

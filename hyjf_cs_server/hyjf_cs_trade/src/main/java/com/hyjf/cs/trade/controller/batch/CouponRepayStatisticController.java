@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 加息券还款统计定时任务
  */
 @RestController
-@RequestMapping("/batch/repayStatistic")
+@RequestMapping("/cs-trade/batch/repayStatistic")
 public class CouponRepayStatisticController {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayStatisticController.class);
 

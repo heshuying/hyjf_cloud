@@ -292,4 +292,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName);
+
+
+
+	/**
+	 * 根据用户信息获取部门信息
+	 * @param userId
+	 * @return
+	 */
+	List<UserInfoCustomizeVO> queryDepartmentInfoByUserId(Integer userId);
 }

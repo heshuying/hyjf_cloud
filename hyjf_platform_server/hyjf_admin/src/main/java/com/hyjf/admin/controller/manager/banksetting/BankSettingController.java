@@ -43,7 +43,7 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(description = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
+@Api(tags = "配置中心银-行配置 江西银行")
 @RestController
 @RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {

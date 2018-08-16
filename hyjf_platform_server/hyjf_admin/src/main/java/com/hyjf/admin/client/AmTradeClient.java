@@ -11,12 +11,14 @@ import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -348,28 +350,21 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
      * @param request
      * @return
      */
-    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(TransferExceptionLogVO request);
 
     /**
      * 更改银行转账信息
      * @param request
      * @return
      */
-    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
-
-    /**
-     * 更改银行转账信息
-     * @param transferExceptionLog
-     * @return
-     */
-    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO request);
 
     /**
      * 通过uuid银行转账异常
@@ -1796,6 +1791,14 @@ public interface AmTradeClient {
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
+     * 资金中心 - 充值管理
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
@@ -2521,5 +2524,52 @@ public interface AmTradeClient {
      * @return
      */
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
+
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    List<BorrowStyleVO> selectCommonBorrowStyleList();
+
+    /**
+     * 资产来源下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     */
+    List<HjhInstConfigVO> selectCommonHjhInstConfigList();
+    /**
+     * 添加互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean insertNifaFieldDefinition(NifaFieldDefinitionAddRequest request);
+
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @auth nxl
+     * @return
+     */
+    NifaFieldDefinitionResponse selectFieldDefinitionList(NifaFieldDefinitionRequest request);
+    /**
+     * 根据id查找互金定义
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    NifaFieldDefinitionResponse selectFieldDefinitionById(String nifaId);
+    /**
+     * 修改互金字段定义
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest request);
 }
 

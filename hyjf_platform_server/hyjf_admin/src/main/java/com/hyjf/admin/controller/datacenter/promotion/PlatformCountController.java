@@ -22,6 +22,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ import java.util.List;
  * @author fuqiang
  * @version PlatformCountController, v0.1 2018/7/18 17:46
  */
-@Api(value = "数据中心-平台统计", tags = "数据中心-平台统计")
+@Api(tags = "数据中心-平台统计")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/platformcount")
 public class PlatformCountController extends BaseController {
@@ -45,7 +46,7 @@ public class PlatformCountController extends BaseController {
     private PlatformCountService platformCountService;
 
     @ApiOperation(value = "数据中心-平台统计列表查询", notes = "数据中心-平台统计列表查询")
-    @RequestMapping("/searchaction")
+    @PostMapping("/searchaction")
     public AdminResult<ListResult<PlatformCountCustomizeVO>> searchAction(@RequestBody PlatformCountRequestBean requestBean) {
         PlatformCountCustomizeResponse response = platformCountService.searchAction(requestBean);
         if (response == null) {
@@ -65,7 +66,7 @@ public class PlatformCountController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "导出excel", notes = "导出excel")
-    @RequestMapping("/exportAction")
+    @PostMapping("/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
         // 表格sheet名称
         String sheetName = "平台统计";

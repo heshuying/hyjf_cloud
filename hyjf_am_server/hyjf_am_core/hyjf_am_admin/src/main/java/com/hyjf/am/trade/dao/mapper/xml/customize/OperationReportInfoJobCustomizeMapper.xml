@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.OperationReportInfoJobCustomizeMapper">
+
+    <resultMap id="performanceMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="sumAccount" property="sumAccount" jdbcType="DECIMAL" />
+        <result column="dealMonth" property="dealMonth" jdbcType="VARCHAR" />
+        <result column="dealSum" property="dealSum" jdbcType="INTEGER" />
+        <result column="userId" property="userId" jdbcType="INTEGER" />
+        <result column="userName" property="userName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 	业绩总览 -->
+    <select id="getPerformanceSum" resultMap="performanceMap">
+        SELECT
+        '累计交易总额' AS title,
+        sum(account) AS sumAccount
+        FROM
+        (
+        # 直投
+        SELECT
+        sum(br.recover_capital) AS account # 放款金额
+        FROM
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND br.accede_order_id IS NULL
+        UNION ALL
+        # 汇计划
+        SELECT
+        sum(a.accede_account) AS account # 加入金额
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        UNION ALL
+        # 债转
+        SELECT
+        sum(assign_capital) AS account # 承接本金
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 承接时间
+        UNION ALL
+        # 汇添金
+        SELECT
+        sum(repay_capital) AS account # 应还本金
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 加入时间
+        UNION ALL
+        # 汇添利
+        SELECT
+        sum(amount) AS account # 加入金额
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        ) t
+        UNION ALL
+        # 2：累计用户收益：取汇直投项目到手收益
+        SELECT
+        '累计用户收益' AS title,
+        sum(account) AS sumAccount
+        FROM
+        (
+        # 直投
+        SELECT
+        sum(br.recover_interest_yes) AS account # 已收利息
+        FROM
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND br.accede_order_id IS NULL
+        UNION ALL
+        # 汇计划
+        SELECT
+        sum(a.received_interest) AS account # 已收利息
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        UNION ALL
+        # 汇添金
+        SELECT
+        sum(repay_interest_yes) AS account # 已收利息
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        UNION ALL
+        # 汇添利
+        SELECT
+        sum(interest) AS account # 加入金额
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        ) t
+    </select>
+
+    <!-- 	当月、季、半年、全年业绩  下面的  成交金额,根据月份计算 -->
+    <select id="getMonthDealMoney" resultMap="performanceMap">
+        SELECT
+        t.`month` AS dealMonth,
+        sum(t.account) AS sumAccount
+        FROM
+        (
+        # 直投
+        SELECT
+        date_format(
+        from_unixtime(br.recover_time),
+        '%Y%m'
+        ) AS 'month',
+        sum(br.recover_capital) AS account # 放款金额
+        FROM
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        br.recover_time <![CDATA[ < ]]>  unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        ) # 放款时间
+        AND br.recover_time <![CDATA[ >= ]]> unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL
+        GROUP BY
+        date_format(
+        from_unixtime(br.recover_time),
+        '%Y%m'
+        )
+        UNION ALL
+        # 汇计划
+        SELECT
+        date_format(
+        a.create_time,
+        '%Y%m'
+        ) AS 'month',
+        sum(a.accede_account) AS 'account' # 加入金额
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+
+        GROUP BY
+        date_format(
+        a.create_time,
+        '%Y%m'
+        )
+        UNION ALL
+        # 债转
+        SELECT
+        date_format(
+        ct.create_time,
+        '%Y%m'
+        ) AS 'month',
+        sum(assign_capital) AS account # 承接本金
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+
+        ) # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+
+        GROUP BY
+        date_format(
+        ct.create_time,
+        '%Y%m'
+        )
+        UNION ALL
+        # 汇添金
+        SELECT
+        date_format(
+        pa.create_time,
+        '%Y%m'
+        ) AS 'month',
+        sum(pa.repay_capital) AS account # 应还本金
+        FROM
+        ht_debt_plan_accede pa
+        WHERE
+        pa.create_time <![CDATA[ < ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+         # 加入时间
+        AND pa.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+
+        GROUP BY
+        date_format(
+        pa.create_time,
+        '%Y%m'
+        )
+        UNION ALL
+        # 汇添利
+        SELECT
+        date_format(
+        from_unixtime(pl.invest_time),
+        '%Y%m'
+        ) AS 'month',
+        sum(pl.amount) AS account # 加入金额
+        FROM
+        ht_product_list pl
+        WHERE
+        invest_status = 0 # 投资成功
+        AND pl.invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        )
+        AND pl.invest_time <![CDATA[ >= ]]> unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+        ) # 加入时间
+        GROUP BY
+        date_format(
+        from_unixtime(pl.invest_time),
+        '%Y%m'
+        )
+        ) t
+        GROUP BY
+        t.`month`
+    </select>
+
+    <!-- 	今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率 -->
+    <select id="getRevenueAndYield" resultMap="performanceMap">
+        SELECT
+        '本次到手收益'  AS title,
+        ifnull(
+        (
+        SELECT
+        SUM(hbr.recover_interest_yes)
+        FROM
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        WHERE
+        hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND hbr.accede_order_id IS NULL
+        AND hbr.recover_yestime <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND (
+        hb.borrow_style = 'endday'
+        OR hb.borrow_style = 'end'
+        )
+        ),
+        0
+        ) + ifnull(
+        (
+        SELECT
+        SUM(hbrp.recover_interest_yes)
+        FROM
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        WHERE
+        hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND hbrp.accede_order_id IS NULL
+        AND hbrp.recover_yestime <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND (
+        hb.borrow_style = 'month'
+        OR hb.borrow_style = 'endmonth'
+        )
+        ),
+        0
+        ) + ifnull(
+        (
+        SELECT
+        sum(received_interest)
+        FROM
+        ht_hjh_accede
+        WHERE
+        acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND acctual_payment_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        ),
+        0
+        ) as sumAccount
+        UNION ALL
+        SELECT
+        '去年本次到手收益'  AS title,
+        ifnull(
+        (
+        SELECT
+        SUM(hbr.recover_interest_yes)
+        FROM
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        WHERE
+        hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+        )
+        AND hbr.accede_order_id IS NULL
+        AND hbr.recover_yestime <![CDATA[ < ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        )
+        AND (
+        hb.borrow_style = 'endday'
+        OR hb.borrow_style = 'end'
+        )
+        ),
+        0
+        ) + ifnull(
+        (
+        SELECT
+        SUM(hbrp.recover_interest_yes)
+        FROM
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        WHERE
+        hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+        )
+        AND hbrp.accede_order_id IS NULL
+        AND hbrp.recover_yestime <![CDATA[ < ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        )
+        AND (
+        hb.borrow_style = 'month'
+        OR hb.borrow_style = 'endmonth'
+        )
+        ),
+		0
+	    ) + ifnull ((
+        SELECT
+        sum(received_interest)
+        FROM
+        ht_hjh_accede
+        WHERE
+        acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{endMonth} MONTH
+        )
+        )
+        AND acctual_payment_time <![CDATA[ < ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{startMonth} MONTH
+        )
+        )
+        ),
+        0
+        ) as sumAccount
+        UNION ALL
+        SELECT
+        '平均预期收益率'  AS title,
+        sum(borrow_apr) / count(*) as  sumAccount
+        FROM
+        ht_borrow
+        WHERE
+        recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        );
+    </select>
+
+    <!-- 	充值金额、充值笔数 -->
+    <select id="getRechargeMoneyAndSum" resultMap="performanceMap">
+        SELECT
+        '充值金额' AS title,
+        sum(money) AS sumAccount
+        FROM
+        ht_account_recharge
+        WHERE
+        `status` = 2
+        AND create_time <![CDATA[ <= ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        SELECT
+        '充值笔数'  AS title,
+        count(money)  AS sumAccount
+        FROM
+        ht_account_recharge
+        WHERE
+        `status` = 2
+        AND create_time  <![CDATA[ <= ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+
+        AND create_time  <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+    </select>
+
+    <!-- 	渠道分析 ，成交笔数 -->
+    <select id="getCompleteCount" resultMap="performanceMap">
+        SELECT
+        CASE client
+        WHEN 0 THEN
+        "PC"
+        WHEN 1 THEN
+        "微信"
+        WHEN 2 THEN
+        "安卓APP"
+        WHEN 3 THEN
+        "IOSAPP"
+        WHEN 4 THEN
+        "其他"
+        ELSE
+        "未知"
+        END AS title,
+        sum(account) as dealSum,
+        sum(sum) as sumAccount
+        FROM
+        (
+        # 直投
+        SELECT
+        br.client,
+        sum(br.account) AS sum,
+        count(*) AS account # 放款笔数
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time  <![CDATA[ < ]]>  unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time  <![CDATA[ >= ]]>  unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL
+        GROUP BY
+        client
+        UNION ALL
+        # 汇计划
+        SELECT
+        a.client,
+        sum(accede_account) AS sum,
+        count(*) AS account # 加入笔数
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time  <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND a.create_time  <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        GROUP BY
+        client
+        UNION ALL
+        # 债转
+        SELECT
+        ct.client,
+        sum(assign_capital) AS sum,
+        count(*) AS account # 承接笔数
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time  <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 承接时间
+        AND ct.create_time  <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        GROUP BY
+        client
+        UNION ALL
+        # 汇添金
+        SELECT
+        client,
+        sum(accede_account) AS sum,
+        count(*) AS account # 加入笔数
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time  <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND create_time  <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        GROUP BY
+        client
+        UNION ALL
+        # 汇添利
+        SELECT
+        client,
+        sum(amount) AS sum,
+        count(*) AS account # 加入笔数
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time  <![CDATA[ < ]]>  unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time  <![CDATA[ >= ]]>  unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        GROUP BY
+        client
+        ) t
+        GROUP BY
+        CASE client
+        WHEN 0 THEN
+        "PC"
+        WHEN 1 THEN
+        "微信"
+        WHEN 2 THEN
+        "安卓APP"
+        WHEN 3 THEN
+        "IOSAPP"
+        WHEN 4 THEN
+        "其他"
+        ELSE
+        "未知"
+        END;
+    </select>
+
+    <!-- 	借款期限 -->
+    <select id="getBorrowPeriod" resultMap="performanceMap">
+        SELECT
+        CASE c.nid
+        WHEN 'endday' THEN
+        concat(b.borrow_period, '天')
+        WHEN 'month' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'end' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'endmonth' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'principal' THEN
+        concat(b.borrow_period, '个月')
+        END AS title,
+        count(borrow_nid) as dealSum
+        FROM
+        ht_borrow b
+        LEFT JOIN ht_borrow_style c ON b.borrow_style = c.nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND b.recover_last_time <![CDATA[ >= ]]>  unix_timestamp(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        ) /*放款*/
+        AND c. STATUS = 0
+        GROUP BY
+        CASE c.nid
+        WHEN 'endday' THEN
+        concat(b.borrow_period, '天')
+        WHEN 'month' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'end' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'endmonth' THEN
+        concat(b.borrow_period, '个月')
+        WHEN 'principal' THEN
+        concat(b.borrow_period, '个月')
+        END;
+    </select>
+
+    <!-- 	用户分析 - 性别分布 -->
+    <select id="getSexDistribute" resultMap="performanceMap">
+        SELECT
+        t.user_id as userId
+        FROM
+        (
+        # 直投
+        SELECT
+        br.user_id
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL # 刨除汇计划
+        UNION
+        # 汇计划
+        SELECT
+        a.user_id
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 债转
+        SELECT
+        user_id
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 汇添金
+        SELECT
+        user_id
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 汇添利
+        SELECT
+        user_id
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        ) t
+
+    </select>
+
+    <!-- 	用户分析 - 年龄分布 -->
+    <select id="getAgeDistribute" resultMap="performanceMap">
+        # 直投
+        SELECT
+        br.user_id as userId
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL # 刨除汇计划
+        UNION
+        # 汇计划
+        SELECT
+        a.user_id as userId
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 债转
+        SELECT
+        user_id as userId
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 汇添金
+        SELECT
+        user_id as userId
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION
+        # 汇添利
+        SELECT
+        user_id as userId
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+    </select>
+
+    <!-- 	用户分析 - 金额分布 -->
+    <select id="getMoneyDistribute" resultMap="performanceMap">
+       SELECT
+        CASE
+        WHEN account <![CDATA[ >= ]]> 500000 THEN
+        '50万以上'
+        WHEN account <![CDATA[ >= ]]> 100000
+        AND account <![CDATA[ < ]]> 500000 THEN
+        '10万-50万'
+        WHEN account <![CDATA[ >= ]]> 50000
+        AND account <![CDATA[ < ]]> 100000 THEN
+        '5万-10万'
+        WHEN account <![CDATA[ >= ]]> 10000
+        AND account <![CDATA[ < ]]> 50000 THEN
+        '1万-5万'
+        WHEN account <![CDATA[ < ]]> 10000 THEN
+        '1万以下'
+        END AS title,
+        count(*) as dealSum
+        FROM
+        (
+        SELECT
+        user_id,
+        sum(account) AS account
+        FROM
+        (
+        # 直投
+        SELECT
+        br.user_id,
+        br.account
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL
+        UNION ALL
+        # 汇计划
+        SELECT
+        user_id,
+        a.accede_account AS account
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 债转
+        SELECT
+        user_id,
+        ct.assign_capital AS account # 承接笔数
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添金
+        SELECT
+        user_id,
+        accede_account AS account # 加入笔数
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添利
+        SELECT
+        user_id,
+        amount AS account # 加入笔数
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        ) t
+        GROUP BY
+        user_id
+        ) tmp
+        GROUP BY
+        CASE
+        WHEN account <![CDATA[ >= ]]> 500000 THEN
+        '50万以上'
+        WHEN account <![CDATA[ >= ]]> 100000
+        AND account <![CDATA[ < ]]> 500000 THEN
+        '10万-50万'
+        WHEN account <![CDATA[ >= ]]> 50000
+        AND account <![CDATA[ < ]]> 100000 THEN
+        '5万-10万'
+        WHEN account <![CDATA[ >= ]]> 10000
+        AND account <![CDATA[ < ]]> 50000 THEN
+        '1万-5万'
+        WHEN account <![CDATA[ < ]]> 10000 THEN
+        '1万以下'
+        END;
+    </select>
+
+    <!-- 	十大投资人 -->
+    <select id="getTenMostMoney" resultMap="performanceMap">
+       SELECT
+        tmp.user_id as userId,
+        account as sumAccount
+        FROM
+        (
+        SELECT
+        user_id,
+        sum(account) AS account
+        FROM
+        (
+        # 直投
+        SELECT
+        br.user_id,
+        br.account
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL
+        UNION ALL
+        # 汇计划
+        SELECT
+        user_id,
+        a.accede_account AS account
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 债转
+        SELECT
+        user_id,
+        ct.assign_capital AS account # 承接笔数
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添金
+        SELECT
+        user_id,
+        accede_account AS account # 加入笔数
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添利
+        SELECT
+        user_id,
+        amount AS account # 加入笔数
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        ) t
+        GROUP BY
+        user_id
+        ORDER BY
+        account DESC
+        LIMIT 11
+        ) tmp
+    </select>
+
+    <!-- 	超活跃，投资笔数最多 -->
+    <select id="getOneInvestMost" resultMap="performanceMap">
+        SELECT
+        tmp.user_id as userId,
+        account as dealSum
+        FROM
+        (
+        SELECT
+        user_id,
+        count(account) AS account
+        FROM
+        (
+        # 直投
+        SELECT
+        br.user_id,
+        br.account
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 放款时间
+        AND b.recover_last_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND br.accede_order_id IS NULL
+        UNION ALL
+        # 汇计划
+        SELECT
+        user_id,
+        a.accede_account AS account
+        FROM
+        ht_hjh_accede a
+        WHERE
+        a.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 债转
+        SELECT
+        user_id,
+        ct.assign_capital AS account # 承接笔数
+        FROM
+        ht_credit_tender ct
+        WHERE
+        ct.create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添金
+        SELECT
+        user_id,
+        accede_account AS account # 加入笔数
+        FROM
+        ht_debt_plan_accede
+        WHERE
+        create_time <![CDATA[ < ]]>
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+
+        UNION ALL
+        # 汇添利
+        SELECT
+        user_id,
+        amount AS account # 加入笔数
+        FROM
+        ht_product_list
+        WHERE
+        invest_status = 0 # 投资成功
+        AND invest_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        ) # 加入时间
+        AND invest_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        ) t
+        GROUP BY
+        user_id
+        ORDER BY
+        account DESC
+        LIMIT 11
+        ) tmp
+    </select>
+
+    <!-- 	大赢家，收益最高 -->
+    <select id="getOneInterestsMost" resultMap="performanceMap">
+
+      SELECT
+        sum(t.interest) as sumAccount,
+        t.user_id as userId
+        FROM
+        (
+        SELECT
+        SUM(hbr.recover_interest_yes) AS interest,
+        hbr.user_id
+        FROM
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        WHERE
+        hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND hbr.accede_order_id IS NULL
+        AND hbr.recover_yestime <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND (
+        hb.borrow_style = 'endday'
+        OR hb.borrow_style = 'end'
+        )
+        GROUP BY
+        hbr.user_id
+        UNION ALL
+        SELECT
+        SUM(hbrp.recover_interest_yes) AS interest,
+        hbrp.user_id
+        FROM
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        WHERE
+        hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND hbrp.accede_order_id IS NULL
+        AND hbrp.recover_yestime <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        AND (
+        hb.borrow_style = 'month'
+        OR hb.borrow_style = 'endmonth'
+        )
+        GROUP BY
+        hbrp.user_id
+        UNION ALL
+        SELECT
+        sum(received_interest) AS interest,
+        user_id
+        FROM
+        ht_hjh_accede
+        WHERE
+        acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        DATE_SUB(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
+        INTERVAL #{intervalMonth} MONTH
+        )
+        )
+        AND acctual_payment_time <![CDATA[ < ]]> unix_timestamp(
+        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
+        GROUP BY
+        user_id
+        ) t
+
+        GROUP BY
+        t.user_id
+        ORDER BY
+        sum(t.interest) DESC
+        LIMIT 11
+    </select>
+
+
+    <!-- 	投资人年龄分布 -->
+    <select id="getTenderAgeByRangeList"   resultMap="performanceMap">
+        SELECT
+        br .user_id as userId
+        FROM
+        ht_borrow_tender  br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time  &lt;=  unix_timestamp(#{0})
+        UNION
+        SELECT
+        user_id as userId
+        FROM
+        ht_credit_tender
+        WHERE
+        create_time  &lt;= #{0}
+
+        UNION
+        SELECT
+        hdpa.user_id as userId
+        FROM
+        ht_debt_plan_accede hdpa
+        left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+        WHERE
+        hdp.plan_lock_time  &lt;=  unix_timestamp(#{0})
+        UNION
+        SELECT
+        user_id as userId
+        FROM
+        ht_product_list
+        WHERE
+        invest_time  &lt;=  unix_timestamp(#{0})
+        And  invest_status = 0
+    </select>
+
+    <!-- 	投资人性别分布 -->
+    <select  id="getTenderSexGroupByList"  resultMap="performanceMap">
+
+        SELECT
+        br.user_id as userId
+        FROM
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        WHERE
+        b.recover_last_time &lt;= unix_timestamp(#{0})
+        UNION
+        SELECT
+        user_id as userId
+        FROM
+        ht_credit_tender
+        WHERE
+        create_time &lt;= #{0}
+
+        UNION
+        SELECT
+        hdpa.user_id as userId
+        FROM
+        ht_debt_plan_accede hdpa
+        left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+        WHERE
+        hdp.plan_lock_time &lt;= unix_timestamp(#{0})
+
+        UNION
+        SELECT
+        user_id as userId
+        FROM
+        ht_product_list
+        WHERE
+        invest_time &lt;= unix_timestamp(#{0})
+        And  invest_status = 0
+    </select>
+
+
+    <!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+    <select  id="getTenderCityGroupByList" parameterType="java.util.Date" resultMap="performanceMap">
+       SELECT
+		        user_id as userId
+		    FROM
+		        ht_borrow_tender
+		    WHERE
+		        create_time  &lt;= #{date} UNION SELECT
+		        user_id
+		    FROM
+		        ht_credit_tender
+		    WHERE
+		        create_time  &lt;= #{date} UNION SELECT
+		        hdpa.user_id
+		    FROM
+		        ht_debt_plan_accede hdpa
+		    LEFT JOIN ht_debt_plan hdp ON hdpa.plan_nid = hdp.debt_plan_nid
+		    WHERE
+		        hdp.plan_lock_time  &lt;= unix_timestamp(#{date}) UNION SELECT
+		        user_id
+		    FROM
+		        ht_product_list
+		    WHERE
+		        invest_time  &lt;= unix_timestamp(#{date})
+		            AND invest_status = 0
+    </select>
+</mapper>
