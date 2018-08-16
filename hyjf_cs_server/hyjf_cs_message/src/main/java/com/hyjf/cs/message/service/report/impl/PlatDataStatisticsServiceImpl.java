@@ -1,16 +1,17 @@
 package com.hyjf.cs.message.service.report.impl;
 
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
-import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
+import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
+import com.hyjf.cs.message.mongo.mc.OperationMongDao;
+import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 平台数据统计Service实现类
@@ -22,6 +23,10 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
 
     @Autowired
     private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
+    @Autowired
+    private OperationMongoGroupDao operationMongoGroupDao;
+    @Autowired
+    private OperationMongDao operationMongDao;
 
     /**
      * 获取累计投资累计收益
@@ -64,4 +69,18 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
     private TotalInvestAndInterestEntity getTotalInvestAndInterestEntity() {
         return totalInvestAndInterestMongoDao.findOne(new Query());
     }
+    @Override
+    public OperationReportEntity findOneOperationReportEntity(Query query){
+        return operationMongDao.findOne(query);
+    }
+    @Override
+    public OperationMongoGroupEntity findOneOperationMongoGroupEntity(Query query){
+        return operationMongoGroupDao.findOne(query);
+    }
+
+    @Override
+    public List<OperationReportEntity> findOperationReportEntityList(Query query){
+        return operationMongDao.find(query);
+    }
+
 }

@@ -181,8 +181,8 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
-	@GetMapping("/alreadyReadAction")
-	public JSONObject alreadyReadAction(HttpServletRequest request) {
+	@PostMapping("/alreadyReadAction")
+	public JSONObject alreadyReadAction(HttpServletRequest request, @RequestHeader(value = "userId")Integer userId) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");
 		// 版本号
@@ -196,20 +196,6 @@ public class MessagePushController extends BaseController {
 			ret.put("status", "1");
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
-		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
-		// 取得用户iD
-		Integer userId = null;
-		try {
-			userId = SecretUtil.getUserId(sign);
-		} catch (Exception e) {
-			userId = null;
 		}
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
