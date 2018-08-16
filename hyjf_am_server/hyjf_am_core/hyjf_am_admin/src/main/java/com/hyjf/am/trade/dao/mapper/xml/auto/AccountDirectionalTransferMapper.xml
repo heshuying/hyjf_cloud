@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.AccountDirectionalTransferMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="turn_out_username" property="turnOutUsername" jdbcType="VARCHAR" />
+    <result column="turn_out_user_id" property="turnOutUserId" jdbcType="INTEGER" />
+    <result column="shift_to_username" property="shiftToUsername" jdbcType="VARCHAR" />
+    <result column="shift_to_user_id" property="shiftToUserId" jdbcType="INTEGER" />
+    <result column="transfer_accounts_money" property="transferAccountsMoney" jdbcType="DECIMAL" />
+    <result column="transfer_accounts_state" property="transferAccountsState" jdbcType="TINYINT" />
+    <result column="transfer_accounts_time" property="transferAccountsTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, order_id, turn_out_username, turn_out_user_id, shift_to_username, shift_to_user_id, 
+    transfer_accounts_money, transfer_accounts_state, transfer_accounts_time, remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransferExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_account_directional_transfer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_account_directional_transfer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_account_directional_transfer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransferExample" >
+    delete from ht_account_directional_transfer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_directional_transfer (order_id, turn_out_username, turn_out_user_id, 
+      shift_to_username, shift_to_user_id, transfer_accounts_money, 
+      transfer_accounts_state, transfer_accounts_time, 
+      remark)
+    values (#{orderId,jdbcType=VARCHAR}, #{turnOutUsername,jdbcType=VARCHAR}, #{turnOutUserId,jdbcType=INTEGER}, 
+      #{shiftToUsername,jdbcType=VARCHAR}, #{shiftToUserId,jdbcType=INTEGER}, #{transferAccountsMoney,jdbcType=DECIMAL}, 
+      #{transferAccountsState,jdbcType=TINYINT}, #{transferAccountsTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_directional_transfer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="turnOutUsername != null" >
+        turn_out_username,
+      </if>
+      <if test="turnOutUserId != null" >
+        turn_out_user_id,
+      </if>
+      <if test="shiftToUsername != null" >
+        shift_to_username,
+      </if>
+      <if test="shiftToUserId != null" >
+        shift_to_user_id,
+      </if>
+      <if test="transferAccountsMoney != null" >
+        transfer_accounts_money,
+      </if>
+      <if test="transferAccountsState != null" >
+        transfer_accounts_state,
+      </if>
+      <if test="transferAccountsTime != null" >
+        transfer_accounts_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUsername != null" >
+        #{turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUserId != null" >
+        #{turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="shiftToUsername != null" >
+        #{shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="shiftToUserId != null" >
+        #{shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="transferAccountsMoney != null" >
+        #{transferAccountsMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="transferAccountsState != null" >
+        #{transferAccountsState,jdbcType=TINYINT},
+      </if>
+      <if test="transferAccountsTime != null" >
+        #{transferAccountsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransferExample" resultType="java.lang.Integer" >
+    select count(*) from ht_account_directional_transfer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_account_directional_transfer
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.turnOutUsername != null" >
+        turn_out_username = #{record.turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.turnOutUserId != null" >
+        turn_out_user_id = #{record.turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.shiftToUsername != null" >
+        shift_to_username = #{record.shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shiftToUserId != null" >
+        shift_to_user_id = #{record.shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.transferAccountsMoney != null" >
+        transfer_accounts_money = #{record.transferAccountsMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.transferAccountsState != null" >
+        transfer_accounts_state = #{record.transferAccountsState,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferAccountsTime != null" >
+        transfer_accounts_time = #{record.transferAccountsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_account_directional_transfer
+    set id = #{record.id,jdbcType=INTEGER},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      turn_out_username = #{record.turnOutUsername,jdbcType=VARCHAR},
+      turn_out_user_id = #{record.turnOutUserId,jdbcType=INTEGER},
+      shift_to_username = #{record.shiftToUsername,jdbcType=VARCHAR},
+      shift_to_user_id = #{record.shiftToUserId,jdbcType=INTEGER},
+      transfer_accounts_money = #{record.transferAccountsMoney,jdbcType=DECIMAL},
+      transfer_accounts_state = #{record.transferAccountsState,jdbcType=TINYINT},
+      transfer_accounts_time = #{record.transferAccountsTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer" >
+    update ht_account_directional_transfer
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUsername != null" >
+        turn_out_username = #{turnOutUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="turnOutUserId != null" >
+        turn_out_user_id = #{turnOutUserId,jdbcType=INTEGER},
+      </if>
+      <if test="shiftToUsername != null" >
+        shift_to_username = #{shiftToUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="shiftToUserId != null" >
+        shift_to_user_id = #{shiftToUserId,jdbcType=INTEGER},
+      </if>
+      <if test="transferAccountsMoney != null" >
+        transfer_accounts_money = #{transferAccountsMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="transferAccountsState != null" >
+        transfer_accounts_state = #{transferAccountsState,jdbcType=TINYINT},
+      </if>
+      <if test="transferAccountsTime != null" >
+        transfer_accounts_time = #{transferAccountsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.AccountDirectionalTransfer" >
+    update ht_account_directional_transfer
+    set order_id = #{orderId,jdbcType=VARCHAR},
+      turn_out_username = #{turnOutUsername,jdbcType=VARCHAR},
+      turn_out_user_id = #{turnOutUserId,jdbcType=INTEGER},
+      shift_to_username = #{shiftToUsername,jdbcType=VARCHAR},
+      shift_to_user_id = #{shiftToUserId,jdbcType=INTEGER},
+      transfer_accounts_money = #{transferAccountsMoney,jdbcType=DECIMAL},
+      transfer_accounts_state = #{transferAccountsState,jdbcType=TINYINT},
+      transfer_accounts_time = #{transferAccountsTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

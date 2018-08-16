@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="account_multiple" property="accountMultiple" jdbcType="INTEGER" />
+    <result column="password_status" property="passwordStatus" jdbcType="TINYINT" />
+    <result column="amount_type" property="amountType" jdbcType="VARCHAR" />
+    <result column="amount_first" property="amountFirst" jdbcType="INTEGER" />
+    <result column="amount_end" property="amountEnd" jdbcType="INTEGER" />
+    <result column="frost_scale_vip" property="frostScaleVip" jdbcType="DECIMAL" />
+    <result column="admin_status" property="adminStatus" jdbcType="TINYINT" />
+    <result column="apr_first" property="aprFirst" jdbcType="DECIMAL" />
+    <result column="apr_end" property="aprEnd" jdbcType="DECIMAL" />
+    <result column="check_first" property="checkFirst" jdbcType="INTEGER" />
+    <result column="check_end" property="checkEnd" jdbcType="INTEGER" />
+    <result column="tender_account_min" property="tenderAccountMin" jdbcType="VARCHAR" />
+    <result column="tender_account_max" property="tenderAccountMax" jdbcType="VARCHAR" />
+    <result column="period_first" property="periodFirst" jdbcType="INTEGER" />
+    <result column="period_end" property="periodEnd" jdbcType="INTEGER" />
+    <result column="validate_first" property="validateFirst" jdbcType="INTEGER" />
+    <result column="validate_end" property="validateEnd" jdbcType="INTEGER" />
+    <result column="award_status" property="awardStatus" jdbcType="TINYINT" />
+    <result column="award_scale_first" property="awardScaleFirst" jdbcType="DECIMAL" />
+    <result column="award_scale_end" property="awardScaleEnd" jdbcType="DECIMAL" />
+    <result column="award_account_first" property="awardAccountFirst" jdbcType="DECIMAL" />
+    <result column="award_account_end" property="awardAccountEnd" jdbcType="DECIMAL" />
+    <result column="award_false_status" property="awardFalseStatus" jdbcType="INTEGER" />
+    <result column="verify_auto_status" property="verifyAutoStatus" jdbcType="INTEGER" />
+    <result column="verify_auto_remark" property="verifyAutoRemark" jdbcType="VARCHAR" />
+    <result column="styles" property="styles" jdbcType="VARCHAR" />
+    <result column="frost_scale" property="frostScale" jdbcType="DECIMAL" />
+    <result column="late_days" property="lateDays" jdbcType="INTEGER" />
+    <result column="vip_late_scale" property="vipLateScale" jdbcType="DECIMAL" />
+    <result column="all_late_scale" property="allLateScale" jdbcType="DECIMAL" />
+    <result column="part_status" property="partStatus" jdbcType="TINYINT" />
+    <result column="system_borrow_full_status" property="systemBorrowFullStatus" jdbcType="TINYINT" />
+    <result column="system_borrow_repay_status" property="systemBorrowRepayStatus" jdbcType="TINYINT" />
+    <result column="system_web_repay_status" property="systemWebRepayStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, nid, `status`, `name`, title, description, account_multiple, password_status, 
+    amount_type, amount_first, amount_end, frost_scale_vip, admin_status, apr_first, 
+    apr_end, check_first, check_end, tender_account_min, tender_account_max, period_first, 
+    period_end, validate_first, validate_end, award_status, award_scale_first, award_scale_end, 
+    award_account_first, award_account_end, award_false_status, verify_auto_status, verify_auto_remark, 
+    styles, frost_scale, late_days, vip_late_scale, all_late_scale, part_status, system_borrow_full_status, 
+    system_borrow_repay_status, system_web_repay_status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTypeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_borrow_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTypeExample" >
+    delete from ht_borrow_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowType" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_type (nid, `status`, `name`, 
+      title, description, account_multiple, 
+      password_status, amount_type, amount_first, 
+      amount_end, frost_scale_vip, admin_status, 
+      apr_first, apr_end, check_first, 
+      check_end, tender_account_min, tender_account_max, 
+      period_first, period_end, validate_first, 
+      validate_end, award_status, award_scale_first, 
+      award_scale_end, award_account_first, award_account_end, 
+      award_false_status, verify_auto_status, verify_auto_remark, 
+      styles, frost_scale, late_days, 
+      vip_late_scale, all_late_scale, part_status, 
+      system_borrow_full_status, system_borrow_repay_status, 
+      system_web_repay_status)
+    values (#{nid,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{accountMultiple,jdbcType=INTEGER}, 
+      #{passwordStatus,jdbcType=TINYINT}, #{amountType,jdbcType=VARCHAR}, #{amountFirst,jdbcType=INTEGER}, 
+      #{amountEnd,jdbcType=INTEGER}, #{frostScaleVip,jdbcType=DECIMAL}, #{adminStatus,jdbcType=TINYINT}, 
+      #{aprFirst,jdbcType=DECIMAL}, #{aprEnd,jdbcType=DECIMAL}, #{checkFirst,jdbcType=INTEGER}, 
+      #{checkEnd,jdbcType=INTEGER}, #{tenderAccountMin,jdbcType=VARCHAR}, #{tenderAccountMax,jdbcType=VARCHAR}, 
+      #{periodFirst,jdbcType=INTEGER}, #{periodEnd,jdbcType=INTEGER}, #{validateFirst,jdbcType=INTEGER}, 
+      #{validateEnd,jdbcType=INTEGER}, #{awardStatus,jdbcType=TINYINT}, #{awardScaleFirst,jdbcType=DECIMAL}, 
+      #{awardScaleEnd,jdbcType=DECIMAL}, #{awardAccountFirst,jdbcType=DECIMAL}, #{awardAccountEnd,jdbcType=DECIMAL}, 
+      #{awardFalseStatus,jdbcType=INTEGER}, #{verifyAutoStatus,jdbcType=INTEGER}, #{verifyAutoRemark,jdbcType=VARCHAR}, 
+      #{styles,jdbcType=VARCHAR}, #{frostScale,jdbcType=DECIMAL}, #{lateDays,jdbcType=INTEGER}, 
+      #{vipLateScale,jdbcType=DECIMAL}, #{allLateScale,jdbcType=DECIMAL}, #{partStatus,jdbcType=TINYINT}, 
+      #{systemBorrowFullStatus,jdbcType=TINYINT}, #{systemBorrowRepayStatus,jdbcType=TINYINT}, 
+      #{systemWebRepayStatus,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowType" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="accountMultiple != null" >
+        account_multiple,
+      </if>
+      <if test="passwordStatus != null" >
+        password_status,
+      </if>
+      <if test="amountType != null" >
+        amount_type,
+      </if>
+      <if test="amountFirst != null" >
+        amount_first,
+      </if>
+      <if test="amountEnd != null" >
+        amount_end,
+      </if>
+      <if test="frostScaleVip != null" >
+        frost_scale_vip,
+      </if>
+      <if test="adminStatus != null" >
+        admin_status,
+      </if>
+      <if test="aprFirst != null" >
+        apr_first,
+      </if>
+      <if test="aprEnd != null" >
+        apr_end,
+      </if>
+      <if test="checkFirst != null" >
+        check_first,
+      </if>
+      <if test="checkEnd != null" >
+        check_end,
+      </if>
+      <if test="tenderAccountMin != null" >
+        tender_account_min,
+      </if>
+      <if test="tenderAccountMax != null" >
+        tender_account_max,
+      </if>
+      <if test="periodFirst != null" >
+        period_first,
+      </if>
+      <if test="periodEnd != null" >
+        period_end,
+      </if>
+      <if test="validateFirst != null" >
+        validate_first,
+      </if>
+      <if test="validateEnd != null" >
+        validate_end,
+      </if>
+      <if test="awardStatus != null" >
+        award_status,
+      </if>
+      <if test="awardScaleFirst != null" >
+        award_scale_first,
+      </if>
+      <if test="awardScaleEnd != null" >
+        award_scale_end,
+      </if>
+      <if test="awardAccountFirst != null" >
+        award_account_first,
+      </if>
+      <if test="awardAccountEnd != null" >
+        award_account_end,
+      </if>
+      <if test="awardFalseStatus != null" >
+        award_false_status,
+      </if>
+      <if test="verifyAutoStatus != null" >
+        verify_auto_status,
+      </if>
+      <if test="verifyAutoRemark != null" >
+        verify_auto_remark,
+      </if>
+      <if test="styles != null" >
+        styles,
+      </if>
+      <if test="frostScale != null" >
+        frost_scale,
+      </if>
+      <if test="lateDays != null" >
+        late_days,
+      </if>
+      <if test="vipLateScale != null" >
+        vip_late_scale,
+      </if>
+      <if test="allLateScale != null" >
+        all_late_scale,
+      </if>
+      <if test="partStatus != null" >
+        part_status,
+      </if>
+      <if test="systemBorrowFullStatus != null" >
+        system_borrow_full_status,
+      </if>
+      <if test="systemBorrowRepayStatus != null" >
+        system_borrow_repay_status,
+      </if>
+      <if test="systemWebRepayStatus != null" >
+        system_web_repay_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMultiple != null" >
+        #{accountMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="passwordStatus != null" >
+        #{passwordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="amountType != null" >
+        #{amountType,jdbcType=VARCHAR},
+      </if>
+      <if test="amountFirst != null" >
+        #{amountFirst,jdbcType=INTEGER},
+      </if>
+      <if test="amountEnd != null" >
+        #{amountEnd,jdbcType=INTEGER},
+      </if>
+      <if test="frostScaleVip != null" >
+        #{frostScaleVip,jdbcType=DECIMAL},
+      </if>
+      <if test="adminStatus != null" >
+        #{adminStatus,jdbcType=TINYINT},
+      </if>
+      <if test="aprFirst != null" >
+        #{aprFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="aprEnd != null" >
+        #{aprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="checkFirst != null" >
+        #{checkFirst,jdbcType=INTEGER},
+      </if>
+      <if test="checkEnd != null" >
+        #{checkEnd,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMin != null" >
+        #{tenderAccountMin,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAccountMax != null" >
+        #{tenderAccountMax,jdbcType=VARCHAR},
+      </if>
+      <if test="periodFirst != null" >
+        #{periodFirst,jdbcType=INTEGER},
+      </if>
+      <if test="periodEnd != null" >
+        #{periodEnd,jdbcType=INTEGER},
+      </if>
+      <if test="validateFirst != null" >
+        #{validateFirst,jdbcType=INTEGER},
+      </if>
+      <if test="validateEnd != null" >
+        #{validateEnd,jdbcType=INTEGER},
+      </if>
+      <if test="awardStatus != null" >
+        #{awardStatus,jdbcType=TINYINT},
+      </if>
+      <if test="awardScaleFirst != null" >
+        #{awardScaleFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="awardScaleEnd != null" >
+        #{awardScaleEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="awardAccountFirst != null" >
+        #{awardAccountFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="awardAccountEnd != null" >
+        #{awardAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="awardFalseStatus != null" >
+        #{awardFalseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyAutoStatus != null" >
+        #{verifyAutoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyAutoRemark != null" >
+        #{verifyAutoRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="styles != null" >
+        #{styles,jdbcType=VARCHAR},
+      </if>
+      <if test="frostScale != null" >
+        #{frostScale,jdbcType=DECIMAL},
+      </if>
+      <if test="lateDays != null" >
+        #{lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="vipLateScale != null" >
+        #{vipLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="allLateScale != null" >
+        #{allLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="partStatus != null" >
+        #{partStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemBorrowFullStatus != null" >
+        #{systemBorrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemBorrowRepayStatus != null" >
+        #{systemBorrowRepayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemWebRepayStatus != null" >
+        #{systemWebRepayStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTypeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_type
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountMultiple != null" >
+        account_multiple = #{record.accountMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="record.passwordStatus != null" >
+        password_status = #{record.passwordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.amountType != null" >
+        amount_type = #{record.amountType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amountFirst != null" >
+        amount_first = #{record.amountFirst,jdbcType=INTEGER},
+      </if>
+      <if test="record.amountEnd != null" >
+        amount_end = #{record.amountEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.frostScaleVip != null" >
+        frost_scale_vip = #{record.frostScaleVip,jdbcType=DECIMAL},
+      </if>
+      <if test="record.adminStatus != null" >
+        admin_status = #{record.adminStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.aprFirst != null" >
+        apr_first = #{record.aprFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="record.aprEnd != null" >
+        apr_end = #{record.aprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.checkFirst != null" >
+        check_first = #{record.checkFirst,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkEnd != null" >
+        check_end = #{record.checkEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderAccountMin != null" >
+        tender_account_min = #{record.tenderAccountMin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderAccountMax != null" >
+        tender_account_max = #{record.tenderAccountMax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.periodFirst != null" >
+        period_first = #{record.periodFirst,jdbcType=INTEGER},
+      </if>
+      <if test="record.periodEnd != null" >
+        period_end = #{record.periodEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.validateFirst != null" >
+        validate_first = #{record.validateFirst,jdbcType=INTEGER},
+      </if>
+      <if test="record.validateEnd != null" >
+        validate_end = #{record.validateEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.awardStatus != null" >
+        award_status = #{record.awardStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.awardScaleFirst != null" >
+        award_scale_first = #{record.awardScaleFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="record.awardScaleEnd != null" >
+        award_scale_end = #{record.awardScaleEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.awardAccountFirst != null" >
+        award_account_first = #{record.awardAccountFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="record.awardAccountEnd != null" >
+        award_account_end = #{record.awardAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.awardFalseStatus != null" >
+        award_false_status = #{record.awardFalseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyAutoStatus != null" >
+        verify_auto_status = #{record.verifyAutoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyAutoRemark != null" >
+        verify_auto_remark = #{record.verifyAutoRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.styles != null" >
+        styles = #{record.styles,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frostScale != null" >
+        frost_scale = #{record.frostScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.lateDays != null" >
+        late_days = #{record.lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.vipLateScale != null" >
+        vip_late_scale = #{record.vipLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.allLateScale != null" >
+        all_late_scale = #{record.allLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.partStatus != null" >
+        part_status = #{record.partStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.systemBorrowFullStatus != null" >
+        system_borrow_full_status = #{record.systemBorrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.systemBorrowRepayStatus != null" >
+        system_borrow_repay_status = #{record.systemBorrowRepayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.systemWebRepayStatus != null" >
+        system_web_repay_status = #{record.systemWebRepayStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_type
+    set id = #{record.id,jdbcType=INTEGER},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      account_multiple = #{record.accountMultiple,jdbcType=INTEGER},
+      password_status = #{record.passwordStatus,jdbcType=TINYINT},
+      amount_type = #{record.amountType,jdbcType=VARCHAR},
+      amount_first = #{record.amountFirst,jdbcType=INTEGER},
+      amount_end = #{record.amountEnd,jdbcType=INTEGER},
+      frost_scale_vip = #{record.frostScaleVip,jdbcType=DECIMAL},
+      admin_status = #{record.adminStatus,jdbcType=TINYINT},
+      apr_first = #{record.aprFirst,jdbcType=DECIMAL},
+      apr_end = #{record.aprEnd,jdbcType=DECIMAL},
+      check_first = #{record.checkFirst,jdbcType=INTEGER},
+      check_end = #{record.checkEnd,jdbcType=INTEGER},
+      tender_account_min = #{record.tenderAccountMin,jdbcType=VARCHAR},
+      tender_account_max = #{record.tenderAccountMax,jdbcType=VARCHAR},
+      period_first = #{record.periodFirst,jdbcType=INTEGER},
+      period_end = #{record.periodEnd,jdbcType=INTEGER},
+      validate_first = #{record.validateFirst,jdbcType=INTEGER},
+      validate_end = #{record.validateEnd,jdbcType=INTEGER},
+      award_status = #{record.awardStatus,jdbcType=TINYINT},
+      award_scale_first = #{record.awardScaleFirst,jdbcType=DECIMAL},
+      award_scale_end = #{record.awardScaleEnd,jdbcType=DECIMAL},
+      award_account_first = #{record.awardAccountFirst,jdbcType=DECIMAL},
+      award_account_end = #{record.awardAccountEnd,jdbcType=DECIMAL},
+      award_false_status = #{record.awardFalseStatus,jdbcType=INTEGER},
+      verify_auto_status = #{record.verifyAutoStatus,jdbcType=INTEGER},
+      verify_auto_remark = #{record.verifyAutoRemark,jdbcType=VARCHAR},
+      styles = #{record.styles,jdbcType=VARCHAR},
+      frost_scale = #{record.frostScale,jdbcType=DECIMAL},
+      late_days = #{record.lateDays,jdbcType=INTEGER},
+      vip_late_scale = #{record.vipLateScale,jdbcType=DECIMAL},
+      all_late_scale = #{record.allLateScale,jdbcType=DECIMAL},
+      part_status = #{record.partStatus,jdbcType=TINYINT},
+      system_borrow_full_status = #{record.systemBorrowFullStatus,jdbcType=TINYINT},
+      system_borrow_repay_status = #{record.systemBorrowRepayStatus,jdbcType=TINYINT},
+      system_web_repay_status = #{record.systemWebRepayStatus,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowType" >
+    update ht_borrow_type
+    <set >
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="accountMultiple != null" >
+        account_multiple = #{accountMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="passwordStatus != null" >
+        password_status = #{passwordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="amountType != null" >
+        amount_type = #{amountType,jdbcType=VARCHAR},
+      </if>
+      <if test="amountFirst != null" >
+        amount_first = #{amountFirst,jdbcType=INTEGER},
+      </if>
+      <if test="amountEnd != null" >
+        amount_end = #{amountEnd,jdbcType=INTEGER},
+      </if>
+      <if test="frostScaleVip != null" >
+        frost_scale_vip = #{frostScaleVip,jdbcType=DECIMAL},
+      </if>
+      <if test="adminStatus != null" >
+        admin_status = #{adminStatus,jdbcType=TINYINT},
+      </if>
+      <if test="aprFirst != null" >
+        apr_first = #{aprFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="aprEnd != null" >
+        apr_end = #{aprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="checkFirst != null" >
+        check_first = #{checkFirst,jdbcType=INTEGER},
+      </if>
+      <if test="checkEnd != null" >
+        check_end = #{checkEnd,jdbcType=INTEGER},
+      </if>
+      <if test="tenderAccountMin != null" >
+        tender_account_min = #{tenderAccountMin,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAccountMax != null" >
+        tender_account_max = #{tenderAccountMax,jdbcType=VARCHAR},
+      </if>
+      <if test="periodFirst != null" >
+        period_first = #{periodFirst,jdbcType=INTEGER},
+      </if>
+      <if test="periodEnd != null" >
+        period_end = #{periodEnd,jdbcType=INTEGER},
+      </if>
+      <if test="validateFirst != null" >
+        validate_first = #{validateFirst,jdbcType=INTEGER},
+      </if>
+      <if test="validateEnd != null" >
+        validate_end = #{validateEnd,jdbcType=INTEGER},
+      </if>
+      <if test="awardStatus != null" >
+        award_status = #{awardStatus,jdbcType=TINYINT},
+      </if>
+      <if test="awardScaleFirst != null" >
+        award_scale_first = #{awardScaleFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="awardScaleEnd != null" >
+        award_scale_end = #{awardScaleEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="awardAccountFirst != null" >
+        award_account_first = #{awardAccountFirst,jdbcType=DECIMAL},
+      </if>
+      <if test="awardAccountEnd != null" >
+        award_account_end = #{awardAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="awardFalseStatus != null" >
+        award_false_status = #{awardFalseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyAutoStatus != null" >
+        verify_auto_status = #{verifyAutoStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyAutoRemark != null" >
+        verify_auto_remark = #{verifyAutoRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="styles != null" >
+        styles = #{styles,jdbcType=VARCHAR},
+      </if>
+      <if test="frostScale != null" >
+        frost_scale = #{frostScale,jdbcType=DECIMAL},
+      </if>
+      <if test="lateDays != null" >
+        late_days = #{lateDays,jdbcType=INTEGER},
+      </if>
+      <if test="vipLateScale != null" >
+        vip_late_scale = #{vipLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="allLateScale != null" >
+        all_late_scale = #{allLateScale,jdbcType=DECIMAL},
+      </if>
+      <if test="partStatus != null" >
+        part_status = #{partStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemBorrowFullStatus != null" >
+        system_borrow_full_status = #{systemBorrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemBorrowRepayStatus != null" >
+        system_borrow_repay_status = #{systemBorrowRepayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="systemWebRepayStatus != null" >
+        system_web_repay_status = #{systemWebRepayStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowType" >
+    update ht_borrow_type
+    set nid = #{nid,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      account_multiple = #{accountMultiple,jdbcType=INTEGER},
+      password_status = #{passwordStatus,jdbcType=TINYINT},
+      amount_type = #{amountType,jdbcType=VARCHAR},
+      amount_first = #{amountFirst,jdbcType=INTEGER},
+      amount_end = #{amountEnd,jdbcType=INTEGER},
+      frost_scale_vip = #{frostScaleVip,jdbcType=DECIMAL},
+      admin_status = #{adminStatus,jdbcType=TINYINT},
+      apr_first = #{aprFirst,jdbcType=DECIMAL},
+      apr_end = #{aprEnd,jdbcType=DECIMAL},
+      check_first = #{checkFirst,jdbcType=INTEGER},
+      check_end = #{checkEnd,jdbcType=INTEGER},
+      tender_account_min = #{tenderAccountMin,jdbcType=VARCHAR},
+      tender_account_max = #{tenderAccountMax,jdbcType=VARCHAR},
+      period_first = #{periodFirst,jdbcType=INTEGER},
+      period_end = #{periodEnd,jdbcType=INTEGER},
+      validate_first = #{validateFirst,jdbcType=INTEGER},
+      validate_end = #{validateEnd,jdbcType=INTEGER},
+      award_status = #{awardStatus,jdbcType=TINYINT},
+      award_scale_first = #{awardScaleFirst,jdbcType=DECIMAL},
+      award_scale_end = #{awardScaleEnd,jdbcType=DECIMAL},
+      award_account_first = #{awardAccountFirst,jdbcType=DECIMAL},
+      award_account_end = #{awardAccountEnd,jdbcType=DECIMAL},
+      award_false_status = #{awardFalseStatus,jdbcType=INTEGER},
+      verify_auto_status = #{verifyAutoStatus,jdbcType=INTEGER},
+      verify_auto_remark = #{verifyAutoRemark,jdbcType=VARCHAR},
+      styles = #{styles,jdbcType=VARCHAR},
+      frost_scale = #{frostScale,jdbcType=DECIMAL},
+      late_days = #{lateDays,jdbcType=INTEGER},
+      vip_late_scale = #{vipLateScale,jdbcType=DECIMAL},
+      all_late_scale = #{allLateScale,jdbcType=DECIMAL},
+      part_status = #{partStatus,jdbcType=TINYINT},
+      system_borrow_full_status = #{systemBorrowFullStatus,jdbcType=TINYINT},
+      system_borrow_repay_status = #{systemBorrowRepayStatus,jdbcType=TINYINT},
+      system_web_repay_status = #{systemWebRepayStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

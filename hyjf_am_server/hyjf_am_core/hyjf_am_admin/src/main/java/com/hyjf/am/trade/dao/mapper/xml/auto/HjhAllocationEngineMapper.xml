@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_name" property="planName" jdbcType="VARCHAR" />
+    <result column="config_add_time" property="configAddTime" jdbcType="INTEGER" />
+    <result column="config_status" property="configStatus" jdbcType="TINYINT" />
+    <result column="label_id" property="labelId" jdbcType="INTEGER" />
+    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="INTEGER" />
+    <result column="label_sort" property="labelSort" jdbcType="TINYINT" />
+    <result column="transfer_time_sort" property="transferTimeSort" jdbcType="TINYINT" />
+    <result column="transfer_time_sort_priority" property="transferTimeSortPriority" jdbcType="TINYINT" />
+    <result column="apr_sort" property="aprSort" jdbcType="TINYINT" />
+    <result column="apr_sort_priority" property="aprSortPriority" jdbcType="TINYINT" />
+    <result column="actul_pay_sort" property="actulPaySort" jdbcType="TINYINT" />
+    <result column="actul_pay_sort_priority" property="actulPaySortPriority" jdbcType="TINYINT" />
+    <result column="invest_progress_sort" property="investProgressSort" jdbcType="TINYINT" />
+    <result column="invest_progress_sort_priority" property="investProgressSortPriority" jdbcType="TINYINT" />
+    <result column="label_status" property="labelStatus" jdbcType="TINYINT" />
+    <result column="create_user" property="createUser" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plan_nid, plan_name, config_add_time, config_status, label_id, label_name, add_time, 
+    label_sort, transfer_time_sort, transfer_time_sort_priority, apr_sort, apr_sort_priority, 
+    actul_pay_sort, actul_pay_sort_priority, invest_progress_sort, invest_progress_sort_priority, 
+    label_status, create_user, update_user, del_flag, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_allocation_engine
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_allocation_engine
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_allocation_engine
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample" >
+    delete from ht_hjh_allocation_engine
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_allocation_engine (plan_nid, plan_name, config_add_time, 
+      config_status, label_id, label_name, 
+      add_time, label_sort, transfer_time_sort, 
+      transfer_time_sort_priority, apr_sort, apr_sort_priority, 
+      actul_pay_sort, actul_pay_sort_priority, invest_progress_sort, 
+      invest_progress_sort_priority, label_status, 
+      create_user, update_user, del_flag, 
+      create_time, update_time)
+    values (#{planNid,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, #{configAddTime,jdbcType=INTEGER}, 
+      #{configStatus,jdbcType=TINYINT}, #{labelId,jdbcType=INTEGER}, #{labelName,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=INTEGER}, #{labelSort,jdbcType=TINYINT}, #{transferTimeSort,jdbcType=TINYINT}, 
+      #{transferTimeSortPriority,jdbcType=TINYINT}, #{aprSort,jdbcType=TINYINT}, #{aprSortPriority,jdbcType=TINYINT}, 
+      #{actulPaySort,jdbcType=TINYINT}, #{actulPaySortPriority,jdbcType=TINYINT}, #{investProgressSort,jdbcType=TINYINT}, 
+      #{investProgressSortPriority,jdbcType=TINYINT}, #{labelStatus,jdbcType=TINYINT}, 
+      #{createUser,jdbcType=INTEGER}, #{updateUser,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_allocation_engine
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="planName != null" >
+        plan_name,
+      </if>
+      <if test="configAddTime != null" >
+        config_add_time,
+      </if>
+      <if test="configStatus != null" >
+        config_status,
+      </if>
+      <if test="labelId != null" >
+        label_id,
+      </if>
+      <if test="labelName != null" >
+        label_name,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="labelSort != null" >
+        label_sort,
+      </if>
+      <if test="transferTimeSort != null" >
+        transfer_time_sort,
+      </if>
+      <if test="transferTimeSortPriority != null" >
+        transfer_time_sort_priority,
+      </if>
+      <if test="aprSort != null" >
+        apr_sort,
+      </if>
+      <if test="aprSortPriority != null" >
+        apr_sort_priority,
+      </if>
+      <if test="actulPaySort != null" >
+        actul_pay_sort,
+      </if>
+      <if test="actulPaySortPriority != null" >
+        actul_pay_sort_priority,
+      </if>
+      <if test="investProgressSort != null" >
+        invest_progress_sort,
+      </if>
+      <if test="investProgressSortPriority != null" >
+        invest_progress_sort_priority,
+      </if>
+      <if test="labelStatus != null" >
+        label_status,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null" >
+        #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="configAddTime != null" >
+        #{configAddTime,jdbcType=INTEGER},
+      </if>
+      <if test="configStatus != null" >
+        #{configStatus,jdbcType=TINYINT},
+      </if>
+      <if test="labelId != null" >
+        #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="labelName != null" >
+        #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="labelSort != null" >
+        #{labelSort,jdbcType=TINYINT},
+      </if>
+      <if test="transferTimeSort != null" >
+        #{transferTimeSort,jdbcType=TINYINT},
+      </if>
+      <if test="transferTimeSortPriority != null" >
+        #{transferTimeSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="aprSort != null" >
+        #{aprSort,jdbcType=TINYINT},
+      </if>
+      <if test="aprSortPriority != null" >
+        #{aprSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="actulPaySort != null" >
+        #{actulPaySort,jdbcType=TINYINT},
+      </if>
+      <if test="actulPaySortPriority != null" >
+        #{actulPaySortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="investProgressSort != null" >
+        #{investProgressSort,jdbcType=TINYINT},
+      </if>
+      <if test="investProgressSortPriority != null" >
+        #{investProgressSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="labelStatus != null" >
+        #{labelStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_allocation_engine
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_allocation_engine
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planName != null" >
+        plan_name = #{record.planName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.configAddTime != null" >
+        config_add_time = #{record.configAddTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.configStatus != null" >
+        config_status = #{record.configStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.labelId != null" >
+        label_id = #{record.labelId,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelName != null" >
+        label_name = #{record.labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addTime != null" >
+        add_time = #{record.addTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelSort != null" >
+        label_sort = #{record.labelSort,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferTimeSort != null" >
+        transfer_time_sort = #{record.transferTimeSort,jdbcType=TINYINT},
+      </if>
+      <if test="record.transferTimeSortPriority != null" >
+        transfer_time_sort_priority = #{record.transferTimeSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="record.aprSort != null" >
+        apr_sort = #{record.aprSort,jdbcType=TINYINT},
+      </if>
+      <if test="record.aprSortPriority != null" >
+        apr_sort_priority = #{record.aprSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="record.actulPaySort != null" >
+        actul_pay_sort = #{record.actulPaySort,jdbcType=TINYINT},
+      </if>
+      <if test="record.actulPaySortPriority != null" >
+        actul_pay_sort_priority = #{record.actulPaySortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="record.investProgressSort != null" >
+        invest_progress_sort = #{record.investProgressSort,jdbcType=TINYINT},
+      </if>
+      <if test="record.investProgressSortPriority != null" >
+        invest_progress_sort_priority = #{record.investProgressSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="record.labelStatus != null" >
+        label_status = #{record.labelStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_allocation_engine
+    set id = #{record.id,jdbcType=INTEGER},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_name = #{record.planName,jdbcType=VARCHAR},
+      config_add_time = #{record.configAddTime,jdbcType=INTEGER},
+      config_status = #{record.configStatus,jdbcType=TINYINT},
+      label_id = #{record.labelId,jdbcType=INTEGER},
+      label_name = #{record.labelName,jdbcType=VARCHAR},
+      add_time = #{record.addTime,jdbcType=INTEGER},
+      label_sort = #{record.labelSort,jdbcType=TINYINT},
+      transfer_time_sort = #{record.transferTimeSort,jdbcType=TINYINT},
+      transfer_time_sort_priority = #{record.transferTimeSortPriority,jdbcType=TINYINT},
+      apr_sort = #{record.aprSort,jdbcType=TINYINT},
+      apr_sort_priority = #{record.aprSortPriority,jdbcType=TINYINT},
+      actul_pay_sort = #{record.actulPaySort,jdbcType=TINYINT},
+      actul_pay_sort_priority = #{record.actulPaySortPriority,jdbcType=TINYINT},
+      invest_progress_sort = #{record.investProgressSort,jdbcType=TINYINT},
+      invest_progress_sort_priority = #{record.investProgressSortPriority,jdbcType=TINYINT},
+      label_status = #{record.labelStatus,jdbcType=TINYINT},
+      create_user = #{record.createUser,jdbcType=INTEGER},
+      update_user = #{record.updateUser,jdbcType=INTEGER},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine" >
+    update ht_hjh_allocation_engine
+    <set >
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null" >
+        plan_name = #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="configAddTime != null" >
+        config_add_time = #{configAddTime,jdbcType=INTEGER},
+      </if>
+      <if test="configStatus != null" >
+        config_status = #{configStatus,jdbcType=TINYINT},
+      </if>
+      <if test="labelId != null" >
+        label_id = #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="labelName != null" >
+        label_name = #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="labelSort != null" >
+        label_sort = #{labelSort,jdbcType=TINYINT},
+      </if>
+      <if test="transferTimeSort != null" >
+        transfer_time_sort = #{transferTimeSort,jdbcType=TINYINT},
+      </if>
+      <if test="transferTimeSortPriority != null" >
+        transfer_time_sort_priority = #{transferTimeSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="aprSort != null" >
+        apr_sort = #{aprSort,jdbcType=TINYINT},
+      </if>
+      <if test="aprSortPriority != null" >
+        apr_sort_priority = #{aprSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="actulPaySort != null" >
+        actul_pay_sort = #{actulPaySort,jdbcType=TINYINT},
+      </if>
+      <if test="actulPaySortPriority != null" >
+        actul_pay_sort_priority = #{actulPaySortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="investProgressSort != null" >
+        invest_progress_sort = #{investProgressSort,jdbcType=TINYINT},
+      </if>
+      <if test="investProgressSortPriority != null" >
+        invest_progress_sort_priority = #{investProgressSortPriority,jdbcType=TINYINT},
+      </if>
+      <if test="labelStatus != null" >
+        label_status = #{labelStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine" >
+    update ht_hjh_allocation_engine
+    set plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_name = #{planName,jdbcType=VARCHAR},
+      config_add_time = #{configAddTime,jdbcType=INTEGER},
+      config_status = #{configStatus,jdbcType=TINYINT},
+      label_id = #{labelId,jdbcType=INTEGER},
+      label_name = #{labelName,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=INTEGER},
+      label_sort = #{labelSort,jdbcType=TINYINT},
+      transfer_time_sort = #{transferTimeSort,jdbcType=TINYINT},
+      transfer_time_sort_priority = #{transferTimeSortPriority,jdbcType=TINYINT},
+      apr_sort = #{aprSort,jdbcType=TINYINT},
+      apr_sort_priority = #{aprSortPriority,jdbcType=TINYINT},
+      actul_pay_sort = #{actulPaySort,jdbcType=TINYINT},
+      actul_pay_sort_priority = #{actulPaySortPriority,jdbcType=TINYINT},
+      invest_progress_sort = #{investProgressSort,jdbcType=TINYINT},
+      invest_progress_sort_priority = #{investProgressSortPriority,jdbcType=TINYINT},
+      label_status = #{labelStatus,jdbcType=TINYINT},
+      create_user = #{createUser,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

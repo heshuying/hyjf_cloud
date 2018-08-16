@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.RUserCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.RUser">
+		<id column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="mobile" jdbcType="CHAR" property="mobile" />
+		<result column="role_id" jdbcType="TINYINT" property="roleId" />
+		<result column="truename" jdbcType="VARCHAR" property="truename" />
+		<result column="attribute" jdbcType="INTEGER" property="attribute" />
+		<result column="spreads_user_id" jdbcType="INTEGER" property="spreadsUserId" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+	<select id="selectRefUserInfoByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+			b.user_id user_id,
+			b.username username,
+			b.mobile mobile,
+			b.role_id role_id,
+			b.truename truename,
+			b.`attribute` `attribute`,
+			b.spreads_user_id spreads_user_id,
+			b.create_time create_time,
+			b.update_time update_time
+		from 	ht_r_user a
+		JOIN ht_r_user b ON a.spreads_user_id = b.user_id
+		WHERE a.user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<select id="selectRefUserInfoByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		b.user_id user_id,
+		b.username username,
+		b.mobile mobile,
+		b.role_id role_id,
+		b.truename truename,
+		b.`attribute` `attribute`,
+		b.spreads_user_id spreads_user_id,
+		b.create_time create_time,
+		b.update_time update_time
+		from 	ht_r_user a
+		JOIN ht_r_user b ON a.spreads_user_id = b.user_id
+		WHERE a.user_id = #{userName,jdbcType=VARCHAR}
+	</select>
+</mapper>

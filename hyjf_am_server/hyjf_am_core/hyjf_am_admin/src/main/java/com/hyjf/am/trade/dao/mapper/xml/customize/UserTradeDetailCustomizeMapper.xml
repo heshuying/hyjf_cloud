@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.UserTradeDetailCustomizeMapper">
+
+	<sql id="Where_Clause_Trade_List">
+		<where>
+			AND hydal.user_id = #{userId,jdbcType=INTEGER}
+			AND hydal.is_show = 0
+			<if test="trade != null and trade != ''">
+				AND hydat.`value`= #{trade,jdbcType=VARCHAR}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND unix_timestamp(hydal.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND unix_timestamp(hydal.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="UserTradeListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="trade" property="trade" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="is_bank" property="isBank" jdbcType="VARCHAR" />
+		<result column="revuAndExpType" property="revuAndExpType" jdbcType="VARCHAR" />
+		<result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="roleId" property="roleId" />
+		<result column="borrowNid" property="borrowNid" />
+	</resultMap>
+
+	<select id="selectUserTradeList" resultMap="UserTradeListMap" parameterType="Map" >
+		SELECT
+		hydal.id,
+		#{roleId,jdbcType=VARCHAR} AS roleId,
+		#{trade,jdbcType=VARCHAR} AS trade,
+		hydal.create_time AS time,
+		CASE
+		WHEN hydal.`type` = 1 THEN
+		'+'
+		WHEN hydal.`type` = 2 THEN
+		'-'
+		ELSE
+		''
+		END AS type,
+		hydat.`name` AS type_name,
+		hydat.`value` AS trade,
+		IFNULL(hydal.amount,0) AS money,
+		CASE
+		WHEN hydal.is_bank = 1 THEN
+		IFNULL(hydal.bank_balance, 0)
+		ELSE
+		IFNULL(hydal.balance, 0)
+		END AS balance,
+		IFNULL(hydal.remark, '') AS borrowNid,
+		hydal.is_bank AS is_bank,
+		hydat.type_id AS `revuAndExpType`,
+		hydal.trade_status AS trade_status,
+		hydal.remark
+		FROM
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		<include refid="Where_Clause_Trade_List" />
+		ORDER BY
+		hydal.create_time DESC,hydal.id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="countUserTradeRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydal.id)
+		FROM
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		<include refid="Where_Clause_Trade_List" />
+	</select>
+
+
+	<sql id="Where_Clause_Recharge_List">
+		<where>
+			hydar.user_id = #{userId,jdbcType=INTEGER}
+			AND  hydar.`status` = 2
+			<if test="startDate != null and startDate != ''">
+				AND unix_timestamp(hydar.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND unix_timestamp(hydar.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</sql>
+	<resultMap id="UserRechargeListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="is_bank" property="isBank" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="VARCHAR" />
+		<result column="fee" property="fee" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="searchUserRechargeList" resultMap="UserRechargeListMap" parameterType="Map" >
+		SELECT
+		hydar.id,
+		hydar.create_time AS time,
+		hydar.money AS money,
+		hydar.balance AS balance,
+		hydar.fee AS fee,
+		hydar.is_bank AS is_bank,
+		hydar.`status` AS `status`
+		FROM
+		ht_account_recharge hydar
+		<include refid="Where_Clause_Recharge_List" />
+		ORDER BY
+		hydar.create_time DESC,hydar.id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="countUserRechargeRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydar.id)
+		FROM
+		ht_account_recharge hydar
+		<include refid="Where_Clause_Recharge_List" />
+	</select>
+
+	<sql id="Where_Clause_Withdraw_List">
+		<where>
+			hydaw.user_id = #{userId,jdbcType=INTEGER}
+			AND hydaw.`status` = 2
+			<if test="startDate != null and startDate != ''">
+				AND unix_timestamp(hydaw.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND unix_timestamp(hydaw.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</sql>
+	<resultMap id="UserWithdrawListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="VARCHAR" />
+		<result column="money" property="money" jdbcType="VARCHAR" />
+		<result column="fee" property="fee" jdbcType="VARCHAR" />
+		<result column="balance" property="balance" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="bank_flag" property="bankFlag" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserWithdrawList" resultMap="UserWithdrawListMap" parameterType="Map" >
+		SELECT
+		hydaw.id,
+		hydaw.create_time AS time,
+		hydaw.total AS money,
+		hydaw.fee AS fee,
+		hydaw.credited AS balance,
+		hydaw.`status` AS `status`,
+		hydaw.bank_flag AS bank_flag
+		FROM
+		ht_account_withdraw hydaw
+		<include refid="Where_Clause_Withdraw_List" />
+		ORDER BY
+		hydaw.create_time DESC,hydaw.id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="countUserWithdrawRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydaw.id)
+		FROM
+		ht_account_withdraw hydaw
+		<include refid="Where_Clause_Withdraw_List" />
+	</select>
+
+
+	<resultMap id="AppUserTradeListMap" type="com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize">
+		<id column="tradeType" property="tradeType" jdbcType="VARCHAR" />
+		<result column="tradeTime" property="tradeTime" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="is_bank" property="isBank" jdbcType="VARCHAR" />
+		<result column="tradeYear" property="tradeYear" jdbcType="VARCHAR" />
+		<result column="tradeMonth" property="tradeMonth" jdbcType="VARCHAR" />
+		<result column="bankBalance" property="bankBalance" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="searchAppTradeDetailList" resultMap="AppUserTradeListMap" parameterType="Map" >
+		SELECT
+		hydal.create_time tradeTime,
+
+		SUBSTRING(FORMAT(IF(hydal.is_bank=0,hydal.balance,hydal.bank_balance),4),1,LENGTH(FORMAT(IF(hydal.is_bank=0,hydal.balance,hydal.bank_balance),4))-2)
+		bankBalance,
+		date_format(hydal.create_time,
+		'%Y'
+		) AS tradeYear,
+		date_format(hydal.create_time,
+		'%m'
+		) AS tradeMonth,
+		hydat.`name` AS tradeType,
+		CASE
+		WHEN hydal.trade IN (
+		'recharge',
+		'borrow_success',
+		'tender_recover_yes',
+		'cash_tiaozhang',
+		'borrow_spreads_tender',
+		'borrowactivity',
+		'redeem_huitianli',
+		'interest_huitianli',
+		'creditsell',
+		'recharge_success',
+		'credit_tender_recover_yes',
+		'increase_interest_profit',
+		'experience_profit',
+		'cash_coupon_profit',
+		'plan_spreads_accede',
+		'plan_repay',
+		'platform_transfer',
+		'increase_interest_repay_yes',
+		'directional_transfer_receive',
+		'recharge_offline',
+		'hjh_quit'
+		) THEN
+		CONCAT('+', SUBSTRING(FORMAT(hydal.amount,4),1,LENGTH(FORMAT(hydal.amount,4))-2))
+		WHEN hydal.trade IN (
+		'tender_success',
+		'cash_success',
+		'tender_huitianli',
+		'account_change',
+		'repay_success',
+		'creditassign',
+		'user_transfer',
+		'apply_vip',
+		'directional_transfer_pay',
+		'accede_plan',
+		'hjh_invest'
+		) THEN
+		CONCAT('-', SUBSTRING(FORMAT(hydal.amount,4),1,LENGTH(FORMAT(hydal.amount,4))-2))
+		ELSE
+		SUBSTRING(FORMAT(hydal.amount,4),1,LENGTH(FORMAT(hydal.amount,4))-2)
+		END AS account,
+		hydal.is_bank
+		FROM
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		<include refid="Where_Clause_Trade_List" />
+		ORDER BY
+		hydal.create_time DESC,hydal.id DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="countTradeDetailListRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydal.id)
+		FROM
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		<include refid="Where_Clause_Trade_List" />
+	</select>
+</mapper>
