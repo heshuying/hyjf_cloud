@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@EnableDiscoveryClient
 @EnableRedisHttpSession
 @CrossOrigin(origins = "*")
 @ComponentScan(basePackages = "com.hyjf")
