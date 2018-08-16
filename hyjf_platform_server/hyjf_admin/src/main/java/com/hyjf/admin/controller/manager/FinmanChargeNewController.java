@@ -19,13 +19,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springframework.util.CollectionUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiehuili on 2018/8/13.
@@ -177,29 +177,29 @@ public class FinmanChargeNewController extends BaseController {
         }
         return new AdminResult<>();
     }
-//
-//    /**
-//     * 下拉联动
-//     * @param instCode
-//     * @return 进入资产列表页面
-//     */
-//    @ApiOperation(value = "费率配置--下拉联动", notes = "费率配置--下拉联动")
-//    @PostMapping("/assetTypeAction/{instCode}")
-//    public List<Map<String, Object>> assetTypeAction(@PathVariable String instCode) {
-//        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-//        // 根据资金来源取得产品类型
-//        // 产品类型
-//        List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(instCode);
-//        if (!CollectionUtils.isEmpty(assetTypeList)) {
-//            for (HjhAssetTypeVO hjhAssetType : assetTypeList) {
-//                Map<String, Object> mapTemp = new HashMap<String, Object>();
-//                mapTemp.put("id", hjhAssetType.getAssetType());
-//                mapTemp.put("text", hjhAssetType.getAssetTypeName());
-//                resultList.add(mapTemp);
-//            }
-//        }
-//        return resultList;
-//    }
+
+    /**
+     * 下拉联动
+     * @param instCode
+     * @return 进入资产列表页面
+     */
+    @ApiOperation(value = "费率配置--下拉联动", notes = "费率配置--下拉联动")
+    @PostMapping("/assetTypeAction/{instCode}")
+    public List<Map<String, Object>> assetTypeAction(@PathVariable String instCode) {
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        // 根据资金来源取得产品类型
+        // 产品类型
+        List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(instCode);
+        if (!CollectionUtils.isEmpty(assetTypeList)) {
+            for (HjhAssetTypeVO hjhAssetType : assetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetType.getAssetType());
+                mapTemp.put("text", hjhAssetType.getAssetTypeName());
+                resultList.add(mapTemp);
+            }
+        }
+        return resultList;
+    }
     /**
      * 画面校验
      *
