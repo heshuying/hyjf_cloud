@@ -5,7 +5,6 @@ import com.hyjf.am.trade.dao.mapper.auto.ProducerTransactionMessageMapper;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample;
 import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
-import com.hyjf.am.trade.mq.transactionmq.MessageStatus;
 import com.hyjf.am.trade.service.front.batch.ProducerTransactionMessageService;
 import com.hyjf.common.util.GetDate;
 import org.apache.rocketmq.client.QueryResult;
