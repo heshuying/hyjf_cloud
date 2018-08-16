@@ -13,11 +13,13 @@ import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
  *
+ * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
 public class  CsMessageClientImpl  implements CsMessageClient {
@@ -264,6 +267,38 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     /**
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getListByConditions",
+                        request, MessagePushErrorResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse update(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/request",
+                        request, MessagePushErrorResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 获取标签列表
      *
      * @return
@@ -305,6 +340,60 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     public void sendMessage(MessagePushErrorVO msg) {
         restTemplate.getForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage"+"/"+msg,
                         MessagePushErrorResponse.class);
+    }
+
+    /**
+     * 获取手动发放短信列表
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request) {
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/selectmessagepushmsg",
+                request,MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MessagePushMsgResponse getMessagePushMsgById(Integer id) {
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO) {
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/insertmessagepushmsg",
+                templateVO,MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest) {
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/updatemessagepushmsg",
+                templateRequest,MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList) {
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/deletemessagepushmsg/" + recordList,
+                MessagePushMsgResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
 
     @Override

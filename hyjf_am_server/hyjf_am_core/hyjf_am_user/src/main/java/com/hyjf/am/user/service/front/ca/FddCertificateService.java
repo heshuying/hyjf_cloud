@@ -16,6 +16,11 @@ import java.text.ParseException;
  */
 public interface FddCertificateService extends BaseService{
 
+    /**
+     * 更新用户CA认证信息
+     * @throws ParseException
+     * @throws MQException
+     */
     void updateUserCAInfo(Integer userId, User user, UserInfo userInfo) throws Exception;
 
     /**

@@ -24,11 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/search")
 public class MongoSeachController extends BaseController {

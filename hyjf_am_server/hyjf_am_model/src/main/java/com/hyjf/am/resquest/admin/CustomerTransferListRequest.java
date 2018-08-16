@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,25 +13,26 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: CustomerTransferListRequest, v0.1 2018/7/6 14:39
  */
+@ApiModel(value = "用户转账请求参数")
 public class CustomerTransferListRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 1L;
-    // 订单号
+    @ApiModelProperty(value = "订单号(检索用)")
     private String orderIdSrch;
-    // 交易类型
+    @ApiModelProperty(value = "交易类型(检索用)")
     private String transferTypeSrch;
-    // 转出账户
+    @ApiModelProperty(value = "转出账户(检索用)")
     private String outUserNameSrch;
-    // 对账标识
+    @ApiModelProperty(value = "对账标识(检索用)")
     private String reconciliationIdSrch;
-    // 转账状态
+    @ApiModelProperty(value = "转账状态(检索用)")
     private String statusSrch;
-    /** 转账时间开始值 */
+    @ApiModelProperty(value = "转账时间开始值(检索用)")
     private String transferTimeStart;
-    /** 转账时间结束值 */
+    @ApiModelProperty(value = "转账时间结束值(检索用)")
     private String transferTimeEnd;
-    /** 操作时间开始值 */
+    @ApiModelProperty(value = "操作时间开始值")
     private String opreateTimeStart;
-    /** 操作时间结束值 */
+    @ApiModelProperty(value = "操作时间结束值")
     private String opreateTimeEnd;
 
     /**

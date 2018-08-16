@@ -9,6 +9,7 @@ import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.request.PdfSignRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -18,7 +19,6 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -40,7 +40,6 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -70,13 +69,13 @@ public class BorrowInvestController extends BaseController {
         borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         //还款方式
-        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //操作平台
-        Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
+        List<DropDownVO> clientList = adminCommonService.getParamNameList("CLIENT");
         responseBean.setClientList(clientList);
         //投资方式
-        Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
+        List<DropDownVO> investTypeList = adminCommonService.getParamNameList("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
     }

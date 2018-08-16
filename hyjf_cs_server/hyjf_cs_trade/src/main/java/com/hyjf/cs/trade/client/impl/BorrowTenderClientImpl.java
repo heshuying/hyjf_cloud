@@ -143,7 +143,7 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 
 	@Override
 	public List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest) {
-		String url = "http://AM-TRADE/am-trade/couponPeriodRepay/selectNidForCouponOnly";
+		String url = "http://AM-TRADE/am-trade/couponperiodrepay/selectnidforcoupononly";
 		List<String> recoverNidList = restTemplate.postForEntity(url,couponRepayRequest,List.class).getBody();
 		if (!CollectionUtils.isEmpty(recoverNidList)) {
 			return recoverNidList;

@@ -12,6 +12,7 @@ import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.net.URLEncoder;
@@ -40,7 +41,9 @@ public class ChinapnrUtil {
     private static final String REQUEST_MAPPING_CALLAPI = "/callapi.json";
 
     /** 接口路径(后台) */
-    private static final String REQUEST_MAPPING_CALLAPIBG = "/callapibg.json";
+    private static final String REQUEST_MAPPING_CALLAPIBG = "/callapibg";
+
+    private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
     /**
      * 调用接口(页面)
@@ -113,9 +116,10 @@ public class ChinapnrUtil {
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
-
+            Map<String, String> param = bean.getAllParams();
             // 调用汇付接口
-            String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIBG, bean.getAllParams());
+            String result = restTemplate
+                    .postForEntity(payurl + REQUEST_MAPPING_CALLAPIBG, param, String.class).getBody();
             log.info("请求pay工程返回结果：" + result);
             if (Validator.isNotNull(result)) {
                 // 将返回字符串转换成ChinapnrBean

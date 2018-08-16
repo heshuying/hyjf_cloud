@@ -9,6 +9,8 @@ import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,76 +19,79 @@ import java.util.Date;
  * @author fuqiang
  * @version PushMoneyRequest, v0.1 2018/7/10 19:26
  */
+@ApiModel(value = "直投提成请求参数")
 public class PushMoneyRequest extends BasePage implements Serializable {
 
-	/**
-	 * 检索条件-项目编号
-	 */
+	@ApiModelProperty(value = "项目编号(检索用)")
 	public String borrowNid;
-	/**
-	 * 检索条件-项目标题
-	 */
+
+	@ApiModelProperty(value = "项目标题(检索用)")
 	public String borrowName;
-	/**
-	 * 检索条件-项目还款方式  = endday 天   !=endday 个月
-	 */
+
+	@ApiModelProperty(value = "项目还款方式 = endday 天   !=endday 个月(检索用)")
 	public String borrowStyle;
-	/**
-	 * 检索条件- 融资期限
-	 */
+
+	@ApiModelProperty(value = "融资期限(检索用)")
 	public String borrowPeriod;
-	/**
-	 * 检索条件- 融资金额
-	 */
+
+	@ApiModelProperty(value = "融资金额(检索用)")
 	public String account;
-	/**
-	 * j检索条件-提成总额
-	 */
+
+	@ApiModelProperty(value = "提成总额(检索用)")
 	public String commission;
-	/**
-	 * 检索条件-放款开始时间
-	 */
+
+	@ApiModelProperty(value = "放款开始时间(检索用)")
 	public String recoverLastTimeStart;
 
-	/**
-	 * 检索条件-放款结束时间
-	 */
+	@ApiModelProperty(value = "放款结束时间(检索用)")
 	public String recoverLastTimeEnd;
 
-	/**
-	 * 检索条件-项目类型
-	 */
+	@ApiModelProperty(value = "项目类型(检索用)")
 	public Integer projectType;
-	// 投资人
+
+	@ApiModelProperty(value = "投资人(检索用)")
 	private String usernameSearch;
-	// 提成人
+
+	@ApiModelProperty(value = "提成人(检索用)")
 	private String referernameSearch;
-	// 部门
+
+	@ApiModelProperty(value = "部门(检索用)")
 	private String combotreeSrch;
-	// 部门
+
+	@ApiModelProperty(value = "部门(检索用)")
 	private String[] combotreeListSrch;
-	// 电子账号
+
+	@ApiModelProperty(value = "电子账号(检索用)")
 	private String accountId;
-	// 0,未发放；1，已发放；9，all
+
+	@ApiModelProperty(value = "状态0,未发放；1，已发放；9，all(检索用)")
 	private String statusSearch;
-	// 创建时间 起始
+
+	@ApiModelProperty(value = "创建时间 起始")
 	private String startDate;
-	// 创建时间 结束
+
+	@ApiModelProperty(value = "创建时间 结束")
 	private String endDate;
-	// 发放时间 起始
+
+	@ApiModelProperty(value = "发放时间 起始")
 	private String startDateSend;
-	// 发放时间 结束
+
+	@ApiModelProperty(value = "发放时间 结束")
 	private String endDateSend;
+	@ApiModelProperty(value = "计划订单锁定时间 开始")
+	private String startDatePlan;
+	@ApiModelProperty(value = "计划订单锁定时间 结束")
+	private String endDatePlan;
+	@ApiModelProperty(value = "放款时间 起始")
+	private String recoverDateStart;
+	@ApiModelProperty(value = "放款时间 结束")
+	private String recoverDateEnd;
 
-	private String startDatePlan;//计划订单锁定时间 开始
-	private String endDatePlan;//计划订单锁定时间 结束
-
-	private String recoverDateStart; // 放款时间 起始
-	private String recoverDateEnd; // 放款时间 结束
-
-	// 提成id  发提成用
+	@ApiModelProperty(value = "提成id(发提成用)")
 	private Integer id;
+	@ApiModelProperty(value = "登录用户id(后台用)")
 	private Integer loginUserId;
+	@ApiModelProperty(value = "登录用户名(后台用)")
 	private String loginUserName;
 	private TenderCommissionVO tenderCommissionVO;
 	private BankCallBeanVO bankCallBeanVO;

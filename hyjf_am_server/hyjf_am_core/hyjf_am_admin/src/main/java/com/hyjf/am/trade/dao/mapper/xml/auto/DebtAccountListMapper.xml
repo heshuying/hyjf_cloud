@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtAccountListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtAccountList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="referer_user_id" property="refererUserId" jdbcType="INTEGER" />
+    <result column="referer_user_name" property="refererUserName" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="plan_order_id" property="planOrderId" jdbcType="VARCHAR" />
+    <result column="plan_order_balance" property="planOrderBalance" jdbcType="DECIMAL" />
+    <result column="plan_order_frost" property="planOrderFrost" jdbcType="DECIMAL" />
+    <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
+    <result column="plan_frost" property="planFrost" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="trade" property="trade" jdbcType="VARCHAR" />
+    <result column="trade_code" property="tradeCode" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="frost" property="frost" jdbcType="DECIMAL" />
+    <result column="account_wait" property="accountWait" jdbcType="DECIMAL" />
+    <result column="capital_wait" property="capitalWait" jdbcType="DECIMAL" />
+    <result column="interest_wait" property="interestWait" jdbcType="DECIMAL" />
+    <result column="repay_wait" property="repayWait" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="web" property="web" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, nid, user_id, user_name, referer_user_id, referer_user_name, plan_nid, plan_order_id, 
+    plan_order_balance, plan_order_frost, plan_balance, plan_frost, amount, `type`, trade, 
+    trade_code, total, balance, frost, account_wait, capital_wait, interest_wait, repay_wait, 
+    remark, ip, web, create_user_id, create_user_name, update_user_id, update_user_name, 
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_account_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_account_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_account_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountListExample" >
+    delete from ht_debt_account_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_account_list (nid, user_id, user_name, 
+      referer_user_id, referer_user_name, plan_nid, 
+      plan_order_id, plan_order_balance, plan_order_frost, 
+      plan_balance, plan_frost, amount, 
+      `type`, trade, trade_code, 
+      total, balance, frost, 
+      account_wait, capital_wait, interest_wait, 
+      repay_wait, remark, ip, 
+      web, create_user_id, create_user_name, 
+      update_user_id, update_user_name, create_time, 
+      update_time)
+    values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{refererUserId,jdbcType=INTEGER}, #{refererUserName,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{planOrderId,jdbcType=VARCHAR}, #{planOrderBalance,jdbcType=DECIMAL}, #{planOrderFrost,jdbcType=DECIMAL}, 
+      #{planBalance,jdbcType=DECIMAL}, #{planFrost,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, 
+      #{type,jdbcType=TINYINT}, #{trade,jdbcType=VARCHAR}, #{tradeCode,jdbcType=VARCHAR}, 
+      #{total,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
+      #{accountWait,jdbcType=DECIMAL}, #{capitalWait,jdbcType=DECIMAL}, #{interestWait,jdbcType=DECIMAL}, 
+      #{repayWait,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{web,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_account_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="refererUserId != null" >
+        referer_user_id,
+      </if>
+      <if test="refererUserName != null" >
+        referer_user_name,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="planOrderId != null" >
+        plan_order_id,
+      </if>
+      <if test="planOrderBalance != null" >
+        plan_order_balance,
+      </if>
+      <if test="planOrderFrost != null" >
+        plan_order_frost,
+      </if>
+      <if test="planBalance != null" >
+        plan_balance,
+      </if>
+      <if test="planFrost != null" >
+        plan_frost,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="trade != null" >
+        trade,
+      </if>
+      <if test="tradeCode != null" >
+        trade_code,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="frost != null" >
+        frost,
+      </if>
+      <if test="accountWait != null" >
+        account_wait,
+      </if>
+      <if test="capitalWait != null" >
+        capital_wait,
+      </if>
+      <if test="interestWait != null" >
+        interest_wait,
+      </if>
+      <if test="repayWait != null" >
+        repay_wait,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="web != null" >
+        web,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="refererUserId != null" >
+        #{refererUserId,jdbcType=INTEGER},
+      </if>
+      <if test="refererUserName != null" >
+        #{refererUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderId != null" >
+        #{planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderBalance != null" >
+        #{planOrderBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planOrderFrost != null" >
+        #{planOrderFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planBalance != null" >
+        #{planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planFrost != null" >
+        #{planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="trade != null" >
+        #{trade,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeCode != null" >
+        #{tradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="accountWait != null" >
+        #{accountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalWait != null" >
+        #{capitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="interestWait != null" >
+        #{interestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWait != null" >
+        #{repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="web != null" >
+        #{web,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_account_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_account_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refererUserId != null" >
+        referer_user_id = #{record.refererUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.refererUserName != null" >
+        referer_user_name = #{record.refererUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planOrderId != null" >
+        plan_order_id = #{record.planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planOrderBalance != null" >
+        plan_order_balance = #{record.planOrderBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planOrderFrost != null" >
+        plan_order_frost = #{record.planOrderFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planBalance != null" >
+        plan_balance = #{record.planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planFrost != null" >
+        plan_frost = #{record.planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.type != null" >
+        `type` = #{record.type,jdbcType=TINYINT},
+      </if>
+      <if test="record.trade != null" >
+        trade = #{record.trade,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tradeCode != null" >
+        trade_code = #{record.tradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.total != null" >
+        total = #{record.total,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balance != null" >
+        balance = #{record.balance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.frost != null" >
+        frost = #{record.frost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accountWait != null" >
+        account_wait = #{record.accountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.capitalWait != null" >
+        capital_wait = #{record.capitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.interestWait != null" >
+        interest_wait = #{record.interestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayWait != null" >
+        repay_wait = #{record.repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ip != null" >
+        ip = #{record.ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.web != null" >
+        web = #{record.web,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserName != null" >
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_account_list
+    set id = #{record.id,jdbcType=INTEGER},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      referer_user_id = #{record.refererUserId,jdbcType=INTEGER},
+      referer_user_name = #{record.refererUserName,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      plan_order_id = #{record.planOrderId,jdbcType=VARCHAR},
+      plan_order_balance = #{record.planOrderBalance,jdbcType=DECIMAL},
+      plan_order_frost = #{record.planOrderFrost,jdbcType=DECIMAL},
+      plan_balance = #{record.planBalance,jdbcType=DECIMAL},
+      plan_frost = #{record.planFrost,jdbcType=DECIMAL},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      `type` = #{record.type,jdbcType=TINYINT},
+      trade = #{record.trade,jdbcType=VARCHAR},
+      trade_code = #{record.tradeCode,jdbcType=VARCHAR},
+      total = #{record.total,jdbcType=DECIMAL},
+      balance = #{record.balance,jdbcType=DECIMAL},
+      frost = #{record.frost,jdbcType=DECIMAL},
+      account_wait = #{record.accountWait,jdbcType=DECIMAL},
+      capital_wait = #{record.capitalWait,jdbcType=DECIMAL},
+      interest_wait = #{record.interestWait,jdbcType=DECIMAL},
+      repay_wait = #{record.repayWait,jdbcType=DECIMAL},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      ip = #{record.ip,jdbcType=VARCHAR},
+      web = #{record.web,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountList" >
+    update ht_debt_account_list
+    <set >
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="refererUserId != null" >
+        referer_user_id = #{refererUserId,jdbcType=INTEGER},
+      </if>
+      <if test="refererUserName != null" >
+        referer_user_name = #{refererUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderId != null" >
+        plan_order_id = #{planOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planOrderBalance != null" >
+        plan_order_balance = #{planOrderBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planOrderFrost != null" >
+        plan_order_frost = #{planOrderFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="planBalance != null" >
+        plan_balance = #{planBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="planFrost != null" >
+        plan_frost = #{planFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="trade != null" >
+        trade = #{trade,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeCode != null" >
+        trade_code = #{tradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="frost != null" >
+        frost = #{frost,jdbcType=DECIMAL},
+      </if>
+      <if test="accountWait != null" >
+        account_wait = #{accountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalWait != null" >
+        capital_wait = #{capitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="interestWait != null" >
+        interest_wait = #{interestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayWait != null" >
+        repay_wait = #{repayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="web != null" >
+        web = #{web,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtAccountList" >
+    update ht_debt_account_list
+    set nid = #{nid,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      referer_user_id = #{refererUserId,jdbcType=INTEGER},
+      referer_user_name = #{refererUserName,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      plan_order_id = #{planOrderId,jdbcType=VARCHAR},
+      plan_order_balance = #{planOrderBalance,jdbcType=DECIMAL},
+      plan_order_frost = #{planOrderFrost,jdbcType=DECIMAL},
+      plan_balance = #{planBalance,jdbcType=DECIMAL},
+      plan_frost = #{planFrost,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      `type` = #{type,jdbcType=TINYINT},
+      trade = #{trade,jdbcType=VARCHAR},
+      trade_code = #{tradeCode,jdbcType=VARCHAR},
+      total = #{total,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      frost = #{frost,jdbcType=DECIMAL},
+      account_wait = #{accountWait,jdbcType=DECIMAL},
+      capital_wait = #{capitalWait,jdbcType=DECIMAL},
+      interest_wait = #{interestWait,jdbcType=DECIMAL},
+      repay_wait = #{repayWait,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      web = #{web,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

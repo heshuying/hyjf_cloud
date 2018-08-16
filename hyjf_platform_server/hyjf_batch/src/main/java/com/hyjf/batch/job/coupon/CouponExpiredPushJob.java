@@ -22,7 +22,7 @@ public class CouponExpiredPushJob extends BaseJob implements Job{
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredPushJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/batch/couponExpiredPush/expiredPush", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/couponExpiredPush/expiredPush", String.class);
         logger.info("CouponExpiredPushJob execute end...");
     }
 }

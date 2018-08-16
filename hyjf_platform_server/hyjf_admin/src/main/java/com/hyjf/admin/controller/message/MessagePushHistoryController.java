@@ -38,25 +38,29 @@ public class MessagePushHistoryController extends BaseController {
     @ResponseBody
     public JSONObject init(@RequestBody  MessagePushHistoryRequest form) {
         JSONObject jsonObject = new JSONObject();
-        MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);
-        MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
+        try {
+            MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);
+            MessagePushTagResponse allPushTagList = messagePushHistoryService.getAllPushTagList();
+            //String fileDomainUrl = http://test.hyjf.com:8083/hyjf-admin/
+            if (prs == null) {
+                jsonObject.put(FAIL, FAIL_DESC);
+                return jsonObject;
+            }
+            if (!Response.isSuccess(prs)) {
+                jsonObject.put(FAIL, prs.getMessage());
+                return jsonObject;
+            }
+            prepareDatas(jsonObject);
+            jsonObject.put("totalCount", prs.getRecordTotal());
+            jsonObject.put("list", prs.getResultList());
+            jsonObject.put("allPushTagList", allPushTagList.getResultList());
+            jsonObject.put("fileDomainUrl", url);
 
-        //String fileDomainUrl = http://test.hyjf.com:8083/hyjf-admin/
-        if (prs == null) {
+            return jsonObject;
+        } catch (Exception e) {
             jsonObject.put(FAIL, FAIL_DESC);
             return jsonObject;
         }
-        if (!Response.isSuccess(prs)) {
-            jsonObject.put(FAIL,  prs.getMessage());
-            return jsonObject;
-        }
-        prepareDatas(jsonObject);
-        jsonObject.put("totalCount", prs.getRecordTotal());
-        jsonObject.put("list",prs.getResultList());
-        jsonObject.put("allPushTagList",allPushTagList.getResultList());
-        jsonObject.put("fileDomainUrl", url);
-
-        return jsonObject;
     }
 
 

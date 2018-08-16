@@ -3,40 +3,44 @@ package com.hyjf.am.resquest.user;
 import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 银行卡绑定
  * @author hesy
  */
+@ApiModel(value = "银行卡请求参数")
 public class BankCardRequest extends BaseVO {
+	@ApiModelProperty(value = "主键id")
 	private Integer id;
-	
+	@ApiModelProperty(value = "用户userId")
 	private Integer userId;
-
+	@ApiModelProperty(value = "用户名")
     private String userName;
-
+	@ApiModelProperty(value = "银行账号")
     private String cardNo;
-
+	@ApiModelProperty(value = "银行ID")
     private Integer bankId;
-
+	@ApiModelProperty(value = "银行绑定的手机号码")
     private String mobile;
-
+	@ApiModelProperty(value = "开户行联行行号")
     private String payAllianceCode;
-
+	@ApiModelProperty(value = "所属银行")
     private String bank;
-
+	@ApiModelProperty(value = "银行卡是否有效 0无效 1有效")
     private Integer status;
-
+	@ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+	@ApiModelProperty(value = "更新时间")
     private Date updateTime;
-    
+	@ApiModelProperty(value = "创建用户id")
     private Integer createUserId;
-
+	@ApiModelProperty(value = "创建用户名")
     private String createUsername;
-
+	@ApiModelProperty(value = "更新用户id")
     private Integer updateUserId;
-
+	@ApiModelProperty(value = "更新用户名")
     private String updateUserName;
     
     public Integer getId() {
