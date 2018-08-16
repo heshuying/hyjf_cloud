@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,44 +13,46 @@ import java.io.Serializable;
  * @author wangjun
  * @version BorrowRegistCustomizeVO, v0.1 2018/6/29 18:43
  */
+@ApiModel(value = "标的备案")
 public class BorrowRegistCustomizeVO extends BaseVO implements Serializable {
-    /** 借款编码 */
+
+    @ApiModelProperty(value = "借款编码")
     private String borrowNid;
 
-    /** 借款标题 */
+    @ApiModelProperty(value = "借款标题")
     private String borrowName;
 
-    /** 借款用户 */
+    @ApiModelProperty(value = "借款用户")
     private String username;
 
-    /** 项目类型 */
+    @ApiModelProperty(value = "项目类型")
     private String projectType;
 
-    /** 项目类型名称 */
+    @ApiModelProperty(value = "项目类型名称")
     private String projectTypeName;
 
-    /** 借款金额 */
+    @ApiModelProperty(value = "借款金额")
     private String account;
 
-    /** 借款期限 */
+    @ApiModelProperty(value = "借款期限")
     private String borrowPeriod;
 
-    /** 年利率 */
+    @ApiModelProperty(value = "年利率")
     private String borrowApr;
 
-    /** 还款方式 */
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyle;
 
-    /** 还款方式 */
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyleName;
 
-    /** 备案状态 */
+    @ApiModelProperty(value = "备案状态")
     private String registStatus;
 
-    /** 备案状态名称 */
+    @ApiModelProperty(value = "备案状态名称")
     private String registStatusName;
 
-    /** 添加时间 */
+    @ApiModelProperty(value = "添加时间")
     private String createTime;
 
     public String getBorrowNid() {

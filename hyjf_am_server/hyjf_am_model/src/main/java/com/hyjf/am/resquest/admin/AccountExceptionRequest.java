@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,14 +13,15 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: AccountExceptionRequest, v0.1 2018/7/11 15:05
  */
+@ApiModel(value = "汇付对账请求参数")
 public class AccountExceptionRequest extends BasePage implements Serializable {
-    // id ，处理异常用
+    @ApiModelProperty(value = "id ，处理异常用")
     private Integer id;
-    // 用户名检索用
+    @ApiModelProperty(value = "用户名检索用")
     private String username;
-    // 客户号检索用
+    @ApiModelProperty(value = "客户号检索用")
     private Long customId;
-    // 手机号检索用
+    @ApiModelProperty(value = "手机号检索用")
     private String mobile;
 
     private int limitStart = -1;

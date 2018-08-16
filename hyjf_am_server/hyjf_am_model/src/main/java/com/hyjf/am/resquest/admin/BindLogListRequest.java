@@ -4,23 +4,31 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author: sunpeikai
  * @version: BindLogListRequest, v0.1 2018/7/5 15:37
  */
+@ApiModel(value = "绑定日志请求参数")
 public class BindLogListRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty(value = "转出账户(检索用)")
     private String turnOutUsername;
+    @ApiModelProperty(value = "转出账户手机(检索用)")
     private String turnOutMobile;
+    @ApiModelProperty(value = "转入账户(检索用)")
     private String shiftToUsername;
+    @ApiModelProperty(value = "转入账户手机(检索用)")
     private String shiftToMobile;
-    // 关联状态(检索用)
+    @ApiModelProperty(value = "关联状态(检索用)")
     private String statusSearch;
-    // 开始时间(检索用)
+    @ApiModelProperty(value = "开始时间(检索用)")
     private String startDate;
-    // 结束时间(检索用)
+    @ApiModelProperty(value = "结束时间(检索用)")
     private String endDate;
     /**
      * 分页变量

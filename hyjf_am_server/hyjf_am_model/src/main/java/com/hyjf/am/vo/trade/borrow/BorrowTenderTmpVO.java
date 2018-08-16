@@ -5,93 +5,97 @@ package com.hyjf.am.vo.trade.borrow;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author jijun
  * @date 20180623
  */
+@ApiModel(value = "投资")
 public class BorrowTenderTmpVO extends BaseVO implements Serializable {
-
+	@ApiModelProperty(value = "主键id")
 	private Integer id;
-
+	@ApiModelProperty(value = "用户ID")
 	private Integer userId;
-
+	@ApiModelProperty(value = "投资用户名")
 	private String userName;
-
+	@ApiModelProperty(value = "借款人用户ID")
 	private Integer borrowUserId;
-
+	@ApiModelProperty(value = "借款人用户名")
 	private String borrowUserName;
-
+	@ApiModelProperty(value = "状态(0:初始,1:已放款,2:放款失败)")
 	private Integer status;
-
+	@ApiModelProperty(value = "标的编号")
 	private String borrowNid;
-
+	@ApiModelProperty(value = "投资订单号")
 	private String nid;
-
+	@ApiModelProperty(value = "投资金额")
 	private BigDecimal account;
-
+	@ApiModelProperty(value = "满标状态(0:初始,1:满标)记录哪一笔是最后一笔满标")
 	private Integer recoverFullStatus;
-
+	@ApiModelProperty(value = "管理费")
 	private BigDecimal recoverFee;
-
+	@ApiModelProperty(value = "收款总额")
 	private BigDecimal recoverAccountAll;
-
+	@ApiModelProperty(value = "收款总利息")
 	private BigDecimal recoverAccountInterest;
-
+	@ApiModelProperty(value = "已收总额")
 	private BigDecimal recoverAccountYes;
-
+	@ApiModelProperty(value = "已收利息")
 	private BigDecimal recoverAccountInterestYes;
-
+	@ApiModelProperty(value = "已收本金")
 	private BigDecimal recoverAccountCapitalYes;
-
+	@ApiModelProperty(value = "待收总额")
 	private BigDecimal recoverAccountWait;
-
+	@ApiModelProperty(value = "待收利息")
 	private BigDecimal recoverAccountInterestWait;
-
+	@ApiModelProperty(value = "待收本金")
 	private BigDecimal recoverAccountCapitalWait;
-
+	@ApiModelProperty(value = "已收期数")
 	private Integer recoverTimes;
-
+	@ApiModelProperty(value = "提前还款费用")
 	private BigDecimal recoverAdvanceFee;
-
+	@ApiModelProperty(value = "逾期还款费用")
 	private BigDecimal recoverLateFee;
-
+	@ApiModelProperty(value = "放款金额")
 	private BigDecimal loanAmount;
-
+	@ApiModelProperty(value = "服务费")
 	private BigDecimal loanFee;
-
-	private Integer addTime;
-
+	@ApiModelProperty(value = "创建时间")
+	private Date createTime;
+	@ApiModelProperty(value = "ip")
 	private String addip;
-
+	@ApiModelProperty(value = "平台0PC，1微信2安卓APP，3IOS APP，4其他")
 	private Integer client;
-
+	@ApiModelProperty(value = "推荐人用户名(投资时)")
 	private String inviteUserName;
-
+	@ApiModelProperty(value = "推荐人用户id(投资时)")
 	private Integer inviteUserId;
-
+	@ApiModelProperty(value = "一级部门id(投资时)")
 	private Integer inviteRegionId;
-
+	@ApiModelProperty(value = "一级部门名称(投资时)")
 	private String inviteRegionName;
-
+	@ApiModelProperty(value = "二级部门id(投资时)")
 	private Integer inviteBranchId;
-
+	@ApiModelProperty(value = "二级部门名称(投资时)")
 	private String inviteBranchName;
-
+	@ApiModelProperty(value = "三级部门id(投资时)")
 	private Integer inviteDepartmentId;
-
+	@ApiModelProperty(value = "三级部门名称(投资时)")
 	private String inviteDepartmentName;
-
+	@ApiModelProperty(value = "投资人用户属性")
 	private Integer tenderUserAttribute;
-
+	@ApiModelProperty(value = "推荐人用户属性")
 	private Integer inviteUserAttribute;
-
+	@ApiModelProperty(value = "投资订单日期")
 	private String orderDate;
-
+	@ApiModelProperty(value = "优惠券发放编号（coupon_user.id）")
 	private Integer couponGrantId;
-
+	@ApiModelProperty(value = "是否江西银行投资: 1 是")
 	private Integer isBankTender;
 
 	private static final long serialVersionUID = 1L;
@@ -288,12 +292,12 @@ public class BorrowTenderTmpVO extends BaseVO implements Serializable {
 		this.loanFee = loanFee;
 	}
 
-	public Integer getAddTime() {
-		return addTime;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setAddTime(Integer addTime) {
-		this.addTime = addTime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public String getAddip() {
