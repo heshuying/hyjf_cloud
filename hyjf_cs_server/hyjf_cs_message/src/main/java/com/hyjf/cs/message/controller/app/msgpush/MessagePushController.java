@@ -181,7 +181,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
-	@GetMapping("/alreadyReadAction")
+	@PostMapping("/alreadyReadAction")
 	public JSONObject alreadyReadAction(HttpServletRequest request, @RequestHeader(value = "userId")Integer userId) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");

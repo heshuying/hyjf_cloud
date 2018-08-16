@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
 import com.hyjf.am.trade.service.front.borrow.FinmanChargeNewService;
 import com.hyjf.am.vo.trade.borrow.BorrowFinmanNewChargeVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,6 +78,10 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
      */
     @Override
     public int updateFinmanChargeNew(FinmanChargeNewRequest adminRequest){
+//        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
+//            //ManChargeCd为必填字段
+//            return 0;
+//        }
         BorrowFinmanNewCharge record = new BorrowFinmanNewCharge();
         BeanUtils.copyProperties(adminRequest, record);
         // 更新时间
@@ -90,6 +95,10 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
      */
     @Override
     public int deleteFinmanChargeNew(FinmanChargeNewRequest adminRequest){
+//        if(StringUtils.isBlank(adminRequest.getManChargeCd())){
+//            //ManChargeCd为必填字段
+//            return 0;
+//        }
         return borrowFinmanNewChargeMapper.deleteByPrimaryKey(adminRequest.getManChargeCd());
     }
     /**

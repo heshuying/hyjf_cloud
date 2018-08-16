@@ -5,7 +5,6 @@ import com.hyjf.am.trade.dao.mapper.auto.ProducerTransactionMessageMapper;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessageExample;
 import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
-import com.hyjf.am.trade.mq.transactionmq.MessageStatus;
 import com.hyjf.am.trade.service.front.batch.ProducerTransactionMessageService;
 import com.hyjf.common.util.GetDate;
 import org.apache.rocketmq.client.QueryResult;
@@ -29,6 +28,7 @@ import java.util.List;
  * @version ProducerTransactionMessageServiceImpl, v0.1 2018/6/28 15:18
  */
 @Service
+@Deprecated
 public class ProducerTransactionMessageServiceImpl implements ProducerTransactionMessageService {
 	private Logger logger = LoggerFactory.getLogger(ProducerTransactionMessageServiceImpl.class);
 
@@ -112,7 +112,6 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
 						}
 					}
 
-					// todo 这块处理的逻辑要确认是重发还是人工处理 ？？？？？？？
 					Message repeatMsg = new Message();
 					repeatMsg.setBody(message.getBody().getBytes());
 					repeatMsg.setKeys(message.getKeys());
@@ -134,7 +133,9 @@ public class ProducerTransactionMessageServiceImpl implements ProducerTransactio
 	/**
 	 * 根据key查询mq的消息处理结果， sysFlag 4:prepared消息 8：确认消息 作判断
 	 *  如果确认消息已经提交，修改消息状态未成功， 否则累加一次回查次数
-	 * @param keys
+	 * @param message
+	 * @param startDate
+	 * @param endDate
 	 */
 	private void callBackQueryFromMQ(ProducerTransactionMessage message, Date startDate, Date endDate) {
 		List<MessageExt> msgList = this.findMessageListFromMQ(message.getTopic(), message.getKeys(), startDate, endDate);

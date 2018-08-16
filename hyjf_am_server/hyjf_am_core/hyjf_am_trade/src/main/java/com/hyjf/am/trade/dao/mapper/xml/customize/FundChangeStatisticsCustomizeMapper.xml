@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.FundChangeStatisticsCustomizeMapper">
+    <resultMap id="baseMapResult" type="com.hyjf.am.trade.dao.model.customize.FundChangeStatistics">
+        <result column="times" property="times" jdbcType="INTEGER" />
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="startTime" property="startTime" jdbcType="VARCHAR"/>
+        <result column="endTime" property="endTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Where_Clause">
+        <where>
+            --             status = 2 and accede_order_id IS NULL
+            status = 2
+            <if test="startTime != null and startTime !='' ">
+                AND create_time <![CDATA[ >= ]]>concat(#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                AND create_time<![CDATA[ <= ]]> concat(#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+
+    <select id="countRechargeMoney" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select COALESCE(sum(money), 0) as total from  ht_account_recharge  <include refid="Where_Clause" />
+    </select>
+
+
+    <sql id="Where_CountInves">
+        <where>
+            status = 2
+            <if test="startTime != null and startTime !='' ">
+                AND create_time <![CDATA[>=]]>concat(#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                AND create_time<![CDATA[<=]]> concat(#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+
+    <select id="countInvestmentMoney" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COALESCE(sum(account), 0) as total FROM ht_borrow_tender <include refid="Where_CountInves" />
+    </select>
+
+    <sql id="Where_CountInves_CreditTender">
+        <where>
+            <if test="startTime != null and startTime !='' ">
+                AND create_time <![CDATA[>=]]>concat(#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                AND create_time<![CDATA[<=]]> concat(#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+    <select id="countInvestmentCreditTenderMoney" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COALESCE(sum(assign_account), 0) as total FROM ht_credit_tender <include refid="Where_CountInves_CreditTender" />
+    </select>
+
+    <select id="countInvestmentHjhCreditTenderMoney" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COALESCE(sum(accede_account), 0) as total FROM ht_hjh_accede <include refid="Where_CountInves_CreditTender" />
+    </select>
+
+    <select id="countAllAccount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select tender_sum as tender from ht_calculate_invest_interest
+    </select>
+
+
+    <sql id="Where_NumberOfInvestors">
+        <where>
+            1=1
+            <if test="startTime != null and startTime !='' ">
+                AND create_time <![CDATA[>=]]>concat(#{startTime,jdbcType=VARCHAR},' 00:00:00')
+            </if>
+            <if test="endTime != null and endTime !='' ">
+                AND create_time<![CDATA[<=]]> concat(#{endTime,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+    <select id="getNumberOfInvestors" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT count(distinct user_id) as all_user FROM ht_borrow_tender <include refid="Where_NumberOfInvestors" />
+    </select>
+
+</mapper>

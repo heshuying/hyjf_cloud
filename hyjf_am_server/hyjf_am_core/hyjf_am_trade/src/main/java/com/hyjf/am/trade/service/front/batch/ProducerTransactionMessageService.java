@@ -9,6 +9,7 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
  * @author xiasq
  * @version ProducerTransactionMessageService, v0.1 2018/6/28 15:18
  */
+@Deprecated
 public interface ProducerTransactionMessageService {
     /**
      * 保存

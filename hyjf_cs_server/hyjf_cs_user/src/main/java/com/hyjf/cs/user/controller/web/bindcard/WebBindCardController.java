@@ -63,7 +63,7 @@ public class WebBindCardController extends BaseUserController {
 			result.setStatusDesc("用户未登录");
 			return result;
 		}
-		if(!user.isOpenAccount()){
+		if(!user.isBankOpenAccount()){
 			result.setStatus(WebResult.ERROR);
 			result.setStatusDesc("用户未开户");
 			return result;

@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +45,7 @@ import java.util.*;
  * @author yaoyong
  * @version MessagePushTemplateController, v0.1 2018/8/14 19:58
  */
-@Api(tags = "消息推送消息模板")
+@Api(tags = "消息中心-app消息推送-消息模板")
 @RestController
 @RequestMapping("/hyjf-admin/msgPush/template")
 public class MessagePushTemplateController extends BaseController {
@@ -63,7 +64,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
-    public AdminResult<MessagePushTemplateResponse> init(MsgPushTemplateRequest request) {
+    public AdminResult<MessagePushTemplateResponse> init(@RequestBody MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = messagePushTemplateService.searchList(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -79,10 +80,10 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "详情页信息", notes = "详情页信息")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
-    public AdminResult<MessagePushTemplateResponse> infoAction(Integer id, MsgPushTemplateRequest form) {
+    public AdminResult<MessagePushTemplateResponse> infoAction(@RequestBody MsgPushTemplateRequest form) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         try {
-            response = messagePushTemplateService.getRecord(id);
+            response = messagePushTemplateService.getRecord(form.getId());
             if (response.getResult() != null) {
                 MessagePushTemplateVO record = response.getResult();
                 BeanUtils.copyProperties(record, form);
@@ -118,7 +119,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "添加模板", notes = "添加模板")
     @RequestMapping(value = "/insertAction", method = RequestMethod.POST)
-    public AdminResult<MessagePushTemplateResponse> insertAction(HttpServletRequest request, MsgPushTemplateRequest templateRequest) {
+    public AdminResult<MessagePushTemplateResponse> insertAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
@@ -152,7 +153,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "修改模板", notes = "修改模板")
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
-    public AdminResult updateAction(HttpServletRequest request, MsgPushTemplateRequest templateRequest) {
+    public AdminResult updateAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
@@ -204,7 +205,7 @@ public class MessagePushTemplateController extends BaseController {
 
 
     @ApiOperation(value = "修改状态", notes = "修改装态")
-    @RequestMapping(value = "/statusAction", method = RequestMethod.POST)
+    @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
     public AdminResult updateStatus(Integer id) {
         if (id != null) {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
@@ -233,7 +234,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
-    public AdminResult checkAction(MsgPushTemplateRequest request) {
+    public AdminResult checkAction(@RequestBody MsgPushTemplateRequest request) {
         Integer id = request.getId();
         String tagCode = request.getTagCode();
         MessagePushTemplateResponse response = messagePushTemplateService.countByTemplateCode(id, request.getTemplateCode());
