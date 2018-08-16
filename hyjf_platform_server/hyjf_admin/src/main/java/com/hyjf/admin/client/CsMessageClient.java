@@ -216,7 +216,7 @@ public interface CsMessageClient {
      */
     void sendMessage(MessagePushErrorVO msg);
 
-    **
+    /**
      * (条件)查询 APP消息推送 异常处理 列表
      * @param request
      * @return
