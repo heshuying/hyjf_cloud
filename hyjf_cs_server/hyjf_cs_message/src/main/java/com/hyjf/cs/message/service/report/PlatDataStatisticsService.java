@@ -44,13 +44,19 @@ public interface PlatDataStatisticsService extends BaseService {
      */
     Integer selectTotalTradeSum();
     /**
-     * mogo查询
+     * mogo查询单个OperationReportEntity
      * @return
      */
     OperationReportEntity findOneOperationReportEntity(Query query);
-
+    /**
+     * mogo查询单个OperationMongoGroupEntity
+     * @return
+     */
     OperationMongoGroupEntity findOneOperationMongoGroupEntity(Query query);
-
+    /**
+     * mogo查询多个OperationReportEntity
+     * @return
+     */
     List<OperationReportEntity> findOperationReportEntityList(Query query);
 
 }
