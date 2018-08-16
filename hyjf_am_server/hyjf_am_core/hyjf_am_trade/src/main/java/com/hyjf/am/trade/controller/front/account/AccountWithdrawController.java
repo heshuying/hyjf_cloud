@@ -19,7 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import com.hyjf.common.paginator.Paginator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,6 +194,12 @@ public class AccountWithdrawController extends BaseController {
         if (count==0){
             return response;
         }
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+
         List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
         String returnCode = "0";
         if (CollectionUtils.isNotEmpty(withdrawCustomizes)){

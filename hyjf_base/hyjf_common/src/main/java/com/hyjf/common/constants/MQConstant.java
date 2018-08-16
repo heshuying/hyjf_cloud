@@ -11,9 +11,6 @@ public interface MQConstant {
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
 
-	/**
-	 * 测试 group topic todo 暂时使用
-	 */
 	String TEST_GROUP = "TEST_GROUP";
 	String TEST_TOPIC = "TEST_TOPIC";
 

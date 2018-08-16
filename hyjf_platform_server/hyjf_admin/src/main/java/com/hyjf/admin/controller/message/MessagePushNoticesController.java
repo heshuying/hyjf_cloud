@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -172,10 +173,7 @@ public class MessagePushNoticesController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "检查是否是电话号码", notes = "检查是否是电话号码")
-    @PostMapping(value = "/checkMobilesAction")
-    @ResponseBody
-    public String checkMobilesAction(ModelAndView modelAndView, HttpServletRequest request) {
+    /*public String checkMobilesAction(ModelAndView modelAndView, HttpServletRequest request,@RequestParam("mobile") String mobile) {
         String mobiles = request.getParameter("param");
         JSONObject ret = new JSONObject();
         // 检查是否是电话号码
@@ -195,7 +193,7 @@ public class MessagePushNoticesController extends BaseController {
             ret.put("status", "y");
         }
         return ret.toString();
-    }
+    }*/
 
     /**
      * 资料上传
@@ -207,9 +205,17 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping(value = "/uploadFile")
     @ResponseBody
-    public String uploadFile(HttpServletRequest request) throws Exception {
-        String files = messagePushNoticesService.uploadFile(request);
-        return files;
+    public JSONObject uploadFile(@RequestParam(value = "iconImg", required = false) MultipartFile iconImg) throws Exception {
+        JSONObject ret = new JSONObject();
+        String returnMessage = messagePushNoticesService.uploadFile(iconImg);
+        if (!"上传文件成功！".equals(returnMessage)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", returnMessage);
+        }else{
+            ret.put("status", "0");
+            ret.put("statusDesc", returnMessage);
+        }
+        return ret;
     }
 
 

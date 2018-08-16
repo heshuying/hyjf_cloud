@@ -29,7 +29,6 @@ import java.util.List;
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
  *
- * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
 public class  CsMessageClientImpl  implements CsMessageClient {

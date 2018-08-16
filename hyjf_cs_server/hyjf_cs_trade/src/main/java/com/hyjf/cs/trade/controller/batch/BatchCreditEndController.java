@@ -8,12 +8,12 @@ import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author liubin
  * @version BatchCreditEndController, v0.1 2018/6/28 13:59
  */
-@Api(tags = "批次结束债权Batch接口")
+@ApiIgnore
 @Controller
 @RequestMapping(value = "/batch/creditend")
 public class BatchCreditEndController extends BaseTradeController {
