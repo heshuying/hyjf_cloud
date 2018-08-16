@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,42 +15,44 @@ import java.util.Date;
  * @version: CustomerTransferRequest, v0.1 2018/7/6 11:03
  * 用户转账，发起转账提交时用的request参数
  */
+@ApiModel(value = "用户转账，发起转账提交时用的请求参数")
 public class CustomerTransferRequest implements Serializable {
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "订单编号")
     private String orderId;
-
+    @ApiModelProperty(value = "转出账户id")
     private Integer outUserId;
-
+    @ApiModelProperty(value = "转出账户")
     private String outUserName;
-
+    @ApiModelProperty(value = "转入账户id")
     private Integer inUserId;
-
+    @ApiModelProperty(value = "转入账户")
     private String inUserName;
-
+    @ApiModelProperty(value = "转账金额")
     private BigDecimal transferAmount;
-
+    @ApiModelProperty(value = "转账链接")
     private String transferUrl;
-
+    @ApiModelProperty(value = "转账时间")
     private Date transferTime;
-
+    @ApiModelProperty(value = "转让状态 0 待转账 1 转帐中 2 转账成功 3 转账失败")
     private Integer status;
-
+    @ApiModelProperty(value = "转账类型 0 用户转给平台")
     private Integer transferType;
-
+    @ApiModelProperty(value = "转账说明")
     private String remark;
-
+    @ApiModelProperty(value = "创建人")
     private String createUserName;
-
+    @ApiModelProperty(value = "充值手续费对账标识")
     private String reconciliationId;
-
+    @ApiModelProperty(value = "创建者用户id")
     private Integer createUserId;
-
+    @ApiModelProperty(value = "更新者用户id")
     private Integer updateUserId;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
     public static long getSerialVersionUID() {
