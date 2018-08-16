@@ -5010,7 +5010,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
 	    public List<AccountRechargeVO> getAccountRecharge(int userId) {
-	        String url = "http://AM-TRADE/am-trade/accountRecharge/getAccountRechargeByUserId/" + userId;
+	        String url = "http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeByUserId/" + userId;
 	        AccountRechargeResponse response = restTemplate.getForEntity(url,AccountRechargeResponse.class).getBody();
 	        if (response != null) {
 	            return response.getResultList();
