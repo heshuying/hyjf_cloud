@@ -284,7 +284,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }
             //账户信息
             AccountVO account = amTradeClient.getAccountByUserId(userId);
-            String userBalance = account.getBankBalance().toString();
+            String userBalance= "";
+            if (account != null && account.getBankBalance() != null){
+                userBalance = account.getBankBalance().toString();
+            }else{
+                userBalance = "0.00";
+            }
             other.put("userBalance", userBalance);
 
             /* 用户基本信息 结束*/
@@ -340,26 +345,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         borrow.setBorrowInterest(borrowInterest.toString());
 
-        // TODO: 2018/6/25 汇资产项目后期处理
         if ("9".equals(borrow.getType())) {// 如果项目为汇资产项目
-//            // 添加相应的项目详情信息
-//            other.put("projectDeatil", borrow);
-//            // 4查询相应的汇资产的首页信息
-//            WebHzcProjectDetailCustomize borrowInfo = this.borrowService.searchHzcProjectDetail(borrowNid);
-//            other.put("borrowInfo", borrowInfo);
-//            // 处置预案
-//            WebHzcDisposalPlanCustomize disposalPlan = this.borrowService.searchDisposalPlan(borrowNid);
-//            other.put("disposalPlan", disposalPlan);
-//            // 5查询相应的还款计划
-//            List<BorrowRepayPlanCustomBean> repayPlanList = this.borrowService.getRepayPlan(borrowNid);
-//            other.put("repayPlanList", repayPlanList);
-//            // 相关文件
-//            List<BorrowFileCustomBean> files = this.borrowService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-//            other.put("fileList", files);
-//            /**
-//             * 借款类型  1、企业借款 2、借款人  3、汇资产
-//             */
-//            other.put("borrowType", "3");
+            // 已经没有汇资产标的, 不在处理
 
         } else {// 项目为非汇资产项目
             // 添加相应的项目详情信息
@@ -1011,46 +998,29 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             DecimalFormat df = null;
             df = CustomConstants.DF_FOR_VIEW;
             /** 计算最优优惠券开始 pccvip isThereCoupon 1是有最优优惠券，0无最有优惠券 */
-            UserCouponConfigCustomizeVo couponConfig = null;
             //获取用户优惠券总张数
             int recordTotal = 0;
             //可用优惠券张数
             int availableCouponListCount = 0;
 
-            /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
+            /*优惠券模块开始 */
             MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
             myCouponListRequest.setMoney("0");
             myCouponListRequest.setPlatform("0");
             myCouponListRequest.setUserId(userId);
             myCouponListRequest.setBorrowNid(planNid);
-           // BestCouponListVO bestCouponList = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
-            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);//countAvaliableCoupon(myCouponListRequest);
+            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);
             /** 获取用户优惠券总张数开始 pccvip */
             result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */
              /** 可用优惠券张数开始 pccvip */
             result.put("couponAvailableCount", availableCouponListCount);
             /** 可用优惠券张数结束 pccvip */
-            BigDecimal couponInterest = BigDecimal.ZERO;
             result.put("interest", BigDecimal.ZERO);
-           /* if (couponConfig != null) {
-                result.put("isThereCoupon", 1);
 
-                couponInterest = planService.getCouponInterest(couponConfig.getUserCouponId(), planNid, "0");
-                couponConfig.setCouponInterest(df.format(couponInterest));
-                if(couponConfig!=null && couponConfig.getCouponType()==3){
-                    result.put("interest", df.format(couponInterest.subtract(couponConfig.getCouponQuota())));
-                }else{
-                    result.put("interest", df.format(couponInterest));
-                }
-
-            } else {
-                result.put("isThereCoupon", 0);
-            }*/
 
             /*优惠券模块结束 */
             result.put("isThereCoupon", 0);
-            //result.put("couponConfig", couponConfig);
             /** 计算最优优惠券结束 */
             /** 汇添金优惠券使用结束 pcc */
 
@@ -1129,10 +1099,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
                 // 获取用户账户余额
                 AccountVO account = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
-                if (Validator.isNotNull(account)) {
-                    String userBalance = account.getBankBalance().toString();
-                    result.put("userBalance", userBalance);
+                String userBalance = "";
+                if (Validator.isNotNull(account) && account.getBankBalance() != null) {
+                    userBalance = account.getBankBalance().toString();
+                }else{
+                    userBalance = "0.00";
                 }
+                result.put("userBalance", userBalance);
                 // 用户是否完成自动授权标识
                 HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
                 if (Validator.isNotNull(hjhUserAuth)) {
