@@ -5,9 +5,19 @@ package com.hyjf.cs.message.controller;
 
 import java.util.List;
 
+import com.hyjf.am.response.admin.MessagePushMsgResponse;
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
+import com.hyjf.cs.message.service.msgpush.MessagePushMsgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +53,9 @@ public class MessagePushMsgController extends BaseController {
 	@Autowired
 	private MessagePushTemplateStaticsDao msgStaticsDao;
 
+	@Autowired
+	private MessagePushMsgService messagePushMsgService;
+
 	@RequestMapping("/push_all")
 	public void messagePush() {
 		logger.info("消息推送定时任务开始......");
@@ -76,4 +89,82 @@ public class MessagePushMsgController extends BaseController {
 			this.msgPushStaticsService.updatemsgPushStatics(templateStaticsList.get(i),startTime,endTime);
 		}
 	}
+
+	/**
+	 * 根据条件查询手动发放短信列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/selectmessagepushmsg")
+	public MessagePushMsgResponse selectMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
+		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		List<MessagePushMsg> list = messagePushMsgService.selectMessagePushMsg(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<MessagePushMsgVO> msgVOS = CommonUtils.convertBeanList(list,MessagePushMsgVO.class);
+			response.setResultList(msgVOS);
+		}
+		return response;
+	}
+
+
+	/**
+	 * 根据id查询手动发送短信
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/getmessagepushmsgbyid/{id}")
+	public MessagePushMsgResponse getMessagePushMsgById (@PathVariable Integer id){
+		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		MessagePushMsg messagePushMsg = messagePushMsgService.getMessagePushMsgById(id);
+		if (messagePushMsg != null) {
+			MessagePushMsgVO messagePushMsgVO = new MessagePushMsgVO();
+			BeanUtils.copyProperties(messagePushMsg,messagePushMsgVO);
+			response.setResult(messagePushMsgVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 添加手动发送短信
+	 * @param msgVO
+	 * @return
+	 */
+	@RequestMapping("/insertmessagepushmsg")
+	public MessagePushMsgResponse insertMessagePushMsg(@RequestBody MessagePushMsgVO msgVO) {
+		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		MessagePushMsg msg = new MessagePushMsg();
+		BeanUtils.copyProperties(msgVO,msg);
+		Integer count = messagePushMsgService.insertMessagePushMsg(msg);
+		response.setCount(count);
+		return response;
+	}
+
+	/**
+	 * 修改手动发送短信
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/updatemessagepushmsg")
+	public MessagePushMsgResponse updateMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
+		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		MessagePushMsg messagePushMsg = new MessagePushMsg();
+		BeanUtils.copyProperties(request,messagePushMsg);
+		Integer count = messagePushMsgService.updateMessagePushMsg(messagePushMsg);
+		response.setCount(count);
+		return response;
+	}
+
+	/**
+	 * 删除手动发送短信
+	 * @param recordList
+	 * @return
+	 */
+	@RequestMapping("/deletemessagepushmsg/{recordList}")
+	public MessagePushMsgResponse deleteMessagePushMsg(@PathVariable List<Integer> recordList) {
+		MessagePushMsgResponse response = new MessagePushMsgResponse();
+		Integer count = messagePushMsgService.deleteMessagePushMsg(recordList);
+		response.setCount(count);
+		return response;
+	}
+
 }

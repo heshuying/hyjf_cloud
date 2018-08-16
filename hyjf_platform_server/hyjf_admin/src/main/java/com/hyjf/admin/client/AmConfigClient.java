@@ -4,6 +4,7 @@ import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
+import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
@@ -1372,4 +1373,33 @@ public interface AmConfigClient {
 	 * @Author : huanghui
 	 */
 	List<BanksConfigVO> getBankcardList();
+
+	/**
+	 * 添加消息模板
+	 * @param templateVO
+	 * @return
+	 */
+	MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO);
+
+	/**
+	 * 修改消息模板
+	 * @param templateRequest
+	 * @return
+	 */
+	MessagePushTemplateResponse updateMsgPushTemplate(MsgPushTemplateRequest templateRequest);
+
+	/**
+	 * 删除模板
+	 * @param recordList
+	 * @return
+	 */
+	MessagePushTemplateResponse deleteMessagePushTemplate(List<Integer> recordList);
+
+	/**
+	 * 根据id、templapteCode查询唯一消息模板
+	 * @param id
+	 * @param templateCode
+	 * @return
+	 */
+	MessagePushTemplateResponse countByTemplateCode(Integer id, String templateCode);
 }

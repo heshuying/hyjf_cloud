@@ -5,6 +5,8 @@ package com.hyjf.am.config.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,5 +137,39 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 	public MessagePushTemplate findMsgPushTemplateById(Integer id) {
 		MessagePushTemplate page = templateMapper.selectByPrimaryKey(id);
 		return page;
+	}
+
+    @Override
+    public Integer insertMessagePushTemplate(MessagePushTemplate messagePushTemplate) {
+        return templateMapper.insertSelective(messagePushTemplate);
+    }
+
+	@Override
+	public Integer updateAction(MessagePushTemplate messagePushTemplate) {
+		return templateMapper.updateByPrimaryKeySelective(messagePushTemplate);
+	}
+
+	@Override
+	public Integer deleteAction(List<Integer> ids) {
+		Integer result = 0;
+		for (Integer id : ids) {
+			result = templateMapper.deleteByPrimaryKey(id);
+			result++;
+		}
+		return result;
+	}
+
+	@Override
+	public Integer countByTemplate(Integer id, String templateCode) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria cra = example.createCriteria();
+		if (Validator.isNotNull(id)) {
+			cra.andIdNotEqualTo(id);
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(templateCode)) {
+			cra.andTemplateCodeEqualTo(templateCode);
+		}
+		int cnt = templateMapper.countByExample(example);
+		return cnt;
 	}
 }

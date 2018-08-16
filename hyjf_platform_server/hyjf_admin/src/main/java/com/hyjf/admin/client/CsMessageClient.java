@@ -11,11 +11,16 @@ import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -211,6 +216,20 @@ public interface CsMessageClient {
      */
     void sendMessage(MessagePushErrorVO msg);
 
+    **
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse update(MessagePushErrorRequest request);
+
     /**
      *查询定时发送短信列表
      * @param request
@@ -224,4 +243,39 @@ public interface CsMessageClient {
      * @return
      */
     Integer queryLogCount(SmsLogRequestBean requestBean);
+
+    /**
+     * 获取手动发放消息列表
+     * @param request
+     * @return
+     */
+    MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request);
+
+    /**
+     * 根据id获取手动发放消息
+     * @param id
+     * @return
+     */
+    MessagePushMsgResponse getMessagePushMsgById(Integer id);
+
+    /**
+     * 添加手动发送短信
+     * @param templateVO
+     * @return
+     */
+    MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO);
+
+    /**
+     * 修改手动发送短信
+     * @param templateRequest
+     * @return
+     */
+    MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest);
+
+    /**
+     * 删除手动发送短信
+     * @param recordList
+     * @return
+     */
+    MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList);
 }
