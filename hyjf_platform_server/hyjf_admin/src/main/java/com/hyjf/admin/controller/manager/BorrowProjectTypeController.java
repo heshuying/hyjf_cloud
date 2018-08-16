@@ -72,9 +72,9 @@ public class BorrowProjectTypeController extends BaseController {
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
         if (isExists) {
-            record.setModifyFlag("E");
             // 根据主键检索数据
             record = this.borrowProjectTypeService.getRecord(record);
+            record.setModifyFlag("E");
             // 根据项目编号查询
             selectRepay = this.borrowProjectTypeService.selectRepay(record.getBorrowClass());
         } else {
