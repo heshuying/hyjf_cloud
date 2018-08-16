@@ -8,11 +8,11 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.report.OperationReportJobService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,6 +22,7 @@ import java.util.Date;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/23 14:10
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/operation_report_job")
 public class OperationReportJobController extends BaseController {

@@ -19,6 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ import java.util.List;
  * @author fuqiang
  * @version SmsLogController, v0.1 2018/6/23 14:10
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/sms_log")
 public class SmsLogController extends BaseController {
