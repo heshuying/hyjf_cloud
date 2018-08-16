@@ -12,14 +12,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author wangjun
  * @version LandingPageController, v0.1 2018/7/30 11:58
  */
-@Api(value = "wechat端着陆页用户信息接口",tags = "wechat端着陆页用户信息接口")
+@Api(value = "weChat端-着陆页用户信息接口",tags = "weChat端-着陆页用户信息接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/landingPage")
 public class WeChatLandingPageController extends BaseController {
@@ -27,7 +26,7 @@ public class WeChatLandingPageController extends BaseController {
     @Autowired
     private LandingPageService landingPageService;
 
-    @ApiOperation(value = "wechat端获取着陆页用户信息",notes = "wechat端获取着陆页用户信息")
+    @ApiOperation(value = "获取着陆页用户信息",notes = "获取着陆页用户信息")
     @GetMapping(value = "/userData")
     public BaseResultBean landingPageUserData(){
         LandingPageResulltVO landingPageResulltVO = landingPageService.getUserData();

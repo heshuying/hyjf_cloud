@@ -1,9 +1,6 @@
 package com.hyjf.cs.market.controller.app.user;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.app.MsgMailRequest;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.market.service.MsgMailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lisheng
  * @version MsgMailController, v0.1 2018/8/13 17:51
  */
-@Api(description = "修改短信与邮件是否开启", tags = "修改短信与邮件是否开启")
+@Api( tags = "app端-修改短信与邮件是否开启")
 @RestController
 @RequestMapping(value = "/hyjf-app/user")
 public class MsgMailController {

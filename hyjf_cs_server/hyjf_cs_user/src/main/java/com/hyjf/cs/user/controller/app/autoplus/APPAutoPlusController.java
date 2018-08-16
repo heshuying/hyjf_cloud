@@ -52,7 +52,7 @@ public class APPAutoPlusController extends BaseUserController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
-    @RequestMapping(value = "/sendcode")
+    @PostMapping(value = "/sendcode")
     public AutoPlusResultBean autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType,
                                                @RequestParam(value = "mobile", required = false) String mobile) {
         logger.info("app端授权发送短信验证码, mobile :{}", mobile);
@@ -95,7 +95,7 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "自动投标授权url获取", notes = "自动投标授权url获取")
-    @RequestMapping(value = "/getUserAuthInvesUrl")
+    @PostMapping(value = "/getUserAuthInvesUrl")
     @ResponseBody
     public AutoPlusResultBean getUserAuthInvesUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode, @RequestParam String code) {
         String returnRequest = "/bank/user/autoplus/getUserAuthInvesUrl";
@@ -121,7 +121,7 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "自动债转授权url获取", notes = "自动债转授权url获取")
-    @RequestMapping("/getUserAuthCreditUrl")
+    @PostMapping("/getUserAuthCreditUrl")
     @ResponseBody
     public AutoPlusResultBean getUserAuthCreditUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode,
                                                    @RequestParam String code) {
@@ -153,7 +153,8 @@ public class APPAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthCredit")
+    @ApiOperation(value = "用户授权自动债转")
+    @PostMapping(value = "/userAuthCredit")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -188,7 +189,8 @@ public class APPAutoPlusController extends BaseUserController {
      * @param bean
      * @return
      */
-    @RequestMapping(value = "/userAuthCreditReturn")
+    @ApiOperation(value = "用户授权自动债转同步回调")
+    @GetMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@ModelAttribute BankCallBean bean) {
         String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
         String successPath = systemConfig.getAppServerHost()+"/user/setting/authorization/result/success";
@@ -277,7 +279,7 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
-    @RequestMapping(value = "/userAuthInves")
+    @PostMapping(value = "/userAuthInves")
     public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -312,7 +314,7 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资同步回调",notes = "用户授权自动投资同步回调")
-    @RequestMapping(value = "/userAuthInvesReturn")
+    @GetMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean) {
         String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
         ModelAndView modelAndView = new ModelAndView();

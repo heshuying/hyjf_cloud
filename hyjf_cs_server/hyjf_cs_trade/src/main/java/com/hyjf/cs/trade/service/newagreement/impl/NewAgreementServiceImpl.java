@@ -27,6 +27,7 @@ import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 
 /**
+ * APP端协议ServiceImpl
  * @author libin
  * @version NewAgreementServiceImpl.java, v0.1 2018年7月25日 下午2:23:06
  */
@@ -95,6 +96,11 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 		return null;
 	}
 
+	/**
+	 * 根据creditNid获取债转信息
+	 * @param creditNid
+	 * @return
+	 */
 	@Override
 	public HjhDebtCreditVO getHjhDebtCreditByCreditNid(String creditNid) {
 		HjhDebtCreditVO credit = this.amTradeClient.selectHjhDebtCreditByCreditNid(creditNid);
@@ -104,29 +110,55 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 		return null;
 	}
 
+	/**
+	 * 根据参数查询债转列表
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request) {
 		List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
 		return creditTenderList;
 	}
 
+	/**
+	 * 根据参数查询 TenderToCreditDetailCustomizeVO
+	 * @param params
+	 * @return
+	 */
 	@Override
 	public List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String, Object> params) {
 		List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.amTradeClient.selectWebCreditTenderDetailForContract(params);
 		return tenderToCreditDetailList;
 	}
 
+	/**
+	 * 根据参数查询 BorrowTenderVO
+	 * @param tenderNid
+	 * @return
+	 */
 	@Override
 	public List<BorrowTenderVO> getBorrowTenderListByNid(String tenderNid) {
 		List<BorrowTenderVO> tenderList = this.borrowTenderClient.getBorrowTenderListByNid(tenderNid);
 		return tenderList;
 	}
 
+	/**
+	* 会计划投资详情
+	* @param params
+	* @return
+	*/
 	@Override
 	public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
-		return this.amBorrowClient.selectUserHjhInvistDetail(params);
+		/*原return this.amBorrowClient.selectUserHjhInvistDetail(params);*/
+		return this.amTradeClient.selectUserHjhInvistDetail(params);
 	}
 
+	/**
+	 * 获取债转承接信息by AssignOrderId
+	 * @param assignOrderId
+	 * @return
+	 */
 	@Override
 	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
 		HjhDebtCreditTenderVO vo = amTradeClient.getHjhDebtCreditTenderByAssignOrderId(assignOrderId);
@@ -144,6 +176,11 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 		return vo;
 	}
 
+	/**
+	 * 获取协议模板 by  DisplayName
+	 * @param displayName
+	 * @return
+	 */
 	@Override
 	public List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName) {
 		List<ProtocolTemplateVO> volist = amTradeClient.getProtocolTemplateVOByDisplayName(displayName);

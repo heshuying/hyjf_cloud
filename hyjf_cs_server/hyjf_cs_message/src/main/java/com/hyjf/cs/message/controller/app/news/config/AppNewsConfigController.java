@@ -3,27 +3,25 @@
  */
 package com.hyjf.cs.message.controller.app.news.config;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.news.config.AppNewsConfigService;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author fq
  * @version AppNewsConfigController, v0.1 2018/7/25 15:25
  */
-@Api(value = "开关闭推送服务", tags = "开关闭推送服务")
+@Api(tags = "app端-开关闭推送服务")
 @RequestMapping("/hyjf-app/news/config")
 public class AppNewsConfigController extends BaseController {
 	@Autowired

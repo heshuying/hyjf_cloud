@@ -16,11 +16,21 @@ public class AccountMobileSynchResponse extends Response<AccountMobileSynchVO> {
      */
     private boolean updateFlag;
 
+    private int count;
+
     public boolean getUpdateFlag() {
         return updateFlag;
     }
 
     public void setUpdateFlag(boolean updateFlag) {
         this.updateFlag = updateFlag;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

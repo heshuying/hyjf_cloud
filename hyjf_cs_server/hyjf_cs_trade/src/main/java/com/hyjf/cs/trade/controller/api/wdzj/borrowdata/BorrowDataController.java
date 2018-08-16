@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -46,7 +47,7 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public JSONObject getBorrowDataList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();
@@ -129,7 +130,7 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/preapyslist")
+    @PostMapping("/preapyslist")
     public JSONObject getPreapysList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();

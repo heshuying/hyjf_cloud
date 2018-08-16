@@ -4,11 +4,10 @@
 package com.hyjf.admin.beans.response;
 
 import com.hyjf.admin.beans.vo.AdminBorrowFirstCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -16,10 +15,10 @@ import java.util.Map;
  */
 public class BorrowFirstResponseBean {
     @ApiModelProperty(value = "资产来源下拉框")
-    private List<HjhInstConfigVO> hjhInstConfigList;
+    private List<DropDownVO> hjhInstConfigList;
 
     @ApiModelProperty(value = "初审状态下拉框")
-    private Map<String, String> borrowStatusList;
+    private List<DropDownVO> borrowStatusList;
 
     @ApiModelProperty(value = "初审列表")
     private List<AdminBorrowFirstCustomizeVO> recordList;
@@ -30,19 +29,19 @@ public class BorrowFirstResponseBean {
     @ApiModelProperty(value = "总条数")
     private Integer total;
 
-    public List<HjhInstConfigVO> getHjhInstConfigList() {
+    public List<DropDownVO> getHjhInstConfigList() {
         return hjhInstConfigList;
     }
 
-    public void setHjhInstConfigList(List<HjhInstConfigVO> hjhInstConfigList) {
+    public void setHjhInstConfigList(List<DropDownVO> hjhInstConfigList) {
         this.hjhInstConfigList = hjhInstConfigList;
     }
 
-    public Map<String, String> getBorrowStatusList() {
+    public List<DropDownVO> getBorrowStatusList() {
         return borrowStatusList;
     }
 
-    public void setBorrowStatusList(Map<String, String> borrowStatusList) {
+    public void setBorrowStatusList(List<DropDownVO> borrowStatusList) {
         this.borrowStatusList = borrowStatusList;
     }
 

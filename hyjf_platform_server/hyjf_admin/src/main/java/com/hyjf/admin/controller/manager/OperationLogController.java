@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(value = "配置中心操作日志配置",tags ="配置中心操作日志配置")
+@Api(tags ="配置中心操作日志配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {

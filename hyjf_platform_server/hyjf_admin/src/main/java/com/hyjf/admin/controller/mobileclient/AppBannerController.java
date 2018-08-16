@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author lisheng
  * @version AppBannerController, v0.1 2018/7/11 11:27
  */
-@Api(value = "admin移动客户端",tags = "admin移动客户端")
+@Api(tags = "admin移动客户端")
 @RestController
 @RequestMapping("/app/maintenance/banner")
 public class AppBannerController extends BaseController {
@@ -38,6 +38,7 @@ public class AppBannerController extends BaseController {
     AppBannerService appBannerService;
     @Autowired
     ActivityListService activityListService;
+
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
     @ResponseBody

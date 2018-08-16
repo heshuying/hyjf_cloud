@@ -22,7 +22,6 @@ import java.util.Date;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/23 14:10
  */
-@Api(value = "定时任务统计运营报告报表")
 @RestController
 @RequestMapping("/cs-message/operation_report_job")
 public class OperationReportJobController extends BaseController {

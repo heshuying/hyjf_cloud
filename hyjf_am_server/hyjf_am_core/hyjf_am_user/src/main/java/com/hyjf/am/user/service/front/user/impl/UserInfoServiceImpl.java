@@ -133,4 +133,14 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		}
 	}
 
+	/**
+	 * 获取部门信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<UserInfoCustomize> queryDepartmentInfoByUserId(Integer userId){
+		return userInfoCustomizeMapper.queryDepartmentInfoByUserId(userId);
+	}
+
 }

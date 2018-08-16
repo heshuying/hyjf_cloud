@@ -99,7 +99,7 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
-    @RequestMapping(value = "/doLoginOut.do")
+    @PostMapping(value = "/doLoginOut.do")
     public BaseResultBean doLoginOut( String sign) {
         LoginResultBean result = new LoginResultBean();
         result.setStatus(ResultEnum.SUCCESS.getStatus());

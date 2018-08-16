@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
@@ -22,6 +23,7 @@ import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import com.hyjf.common.validator.Validator;
@@ -919,7 +921,12 @@ public class AmConfigClientImpl implements AmConfigClient {
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
-    @Override
+	@Override
+	public ContentArticleResponse findById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
+	}
+
+	@Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/updateaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
@@ -1521,6 +1528,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
+	public void updateMailTemplate(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
+				Object.class);
+	}
+
+	@Override
 	public List<MessagePushTemplateVO> findAll() {
 		MessagePushTemplateResponse response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates",
@@ -1905,5 +1918,133 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+	/**
+	 * 查询短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/insertSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 查询通知配置列表
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse initSmsNoticeConfig(){
+		return  restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/list", SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 查询通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse smsNoticeConfigInfo(SmsNoticeConfigRequest request) {
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/info", request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse insertSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/insert",request, SmsNoticeConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 修改通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse updateSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/update",request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 关闭通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse closeSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/close",request, SmsNoticeConfigResponse.class).getBody();
+	}
+	/**
+	 * 打开通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsNoticeConfigResponse openSmsNoticeConfig(SmsNoticeConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/open",request, SmsNoticeConfigResponse.class).getBody();
+	}
+
+	/**
+	 * 唯一性验证
+	 * @param name
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public Integer onlyName(String name){
+		return  restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/onlyName/"+name, Integer.class).getBody();
+	}
+
+	@Override
+	public void closeAction(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/close_action", request,
+				Object.class);
+	}
+
+	@Override
+	public void openAction(MailTemplateRequest request) {
+		restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/open_action", request,
+				Object.class);
+	}
+
+	/**
+	 * 获取充值银行卡列表
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public List<BanksConfigVO> getBankcardList() {
+		BanksConfigResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigList", BanksConfigResponse.class).getBody();
+		if (Validator.isNotNull(response)){
+			return response.getResultList();
+		}
+		return null;
 	}
 }

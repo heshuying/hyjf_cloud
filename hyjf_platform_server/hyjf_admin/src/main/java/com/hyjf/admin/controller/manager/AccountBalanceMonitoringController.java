@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-@Api(value = "配置中心平台账户配置", tags = "配置中心平台账户配置")
+@Api(tags = "配置中心平台账户配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountbalance")
 public class AccountBalanceMonitoringController extends BaseController {

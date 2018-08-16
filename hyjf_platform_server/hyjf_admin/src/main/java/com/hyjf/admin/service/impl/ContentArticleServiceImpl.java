@@ -4,12 +4,15 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ContentArticleClient;
 import com.hyjf.admin.service.ContentArticleService;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.vo.admin.CategoryVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yinhui
@@ -33,6 +36,11 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     }
 
     @Override
+    public ContentArticleResponse infoAction(Integer id) {
+        return amConfigClient.findById(id);
+    }
+
+    @Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
         return amConfigClient.updateAction(contentArticleRequestBean);
     }
@@ -40,6 +48,48 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Override
     public ContentArticleResponse deleteById(Integer id) {
         return amConfigClient.deleteContentArticleById(id);
+    }
+
+    @Override
+    public List<CategoryVO> putCategory() {
+        List<CategoryVO> categoryList = new ArrayList<CategoryVO>();
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(2);
+            category.setTitle("网站公告");
+            categoryList.add(category);
+        }
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(3);
+            category.setTitle("网贷知识");
+            categoryList.add(category);
+        }
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(5);
+            category.setTitle("关于我们");
+            categoryList.add(category);
+        }
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(101);
+            category.setTitle("风险教育");
+            categoryList.add(category);
+        }
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(8);
+            category.setTitle("联系我们");
+            categoryList.add(category);
+        }
+        {
+            CategoryVO category = new CategoryVO();
+            category.setId(20);
+            category.setTitle("公司动态");
+            categoryList.add(category);
+        }
+        return categoryList;
     }
 
 }

@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.NifaContractEssenceMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.NifaContractEssence" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="platform_no" property="platformNo" jdbcType="VARCHAR" />
+    <result column="platform_name" property="platformName" jdbcType="VARCHAR" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="contract_name" property="contractName" jdbcType="VARCHAR" />
+    <result column="contract_no" property="contractNo" jdbcType="VARCHAR" />
+    <result column="contract_signer" property="contractSigner" jdbcType="VARCHAR" />
+    <result column="contract_time" property="contractTime" jdbcType="VARCHAR" />
+    <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
+    <result column="borrower_cert_type" property="borrowerCertType" jdbcType="VARCHAR" />
+    <result column="borrower_cert_no" property="borrowerCertNo" jdbcType="VARCHAR" />
+    <result column="borrower_name" property="borrowerName" jdbcType="VARCHAR" />
+    <result column="borrower_address" property="borrowerAddress" jdbcType="VARCHAR" />
+    <result column="borrower_nacao_no" property="borrowerNacaoNo" jdbcType="VARCHAR" />
+    <result column="borrower_orgcode_no" property="borrowerOrgcodeNo" jdbcType="VARCHAR" />
+    <result column="borrower_company" property="borrowerCompany" jdbcType="VARCHAR" />
+    <result column="investor_type" property="investorType" jdbcType="TINYINT" />
+    <result column="investor_cert_type" property="investorCertType" jdbcType="VARCHAR" />
+    <result column="investor_cert_no" property="investorCertNo" jdbcType="VARCHAR" />
+    <result column="investor_name" property="investorName" jdbcType="VARCHAR" />
+    <result column="investor_nacao_no" property="investorNacaoNo" jdbcType="VARCHAR" />
+    <result column="investor_orgcode_no" property="investorOrgcodeNo" jdbcType="VARCHAR" />
+    <result column="investor_company" property="investorCompany" jdbcType="VARCHAR" />
+    <result column="invest_amount" property="investAmount" jdbcType="VARCHAR" />
+    <result column="borrow_rate" property="borrowRate" jdbcType="VARCHAR" />
+    <result column="borrow_use" property="borrowUse" jdbcType="VARCHAR" />
+    <result column="borrow_use_limit" property="borrowUseLimit" jdbcType="VARCHAR" />
+    <result column="loan_date" property="loanDate" jdbcType="VARCHAR" />
+    <result column="loan_date_basis" property="loanDateBasis" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="VARCHAR" />
+    <result column="expiry_date" property="expiryDate" jdbcType="VARCHAR" />
+    <result column="repay_type" property="repayType" jdbcType="INTEGER" />
+    <result column="repay_formula" property="repayFormula" jdbcType="VARCHAR" />
+    <result column="repay_date_rule" property="repayDateRule" jdbcType="VARCHAR" />
+    <result column="repay_num" property="repayNum" jdbcType="INTEGER" />
+    <result column="repay_plan" property="repayPlan" jdbcType="VARCHAR" />
+    <result column="overdue_repay_def" property="overdueRepayDef" jdbcType="VARCHAR" />
+    <result column="overdue_repay_resp" property="overdueRepayResp" jdbcType="VARCHAR" />
+    <result column="overdue_repay_proc" property="overdueRepayProc" jdbcType="VARCHAR" />
+    <result column="notice_address" property="noticeAddress" jdbcType="VARCHAR" />
+    <result column="contract_effective_date" property="contractEffectiveDate" jdbcType="VARCHAR" />
+    <result column="contract_template_no" property="contractTemplateNo" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, platform_no, platform_name, project_no, contract_name, contract_no, contract_signer, 
+    contract_time, borrower_type, borrower_cert_type, borrower_cert_no, borrower_name, 
+    borrower_address, borrower_nacao_no, borrower_orgcode_no, borrower_company, investor_type, 
+    investor_cert_type, investor_cert_no, investor_name, investor_nacao_no, investor_orgcode_no, 
+    investor_company, invest_amount, borrow_rate, borrow_use, borrow_use_limit, loan_date, 
+    loan_date_basis, start_date, expiry_date, repay_type, repay_formula, repay_date_rule, 
+    repay_num, repay_plan, overdue_repay_def, overdue_repay_resp, overdue_repay_proc, 
+    notice_address, contract_effective_date, contract_template_no, create_user_id, update_user_id, 
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssenceExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_nifa_contract_essence
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_nifa_contract_essence
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_nifa_contract_essence
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssenceExample" >
+    delete from ht_nifa_contract_essence
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssence" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_nifa_contract_essence (platform_no, platform_name, project_no, 
+      contract_name, contract_no, contract_signer, 
+      contract_time, borrower_type, borrower_cert_type, 
+      borrower_cert_no, borrower_name, borrower_address, 
+      borrower_nacao_no, borrower_orgcode_no, borrower_company, 
+      investor_type, investor_cert_type, investor_cert_no, 
+      investor_name, investor_nacao_no, investor_orgcode_no, 
+      investor_company, invest_amount, borrow_rate, 
+      borrow_use, borrow_use_limit, loan_date, 
+      loan_date_basis, start_date, expiry_date, 
+      repay_type, repay_formula, repay_date_rule, 
+      repay_num, repay_plan, overdue_repay_def, 
+      overdue_repay_resp, overdue_repay_proc, notice_address, 
+      contract_effective_date, contract_template_no, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{platformNo,jdbcType=VARCHAR}, #{platformName,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
+      #{contractName,jdbcType=VARCHAR}, #{contractNo,jdbcType=VARCHAR}, #{contractSigner,jdbcType=VARCHAR}, 
+      #{contractTime,jdbcType=VARCHAR}, #{borrowerType,jdbcType=TINYINT}, #{borrowerCertType,jdbcType=VARCHAR}, 
+      #{borrowerCertNo,jdbcType=VARCHAR}, #{borrowerName,jdbcType=VARCHAR}, #{borrowerAddress,jdbcType=VARCHAR}, 
+      #{borrowerNacaoNo,jdbcType=VARCHAR}, #{borrowerOrgcodeNo,jdbcType=VARCHAR}, #{borrowerCompany,jdbcType=VARCHAR}, 
+      #{investorType,jdbcType=TINYINT}, #{investorCertType,jdbcType=VARCHAR}, #{investorCertNo,jdbcType=VARCHAR}, 
+      #{investorName,jdbcType=VARCHAR}, #{investorNacaoNo,jdbcType=VARCHAR}, #{investorOrgcodeNo,jdbcType=VARCHAR}, 
+      #{investorCompany,jdbcType=VARCHAR}, #{investAmount,jdbcType=VARCHAR}, #{borrowRate,jdbcType=VARCHAR}, 
+      #{borrowUse,jdbcType=VARCHAR}, #{borrowUseLimit,jdbcType=VARCHAR}, #{loanDate,jdbcType=VARCHAR}, 
+      #{loanDateBasis,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, #{expiryDate,jdbcType=VARCHAR}, 
+      #{repayType,jdbcType=INTEGER}, #{repayFormula,jdbcType=VARCHAR}, #{repayDateRule,jdbcType=VARCHAR}, 
+      #{repayNum,jdbcType=INTEGER}, #{repayPlan,jdbcType=VARCHAR}, #{overdueRepayDef,jdbcType=VARCHAR}, 
+      #{overdueRepayResp,jdbcType=VARCHAR}, #{overdueRepayProc,jdbcType=VARCHAR}, #{noticeAddress,jdbcType=VARCHAR}, 
+      #{contractEffectiveDate,jdbcType=VARCHAR}, #{contractTemplateNo,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssence" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_nifa_contract_essence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="platformNo != null" >
+        platform_no,
+      </if>
+      <if test="platformName != null" >
+        platform_name,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="contractName != null" >
+        contract_name,
+      </if>
+      <if test="contractNo != null" >
+        contract_no,
+      </if>
+      <if test="contractSigner != null" >
+        contract_signer,
+      </if>
+      <if test="contractTime != null" >
+        contract_time,
+      </if>
+      <if test="borrowerType != null" >
+        borrower_type,
+      </if>
+      <if test="borrowerCertType != null" >
+        borrower_cert_type,
+      </if>
+      <if test="borrowerCertNo != null" >
+        borrower_cert_no,
+      </if>
+      <if test="borrowerName != null" >
+        borrower_name,
+      </if>
+      <if test="borrowerAddress != null" >
+        borrower_address,
+      </if>
+      <if test="borrowerNacaoNo != null" >
+        borrower_nacao_no,
+      </if>
+      <if test="borrowerOrgcodeNo != null" >
+        borrower_orgcode_no,
+      </if>
+      <if test="borrowerCompany != null" >
+        borrower_company,
+      </if>
+      <if test="investorType != null" >
+        investor_type,
+      </if>
+      <if test="investorCertType != null" >
+        investor_cert_type,
+      </if>
+      <if test="investorCertNo != null" >
+        investor_cert_no,
+      </if>
+      <if test="investorName != null" >
+        investor_name,
+      </if>
+      <if test="investorNacaoNo != null" >
+        investor_nacao_no,
+      </if>
+      <if test="investorOrgcodeNo != null" >
+        investor_orgcode_no,
+      </if>
+      <if test="investorCompany != null" >
+        investor_company,
+      </if>
+      <if test="investAmount != null" >
+        invest_amount,
+      </if>
+      <if test="borrowRate != null" >
+        borrow_rate,
+      </if>
+      <if test="borrowUse != null" >
+        borrow_use,
+      </if>
+      <if test="borrowUseLimit != null" >
+        borrow_use_limit,
+      </if>
+      <if test="loanDate != null" >
+        loan_date,
+      </if>
+      <if test="loanDateBasis != null" >
+        loan_date_basis,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="expiryDate != null" >
+        expiry_date,
+      </if>
+      <if test="repayType != null" >
+        repay_type,
+      </if>
+      <if test="repayFormula != null" >
+        repay_formula,
+      </if>
+      <if test="repayDateRule != null" >
+        repay_date_rule,
+      </if>
+      <if test="repayNum != null" >
+        repay_num,
+      </if>
+      <if test="repayPlan != null" >
+        repay_plan,
+      </if>
+      <if test="overdueRepayDef != null" >
+        overdue_repay_def,
+      </if>
+      <if test="overdueRepayResp != null" >
+        overdue_repay_resp,
+      </if>
+      <if test="overdueRepayProc != null" >
+        overdue_repay_proc,
+      </if>
+      <if test="noticeAddress != null" >
+        notice_address,
+      </if>
+      <if test="contractEffectiveDate != null" >
+        contract_effective_date,
+      </if>
+      <if test="contractTemplateNo != null" >
+        contract_template_no,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="platformNo != null" >
+        #{platformNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformName != null" >
+        #{platformName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNo != null" >
+        #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contractSigner != null" >
+        #{contractSigner,jdbcType=VARCHAR},
+      </if>
+      <if test="contractTime != null" >
+        #{contractTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerType != null" >
+        #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowerCertType != null" >
+        #{borrowerCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerCertNo != null" >
+        #{borrowerCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerName != null" >
+        #{borrowerName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerAddress != null" >
+        #{borrowerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerNacaoNo != null" >
+        #{borrowerNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerOrgcodeNo != null" >
+        #{borrowerOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerCompany != null" >
+        #{borrowerCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="investorType != null" >
+        #{investorType,jdbcType=TINYINT},
+      </if>
+      <if test="investorCertType != null" >
+        #{investorCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="investorCertNo != null" >
+        #{investorCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorName != null" >
+        #{investorName,jdbcType=VARCHAR},
+      </if>
+      <if test="investorNacaoNo != null" >
+        #{investorNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorOrgcodeNo != null" >
+        #{investorOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorCompany != null" >
+        #{investorCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="investAmount != null" >
+        #{investAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowRate != null" >
+        #{borrowRate,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUse != null" >
+        #{borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUseLimit != null" >
+        #{borrowUseLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDate != null" >
+        #{loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDateBasis != null" >
+        #{loanDateBasis,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryDate != null" >
+        #{expiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="repayType != null" >
+        #{repayType,jdbcType=INTEGER},
+      </if>
+      <if test="repayFormula != null" >
+        #{repayFormula,jdbcType=VARCHAR},
+      </if>
+      <if test="repayDateRule != null" >
+        #{repayDateRule,jdbcType=VARCHAR},
+      </if>
+      <if test="repayNum != null" >
+        #{repayNum,jdbcType=INTEGER},
+      </if>
+      <if test="repayPlan != null" >
+        #{repayPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayDef != null" >
+        #{overdueRepayDef,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayResp != null" >
+        #{overdueRepayResp,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayProc != null" >
+        #{overdueRepayProc,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeAddress != null" >
+        #{noticeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contractEffectiveDate != null" >
+        #{contractEffectiveDate,jdbcType=VARCHAR},
+      </if>
+      <if test="contractTemplateNo != null" >
+        #{contractTemplateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssenceExample" resultType="java.lang.Integer" >
+    select count(*) from ht_nifa_contract_essence
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_nifa_contract_essence
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.platformNo != null" >
+        platform_no = #{record.platformNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platformName != null" >
+        platform_name = #{record.platformName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectNo != null" >
+        project_no = #{record.projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractName != null" >
+        contract_name = #{record.contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractNo != null" >
+        contract_no = #{record.contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractSigner != null" >
+        contract_signer = #{record.contractSigner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractTime != null" >
+        contract_time = #{record.contractTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerType != null" >
+        borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowerCertType != null" >
+        borrower_cert_type = #{record.borrowerCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerCertNo != null" >
+        borrower_cert_no = #{record.borrowerCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerName != null" >
+        borrower_name = #{record.borrowerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerAddress != null" >
+        borrower_address = #{record.borrowerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerNacaoNo != null" >
+        borrower_nacao_no = #{record.borrowerNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerOrgcodeNo != null" >
+        borrower_orgcode_no = #{record.borrowerOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowerCompany != null" >
+        borrower_company = #{record.borrowerCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorType != null" >
+        investor_type = #{record.investorType,jdbcType=TINYINT},
+      </if>
+      <if test="record.investorCertType != null" >
+        investor_cert_type = #{record.investorCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorCertNo != null" >
+        investor_cert_no = #{record.investorCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorName != null" >
+        investor_name = #{record.investorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorNacaoNo != null" >
+        investor_nacao_no = #{record.investorNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorOrgcodeNo != null" >
+        investor_orgcode_no = #{record.investorOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investorCompany != null" >
+        investor_company = #{record.investorCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investAmount != null" >
+        invest_amount = #{record.investAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowRate != null" >
+        borrow_rate = #{record.borrowRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowUse != null" >
+        borrow_use = #{record.borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowUseLimit != null" >
+        borrow_use_limit = #{record.borrowUseLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanDate != null" >
+        loan_date = #{record.loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanDateBasis != null" >
+        loan_date_basis = #{record.loanDateBasis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startDate != null" >
+        start_date = #{record.startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expiryDate != null" >
+        expiry_date = #{record.expiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayType != null" >
+        repay_type = #{record.repayType,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayFormula != null" >
+        repay_formula = #{record.repayFormula,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayDateRule != null" >
+        repay_date_rule = #{record.repayDateRule,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repayNum != null" >
+        repay_num = #{record.repayNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayPlan != null" >
+        repay_plan = #{record.repayPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueRepayDef != null" >
+        overdue_repay_def = #{record.overdueRepayDef,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueRepayResp != null" >
+        overdue_repay_resp = #{record.overdueRepayResp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overdueRepayProc != null" >
+        overdue_repay_proc = #{record.overdueRepayProc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.noticeAddress != null" >
+        notice_address = #{record.noticeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractEffectiveDate != null" >
+        contract_effective_date = #{record.contractEffectiveDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contractTemplateNo != null" >
+        contract_template_no = #{record.contractTemplateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_nifa_contract_essence
+    set id = #{record.id,jdbcType=INTEGER},
+      platform_no = #{record.platformNo,jdbcType=VARCHAR},
+      platform_name = #{record.platformName,jdbcType=VARCHAR},
+      project_no = #{record.projectNo,jdbcType=VARCHAR},
+      contract_name = #{record.contractName,jdbcType=VARCHAR},
+      contract_no = #{record.contractNo,jdbcType=VARCHAR},
+      contract_signer = #{record.contractSigner,jdbcType=VARCHAR},
+      contract_time = #{record.contractTime,jdbcType=VARCHAR},
+      borrower_type = #{record.borrowerType,jdbcType=TINYINT},
+      borrower_cert_type = #{record.borrowerCertType,jdbcType=VARCHAR},
+      borrower_cert_no = #{record.borrowerCertNo,jdbcType=VARCHAR},
+      borrower_name = #{record.borrowerName,jdbcType=VARCHAR},
+      borrower_address = #{record.borrowerAddress,jdbcType=VARCHAR},
+      borrower_nacao_no = #{record.borrowerNacaoNo,jdbcType=VARCHAR},
+      borrower_orgcode_no = #{record.borrowerOrgcodeNo,jdbcType=VARCHAR},
+      borrower_company = #{record.borrowerCompany,jdbcType=VARCHAR},
+      investor_type = #{record.investorType,jdbcType=TINYINT},
+      investor_cert_type = #{record.investorCertType,jdbcType=VARCHAR},
+      investor_cert_no = #{record.investorCertNo,jdbcType=VARCHAR},
+      investor_name = #{record.investorName,jdbcType=VARCHAR},
+      investor_nacao_no = #{record.investorNacaoNo,jdbcType=VARCHAR},
+      investor_orgcode_no = #{record.investorOrgcodeNo,jdbcType=VARCHAR},
+      investor_company = #{record.investorCompany,jdbcType=VARCHAR},
+      invest_amount = #{record.investAmount,jdbcType=VARCHAR},
+      borrow_rate = #{record.borrowRate,jdbcType=VARCHAR},
+      borrow_use = #{record.borrowUse,jdbcType=VARCHAR},
+      borrow_use_limit = #{record.borrowUseLimit,jdbcType=VARCHAR},
+      loan_date = #{record.loanDate,jdbcType=VARCHAR},
+      loan_date_basis = #{record.loanDateBasis,jdbcType=VARCHAR},
+      start_date = #{record.startDate,jdbcType=VARCHAR},
+      expiry_date = #{record.expiryDate,jdbcType=VARCHAR},
+      repay_type = #{record.repayType,jdbcType=INTEGER},
+      repay_formula = #{record.repayFormula,jdbcType=VARCHAR},
+      repay_date_rule = #{record.repayDateRule,jdbcType=VARCHAR},
+      repay_num = #{record.repayNum,jdbcType=INTEGER},
+      repay_plan = #{record.repayPlan,jdbcType=VARCHAR},
+      overdue_repay_def = #{record.overdueRepayDef,jdbcType=VARCHAR},
+      overdue_repay_resp = #{record.overdueRepayResp,jdbcType=VARCHAR},
+      overdue_repay_proc = #{record.overdueRepayProc,jdbcType=VARCHAR},
+      notice_address = #{record.noticeAddress,jdbcType=VARCHAR},
+      contract_effective_date = #{record.contractEffectiveDate,jdbcType=VARCHAR},
+      contract_template_no = #{record.contractTemplateNo,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssence" >
+    update ht_nifa_contract_essence
+    <set >
+      <if test="platformNo != null" >
+        platform_no = #{platformNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformName != null" >
+        platform_name = #{platformName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        contract_name = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractNo != null" >
+        contract_no = #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contractSigner != null" >
+        contract_signer = #{contractSigner,jdbcType=VARCHAR},
+      </if>
+      <if test="contractTime != null" >
+        contract_time = #{contractTime,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerType != null" >
+        borrower_type = #{borrowerType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowerCertType != null" >
+        borrower_cert_type = #{borrowerCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerCertNo != null" >
+        borrower_cert_no = #{borrowerCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerName != null" >
+        borrower_name = #{borrowerName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerAddress != null" >
+        borrower_address = #{borrowerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerNacaoNo != null" >
+        borrower_nacao_no = #{borrowerNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerOrgcodeNo != null" >
+        borrower_orgcode_no = #{borrowerOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowerCompany != null" >
+        borrower_company = #{borrowerCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="investorType != null" >
+        investor_type = #{investorType,jdbcType=TINYINT},
+      </if>
+      <if test="investorCertType != null" >
+        investor_cert_type = #{investorCertType,jdbcType=VARCHAR},
+      </if>
+      <if test="investorCertNo != null" >
+        investor_cert_no = #{investorCertNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorName != null" >
+        investor_name = #{investorName,jdbcType=VARCHAR},
+      </if>
+      <if test="investorNacaoNo != null" >
+        investor_nacao_no = #{investorNacaoNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorOrgcodeNo != null" >
+        investor_orgcode_no = #{investorOrgcodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="investorCompany != null" >
+        investor_company = #{investorCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="investAmount != null" >
+        invest_amount = #{investAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowRate != null" >
+        borrow_rate = #{borrowRate,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUse != null" >
+        borrow_use = #{borrowUse,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowUseLimit != null" >
+        borrow_use_limit = #{borrowUseLimit,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDate != null" >
+        loan_date = #{loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDateBasis != null" >
+        loan_date_basis = #{loanDateBasis,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="expiryDate != null" >
+        expiry_date = #{expiryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="repayType != null" >
+        repay_type = #{repayType,jdbcType=INTEGER},
+      </if>
+      <if test="repayFormula != null" >
+        repay_formula = #{repayFormula,jdbcType=VARCHAR},
+      </if>
+      <if test="repayDateRule != null" >
+        repay_date_rule = #{repayDateRule,jdbcType=VARCHAR},
+      </if>
+      <if test="repayNum != null" >
+        repay_num = #{repayNum,jdbcType=INTEGER},
+      </if>
+      <if test="repayPlan != null" >
+        repay_plan = #{repayPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayDef != null" >
+        overdue_repay_def = #{overdueRepayDef,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayResp != null" >
+        overdue_repay_resp = #{overdueRepayResp,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueRepayProc != null" >
+        overdue_repay_proc = #{overdueRepayProc,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeAddress != null" >
+        notice_address = #{noticeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contractEffectiveDate != null" >
+        contract_effective_date = #{contractEffectiveDate,jdbcType=VARCHAR},
+      </if>
+      <if test="contractTemplateNo != null" >
+        contract_template_no = #{contractTemplateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.NifaContractEssence" >
+    update ht_nifa_contract_essence
+    set platform_no = #{platformNo,jdbcType=VARCHAR},
+      platform_name = #{platformName,jdbcType=VARCHAR},
+      project_no = #{projectNo,jdbcType=VARCHAR},
+      contract_name = #{contractName,jdbcType=VARCHAR},
+      contract_no = #{contractNo,jdbcType=VARCHAR},
+      contract_signer = #{contractSigner,jdbcType=VARCHAR},
+      contract_time = #{contractTime,jdbcType=VARCHAR},
+      borrower_type = #{borrowerType,jdbcType=TINYINT},
+      borrower_cert_type = #{borrowerCertType,jdbcType=VARCHAR},
+      borrower_cert_no = #{borrowerCertNo,jdbcType=VARCHAR},
+      borrower_name = #{borrowerName,jdbcType=VARCHAR},
+      borrower_address = #{borrowerAddress,jdbcType=VARCHAR},
+      borrower_nacao_no = #{borrowerNacaoNo,jdbcType=VARCHAR},
+      borrower_orgcode_no = #{borrowerOrgcodeNo,jdbcType=VARCHAR},
+      borrower_company = #{borrowerCompany,jdbcType=VARCHAR},
+      investor_type = #{investorType,jdbcType=TINYINT},
+      investor_cert_type = #{investorCertType,jdbcType=VARCHAR},
+      investor_cert_no = #{investorCertNo,jdbcType=VARCHAR},
+      investor_name = #{investorName,jdbcType=VARCHAR},
+      investor_nacao_no = #{investorNacaoNo,jdbcType=VARCHAR},
+      investor_orgcode_no = #{investorOrgcodeNo,jdbcType=VARCHAR},
+      investor_company = #{investorCompany,jdbcType=VARCHAR},
+      invest_amount = #{investAmount,jdbcType=VARCHAR},
+      borrow_rate = #{borrowRate,jdbcType=VARCHAR},
+      borrow_use = #{borrowUse,jdbcType=VARCHAR},
+      borrow_use_limit = #{borrowUseLimit,jdbcType=VARCHAR},
+      loan_date = #{loanDate,jdbcType=VARCHAR},
+      loan_date_basis = #{loanDateBasis,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=VARCHAR},
+      expiry_date = #{expiryDate,jdbcType=VARCHAR},
+      repay_type = #{repayType,jdbcType=INTEGER},
+      repay_formula = #{repayFormula,jdbcType=VARCHAR},
+      repay_date_rule = #{repayDateRule,jdbcType=VARCHAR},
+      repay_num = #{repayNum,jdbcType=INTEGER},
+      repay_plan = #{repayPlan,jdbcType=VARCHAR},
+      overdue_repay_def = #{overdueRepayDef,jdbcType=VARCHAR},
+      overdue_repay_resp = #{overdueRepayResp,jdbcType=VARCHAR},
+      overdue_repay_proc = #{overdueRepayProc,jdbcType=VARCHAR},
+      notice_address = #{noticeAddress,jdbcType=VARCHAR},
+      contract_effective_date = #{contractEffectiveDate,jdbcType=VARCHAR},
+      contract_template_no = #{contractTemplateNo,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

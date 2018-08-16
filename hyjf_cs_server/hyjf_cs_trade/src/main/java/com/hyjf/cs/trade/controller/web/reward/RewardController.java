@@ -33,10 +33,6 @@ public class RewardController {
 
     /**
      * 我的奖励列表
-     * @param token
-     * @param param
-     * @param request
-     * @return
      */
     @ApiOperation(value = "我的奖励列表", notes = "我的奖励列表")
     @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")

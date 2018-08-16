@@ -31,7 +31,7 @@ import java.util.List;
  * @author jijun
  * @date 20180706
  */
-@Api(value = "admin保证金不足",tags = "admin保证金不足")
+@Api(value = "admin端-保证金不足",tags = "admin端-保证金不足")
 @RestController
 @RequestMapping("/exception/cashdepositexception")
 public class CashDepositeController extends BaseController {

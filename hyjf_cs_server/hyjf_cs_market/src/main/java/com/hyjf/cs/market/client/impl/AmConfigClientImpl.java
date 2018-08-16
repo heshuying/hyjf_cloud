@@ -215,7 +215,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ShareNewsResponse response = restTemplate
 				.getForObject("http://AM-CONFIG/am-config/article/querysharenews" , ShareNewsResponse.class);
 		if (response != null) {
-			return (ShareNewsBeanVO)response.getData();
+			return response.getResult();
 		}
         return null;
     }

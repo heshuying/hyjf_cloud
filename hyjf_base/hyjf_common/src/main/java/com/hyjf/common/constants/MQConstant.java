@@ -390,4 +390,10 @@ public interface MQConstant {
 	 */
 	String CRM_REFEREE_GROUP = "CRM_REFEREE_GROUP";
 	String CRM_REFEREE_TOPIC = "CRM_REFEREE_TOPIC";
+
+	/**
+	 * 定时短信
+	 */
+	String SMS_ONTIME_GROUP = "SMS_ONTIME_GROUP";
+	String SMS_ONTIME_TOPIC = "SMS_ONTIME_TOPIC";
 }
