@@ -52,7 +52,7 @@ public class ActivityListController extends BaseController {
     private ActivityListService activityListService;
 
     @ApiOperation(value = "活动列表", notes = "页面初始化")
-    @PostMapping("/activityListInit")
+    @PostMapping(value = "/activityListInit")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject activityListInit() {
         JSONObject jsonObject = new JSONObject();
@@ -139,7 +139,7 @@ public class ActivityListController extends BaseController {
     }
 
     @ApiOperation(value = "活动列表", notes = "获取活动修改初始信息")
-    @RequestMapping("/initUpdateActivity/{id}")
+    @RequestMapping(value = "/initUpdateActivity",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
         ActivityListRequest activityListRequest = new ActivityListRequest();
@@ -186,7 +186,7 @@ public class ActivityListController extends BaseController {
     }
 
     @ApiOperation(value = "活动列表", notes = "删除配置信息")
-    @RequestMapping("/deleteAction")
+    @RequestMapping(value = "/deleteAction",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteRecordAction(@RequestParam int id) {
         ActivityListRequest request = new ActivityListRequest();

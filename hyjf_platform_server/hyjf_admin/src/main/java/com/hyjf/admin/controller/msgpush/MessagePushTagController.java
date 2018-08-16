@@ -21,6 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +40,7 @@ import java.util.List;
  * @author yaoyong
  * @version MessagePushTagController, v0.1 2018/8/14 14:30
  */
-@Api(tags = "消息推送标签管理")
+@Api(tags = "消息中心-app消息推送-标签管理")
 @RestController
 @RequestMapping("/hyjf-admin/msgPush/tagManage")
 public class MessagePushTagController extends BaseController {
@@ -55,7 +56,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init",method = RequestMethod.POST)
-    public AdminResult<MessagePushTagResponse> init(MessagePushTagRequest request) {
+    public AdminResult<MessagePushTagResponse> init(@RequestBody MessagePushTagRequest request) {
         MessagePushTagResponse response = messagePushTagService.searchList(request);
         String nameClass = "MSG_PUSH_STATUS";
         if (response == null) {
@@ -72,7 +73,7 @@ public class MessagePushTagController extends BaseController {
 
 
     @ApiOperation(value = "详情页", notes = "详情页")
-    @RequestMapping(value = "/infoAction",method = RequestMethod.POST)
+    @RequestMapping(value = "/infoAction",method = RequestMethod.GET)
     public AdminResult infoAction(Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
         if (response == null) {
@@ -87,7 +88,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "添加信息", notes = "添加信息")
     @RequestMapping(value = "insertAction",method = RequestMethod.POST)
-    public AdminResult insertAction(HttpServletRequest request, MessagePushTagRequest tagRequest) {
+    public AdminResult insertAction(HttpServletRequest request, @RequestBody MessagePushTagRequest tagRequest) {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
         tagRequest.setCreateUserName(userName);
@@ -108,7 +109,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "修改信息", notes = "修改信息")
     @RequestMapping(value = "/updateAction",method = RequestMethod.POST)
-    public AdminResult updateAction(HttpServletRequest request, MessagePushTagRequest tagRequest) {
+    public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushTagRequest tagRequest) {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
         tagRequest.setCreateUserName(userName);
@@ -136,7 +137,7 @@ public class MessagePushTagController extends BaseController {
     }
 
     @ApiOperation(value = "修改状态", notes = "修改装态")
-    @RequestMapping(value = "/statusAction",method = RequestMethod.POST)
+    @RequestMapping(value = "/statusAction",method = RequestMethod.GET)
     public AdminResult updateStatus(Integer id) {
         if (id != null) {
             MessagePushTagResponse response = messagePushTagService.getRecord(id);
@@ -163,8 +164,8 @@ public class MessagePushTagController extends BaseController {
 
 
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
-    @RequestMapping(value = "/checkAction",method = RequestMethod.GET)
-    public AdminResult checkAction(MessagePushTagRequest request) {
+    @RequestMapping(value = "/checkAction",method = RequestMethod.POST)
+    public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
         Integer id = request.getId();
         String tagCode = request.getTagCode();
         MessagePushTagResponse response = messagePushTagService.countByTagCode(id, tagCode);
