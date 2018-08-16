@@ -69,7 +69,7 @@ public class WeeklyController {
             String eventTime = eal.getEventTime();
             String content = eal.getContent();
             BigDecimal benzhoutouzie=new BigDecimal("0.00");
-            BigDecimal benzhoushouyi=new BigDecimal("0.00");;
+            BigDecimal benzhoushouyi=new BigDecimal("0.00");
             if (eventTime != null) {
                 benzhoutouzie= new BigDecimal(eventTime);
             }
