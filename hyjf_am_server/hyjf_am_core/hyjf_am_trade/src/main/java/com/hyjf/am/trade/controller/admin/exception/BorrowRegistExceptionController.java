@@ -101,7 +101,7 @@ public class BorrowRegistExceptionController extends BaseController {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
         Integer recordTotal = borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
         logger.info("selectBorrowRegistList::::::::::recordTotal=[{}]",recordTotal);
-        Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal);
+        Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal,borrowRegistListRequest.getPageSize());
         borrowRegistListRequest.setLimitStart(paginator.getOffset());
         borrowRegistListRequest.setLimitEnd(paginator.getLimit());
         logger.info("selectBorrowRegistList::::::::::limitStart=[{}],limitEnd=[{}]",borrowRegistListRequest.getLimitStart(),borrowRegistListRequest.getLimitEnd());

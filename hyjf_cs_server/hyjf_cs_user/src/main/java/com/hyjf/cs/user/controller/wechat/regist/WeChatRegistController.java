@@ -210,7 +210,7 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "注册着陆页提交",notes = "注册着陆页提交")
     @PostMapping(value = "/registLandingPageCommitAction")
-    public JSONObject registLandingPageCommitAction(HttpServletRequest request, HttpServletResponse response, RegistLandingPageCommitRequestBean bean) {
+    public JSONObject registLandingPageCommitAction(HttpServletRequest request, HttpServletResponse response, @RequestBody RegistLandingPageCommitRequestBean bean) {
 
         JSONObject ret = new JSONObject();
         // 手机号

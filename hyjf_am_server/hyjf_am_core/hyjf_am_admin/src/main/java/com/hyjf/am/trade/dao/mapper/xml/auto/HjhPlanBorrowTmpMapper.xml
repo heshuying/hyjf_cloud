@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhPlanBorrowTmpMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+    <result column="already_invest" property="alreadyInvest" jdbcType="DECIMAL" />
+    <result column="asset_id" property="assetId" jdbcType="VARCHAR" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_account" property="borrowAccount" jdbcType="DECIMAL" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="borrow_type" property="borrowType" jdbcType="TINYINT" />
+    <result column="sell_user_id" property="sellUserId" jdbcType="INTEGER" />
+    <result column="sell_order_id" property="sellOrderId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="is_last" property="isLast" jdbcType="TINYINT" />
+    <result column="resp_code" property="respCode" jdbcType="VARCHAR" />
+    <result column="resp_desc" property="respDesc" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, accede_order_id, order_id, plan_nid, user_id, user_name, accede_account, already_invest, 
+    asset_id, inst_code, asset_type, borrow_nid, borrow_account, account, borrow_period, 
+    borrow_style, borrow_type, sell_user_id, sell_order_id, `status`, is_last, resp_code, 
+    resp_desc, create_user_id, update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan_borrow_tmp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_plan_borrow_tmp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_plan_borrow_tmp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample" >
+    delete from ht_hjh_plan_borrow_tmp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan_borrow_tmp (accede_order_id, order_id, plan_nid, 
+      user_id, user_name, accede_account, 
+      already_invest, asset_id, inst_code, 
+      asset_type, borrow_nid, borrow_account, 
+      account, borrow_period, borrow_style, 
+      borrow_type, sell_user_id, sell_order_id, 
+      `status`, is_last, resp_code, 
+      resp_desc, create_user_id, update_user_id, 
+      create_time, update_time)
+    values (#{accedeOrderId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accedeAccount,jdbcType=DECIMAL}, 
+      #{alreadyInvest,jdbcType=DECIMAL}, #{assetId,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, 
+      #{assetType,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, 
+      #{account,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
+      #{borrowType,jdbcType=TINYINT}, #{sellUserId,jdbcType=INTEGER}, #{sellOrderId,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{isLast,jdbcType=TINYINT}, #{respCode,jdbcType=VARCHAR}, 
+      #{respDesc,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_plan_borrow_tmp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        accede_order_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account,
+      </if>
+      <if test="alreadyInvest != null" >
+        already_invest,
+      </if>
+      <if test="assetId != null" >
+        asset_id,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="borrowType != null" >
+        borrow_type,
+      </if>
+      <if test="sellUserId != null" >
+        sell_user_id,
+      </if>
+      <if test="sellOrderId != null" >
+        sell_order_id,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="isLast != null" >
+        is_last,
+      </if>
+      <if test="respCode != null" >
+        resp_code,
+      </if>
+      <if test="respDesc != null" >
+        resp_desc,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accedeOrderId != null" >
+        #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvest != null" >
+        #{alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="assetId != null" >
+        #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccount != null" >
+        #{borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowType != null" >
+        #{borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="sellUserId != null" >
+        #{sellUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sellOrderId != null" >
+        #{sellOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isLast != null" >
+        #{isLast,jdbcType=TINYINT},
+      </if>
+      <if test="respCode != null" >
+        #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respDesc != null" >
+        #{respDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_plan_borrow_tmp
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_plan_borrow_tmp
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeOrderId != null" >
+        accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeAccount != null" >
+        accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.alreadyInvest != null" >
+        already_invest = #{record.alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.assetId != null" >
+        asset_id = #{record.assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetType != null" >
+        asset_type = #{record.assetType,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowAccount != null" >
+        borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowType != null" >
+        borrow_type = #{record.borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="record.sellUserId != null" >
+        sell_user_id = #{record.sellUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellOrderId != null" >
+        sell_order_id = #{record.sellOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.isLast != null" >
+        is_last = #{record.isLast,jdbcType=TINYINT},
+      </if>
+      <if test="record.respCode != null" >
+        resp_code = #{record.respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.respDesc != null" >
+        resp_desc = #{record.respDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_plan_borrow_tmp
+    set id = #{record.id,jdbcType=INTEGER},
+      accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      already_invest = #{record.alreadyInvest,jdbcType=DECIMAL},
+      asset_id = #{record.assetId,jdbcType=VARCHAR},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
+      account = #{record.account,jdbcType=DECIMAL},
+      borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      borrow_type = #{record.borrowType,jdbcType=TINYINT},
+      sell_user_id = #{record.sellUserId,jdbcType=INTEGER},
+      sell_order_id = #{record.sellOrderId,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      is_last = #{record.isLast,jdbcType=TINYINT},
+      resp_code = #{record.respCode,jdbcType=VARCHAR},
+      resp_desc = #{record.respDesc,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp" >
+    update ht_hjh_plan_borrow_tmp
+    <set >
+      <if test="accedeOrderId != null" >
+        accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="alreadyInvest != null" >
+        already_invest = #{alreadyInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="assetId != null" >
+        asset_id = #{assetId,jdbcType=VARCHAR},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account = #{borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowType != null" >
+        borrow_type = #{borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="sellUserId != null" >
+        sell_user_id = #{sellUserId,jdbcType=INTEGER},
+      </if>
+      <if test="sellOrderId != null" >
+        sell_order_id = #{sellOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isLast != null" >
+        is_last = #{isLast,jdbcType=TINYINT},
+      </if>
+      <if test="respCode != null" >
+        resp_code = #{respCode,jdbcType=VARCHAR},
+      </if>
+      <if test="respDesc != null" >
+        resp_desc = #{respDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp" >
+    update ht_hjh_plan_borrow_tmp
+    set accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      already_invest = #{alreadyInvest,jdbcType=DECIMAL},
+      asset_id = #{assetId,jdbcType=VARCHAR},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_account = #{borrowAccount,jdbcType=DECIMAL},
+      account = #{account,jdbcType=DECIMAL},
+      borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      borrow_type = #{borrowType,jdbcType=TINYINT},
+      sell_user_id = #{sellUserId,jdbcType=INTEGER},
+      sell_order_id = #{sellOrderId,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      is_last = #{isLast,jdbcType=TINYINT},
+      resp_code = #{respCode,jdbcType=VARCHAR},
+      resp_desc = #{respDesc,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

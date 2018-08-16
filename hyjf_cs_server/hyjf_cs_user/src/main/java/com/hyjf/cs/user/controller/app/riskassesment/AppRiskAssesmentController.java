@@ -14,6 +14,7 @@ import com.hyjf.cs.user.result.RiskAssesmentResponse;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.UserAnswerRequestBean;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,7 @@ public class AppRiskAssesmentController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "风险测评")
     @GetMapping(value = "/riskTest")
     public RiskAssesmentResponse getQuestionList(HttpServletRequest request) {
 
@@ -115,6 +117,7 @@ public class AppRiskAssesmentController extends BaseUserController {
     /**
      * 风险测评提交
      */
+    @ApiOperation(value = "风险测评提交")
     @PostMapping(value = "/riskTest")
     public RiskAssesmentResponse evaluationResult(HttpServletRequest request,
                                                   @RequestBody UserAnswerRequestBean userAnswerRequestBean) {
@@ -148,6 +151,7 @@ public class AppRiskAssesmentController extends BaseUserController {
     /**
      * 风险空测评提交  -- 跳过测评
      */
+    @ApiOperation(value = "风险空测评提交  -- 跳过测评")
     @PostMapping(value = "/riskTestNone")
     public RiskAssesmentResponse skipEvaluate(HttpServletRequest request) {
 

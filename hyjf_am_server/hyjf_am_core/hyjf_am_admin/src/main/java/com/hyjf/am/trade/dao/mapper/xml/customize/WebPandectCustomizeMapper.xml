@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WebPandectCustomizeMapper">
+	<resultMap id="CreditInfoResult"
+		type="com.hyjf.am.trade.dao.model.customize.WebPandectCreditTenderCustomize">
+		<result column="credit_interest_yes" property="creditInterestYes" />
+		<result column="credit_assign" property="creditAssign" />
+		<result column="credit_capital_wait" property="creditCapitalWait" />
+		<result column="credit_interest_wait" property="creditInterestWait" />
+		<result column="credit_capital" property="creditCapital" />
+	</resultMap>
+
+	<resultMap id="RecoverInfoResult"
+	type="com.hyjf.am.trade.dao.model.customize.WebPandectBorrowRecoverCustomize" >
+		<result column="credit_amount" property="creditAmount" />
+		<result column="credit_interest_amount" property="creditInterestAmount" />
+	</resultMap>
+
+	<resultMap id="WaitMoneyResult"
+	type="com.hyjf.am.trade.dao.model.customize.WebPandectWaitMoneyCustomize" >
+		<result column="wait_capital" property="waitCapital" />
+		<result column="recover_interest" property="recoverInterest" />
+	</resultMap>
+
+	<resultMap id="RecoverMoneyResult"
+	type="com.hyjf.am.trade.dao.model.customize.WebPandectRecoverMoneyCustomize" >
+		<result column="recover_capital" property="recoverCapital" />
+		<result column="recover_interest" property="recoverInterest" />
+	</resultMap>
+
+	<!-- 债转统计 -->
+	<select id="queryCreditInfo" resultMap="CreditInfoResult"
+		parameterType="java.lang.Integer">
+		SELECT
+		sum(assign_repay_interest) as credit_interest_yes,
+		sum(assign_pay) as credit_assign,
+		(sum(assign_capital)-sum(assign_repay_capital)) as credit_capital_wait,
+		sum(assign_capital) as credit_capital,
+		(sum(assign_account)-sum(assign_capital)-sum(assign_repay_interest)) as credit_interest_wait
+		FROM ht_credit_tender t
+		WHERE user_id= #{userId}
+	</select>
+
+	<!-- 去掉已债转（r.recover_status=1）; 去掉待收已债转（r.recover_status=0）  -->
+	<select id="queryRecoverInfo" resultMap="RecoverInfoResult" parameterType="java.lang.Integer">
+		SELECT
+		sum(r.credit_amount) as credit_amount,
+		<if test="recoverStatus != null">
+			<if test="recoverStatus == 0">
+				IFNULL((
+					SELECT
+						sum(ct.assign_interest-ct.assign_repay_interest)
+					FROM
+					ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
+					LEFT JOIN ht_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
+					WHERE 1=1
+						<if test="userId!=null and userId != 0">
+							AND r.user_id= #{userId}
+						</if>
+						AND r.recover_status= 0
+				),0) AS credit_interest_amount
+			</if>
+			<if test="recoverStatus == 1">
+				IFNULL((
+					SELECT
+						sum(ct.assign_repay_interest)
+					FROM
+					ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
+					LEFT JOIN ht_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
+					WHERE 1=1
+						<if test="userId!=null and userId != 0">
+							AND r.user_id= #{userId}
+						</if>
+				),0) - IFNULL((
+					SELECT
+						sum(r.credit_interest_amount)
+					FROM
+				ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
+					AND r.recover_period = bc.credit_period
+					WHERE 1=1
+						<if test="userId!=null and userId != 0">
+							AND r.user_id= #{userId}
+						</if>
+				),0) AS credit_interest_amount
+			</if>
+		</if>
+			FROM ht_borrow_recover r
+		WHERE 1=1
+		<if test="userId!=null and userId != 0">
+			AND r.user_id= #{userId}
+		</if>
+		<if test="recoverStatus!=null">
+			AND r.recover_status= #{recoverStatus}
+		</if>
+	</select>
+
+	<!-- 去掉待收已债转 -->
+<!-- 	<select id="queryRecoverWaitInfo" resultType="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT
+		sum(credit_amount) as credit_amount,
+		sum(credit_interest_amount) as credit_interest_amount
+		FROM huiyingdai_borrow_recover r
+		LEFT JOIN huiyingdai_borrow b ON b.borrow_nid = r.borrow_nid
+		WHERE r.user_id= #{userId}
+		AND r.recover_status=0
+	</select> -->
+
+	<!-- 投标冻结金额  -->
+ 	<select id="queryFrostCapital" resultType="java.math.BigDecimal"
+		parameterType="java.lang.Integer">
+		SELECT
+		sum(account) as frost_capital
+		FROM ht_borrow_tender
+		WHERE user_id= #{userId}
+		AND status=0
+	</select>
+
+	<!-- 累计投资金额  -->
+ 	<select id="queryInvestTotal" resultType="java.math.BigDecimal"
+		parameterType="java.lang.Integer">
+		SELECT
+		sum(account) as account_all
+		FROM ht_borrow_tender
+		WHERE user_id= #{userId}
+		AND status=1
+	</select>
+
+	<!-- 待收本金 和 待收利息  -->
+ 	<select id="queryWaitMoney" resultMap="WaitMoneyResult" parameterType="java.lang.Integer">
+		SELECT
+		sum(recover_account_capital_wait) as wait_capital,
+		sum(recover_account_interest_wait) as recover_interest
+		FROM ht_borrow_tender
+		WHERE user_id= #{userId}
+		AND status=1
+	</select>
+	<!-- 融通宝 待收利息  -->
+ 	<select id="queryWaitMoneyForRtb" resultMap="WaitMoneyResult" parameterType="java.lang.Integer">
+		SELECT
+		sum(repay_interest_wait) as recover_interest
+		FROM ht_increase_interest_invest
+		WHERE user_id= #{userId}
+		AND status=1
+	</select>
+
+	<!-- 已回收的本金 和 利息  -->
+ 	<select id="queryRecoverMoney" resultMap="RecoverMoneyResult" parameterType="java.lang.Integer">
+		SELECT
+		sum(recover_capital_yes) as recover_capital,
+		sum(recover_interest_yes) as recover_interest
+		FROM ht_borrow_recover
+		WHERE user_id= #{userId}
+		AND status=1
+	</select>
+	<!-- 已回收的本金 和 利息  -->
+ 	<select id="queryRecoverMoneyForRtb" resultMap="RecoverMoneyResult" parameterType="java.lang.Integer">
+		SELECT
+			sum(repay_interest_yes) as recover_interest
+		FROM ht_increase_interest_loan
+		WHERE user_id= #{userId}
+	</select>
+
+	<!--  应还总额（利息+本金）  -->
+ 	<select id="queryRecoverAccount" resultType="java.math.BigDecimal"
+		>
+		SELECT
+			sum(recover_account) as recover_account
+		FROM ht_borrow_recover
+		WHERE user_id= #{userId}
+		AND status=1        <!-- 所有都是1，无意义  -->
+		AND recover_status=0  <!-- recover_status  0是未还（包含分期未还完），1是已还 -->
+		AND borrow_nid= #{borrowNid}
+	</select>
+
+	<!-- 最近待收金额  (这个脚本直接用自动生成的sql)  -->
+<!--  	<select id="queryRecentlyWaitMoney" resultMap="java.lang.Integer"
+		parameterType="java.lang.Integer">
+		SELECT  user_id, recover_account, recover_interest,
+				recover_capital, recover_account_yes, recover_interest_yes,
+				recover_capital_yes, recover_account_wait
+		FROM ht_borrow_recover
+		WHERE user_id= #{userId}
+		AND recover_status=0
+
+		ORDER BY recover_time asc
+	</select> -->
+
+
+	<!-- 获取汇天利 购买明细表可赎回金额总额  -->
+ 	<select id="queryHtlSumRestAmount" resultType="java.math.BigDecimal"
+		parameterType="java.lang.Integer">
+		SELECT   sum(rest_amount) as rest_amount
+		FROM ht_product_list
+		WHERE user_id= #{userId}
+		AND status=0  <!-- 0  未赎回 1 已赎回 -->
+	</select>
+
+	<!-- 获取汇天利总收益  -->
+ 	<select id="queryHtlSumInterest" resultType="java.math.BigDecimal"
+		parameterType="java.lang.Integer">
+		SELECT   sum(interest) as interest
+		FROM ht_product_redeem
+		WHERE user_id= #{userId}
+	</select>
+
+	<update id="updateUserAuthStatus" parameterType="java.util.HashMap" >
+			UPDATE  ht_r_user
+			SET auth_type =#{authType},
+			 auth_status =#{appointment},
+			 auth_time =now()
+			WHERE
+				user_id = #{userId}
+	</update>
+	<insert id="insertAppointmentAuthLog" parameterType="java.util.HashMap" >
+		INSERT INTO hyjf_appointment_auth_log (
+			user_id,
+			auth_type,
+			auth_status,
+			add_time
+		)
+		VALUES
+			(#{userId}, #{authType}, #{appointment}, NOW())
+	</insert>
+
+</mapper>
+

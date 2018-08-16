@@ -2,13 +2,16 @@ package com.hyjf.cs.trade.service.projectlist.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -17,6 +20,7 @@ import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.UserCouponConfigCustomizeVo;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -252,7 +256,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 可用优惠券张数开始 pccvip */
             request.setMoney("0");
             Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
-            other.put("couponAvailableCount", String.valueOf(couponAvailableCount));
+            other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
             other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
@@ -625,8 +629,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         Map<String, Object> result = new HashMap<>();
         // 获取债转的详细参数
-        //BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
-        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);//
+        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);
         BorrowCreditDetailVO creditDetail = response.getResult();
         if (Validator.isNull(creditDetail)) {
             throw new RuntimeException("债转详情不存在");
@@ -938,12 +941,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             logger.error("web查询原子层计划专区计划列表数据count异常");
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
-      /*  // 上部统计数据
-        Map<String, Object> map = amTradeClient.searchPlanData(request);
-        if (map == null) {
-            logger.error("web查询原子层计划专区统计数据异常");
-            throw new RuntimeException("web查询原子层计划专区统计数据异常");
-        }*/
         if (count > 0) {
             List<HjhPlanCustomizeVO> list = amTradeClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)) {
@@ -1027,7 +1024,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             myCouponListRequest.setUserId(userId);
             myCouponListRequest.setBorrowNid(planNid);
            // BestCouponListVO bestCouponList = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
-            availableCouponListCount = amTradeClient.countAvaliableCoupon(myCouponListRequest);
+            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);//countAvaliableCoupon(myCouponListRequest);
             /** 获取用户优惠券总张数开始 pccvip */
             result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */
@@ -1217,7 +1214,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             accedeTotal = 0.00;
         } else {
             count = (Integer) totalData.get("count");
-            accedeTotal = (double) totalData.get("sum");
+            accedeTotal =  totalData.get("sum") == null ? 0.00 : (double) totalData.get("sum");
         }
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         info.put("planAccedeList", new ArrayList<>());
@@ -1278,4 +1275,45 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     }
 
 
+    /**
+     * 根据计划编号和用户id查询用户优惠券
+     * @author zhangyk
+     * @date 2018/8/16 11:08
+     */
+    @Override
+    public WebResult getProjectAvailableUserCoupon(WebPlanRequestBean requestBean, Integer userId) {
+        WebResult result = new WebResult();
+        String planNid = requestBean.getPlanNid();
+        String money = requestBean.getMoney();
+        CheckUtil.check(StringUtils.isNotBlank(planNid),MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
+        if (StringUtils.isBlank(money)){
+            money = "0";
+        }
+        if (userId == null){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("availableCouponList",  new ArrayList<CouponBeanVo>());
+            jsonObject.put("notAvailableCouponList", new ArrayList<CouponBeanVo>());
+            jsonObject.put("availableCouponListCount", 0);
+            jsonObject.put("notAvailableCouponListCount", 0);
+            result.setData(jsonObject);
+            return result;
+        }
+        String platform = CustomConstants.CLIENT_PC;
+        Object object = getAvailableUserCoupon(planNid,userId,money,platform);
+        result.setData(object);
+        return null;
+    }
+
+    private Object getAvailableUserCoupon(String planNid,Integer userId,String money,String platform){
+       MyCouponListRequest request = new MyCouponListRequest();
+       request.setBorrowNid(planNid);
+       request.setUserId(userId.toString());
+       request.setPlatform(platform);
+       request.setMoney(money);
+       CouponResponse response = amTradeClient.getPlanCoupon(request);
+       if (Response.isSuccess(response)){
+           return response.getResult();
+       }
+       return null;
+    }
 }

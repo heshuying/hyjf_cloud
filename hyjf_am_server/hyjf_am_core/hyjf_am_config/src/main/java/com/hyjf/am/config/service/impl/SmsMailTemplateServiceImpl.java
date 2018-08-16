@@ -69,7 +69,7 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
 		if (request != null) {
 			SmsMailTemplate smsMailTemplate = new SmsMailTemplate();
 			BeanUtils.copyProperties(request, smsMailTemplate);
-			smsMailTemplateMapper.insert(smsMailTemplate);
+			smsMailTemplateMapper.insertSelective(smsMailTemplate);
 		}
 	}
 

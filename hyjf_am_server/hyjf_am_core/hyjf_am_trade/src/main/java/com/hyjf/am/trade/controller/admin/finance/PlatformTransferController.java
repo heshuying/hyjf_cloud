@@ -53,7 +53,7 @@ public class PlatformTransferController extends BaseController {
         Integer count = platformTransferService.getPlatformTransferCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }

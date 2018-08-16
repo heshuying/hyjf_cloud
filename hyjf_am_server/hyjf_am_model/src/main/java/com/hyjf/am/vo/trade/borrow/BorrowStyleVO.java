@@ -1,22 +1,26 @@
 package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 /*
  *还款方式
  */
+@ApiModel(value = "还款方式")
 public class BorrowStyleVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "标示名")
     private String nid;
-
+    @ApiModelProperty(value = "状态：是否启用")
     private Integer status;
-
+    @ApiModelProperty(value = "名称")
     private String name;
-    //前端页面显示用
+    @ApiModelProperty(value = "前端页面显示用")
     private String label;
-
+    @ApiModelProperty(value = "名称，可改")
     private String title;
 
     private static final long serialVersionUID = 1L;

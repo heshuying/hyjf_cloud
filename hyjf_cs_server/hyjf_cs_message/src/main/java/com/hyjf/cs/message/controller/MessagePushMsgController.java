@@ -3,16 +3,20 @@
  */
 package com.hyjf.cs.message.controller;
 
-import java.util.List;
-
 import com.hyjf.am.response.admin.MessagePushMsgResponse;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.msgpush.MessagePushMsgService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hyjf.cs.message.service.msgpush.MsgPushService;
+import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -20,16 +24,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.mc.MessagePush;
-import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
-import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
-import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
-import com.hyjf.cs.message.service.msgpush.MsgPushService;
-import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
+import java.util.List;
 
 /**
  * 消息推送定时任务
@@ -37,6 +34,7 @@ import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
  * @author fuqiang
  * @version MessagePushMsgController, v0.1 2018/6/21 15:52
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/app_message")
 public class MessagePushMsgController extends BaseController {

@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,20 +40,19 @@ public class UserAuthExceptionController extends BaseController {
      * 自动投资债转授权异常list查询
      * @auth sunpeikai
      * @param request 筛选条件请求参数
-     * @return JSONObject 拼装的返回参数
+     * @return
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
-    public AdminResult userAuthException(@RequestBody AdminUserAuthListRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<AdminUserAuthListVO>> userAuthException(@RequestBody AdminUserAuthListRequest request){
+        Integer recordTotal = 0;
+        List<AdminUserAuthListVO> resultList = new ArrayList<>();
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
-            Integer recordTotal = response.getRecordTotal();
-            List<AdminUserAuthListVO> resultList = response.getResultList();
-            return new AdminResult<ListResult<AdminUserAuthListVO>>(ListResult.build(resultList,recordTotal));
-        }else{
-            return new AdminResult(FAIL,FAIL_DESC);
+            recordTotal = response.getRecordTotal();
+            resultList = response.getResultList();
         }
+        return new AdminResult<>(ListResult.build(resultList,recordTotal));
     }
     /**
      * 同步用户授权状态

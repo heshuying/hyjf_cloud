@@ -1414,4 +1414,10 @@ public interface AmConfigClient {
 	 * @param request
 	 */
 	void closeSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 修改短信模版
+	 * @param request
+	 */
+    void updateSmsTemplate(SmsTemplateRequest request);
 }

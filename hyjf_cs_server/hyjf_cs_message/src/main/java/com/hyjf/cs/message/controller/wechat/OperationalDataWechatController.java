@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author tanyy
  * @version OperationalDataController, v0.1 2018/1/16 17:39
  */
-
+@ApiIgnore
 @RestController
 @RequestMapping("/hyjf-wechat/find/operationalData")
 public class OperationalDataWechatController {

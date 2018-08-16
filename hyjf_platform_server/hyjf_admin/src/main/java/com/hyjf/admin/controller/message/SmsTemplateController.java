@@ -88,6 +88,29 @@ public class SmsTemplateController extends BaseController {
 		}
 	}
 
+	/**
+	 * 修改短信模版
+	 *
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "修改短信模版", notes = "修改短信模版")
+	@PostMapping("/updateSmsTemplate")
+	public JSONObject updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			smsTemplateService.updateSmsTemplate(request);
+			jsonObject.put("status", "000");
+			jsonObject.put("statusDesc", "修改短信模版成功");
+			return jsonObject;
+		} catch (Exception e) {
+			logger.error("修改短信模版失败...", e);
+			jsonObject.put("status", "99");
+			jsonObject.put("statusDesc", "修改短信模版失败");
+			return jsonObject;
+		}
+	}
+
 	@ApiOperation(value = "开启短信模版", notes = "开启短信模版")
 	@PostMapping("/openAction")
 	public JSONObject openAction(@RequestBody SmsTemplateRequest request) {

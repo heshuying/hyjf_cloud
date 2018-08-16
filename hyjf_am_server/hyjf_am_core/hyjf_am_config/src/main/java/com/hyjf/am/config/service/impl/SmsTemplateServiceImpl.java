@@ -95,4 +95,11 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 		smsTemplate.setStatus(0);
 		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
 	}
+
+	@Override
+	public void updateSmsTemplate(SmsTemplateRequest request) {
+		SmsTemplate smsTemplate = new SmsTemplate();
+		BeanUtils.copyProperties(request, smsTemplate);
+		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	}
 }

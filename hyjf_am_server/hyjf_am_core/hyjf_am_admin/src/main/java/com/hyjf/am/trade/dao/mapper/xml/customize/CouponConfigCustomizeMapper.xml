@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.CouponConfigCustomizeMapper">
+	<resultMap id="selectCouponConfigMap" type="com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />
+		<result column="coupon_quantity" property="couponQuantity" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="issue_number" property="issueNumber" jdbcType="VARCHAR" />
+		<result column="expiration_type" property="expirationType" jdbcType="VARCHAR" />
+		<result column="expiration_date" property="expirationDate" jdbcType="VARCHAR" />
+		<result column="expiration_length" property="expirationLength" jdbcType="VARCHAR" />
+		<result column="is_expiration" property="isExpiration" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+		<sql id="Where_Clause">
+		<where>
+		    c.del_flag = 0
+			<!-- 优惠券名称 -->
+			<if test="couponName != null and couponName != ''">
+				AND c.coupon_name LIKE CONCAT('%', #{couponName}, '%')
+			</if>
+			<if test="couponCode != null and couponCode != ''">
+				AND c.coupon_code = #{couponCode}
+			</if>
+			<!-- 优惠券类型 -->
+			<if test="couponType != null and couponType != ''">
+				AND c.coupon_type = #{couponType}
+			</if>
+			<if test="status != null and status != ''">
+				AND c.status = #{status}
+			</if>
+			<!-- 时间 -->
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( c.audit_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( c.audit_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+			
+		</where>
+	</sql>
+	<!--<select id="getCouponfigByUserIdAndBorrowNid" resultType="com.hyjf.mybatis.model.customize.app.AppCouponInfoCustomize" parameterType="java.util.Map">-->
+			<!--SELECT  c.coupon_name AS couponName,-->
+				    <!--c.coupon_code AS couponCode,-->
+				    <!--c.coupon_quota AS couponQuota,-->
+				    <!--c.coupon_type AS couponType,-->
+					<!--d.real_tender_id AS realOrderId,-->
+					<!--t.recover_account_capital_wait AS recoverAccountCapitalWait,-->
+					<!--t.recover_account_interest_wait AS recoverAccountInterestWait,-->
+					<!--t.recover_account_wait AS recoverAaccountWait-->
+				<!--FROM hyjf_borrow_tender_cpn t-->
+				<!--LEFT JOIN hyjf_coupon_tender a ON a.order_id = t.nid-->
+				<!--LEFT JOIN hyjf_coupon_user b ON a.coupon_grant_id = b.id-->
+				<!--LEFT JOIN hyjf_coupon_config c ON c.coupon_code = b.coupon_code-->
+				<!--LEFT JOIN hyjf_coupon_real_tender d ON d.coupon_tender_id = t.nid-->
+					<!--WHERE 2 = 2-->
+			<!--<if test="userId != null" >-->
+				<!--AND t.user_id = #{userId}-->
+		    <!--</if>-->
+			<!--<if test="orderId != null" >-->
+				<!--AND t.nid = #{orderId}-->
+		    <!--</if>-->
+		    <!--limit 1-->
+	<!--</select>-->
+	<select id="selectCouponConfigList" resultMap="selectCouponConfigMap" parameterType="Map">
+			SELECT
+				c.id,
+				c.coupon_name,
+				c.coupon_code,
+				c.coupon_type,
+				CASE c.coupon_type 
+				WHEN 1 THEN FORMAT(c.coupon_quota, 2) 
+				ELSE c.coupon_quota 
+				END AS coupon_quota,
+				c.coupon_quantity,
+				(SELECT COUNT(1) FROM ht_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,
+				c.expiration_type,
+				CASE c.expiration_type 
+				WHEN 1 THEN  FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d')
+				WHEN 2 THEN  concat(c.expiration_length , '个月')
+				WHEN 3 THEN  concat(c.expiration_length_day , '天')
+				END  AS expiration_date,
+				c.expiration_length,
+				CASE c.expiration_type 
+				WHEN 1 THEN  IF(FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d %H:%i:%s')<![CDATA[<]]>ADDDATE(now(),interval -1 day), 0, 1)
+				WHEN 2 THEN  1
+				WHEN 3 THEN  1
+				END  AS is_expiration,
+				FROM_UNIXTIME(c.audit_time,'%Y-%m-%d %H:%i:%s') AS add_time,
+				c.status
+			FROM
+				ht_coupon_config c
+			<include refid="Where_Clause" />
+			ORDER BY c.status,c.audit_time DESC
+			<if test="limitStart >= 0" >
+		      LIMIT #{limitStart} , #{limitEnd}
+		    </if>
+	</select>
+	
+	<select id="selectCouponPublishedCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+	     SELECT COUNT(1) FROM hyjf_coupon_user a WHERE a.coupon_code = #{couponCode} and a.del_flag = 0
+	</select>
+	
+    <select id="countCouponConfig" resultType="java.lang.Integer" parameterType="Map">
+	     SELECT
+				count(1)
+			FROM
+				ht_coupon_config c
+			<include refid="Where_Clause" />
+	</select>
+	
+	
+	
+	<!--<resultMap id="exportCouponConfigMap" type="com.hyjf.mybatis.model.customize.coupon.CouponConfigExoportCustomize">-->
+		<!--&lt;!&ndash; <result column="id" property="id" jdbcType="INTEGER" /> &ndash;&gt;-->
+		<!--<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />-->
+		<!--<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />-->
+		<!--<result column="coupon_quota" property="couponQuota" jdbcType="VARCHAR" />-->
+		<!--<result column="coupon_quantity" property="couponQuantity" jdbcType="VARCHAR" />-->
+		<!--<result column="issue_number" property="issueNumber" jdbcType="VARCHAR" />-->
+		<!--<result column="expiration_date" property="expirationDate" jdbcType="VARCHAR" />-->
+		<!--<result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />-->
+		<!--<result column="project_type" property="projectType" jdbcType="VARCHAR" />-->
+		<!--<result column="tender_quota" property="tenderQuota" jdbcType="VARCHAR" />-->
+		<!--<result column="project_expiration_type" property="projectExpirationType" jdbcType="VARCHAR" />-->
+		<!--<result column="status" property="status" jdbcType="VARCHAR" />-->
+		<!--<result column="add_time" property="addTime" jdbcType="VARCHAR" />-->
+		<!--<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />-->
+	<!--</resultMap>	-->
+	<!--<select id="exportCouponConfigList" resultMap="exportCouponConfigMap" parameterType="com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize">-->
+			<!--SELECT -->
+			<!--c.coupon_name,-->
+			<!--CASE c.coupon_type -->
+							<!--WHEN 1 THEN '体验金' -->
+							<!--WHEN 2 THEN '加息券' -->
+							<!--WHEN 3 THEN '代金券'-->
+							<!--END AS coupon_type,				-->
+							<!--CASE c.coupon_type -->
+							<!--WHEN 1 THEN FORMAT(c.coupon_quota, 2) -->
+							<!--ELSE c.coupon_quota -->
+							<!--END AS coupon_quota,-->
+			<!--c.coupon_quantity,-->
+			<!--(SELECT COUNT(1) FROM hyjf_coupon_user a WHERE a.coupon_code = c.coupon_code and a.used_flag in (0,1,4) and a.del_flag = 0) AS issue_number,-->
+			<!--CASE c.expiration_type -->
+							<!--WHEN 1 THEN  FROM_UNIXTIME(c.expiration_date,'%Y-%m-%d')-->
+							<!--WHEN 2 THEN  concat(c.expiration_length , '个月')-->
+							<!--WHEN 3 THEN  concat(c.expiration_length_day , '天')-->
+							<!--END  AS expiration_date,-->
+			<!--c.coupon_system coupon_system,-->
+						 <!--c.project_type project_type,-->
+						 <!--CASE-->
+						<!--WHEN c.tender_quota_type = 0 THEN-->
+							<!--'投资金额不限'-->
+						<!--WHEN c.tender_quota_type = 1 THEN-->
+							<!--CONCAT(-->
+								<!--c.tender_quota_min,-->
+								<!--'元~',-->
+								<!--c.tender_quota_max,-->
+								<!--'元'-->
+							<!--)-->
+						<!--WHEN c.tender_quota_type = 2 THEN-->
+							<!--CONCAT(-->
+								<!--'大于等于',-->
+								<!--c.tender_quota,-->
+								<!--'元'-->
+							<!--)-->
+						<!--ELSE-->
+							<!--'投资金额不限'-->
+						<!--END tender_quota,-->
+						 <!--CASE-->
+						<!--WHEN c.project_expiration_type = 0 THEN-->
+							<!--'投资期限不限'-->
+						<!--WHEN c.project_expiration_type = 1 THEN-->
+							<!--CONCAT(-->
+								<!--'等于',-->
+								<!--c.project_expiration_length,-->
+								<!--'月'-->
+							<!--)-->
+						<!--WHEN c.project_expiration_type = 2 THEN-->
+							<!--CONCAT(-->
+								<!--c.project_expiration_length_min,-->
+								<!--'月~',-->
+								<!--c.project_expiration_length_max,-->
+								<!--'月'-->
+							<!--)-->
+						<!--WHEN c.project_expiration_type = 3 THEN-->
+							<!--CONCAT(-->
+								<!--'大于等于',-->
+								<!--c.project_expiration_length,-->
+								<!--'月'-->
+							<!--)-->
+						<!--WHEN c.project_expiration_type = 4 THEN-->
+							<!--CONCAT(-->
+								<!--'小于等于',-->
+								<!--c.project_expiration_length,-->
+								<!--'月'-->
+							<!--)-->
+						<!--ELSE-->
+							<!--'项目期限不限'-->
+						<!--END project_expiration_type,-->
+			<!--CASE c.status-->
+							<!--WHEN 1 THEN  '待审核'-->
+							<!--WHEN 2 THEN  '已发行'-->
+							<!--WHEN 3 THEN  '审核不通过'-->
+							<!--END  AS status,-->
+			<!--FROM_UNIXTIME(c.add_time,'%Y-%m-%d %H:%i:%s') AS add_time,-->
+			<!--c.coupon_code-->
+			<!--from hyjf_coupon_config c-->
+			<!--<include refid="Where_Clause" />-->
+			<!--ORDER BY c.status,c.add_time DESC	-->
+			<!---->
+	<!--</select>-->
+	
+	
+	<!--<resultMap id="UserCouponConfigMap" type="com.hyjf.mybatis.model.customize.coupon.UserCouponConfigCustomize" >-->
+    <!--<id column="id" property="id" jdbcType="INTEGER" />-->
+    <!--<result column="user_coupon_id" property="userCouponId" jdbcType="VARCHAR" />-->
+    <!--<result column="end_time" property="endTime" jdbcType="VARCHAR" />-->
+    <!--<result column="coupon_add_time" property="couponAddTime" jdbcType="VARCHAR" />-->
+    <!---->
+    <!--<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />-->
+    <!--<result column="coupon_name" property="couponName" jdbcType="VARCHAR" />-->
+    <!--<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />-->
+    <!--<result column="coupon_quantity" property="couponQuantity" jdbcType="INTEGER" />-->
+    <!--<result column="expiration_type" property="expirationType" jdbcType="INTEGER" />-->
+    <!--<result column="expiration_date" property="expirationDate" jdbcType="INTEGER" />-->
+    <!--<result column="expiration_length" property="expirationLength" jdbcType="INTEGER" />-->
+    <!--<result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />-->
+    <!--<result column="coupon_type" property="couponType" jdbcType="INTEGER" />-->
+    <!--<result column="project_type" property="projectType" jdbcType="VARCHAR" />-->
+    <!--<result column="project_expiration_type" property="projectExpirationType" jdbcType="INTEGER" />-->
+    <!--<result column="project_expiration_length" property="projectExpirationLength" jdbcType="INTEGER" />-->
+    <!--<result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="INTEGER" />-->
+    <!--<result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="INTEGER" />-->
+    <!--<result column="tender_quota_type" property="tenderQuotaType" jdbcType="INTEGER" />-->
+    <!--<result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />-->
+    <!--<result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />-->
+    <!--<result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />-->
+    <!--<result column="content" property="content" jdbcType="VARCHAR" />-->
+    <!--<result column="status" property="status" jdbcType="INTEGER" />-->
+    <!--<result column="audit_content" property="auditContent" jdbcType="VARCHAR" />-->
+    <!--<result column="audit_user" property="auditUser" jdbcType="VARCHAR" />-->
+    <!--<result column="audit_time" property="auditTime" jdbcType="INTEGER" />-->
+    <!--<result column="add_time" property="addTime" jdbcType="INTEGER" />-->
+    <!--<result column="add_user" property="addUser" jdbcType="VARCHAR" />-->
+    <!--<result column="update_time" property="updateTime" jdbcType="INTEGER" />-->
+    <!--<result column="update_user" property="updateUser" jdbcType="VARCHAR" />-->
+    <!--<result column="del_flag" property="delFlg" jdbcType="INTEGER" />-->
+    <!---->
+    <!--<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />-->
+    <!---->
+    <!--<result column="add_flg" property="addFlg" jdbcType="INTEGER" />-->
+    <!--<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />-->
+  <!--</resultMap>-->
+  <!--<select id="getCouponConfigList" resultMap="UserCouponConfigMap" parameterType="java.util.Map">-->
+			<!--SELECT-->
+			<!--hcc.id,-->
+			<!--hcc.coupon_code,-->
+			<!--hcc.coupon_name,-->
+			<!--hcc.coupon_quota,-->
+			<!--hcc.coupon_quantity,-->
+			<!--hcc.expiration_type,-->
+			<!--hcc.expiration_date,-->
+			<!--hcc.expiration_length,-->
+			<!--hcc.coupon_system,-->
+			<!--hcc.coupon_type,-->
+			<!--hcc.project_type,-->
+			<!--hcc.project_expiration_type,-->
+			<!--hcc.project_expiration_length,-->
+			<!--hcc.project_expiration_length_min,-->
+			<!--hcc.project_expiration_length_max,-->
+			<!--hcc.tender_quota_type,-->
+			<!--hcc.tender_quota,-->
+			<!--hcc.tender_quota_min,-->
+			<!--hcc.tender_quota_max,-->
+			<!--hcc.content,-->
+			<!--hcc.`status`,-->
+			<!--hcc.audit_content,-->
+			<!--hcc.audit_user,-->
+			<!--hcc.audit_time,-->
+			<!--hcc.add_time,-->
+			<!--hcc.add_user,-->
+			<!--hcc.update_time,-->
+			<!--hcc.update_user,-->
+			<!--hcu.del_flag,-->
+			<!--hcu.id user_coupon_id,-->
+			<!--FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,-->
+			<!--FROM_UNIXTIME(hcu.add_time,'%Y.%m.%d') coupon_add_time,-->
+			<!--hcu.coupon_user_code coupon_user_code,-->
+			<!--hcc.add_flg add_flg,-->
+			<!--hcc.coupon_profit_time coupon_profit_time-->
+		<!--FROM-->
+			<!--hyjf_coupon_user hcu-->
+		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+		<!--WHERE-->
+			<!--hcu.user_id = #{userId}-->
+		<!--AND hcu.used_flag = 0-->
+		<!--AND hcu.del_flag = 0-->
+		<!--ORDER BY-->
+			<!--hcc.coupon_type,-->
+			<!--hcc.coupon_quota DESC,-->
+			<!--hcu.end_time,-->
+			<!--hcc.id-->
+	<!--</select>-->
+	
+	
+	<!--<select id="getBestCouponById" resultMap="UserCouponConfigMap" parameterType="java.lang.String" >-->
+			<!--SELECT-->
+			<!--hcc.id,-->
+			<!--hcc.coupon_code,-->
+			<!--hcc.coupon_name,-->
+			<!--hcc.coupon_quota,-->
+			<!--hcc.coupon_quantity,-->
+			<!--hcc.expiration_type,-->
+			<!--hcc.expiration_date,-->
+			<!--hcc.expiration_length,-->
+			<!--hcc.coupon_system,-->
+			<!--hcc.coupon_type,-->
+			<!--hcc.project_type,-->
+			<!--hcc.project_expiration_type,-->
+			<!--hcc.project_expiration_length,-->
+			<!--hcc.project_expiration_length_min,-->
+			<!--hcc.project_expiration_length_max,-->
+			<!--hcc.tender_quota_type,-->
+			<!--hcc.tender_quota,-->
+			<!--hcc.tender_quota_min,-->
+			<!--hcc.tender_quota_max,-->
+			<!--hcc.content,-->
+			<!--hcc.`status`,-->
+			<!--hcc.audit_content,-->
+			<!--hcc.audit_user,-->
+			<!--hcc.audit_time,-->
+			<!--hcc.add_time,-->
+			<!--hcc.add_user,-->
+			<!--hcc.update_time,-->
+			<!--hcc.update_user,-->
+			<!--hcu.del_flag,-->
+			<!--hcu.id user_coupon_id,-->
+			<!--FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,-->
+			<!--FROM_UNIXTIME(hcu.add_time,'%Y.%m.%d') coupon_add_time,-->
+			<!--hcc.add_flg add_flg,-->
+			<!--hcc.coupon_profit_time coupon_profit_time-->
+		<!--FROM-->
+			<!--hyjf_coupon_user hcu-->
+		<!--LEFT JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code-->
+		<!--WHERE-->
+			<!--hcu.id=#{couponId}-->
+			<!--AND hcu.used_flag = 0-->
+			<!--AND hcu.del_flag = 0-->
+	<!--</select>-->
+	
+	<!-- 校验优惠券发放数量是否超限 -->
+	<select id="checkCouponSendExcess" resultType="int" parameterType="java.lang.String" >
+		SELECT
+			IFNULL(cc.coupon_quantity,0) - IFNULL(COUNT(cu.id),0)
+		FROM
+			ht_coupon_user cu
+		RIGHT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+			cc.coupon_code = #{couponCode}
+	</select>
+
+	<resultMap id="couponConfigData" type="com.hyjf.am.vo.trade.coupon.CouponConfigVO">
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
+		<result column="coupon_type" property="couponType" jdbcType="INTEGER" />
+		<result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getCouponConfig" resultMap="couponConfigData" parameterType="java.lang.String">
+		SELECT
+		    cc.coupon_code,
+		    cc.coupon_quota,
+		    cc.coupon_type,
+		    cc.repay_time_config
+		FROM
+			ht_coupon_tender ct
+		INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+			ct.order_id = #{ordId}
+		AND ct.del_flag = 0
+		AND cu.del_flag = 0
+		AND cc.del_flag = 0
+	</select>
+
+	<update id="crRecoverPeriod" parameterType="java.util.Map">
+		UPDATE ht_coupon_recover r
+		SET r.current_recover_flg = #{currentRecoverFlg}
+		WHERE
+		r.tender_id = #{tenderNid}
+		<if test="period != null and period != 0">
+			AND r.recover_period = #{period}
+		</if>
+	</update>
+
+	<select id="getCouponProfitTime" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			c.coupon_profit_time
+		FROM
+			ht_coupon_tender t
+		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
+		INNER JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+		WHERE t.order_id=#{nid}
+	</select>
+
+	<update id="updateOfLoansTenderHjh" parameterType="com.hyjf.am.vo.trade.account.AccountVO">
+		update ht_account
+		set
+		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
+		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL},
+		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<resultMap id="couponRecoverAll" type="com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO">
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" />
+	</resultMap>
+
+	<select id="getCouponTenderListHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">
+		SELECT
+		ct.order_id,
+		bt.user_id,
+		ct.coupon_grant_id,
+		cu.coupon_user_code,
+		bt.borrow_nid
+		FROM
+		ht_borrow_tender_cpn bt
+		INNER JOIN ht_coupon_real_tender crt ON crt.coupon_tender_id = bt.nid
+		INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id
+		INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+		crt.real_tender_id = #{orderId}
+		<if test="repayTimeConfig != null">
+			AND cc.repay_time_config = #{repayTimeConfig}
+		</if>
+		AND ct.del_flag = 0
+	</select>
+
+</mapper>

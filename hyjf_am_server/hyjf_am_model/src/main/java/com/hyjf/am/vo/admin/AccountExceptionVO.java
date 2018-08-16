@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,27 +14,29 @@ import java.math.BigDecimal;
  * @author: zdj
  * @version: AccountExceptionVO, v0.1 2018/7/11 15:10
  */
+@ApiModel(value = "账户异常返回值")
 public class AccountExceptionVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
-
+    @ApiModelProperty(value = "用户名")
     private String username;
-
+    @ApiModelProperty(value = "客户号")
     private Long customId;
-
+    @ApiModelProperty(value = "手机号")
     private String mobile;
-
+    @ApiModelProperty(value = "平台可用金额")
     private BigDecimal balancePlat;
-
+    @ApiModelProperty(value = "平台冻结金额")
     private BigDecimal frostPlat;
-
+    @ApiModelProperty(value = "汇付可用金额")
     private BigDecimal balanceHuifu;
-
+    @ApiModelProperty(value = "汇付冻结金额")
     private BigDecimal frostHuifu;
-
+    @ApiModelProperty(value = "创建时间")
     private Integer createTime;
-
+    @ApiModelProperty(value = "角色")
     private String role;
 
     private static final long serialVersionUID = 1L;

@@ -43,6 +43,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -52,6 +53,7 @@ import java.util.*;
  * @version CouponRepayServiceImpl, v0.1 2018/6/21 18:14
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CouponRepayServiceImpl implements CouponRepayService {
 
     public static final Logger logger = LoggerFactory.getLogger(CouponRepayServiceImpl.class);
