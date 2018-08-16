@@ -7,6 +7,7 @@ import java.util.Map;
  * @author xiasq
  * @version MessageStatus, v0.1 2018/6/27 14:54
  */
+@Deprecated
 public enum MessageStatus {
 	UNKKOWN(0, "未确认"),
 	COMMIT(1, "已确认"),

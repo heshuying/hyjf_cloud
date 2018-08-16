@@ -23,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map;
 
 /**
@@ -186,16 +188,69 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
-		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
+
+		String order = request.getParameter(ORDER);
+		String platform = request.getParameter(PLATFORM);
+		String randomString = request.getParameter(RANDOM_STRING);
+		String token = signValue.getToken();
+		String key = signValue.getKey();
+
+		ctx.addZuulRequestHeader(TOKEN, token);
 		ctx.addZuulRequestHeader(SIGN, sign);
-		ctx.addZuulRequestHeader(KEY, signValue.getKey());
+		ctx.addZuulRequestHeader(KEY, key);
 		ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
 		ctx.addZuulRequestHeader(VERSION, signValue.getVersion());
-		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
-		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
+		ctx.addZuulRequestHeader(PLATFORM, platform);
+		ctx.addZuulRequestHeader(RANDOM_STRING,randomString );
 		ctx.addZuulRequestHeader(NET_STATUS, request.getParameter(NET_STATUS));
-		ctx.addZuulRequestHeader(ORDER, request.getParameter(ORDER));
+		ctx.addZuulRequestHeader(ORDER, order);
+		//todo
+//		if(!appRequestCheckOrder(order, request.getMethod(), platform, token, randomString,key)){
+//			logger.error("order check fail...");
+//			// 不对其进行路由
+//			this.buildErrorRequestContext(ctx, 502, "order is invalid!");
+//			return null;
+//		}
 		return ctx;
+	}
+
+	/**
+	 * app order check
+	 * @param order
+	 * @param method
+	 * @param platform
+	 * @param token
+	 * @param randomString
+	 * @param key
+	 * @return
+	 */
+	private boolean appRequestCheckOrder(String order, String method, String platform, String token,
+			String randomString, String key) {
+		// 如果是ios
+		if (CustomConstants.GET.equals(method) && CustomConstants.CLIENT_IOS.equals(platform)) {
+			try {
+				// get请求，则需要对token和order进行解码
+				if (StringUtils.isNotBlank(token)) {
+					token = URLDecoder.decode(token, "utf-8");
+				}
+				order = URLDecoder.decode(order, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				logger.error("parse decode fail...", e);
+				return false;
+			}
+		}
+
+		if (!StringUtils.isBlank(token)) {
+			// token校验
+			if (SecretUtil.checkOrder(key, token, randomString, order)) {
+				return true;
+			}
+		} else {
+			if (SecretUtil.checkOrder(key, randomString, order)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

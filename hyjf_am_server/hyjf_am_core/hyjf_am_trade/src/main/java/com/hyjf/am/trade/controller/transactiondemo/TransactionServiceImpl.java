@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void commitAmount(int userId) throws MQException {
 		boolean commitFlag = accountTProducer
-				.messageSend(new AccountTProducer.MassageContent("userTransationTest1" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
+				.send(new AccountTProducer.MassageContent("userTransationTest1" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
 		if (!commitFlag) {
 			throw new RuntimeException("事务消息发送失败...");
 		}

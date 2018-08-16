@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @EnableScheduling
+/** rocketmq升级4.3， 此回查针对4.2处理 */
+@Deprecated
 public class TransactionCheckScheduler {
 	private Logger logger = LoggerFactory.getLogger(TransactionCheckScheduler.class);
 
@@ -27,7 +29,7 @@ public class TransactionCheckScheduler {
 	/**
 	 * 每分钟执行一次
 	 */
-	@Scheduled(fixedRate = 60 * 1000)
+	//@Scheduled(fixedRate = 60 * 1000)
 	public void checkTransactionMessage() {
 		try {
 			logger.info("rocketmq事务回查开始....");
