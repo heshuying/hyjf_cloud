@@ -6,6 +6,7 @@ import com.hyjf.am.config.dao.model.auto.AppBorrowImageExample;
 import com.hyjf.am.config.service.AppBorrowImageService;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -20,7 +21,12 @@ import java.util.List;
 public class AppBorrowImageServiceImpl implements AppBorrowImageService {
     @Autowired
     AppBorrowImageMapper appBorrowImageMapper;
-
+    @Value("${file.physical.path}")
+    String PHYSICAL;
+    @Value("${file.upload.real.path}")
+    String REALPATH;
+    @Value("${file.upload.temp.path}")
+    String TEMPPATH;
     /**
      * 获取列表
      *
@@ -116,14 +122,11 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     private String moveUploadImage(AppBorrowImage record) throws Exception {
         // 保存的物理路径
-        // TODO PropUtils.getSystem("file.physical.path")
-        String filePhysicalPath = UploadFileUtils.getDoPath("");
+        String filePhysicalPath = UploadFileUtils.getDoPath(PHYSICAL);
         // 正式保存的路径
-        //TODO PropUtils.getSystem("file.upload.real.path")) + "borrowImage/" + UploadFileUtils.getDoPath(record.getBorrowImage()
-        String fileUploadRealPath = UploadFileUtils.getDoPath("");
+        String fileUploadRealPath = UploadFileUtils.getDoPath(REALPATH)+ "borrowImage/" + UploadFileUtils.getDoPath(record.getBorrowImage());
         // 临时文件夹
-        // TODO PropUtils.getSystem("file.upload.real.path")) + "borrowImage/" + UploadFileUtils.getDoPath(record.getBorrowImage()
-        String fileUploadTempPath = UploadFileUtils.getDoPath("");
+        String fileUploadTempPath = UploadFileUtils.getDoPath(TEMPPATH);
 
         File file = new File(filePhysicalPath + fileUploadRealPath + record.getBorrowImageRealname());
         if (!file.exists()) {

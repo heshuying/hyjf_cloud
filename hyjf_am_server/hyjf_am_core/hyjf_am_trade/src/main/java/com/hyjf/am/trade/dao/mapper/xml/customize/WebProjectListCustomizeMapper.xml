@@ -874,7 +874,7 @@
         <include refid="App_Where_Clause" />
         ORDER BY
         hydb.`status` ASC,
-        <if test="planform != null and planform =='wx'" >
+        <if test="platform != null and platform =='wx'" >
             hydb.borrow_account_scale DESC,
         </if>
         CASE

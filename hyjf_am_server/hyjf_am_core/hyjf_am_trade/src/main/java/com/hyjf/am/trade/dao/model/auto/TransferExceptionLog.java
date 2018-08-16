@@ -33,11 +33,11 @@ public class TransferExceptionLog implements Serializable {
 
     private Integer delFlag;
 
-    private String addUser;
+    private String createUser;
 
     private String updateUser;
 
-    private Date addTime;
+    private Date createTime;
 
     private Date updateTime;
 
@@ -155,13 +155,6 @@ public class TransferExceptionLog implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public String getAddUser() {
-        return addUser;
-    }
-
-    public void setAddUser(String addUser) {
-        this.addUser = addUser == null ? null : addUser.trim();
-    }
 
     public String getUpdateUser() {
         return updateUser;
@@ -171,19 +164,27 @@ public class TransferExceptionLog implements Serializable {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
-    public Date getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Date addTime) {
-        this.addTime = addTime;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

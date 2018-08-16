@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 优惠券过期短信提醒
  */
 @RestController
-@RequestMapping("batch/couponExpiredSms")
+@RequestMapping("/cs-trade/batch/couponExpiredSms")
 public class CouponExpiredSmsController {
 
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredSmsController.class);

@@ -112,18 +112,21 @@ public class WebBindCardController extends BaseUserController {
 			result.setStatus(ApiResult.ERROR);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口发生异常", e);
+			return result;
 		}
 
 		if (bankBean == null) {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口失败");
+			return result;
 		}
 
         if(!BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()) && !"JX900651".equals(bankBean.getRetCode())) {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口失败");
+			return result;
         }else {
 			result.setData(bankBean.getSrvAuthCode());
 		}

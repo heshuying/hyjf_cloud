@@ -39,7 +39,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CouponRepayController, v0.1 2018/7/9 11:12
  */
-@Api(value = "加息券还款统计",tags ="加息券还款统计")
+@Api(value = "资金中心-平台账户-加息券还款统计",tags ="资金中心-平台账户-加息券还款统计")
 @RestController
 @RequestMapping("/hyjf-admin/finance/couponrepaymonitor")
 public class CouponRepayController extends BaseController {
@@ -127,7 +127,7 @@ public class CouponRepayController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "数据导出",notes = "数据导出")
-    @RequestMapping("/exportAction")
+    @PostMapping("/exportAction")
     public void exportAction(HttpServletResponse response, CouponRepayRequest form) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "优惠券还款监测";

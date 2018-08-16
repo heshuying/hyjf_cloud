@@ -4,16 +4,18 @@ import com.hyjf.admin.client.BorrowFlowClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.apache.commons.collections.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +44,12 @@ public class BorrowFlowClientImpl implements BorrowFlowClient {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode){
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",List.class)
+        HjhInstConfigResponse response =restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",HjhInstConfigResponse.class)
                 .getBody();
+        if(response == null){
+           return null;
+        }
+        return response.getResultList();
     }
 
     /**

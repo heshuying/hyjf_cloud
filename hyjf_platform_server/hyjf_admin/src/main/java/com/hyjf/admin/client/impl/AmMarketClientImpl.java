@@ -2,12 +2,12 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
-import com.hyjf.am.response.admin.ContentAdsResponse;
-import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
+import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
+import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
@@ -205,4 +205,109 @@ public class AmMarketClientImpl implements AmMarketClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 获取发送消息表
+ 	 * @param bean
+	 * @return
+	 */
+	@Override
+	public MessagePushNoticesResponse getRecordList(MessagePushNoticesRequest bean) {
+		MessagePushNoticesResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/message_push_list",bean,
+						MessagePushNoticesResponse.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 添加发送消息列表
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public MessagePushNoticesResponse insertRecord(MessagePushNoticesRequest bean) {
+		MessagePushNoticesResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/insert_push_list",bean,
+						MessagePushNoticesResponse.class)
+				.getBody();
+		return response;
+	}
+
+	/**
+	 * 删除
+	 * @param bean
+	 * @return
+	 */
+    @Override
+    public MessagePushNoticesResponse deleteRecord(MessagePushNoticesRequest bean) {
+		MessagePushNoticesResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/delete_push_list",bean,
+						MessagePushNoticesResponse.class)
+				.getBody();
+		return response;
+
+	}
+
+	/**
+	 * 修改
+	 * @param bean
+	 * @return
+	 */
+	@Override
+	public MessagePushNoticesResponse updateRecord(MessagePushNoticesRequest bean) {
+		MessagePushNoticesResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/update_push_list",bean,
+						MessagePushNoticesResponse.class)
+				.getBody();
+		return response;
+
+	}
+
+	/**
+	 * 获取历史消息列表
+	 * @param request
+	 * @return
+	 */
+    @Override
+    public MessagePushHistoryResponse getRecordList(MessagePushHistoryRequest request) {
+		MessagePushHistoryResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/history_message/get_message_list",request,
+						MessagePushHistoryResponse.class)
+				.getBody();
+		return response;
+
+    }
+
+	/**
+	 * 获取标签
+	 * @return
+	 */
+	@Override
+	public MessagePushTagResponse getAllPushTagList() {
+		MessagePushTagResponse response = restTemplate
+				.getForEntity("http://CS-MESSAGE/cs-message/history_message/get_push_tag_list",
+						MessagePushTagResponse.class)
+				.getBody();
+		return response;
+
+	}
+
+    @Override
+    public MessagePushNoticesResponse getRecord(MessagePushNoticesRequest bean) {
+		MessagePushNoticesResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/get_push_record",bean,
+						MessagePushNoticesResponse.class)
+				.getBody();
+		return response;
+    }
+
+    @Override
+    public MessagePushTagResponse getTagList() {
+		MessagePushTagResponse response = restTemplate
+				.getForEntity("http://CS-MESSAGE/cs-message/history_message/get_push_tag",
+						MessagePushTagResponse.class)
+				.getBody();
+		return response;
+    }
 }

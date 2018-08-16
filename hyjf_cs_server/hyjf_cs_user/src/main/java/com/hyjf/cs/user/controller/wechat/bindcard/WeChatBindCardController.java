@@ -17,6 +17,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ public class WeChatBindCardController extends BaseUserController {
      * @param request
      */
     @PostMapping("/bindCardPage")
+    @ApiOperation(value = "绑卡", notes = "绑卡")
     public ModelAndView bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -110,6 +112,7 @@ public class WeChatBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/return")
+    @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
     public ModelAndView bindCardReturn(HttpServletRequest request, HttpServletResponse response,
                                        @ModelAttribute BankCallBean bean) {
 
@@ -166,6 +169,7 @@ public class WeChatBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/notifyReturn")
+    @ApiOperation(value = "绑卡异步回调", notes = "绑卡异步回调")
     public BankCallResult bgreturn(HttpServletRequest request,
                                    @ModelAttribute BankCallBean bean) {
         // 上送的异步地址里面有

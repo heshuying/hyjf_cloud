@@ -44,7 +44,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version BankMerchantAccountController, v0.1 2018/7/9 16:07
  */
-@Api(value = "江西银行商户子账户",tags ="江西银行商户子账户")
+@Api(value = "资金中心-银行平台账户-账户信息",tags ="资金中心-银行平台账户-账户信息")
 @RestController
 @RequestMapping("/hyjf-admin/bank/merchant/account")
 public class BankMerchantAccountController extends BaseController {
@@ -75,10 +75,11 @@ public class BankMerchantAccountController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "init")
+    @ApiOperation(value = "账户信息")
+    @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
         AdminSystemVO adminSystem = getUser(request);
-        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+      //  CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
@@ -112,7 +113,8 @@ public class BankMerchantAccountController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/setPassword")
+    @ApiOperation(value = "设置交易密码")
+    @PostMapping(value = "/setPassword")
     public AdminResult setPassword(HttpServletRequest request) {
         String accountCode = request.getParameter("accountCode");
         AdminResult result = bankMerchantAccountService.setPassword(accountCode);
@@ -124,7 +126,8 @@ public class BankMerchantAccountController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/passwordBgreturn")
+    @ApiOperation(value = "设置交易密码异步回调")
+    @PostMapping(value = "/passwordBgreturn")
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
@@ -145,7 +148,8 @@ public class BankMerchantAccountController extends BaseController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/resetPassword")
+    @ApiOperation(value = "重置交易密码")
+    @PostMapping(value = "/resetPassword")
     public AdminResult resetPassword(HttpServletRequest request) {
         String accountCode = request.getParameter("accountCode");
         AdminResult result = bankMerchantAccountService.resetPassword(accountCode);
@@ -157,7 +161,8 @@ public class BankMerchantAccountController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/resetPasswordBgreturn")
+    @ApiOperation(value = "重置交易密码异步回调")
+    @PostMapping(value = "/resetPasswordBgreturn")
     public String resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
@@ -169,8 +174,8 @@ public class BankMerchantAccountController extends BaseController {
      * @Description 调用银行失败原因
      * @Author
      */
-    @ApiOperation(value = "admin端-调用银行失败原因", notes = "admin端-调用银行失败原因")
-    @RequestMapping("/searchFiledMess")
+    @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
+    @PostMapping("/searchFiledMess")
     @ResponseBody
     public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
@@ -346,7 +351,7 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/8 14:17
      */
     @ResponseBody
-    @RequestMapping(value = RECHARGE_METHOD_NAME , produces = "application/json; charset=utf-8")
+    @PostMapping(value = RECHARGE_METHOD_NAME )
     public BankCallResult rechargeCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("圈存回调: 接收到参数[{}]",JSON.toJSONString(bean));
         logger.info( "公司账户[{}]充值回调开始", bean.getLogOrderId());
@@ -532,7 +537,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "提现异步回调", tags = "提现异步回调")
     @ResponseBody
-    @RequestMapping(value = WITHDRAW_METHOD_NAME , produces = "application/json; charset=utf-8")
+    @PostMapping(value = WITHDRAW_METHOD_NAME )
     public BankCallResult withdrawCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info(bean.getLogOrderId()+ " 公司账户提现回调开始");
         BankCallResult result = new BankCallResult();
@@ -596,8 +601,9 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 用户同步余额
      */
+    @ApiOperation(value = "用户同步余额")
     @ResponseBody
-    @RequestMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
     public JSONObject synbalance(HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         String accountCode = request.getParameter("accountCode");
@@ -617,12 +623,10 @@ public class BankMerchantAccountController extends BaseController {
         // 电子账号
         bean.setAccountId(accountCode);
         // 订单号
-        // TODO: 2018/8/8 zhangqingqing
-        //bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId())));
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId())));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        // TODO: 2018/8/8 zhangqingqing
-        //bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        bean.setLogUserId(getUser(request).getId());
         // 平台
         bean.setLogClient(0);
         try {
@@ -673,13 +677,13 @@ public class BankMerchantAccountController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/redPocketSendAction")
+    @ApiOperation(value = "发红包")
+    @PostMapping(value = "/redPocketSendAction")
     public AdminResult redPocketSendAction(HttpServletRequest request, @ModelAttribute RedPocketBean form) {
         AdminResult result = new AdminResult();
         // 查询商户子账户余额
         String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
-        // TODO: 2018/8/8
-        int loginUserId = 0;//Integer.parseInt(ShiroUtil.getLoginUserId());
+        int loginUserId = Integer.parseInt(getUser(request).getId());
         BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
         // 画面验证
         // TODO: 2018/8/8 zhangqingqing
@@ -690,9 +694,7 @@ public class BankMerchantAccountController extends BaseController {
         }*/
         // IP地址
         String ip = CustomUtil.getIpAddr(request);
-        // TODO: 2018/8/8
-      //  String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId()));
-        String orderId = "";
+        String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId()));
         BankCallBean bean = new BankCallBean();
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);
@@ -706,8 +708,7 @@ public class BankMerchantAccountController extends BaseController {
         bean.setDesLine(orderId);
         // 订单号
         bean.setLogOrderId(orderId);
-        // TODO: 2018/8/8
-       // bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        bean.setLogUserId(getUser(request).getId());
         // 平台
         bean.setLogClient(0);
         bean.setLogIp(ip);

@@ -75,6 +75,9 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             paraMap.put("timeEndSrch", request.getTimeEndSrch());
         }
 
+        paraMap.put("limitStart",request.getLimitStart());
+        paraMap.put("limitEnd",request.getLimitEnd());
+
         return transferExceptionLogCustomizeMapper.selectTransferExceptionList(paraMap);
     }
 

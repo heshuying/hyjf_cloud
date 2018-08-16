@@ -45,7 +45,7 @@ public class ActivityListController extends BaseController {
     /** 权限关键字 */
     public static final String PERMISSIONS = "activitylist";
 
-    @Value("${http://cdn.huiyingdai.com/}")
+    @Value("${file.domain.url}")
     private String fileDomainUrl;
 
     @Autowired

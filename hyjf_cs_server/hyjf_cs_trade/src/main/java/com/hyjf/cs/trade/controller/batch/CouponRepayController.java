@@ -19,7 +19,7 @@ import java.util.List;
  * 体验金收益期限还款
  */
 @RestController
-@RequestMapping("batch/couponPeriodRepay")
+@RequestMapping("/batch/couponPeriodRepay")
 public class CouponRepayController extends BaseTradeController {
     @Autowired
     private CouponRepayService couponRepayService;
