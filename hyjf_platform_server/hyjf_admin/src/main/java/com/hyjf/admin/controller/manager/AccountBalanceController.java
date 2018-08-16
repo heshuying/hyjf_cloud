@@ -34,7 +34,7 @@ import java.util.List;
  * @author：yinhui
  * @Date: 2018/8/7  9:32
  */
-@Api(value = "数据中心-汇计划统计", tags = "数据中心-汇计划统计")
+@Api(tags = "数据中心-汇计划统计")
 @RestController
 @RequestMapping("/hyjf-admin/manager/statis")
 public class AccountBalanceController extends BaseController {

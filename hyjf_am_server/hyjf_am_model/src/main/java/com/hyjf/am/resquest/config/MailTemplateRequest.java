@@ -3,35 +3,43 @@
  */
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author fuqiang
  * @version MailTemplateRequest, v0.1 2018/6/25 14:52
  */
-public class MailTemplateRequest extends Request implements Serializable {
-    private static final long serialVersionUID = -2804856326536538472L;
-
-    private String mailValue;
-
+public class MailTemplateRequest extends BasePage implements Serializable {
+    private Integer id;
+    @ApiModelProperty(value = "模板名称")
     private String mailName;
 
+    private String mailValue;
+    @ApiModelProperty(value = "状态")
     private Integer mailStatus;
-
-    private Integer createTime;
-
-    private Integer updateTime;
 
     private String mailContent;
 
-    public String getMailValue() {
-        return mailValue;
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setMailValue(String mailValue) {
-        this.mailValue = mailValue;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getMailName() {
@@ -39,7 +47,15 @@ public class MailTemplateRequest extends Request implements Serializable {
     }
 
     public void setMailName(String mailName) {
-        this.mailName = mailName;
+        this.mailName = mailName == null ? null : mailName.trim();
+    }
+
+    public String getMailValue() {
+        return mailValue;
+    }
+
+    public void setMailValue(String mailValue) {
+        this.mailValue = mailValue == null ? null : mailValue.trim();
     }
 
     public Integer getMailStatus() {
@@ -50,27 +66,43 @@ public class MailTemplateRequest extends Request implements Serializable {
         this.mailStatus = mailStatus;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getMailContent() {
         return mailContent;
     }
 
     public void setMailContent(String mailContent) {
-        this.mailContent = mailContent;
+        this.mailContent = mailContent == null ? null : mailContent.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

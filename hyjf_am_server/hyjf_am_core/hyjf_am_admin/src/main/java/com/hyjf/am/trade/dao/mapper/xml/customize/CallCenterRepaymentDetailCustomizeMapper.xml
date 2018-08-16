@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.trade.dao.mapper.customize.CallCenterRepaymentDetailCustomizeMapper">
+	<sql id="Where_Clause_Hzt">
+		<where>
+			<!-- 用户id -->
+			<if test="userId != null and userId != ''">
+				AND br.user_id = #{userId}
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="hztRepaymentDetailResultMap"
+		type="com.hyjf.am.trade.dao.model.customize.CallCenterHztRepaymentDetailCustomize">
+		<result column="borrowNid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrowName" property="borrowName" jdbcType="VARCHAR" />
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="repay_ordid" property="repayOrdid" jdbcType="VARCHAR" />
+		<result column="recoverCapital" property="recoverCapital" jdbcType="VARCHAR" />
+		<result column="recoverInterest" property="recoverInterest" jdbcType="VARCHAR" />
+		<result column="recoverAccount" property="recoverAccount" jdbcType="VARCHAR" />
+		<result column="recoverFee" property="recoverFee" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
+		<result column="repayActionTime" property="repayActionTime" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<select id="getHztRepaymentDetailList" resultMap="hztRepaymentDetailResultMap" parameterType="java.util.Map">
+		SELECT
+		br.borrow_nid AS borrowNid,
+		bi.name AS borrowName,
+		br.nid AS nid,
+		br.repay_ordid AS repay_ordid,
+		br.recover_capital AS recoverCapital,
+		br.recover_interest AS recoverInterest,
+		br.recover_Account AS recoverAccount,
+		br.recover_fee AS recoverFee,
+		CASE WHEN br.recover_status = 1 THEN '已还款' ELSE '未还款' END status,
+		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
+		b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
+		if(br.recover_yestime is null or br.recover_yestime='',
+		'',FROM_UNIXTIME(br.recover_yestime, '%Y-%m-%d %H:%i:%s' )) as repayActionTime
+		FROM
+		ht_borrow AS b
+		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+		INNER JOIN ht_borrow_info AS bi ON bi.borrow_nid=b.borrow_nid
+		<include refid="Where_Clause_Hzt" />
+		ORDER BY
+		br.recover_time ASC,b.id ASC
+		<if test="limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+	
+	
+	
+	<resultMap id="htjRepaymentDetailResultMap" type="com.hyjf.am.trade.dao.model.customize.CallCenterHtjRepaymentDetailCustomize">
+		<result column="debt_plan_nid" property="debtPlanNid" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<result column="repay_capital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repay_interest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="repay_interest_fact" property="repayInterestFact" jdbcType="VARCHAR" />
+		<result column="repay_account_fact" property="repayAccountFact" jdbcType="VARCHAR" />
+		<result column="liquidate_should_time" property="liquidateShouldTime" jdbcType="VARCHAR" />
+		<result column="last_repay_time" property="lastRepayTime" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+	
+	</resultMap>
+	
+	<sql id="Where_Clause_Htj">
+		<where>
+			<if test="userId != null and userId != ''">
+				AND dpa.user_id = #{userId}
+			</if>
+		</where>
+	</sql>
+	
+	
+	<select id="getHtjRepaymentDetailList" resultMap="htjRepaymentDetailResultMap" parameterType="java.util.Map">
+		SELECT
+			dpa.plan_nid debt_plan_nid,
+			dpa.accede_order_id,
+			dpa.accede_account,
+			dpa.repay_capital,
+			dpa.repay_interest,
+			dpa.repay_interest_yes  repay_interest_fact,
+			dpa.repay_account_yes  repay_account_fact,
+			case when dp.liquidate_should_time=0 then 0 else  FROM_UNIXTIME(
+				dp.liquidate_should_time,
+				'%Y-%m-%d'
+			) end liquidate_should_time,
+			DATE_FORMAT(
+			DATE_ADD(
+			FROM_UNIXTIME(
+				dp.liquidate_should_time,
+				'%Y-%m-%d'
+					),INTERVAL dp.debt_quit_period-1 DAY
+					),'%Y-%m-%d'
+					) last_repay_time,
+				FROM_UNIXTIME(
+				dp.repay_time,
+				'%Y-%m-%d'
+			) repay_time,
+			FROM_UNIXTIME(
+				dpa.create_time,
+				'%Y-%m-%d %H:%i:%s'
+			) create_time,
+			case when dpa.status=4 then '已还款' 
+			when dpa.status=5 then '已还款' 
+			else 
+			'未还款'
+			end status
+		FROM
+			ht_debt_plan_accede dpa
+		left join ht_debt_plan dp on dpa.plan_nid=dp.debt_plan_nid
+		<include refid="Where_Clause_Htj" />
+		
+		ORDER BY create_time DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	
+	
+</mapper>

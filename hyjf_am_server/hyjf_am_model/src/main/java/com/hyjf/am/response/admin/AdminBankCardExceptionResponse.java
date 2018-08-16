@@ -13,11 +13,21 @@ import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 public class AdminBankCardExceptionResponse extends Response<AdminBankCardExceptionCustomizeVO> {
     private int count;
 
+    private String resultMsg;
+
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getResultMsg() {
+        return resultMsg;
+    }
+
+    public void setResultMsg(String resultMsg) {
+        this.resultMsg = resultMsg;
     }
 }

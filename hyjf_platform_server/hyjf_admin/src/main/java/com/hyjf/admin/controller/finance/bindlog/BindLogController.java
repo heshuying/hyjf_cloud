@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.bindlog;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BindLogService;
@@ -49,14 +50,11 @@ public class BindLogController extends BaseController {
      */
     @ApiOperation(value = "查询绑定日志列表",notes = "查询绑定日志列表")
     @PostMapping(value = "/getbindloglist")
-    public AdminResult getBindLogList(@RequestBody BindLogListRequest request){
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<BindLogVO>> getBindLogList(@RequestBody BindLogListRequest request){
         Integer count = bindLogService.getBindLogCount(request);
         count = (count == null)?0:count;
-        map.put("count",count);
         List<BindLogVO> bindLogVOList = bindLogService.searchBindLogList(request);
-        map.put("bindLogVOList",bindLogVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(bindLogVOList,count));
     }
 
     /**

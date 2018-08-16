@@ -1,17 +1,20 @@
 package com.hyjf.admin.controller.productcenter.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.admin.service.HjhDebtCreditService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -30,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther:yangchangwei
@@ -60,13 +64,14 @@ public class HjhDebtCreditController extends BaseController{
         List<BorrowStyleVO> styleVOList = borrowRegistExceptionService.selectBorrowStyleList();
         if(styleVOList != null && styleVOList.size() > 0){
             jsonObject.put("还款方式列表","borrowStyleList");
-            jsonObject.put("borrowStyleList",styleVOList);
+            List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "nameCd", "name");
+            jsonObject.put("borrowStyleList",dropDownVOS);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取还款方式列表失败！");
         }
         //转让状态
-        List<ParamNameVO> hjhDebtCreditStatus = hjhDebtCreditService.getParamNameList(CustomConstants.HJH_DEBT_CREDIT_STATUS);
+        Map<String, String> hjhDebtCreditStatus = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_CREDIT_STATUS);
         if(hjhDebtCreditStatus != null && hjhDebtCreditStatus.size() > 0){
             jsonObject.put("转让状态列表","hjhDebtCreditStatus");
             jsonObject.put("hjhDebtCreditStatus",hjhDebtCreditStatus);
@@ -75,7 +80,7 @@ public class HjhDebtCreditController extends BaseController{
             jsonObject.put("msg","获取转让状态列表失败！");
         }
         //汇计划债转还款状态
-        List<ParamNameVO> hjhDebtRepayStatus = hjhDebtCreditService.getParamNameList(CustomConstants.HJH_DEBT_REPAY_STATUS);
+        Map<String, String> hjhDebtRepayStatus = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_REPAY_STATUS);
         if(hjhDebtRepayStatus != null && hjhDebtRepayStatus.size() > 0){
             jsonObject.put("还款状态列表","hjhDebtRepayStatus");
             jsonObject.put("hjhDebtRepayStatus",hjhDebtRepayStatus);

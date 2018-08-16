@@ -55,7 +55,7 @@ public class AppRegistController extends BaseUserController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @ApiOperation(value = "用户注册", notes = "app端-用户注册")
+    @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/registAction")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request){
         JSONObject ret = new JSONObject();

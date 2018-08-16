@@ -9,6 +9,7 @@ import com.hyjf.am.config.service.app.AppContentArticleService;
 import com.hyjf.am.response.app.AppContentArticleResponse;
 import com.hyjf.am.vo.app.AppContentArticleVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,18 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/am-config/find/contentArticle/")
 public class AppContentArticleController extends BaseConfigController {
 
+    @Autowired
     private AppContentArticleService appContentArticleService;
 
     /**
      * 根据id获取网贷知识
-     * @param contentArticleId
+     * @param id
      * @return
      */
-    @RequestMapping("/getContentArticleById/{contentArticleId}")
-    public AppContentArticleResponse getContentArticleById(@PathVariable(value = "contentArticleId") Integer contentArticleId){
-        logger.info("contentArticleId:" + contentArticleId);
+    @RequestMapping("/getContentArticleById/{id}")
+    public AppContentArticleResponse getContentArticleById(@PathVariable(value = "id") Integer id){
         AppContentArticleResponse response = new AppContentArticleResponse();
-        ContentArticle list = appContentArticleService.getContentArticleById(contentArticleId);
+        ContentArticle list = appContentArticleService.getContentArticleById(id);
         if(list != null){
             AppContentArticleVO voList = CommonUtils.convertBean(list, AppContentArticleVO.class);
             response.setResult(voList);

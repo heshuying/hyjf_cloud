@@ -13,11 +13,9 @@ import com.hyjf.cs.user.bean.ThirdPartyEvaluationResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zhangqingqing
@@ -40,7 +38,8 @@ public class ApiEvaluationController extends BaseUserController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/saveUserEvaluationResults")
+    @ApiOperation(value = "风险测评接口")
+    @PostMapping(value = "/saveUserEvaluationResults")
     public ApiResult<ThirdPartyEvaluationResultBean> saveUserEvaluationResults(@RequestBody ThirdPartyEvaluationRequestBean thirdPartyFinancialadvisorRequestBean) {
         ApiResult<ThirdPartyEvaluationResultBean> result = new ApiResult<>();
         ThirdPartyEvaluationResultBean resultBean = new ThirdPartyEvaluationResultBean();

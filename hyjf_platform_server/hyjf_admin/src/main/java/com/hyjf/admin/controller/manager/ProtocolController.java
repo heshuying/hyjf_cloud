@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author：yinhui
  * @Date: 2018/8/8  15:10
  */
-@Api(value = "配置中心-协议模板管理",tags ="配置中心-协议模板管理")
+@Api(tags ="配置中心-协议模板管理")
 @RestController
 @RequestMapping("/hyjf-admin/manager/protocol")
 public class ProtocolController extends BaseController{

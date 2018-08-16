@@ -6,17 +6,13 @@ package com.hyjf.cs.market.controller.wechat.find;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.market.bean.AppContentArticleBean;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -29,7 +25,7 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "微信发现页", tags = "微信发现页")
+@Api(tags = "wechat端-微信发现页")
 @RestController
 @RequestMapping("/hyjf-wechat/find")
 public class WechatFindController extends BaseMarketController {
@@ -37,8 +33,12 @@ public class WechatFindController extends BaseMarketController {
     private AppFindService appFindService;
 
     @ApiOperation(value = "根据类型获取文章", notes = "根据类型获取文章")
-    @RequestMapping("/contentArticle/getContentArticleListByType")
-    public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
+    @GetMapping("/contentArticle/getContentArticleListByType.do")
+    public JSONObject getContentArticleListByType(HttpServletRequest request, @RequestParam(value = "offset", required = false) String offset,
+                                                  @RequestParam(value = "type", required = false) String type,
+                                                  @RequestParam(value = "messageId", required = false) Integer messageId,
+                                                  @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+                                                  @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
@@ -46,19 +46,13 @@ public class WechatFindController extends BaseMarketController {
         try {
 
             // 检查参数正确性
-            if (Validator.isNull(form.getVersion()) || Validator.isNull(form.getPlatform())){
-                ret.put("status", "1");
-                ret.put("statusDesc", "请求参数非法");
-                return ret;
-            }
-            // 检查参数正确性
-            if (form.getSize()<0||form.getPage()<0){
+            if (pageSize<0||currentPage<0){
                 ret.put("status", "1");
                 ret.put("statusDesc", "分页参数非法");
                 return ret;
             }
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("type", form.getType());
+            params.put("type", type);
             params.put("limitStart", -1);
             params.put("limitEnd", -1);
             // 查询总数
@@ -66,8 +60,8 @@ public class WechatFindController extends BaseMarketController {
 
             if (count != null && count > 0) {
                 // 构造分页
-                params.put("limitStart", form.getSize() * (form.getPage() - 1));
-                params.put("limitEnd", form.getSize());
+                params.put("limitStart", pageSize * (currentPage - 1));
+                params.put("limitEnd", pageSize);
                 List<ContentArticleCustomizeVO> list=appFindService.getContentArticleListByType(params);
 
                 if (!CollectionUtils.isEmpty(list)) {
@@ -93,7 +87,7 @@ public class WechatFindController extends BaseMarketController {
     }
 
     @ApiOperation(value = "根据类型和文章编号查找文章", notes = "根据类型和文章编号查找文章")
-    @RequestMapping("/contentArticle/{type}/{contentArticleId}")
+    @GetMapping("/contentArticle/{type}/{contentArticleId}")
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {
         JSONObject ret = new JSONObject();

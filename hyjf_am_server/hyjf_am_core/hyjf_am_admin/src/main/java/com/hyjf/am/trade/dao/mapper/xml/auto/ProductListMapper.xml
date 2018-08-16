@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ProductListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProductList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="invest_time" property="investTime" jdbcType="INTEGER" />
+    <result column="interest_time" property="interestTime" jdbcType="INTEGER" />
+    <result column="valid_days" property="validDays" jdbcType="INTEGER" />
+    <result column="redeemed" property="redeemed" jdbcType="DECIMAL" />
+    <result column="rest_amount" property="restAmount" jdbcType="DECIMAL" />
+    <result column="referee" property="referee" jdbcType="INTEGER" />
+    <result column="area" property="area" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="INTEGER" />
+    <result column="department" property="department" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
+    <result column="interest" property="interest" jdbcType="DECIMAL" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="loans_id" property="loansId" jdbcType="VARCHAR" />
+    <result column="loans_date" property="loansDate" jdbcType="VARCHAR" />
+    <result column="is_new" property="isNew" jdbcType="TINYINT" />
+    <result column="invest_status" property="investStatus" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, product_id, amount, invest_time, interest_time, valid_days, redeemed, 
+    rest_amount, referee, area, company, department, `status`, order_id, order_date, 
+    interest, client, balance, loans_id, loans_date, is_new, invest_status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProductListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_product_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_product_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_product_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProductListExample" >
+    delete from ht_product_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ProductList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_product_list (user_id, product_id, amount, 
+      invest_time, interest_time, valid_days, 
+      redeemed, rest_amount, referee, 
+      area, company, department, 
+      `status`, order_id, order_date, 
+      interest, client, balance, 
+      loans_id, loans_date, is_new, 
+      invest_status)
+    values (#{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, 
+      #{investTime,jdbcType=INTEGER}, #{interestTime,jdbcType=INTEGER}, #{validDays,jdbcType=INTEGER}, 
+      #{redeemed,jdbcType=DECIMAL}, #{restAmount,jdbcType=DECIMAL}, #{referee,jdbcType=INTEGER}, 
+      #{area,jdbcType=INTEGER}, #{company,jdbcType=INTEGER}, #{department,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{orderId,jdbcType=VARCHAR}, #{orderDate,jdbcType=VARCHAR}, 
+      #{interest,jdbcType=DECIMAL}, #{client,jdbcType=TINYINT}, #{balance,jdbcType=DECIMAL}, 
+      #{loansId,jdbcType=VARCHAR}, #{loansDate,jdbcType=VARCHAR}, #{isNew,jdbcType=TINYINT}, 
+      #{investStatus,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProductList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_product_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="investTime != null" >
+        invest_time,
+      </if>
+      <if test="interestTime != null" >
+        interest_time,
+      </if>
+      <if test="validDays != null" >
+        valid_days,
+      </if>
+      <if test="redeemed != null" >
+        redeemed,
+      </if>
+      <if test="restAmount != null" >
+        rest_amount,
+      </if>
+      <if test="referee != null" >
+        referee,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderDate != null" >
+        order_date,
+      </if>
+      <if test="interest != null" >
+        interest,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="loansId != null" >
+        loans_id,
+      </if>
+      <if test="loansDate != null" >
+        loans_date,
+      </if>
+      <if test="isNew != null" >
+        is_new,
+      </if>
+      <if test="investStatus != null" >
+        invest_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="investTime != null" >
+        #{investTime,jdbcType=INTEGER},
+      </if>
+      <if test="interestTime != null" >
+        #{interestTime,jdbcType=INTEGER},
+      </if>
+      <if test="validDays != null" >
+        #{validDays,jdbcType=INTEGER},
+      </if>
+      <if test="redeemed != null" >
+        #{redeemed,jdbcType=DECIMAL},
+      </if>
+      <if test="restAmount != null" >
+        #{restAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="referee != null" >
+        #{referee,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=INTEGER},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        #{orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="interest != null" >
+        #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="loansId != null" >
+        #{loansId,jdbcType=VARCHAR},
+      </if>
+      <if test="loansDate != null" >
+        #{loansDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isNew != null" >
+        #{isNew,jdbcType=TINYINT},
+      </if>
+      <if test="investStatus != null" >
+        #{investStatus,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProductListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_product_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_product_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productId != null" >
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investTime != null" >
+        invest_time = #{record.investTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.interestTime != null" >
+        interest_time = #{record.interestTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.validDays != null" >
+        valid_days = #{record.validDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.redeemed != null" >
+        redeemed = #{record.redeemed,jdbcType=DECIMAL},
+      </if>
+      <if test="record.restAmount != null" >
+        rest_amount = #{record.restAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.referee != null" >
+        referee = #{record.referee,jdbcType=INTEGER},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area,jdbcType=INTEGER},
+      </if>
+      <if test="record.company != null" >
+        company = #{record.company,jdbcType=INTEGER},
+      </if>
+      <if test="record.department != null" >
+        department = #{record.department,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderDate != null" >
+        order_date = #{record.orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interest != null" >
+        interest = #{record.interest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.balance != null" >
+        balance = #{record.balance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loansId != null" >
+        loans_id = #{record.loansId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loansDate != null" >
+        loans_date = #{record.loansDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isNew != null" >
+        is_new = #{record.isNew,jdbcType=TINYINT},
+      </if>
+      <if test="record.investStatus != null" >
+        invest_status = #{record.investStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_product_list
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      product_id = #{record.productId,jdbcType=INTEGER},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      invest_time = #{record.investTime,jdbcType=INTEGER},
+      interest_time = #{record.interestTime,jdbcType=INTEGER},
+      valid_days = #{record.validDays,jdbcType=INTEGER},
+      redeemed = #{record.redeemed,jdbcType=DECIMAL},
+      rest_amount = #{record.restAmount,jdbcType=DECIMAL},
+      referee = #{record.referee,jdbcType=INTEGER},
+      area = #{record.area,jdbcType=INTEGER},
+      company = #{record.company,jdbcType=INTEGER},
+      department = #{record.department,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      order_date = #{record.orderDate,jdbcType=VARCHAR},
+      interest = #{record.interest,jdbcType=DECIMAL},
+      client = #{record.client,jdbcType=TINYINT},
+      balance = #{record.balance,jdbcType=DECIMAL},
+      loans_id = #{record.loansId,jdbcType=VARCHAR},
+      loans_date = #{record.loansDate,jdbcType=VARCHAR},
+      is_new = #{record.isNew,jdbcType=TINYINT},
+      invest_status = #{record.investStatus,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProductList" >
+    update ht_product_list
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="investTime != null" >
+        invest_time = #{investTime,jdbcType=INTEGER},
+      </if>
+      <if test="interestTime != null" >
+        interest_time = #{interestTime,jdbcType=INTEGER},
+      </if>
+      <if test="validDays != null" >
+        valid_days = #{validDays,jdbcType=INTEGER},
+      </if>
+      <if test="redeemed != null" >
+        redeemed = #{redeemed,jdbcType=DECIMAL},
+      </if>
+      <if test="restAmount != null" >
+        rest_amount = #{restAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="referee != null" >
+        referee = #{referee,jdbcType=INTEGER},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=INTEGER},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        order_date = #{orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="interest != null" >
+        interest = #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="loansId != null" >
+        loans_id = #{loansId,jdbcType=VARCHAR},
+      </if>
+      <if test="loansDate != null" >
+        loans_date = #{loansDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isNew != null" >
+        is_new = #{isNew,jdbcType=TINYINT},
+      </if>
+      <if test="investStatus != null" >
+        invest_status = #{investStatus,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ProductList" >
+    update ht_product_list
+    set user_id = #{userId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      invest_time = #{investTime,jdbcType=INTEGER},
+      interest_time = #{interestTime,jdbcType=INTEGER},
+      valid_days = #{validDays,jdbcType=INTEGER},
+      redeemed = #{redeemed,jdbcType=DECIMAL},
+      rest_amount = #{restAmount,jdbcType=DECIMAL},
+      referee = #{referee,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      company = #{company,jdbcType=INTEGER},
+      department = #{department,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      order_date = #{orderDate,jdbcType=VARCHAR},
+      interest = #{interest,jdbcType=DECIMAL},
+      client = #{client,jdbcType=TINYINT},
+      balance = #{balance,jdbcType=DECIMAL},
+      loans_id = #{loansId,jdbcType=VARCHAR},
+      loans_date = #{loansDate,jdbcType=VARCHAR},
+      is_new = #{isNew,jdbcType=TINYINT},
+      invest_status = #{investStatus,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

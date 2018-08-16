@@ -11,6 +11,7 @@ import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,7 @@ public class AppDeleteCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/deleteCard")
+    @ApiOperation(value = "解绑银行卡", notes = "解绑银行卡")
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         JSONObject info = new JSONObject();
         info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard.do");

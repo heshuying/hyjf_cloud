@@ -33,6 +33,7 @@ import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -1167,11 +1168,15 @@ public class NewAgreementController extends BaseTradeController{
     }
 
     @ApiOperation(value = "查看协议模板接口", httpMethod = "POST", notes = "查看协议模板接口")
+    @ApiParam(required = true, name = "aliasName", value = "协议别名")
     @ResponseBody
-    @PostMapping("/getdisplayNameDynamic")
-    public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
+    @GetMapping("/getdisplayNameDynamic")
+    public AppResult getdisplayNameDynamic(@RequestParam(required = false) String aliasName) {
         logger.info("*******************************查看协议模板接口************************************");
         AppNewAgreementResponse response = new AppNewAgreementResponse();
+        if (aliasName == null || aliasName.equals("")) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, "协议别名不能为空!");
+        }
         AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
         response.setResult(template);
         if(response == null) {
@@ -1180,6 +1185,7 @@ public class NewAgreementController extends BaseTradeController{
         if (!Response.isSuccess(response)) {
             return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
         }
+        response.setRtn(BaseResultBeanFrontEnd.SUCCESS);
         return new AppResult(response.getResultList());
     }
     

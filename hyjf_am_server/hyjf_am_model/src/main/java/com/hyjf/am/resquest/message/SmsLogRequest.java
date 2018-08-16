@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.resquest.message;
 
-import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author fuqiang
  * @version SmsLogRequest, v0.1 2018/6/23 14:19
  */
-public class SmsLogRequest extends Request implements Serializable {
+public class SmsLogRequest extends BasePage implements Serializable {
 	private static final long serialVersionUID = 7926404299409201764L;
 
 	/**

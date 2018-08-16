@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -37,11 +38,13 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1176,7 +1179,7 @@ public interface AmTradeClient {
      * @Param transferExceptionLog
      * @return
      */
-    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+    Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog);
 
     /**
      * 判断用户所处的渠道如果不允许债转，可债转金额为0  start
@@ -1617,4 +1620,40 @@ public interface AmTradeClient {
     RepayBean getRepayBean(Map<String, String> paraMap);
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    /**
+     *根据订单编号取得该订单的还款列表
+     * @param couponTenderNid
+     * @param periodNow
+     * @return
+     */
+    CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow);
+
+    /**
+     *更新优惠券还款
+     * @param cr
+     */
+    boolean updateCouponRecover(CouponRecoverVO cr);
+
+    /**
+     *体验金按收益期限还款
+     * @param request
+     */
+    boolean updateCouponOnlyRecover(CouponRecoverCustomizeRequest request);
+
+    /**
+     * 根据订单号获取汇计划加入明细
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId);
+
+
+    /**
+     * 获取提成配置信息
+     * @param map
+     * @return
+     */
+    Integer getCommisionConfig(HashMap map);
 }

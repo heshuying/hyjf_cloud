@@ -11,6 +11,7 @@ import com.hyjf.cs.message.service.security.SecurityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
  * @author fq
  * @version WechatSecurityController, v0.1 2018/7/20 15:01
  */
-@Api(value = "安全保障数据", tags = "安全保障数据")
+@Api(tags = "weChat端-安全保障数据")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/find")
 public class WechatSecurityController extends BaseController {
@@ -30,7 +31,7 @@ public class WechatSecurityController extends BaseController {
     private SecurityService securityService;
 
     @ApiOperation(value = "安全保障数据", notes = "安全保障数据")
-    @RequestMapping("/security.do")
+    @GetMapping("/security.do")
     public JSONObject getSecurityMessage() {
         JSONObject ret = new JSONObject();
         ret.put("status", "000");

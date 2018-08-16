@@ -73,6 +73,10 @@ public class BorrowUser implements Serializable {
 
     private String isPunished;
 
+    private String corporateCode;
+
+    private String registrationAddress;
+
     private String otherInfo;
 
     private static final long serialVersionUID = 1L;
@@ -355,6 +359,22 @@ public class BorrowUser implements Serializable {
 
     public void setIsPunished(String isPunished) {
         this.isPunished = isPunished == null ? null : isPunished.trim();
+    }
+
+    public String getCorporateCode() {
+        return corporateCode;
+    }
+
+    public void setCorporateCode(String corporateCode) {
+        this.corporateCode = corporateCode == null ? null : corporateCode.trim();
+    }
+
+    public String getRegistrationAddress() {
+        return registrationAddress;
+    }
+
+    public void setRegistrationAddress(String registrationAddress) {
+        this.registrationAddress = registrationAddress == null ? null : registrationAddress.trim();
     }
 
     public String getOtherInfo() {

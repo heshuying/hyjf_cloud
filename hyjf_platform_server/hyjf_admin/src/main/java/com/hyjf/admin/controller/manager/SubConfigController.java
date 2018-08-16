@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author by xiehuili on 2018/7/9.
  * @version SubConfigController, v0.1 2018/7/9.
  */
-@Api(value = "配置中心分账名单配置",tags ="配置中心分账名单配置")
+@Api(tags ="配置中心分账名单配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/subconfig")
 public class SubConfigController extends BaseController {

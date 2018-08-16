@@ -25,8 +25,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,11 +40,10 @@ import java.util.List;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/02 11:17
  */
-@Api(value = "运营报告配置",tags ="运营报告配置")
+@Api(tags ="运营报告配置")
 @RestController
 @RequestMapping("/hyjf-admin/report/operationreport")
 public class OperationReportController extends BaseController {
-    private Logger logger = LoggerFactory.getLogger(OperationReportController.class);
 
     @Autowired
     private OperationReportService operationReportService;

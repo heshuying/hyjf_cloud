@@ -25,7 +25,7 @@ import java.util.Map;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/23 14:10
  */
-@Api(value = "运营报告配置",tags ="app和web和api通用接口")
+@Api(tags ="app和web和api通用接口:运营报告")
 @RestController
 @RequestMapping("/cs-message/operation_report")
 public class OperationReportController extends BaseController {
@@ -35,7 +35,7 @@ public class OperationReportController extends BaseController {
 	private OperationReportService operationReportService;
 
 	@ApiOperation(value = "运营报告配置", notes = "运营报告配置列表")
-	@RequestMapping("/list")
+	@PostMapping("/list")
 	public OperationReportResponse list(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -139,7 +139,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据id查询运营报告", notes = "根据id查询运营报告")
-	@PostMapping("/selectdetail/{id}")
+	@GetMapping("/selectdetail/{id}")
 	public OperationReportResponse selectDetail(@PathVariable String id) {
 		OperationReportResponse response = operationReportService.selectOperationreportCommon(id);
 		return response;

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AleveCustomizeMapper">
+
+	<sql id="where-all-page-condition">
+		<if test="cardnbr != null and cardnbr != ''">
+			AND cardnbr = #{cardnbr}
+		</if>
+		<if test="seqno != null and seqno != 0">
+			AND seqno = #{seqno}
+		</if>
+		<if test="transtype != null and transtype != 0">
+			AND transtype = #{transtype}
+		</if>
+		<if test="startValdate != null and startValdate != ''">
+
+			AND STR_TO_DATE(valdate, '%Y%m%d') &gt;= STR_TO_DATE(#{startValdate}, '%Y-%m-%d')
+
+		</if>
+		<if test="endValdate != null and endValdate != ''">
+
+			AND STR_TO_DATE(valdate, '%Y%m%d') &lt;= STR_TO_DATE(#{endValdate}, '%Y-%m-%d')
+
+		</if>
+		<if test="startInpdate != null and startInpdate != ''">
+
+			AND STR_TO_DATE(inpdate, '%Y%m%d') &gt;= STR_TO_DATE(#{startInpdate}, '%Y-%m-%d')
+
+		</if>
+		<if test="endInpdate != null and endInpdate != ''">
+
+			AND STR_TO_DATE(inpdate, '%Y%m%d') &lt;= STR_TO_DATE(#{endInpdate}, '%Y-%m-%d')
+
+		</if>
+		<if test="startReldate != null and startReldate != ''">
+
+			AND STR_TO_DATE(reldate, '%Y%m%d') &gt;= STR_TO_DATE(#{startReldate}, '%Y-%m-%d')
+
+		</if>
+		<if test="endReldate != null and endReldate != ''">
+
+			AND STR_TO_DATE(reldate, '%Y%m%d') &lt;= STR_TO_DATE(#{endReldate}, '%Y-%m-%d')
+
+		</if>
+	</sql>
+
+	<select id="queryAleveLogCount" resultType="java.lang.Integer"
+		parameterType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize">
+		SELECT COUNT(1)
+		FROM ht_aleve_log
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+	</select>
+
+	<select id="queryAleveLogList" resultType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize"
+		parameterType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize">
+		SELECT
+			bank,
+			cardnbr,
+			amount,
+			cur_num as curNum,
+			crflag,
+			valdate,
+			inpdate,
+			reldate,
+			inptime,
+			tranno,
+			ori_tranno as oriTranno,
+			transtype,
+			desline,
+			curr_bal as currBal,
+			forcardnbr,
+			revind,
+			accchg,
+			seqno,
+			ori_num as oriNum,
+			resv,
+			create_day as createDay,
+			create_user_id as createUserId,
+			create_time as createTime,
+			update_user_id as updateUser,
+			update_time as updateTime,
+			del_flag as delFlg,
+			upd_flag as updFlg
+		FROM
+			ht_aleve_log aleve
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+		ORDER BY inpdate DESC,inptime DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	
+	<select id="queryAleveLogListByTranstype" resultType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize" parameterType="java.util.List">
+		SELECT
+			id,
+			bank,
+			cardnbr,
+			amount,
+			cur_num as curNum,
+			crflag,
+			valdate,
+			inpdate,
+			reldate,
+			inptime,
+			tranno,
+			ori_tranno as oriTranno,
+			transtype,
+			desline,
+			curr_bal as currBal,
+			forcardnbr,
+			revind,
+			accchg,
+			seqno,
+			ori_num as oriNum,
+			resv,
+			create_day as createDay,
+			create_user_id as createUserId,
+			create_time as createTime,
+			update_user_id as updateUser,
+			update_time as updateTime,
+			del_flag as delFlg,
+			upd_flag as updFlg
+		FROM
+			ht_aleve_log aleve
+		WHERE 
+			transtype IN
+		<foreach collection="list" index="index" item="transtype" open="(" separator="," close=")">
+            #{transtype }  
+        </foreach>
+        AND upd_flag = 0
+		ORDER BY inpdate DESC,inptime DESC
+	</select>
+
+</mapper>
+

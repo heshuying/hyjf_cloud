@@ -145,7 +145,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
         // 异步调用路
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/passwordBgreturn";
+        String bgRetUrl = systemConfig.getWebHost()+"/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -197,7 +197,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
         // 异步调用路
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.getWebHost()+"/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -230,8 +230,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     @Override
     public JSONObject weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
         JSONObject ret = new JSONObject();
-        oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
-        CheckUtil.check( StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
         checkPassword(newPassword);
         // 检查参数正确性
         if (Validator.isNull(userVO) || Validator.isNull(newPassword) || Validator.isNull(oldPassword)) {

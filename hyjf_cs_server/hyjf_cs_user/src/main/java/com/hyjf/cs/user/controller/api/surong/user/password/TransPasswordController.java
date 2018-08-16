@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version TransPasswordController.java, v0.1 2018年7月19日 上午9:17:39
  */
-@Api(value = "融东风密码设置接口",tags = "融东风密码设置接口")
+@Api(value = "api端-融东风密码设置接口",tags = "api端-融东风密码设置接口")
 @Controller
 @RequestMapping("hyjf-api/surong/user/transpassword")
 public class TransPasswordController extends BaseUserController{
@@ -76,7 +76,7 @@ public class TransPasswordController extends BaseUserController{
      * @param
      * @return
      */
-    @ApiOperation(value = "融东风密码设置接口", notes = "融东风用户设置交易密码")
+    @ApiOperation(value = "融东风用户设置交易密码", notes = "融东风用户设置交易密码")
     @PostMapping("/setPassword")
     public ModelAndView setPassword(HttpServletRequest request, HttpServletResponse response) {
     	logger.info("设置交易密码 start");
@@ -187,7 +187,7 @@ public class TransPasswordController extends BaseUserController{
      * @param form
      * @return
      */
-    @ApiOperation(value = "融东风密码设置接口", notes = "设置交易密码同步回调")
+    @ApiOperation(value = "设置交易密码同步回调", notes = "设置交易密码同步回调")
     @PostMapping("/passwordReturn")
     public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute BankCallBean bean) {
@@ -252,7 +252,7 @@ public class TransPasswordController extends BaseUserController{
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "融东风密码设置接口", notes = "设置交易密码异步回调")
+    @ApiOperation(value = "设置交易密码异步回调", notes = "设置交易密码异步回调")
     @PostMapping("/passwordBgreturn")
     public Object passwordBgreturn(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute BankCallBean bean) {
@@ -285,7 +285,7 @@ public class TransPasswordController extends BaseUserController{
      * @param form
      * @return
      */
-    @ApiOperation(value = "融东风密码设置接口", notes = "融东风用户修改交易密码")
+    @ApiOperation(value = "融东风用户修改交易密码", notes = "融东风用户修改交易密码")
     @PostMapping("/resetPassword")
     public ModelAndView resetPassword(HttpServletRequest request, HttpServletResponse response) {
     	logger.info("修改交易密码 start");
@@ -390,7 +390,7 @@ public class TransPasswordController extends BaseUserController{
      * @param response
      * @return
      */
-    @ApiOperation(value = "融东风密码设置接口", notes = "修改交易密码同步回调")
+    @ApiOperation(value = "修改交易密码同步回调", notes = "修改交易密码同步回调")
     @PostMapping("/resetPasswordReturn")
     public ModelAndView resetPasswordReturn(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute BankCallBean bean) {
@@ -426,7 +426,7 @@ public class TransPasswordController extends BaseUserController{
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "融东风密码设置接口", notes = "修改交易密码异步回调")
+    @ApiOperation(value = "修改交易密码异步回调", notes = "修改交易密码异步回调")
     @PostMapping("/resetPasswordBgreturn")
     public Object resetPasswordBgreturn(HttpServletRequest request, HttpServletResponse response,
             @ModelAttribute BankCallBean bean) {

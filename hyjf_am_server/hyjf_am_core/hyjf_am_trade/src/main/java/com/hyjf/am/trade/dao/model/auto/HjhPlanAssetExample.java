@@ -3784,6 +3784,216 @@ public class HjhPlanAssetExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andAddressIsNull() {
+            addCriterion("address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIsNotNull() {
+            addCriterion("address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressEqualTo(String value) {
+            addCriterion("address =", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotEqualTo(String value) {
+            addCriterion("address <>", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThan(String value) {
+            addCriterion("address >", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("address >=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThan(String value) {
+            addCriterion("address <", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThanOrEqualTo(String value) {
+            addCriterion("address <=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLike(String value) {
+            addCriterion("address like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotLike(String value) {
+            addCriterion("address not like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIn(List<String> values) {
+            addCriterion("address in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotIn(List<String> values) {
+            addCriterion("address not in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressBetween(String value1, String value2) {
+            addCriterion("address between", value1, value2, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotBetween(String value1, String value2) {
+            addCriterion("address not between", value1, value2, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeIsNull() {
+            addCriterion("corporate_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeIsNotNull() {
+            addCriterion("corporate_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeEqualTo(String value) {
+            addCriterion("corporate_code =", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeNotEqualTo(String value) {
+            addCriterion("corporate_code <>", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeGreaterThan(String value) {
+            addCriterion("corporate_code >", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("corporate_code >=", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeLessThan(String value) {
+            addCriterion("corporate_code <", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeLessThanOrEqualTo(String value) {
+            addCriterion("corporate_code <=", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeLike(String value) {
+            addCriterion("corporate_code like", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeNotLike(String value) {
+            addCriterion("corporate_code not like", value, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeIn(List<String> values) {
+            addCriterion("corporate_code in", values, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeNotIn(List<String> values) {
+            addCriterion("corporate_code not in", values, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeBetween(String value1, String value2) {
+            addCriterion("corporate_code between", value1, value2, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCorporateCodeNotBetween(String value1, String value2) {
+            addCriterion("corporate_code not between", value1, value2, "corporateCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressIsNull() {
+            addCriterion("registration_address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressIsNotNull() {
+            addCriterion("registration_address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressEqualTo(String value) {
+            addCriterion("registration_address =", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressNotEqualTo(String value) {
+            addCriterion("registration_address <>", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressGreaterThan(String value) {
+            addCriterion("registration_address >", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("registration_address >=", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressLessThan(String value) {
+            addCriterion("registration_address <", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressLessThanOrEqualTo(String value) {
+            addCriterion("registration_address <=", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressLike(String value) {
+            addCriterion("registration_address like", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressNotLike(String value) {
+            addCriterion("registration_address not like", value, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressIn(List<String> values) {
+            addCriterion("registration_address in", values, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressNotIn(List<String> values) {
+            addCriterion("registration_address not in", values, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressBetween(String value1, String value2) {
+            addCriterion("registration_address between", value1, value2, "registrationAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegistrationAddressNotBetween(String value1, String value2) {
+            addCriterion("registration_address not between", value1, value2, "registrationAddress");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

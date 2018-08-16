@@ -1,5 +1,6 @@
 package com.hyjf.am.response.trade;
 
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.EventsVO;
@@ -11,7 +12,7 @@ import java.util.List;
  * @version WeeklyResponse, v0.1 2018/7/27 15:15
  */
 
-public class WeeklyResponse {
+public class WeeklyResponse  extends BaseResult{
     /**
      * 此处为属性说明
      */

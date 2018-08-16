@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper" >
+    <!-- 变更计划还款账户数据 -->
+    <update id="updateOfPlanRepayAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+			bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
+			bank_balance = IFNULL(bank_balance,0) + #{bankBalance,jdbcType=DECIMAL},
+			plan_account_wait = IFNULL(plan_account_wait,0) - #{planAccountWait,jdbcType=DECIMAL},
+			plan_capital_wait = IFNULL(plan_capital_wait,0) - #{planCapitalWait,jdbcType=DECIMAL},
+			plan_interest_wait = IFNULL(plan_interest_wait,0) - #{planInterestWait,jdbcType=DECIMAL},
+			bank_interest_sum = IFNULL(bank_interest_sum,0) + #{bankInterestSum,jdbcType=DECIMAL},
+			plan_frost = IFNULL(plan_frost,0) - #{planFrost,jdbcType=DECIMAL},
+			plan_balance = IFNULL(plan_balance,0) - #{planBalance,jdbcType=DECIMAL}
+		where
+			user_id = #{userId,jdbcType=INTEGER}
+	</update>
+
+    <!-- 更新待收收益  -->
+    <update id="updateHjhBorrowRepayInterest" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+		update hyjf_hjh_accede
+		set
+		wait_total = IFNULL(wait_total,0) + #{waitTotal,jdbcType=DECIMAL},
+		wait_captical = IFNULL(wait_captical,0) + #{waitCaptical,jdbcType=DECIMAL},
+		wait_interest = IFNULL(wait_interest,0) + #{waitInterest,jdbcType=DECIMAL}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+
+    <!-- 进入锁定期后 修改账户总资产 待收收益-->
+    <update id="updateBankTotalForLockPlan" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
+		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL},
+		plan_capital_wait = IFNULL(plan_capital_wait,0) + #{planCapitalWait,jdbcType=DECIMAL},
+		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateCalculateInvestByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
+		update hyjf_calculate_invest_interest
+		<set >
+			<if test="tenderSum != null" >
+				tender_sum = tender_sum + #{tenderSum,jdbcType=DECIMAL},
+			</if>
+			<if test="interestSum != null" >
+				interest_sum = interest_sum + #{interestSum,jdbcType=DECIMAL},
+			</if>
+			<if test="sevenDayTenderSum != null" >
+				seven_day_tender_sum = #{sevenDayTenderSum,jdbcType=DECIMAL},
+			</if>
+			<if test="sevenDayInterestSum != null" >
+				seven_day_interest_sum = #{sevenDayInterestSum,jdbcType=DECIMAL},
+			</if>
+			<if test="borrowZeroOne != null" >
+				borrow_zero_one = #{borrowZeroOne,jdbcType=INTEGER},
+			</if>
+			<if test="borrowOneThree != null" >
+				borrow_one_three = #{borrowOneThree,jdbcType=INTEGER},
+			</if>
+			<if test="borrowThreeSix != null" >
+				borrow_three_six = #{borrowThreeSix,jdbcType=INTEGER},
+			</if>
+			<if test="borrowSixTwelve != null" >
+				borrow_six_twelve = #{borrowSixTwelve,jdbcType=INTEGER},
+			</if>
+			<if test="borrowTwelveUp != null" >
+				borrow_twelve_up = #{borrowTwelveUp,jdbcType=INTEGER},
+			</if>
+			<if test="investOneDown != null" >
+				invest_one_down = #{investOneDown,jdbcType=INTEGER},
+			</if>
+			<if test="investOneFive != null" >
+				invest_one_five = #{investOneFive,jdbcType=INTEGER},
+			</if>
+			<if test="investFiveTen != null" >
+				invest_five_ten = #{investFiveTen,jdbcType=INTEGER},
+			</if>
+			<if test="investTenFifth != null" >
+				invest_ten_fifth = #{investTenFifth,jdbcType=INTEGER},
+			</if>
+			<if test="investFifthUp != null" >
+				invest_fifth_up = #{investFifthUp,jdbcType=INTEGER},
+			</if>
+			<if test="bailMoney != null" >
+				bail_money = #{bailMoney,jdbcType=DECIMAL},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ConsumeListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ConsumeList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="contract_no" property="contractNo" jdbcType="VARCHAR" />
+    <result column="person_name" property="personName" jdbcType="VARCHAR" />
+    <result column="ident" property="ident" jdbcType="VARCHAR" />
+    <result column="loan_date" property="loanDate" jdbcType="VARCHAR" />
+    <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL" />
+    <result column="init_pay" property="initPay" jdbcType="INTEGER" />
+    <result column="instalment_num" property="instalmentNum" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="ident_exp" property="identExp" jdbcType="VARCHAR" />
+    <result column="ident_auth" property="identAuth" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="account_no" property="accountNo" jdbcType="VARCHAR" />
+    <result column="income" property="income" jdbcType="DECIMAL" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="release" property="release" jdbcType="INTEGER" />
+    <result column="insert_day" property="insertDay" jdbcType="VARCHAR" />
+    <result column="consume_id" property="consumeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, contract_no, person_name, ident, loan_date, credit_amount, init_pay, instalment_num, 
+    mobile, ident_exp, ident_auth, company, bank_name, account_no, income, address, insert_time, 
+    `status`, sex, `release`, insert_day, consume_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_consume_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_consume_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_consume_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeListExample" >
+    delete from ht_consume_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_consume_list (contract_no, person_name, ident, 
+      loan_date, credit_amount, init_pay, 
+      instalment_num, mobile, ident_exp, 
+      ident_auth, company, bank_name, 
+      account_no, income, address, 
+      insert_time, `status`, sex, 
+      `release`, insert_day, consume_id
+      )
+    values (#{contractNo,jdbcType=VARCHAR}, #{personName,jdbcType=VARCHAR}, #{ident,jdbcType=VARCHAR}, 
+      #{loanDate,jdbcType=VARCHAR}, #{creditAmount,jdbcType=DECIMAL}, #{initPay,jdbcType=INTEGER}, 
+      #{instalmentNum,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{identExp,jdbcType=VARCHAR}, 
+      #{identAuth,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{accountNo,jdbcType=VARCHAR}, #{income,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, 
+      #{insertTime,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{sex,jdbcType=VARCHAR}, 
+      #{release,jdbcType=INTEGER}, #{insertDay,jdbcType=VARCHAR}, #{consumeId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_consume_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractNo != null" >
+        contract_no,
+      </if>
+      <if test="personName != null" >
+        person_name,
+      </if>
+      <if test="ident != null" >
+        ident,
+      </if>
+      <if test="loanDate != null" >
+        loan_date,
+      </if>
+      <if test="creditAmount != null" >
+        credit_amount,
+      </if>
+      <if test="initPay != null" >
+        init_pay,
+      </if>
+      <if test="instalmentNum != null" >
+        instalment_num,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="identExp != null" >
+        ident_exp,
+      </if>
+      <if test="identAuth != null" >
+        ident_auth,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="accountNo != null" >
+        account_no,
+      </if>
+      <if test="income != null" >
+        income,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="release != null" >
+        `release`,
+      </if>
+      <if test="insertDay != null" >
+        insert_day,
+      </if>
+      <if test="consumeId != null" >
+        consume_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractNo != null" >
+        #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="personName != null" >
+        #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="ident != null" >
+        #{ident,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDate != null" >
+        #{loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="creditAmount != null" >
+        #{creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="initPay != null" >
+        #{initPay,jdbcType=INTEGER},
+      </if>
+      <if test="instalmentNum != null" >
+        #{instalmentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="identExp != null" >
+        #{identExp,jdbcType=VARCHAR},
+      </if>
+      <if test="identAuth != null" >
+        #{identAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNo != null" >
+        #{accountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null" >
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="release != null" >
+        #{release,jdbcType=INTEGER},
+      </if>
+      <if test="insertDay != null" >
+        #{insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        #{consumeId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_consume_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_consume_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.contractNo != null" >
+        contract_no = #{record.contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.personName != null" >
+        person_name = #{record.personName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ident != null" >
+        ident = #{record.ident,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanDate != null" >
+        loan_date = #{record.loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creditAmount != null" >
+        credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.initPay != null" >
+        init_pay = #{record.initPay,jdbcType=INTEGER},
+      </if>
+      <if test="record.instalmentNum != null" >
+        instalment_num = #{record.instalmentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identExp != null" >
+        ident_exp = #{record.identExp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identAuth != null" >
+        ident_auth = #{record.identAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.company != null" >
+        company = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankName != null" >
+        bank_name = #{record.bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountNo != null" >
+        account_no = #{record.accountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.income != null" >
+        income = #{record.income,jdbcType=DECIMAL},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.insertTime != null" >
+        insert_time = #{record.insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.release != null" >
+        `release` = #{record.release,jdbcType=INTEGER},
+      </if>
+      <if test="record.insertDay != null" >
+        insert_day = #{record.insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consumeId != null" >
+        consume_id = #{record.consumeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_consume_list
+    set id = #{record.id,jdbcType=INTEGER},
+      contract_no = #{record.contractNo,jdbcType=VARCHAR},
+      person_name = #{record.personName,jdbcType=VARCHAR},
+      ident = #{record.ident,jdbcType=VARCHAR},
+      loan_date = #{record.loanDate,jdbcType=VARCHAR},
+      credit_amount = #{record.creditAmount,jdbcType=DECIMAL},
+      init_pay = #{record.initPay,jdbcType=INTEGER},
+      instalment_num = #{record.instalmentNum,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      ident_exp = #{record.identExp,jdbcType=VARCHAR},
+      ident_auth = #{record.identAuth,jdbcType=VARCHAR},
+      company = #{record.company,jdbcType=VARCHAR},
+      bank_name = #{record.bankName,jdbcType=VARCHAR},
+      account_no = #{record.accountNo,jdbcType=VARCHAR},
+      income = #{record.income,jdbcType=DECIMAL},
+      address = #{record.address,jdbcType=VARCHAR},
+      insert_time = #{record.insertTime,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      `release` = #{record.release,jdbcType=INTEGER},
+      insert_day = #{record.insertDay,jdbcType=VARCHAR},
+      consume_id = #{record.consumeId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeList" >
+    update ht_consume_list
+    <set >
+      <if test="contractNo != null" >
+        contract_no = #{contractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="personName != null" >
+        person_name = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="ident != null" >
+        ident = #{ident,jdbcType=VARCHAR},
+      </if>
+      <if test="loanDate != null" >
+        loan_date = #{loanDate,jdbcType=VARCHAR},
+      </if>
+      <if test="creditAmount != null" >
+        credit_amount = #{creditAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="initPay != null" >
+        init_pay = #{initPay,jdbcType=INTEGER},
+      </if>
+      <if test="instalmentNum != null" >
+        instalment_num = #{instalmentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="identExp != null" >
+        ident_exp = #{identExp,jdbcType=VARCHAR},
+      </if>
+      <if test="identAuth != null" >
+        ident_auth = #{identAuth,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNo != null" >
+        account_no = #{accountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null" >
+        income = #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="release != null" >
+        `release` = #{release,jdbcType=INTEGER},
+      </if>
+      <if test="insertDay != null" >
+        insert_day = #{insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        consume_id = #{consumeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeList" >
+    update ht_consume_list
+    set contract_no = #{contractNo,jdbcType=VARCHAR},
+      person_name = #{personName,jdbcType=VARCHAR},
+      ident = #{ident,jdbcType=VARCHAR},
+      loan_date = #{loanDate,jdbcType=VARCHAR},
+      credit_amount = #{creditAmount,jdbcType=DECIMAL},
+      init_pay = #{initPay,jdbcType=INTEGER},
+      instalment_num = #{instalmentNum,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      ident_exp = #{identExp,jdbcType=VARCHAR},
+      ident_auth = #{identAuth,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      account_no = #{accountNo,jdbcType=VARCHAR},
+      income = #{income,jdbcType=DECIMAL},
+      address = #{address,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      sex = #{sex,jdbcType=VARCHAR},
+      `release` = #{release,jdbcType=INTEGER},
+      insert_day = #{insertDay,jdbcType=VARCHAR},
+      consume_id = #{consumeId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
