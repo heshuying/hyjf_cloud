@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtPlanAccedeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtPlanAccede" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_attribute" property="userAttribute" jdbcType="INTEGER" />
+    <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+    <result column="freeze_order_id" property="freezeOrderId" jdbcType="VARCHAR" />
+    <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+    <result column="accede_balance" property="accedeBalance" jdbcType="DECIMAL" />
+    <result column="accede_frost" property="accedeFrost" jdbcType="DECIMAL" />
+    <result column="liquidates_credit_frost" property="liquidatesCreditFrost" jdbcType="DECIMAL" />
+    <result column="liquidates_apr" property="liquidatesApr" jdbcType="DECIMAL" />
+    <result column="liquidates_repay_frost" property="liquidatesRepayFrost" jdbcType="DECIMAL" />
+    <result column="service_fee_rate" property="serviceFeeRate" jdbcType="DECIMAL" />
+    <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+    <result column="expire_fair_value" property="expireFairValue" jdbcType="DECIMAL" />
+    <result column="under_take_times" property="underTakeTimes" jdbcType="TINYINT" />
+    <result column="invest_max" property="investMax" jdbcType="DECIMAL" />
+    <result column="invest_min" property="investMin" jdbcType="DECIMAL" />
+    <result column="cycle_times" property="cycleTimes" jdbcType="INTEGER" />
+    <result column="repay_account" property="repayAccount" jdbcType="DECIMAL" />
+    <result column="repay_capital" property="repayCapital" jdbcType="DECIMAL" />
+    <result column="repay_interest" property="repayInterest" jdbcType="DECIMAL" />
+    <result column="repay_account_wait" property="repayAccountWait" jdbcType="DECIMAL" />
+    <result column="repay_capital_wait" property="repayCapitalWait" jdbcType="DECIMAL" />
+    <result column="repay_interest_wait" property="repayInterestWait" jdbcType="DECIMAL" />
+    <result column="repay_account_yes" property="repayAccountYes" jdbcType="DECIMAL" />
+    <result column="repay_capital_yes" property="repayCapitalYes" jdbcType="DECIMAL" />
+    <result column="repay_interest_yes" property="repayInterestYes" jdbcType="DECIMAL" />
+    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+    <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
+    <result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="INTEGER" />
+    <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
+    <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+    <result column="invite_branch_id" property="inviteBranchId" jdbcType="INTEGER" />
+    <result column="invite_branch_name" property="inviteBranchName" jdbcType="VARCHAR" />
+    <result column="invite_department_id" property="inviteDepartmentId" jdbcType="INTEGER" />
+    <result column="invite_department_name" property="inviteDepartmentName" jdbcType="VARCHAR" />
+    <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
+    <result column="calculation_status" property="calculationStatus" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="reinvest_status" property="reinvestStatus" jdbcType="TINYINT" />
+    <result column="repay_running_status" property="repayRunningStatus" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="invite_repay_user_id" property="inviteRepayUserId" jdbcType="INTEGER" />
+    <result column="invite_repay_user_attribute" property="inviteRepayUserAttribute" jdbcType="INTEGER" />
+    <result column="invite_repay_user_name" property="inviteRepayUserName" jdbcType="VARCHAR" />
+    <result column="invite_repay_region_id" property="inviteRepayRegionId" jdbcType="INTEGER" />
+    <result column="invite_repay_region_name" property="inviteRepayRegionName" jdbcType="VARCHAR" />
+    <result column="invite_repay_branch_id" property="inviteRepayBranchId" jdbcType="INTEGER" />
+    <result column="invite_repay_branch_name" property="inviteRepayBranchName" jdbcType="VARCHAR" />
+    <result column="invite_repay_department_id" property="inviteRepayDepartmentId" jdbcType="INTEGER" />
+    <result column="invite_repay_department_name" property="inviteRepayDepartmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, plan_nid, user_id, user_name, user_attribute, accede_order_id, freeze_order_id, 
+    accede_account, accede_balance, accede_frost, liquidates_credit_frost, liquidates_apr, 
+    liquidates_repay_frost, service_fee_rate, service_fee, expire_fair_value, under_take_times, 
+    invest_max, invest_min, cycle_times, repay_account, repay_capital, repay_interest, 
+    repay_account_wait, repay_capital_wait, repay_interest_wait, repay_account_yes, repay_capital_yes, 
+    repay_interest_yes, invite_user_id, invite_user_name, invite_user_attribute, invite_region_id, 
+    invite_region_name, invite_branch_id, invite_branch_name, invite_department_id, invite_department_name, 
+    send_status, calculation_status, `status`, reinvest_status, repay_running_status, 
+    del_flag, client, create_time, create_user_id, create_user_name, update_time, update_user_id, 
+    update_user_name, invite_repay_user_id, invite_repay_user_attribute, invite_repay_user_name, 
+    invite_repay_region_id, invite_repay_region_name, invite_repay_branch_id, invite_repay_branch_name, 
+    invite_repay_department_id, invite_repay_department_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccedeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_plan_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_plan_accede
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_plan_accede
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccedeExample" >
+    delete from ht_debt_plan_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccede" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan_accede (plan_nid, user_id, user_name, 
+      user_attribute, accede_order_id, freeze_order_id, 
+      accede_account, accede_balance, accede_frost, 
+      liquidates_credit_frost, liquidates_apr, liquidates_repay_frost, 
+      service_fee_rate, service_fee, expire_fair_value, 
+      under_take_times, invest_max, invest_min, 
+      cycle_times, repay_account, repay_capital, 
+      repay_interest, repay_account_wait, repay_capital_wait, 
+      repay_interest_wait, repay_account_yes, repay_capital_yes, 
+      repay_interest_yes, invite_user_id, invite_user_name, 
+      invite_user_attribute, invite_region_id, invite_region_name, 
+      invite_branch_id, invite_branch_name, invite_department_id, 
+      invite_department_name, send_status, calculation_status, 
+      `status`, reinvest_status, repay_running_status, 
+      del_flag, client, create_time, 
+      create_user_id, create_user_name, update_time, 
+      update_user_id, update_user_name, invite_repay_user_id, 
+      invite_repay_user_attribute, invite_repay_user_name, 
+      invite_repay_region_id, invite_repay_region_name, 
+      invite_repay_branch_id, invite_repay_branch_name, 
+      invite_repay_department_id, invite_repay_department_name
+      )
+    values (#{planNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{userAttribute,jdbcType=INTEGER}, #{accedeOrderId,jdbcType=VARCHAR}, #{freezeOrderId,jdbcType=VARCHAR}, 
+      #{accedeAccount,jdbcType=DECIMAL}, #{accedeBalance,jdbcType=DECIMAL}, #{accedeFrost,jdbcType=DECIMAL}, 
+      #{liquidatesCreditFrost,jdbcType=DECIMAL}, #{liquidatesApr,jdbcType=DECIMAL}, #{liquidatesRepayFrost,jdbcType=DECIMAL}, 
+      #{serviceFeeRate,jdbcType=DECIMAL}, #{serviceFee,jdbcType=DECIMAL}, #{expireFairValue,jdbcType=DECIMAL}, 
+      #{underTakeTimes,jdbcType=TINYINT}, #{investMax,jdbcType=DECIMAL}, #{investMin,jdbcType=DECIMAL}, 
+      #{cycleTimes,jdbcType=INTEGER}, #{repayAccount,jdbcType=DECIMAL}, #{repayCapital,jdbcType=DECIMAL}, 
+      #{repayInterest,jdbcType=DECIMAL}, #{repayAccountWait,jdbcType=DECIMAL}, #{repayCapitalWait,jdbcType=DECIMAL}, 
+      #{repayInterestWait,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{repayCapitalYes,jdbcType=DECIMAL}, 
+      #{repayInterestYes,jdbcType=DECIMAL}, #{inviteUserId,jdbcType=INTEGER}, #{inviteUserName,jdbcType=VARCHAR}, 
+      #{inviteUserAttribute,jdbcType=INTEGER}, #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, 
+      #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, #{inviteDepartmentId,jdbcType=INTEGER}, 
+      #{inviteDepartmentName,jdbcType=VARCHAR}, #{sendStatus,jdbcType=TINYINT}, #{calculationStatus,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{reinvestStatus,jdbcType=TINYINT}, #{repayRunningStatus,jdbcType=TINYINT}, 
+      #{delFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{inviteRepayUserId,jdbcType=INTEGER}, 
+      #{inviteRepayUserAttribute,jdbcType=INTEGER}, #{inviteRepayUserName,jdbcType=VARCHAR}, 
+      #{inviteRepayRegionId,jdbcType=INTEGER}, #{inviteRepayRegionName,jdbcType=VARCHAR}, 
+      #{inviteRepayBranchId,jdbcType=INTEGER}, #{inviteRepayBranchName,jdbcType=VARCHAR}, 
+      #{inviteRepayDepartmentId,jdbcType=INTEGER}, #{inviteRepayDepartmentName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccede" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan_accede
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute,
+      </if>
+      <if test="accedeOrderId != null" >
+        accede_order_id,
+      </if>
+      <if test="freezeOrderId != null" >
+        freeze_order_id,
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account,
+      </if>
+      <if test="accedeBalance != null" >
+        accede_balance,
+      </if>
+      <if test="accedeFrost != null" >
+        accede_frost,
+      </if>
+      <if test="liquidatesCreditFrost != null" >
+        liquidates_credit_frost,
+      </if>
+      <if test="liquidatesApr != null" >
+        liquidates_apr,
+      </if>
+      <if test="liquidatesRepayFrost != null" >
+        liquidates_repay_frost,
+      </if>
+      <if test="serviceFeeRate != null" >
+        service_fee_rate,
+      </if>
+      <if test="serviceFee != null" >
+        service_fee,
+      </if>
+      <if test="expireFairValue != null" >
+        expire_fair_value,
+      </if>
+      <if test="underTakeTimes != null" >
+        under_take_times,
+      </if>
+      <if test="investMax != null" >
+        invest_max,
+      </if>
+      <if test="investMin != null" >
+        invest_min,
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times,
+      </if>
+      <if test="repayAccount != null" >
+        repay_account,
+      </if>
+      <if test="repayCapital != null" >
+        repay_capital,
+      </if>
+      <if test="repayInterest != null" >
+        repay_interest,
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait,
+      </if>
+      <if test="repayCapitalWait != null" >
+        repay_capital_wait,
+      </if>
+      <if test="repayInterestWait != null" >
+        repay_interest_wait,
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes,
+      </if>
+      <if test="repayCapitalYes != null" >
+        repay_capital_yes,
+      </if>
+      <if test="repayInterestYes != null" >
+        repay_interest_yes,
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id,
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name,
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute,
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id,
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name,
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id,
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name,
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id,
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+      <if test="calculationStatus != null" >
+        calculation_status,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="reinvestStatus != null" >
+        reinvest_status,
+      </if>
+      <if test="repayRunningStatus != null" >
+        repay_running_status,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="inviteRepayUserId != null" >
+        invite_repay_user_id,
+      </if>
+      <if test="inviteRepayUserAttribute != null" >
+        invite_repay_user_attribute,
+      </if>
+      <if test="inviteRepayUserName != null" >
+        invite_repay_user_name,
+      </if>
+      <if test="inviteRepayRegionId != null" >
+        invite_repay_region_id,
+      </if>
+      <if test="inviteRepayRegionName != null" >
+        invite_repay_region_name,
+      </if>
+      <if test="inviteRepayBranchId != null" >
+        invite_repay_branch_id,
+      </if>
+      <if test="inviteRepayBranchName != null" >
+        invite_repay_branch_name,
+      </if>
+      <if test="inviteRepayDepartmentId != null" >
+        invite_repay_department_id,
+      </if>
+      <if test="inviteRepayDepartmentName != null" >
+        invite_repay_department_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="accedeOrderId != null" >
+        #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="freezeOrderId != null" >
+        #{freezeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeBalance != null" >
+        #{accedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeFrost != null" >
+        #{accedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesCreditFrost != null" >
+        #{liquidatesCreditFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesApr != null" >
+        #{liquidatesApr,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesRepayFrost != null" >
+        #{liquidatesRepayFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFeeRate != null" >
+        #{serviceFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="expireFairValue != null" >
+        #{expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="underTakeTimes != null" >
+        #{underTakeTimes,jdbcType=TINYINT},
+      </if>
+      <if test="investMax != null" >
+        #{investMax,jdbcType=DECIMAL},
+      </if>
+      <if test="investMin != null" >
+        #{investMin,jdbcType=DECIMAL},
+      </if>
+      <if test="cycleTimes != null" >
+        #{cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="repayAccount != null" >
+        #{repayAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapital != null" >
+        #{repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterest != null" >
+        #{repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalWait != null" >
+        #{repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestWait != null" >
+        #{repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalYes != null" >
+        #{repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestYes != null" >
+        #{repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="inviteUserId != null" >
+        #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionId != null" >
+        #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="calculationStatus != null" >
+        #{calculationStatus,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="reinvestStatus != null" >
+        #{reinvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayRunningStatus != null" >
+        #{repayRunningStatus,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayUserId != null" >
+        #{inviteRepayUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayUserAttribute != null" >
+        #{inviteRepayUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayUserName != null" >
+        #{inviteRepayUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayRegionId != null" >
+        #{inviteRepayRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayRegionName != null" >
+        #{inviteRepayRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayBranchId != null" >
+        #{inviteRepayBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayBranchName != null" >
+        #{inviteRepayBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayDepartmentId != null" >
+        #{inviteRepayDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayDepartmentName != null" >
+        #{inviteRepayDepartmentName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccedeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_plan_accede
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_plan_accede
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userAttribute != null" >
+        user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.accedeOrderId != null" >
+        accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.freezeOrderId != null" >
+        freeze_order_id = #{record.freezeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accedeAccount != null" >
+        accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accedeBalance != null" >
+        accede_balance = #{record.accedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accedeFrost != null" >
+        accede_frost = #{record.accedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidatesCreditFrost != null" >
+        liquidates_credit_frost = #{record.liquidatesCreditFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidatesApr != null" >
+        liquidates_apr = #{record.liquidatesApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.liquidatesRepayFrost != null" >
+        liquidates_repay_frost = #{record.liquidatesRepayFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceFeeRate != null" >
+        service_fee_rate = #{record.serviceFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceFee != null" >
+        service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.expireFairValue != null" >
+        expire_fair_value = #{record.expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.underTakeTimes != null" >
+        under_take_times = #{record.underTakeTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.investMax != null" >
+        invest_max = #{record.investMax,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investMin != null" >
+        invest_min = #{record.investMin,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cycleTimes != null" >
+        cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayAccount != null" >
+        repay_account = #{record.repayAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapital != null" >
+        repay_capital = #{record.repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterest != null" >
+        repay_interest = #{record.repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountWait != null" >
+        repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapitalWait != null" >
+        repay_capital_wait = #{record.repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterestWait != null" >
+        repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountYes != null" >
+        repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayCapitalYes != null" >
+        repay_capital_yes = #{record.repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayInterestYes != null" >
+        repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.inviteUserId != null" >
+        invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserName != null" >
+        invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserAttribute != null" >
+        invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRegionId != null" >
+        invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRegionName != null" >
+        invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteBranchId != null" >
+        invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteBranchName != null" >
+        invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteDepartmentId != null" >
+        invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteDepartmentName != null" >
+        invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sendStatus != null" >
+        send_status = #{record.sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.calculationStatus != null" >
+        calculation_status = #{record.calculationStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.reinvestStatus != null" >
+        reinvest_status = #{record.reinvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayRunningStatus != null" >
+        repay_running_status = #{record.repayRunningStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserName != null" >
+        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRepayUserId != null" >
+        invite_repay_user_id = #{record.inviteRepayUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRepayUserAttribute != null" >
+        invite_repay_user_attribute = #{record.inviteRepayUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRepayUserName != null" >
+        invite_repay_user_name = #{record.inviteRepayUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRepayRegionId != null" >
+        invite_repay_region_id = #{record.inviteRepayRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRepayRegionName != null" >
+        invite_repay_region_name = #{record.inviteRepayRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRepayBranchId != null" >
+        invite_repay_branch_id = #{record.inviteRepayBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRepayBranchName != null" >
+        invite_repay_branch_name = #{record.inviteRepayBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRepayDepartmentId != null" >
+        invite_repay_department_id = #{record.inviteRepayDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRepayDepartmentName != null" >
+        invite_repay_department_name = #{record.inviteRepayDepartmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_plan_accede
+    set id = #{record.id,jdbcType=INTEGER},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_attribute = #{record.userAttribute,jdbcType=INTEGER},
+      accede_order_id = #{record.accedeOrderId,jdbcType=VARCHAR},
+      freeze_order_id = #{record.freezeOrderId,jdbcType=VARCHAR},
+      accede_account = #{record.accedeAccount,jdbcType=DECIMAL},
+      accede_balance = #{record.accedeBalance,jdbcType=DECIMAL},
+      accede_frost = #{record.accedeFrost,jdbcType=DECIMAL},
+      liquidates_credit_frost = #{record.liquidatesCreditFrost,jdbcType=DECIMAL},
+      liquidates_apr = #{record.liquidatesApr,jdbcType=DECIMAL},
+      liquidates_repay_frost = #{record.liquidatesRepayFrost,jdbcType=DECIMAL},
+      service_fee_rate = #{record.serviceFeeRate,jdbcType=DECIMAL},
+      service_fee = #{record.serviceFee,jdbcType=DECIMAL},
+      expire_fair_value = #{record.expireFairValue,jdbcType=DECIMAL},
+      under_take_times = #{record.underTakeTimes,jdbcType=TINYINT},
+      invest_max = #{record.investMax,jdbcType=DECIMAL},
+      invest_min = #{record.investMin,jdbcType=DECIMAL},
+      cycle_times = #{record.cycleTimes,jdbcType=INTEGER},
+      repay_account = #{record.repayAccount,jdbcType=DECIMAL},
+      repay_capital = #{record.repayCapital,jdbcType=DECIMAL},
+      repay_interest = #{record.repayInterest,jdbcType=DECIMAL},
+      repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      repay_capital_wait = #{record.repayCapitalWait,jdbcType=DECIMAL},
+      repay_interest_wait = #{record.repayInterestWait,jdbcType=DECIMAL},
+      repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      repay_capital_yes = #{record.repayCapitalYes,jdbcType=DECIMAL},
+      repay_interest_yes = #{record.repayInterestYes,jdbcType=DECIMAL},
+      invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      send_status = #{record.sendStatus,jdbcType=TINYINT},
+      calculation_status = #{record.calculationStatus,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=TINYINT},
+      reinvest_status = #{record.reinvestStatus,jdbcType=TINYINT},
+      repay_running_status = #{record.repayRunningStatus,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      client = #{record.client,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      invite_repay_user_id = #{record.inviteRepayUserId,jdbcType=INTEGER},
+      invite_repay_user_attribute = #{record.inviteRepayUserAttribute,jdbcType=INTEGER},
+      invite_repay_user_name = #{record.inviteRepayUserName,jdbcType=VARCHAR},
+      invite_repay_region_id = #{record.inviteRepayRegionId,jdbcType=INTEGER},
+      invite_repay_region_name = #{record.inviteRepayRegionName,jdbcType=VARCHAR},
+      invite_repay_branch_id = #{record.inviteRepayBranchId,jdbcType=INTEGER},
+      invite_repay_branch_name = #{record.inviteRepayBranchName,jdbcType=VARCHAR},
+      invite_repay_department_id = #{record.inviteRepayDepartmentId,jdbcType=INTEGER},
+      invite_repay_department_name = #{record.inviteRepayDepartmentName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccede" >
+    update ht_debt_plan_accede
+    <set >
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAttribute != null" >
+        user_attribute = #{userAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="accedeOrderId != null" >
+        accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="freezeOrderId != null" >
+        freeze_order_id = #{freezeOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="accedeAccount != null" >
+        accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeBalance != null" >
+        accede_balance = #{accedeBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="accedeFrost != null" >
+        accede_frost = #{accedeFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesCreditFrost != null" >
+        liquidates_credit_frost = #{liquidatesCreditFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesApr != null" >
+        liquidates_apr = #{liquidatesApr,jdbcType=DECIMAL},
+      </if>
+      <if test="liquidatesRepayFrost != null" >
+        liquidates_repay_frost = #{liquidatesRepayFrost,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFeeRate != null" >
+        service_fee_rate = #{serviceFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFee != null" >
+        service_fee = #{serviceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="expireFairValue != null" >
+        expire_fair_value = #{expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="underTakeTimes != null" >
+        under_take_times = #{underTakeTimes,jdbcType=TINYINT},
+      </if>
+      <if test="investMax != null" >
+        invest_max = #{investMax,jdbcType=DECIMAL},
+      </if>
+      <if test="investMin != null" >
+        invest_min = #{investMin,jdbcType=DECIMAL},
+      </if>
+      <if test="cycleTimes != null" >
+        cycle_times = #{cycleTimes,jdbcType=INTEGER},
+      </if>
+      <if test="repayAccount != null" >
+        repay_account = #{repayAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapital != null" >
+        repay_capital = #{repayCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterest != null" >
+        repay_interest = #{repayInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalWait != null" >
+        repay_capital_wait = #{repayCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestWait != null" >
+        repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayCapitalYes != null" >
+        repay_capital_yes = #{repayCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayInterestYes != null" >
+        repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="calculationStatus != null" >
+        calculation_status = #{calculationStatus,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="reinvestStatus != null" >
+        reinvest_status = #{reinvestStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayRunningStatus != null" >
+        repay_running_status = #{repayRunningStatus,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayUserId != null" >
+        invite_repay_user_id = #{inviteRepayUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayUserAttribute != null" >
+        invite_repay_user_attribute = #{inviteRepayUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayUserName != null" >
+        invite_repay_user_name = #{inviteRepayUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayRegionId != null" >
+        invite_repay_region_id = #{inviteRepayRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayRegionName != null" >
+        invite_repay_region_name = #{inviteRepayRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayBranchId != null" >
+        invite_repay_branch_id = #{inviteRepayBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayBranchName != null" >
+        invite_repay_branch_name = #{inviteRepayBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRepayDepartmentId != null" >
+        invite_repay_department_id = #{inviteRepayDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRepayDepartmentName != null" >
+        invite_repay_department_name = #{inviteRepayDepartmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanAccede" >
+    update ht_debt_plan_accede
+    set plan_nid = #{planNid,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_attribute = #{userAttribute,jdbcType=INTEGER},
+      accede_order_id = #{accedeOrderId,jdbcType=VARCHAR},
+      freeze_order_id = #{freezeOrderId,jdbcType=VARCHAR},
+      accede_account = #{accedeAccount,jdbcType=DECIMAL},
+      accede_balance = #{accedeBalance,jdbcType=DECIMAL},
+      accede_frost = #{accedeFrost,jdbcType=DECIMAL},
+      liquidates_credit_frost = #{liquidatesCreditFrost,jdbcType=DECIMAL},
+      liquidates_apr = #{liquidatesApr,jdbcType=DECIMAL},
+      liquidates_repay_frost = #{liquidatesRepayFrost,jdbcType=DECIMAL},
+      service_fee_rate = #{serviceFeeRate,jdbcType=DECIMAL},
+      service_fee = #{serviceFee,jdbcType=DECIMAL},
+      expire_fair_value = #{expireFairValue,jdbcType=DECIMAL},
+      under_take_times = #{underTakeTimes,jdbcType=TINYINT},
+      invest_max = #{investMax,jdbcType=DECIMAL},
+      invest_min = #{investMin,jdbcType=DECIMAL},
+      cycle_times = #{cycleTimes,jdbcType=INTEGER},
+      repay_account = #{repayAccount,jdbcType=DECIMAL},
+      repay_capital = #{repayCapital,jdbcType=DECIMAL},
+      repay_interest = #{repayInterest,jdbcType=DECIMAL},
+      repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      repay_capital_wait = #{repayCapitalWait,jdbcType=DECIMAL},
+      repay_interest_wait = #{repayInterestWait,jdbcType=DECIMAL},
+      repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      repay_capital_yes = #{repayCapitalYes,jdbcType=DECIMAL},
+      repay_interest_yes = #{repayInterestYes,jdbcType=DECIMAL},
+      invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      send_status = #{sendStatus,jdbcType=TINYINT},
+      calculation_status = #{calculationStatus,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=TINYINT},
+      reinvest_status = #{reinvestStatus,jdbcType=TINYINT},
+      repay_running_status = #{repayRunningStatus,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      client = #{client,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      invite_repay_user_id = #{inviteRepayUserId,jdbcType=INTEGER},
+      invite_repay_user_attribute = #{inviteRepayUserAttribute,jdbcType=INTEGER},
+      invite_repay_user_name = #{inviteRepayUserName,jdbcType=VARCHAR},
+      invite_repay_region_id = #{inviteRepayRegionId,jdbcType=INTEGER},
+      invite_repay_region_name = #{inviteRepayRegionName,jdbcType=VARCHAR},
+      invite_repay_branch_id = #{inviteRepayBranchId,jdbcType=INTEGER},
+      invite_repay_branch_name = #{inviteRepayBranchName,jdbcType=VARCHAR},
+      invite_repay_department_id = #{inviteRepayDepartmentId,jdbcType=INTEGER},
+      invite_repay_department_name = #{inviteRepayDepartmentName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
