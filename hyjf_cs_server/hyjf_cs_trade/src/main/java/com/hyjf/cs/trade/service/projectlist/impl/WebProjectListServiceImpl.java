@@ -1214,7 +1214,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             accedeTotal = 0.00;
         } else {
             count = (Integer) totalData.get("count");
-            accedeTotal = (double) totalData.get("sum");
+            accedeTotal =  totalData.get("sum") == null ? 0.00 : (double) totalData.get("sum");
         }
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         info.put("planAccedeList", new ArrayList<>());
