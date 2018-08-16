@@ -38,7 +38,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(tags = "admin移动客户端")
+@Api(tags = "admin移动客户端-意见反馈")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {
@@ -98,7 +98,7 @@ public class SubmissionsController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
-    @RequestMapping("/exportListAction")
+    @PostMapping("/exportListAction")
     public void exportListAction(@RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");

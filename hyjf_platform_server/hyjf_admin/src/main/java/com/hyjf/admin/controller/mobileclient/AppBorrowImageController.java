@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
-@Api(tags = "admin移动客户端")
+@Api(tags = "admin移动客户端-产品图片")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
@@ -125,11 +125,8 @@ public class AppBorrowImageController extends BaseController {
         //CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
        // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        //TODO PropUtils.getSystem("file.domain.url")
         String fileDomainUrl = DOMAIN_URL;
-        // TODO PropUtils.getSystem("file.physical.path")
         String filePhysicalPath = PHYSICAL_PATH;
-        // TODO PropUtils.getSystem("file.upload.temp.path")
         String fileUploadTempPath = TEMP_PATH;
 
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
