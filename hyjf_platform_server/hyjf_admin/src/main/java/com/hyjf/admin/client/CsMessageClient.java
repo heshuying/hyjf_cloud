@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -175,18 +176,40 @@ public interface CsMessageClient {
     MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
 
     /**
-     * (条件)查询 APP消息推送 异常处理 列表
-     * @param request
+     * 获取列表记录数
+     *
      * @return
      */
-    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+    Integer getRecordCount(MessagePushErrorRequest request);
 
     /**
-     * 数据修改 APP消息推送 异常处理
-     * @param request
+     * 获取列表
+     *
      * @return
      */
-    MessagePushErrorResponse update(MessagePushErrorRequest request);
+    List<MessagePushErrorVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    List<MessagePushErrorVO> getTagList();
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    MessagePushErrorVO getRecord(Integer id);
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    void sendMessage(MessagePushErrorVO msg);
 
     /**
      *查询定时发送短信列表

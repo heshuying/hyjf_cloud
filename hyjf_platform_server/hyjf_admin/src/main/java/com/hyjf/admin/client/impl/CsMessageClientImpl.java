@@ -17,6 +17,7 @@ import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,35 +232,79 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     /**
-     * (条件)查询 APP消息推送 异常处理 列表
-     * @param request
+     * 获取列表记录数
+     *
      * @return
      */
     @Override
-    public MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
+    public Integer getRecordCount(MessagePushErrorRequest request) {
         MessagePushErrorResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getListByConditions",
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getRecordCount",
                         request, MessagePushErrorResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getCount();
         }
         return null;
     }
 
     /**
-     * 数据修改 APP消息推送 异常处理
-     * @param request
+     * 获取列表
+     *
      * @return
      */
     @Override
-    public MessagePushErrorResponse update(MessagePushErrorRequest request) {
+    public List<MessagePushErrorVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd) {
         MessagePushErrorResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/request",
-                        request, MessagePushErrorResponse.class).getBody();
+                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecordListT"+"/"+request+"/"+limitStart+"/"+limitEnd,
+                                 MessagePushErrorResponse.class);
         if (response != null) {
-            return response;
+            return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    @Override
+    public List<MessagePushErrorVO> getTagList() {
+        MessagePushErrorResponse response = restTemplate
+                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getTagList",
+                        MessagePushErrorResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    @Override
+    public MessagePushErrorVO getRecord(Integer id) {
+        MessagePushErrorResponse response = restTemplate
+                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getTagList"+"/"+id,
+                        MessagePushErrorResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    @Override
+    public void sendMessage(MessagePushErrorVO msg) {
+        restTemplate.getForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage"+"/"+msg,
+                        MessagePushErrorResponse.class);
     }
 
     @Override
