@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowTenderCpnMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="account_tender" property="accountTender" jdbcType="DECIMAL" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="change_status" property="changeStatus" jdbcType="TINYINT" />
+    <result column="change_userid" property="changeUserid" jdbcType="INTEGER" />
+    <result column="change_period" property="changePeriod" jdbcType="INTEGER" />
+    <result column="tender_status" property="tenderStatus" jdbcType="TINYINT" />
+    <result column="tender_nid" property="tenderNid" jdbcType="VARCHAR" />
+    <result column="tender_award_account" property="tenderAwardAccount" jdbcType="DECIMAL" />
+    <result column="recover_full_status" property="recoverFullStatus" jdbcType="TINYINT" />
+    <result column="recover_fee" property="recoverFee" jdbcType="DECIMAL" />
+    <result column="recover_type" property="recoverType" jdbcType="VARCHAR" />
+    <result column="recover_account_all" property="recoverAccountAll" jdbcType="DECIMAL" />
+    <result column="recover_account_interest" property="recoverAccountInterest" jdbcType="DECIMAL" />
+    <result column="recover_account_yes" property="recoverAccountYes" jdbcType="DECIMAL" />
+    <result column="recover_account_interest_yes" property="recoverAccountInterestYes" jdbcType="DECIMAL" />
+    <result column="recover_account_capital_yes" property="recoverAccountCapitalYes" jdbcType="DECIMAL" />
+    <result column="recover_account_wait" property="recoverAccountWait" jdbcType="DECIMAL" />
+    <result column="recover_account_interest_wait" property="recoverAccountInterestWait" jdbcType="DECIMAL" />
+    <result column="recover_account_capital_wait" property="recoverAccountCapitalWait" jdbcType="DECIMAL" />
+    <result column="recover_times" property="recoverTimes" jdbcType="INTEGER" />
+    <result column="recover_advance_fee" property="recoverAdvanceFee" jdbcType="DECIMAL" />
+    <result column="recover_late_fee" property="recoverLateFee" jdbcType="DECIMAL" />
+    <result column="tender_award_fee" property="tenderAwardFee" jdbcType="DECIMAL" />
+    <result column="loan_amount" property="loanAmount" jdbcType="DECIMAL" />
+    <result column="loan_fee" property="loanFee" jdbcType="DECIMAL" />
+    <result column="contents" property="contents" jdbcType="VARCHAR" />
+    <result column="auto_status" property="autoStatus" jdbcType="TINYINT" />
+    <result column="web_status" property="webStatus" jdbcType="TINYINT" />
+    <result column="api_status" property="apiStatus" jdbcType="TINYINT" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+    <result column="period_status" property="periodStatus" jdbcType="TINYINT" />
+    <result column="isok" property="isok" jdbcType="TINYINT" />
+    <result column="is_report" property="isReport" jdbcType="TINYINT" />
+    <result column="flag" property="flag" jdbcType="TINYINT" />
+    <result column="activity_flag" property="activityFlag" jdbcType="TINYINT" />
+    <result column="client" property="client" jdbcType="TINYINT" />
+    <result column="web" property="web" jdbcType="TINYINT" />
+    <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
+    <result column="invite_branch_id" property="inviteBranchId" jdbcType="INTEGER" />
+    <result column="invite_branch_name" property="inviteBranchName" jdbcType="VARCHAR" />
+    <result column="invite_department_id" property="inviteDepartmentId" jdbcType="INTEGER" />
+    <result column="invite_department_name" property="inviteDepartmentName" jdbcType="VARCHAR" />
+    <result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="INTEGER" />
+    <result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="INTEGER" />
+    <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
+    <result column="loan_ordid" property="loanOrdid" jdbcType="VARCHAR" />
+    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+    <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
+    <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+    <result column="tender_user_name" property="tenderUserName" jdbcType="VARCHAR" />
+    <result column="tender_type" property="tenderType" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, `status`, borrow_nid, nid, account_tender, account, change_status, change_userid, 
+    change_period, tender_status, tender_nid, tender_award_account, recover_full_status, 
+    recover_fee, recover_type, recover_account_all, recover_account_interest, recover_account_yes, 
+    recover_account_interest_yes, recover_account_capital_yes, recover_account_wait, 
+    recover_account_interest_wait, recover_account_capital_wait, recover_times, recover_advance_fee, 
+    recover_late_fee, tender_award_fee, loan_amount, loan_fee, contents, auto_status, 
+    web_status, api_status, add_ip, period_status, isok, is_report, flag, activity_flag, 
+    client, web, invite_user_name, invite_branch_id, invite_branch_name, invite_department_id, 
+    invite_department_name, tender_user_attribute, invite_user_attribute, order_date, 
+    loan_ordid, invite_user_id, invite_region_id, invite_region_name, tender_user_name, 
+    tender_type, remark, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpnExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_tender_cpn
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_borrow_tender_cpn
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow_tender_cpn
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpnExample" >
+    delete from ht_borrow_tender_cpn
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_tender_cpn (user_id, `status`, borrow_nid, 
+      nid, account_tender, account, 
+      change_status, change_userid, change_period, 
+      tender_status, tender_nid, tender_award_account, 
+      recover_full_status, recover_fee, recover_type, 
+      recover_account_all, recover_account_interest, 
+      recover_account_yes, recover_account_interest_yes, 
+      recover_account_capital_yes, recover_account_wait, 
+      recover_account_interest_wait, recover_account_capital_wait, 
+      recover_times, recover_advance_fee, recover_late_fee, 
+      tender_award_fee, loan_amount, loan_fee, 
+      contents, auto_status, web_status, 
+      api_status, add_ip, period_status, 
+      isok, is_report, flag, 
+      activity_flag, client, web, 
+      invite_user_name, invite_branch_id, invite_branch_name, 
+      invite_department_id, invite_department_name, 
+      tender_user_attribute, invite_user_attribute, 
+      order_date, loan_ordid, invite_user_id, 
+      invite_region_id, invite_region_name, tender_user_name, 
+      tender_type, remark, create_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{nid,jdbcType=VARCHAR}, #{accountTender,jdbcType=DECIMAL}, #{account,jdbcType=DECIMAL}, 
+      #{changeStatus,jdbcType=TINYINT}, #{changeUserid,jdbcType=INTEGER}, #{changePeriod,jdbcType=INTEGER}, 
+      #{tenderStatus,jdbcType=TINYINT}, #{tenderNid,jdbcType=VARCHAR}, #{tenderAwardAccount,jdbcType=DECIMAL}, 
+      #{recoverFullStatus,jdbcType=TINYINT}, #{recoverFee,jdbcType=DECIMAL}, #{recoverType,jdbcType=VARCHAR}, 
+      #{recoverAccountAll,jdbcType=DECIMAL}, #{recoverAccountInterest,jdbcType=DECIMAL}, 
+      #{recoverAccountYes,jdbcType=DECIMAL}, #{recoverAccountInterestYes,jdbcType=DECIMAL}, 
+      #{recoverAccountCapitalYes,jdbcType=DECIMAL}, #{recoverAccountWait,jdbcType=DECIMAL}, 
+      #{recoverAccountInterestWait,jdbcType=DECIMAL}, #{recoverAccountCapitalWait,jdbcType=DECIMAL}, 
+      #{recoverTimes,jdbcType=INTEGER}, #{recoverAdvanceFee,jdbcType=DECIMAL}, #{recoverLateFee,jdbcType=DECIMAL}, 
+      #{tenderAwardFee,jdbcType=DECIMAL}, #{loanAmount,jdbcType=DECIMAL}, #{loanFee,jdbcType=DECIMAL}, 
+      #{contents,jdbcType=VARCHAR}, #{autoStatus,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, 
+      #{apiStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{periodStatus,jdbcType=TINYINT}, 
+      #{isok,jdbcType=TINYINT}, #{isReport,jdbcType=TINYINT}, #{flag,jdbcType=TINYINT}, 
+      #{activityFlag,jdbcType=TINYINT}, #{client,jdbcType=TINYINT}, #{web,jdbcType=TINYINT}, 
+      #{inviteUserName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, 
+      #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
+      #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
+      #{orderDate,jdbcType=VARCHAR}, #{loanOrdid,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=INTEGER}, 
+      #{inviteRegionId,jdbcType=INTEGER}, #{inviteRegionName,jdbcType=VARCHAR}, #{tenderUserName,jdbcType=VARCHAR}, 
+      #{tenderType,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_tender_cpn
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="accountTender != null" >
+        account_tender,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="changeStatus != null" >
+        change_status,
+      </if>
+      <if test="changeUserid != null" >
+        change_userid,
+      </if>
+      <if test="changePeriod != null" >
+        change_period,
+      </if>
+      <if test="tenderStatus != null" >
+        tender_status,
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid,
+      </if>
+      <if test="tenderAwardAccount != null" >
+        tender_award_account,
+      </if>
+      <if test="recoverFullStatus != null" >
+        recover_full_status,
+      </if>
+      <if test="recoverFee != null" >
+        recover_fee,
+      </if>
+      <if test="recoverType != null" >
+        recover_type,
+      </if>
+      <if test="recoverAccountAll != null" >
+        recover_account_all,
+      </if>
+      <if test="recoverAccountInterest != null" >
+        recover_account_interest,
+      </if>
+      <if test="recoverAccountYes != null" >
+        recover_account_yes,
+      </if>
+      <if test="recoverAccountInterestYes != null" >
+        recover_account_interest_yes,
+      </if>
+      <if test="recoverAccountCapitalYes != null" >
+        recover_account_capital_yes,
+      </if>
+      <if test="recoverAccountWait != null" >
+        recover_account_wait,
+      </if>
+      <if test="recoverAccountInterestWait != null" >
+        recover_account_interest_wait,
+      </if>
+      <if test="recoverAccountCapitalWait != null" >
+        recover_account_capital_wait,
+      </if>
+      <if test="recoverTimes != null" >
+        recover_times,
+      </if>
+      <if test="recoverAdvanceFee != null" >
+        recover_advance_fee,
+      </if>
+      <if test="recoverLateFee != null" >
+        recover_late_fee,
+      </if>
+      <if test="tenderAwardFee != null" >
+        tender_award_fee,
+      </if>
+      <if test="loanAmount != null" >
+        loan_amount,
+      </if>
+      <if test="loanFee != null" >
+        loan_fee,
+      </if>
+      <if test="contents != null" >
+        contents,
+      </if>
+      <if test="autoStatus != null" >
+        auto_status,
+      </if>
+      <if test="webStatus != null" >
+        web_status,
+      </if>
+      <if test="apiStatus != null" >
+        api_status,
+      </if>
+      <if test="addIp != null" >
+        add_ip,
+      </if>
+      <if test="periodStatus != null" >
+        period_status,
+      </if>
+      <if test="isok != null" >
+        isok,
+      </if>
+      <if test="isReport != null" >
+        is_report,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="activityFlag != null" >
+        activity_flag,
+      </if>
+      <if test="client != null" >
+        client,
+      </if>
+      <if test="web != null" >
+        web,
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name,
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id,
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name,
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id,
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name,
+      </if>
+      <if test="tenderUserAttribute != null" >
+        tender_user_attribute,
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute,
+      </if>
+      <if test="orderDate != null" >
+        order_date,
+      </if>
+      <if test="loanOrdid != null" >
+        loan_ordid,
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id,
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id,
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name,
+      </if>
+      <if test="tenderUserName != null" >
+        tender_user_name,
+      </if>
+      <if test="tenderType != null" >
+        tender_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="accountTender != null" >
+        #{accountTender,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="changeStatus != null" >
+        #{changeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="changeUserid != null" >
+        #{changeUserid,jdbcType=INTEGER},
+      </if>
+      <if test="changePeriod != null" >
+        #{changePeriod,jdbcType=INTEGER},
+      </if>
+      <if test="tenderStatus != null" >
+        #{tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tenderNid != null" >
+        #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAwardAccount != null" >
+        #{tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverFullStatus != null" >
+        #{recoverFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="recoverFee != null" >
+        #{recoverFee,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverType != null" >
+        #{recoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverAccountAll != null" >
+        #{recoverAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterest != null" >
+        #{recoverAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountYes != null" >
+        #{recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterestYes != null" >
+        #{recoverAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountCapitalYes != null" >
+        #{recoverAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountWait != null" >
+        #{recoverAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterestWait != null" >
+        #{recoverAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountCapitalWait != null" >
+        #{recoverAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverTimes != null" >
+        #{recoverTimes,jdbcType=INTEGER},
+      </if>
+      <if test="recoverAdvanceFee != null" >
+        #{recoverAdvanceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverLateFee != null" >
+        #{recoverLateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="tenderAwardFee != null" >
+        #{tenderAwardFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loanAmount != null" >
+        #{loanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanFee != null" >
+        #{loanFee,jdbcType=DECIMAL},
+      </if>
+      <if test="contents != null" >
+        #{contents,jdbcType=VARCHAR},
+      </if>
+      <if test="autoStatus != null" >
+        #{autoStatus,jdbcType=TINYINT},
+      </if>
+      <if test="webStatus != null" >
+        #{webStatus,jdbcType=TINYINT},
+      </if>
+      <if test="apiStatus != null" >
+        #{apiStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="periodStatus != null" >
+        #{periodStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        #{isok,jdbcType=TINYINT},
+      </if>
+      <if test="isReport != null" >
+        #{isReport,jdbcType=TINYINT},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=TINYINT},
+      </if>
+      <if test="activityFlag != null" >
+        #{activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="client != null" >
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="web != null" >
+        #{web,jdbcType=TINYINT},
+      </if>
+      <if test="inviteUserName != null" >
+        #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserAttribute != null" >
+        #{tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="orderDate != null" >
+        #{orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrdid != null" >
+        #{loanOrdid,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null" >
+        #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionId != null" >
+        #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserName != null" >
+        #{tenderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderType != null" >
+        #{tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpnExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_tender_cpn
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_tender_cpn
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountTender != null" >
+        account_tender = #{record.accountTender,jdbcType=DECIMAL},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.changeStatus != null" >
+        change_status = #{record.changeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.changeUserid != null" >
+        change_userid = #{record.changeUserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.changePeriod != null" >
+        change_period = #{record.changePeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderStatus != null" >
+        tender_status = #{record.tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.tenderNid != null" >
+        tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderAwardAccount != null" >
+        tender_award_account = #{record.tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverFullStatus != null" >
+        recover_full_status = #{record.recoverFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.recoverFee != null" >
+        recover_fee = #{record.recoverFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverType != null" >
+        recover_type = #{record.recoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recoverAccountAll != null" >
+        recover_account_all = #{record.recoverAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountInterest != null" >
+        recover_account_interest = #{record.recoverAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountYes != null" >
+        recover_account_yes = #{record.recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountInterestYes != null" >
+        recover_account_interest_yes = #{record.recoverAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountCapitalYes != null" >
+        recover_account_capital_yes = #{record.recoverAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountWait != null" >
+        recover_account_wait = #{record.recoverAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountInterestWait != null" >
+        recover_account_interest_wait = #{record.recoverAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverAccountCapitalWait != null" >
+        recover_account_capital_wait = #{record.recoverAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverTimes != null" >
+        recover_times = #{record.recoverTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.recoverAdvanceFee != null" >
+        recover_advance_fee = #{record.recoverAdvanceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.recoverLateFee != null" >
+        recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tenderAwardFee != null" >
+        tender_award_fee = #{record.tenderAwardFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanAmount != null" >
+        loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.loanFee != null" >
+        loan_fee = #{record.loanFee,jdbcType=DECIMAL},
+      </if>
+      <if test="record.contents != null" >
+        contents = #{record.contents,jdbcType=VARCHAR},
+      </if>
+      <if test="record.autoStatus != null" >
+        auto_status = #{record.autoStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.webStatus != null" >
+        web_status = #{record.webStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.apiStatus != null" >
+        api_status = #{record.apiStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.periodStatus != null" >
+        period_status = #{record.periodStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.isok != null" >
+        isok = #{record.isok,jdbcType=TINYINT},
+      </if>
+      <if test="record.isReport != null" >
+        is_report = #{record.isReport,jdbcType=TINYINT},
+      </if>
+      <if test="record.flag != null" >
+        flag = #{record.flag,jdbcType=TINYINT},
+      </if>
+      <if test="record.activityFlag != null" >
+        activity_flag = #{record.activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.client != null" >
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.web != null" >
+        web = #{record.web,jdbcType=TINYINT},
+      </if>
+      <if test="record.inviteUserName != null" >
+        invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteBranchId != null" >
+        invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteBranchName != null" >
+        invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteDepartmentId != null" >
+        invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteDepartmentName != null" >
+        invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderUserAttribute != null" >
+        tender_user_attribute = #{record.tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserAttribute != null" >
+        invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderDate != null" >
+        order_date = #{record.orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanOrdid != null" >
+        loan_ordid = #{record.loanOrdid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteUserId != null" >
+        invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRegionId != null" >
+        invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRegionName != null" >
+        invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderUserName != null" >
+        tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderType != null" >
+        tender_type = #{record.tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_tender_cpn
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      account_tender = #{record.accountTender,jdbcType=DECIMAL},
+      account = #{record.account,jdbcType=DECIMAL},
+      change_status = #{record.changeStatus,jdbcType=TINYINT},
+      change_userid = #{record.changeUserid,jdbcType=INTEGER},
+      change_period = #{record.changePeriod,jdbcType=INTEGER},
+      tender_status = #{record.tenderStatus,jdbcType=TINYINT},
+      tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      tender_award_account = #{record.tenderAwardAccount,jdbcType=DECIMAL},
+      recover_full_status = #{record.recoverFullStatus,jdbcType=TINYINT},
+      recover_fee = #{record.recoverFee,jdbcType=DECIMAL},
+      recover_type = #{record.recoverType,jdbcType=VARCHAR},
+      recover_account_all = #{record.recoverAccountAll,jdbcType=DECIMAL},
+      recover_account_interest = #{record.recoverAccountInterest,jdbcType=DECIMAL},
+      recover_account_yes = #{record.recoverAccountYes,jdbcType=DECIMAL},
+      recover_account_interest_yes = #{record.recoverAccountInterestYes,jdbcType=DECIMAL},
+      recover_account_capital_yes = #{record.recoverAccountCapitalYes,jdbcType=DECIMAL},
+      recover_account_wait = #{record.recoverAccountWait,jdbcType=DECIMAL},
+      recover_account_interest_wait = #{record.recoverAccountInterestWait,jdbcType=DECIMAL},
+      recover_account_capital_wait = #{record.recoverAccountCapitalWait,jdbcType=DECIMAL},
+      recover_times = #{record.recoverTimes,jdbcType=INTEGER},
+      recover_advance_fee = #{record.recoverAdvanceFee,jdbcType=DECIMAL},
+      recover_late_fee = #{record.recoverLateFee,jdbcType=DECIMAL},
+      tender_award_fee = #{record.tenderAwardFee,jdbcType=DECIMAL},
+      loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
+      loan_fee = #{record.loanFee,jdbcType=DECIMAL},
+      contents = #{record.contents,jdbcType=VARCHAR},
+      auto_status = #{record.autoStatus,jdbcType=TINYINT},
+      web_status = #{record.webStatus,jdbcType=TINYINT},
+      api_status = #{record.apiStatus,jdbcType=TINYINT},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
+      period_status = #{record.periodStatus,jdbcType=TINYINT},
+      isok = #{record.isok,jdbcType=TINYINT},
+      is_report = #{record.isReport,jdbcType=TINYINT},
+      flag = #{record.flag,jdbcType=TINYINT},
+      activity_flag = #{record.activityFlag,jdbcType=TINYINT},
+      client = #{record.client,jdbcType=TINYINT},
+      web = #{record.web,jdbcType=TINYINT},
+      invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      tender_user_attribute = #{record.tenderUserAttribute,jdbcType=INTEGER},
+      invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      order_date = #{record.orderDate,jdbcType=VARCHAR},
+      loan_ordid = #{record.loanOrdid,jdbcType=VARCHAR},
+      invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      tender_user_name = #{record.tenderUserName,jdbcType=VARCHAR},
+      tender_type = #{record.tenderType,jdbcType=TINYINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
+    update ht_borrow_tender_cpn
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="accountTender != null" >
+        account_tender = #{accountTender,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="changeStatus != null" >
+        change_status = #{changeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="changeUserid != null" >
+        change_userid = #{changeUserid,jdbcType=INTEGER},
+      </if>
+      <if test="changePeriod != null" >
+        change_period = #{changePeriod,jdbcType=INTEGER},
+      </if>
+      <if test="tenderStatus != null" >
+        tender_status = #{tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAwardAccount != null" >
+        tender_award_account = #{tenderAwardAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverFullStatus != null" >
+        recover_full_status = #{recoverFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="recoverFee != null" >
+        recover_fee = #{recoverFee,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverType != null" >
+        recover_type = #{recoverType,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverAccountAll != null" >
+        recover_account_all = #{recoverAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterest != null" >
+        recover_account_interest = #{recoverAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountYes != null" >
+        recover_account_yes = #{recoverAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterestYes != null" >
+        recover_account_interest_yes = #{recoverAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountCapitalYes != null" >
+        recover_account_capital_yes = #{recoverAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountWait != null" >
+        recover_account_wait = #{recoverAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountInterestWait != null" >
+        recover_account_interest_wait = #{recoverAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverAccountCapitalWait != null" >
+        recover_account_capital_wait = #{recoverAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverTimes != null" >
+        recover_times = #{recoverTimes,jdbcType=INTEGER},
+      </if>
+      <if test="recoverAdvanceFee != null" >
+        recover_advance_fee = #{recoverAdvanceFee,jdbcType=DECIMAL},
+      </if>
+      <if test="recoverLateFee != null" >
+        recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
+      </if>
+      <if test="tenderAwardFee != null" >
+        tender_award_fee = #{tenderAwardFee,jdbcType=DECIMAL},
+      </if>
+      <if test="loanAmount != null" >
+        loan_amount = #{loanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="loanFee != null" >
+        loan_fee = #{loanFee,jdbcType=DECIMAL},
+      </if>
+      <if test="contents != null" >
+        contents = #{contents,jdbcType=VARCHAR},
+      </if>
+      <if test="autoStatus != null" >
+        auto_status = #{autoStatus,jdbcType=TINYINT},
+      </if>
+      <if test="webStatus != null" >
+        web_status = #{webStatus,jdbcType=TINYINT},
+      </if>
+      <if test="apiStatus != null" >
+        api_status = #{apiStatus,jdbcType=TINYINT},
+      </if>
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="periodStatus != null" >
+        period_status = #{periodStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        isok = #{isok,jdbcType=TINYINT},
+      </if>
+      <if test="isReport != null" >
+        is_report = #{isReport,jdbcType=TINYINT},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=TINYINT},
+      </if>
+      <if test="activityFlag != null" >
+        activity_flag = #{activityFlag,jdbcType=TINYINT},
+      </if>
+      <if test="client != null" >
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="web != null" >
+        web = #{web,jdbcType=TINYINT},
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserAttribute != null" >
+        tender_user_attribute = #{tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="orderDate != null" >
+        order_date = #{orderDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrdid != null" >
+        loan_ordid = #{loanOrdid,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserName != null" >
+        tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderType != null" >
+        tender_type = #{tenderType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn" >
+    update ht_borrow_tender_cpn
+    set user_id = #{userId,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      nid = #{nid,jdbcType=VARCHAR},
+      account_tender = #{accountTender,jdbcType=DECIMAL},
+      account = #{account,jdbcType=DECIMAL},
+      change_status = #{changeStatus,jdbcType=TINYINT},
+      change_userid = #{changeUserid,jdbcType=INTEGER},
+      change_period = #{changePeriod,jdbcType=INTEGER},
+      tender_status = #{tenderStatus,jdbcType=TINYINT},
+      tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      tender_award_account = #{tenderAwardAccount,jdbcType=DECIMAL},
+      recover_full_status = #{recoverFullStatus,jdbcType=TINYINT},
+      recover_fee = #{recoverFee,jdbcType=DECIMAL},
+      recover_type = #{recoverType,jdbcType=VARCHAR},
+      recover_account_all = #{recoverAccountAll,jdbcType=DECIMAL},
+      recover_account_interest = #{recoverAccountInterest,jdbcType=DECIMAL},
+      recover_account_yes = #{recoverAccountYes,jdbcType=DECIMAL},
+      recover_account_interest_yes = #{recoverAccountInterestYes,jdbcType=DECIMAL},
+      recover_account_capital_yes = #{recoverAccountCapitalYes,jdbcType=DECIMAL},
+      recover_account_wait = #{recoverAccountWait,jdbcType=DECIMAL},
+      recover_account_interest_wait = #{recoverAccountInterestWait,jdbcType=DECIMAL},
+      recover_account_capital_wait = #{recoverAccountCapitalWait,jdbcType=DECIMAL},
+      recover_times = #{recoverTimes,jdbcType=INTEGER},
+      recover_advance_fee = #{recoverAdvanceFee,jdbcType=DECIMAL},
+      recover_late_fee = #{recoverLateFee,jdbcType=DECIMAL},
+      tender_award_fee = #{tenderAwardFee,jdbcType=DECIMAL},
+      loan_amount = #{loanAmount,jdbcType=DECIMAL},
+      loan_fee = #{loanFee,jdbcType=DECIMAL},
+      contents = #{contents,jdbcType=VARCHAR},
+      auto_status = #{autoStatus,jdbcType=TINYINT},
+      web_status = #{webStatus,jdbcType=TINYINT},
+      api_status = #{apiStatus,jdbcType=TINYINT},
+      add_ip = #{addIp,jdbcType=VARCHAR},
+      period_status = #{periodStatus,jdbcType=TINYINT},
+      isok = #{isok,jdbcType=TINYINT},
+      is_report = #{isReport,jdbcType=TINYINT},
+      flag = #{flag,jdbcType=TINYINT},
+      activity_flag = #{activityFlag,jdbcType=TINYINT},
+      client = #{client,jdbcType=TINYINT},
+      web = #{web,jdbcType=TINYINT},
+      invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      tender_user_attribute = #{tenderUserAttribute,jdbcType=INTEGER},
+      invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      order_date = #{orderDate,jdbcType=VARCHAR},
+      loan_ordid = #{loanOrdid,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      tender_user_name = #{tenderUserName,jdbcType=VARCHAR},
+      tender_type = #{tenderType,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

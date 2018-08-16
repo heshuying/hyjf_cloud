@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: AM-ADMIN
+  cloud:
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: am-admin
+
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
+  sleuth:
+    sampler:
+      percentage: 1.0
+server:
+  port: 8099
+
+logging:
+  file: am-admin.log
+file:
+ physical:
+  path: D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
+ domain:
+  url: http://test.hyjf.com:8083/hyjf-admin/
+ upload:
+  real:
+   path: 123
+#swagger启用开关
+swagger:
+ enable: true

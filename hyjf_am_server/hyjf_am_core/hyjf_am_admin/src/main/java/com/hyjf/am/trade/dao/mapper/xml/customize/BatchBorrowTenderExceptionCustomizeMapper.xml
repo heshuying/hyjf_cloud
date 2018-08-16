@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper" >
+	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+	    <result column="nid" property="nid" jdbcType="VARCHAR" />
+	    <result column="auth_code" property="authCode" jdbcType="VARCHAR" />
+	    <result column="account_tender" property="accountTender" jdbcType="DECIMAL" />
+	    <result column="account" property="account" jdbcType="DECIMAL" />
+	    <result column="change_status" property="changeStatus" jdbcType="INTEGER" />
+	    <result column="change_userid" property="changeUserid" jdbcType="INTEGER" />
+	    <result column="change_period" property="changePeriod" jdbcType="INTEGER" />
+	    <result column="tender_status" property="tenderStatus" jdbcType="INTEGER" />
+	    <result column="tender_nid" property="tenderNid" jdbcType="VARCHAR" />
+	    <result column="tender_award_account" property="tenderAwardAccount" jdbcType="DECIMAL" />
+	    <result column="recover_full_status" property="recoverFullStatus" jdbcType="INTEGER" />
+	    <result column="recover_fee" property="recoverFee" jdbcType="DECIMAL" />
+	    <result column="recover_type" property="recoverType" jdbcType="VARCHAR" />
+	    <result column="recover_account_all" property="recoverAccountAll" jdbcType="DECIMAL" />
+	    <result column="recover_account_interest" property="recoverAccountInterest" jdbcType="DECIMAL" />
+	    <result column="recover_account_yes" property="recoverAccountYes" jdbcType="DECIMAL" />
+	    <result column="recover_account_interest_yes" property="recoverAccountInterestYes" jdbcType="DECIMAL" />
+	    <result column="recover_account_capital_yes" property="recoverAccountCapitalYes" jdbcType="DECIMAL" />
+	    <result column="recover_account_wait" property="recoverAccountWait" jdbcType="DECIMAL" />
+	    <result column="recover_account_interest_wait" property="recoverAccountInterestWait" jdbcType="DECIMAL" />
+	    <result column="recover_account_capital_wait" property="recoverAccountCapitalWait" jdbcType="DECIMAL" />
+	    <result column="recover_times" property="recoverTimes" jdbcType="INTEGER" />
+	    <result column="recover_advance_fee" property="recoverAdvanceFee" jdbcType="DECIMAL" />
+	    <result column="recover_late_fee" property="recoverLateFee" jdbcType="DECIMAL" />
+	    <result column="tender_award_fee" property="tenderAwardFee" jdbcType="DECIMAL" />
+	    <result column="loan_amount" property="loanAmount" jdbcType="DECIMAL" />
+	    <result column="loan_fee" property="loanFee" jdbcType="DECIMAL" />
+	    <result column="contents" property="contents" jdbcType="VARCHAR" />
+	    <result column="auto_status" property="autoStatus" jdbcType="INTEGER" />
+	    <result column="web_status" property="webStatus" jdbcType="INTEGER" />
+	    <result column="api_status" property="apiStatus" jdbcType="TINYINT" />
+	    <result column="addtime" property="addtime" jdbcType="INTEGER" />
+	    <result column="addip" property="addip" jdbcType="VARCHAR" />
+	    <result column="period_status" property="periodStatus" jdbcType="TINYINT" />
+	    <result column="isok" property="isok" jdbcType="TINYINT" />
+	    <result column="is_report" property="isReport" jdbcType="TINYINT" />
+	    <result column="flag" property="flag" jdbcType="TINYINT" />
+	    <result column="activity_flag" property="activityFlag" jdbcType="TINYINT" />
+	    <result column="client" property="client" jdbcType="TINYINT" />
+	    <result column="web" property="web" jdbcType="TINYINT" />
+	    <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
+	    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+	    <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
+	    <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+	    <result column="invite_branch_id" property="inviteBranchId" jdbcType="INTEGER" />
+	    <result column="invite_branch_name" property="inviteBranchName" jdbcType="VARCHAR" />
+	    <result column="invite_department_id" property="inviteDepartmentId" jdbcType="INTEGER" />
+	    <result column="invite_department_name" property="inviteDepartmentName" jdbcType="VARCHAR" />
+	    <result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="INTEGER" />
+	    <result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="INTEGER" />
+	    <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
+	    <result column="loan_order_date" property="loanOrderDate" jdbcType="VARCHAR" />
+	    <result column="loan_ordid" property="loanOrdid" jdbcType="VARCHAR" />
+	    <result column="tender_user_name" property="tenderUserName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="invest_type" property="investType" jdbcType="TINYINT" />
+	    <result column="accountno" property="accountNo" jdbcType="VARCHAR" />
+	  </resultMap>
+	  
+	  <select id="queryAuthCodeBorrowTenderList" resultMap="BaseResultMap">
+			SELECT
+				a.*, o.account_id AS 'accountno'
+			FROM
+				ht_borrow_tender a
+			LEFT JOIN ht_account o ON o.user_id = a.user_id
+			LEFT JOIN ht_borrow b ON b.borrow_nid = a.borrow_nid
+			WHERE
+				a.auth_code IS NULL
+				AND o.account_id is not null and ifnull(o.del_flag,0) !=1
+				AND a.create_time >= UNIX_TIMESTAMP(SUBDATE(CURDATE(),INTERVAL 3 DAY))
+	  </select>
+  
+  </mapper>

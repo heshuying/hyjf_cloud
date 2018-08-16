@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ConsumeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Consume" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="amount_real" property="amountReal" jdbcType="DECIMAL" />
+    <result column="person_num" property="personNum" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="VARCHAR" />
+    <result column="person_real" property="personReal" jdbcType="INTEGER" />
+    <result column="release" property="release" jdbcType="INTEGER" />
+    <result column="insert_day" property="insertDay" jdbcType="VARCHAR" />
+    <result column="consume_id" property="consumeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, amount, amount_real, person_num, `status`, `time`, insert_time, person_real, 
+    `release`, insert_day, consume_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_consume
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_consume
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeExample" >
+    delete from ht_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.Consume" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_consume (amount, amount_real, person_num, 
+      `status`, `time`, insert_time, 
+      person_real, `release`, insert_day, 
+      consume_id)
+    values (#{amount,jdbcType=DECIMAL}, #{amountReal,jdbcType=DECIMAL}, #{personNum,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{time,jdbcType=VARCHAR}, #{insertTime,jdbcType=VARCHAR}, 
+      #{personReal,jdbcType=INTEGER}, #{release,jdbcType=INTEGER}, #{insertDay,jdbcType=VARCHAR}, 
+      #{consumeId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Consume" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_consume
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="amountReal != null" >
+        amount_real,
+      </if>
+      <if test="personNum != null" >
+        person_num,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="time != null" >
+        `time`,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="personReal != null" >
+        person_real,
+      </if>
+      <if test="release != null" >
+        `release`,
+      </if>
+      <if test="insertDay != null" >
+        insert_day,
+      </if>
+      <if test="consumeId != null" >
+        consume_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="amountReal != null" >
+        #{amountReal,jdbcType=DECIMAL},
+      </if>
+      <if test="personNum != null" >
+        #{personNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="personReal != null" >
+        #{personReal,jdbcType=INTEGER},
+      </if>
+      <if test="release != null" >
+        #{release,jdbcType=INTEGER},
+      </if>
+      <if test="insertDay != null" >
+        #{insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        #{consumeId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ConsumeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_consume
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.amount != null" >
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.amountReal != null" >
+        amount_real = #{record.amountReal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.personNum != null" >
+        person_num = #{record.personNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.time != null" >
+        `time` = #{record.time,jdbcType=VARCHAR},
+      </if>
+      <if test="record.insertTime != null" >
+        insert_time = #{record.insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.personReal != null" >
+        person_real = #{record.personReal,jdbcType=INTEGER},
+      </if>
+      <if test="record.release != null" >
+        `release` = #{record.release,jdbcType=INTEGER},
+      </if>
+      <if test="record.insertDay != null" >
+        insert_day = #{record.insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.consumeId != null" >
+        consume_id = #{record.consumeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_consume
+    set id = #{record.id,jdbcType=INTEGER},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      amount_real = #{record.amountReal,jdbcType=DECIMAL},
+      person_num = #{record.personNum,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
+      `time` = #{record.time,jdbcType=VARCHAR},
+      insert_time = #{record.insertTime,jdbcType=VARCHAR},
+      person_real = #{record.personReal,jdbcType=INTEGER},
+      `release` = #{record.release,jdbcType=INTEGER},
+      insert_day = #{record.insertDay,jdbcType=VARCHAR},
+      consume_id = #{record.consumeId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.Consume" >
+    update ht_consume
+    <set >
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="amountReal != null" >
+        amount_real = #{amountReal,jdbcType=DECIMAL},
+      </if>
+      <if test="personNum != null" >
+        person_num = #{personNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="time != null" >
+        `time` = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=VARCHAR},
+      </if>
+      <if test="personReal != null" >
+        person_real = #{personReal,jdbcType=INTEGER},
+      </if>
+      <if test="release != null" >
+        `release` = #{release,jdbcType=INTEGER},
+      </if>
+      <if test="insertDay != null" >
+        insert_day = #{insertDay,jdbcType=VARCHAR},
+      </if>
+      <if test="consumeId != null" >
+        consume_id = #{consumeId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Consume" >
+    update ht_consume
+    set amount = #{amount,jdbcType=DECIMAL},
+      amount_real = #{amountReal,jdbcType=DECIMAL},
+      person_num = #{personNum,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
+      `time` = #{time,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=VARCHAR},
+      person_real = #{personReal,jdbcType=INTEGER},
+      `release` = #{release,jdbcType=INTEGER},
+      insert_day = #{insertDay,jdbcType=VARCHAR},
+      consume_id = #{consumeId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
