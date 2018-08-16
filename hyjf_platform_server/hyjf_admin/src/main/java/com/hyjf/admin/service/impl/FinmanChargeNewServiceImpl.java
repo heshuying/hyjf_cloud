@@ -29,14 +29,7 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
      */
     @Override
    public FinmanChargeNewResponse selectFinmanChargeList(FinmanChargeNewRequest adminRequest){
-        FinmanChargeNewResponse response =amTradeClient.selectFinmanChargeList(adminRequest);
-        // 资金来源
-        List<HjhInstConfigVO> hjhInstConfigList = hjhInstConfigList("");
-        response.setHjhInstConfigList(hjhInstConfigList);
-        // 产品类型
-        List<HjhAssetTypeVO> assetTypeList = hjhAssetTypeList(response.getResult().getInstCode());
-        response.setAssetTypeList(assetTypeList);
-        return response;
+        return amTradeClient.selectFinmanChargeList(adminRequest);
    }
 
     /**

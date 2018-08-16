@@ -26,6 +26,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -68,6 +69,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -284,7 +286,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhUserAuthVO getUserAuthByUserId(Integer userId) {
-        HjhUserAuthResponse response = restTemplate.getForEntity("",HjhUserAuthResponse.class).getBody();
+        String url = "http://AM-USER/am-user/user/getHjhUserAuthByUserId/" + userId;
+        HjhUserAuthResponse response = restTemplate.getForEntity(url,HjhUserAuthResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
@@ -1311,8 +1314,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowRepayVO> selectBorrowRepayList(String borrowNid, Integer repaySmsReminder) {
+        String url= "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/";
+        if (null == repaySmsReminder){
+            url += "000";  // 为了公用添加特殊处理字符
+        }else{
+            url += repaySmsReminder.toString();
+        }
         BorrowRepayResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/" + repaySmsReminder,
+                url,
                 BorrowRepayResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2671,7 +2680,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+    public Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog) {
         TransferExceptionLogResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/couponConfig/insertTransferexloghjh" ,transferExceptionLog, TransferExceptionLogResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
@@ -3804,4 +3813,38 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据订单号获取汇计划加入明细
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId) {
+        HjhAccedeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListByOrderId/" + accedeOrderId, HjhAccedeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取提成配置信息
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public Integer getCommisionConfig(HashMap map) {
+        Integer result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateCalculateInvestByPrimaryKey/", map,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+
 }

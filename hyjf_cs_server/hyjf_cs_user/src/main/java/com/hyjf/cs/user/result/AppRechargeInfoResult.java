@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.result;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author fq
  * @version AppRechargeInfoResult, v0.1 2018/7/30 9:38
@@ -37,9 +39,9 @@ public class AppRechargeInfoResult extends BaseResultBean {
     /** 其他充值方式url(是否成功，都要给出url) */
     private String otherUrl = "";
 
-    private String smsSeq;
+    private String smsSeq = "";
 
-    private String rechargeUrl;
+    private String rechargeUrl = "";
 
     private String isDefault = "0";// 0普通提现卡1默认提现卡2快捷支付卡
     /** 卡号绑定手机号码 */
@@ -173,7 +175,11 @@ public class AppRechargeInfoResult extends BaseResultBean {
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile;
+        if(StringUtils.isNotBlank(mobile)){
+            this.mobile = mobile;
+        }else{
+            this.mobile = "";
+        }
     }
 
     public String getAvailableAmount() {

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import com.hyjf.admin.beans.request.BorrowFirstFireRequestBean;
 import com.hyjf.admin.beans.request.BorrowFirstRequestBean;
 import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
@@ -14,11 +15,13 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowFirstService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +57,10 @@ public class BorrowFirstController extends BaseController {
         BorrowFirstResponseBean responseBean = borrowFirstService.getBorrowFirstList(borrowFirstRequest);
         // 资产来源
         List<HjhInstConfigVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
-        responseBean.setHjhInstConfigList(hjhInstConfigList);
+        responseBean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"id","instName"));
         // 初审状态
         Map<String, String> borrowStatusList = adminCommonService.getParamNameMap(CustomConstants.VERIFY_STATUS);
-        responseBean.setBorrowStatusList(borrowStatusList);
+        responseBean.setBorrowStatusList(ConvertUtils.convertParamMapToDropDown(borrowStatusList));
         return new AdminResult(responseBean);
     }
 
@@ -72,6 +75,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "已交保证金详细画面", notes = "已交保证金详细画面")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
     @GetMapping("/get_bail_info/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult<BorrowBailInfoResponseBean> getBailInfo(@PathVariable String borrowNid) {
@@ -79,6 +83,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "交保证金", notes = "交保证金")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
     @GetMapping("/insert_borrow_bail/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
@@ -90,6 +95,7 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult<BorrowFireInfoResponseBean> getBorrowFireInfo(@PathVariable String borrowNid) {
@@ -99,7 +105,7 @@ public class BorrowFirstController extends BaseController {
     @ApiOperation(value = "发标", notes = "发标")
     @PostMapping("/update_borrow_fire_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
-    public AdminResult updateBorrowFireInfo(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
-        return borrowFirstService.updateBorrowFireInfo(borrowFirstRequestBean.getBorrowNidSrch(), borrowFirstRequestBean.getVerifyStatusSrch(), borrowFirstRequestBean.getOntime());
+    public AdminResult updateBorrowFireInfo(@RequestBody BorrowFirstFireRequestBean requestBean) {
+        return borrowFirstService.updateBorrowFireInfo(requestBean.getBorrowNid(), requestBean.getVerifyStatus(), requestBean.getOntime());
     }
 }

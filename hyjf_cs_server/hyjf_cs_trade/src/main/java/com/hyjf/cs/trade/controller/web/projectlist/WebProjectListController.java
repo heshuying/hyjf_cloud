@@ -117,6 +117,7 @@ public class WebProjectListController extends BaseTradeController {
 
     /**
      * 散标专区-债权转让详情
+     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchWebCreditTender()
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")

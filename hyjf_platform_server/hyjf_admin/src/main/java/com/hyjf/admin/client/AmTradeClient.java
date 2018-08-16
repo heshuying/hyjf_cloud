@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -348,28 +349,21 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
      * @param request
      * @return
      */
-    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(TransferExceptionLogVO request);
 
     /**
      * 更改银行转账信息
      * @param request
      * @return
      */
-    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
-
-    /**
-     * 更改银行转账信息
-     * @param transferExceptionLog
-     * @return
-     */
-    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO request);
 
     /**
      * 通过uuid银行转账异常
@@ -1794,6 +1788,14 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
+
+    /**
+     * 资金中心 - 充值管理
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
      *

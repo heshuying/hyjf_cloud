@@ -24,7 +24,7 @@ import java.util.*;
  * @author dangzw
  * @version RepayCalendarController, v0.1 2018/7/27 11:30
  */
-@Api(description = "app日历", tags = "app日历")
+@Api(tags = "app端-app日历")
 @RestController
 @RequestMapping(value = "/hyjf-app/user")
 public class RepayCalendarController extends BaseMarketController {
@@ -34,7 +34,7 @@ public class RepayCalendarController extends BaseMarketController {
 
     @ResponseBody
     @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
-    @PostMapping(value = "/repayCalendar/getRepayCalendar?")
+    @PostMapping(value = "/repayCalendar/getRepayCalendar")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month, HttpServletRequest request) {
         logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");

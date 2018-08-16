@@ -76,7 +76,7 @@ public class AOPHandler {
 			logger.error(pjp.getSignature() + " 发生异常\r\n" + AOPUtil.getMethodArgs(pjp), e);
 			result.setStatus(BaseResult.ERROR);
 			result.setStatusDesc("接口调用发生异常，请联系服务方。");
-			// TODO 发送邮件或者写到异常文件中
+			//  发送邮件或者写到异常文件中
 		}
 		return result;
 	}
@@ -119,7 +119,7 @@ public class AOPHandler {
 			logger.error(pjp.getSignature() + " 发生异常\r\n" + AOPUtil.getMethodArgs(pjp), e);
 			result.setStatus(BaseResult.ERROR);
 			result.setStatusDesc("接口调用发生异常，请联系服务方。");
-			// TODO 发送邮件或者写到异常文件中
+			//  发送邮件或者写到异常文件中
 		}
 		return result;
 	}
@@ -162,7 +162,7 @@ public class AOPHandler {
 		} else {
 			logger.error(pjp.getSignature() + " 发生异常\r\n" + AOPUtil.getMethodArgs(pjp), e);
 			throw e;
-			// TODO 发送邮件或者写到异常文件中
+			//  发送邮件或者写到异常文件中
 		}
 //		return result;
 	}

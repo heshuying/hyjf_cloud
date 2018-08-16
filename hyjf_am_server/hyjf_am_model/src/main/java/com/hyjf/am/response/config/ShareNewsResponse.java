@@ -1,5 +1,9 @@
 package com.hyjf.am.response.config;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import org.apache.poi.ss.formula.functions.T;
+
 import java.util.List;
 
 /**
@@ -7,24 +11,5 @@ import java.util.List;
  * @Date: 2018/7/27 09:09
  * @Description: ShareNewsResponse
  */
-public class ShareNewsResponse<T> {
-    private T data;
-
-    private List<T> resultList;
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public List<T> getResultList() {
-        return resultList;
-    }
-
-    public void setResultList(List<T> resultList) {
-        this.resultList = resultList;
-    }
+public class ShareNewsResponse extends Response<ShareNewsBeanVO> {
 }

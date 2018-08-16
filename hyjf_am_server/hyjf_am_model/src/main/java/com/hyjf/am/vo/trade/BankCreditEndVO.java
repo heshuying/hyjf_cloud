@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,65 +17,61 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-
+    @ApiModelProperty(value = "批次号（批次号当日必须唯一）")
     private String batchNo;
-
+    @ApiModelProperty(value = "本批次交易日期")
     private String txDate;
-
+    @ApiModelProperty(value = "本批次交易时间")
     private String txTime;
-
+    @ApiModelProperty(value = "本批次交易流水号")
     private String seqNo;
-
+    @ApiModelProperty(value = "本批次所有交易笔数")
     private Integer txCounts;
-
+    @ApiModelProperty(value = "融资人用户ID")
     private Integer userId;
-
+    @ApiModelProperty(value = "融资人用户名")
     private String username;
-
+    @ApiModelProperty(value = "投资人用户ID")
     private Integer tenderUserId;
-
+    @ApiModelProperty(value = "投资人用户名")
     private String tenderUsername;
-
+    @ApiModelProperty(value = "融资人电子账号")
     private String accountId;
-
+    @ApiModelProperty(value = "投资人电子账号")
     private String tenderAccountId;
-
+    @ApiModelProperty(value = "订单号")
     private String orderId;
-
+    @ApiModelProperty(value = "原始投资订单号")
     private String orgOrderId;
-
+    @ApiModelProperty(value = "标的号")
     private String borrowNid;
-
+    @ApiModelProperty(value = "授权码")
     private String authCode;
-
+    @ApiModelProperty(value = "结束债权类型（1:还款，2:散标债转，3:计划债转）")
     private Integer creditEndType;
-
+    @ApiModelProperty(value = "银行接受结果（0：fail接收失败，1：success接收成功）")
     private Integer received;
-
+    @ApiModelProperty(value = "异步检查响应代码")
     private String checkRetcode;
-
+    @ApiModelProperty(value = "异步检查响应描述")
     private String checkRetmsg;
-
+    @ApiModelProperty(value = "响应代码")
     private String retcode;
-
+    @ApiModelProperty(value = "响应描述")
     private String retmsg;
-
+    @ApiModelProperty(value = "成功笔数")
     private Integer sucCounts;
-
+    @ApiModelProperty(value = "失败笔数")
     private Integer failCounts;
-
+    @ApiModelProperty(value = "银行交易状态（S-成功;F-失败;A-待处理;D-正在处理;C-撤销;）")
     private Integer state;
-
+    @ApiModelProperty(value = "0初始 1待请求 2请求成功 3请求失败 4校验成功 5业务全部成功  10校验失败 11业务部分成功 12业务失败 ")
     private Integer status;
-
+    @ApiModelProperty(value = "失败原因")
     private String failmsg;
-
     private Integer createUser;
-
     private Date createTime;
-
     private Integer updateUser;
-
     private Date updateTime;
 
     public Integer getId() {

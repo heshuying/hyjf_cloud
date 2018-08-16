@@ -26,7 +26,7 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码",tags = "web端-验证码")
+@Api(tags = "web端-验证码")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user/sms")
@@ -39,7 +39,7 @@ public class WebSmsCodeController extends BaseUserController {
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
 	 * @param param 修改手机号码验证原手机号：validCodeType=TPL_YZYSJH  绑定新手机号：validCodeType=TPL_BDYSJH
-	 * @param token
+	 * @param
 	 * @param request
 	 * @return
 	 * @throws MQException

@@ -12,6 +12,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowLogService;
 import com.hyjf.admin.service.BorrowRecoverService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
@@ -69,8 +70,7 @@ public class BorrowLogController extends BaseController {
         BorrowLogRequset copyForm=new BorrowLogRequset();
         BeanUtils.copyProperties(form, copyForm);
         BorrowLogBean bean = borrowLogService.selectBorrowLogList(copyForm);
-        Map<String, String> map=CacheUtil.getParamNameMap("BORROW_STATUS");
-        bean.setBorrowStatusList(map);
+        bean.setBorrowStatusList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("BORROW_STATUS")));
         AdminResult<BorrowLogBean> result=new AdminResult<BorrowLogBean> ();
         result.setData(bean);
         return result;

@@ -31,7 +31,7 @@ import java.util.List;
  * @author fuqiang
  * @version ApiAssetPushController, v0.1 2018/6/11 17:52
  */
-@Api(description = "资产推送接口", tags = "资产推送接口")
+@Api(tags = "api端-资产推送接口")
 @RestController
 @RequestMapping("/hyjf-api/api")
 public class ApiAssetPushController extends BaseTradeController {

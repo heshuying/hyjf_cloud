@@ -33,6 +33,12 @@ public class PlanDetailBean implements Serializable {
     private String fullExpireTimeFormat;
 
     private String liquidateFactTimeFormat;
+    //还款方式(hjh)
+    private String borrowStyle;
+    //还款方式名称(hjh)
+    private String borrowStyleName;
+    // 默认0 天标，1 月标
+    private String isMonth;
 
     public String getPlanNid() {
         return planNid;
@@ -152,5 +158,29 @@ public class PlanDetailBean implements Serializable {
 
     public void setLiquidateFactTimeFormat(String liquidateFactTimeFormat) {
         this.liquidateFactTimeFormat = liquidateFactTimeFormat;
+    }
+
+    public String getBorrowStyle() {
+        return borrowStyle;
+    }
+
+    public void setBorrowStyle(String borrowStyle) {
+        this.borrowStyle = borrowStyle;
+    }
+
+    public String getBorrowStyleName() {
+        return borrowStyleName;
+    }
+
+    public void setBorrowStyleName(String borrowStyleName) {
+        this.borrowStyleName = borrowStyleName;
+    }
+
+    public String getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(String isMonth) {
+        this.isMonth = isMonth;
     }
 }

@@ -12,12 +12,14 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRegistService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +56,13 @@ public class BorrowRegistController extends BaseController {
         BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);
         //项目类型
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
-        responseBean.setBorrowProjectTypeList(borrowProjectTypeList);
+        responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
         //还款方式
         List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
-        responseBean.setBorrowStyleList(borrowStyleList);
+        responseBean.setBorrowStyleList(ConvertUtils.convertListToDropDown(borrowStyleList,"nid","name"));
         //备案状态
         Map<String, String> borrowRegistStatusList = adminCommonService.getParamNameMap(CustomConstants.REGIST_STATUS);
-        responseBean.setBorrowRegistStatusList(borrowRegistStatusList);
+        responseBean.setBorrowRegistStatusList(ConvertUtils.convertParamMapToDropDown(borrowRegistStatusList));
 
         return new AdminResult(responseBean);
     }
@@ -76,6 +78,7 @@ public class BorrowRegistController extends BaseController {
     }
 
     @ApiOperation(value = "标的备案", notes = "标的备案")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
     @GetMapping("/debt_regist/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {

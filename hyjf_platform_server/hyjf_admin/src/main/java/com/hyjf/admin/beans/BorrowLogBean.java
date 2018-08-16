@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class BorrowLogBean {
     private List<BorrowLogCustomizeVO> recordList;
 
-    private Map<String, String> borrowStatusList;
+    private List<DropDownVO> borrowStatusList;
     private Integer total;
 
     public List<BorrowLogCustomizeVO> getRecordList() {
@@ -25,11 +26,11 @@ public class BorrowLogBean {
         this.recordList = recordList;
     }
 
-    public Map<String, String> getBorrowStatusList() {
+    public List<DropDownVO> getBorrowStatusList() {
         return borrowStatusList;
     }
 
-    public void setBorrowStatusList(Map<String, String> borrowStatusList) {
+    public void setBorrowStatusList(List<DropDownVO> borrowStatusList) {
         this.borrowStatusList = borrowStatusList;
     }
 

@@ -41,4 +41,22 @@ public interface SmsMailTemplateService {
      * @param request
      */
     void insertMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 修改短信模板
+     * @param request
+     */
+    void updateMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 关闭短信模板
+     * @param request
+     */
+    void closeMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 开启短信模板
+     * @param request
+     */
+    void openMailTemplate(MailTemplateRequest request);
 }

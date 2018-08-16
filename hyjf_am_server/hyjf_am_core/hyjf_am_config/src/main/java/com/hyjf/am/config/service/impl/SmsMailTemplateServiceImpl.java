@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.config.dao.mapper.auto.SmsMailTemplateMapper;
 import com.hyjf.am.config.dao.model.auto.SmsMailTemplate;
 import com.hyjf.am.config.dao.model.auto.SmsMailTemplateExample;
 import com.hyjf.am.config.service.SmsMailTemplateService;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -73,4 +72,31 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
 			smsMailTemplateMapper.insert(smsMailTemplate);
 		}
 	}
+
+    @Override
+    public void updateMailTemplate(MailTemplateRequest request) {
+        if (request != null) {
+            SmsMailTemplate smsMailTemplate = new SmsMailTemplate();
+            BeanUtils.copyProperties(request, smsMailTemplate);
+            smsMailTemplateMapper.updateByPrimaryKey(smsMailTemplate);
+        }
+    }
+
+    @Override
+    public void closeMailTemplate(MailTemplateRequest request) {
+        SmsMailTemplate smt = new SmsMailTemplate();
+        smt.setMailValue(request.getMailValue());
+        smt.setId(request.getId());
+        smt.setMailStatus(0);
+        smsMailTemplateMapper.updateByPrimaryKey(smt);
+    }
+
+    @Override
+    public void openMailTemplate(MailTemplateRequest request) {
+        SmsMailTemplate smt = new SmsMailTemplate();
+        smt.setMailValue(request.getMailValue());
+        smt.setId(request.getId());
+        smt.setMailStatus(1);
+        smsMailTemplateMapper.updateByPrimaryKey(smt);
+    }
 }

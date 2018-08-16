@@ -11,6 +11,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
@@ -1877,5 +1878,126 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.isUpdate();
 		}
 		return false;
+	}
+
+	/**
+	 * 银行卡异常count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/getBankCardExceptionCount";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 银行卡异常列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/searchBankCardExceptionList";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡(admin后台异常中心-银行卡异常用)
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultMsg();
+		}
+		return "";
+	}
+
+	@Override
+	public UserVO getUserByMobile(String mobile) {
+		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 线下修改信息同步查询列表count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getModifyInfoCount(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/getModifyInfoCount";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 线下修改信息同步查询列表list
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/searchModifyInfoList";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 添加信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/insertAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 5;
+	}
+
+	/**
+	 * 根据主键id删除一条信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/deleteAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
 	}
 }

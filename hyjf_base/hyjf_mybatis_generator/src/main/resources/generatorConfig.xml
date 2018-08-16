@@ -483,6 +483,7 @@
         <table tableName="ht_borrow" domainObjectName="Borrow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_show" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_engine_used" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_installment" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1798,6 +1799,48 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
+
+        <!-- 合同要素信息 -->
+        <table tableName="ht_nifa_contract_essence" domainObjectName="NifaContractEssence">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="borrower_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investor_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 借款人项目还款记录 -->
+        <table tableName="ht_nifa_repay_info" domainObjectName="NifaRepayInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 合同状态变更 -->
+        <table tableName="ht_nifa_contract_status" domainObjectName="NifaContractStatus">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="contract_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 出借人回款记录 -->
+        <table tableName="ht_nifa_received_payments" domainObjectName="NifaReceivedPayments">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="return_situation" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 合同模版约定条款表 -->
+        <table tableName="ht_nifa_contract_template" domainObjectName="NifaContractTemplate">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 互金字段定义表 -->
+        <table tableName="ht_nifa_field_definition" domainObjectName="NifaFieldDefinition">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 互金协会报送日志表 -->
+        <table tableName="ht_nifa_report_log" domainObjectName="NifaReportLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="file_upload_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="feedback_result" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
         <table tableName="ht_apply_agreement" domainObjectName="ApplyAgreement">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>

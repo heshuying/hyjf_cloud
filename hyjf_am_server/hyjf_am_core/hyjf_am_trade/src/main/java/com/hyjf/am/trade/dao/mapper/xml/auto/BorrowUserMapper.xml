@@ -37,6 +37,8 @@
     <result column="is_overdue" property="isOverdue" jdbcType="VARCHAR" />
     <result column="is_complaint" property="isComplaint" jdbcType="VARCHAR" />
     <result column="is_punished" property="isPunished" jdbcType="VARCHAR" />
+    <result column="corporate_code" property="corporateCode" jdbcType="VARCHAR" />
+    <result column="registration_address" property="registrationAddress" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowUser" extends="BaseResultMap" >
     <result column="other_info" property="otherInfo" jdbcType="LONGVARCHAR" />
@@ -105,7 +107,7 @@
     main_business, overdue_times, overdue_amount, is_certificate, is_operation, is_finance, 
     is_enterprise_creidt, is_legal_person, is_asset, is_purchase_contract, is_supply_contract, 
     overdue_report, debt_situation, other_borrowed, is_funds, is_managed, is_ability, 
-    is_overdue, is_complaint, is_punished
+    is_overdue, is_complaint, is_punished, corporate_code, registration_address
   </sql>
   <sql id="Blob_Column_List" >
     other_info
@@ -179,7 +181,8 @@
       is_supply_contract, overdue_report, debt_situation, 
       other_borrowed, is_funds, is_managed, 
       is_ability, is_overdue, is_complaint, 
-      is_punished, other_info)
+      is_punished, corporate_code, registration_address, 
+      other_info)
     values (#{borrowNid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
       #{currencyName,jdbcType=VARCHAR}, #{regCaptial,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
       #{litigation,jdbcType=VARCHAR}, #{creReport,jdbcType=VARCHAR}, #{credit,jdbcType=INTEGER}, 
@@ -191,7 +194,8 @@
       #{isSupplyContract,jdbcType=VARCHAR}, #{overdueReport,jdbcType=VARCHAR}, #{debtSituation,jdbcType=VARCHAR}, 
       #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, #{isManaged,jdbcType=VARCHAR}, 
       #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, #{isComplaint,jdbcType=VARCHAR}, 
-      #{isPunished,jdbcType=VARCHAR}, #{otherInfo,jdbcType=LONGVARCHAR})
+      #{isPunished,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, #{registrationAddress,jdbcType=VARCHAR}, 
+      #{otherInfo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowUser" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -301,6 +305,12 @@
       <if test="isPunished != null" >
         is_punished,
       </if>
+      <if test="corporateCode != null" >
+        corporate_code,
+      </if>
+      <if test="registrationAddress != null" >
+        registration_address,
+      </if>
       <if test="otherInfo != null" >
         other_info,
       </if>
@@ -407,6 +417,12 @@
       </if>
       <if test="isPunished != null" >
         #{isPunished,jdbcType=VARCHAR},
+      </if>
+      <if test="corporateCode != null" >
+        #{corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationAddress != null" >
+        #{registrationAddress,jdbcType=VARCHAR},
       </if>
       <if test="otherInfo != null" >
         #{otherInfo,jdbcType=LONGVARCHAR},
@@ -527,6 +543,12 @@
       <if test="record.isPunished != null" >
         is_punished = #{record.isPunished,jdbcType=VARCHAR},
       </if>
+      <if test="record.corporateCode != null" >
+        corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationAddress != null" >
+        registration_address = #{record.registrationAddress,jdbcType=VARCHAR},
+      </if>
       <if test="record.otherInfo != null" >
         other_info = #{record.otherInfo,jdbcType=LONGVARCHAR},
       </if>
@@ -572,6 +594,8 @@
       is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
       is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
       is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
+      registration_address = #{record.registrationAddress,jdbcType=VARCHAR},
       other_info = #{record.otherInfo,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -613,7 +637,9 @@
       is_ability = #{record.isAbility,jdbcType=VARCHAR},
       is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
       is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
-      is_punished = #{record.isPunished,jdbcType=VARCHAR}
+      is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
+      registration_address = #{record.registrationAddress,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -723,6 +749,12 @@
       <if test="isPunished != null" >
         is_punished = #{isPunished,jdbcType=VARCHAR},
       </if>
+      <if test="corporateCode != null" >
+        corporate_code = #{corporateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationAddress != null" >
+        registration_address = #{registrationAddress,jdbcType=VARCHAR},
+      </if>
       <if test="otherInfo != null" >
         other_info = #{otherInfo,jdbcType=LONGVARCHAR},
       </if>
@@ -765,6 +797,8 @@
       is_overdue = #{isOverdue,jdbcType=VARCHAR},
       is_complaint = #{isComplaint,jdbcType=VARCHAR},
       is_punished = #{isPunished,jdbcType=VARCHAR},
+      corporate_code = #{corporateCode,jdbcType=VARCHAR},
+      registration_address = #{registrationAddress,jdbcType=VARCHAR},
       other_info = #{otherInfo,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -803,7 +837,9 @@
       is_ability = #{isAbility,jdbcType=VARCHAR},
       is_overdue = #{isOverdue,jdbcType=VARCHAR},
       is_complaint = #{isComplaint,jdbcType=VARCHAR},
-      is_punished = #{isPunished,jdbcType=VARCHAR}
+      is_punished = #{isPunished,jdbcType=VARCHAR},
+      corporate_code = #{corporateCode,jdbcType=VARCHAR},
+      registration_address = #{registrationAddress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

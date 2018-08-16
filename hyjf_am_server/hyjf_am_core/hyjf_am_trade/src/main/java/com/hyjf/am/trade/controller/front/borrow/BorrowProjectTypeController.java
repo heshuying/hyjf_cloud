@@ -55,7 +55,7 @@ public class BorrowProjectTypeController extends BaseController {
                         list.get(i).setInvestUserType(paramNameVOS.get(j).getName());
                     }
                     if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getStatus())){
-                        list.get(i).setStatus(paramNameVOS.get(j).getName());
+                        list.get(i).setStatus(Integer.valueOf(paramNameVOS.get(j).getName()));
                     }
                 }
             }

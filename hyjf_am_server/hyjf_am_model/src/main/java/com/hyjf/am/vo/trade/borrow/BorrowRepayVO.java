@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author PC-LIUSHOUYI
@@ -91,6 +92,8 @@ public class BorrowRepayVO extends BaseVO implements Serializable {
     private Integer repaySmsReminder;
 
     private Integer autoRepay;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -394,5 +397,13 @@ public class BorrowRepayVO extends BaseVO implements Serializable {
 
     public void setAutoRepay(Integer autoRepay) {
         this.autoRepay = autoRepay;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -849,10 +850,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		String[] answer = userAnswer.split(",");
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
-		for (String string : answer) {
-			if (string.split("_").length == 2) {
-				questionList.add(string.split("_")[0]);
-				answerList.add(string.split("_")[1]);
+		if (!Strings.isNullOrEmpty(userAnswer)) {
+			for (String string : answer) {
+				if (string.split("_").length == 2) {
+					questionList.add(string.split("_")[0]);
+					answerList.add(string.split("_")[1]);
+				}
 			}
 		}
 		AnswerRequest answerRequest = new AnswerRequest();

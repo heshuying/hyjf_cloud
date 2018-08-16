@@ -11,9 +11,6 @@ public interface MQConstant {
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
 
-	/**
-	 * 测试 group topic todo 暂时使用
-	 */
 	String TEST_GROUP = "TEST_GROUP";
 	String TEST_TOPIC = "TEST_TOPIC";
 
@@ -390,4 +387,10 @@ public interface MQConstant {
 	 */
 	String CRM_REFEREE_GROUP = "CRM_REFEREE_GROUP";
 	String CRM_REFEREE_TOPIC = "CRM_REFEREE_TOPIC";
+
+	/**
+	 * 定时短信
+	 */
+	String SMS_ONTIME_GROUP = "SMS_ONTIME_GROUP";
+	String SMS_ONTIME_TOPIC = "SMS_ONTIME_TOPIC";
 }

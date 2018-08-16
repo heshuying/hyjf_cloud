@@ -27,6 +27,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -225,7 +226,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         jsonObject.put("userValidation", userValidation);
         if (borrow == null) {
-            throw new RuntimeException("");
+            throw new CheckException("标的信息不存在");
         } else {
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
@@ -1337,11 +1338,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
 
             // 是否是新手0新手 1老手
-            if (userVO.getInvestflag() == 0) {
+          /*  if ( null != userVO.getInvestflag() && userVO.getInvestflag() == 0) {
                 userValidation.put("investflag", true);
             } else {
                 userValidation.put("investflag", false);
-            }
+            }*/
             //0未锁定,1锁定
             if (userVO.getStatus() == 0) {
                 userValidation.put("isAllowed", true);

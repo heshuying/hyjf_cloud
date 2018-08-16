@@ -4,14 +4,16 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
@@ -27,7 +29,6 @@ import java.util.List;
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
  *
- * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
 public class  CsMessageClientImpl  implements CsMessageClient {
@@ -205,4 +206,83 @@ public class  CsMessageClientImpl  implements CsMessageClient {
         return null;
     }
 
+	@Override
+	public MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
+		MessagePushTemplateStaticsResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+						request, MessagePushTemplateStaticsResponse.class)
+				.getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+    @Override
+    public MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request) {
+        MessagePushPlatStaticsResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+                        request, MessagePushPlatStaticsResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getListByConditions",
+                        request, MessagePushErrorResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse update(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/request",
+                        request, MessagePushErrorResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public SmsOntimeResponse queryTime(SmsLogRequest request) {
+        SmsOntimeResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/sms_log/query_time",
+                        request, SmsOntimeResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public Integer queryLogCount(SmsLogRequestBean requestBean) {
+        SmsLogResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/sms_log/query_log_count",
+                        requestBean, SmsLogResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getLogCount();
+        }
+        return 0;
+    }
 }

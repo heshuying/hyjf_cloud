@@ -19,6 +19,7 @@ import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 
@@ -402,6 +403,8 @@ public interface AmConfigClient {
 	ContentArticleResponse searchAction(ContentArticleRequest contentArticleRequestBean);
 
 	ContentArticleResponse inserAction(ContentArticleRequest contentArticleRequestBean);
+
+	ContentArticleResponse findById(Integer id);
 
 	ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean);
 
@@ -937,6 +940,14 @@ public interface AmConfigClient {
 	void insertMailTemplate(MailTemplateRequest request);
 
 	/**
+	 * 修改邮件模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	void updateMailTemplate(MailTemplateRequest request);
+
+	/**
 	 * 查询所有消息推送模板
 	 *
 	 * @return
@@ -1193,4 +1204,96 @@ public interface AmConfigClient {
 	 * @author: nxl
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
+	/**
+	 * 查询数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request);
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request);
+
+	/**
+	 * 查询通知配置列表
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse initSmsNoticeConfig();
+	/**
+	 * 查询通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse smsNoticeConfigInfo(SmsNoticeConfigRequest request);
+	/**
+	 * 添加通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse insertSmsNoticeConfig(SmsNoticeConfigRequest request);
+
+	/**
+	 * 修改通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse updateSmsNoticeConfig(SmsNoticeConfigRequest request);
+	/**
+	 * 关闭通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse closeSmsNoticeConfig(SmsNoticeConfigRequest request);
+	/**
+	 * 打开通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse openSmsNoticeConfig(SmsNoticeConfigRequest request);
+
+	/**
+	 * 唯一性验证
+	 * @param name
+	 * @author xiehuili
+	 * @return
+	 */
+	public Integer onlyName(String name);
+
+	/**
+	 * 关闭模板
+	 * @param request
+	 */
+	void closeAction(MailTemplateRequest request);
+
+	/**
+	 * 开启模板
+	 * @param request
+	 */
+	void openAction(MailTemplateRequest request);
+
+	/**
+	 * 获取充值银行卡列表
+	 * @return
+	 * @Author : huanghui
+	 */
+	List<BanksConfigVO> getBankcardList();
 }

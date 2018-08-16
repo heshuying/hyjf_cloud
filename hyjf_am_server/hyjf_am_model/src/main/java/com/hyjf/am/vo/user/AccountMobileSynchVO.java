@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,30 +14,31 @@ import java.util.Date;
  * @version AccountMobileSynchVO, v0.1 2018/6/22 14:29
  */
 public class AccountMobileSynchVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "银行卡号手机号同步表主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
-
+    @ApiModelProperty(value = "用户名")
     private String username;
-
+    @ApiModelProperty(value = "姓名")
     private String name;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "电子账号")
     private String accountid;
-
+    @ApiModelProperty(value = "原银行卡号")
     private String account;
-
+    @ApiModelProperty(value = "新银行卡号")
     private String newAccount;
-
+    @ApiModelProperty(value = "原手机号")
     private String mobile;
-
+    @ApiModelProperty(value = "新手机号")
     private String newMobile;
-
+    @ApiModelProperty(value = "查询次数")
     private Integer searchtime;
-
+    @ApiModelProperty(value = "同步状态：0：未同步1：已同步")
     private Integer status;
-
+    @ApiModelProperty(value = "同步标识：1：手机号同步，2：银行卡同步")
     private Integer flag;
 
     private static final long serialVersionUID = 1L;

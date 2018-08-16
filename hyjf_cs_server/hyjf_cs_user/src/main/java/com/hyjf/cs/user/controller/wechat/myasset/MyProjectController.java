@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * 我的资产接口，散标、计划......
  *  jijun on 20180727
  */
-@Api(value = "wechat端我的资产",tags = "wechat端我的资产")
+@Api(value = "weChat端-我的资产",tags = "weChat端-我的资产")
 @Controller
 @RequestMapping("/hyjf-wechat/myproject")
 public class MyProjectController extends BaseUserController {

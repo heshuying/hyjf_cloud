@@ -40,7 +40,7 @@ public class UserWithdrawController extends BaseUserController {
     @Autowired
     private SystemConfig systemConfig;
 
-    @ApiOperation(value = "app端-获取我的银行卡")
+    @ApiOperation(value = "获取我的银行卡")
     @PostMapping(value = "/bank/user/withdraw/getBankCardAction")
     public JSONObject getBankCardAction(HttpServletRequest request){
         JSONObject ret = checkAppBaseParam(request);
