@@ -30,7 +30,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 		BankCardExample example = new BankCardExample();
 		BankCardExample.Criteria aCriteria = example.createCriteria();
 		aCriteria.andUserIdEqualTo(userId);
-		if(StringUtils.isNotBlank(cardNo)){
+		if(StringUtils.isNotBlank(cardNo) && !cardNo.equals("null")){
 			aCriteria.andCardNoEqualTo(cardNo);
 		}
 		aCriteria.andStatusEqualTo(1); // 0:无效 1：有效

@@ -21,6 +21,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,13 @@ public class WebBindCardController extends BaseUserController {
 		BankConfigVO bankConfigVO = bindCardService.getBankConfigById(bankCardVO.getBankId());
 		//已绑卡
 		resultMap.put("bindType", 1);
-		resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
-		resultMap.put("bankname", bankConfigVO.getName());
+		if(bankConfigVO != null){
+            resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
+            resultMap.put("bankname", bankConfigVO.getName());
+        }else{
+            resultMap.put("bankicon", systemConfig.getWebHost() + "/data/upfiles/filetemp/image/bank_log.png");
+            resultMap.put("bankname", StringUtils.isBlank(bankCardVO.getBank())?"":bankCardVO.getBank());
+        }
 		resultMap.put("bankcard", BankCardUtil.getCardNo(bankCardVO.getCardNo()));
 		resultMap.put("cardId", bankCardVO.getId());
 
