@@ -43,28 +43,36 @@ public class AppBannerController extends BaseController {
     @PostMapping(value = "/init")
     @ResponseBody
     public AdminResult<ListResult<AppBannerVO>> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
-        AppBannerRequest aprlr = new AppBannerRequest();
-        BeanUtils.copyProperties(appBannerRequestBean, aprlr);
-        AppBannerResponse prs = appBannerService.getRecordList(aprlr);
-        if (prs == null) {
+        try {
+            AppBannerRequest aprlr = new AppBannerRequest();
+            BeanUtils.copyProperties(appBannerRequestBean, aprlr);
+            AppBannerResponse prs = appBannerService.getRecordList(aprlr);
+            if (prs == null) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            if (!Response.isSuccess(prs)) {
+                return new AdminResult<>(FAIL, prs.getMessage());
+            }
+            return new AdminResult<ListResult<AppBannerVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(prs)) {
-            return new AdminResult<>(FAIL, prs.getMessage());
-        }
-        return new AdminResult<ListResult<AppBannerVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
     }
 
     @ApiOperation(value = "广告管理添加", notes = "广告管理添加")
     @PostMapping(value = "/add")
     @ResponseBody
     public AdminResult<AdsWithBLOBsVO> add(@RequestBody AppBannerRequestBean form) {
-        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-        BeanUtils.copyProperties(form,adsWithBLOBsVO);
-        AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsWithBLOBsVO);
-        if (Response.isSuccess(appBannerResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+            BeanUtils.copyProperties(form, adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsWithBLOBsVO);
+            if (Response.isSuccess(appBannerResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -73,12 +81,16 @@ public class AppBannerController extends BaseController {
     @PostMapping(value = "/update")
     @ResponseBody
     public AdminResult<AdsWithBLOBsVO> update(@RequestBody AppBannerRequestBean form) {
-        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-            BeanUtils.copyProperties(form,adsWithBLOBsVO);
-        AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsWithBLOBsVO);
-        if (Response.isSuccess(appBannerResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+            BeanUtils.copyProperties(form, adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsWithBLOBsVO);
+            if (Response.isSuccess(appBannerResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -87,12 +99,16 @@ public class AppBannerController extends BaseController {
     @PostMapping(value = "/updateStatus")
     @ResponseBody
     public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AppBannerRequestBean form) {
-        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-        BeanUtils.copyProperties(form,adsWithBLOBsVO);
-        AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsWithBLOBsVO);
-        if (Response.isSuccess(appBannerResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+            BeanUtils.copyProperties(form, adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsWithBLOBsVO);
+            if (Response.isSuccess(appBannerResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -102,12 +118,16 @@ public class AppBannerController extends BaseController {
     @PostMapping(value = "/delete")
     @ResponseBody
     public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AppBannerRequestBean form) {
-        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
-        BeanUtils.copyProperties(form,adsWithBLOBsVO);
-        AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsWithBLOBsVO);
-        if (Response.isSuccess(appBannerResponse)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+        try {
+            AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+            BeanUtils.copyProperties(form, adsWithBLOBsVO);
+            AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsWithBLOBsVO);
+            if (Response.isSuccess(appBannerResponse)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
@@ -115,11 +135,15 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> upLoadFile(HttpServletResponse response, HttpServletRequest request) throws Exception {
-        String s = activityListService.uploadFile(request, response);
-        if (StringUtils.isNotBlank(s)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+    public AdminResult<AdsWithBLOBsVO> upLoadFile(HttpServletResponse response, HttpServletRequest request) {
+        try {
+            String s = activityListService.uploadFile(request, response);
+            if (StringUtils.isNotBlank(s)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            } else {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }

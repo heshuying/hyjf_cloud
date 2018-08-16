@@ -35,5 +35,3 @@ logging:
   level:
     com.hyjf.am.config.dao.mapper: DEBUG
 
-file.domain.url: http://test.hyjf.com:8083/hyjf-admin/
-hyjf.web.host: http://test.hyjf.com:8080/hyjf-web

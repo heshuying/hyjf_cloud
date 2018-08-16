@@ -67,16 +67,22 @@ public class WeeklyController {
             //放入公共周数据
             EventVO eal = weeklyService.getEventsAll(date1, date2);
             String eventTime = eal.getEventTime();
-            BigDecimal benzhoutouzie = new BigDecimal(eventTime);
             String content = eal.getContent();
-            BigDecimal benzhoushouyi = new BigDecimal(eventTime);
+            BigDecimal benzhoutouzie=new BigDecimal("0.00");
+            BigDecimal benzhoushouyi=new BigDecimal("0.00");;
+            if (eventTime != null) {
+                benzhoutouzie= new BigDecimal(eventTime);
+            }
+            if (content != null) {
+                benzhoushouyi= new BigDecimal(content);
+            }
             resultBean.setBenzhoutouzie(benzhoutouzie.divide(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_DOWN).toString() + "万");
             resultBean.setBenzhoushouyi(benzhoushouyi.divide(new BigDecimal(10000)).setScale(2, BigDecimal.ROUND_DOWN).toString() + "万");
             resultBean.setChengjiaoshu(eal.getEventYear());
             WeeklyreportEntity wrt=new WeeklyreportEntity();
             wrt.setUserId(0);
             wrt.setBeginDate(dat1);
-            wrt.setTouzie(new BigDecimal(eventTime));
+            wrt.setTouzie(benzhoutouzie);
             //eal.getContent() 值判空
             wrt.setShouyi(new BigDecimal(StringUtils.isBlank(content)?"0.00": content));
             wrt.setBishu(eal.getEventYear());
