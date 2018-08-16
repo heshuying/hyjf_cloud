@@ -2313,6 +2313,11 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
+    public void updateSmsTemplate(SmsTemplateRequest request) {
+        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, SmsTemplateResponse.class);
+    }
+
+    @Override
     public MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO) {
         String url = "http://AM-CONFIG/am-config/messagePushTemplate/insertMessageTemplate";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, templateVO, MessagePushTemplateResponse.class).getBody();

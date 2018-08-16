@@ -115,4 +115,14 @@ public class SmsTemplateController extends BaseConfigController{
     public void closeSmsTemplate(@RequestBody SmsTemplateRequest request) {
         smsTemplateService.closeSmsTemplate(request);
     }
+
+    /**
+     * 关闭短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/update_sms_template")
+    public void updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        smsTemplateService.updateSmsTemplate(request);
+    }
 }

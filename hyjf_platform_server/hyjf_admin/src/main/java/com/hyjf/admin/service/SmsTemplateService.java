@@ -47,4 +47,10 @@ public interface SmsTemplateService {
 	 * @param request
 	 */
 	void closeAction(SmsTemplateRequest request);
+
+	/**
+	 * 修改短信模版
+	 * @param request
+	 */
+    void updateSmsTemplate(SmsTemplateRequest request);
 }
