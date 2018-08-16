@@ -1,5 +1,7 @@
 package com.hyjf.admin.beans.request;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -12,11 +14,10 @@ public class MerchantAccountRequestBean  implements Serializable {
 
     private String ids;
 
-
-    /** 子账户名称(检索用) */
+    @ApiModelProperty(value = "子账户名称(检索用) ")
     private String subAccountNameSear;
 
-    /** 子账户类型(检索用) */
+    @ApiModelProperty(value = "子账户类型(检索用) ")
     private String subAccountTypeSear;
     private Integer id;
 

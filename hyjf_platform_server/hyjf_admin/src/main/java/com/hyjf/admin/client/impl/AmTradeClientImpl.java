@@ -29,7 +29,6 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -3745,8 +3744,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowProjectTypeVO> borrowProjectTypeList(String borrowTypeCd) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, List.class)
+        BorrowProjectTypeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/borrowProjectTypeList/" + borrowTypeCd, BorrowProjectTypeResponse.class)
                 .getBody();
+        if(response == null){
+            return null;
+        }
+        return response.getResultList();
     }
 
     /**
@@ -3757,8 +3760,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList", List.class)
+        HjhInstConfigResponse response =restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",HjhInstConfigResponse.class)
                 .getBody();
+        if(response == null){
+            return null;
+        }
+        return response.getResultList();
     }
 
     /**
@@ -5288,53 +5295,36 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 添加互金字段定义
-     * @param request
+     * 还款方式下拉列表
+     *
+     * @param
      * @return
-     * @auth nxl
+     * @author wangjun
      */
     @Override
-    public Boolean insertNifaFieldDefinition(NifaFieldDefinitionAddRequest request) {
-        String url = tradeService + "/nifaConfig/insertNifaFieldDefinition";
-        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
-        return response;
+    public List<BorrowStyleVO> selectCommonBorrowStyleList() {
+        String url = "http://AM-TRADE/am-trade/admin_common/select_borrow_style";
+        BorrowStyleResponse response = restTemplate.getForEntity(url, BorrowStyleResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**
-     * 查找互金字段定义列表
-     * @param request
+     * 资产来源下拉列表
+     *
+     * @param
      * @return
-     * @auth nxl
+     * @author wangjun
      */
     @Override
-    public NifaFieldDefinitionResponse selectFieldDefinitionList(NifaFieldDefinitionRequest request) {
-        String url = tradeService + "/nifaConfig/selectFieldDefinitionList";
-        NifaFieldDefinitionResponse response = restTemplate.postForEntity(url,request,NifaFieldDefinitionResponse.class).getBody();
-        return response;
-    }
-
-    /**
-     * 根据id查找互金定义
-     * @param nifaId
-     * @auth nxl
-     * @return
-     */
-    @Override
-    public NifaFieldDefinitionResponse selectFieldDefinitionById(String nifaId) {
-        String url = tradeService + "/nifaConfig/selectFieldDefinitionById/"+nifaId;
-        NifaFieldDefinitionResponse response = restTemplate.getForEntity(url,NifaFieldDefinitionResponse.class).getBody();
-        return response;
-    }
-    /**
-     * 修改互金字段定义
-     * @param request
-     * @return
-     * @auth nxl
-     */
-    @Override
-    public Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest request){
-        String url = tradeService + "/nifaConfig/updateNifaFieldDefinition";
-        Boolean response = restTemplate.postForEntity(url, request, Boolean.class).getBody();
-        return response;
+    public List<HjhInstConfigVO> selectCommonHjhInstConfigList() {
+        String url = "http://AM-TRADE/am-trade/admin_common/select_inst_config";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
     }
 }

@@ -3,21 +3,22 @@
  */
 package com.hyjf.cs.message.controller;
 
-import java.util.List;
-
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.mc.SmsOntime;
+import com.hyjf.cs.message.service.message.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.mc.SmsOntime;
-import com.hyjf.cs.message.service.message.MessageService;
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version OntimeMessageController, v0.1 2018/6/22 10:32
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/sms_ontime")
 public class OntimeMessageController extends BaseController {

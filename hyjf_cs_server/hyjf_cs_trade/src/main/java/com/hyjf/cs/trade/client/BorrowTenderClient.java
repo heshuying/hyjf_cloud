@@ -70,7 +70,7 @@ public interface BorrowTenderClient {
 
 
 	/**
-	 * 优惠券单独投资放款
+	 * 优惠券单独投资还款
 	 * @return
 	 */
     List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);

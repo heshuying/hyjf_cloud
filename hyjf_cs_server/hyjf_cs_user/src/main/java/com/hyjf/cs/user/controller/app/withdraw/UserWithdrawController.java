@@ -93,6 +93,7 @@ public class UserWithdrawController extends BaseUserController {
      * @param
      * @return
      */
+    @ApiOperation(value = "获取提现信息")
     @PostMapping(value = "/user/withdraw/getInfoAction")
     public JSONObject getCashInfo(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);

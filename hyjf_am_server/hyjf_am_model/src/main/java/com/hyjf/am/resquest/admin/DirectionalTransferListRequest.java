@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,19 +13,21 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: DirectionalTransferListRequest, v0.1 2018/7/4 16:23
  */
+@ApiModel(value = "定向转账请求参数")
 public class DirectionalTransferListRequest extends BasePage implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-    // 订单号(检索用)
+    @ApiModelProperty(value = "订单号(检索用)")
     private String orderId;
-    // 转出账户(检索用)
+    @ApiModelProperty(value = "转出账户(检索用)")
     private String turnOutUsername;
-    // 转入账户(检索用)
+    @ApiModelProperty(value = "转入账户(检索用)")
     private String shiftToUsername;
-    // 开始时间(检索用)
+    @ApiModelProperty(value = "开始时间(检索用)")
     private String startDate;
-    // 结束时间(检索用)
+    @ApiModelProperty(value = "结束时间(检索用)")
     private String endDate;
-    // 转账状态(检索用)
+    @ApiModelProperty(value = "转账状态(检索用)")
     private String statusSearch;
 
     private int limitStart = -1;

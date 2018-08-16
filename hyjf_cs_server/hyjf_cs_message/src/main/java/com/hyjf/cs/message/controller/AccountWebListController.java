@@ -5,6 +5,7 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.cs.message.service.account.AccountWebListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @Auther: walter.limeng
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @Date: 2018/8/1 13:59
  * @Description: AccountWebListController
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/accountweblist")
 public class AccountWebListController {

@@ -34,7 +34,7 @@ import java.util.Map;
  * @author tanyy
  * @version OperationalDataController, v0.1 2018/8/6 17:39
  */
-@Api(value = "app运营数据",tags ="app运营数据")
+@Api(tags ="app端-运营数据")
 @RestController
 @RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {

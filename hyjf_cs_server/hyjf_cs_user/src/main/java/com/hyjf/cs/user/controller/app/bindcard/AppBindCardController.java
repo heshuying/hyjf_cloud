@@ -1,7 +1,8 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.util.*;
@@ -10,6 +11,8 @@ import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
+import com.hyjf.cs.user.result.BindBeanDeatail;
+import com.hyjf.cs.user.result.BindCardResultBean;
 import com.hyjf.cs.user.result.SendSmsResultBean;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -18,12 +21,10 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,15 +54,77 @@ public class AppBindCardController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
+    @GetMapping("/bind_data")
+    @ApiOperation(value = "获取绑卡数据", notes = "获取绑卡数据")
+    public BaseResultBeanFrontEnd getBindCardData(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request){
+        BindCardResultBean resultBean = new BindCardResultBean();
+//        resultBean.setStatus(BindCardBean.SUCCESS);
+//        resultBean.setStatusDesc(BindCardBean.SUCCESS_MSG);
+
+        logger.info("获取绑卡数据接口开始，userId：" + userId);
+
+//        Integer userId = Integer.valueOf(request.getParameter("userId"));
+
+        if(userId == null){
+            resultBean.setStatus(CustomConstants.APP_STATUS_FAIL);
+            resultBean.setStatusDesc("用户未登录");
+            return resultBean;
+        }
+
+
+        BindBeanDeatail beanDetail = new BindBeanDeatail();
+        try {
+            // 查询用户信息获取真实姓名和银行卡和手机号码
+//            List<BankCard> bankCardList= userBindCardService.getAccountBankByUserId(String.valueOf(userId));
+            UserVO users = bindCardService.getUsersById(userId);
+            UserInfoVO userInfoVO = bindCardService.getUserInfo(userId);
+            if(userInfoVO != null){
+                String idcard = userInfoVO.getIdcard().substring(0, 3) + "***********" + userInfoVO.getIdcard().substring(userInfoVO.getIdcard().length() - 4);
+                userInfoVO.setIdcard(idcard);
+
+                //获取实名信息
+                String trueName = userInfoVO.getTruename();
+                userInfoVO.setTruename(trueName.replaceFirst(trueName.substring(0,1),"*"));
+            }
+
+            if (users != null) {
+//                BankCard bankCard = bankCardList.get(0);
+                beanDetail.setTelNo(users.getMobile());
+            } else {
+                resultBean.setStatus(BindCardResultBean.FAIL);
+                resultBean.setStatusDesc(BindCardResultBean.FAIL_MSG);
+            }
+
+            if (userInfoVO != null) {
+                beanDetail.setUserName(userInfoVO.getTruename());
+                beanDetail.setUserCardId(userInfoVO.getIdcard());
+            } else {
+                resultBean.setStatus(BindCardResultBean.FAIL);
+                resultBean.setStatusDesc(BindCardResultBean.FAIL_MSG);
+            }
+
+        } catch (Exception e) {
+            resultBean.setStatus(BindCardResultBean.FAIL);
+            resultBean.setStatusDesc(BindCardResultBean.FAIL_MSG);
+        }
+        resultBean.setFormData(beanDetail);
+        resultBean.setStatus(BindCardResultBean.SUCCESS);
+        resultBean.setStatusDesc(BindCardResultBean.SUCCESS_MSG);
+
+        return resultBean;
+    }
+
     /**
      * 绑定银行卡发送短信验证码
      * @param request
      * @return
      */
-    @PostMapping("/bind/smscode")
+    @GetMapping("/bind/smscode")
+    @ApiOperation(value = "绑卡发送验证码", notes = "绑卡发送验证码")
     public BaseResultBeanFrontEnd sendSmsCode(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         SendSmsResultBean result = new SendSmsResultBean();
 
+        logger.info("绑卡发送验证码接口开始：userId：" + userId);
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
 
         if (webViewUserVO == null) {
@@ -94,6 +157,7 @@ public class AppBindCardController extends BaseUserController {
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
             if("JX900651".equals(bean.getRetCode())){
 
+
                 result.setStatus(SendSmsResultBean.SUCCESS);
                 result.setStatusDesc(SendSmsResultBean.SUCCESS_MSG);
                 result.setSrvAuthCode(bean.getSrvAuthCode());
@@ -123,6 +187,7 @@ public class AppBindCardController extends BaseUserController {
         } catch (UnsupportedEncodingException e) {
             logger.error("组装重定向url异常", e);
         }
+        logger.info("重定向地址：" + resultUrl.toString());
         return resultUrl.toString();
     }
 
@@ -139,9 +204,11 @@ public class AppBindCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/bind")
+    @ApiOperation(value = "用户绑卡", notes = "用户绑卡")
     public ModelAndView bindCardPlus(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
 
+        logger.info("用户绑卡开始：userId:" + userId);
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         if (webViewUserVO == null) {
             return getErrorModel("用户未登录");
@@ -226,22 +293,15 @@ public class AppBindCardController extends BaseUserController {
             BankCardVO bankCardVO = bindCardService.queryUserCardValid(bean.getLogUserId(), bean.getCardNo());
 
             if (bankCardVO != null) {
-                modelAndView = new ModelAndView("/jumpHTML");
-                BaseMapBean baseMapBean=new BaseMapBean();
-                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                baseMapBean.set(CustomConstants.APP_STATUS_DESC, "");
-                baseMapBean.setCallBackAction(systemConfig.appHost+ JUMP_HTML_SUCCESS_PATH);
-                modelAndView.addObject("callBackForm", baseMapBean);
-                return modelAndView;
+                Map<String,String> paraMap=new HashMap<>();
+                paraMap.put(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                paraMap.put(CustomConstants.APP_STATUS_DESC, "");
+                return new ModelAndView(getRedirectUrl(JUMP_HTML_SUCCESS_PATH, paraMap));
             } else {
-                modelAndView = new ModelAndView("/jumpHTML");
-                BaseMapBean baseMapBean=new BaseMapBean();
-                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                baseMapBean.set(CustomConstants.APP_STATUS_DESC, "银行处理中，请稍后查看");
-                baseMapBean.setCallBackAction(systemConfig.appHost+ JUMP_HTML_HANDLING_PATH);
-                modelAndView.addObject("callBackForm", baseMapBean);
-                return modelAndView;
-
+                Map<String,String> paraMap=new HashMap<>();
+                paraMap.put(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                paraMap.put(CustomConstants.APP_STATUS_DESC, "银行处理中，请稍后查看");
+                return new ModelAndView(getRedirectUrl(JUMP_HTML_HANDLING_PATH, paraMap));
             }
 
         } catch (Exception e) {

@@ -16,15 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.text.SimpleDateFormat;
+
 import static com.hyjf.am.bean.result.BaseResult.FAIL_DESC;
-import static com.hyjf.am.response.Response.FAIL;
 
 /**
  * @author dangzw
  * @version AppContentArticleController, v0.1 2018/7/30 23:13
  */
-@Api(description = "APP端", tags = "APP端")
+@Api(tags = "app端-APP端文章详情")
 @RestController
 @RequestMapping(value = "/hyjf-app/find/contentArticle")
 
@@ -58,14 +59,14 @@ public class AppContentArticleController extends BaseMarketController {
                 response.setDetails(details);
             }
         } catch (Exception e) {
-            response.setRtn("99");
+            response.setRtn(Response.ERROR);
             response.setMessage(AppContentArticleResponse.FAIL_MSG);
         }
         if(response == null) {
-            return new AppResult<>("99", FAIL_DESC);
+            return new AppResult<>(Response.ERROR, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
-            return new AppResult<>("99", response.getMessage());
+            return new AppResult<>(Response.ERROR, response.getMessage());
         }
         logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         return new AppResult<>(response) ;

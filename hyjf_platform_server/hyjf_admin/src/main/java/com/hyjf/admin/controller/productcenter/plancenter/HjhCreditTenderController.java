@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AdminHjhCreditTenderRequest;
 import com.hyjf.admin.beans.vo.AdminHjhCreditTenderCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -25,7 +26,6 @@ import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -54,7 +54,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author libin
@@ -80,7 +83,6 @@ public class HjhCreditTenderController extends BaseController{
 	
     /** 权限 */
 	public static final String PERMISSIONS = "hjhcredittender";
-	private static final String PARAM_NAME = "hyjf_param_name:";
 	
 	/**
 	 * 画面初始化
@@ -96,9 +98,9 @@ public class HjhCreditTenderController extends BaseController{
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
         // 还款方式
-        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         // 承接方式
-        Map<String, String> clientList = adminCommonService.getParamNameMap(PARAM_NAME + "PLAN_ASSIGN_TYPE");
+		List<DropDownVO> clientList = adminCommonService.getParamNameList("PLAN_ASSIGN_TYPE");
         if(CollectionUtils.isEmpty(borrowStyleList) &&  clientList.isEmpty()){
         	jsonObject.put("status", FAIL);
         } else {

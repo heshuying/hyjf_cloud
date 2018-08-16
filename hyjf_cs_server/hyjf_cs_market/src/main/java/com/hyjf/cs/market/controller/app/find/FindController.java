@@ -5,13 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
  * @author lisheng
  * @version FindController, v0.1 2018/7/26 9:39
  */
-@Api(value = "app发现页", tags = "app发现页")
+@Api(value = "app发现页", tags = "app端-app发现页")
 @RestController
 public class FindController {
     @Autowired
@@ -34,7 +32,8 @@ public class FindController {
     public static final String GET_CONTENT_ARTICLE_ID_ACTION = "/{type}/{contentArticleId}";
 
     @ResponseBody
-    @RequestMapping(value = "/hyjf-app/find")
+    @GetMapping(value = "/hyjf-app/find")
+    @ApiOperation(value = "app发现页信息", notes = "app发现页信息")
     public JSONObject find() {
         JSONObject ret = new JSONObject();
         List<ContentArticleVO> newsList = appFindService.searchHomeNoticeList("20", 0, 3);

@@ -1005,4 +1005,5 @@ public interface AmUserClient {
      * @return
      */
     UserVO getUserByMobile(String mobile);
+
 }

@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",tags = "app端-验证码")
+@Api(tags = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -56,7 +56,7 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "app验证验证码",notes = "验证验证码")
+    @ApiOperation(value = "验证验证码",notes = "验证验证码")
     @PostMapping(value = "/validateVerificationCodeAction")
     public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();

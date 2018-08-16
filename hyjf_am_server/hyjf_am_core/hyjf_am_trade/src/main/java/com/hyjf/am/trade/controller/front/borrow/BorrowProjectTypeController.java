@@ -46,19 +46,6 @@ public class BorrowProjectTypeController extends BaseController {
             borrowProjectTypeVO.setLimitStart(paginator.getOffset());
             borrowProjectTypeVO.setLimitEnd(paginator.getLimit());
             list = borrowProjectTypeService.selectProjectTypeList(borrowProjectTypeVO);
-            for(int i=0;i<list.size();i++){
-                for(int j=0;j<paramNameVOS.size();j++){
-                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getBorrowProjectType())){
-                        list.get(i).setBorrowProjectType(paramNameVOS.get(j).getName());
-                    }
-                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getInvestUserType())){
-                        list.get(i).setInvestUserType(paramNameVOS.get(j).getName());
-                    }
-                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getStatus())){
-                        list.get(i).setStatus(paramNameVOS.get(j).getName());
-                    }
-                }
-            }
             result.setResultList(list);
             result.setRtn(Response.SUCCESS);
             return result;

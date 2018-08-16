@@ -5,6 +5,8 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,41 +14,33 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: MobileSynchronizeRequest, v0.1 2018/8/13 11:47
  */
+@ApiModel(value = "银行手机号同步请求参数")
 public class MobileSynchronizeRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 5878365400911813862L;
 
-    /**
-     * 用户名(检索用)
-     */
+    @ApiModelProperty(value = "用户名(检索用)")
     private String userNameSrch;
 
-    /**
-     * 电子账号(检索用)
-     */
+    @ApiModelProperty(value = "电子账号(检索用)")
     private String accountIdSrch;
 
-    /**
-     * 手机号(检索用)
-     */
+    @ApiModelProperty(value = "手机号(检索用)")
     private String mobileSrch;
 
-    /**
-     * 电子账号
-     */
+    @ApiModelProperty(value = "电子账号")
     private String accountId;
 
-    /**
-     * 用户Id
-     */
+    @ApiModelProperty(value = "用户Id")
     private String userId;
 
+    @ApiModelProperty(value = "当前登录用户信息(后台用)")
     private AdminSystemVO adminSystemVO;
-
+    @ApiModelProperty(value = "分页limit(后台用)")
     private int limitStart = -1;
-
+    @ApiModelProperty(value = "分页limit(后台用)")
     private int limitEnd = -1;
 
     public String getUserNameSrch() {

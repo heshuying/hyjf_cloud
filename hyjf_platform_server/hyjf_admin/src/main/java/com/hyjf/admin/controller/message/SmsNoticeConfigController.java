@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author xiehuili on 2018/8/14.
  */
-@Api(value = "消息中心-通知配置", tags = "消息中心-通知配置")
+@Api(tags = "消息中心-通知配置")
 @RestController
 @RequestMapping("/hyjf-admin/message/noticeconfig")
 public class SmsNoticeConfigController extends BaseController {

@@ -23,10 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +36,7 @@ import java.util.List;
  * @author fuqiang
  * @version ProtocolsController, v0.1 2018/7/10 16:03
  */
-@Api(value = "协议管理", tags = "协议管理")
+@Api(tags = "协议管理")
 @RestController
 @RequestMapping("/hyjf-admin/protocols")
 public class ProtocolsController extends BaseController {
@@ -47,7 +44,7 @@ public class ProtocolsController extends BaseController {
 	private ProtocolsService protocolsService;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
-	@RequestMapping("/init")
+	@PostMapping("/init")
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
@@ -61,7 +58,7 @@ public class ProtocolsController extends BaseController {
 	}
 
 	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -77,7 +74,7 @@ public class ProtocolsController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -102,7 +99,7 @@ public class ProtocolsController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
-	@RequestMapping("/exportaction")
+	@PostMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// 表格sheet名称

@@ -3,28 +3,29 @@
  */
 package com.hyjf.cs.message.controller;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
 import java.util.List;
 
 /**
  * @author dangzw
  * @version MessagePushErrorController, v0.1 2018/8/14 22:39
  */
+@ApiIgnore
 @RestController
-@RequestMapping("/cs-message/app_message")
+@RequestMapping("/cs-message/msgpush/error")
 public class MessagePushErrorController {
 
     @Value("file.domain.url")
@@ -34,49 +35,84 @@ public class MessagePushErrorController {
     private MessagePushErrorService messagePushErrorService;
 
     /**
-     * (条件)查询 APP消息推送 异常处理 列表
+     * 获取列表记录数
      *
-     * @param request
+     * @return
      */
-    @RequestMapping("getListByConditions")
-    private MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
+    @RequestMapping("getRecordCount")
+    private MessagePushErrorResponse getRecordCount(@RequestBody MessagePushErrorRequest request) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
-        Integer count = this.messagePushErrorService.getRecordCount(request);
-        if(count > 0){
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
-            request.setPaginator(paginator);
-            List<MessagePushMsgHistory> recordList = this.messagePushErrorService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
-            String fileDomainUrl = UploadFileUtils.getDoPath(FILE_DOMAIN_URL);
-            response.setFileDomainUrl(fileDomainUrl);
-            List<MessagePushErrorVO> messagePushErrorVOList = CommonUtils.convertBeanList(recordList, MessagePushErrorVO.class);
-            response.setResultList(messagePushErrorVOList);
-        }
-        // 标签
-        List<MessagePushTag> tagList = this.messagePushErrorService.getTagList();
-        List<MessagePushErrorVO> messagePushErrorVOListT = CommonUtils.convertBeanList(tagList, MessagePushErrorVO.class);
-        response.setResultList(messagePushErrorVOListT);
-        // 发送状态
-        List<ParamName> messagesSendStatus = this.messagePushErrorService.getParamNameList("MSG_PUSH_SEND_STATUS");
-        List<MessagePushErrorVO> messagePushErrorVOList = CommonUtils.convertBeanList(messagesSendStatus, MessagePushErrorVO.class);
-        response.setResultList(messagePushErrorVOList);
+        Integer recordCount = messagePushErrorService.getRecordCount(request);
+        response.setCount(recordCount);
         return response;
     }
 
     /**
-     * 数据修改 APP消息推送 异常处理
+     * 获取列表
      *
-     * @param request
      * @return
      */
-    @RequestMapping()
-    public MessagePushErrorResponse resendAction(MessagePushErrorRequest request) {
+    @RequestMapping("getRecordListT/{request}/{limitStart}/{limitEnd}")
+    public MessagePushErrorResponse getRecordListT(@PathVariable MessagePushErrorRequest request, @PathVariable int limitStart,
+                                                        @PathVariable int limitEnd) {
         MessagePushErrorResponse response = new MessagePushErrorResponse();
-        // 重发此消息
-        if (request.getIds() != null) {
-            Integer id = Integer.valueOf(request.getIds());
-            MessagePushMsgHistory msg = this.messagePushErrorService.getRecord(id);
-            this.messagePushErrorService.sendMessage(msg);
+        List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, limitStart, limitEnd);
+        if (!CollectionUtils.isEmpty(messagePushMsgHistory)){
+            List<MessagePushErrorVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushErrorVO.class);
+            response.setResultList(messagePushErrorVO);
+            return response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
+    }
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    @RequestMapping("getTagList")
+    public MessagePushErrorResponse getTagList() {
+        MessagePushErrorResponse response = new MessagePushErrorResponse();
+        List<MessagePushTag> tagList = messagePushErrorService.getTagList();
+        if (!CollectionUtils.isEmpty(tagList)){
+            List<MessagePushErrorVO> messagePushErrorVO = CommonUtils.convertBeanList(tagList, MessagePushErrorVO.class);
+            response.setResultList(messagePushErrorVO);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
+    }
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    @RequestMapping("getRecord/{id}")
+    public MessagePushErrorResponse getRecord(@PathVariable Integer id) {
+        MessagePushErrorResponse response = new MessagePushErrorResponse();
+        MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
+        if (msg != null){
+            MessagePushErrorVO messagePushErrorVO = CommonUtils.convertBean(msg, MessagePushErrorVO.class);
+            response.setResult(messagePushErrorVO);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
+    }
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    @RequestMapping("sendMessage/{msg}")
+    public void sendMessage(@PathVariable MessagePushErrorVO msg) {
+        messagePushErrorService.sendMessage(msg);
     }
 }

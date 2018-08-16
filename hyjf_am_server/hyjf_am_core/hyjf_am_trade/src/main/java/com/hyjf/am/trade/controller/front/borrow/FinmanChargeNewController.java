@@ -36,7 +36,7 @@ public class FinmanChargeNewController extends BaseController {
     @RequestMapping("/list")
     public FinmanChargeNewResponse selectFinmanChargeNewList(@RequestBody FinmanChargeNewRequest adminRequest) {
         logger.info("费率配置 列表..." + JSONObject.toJSON(adminRequest));
-        FinmanChargeNewResponse response =null;
+        FinmanChargeNewResponse response =new FinmanChargeNewResponse();
         int total = this.finmanChargeNewService.countRecordTotal(adminRequest);
         if(total > 0){
             Paginator paginator = new Paginator(adminRequest.getCurrPage(), total);
@@ -47,9 +47,11 @@ public class FinmanChargeNewController extends BaseController {
                 response.setResultList(recordList);
                 return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("数据为空！");
             return response;
         }
-        return response;
+        return null;
     }
 
     /**
@@ -71,6 +73,7 @@ public class FinmanChargeNewController extends BaseController {
                 return response;
             }
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;
@@ -88,6 +91,7 @@ public class FinmanChargeNewController extends BaseController {
         int count = this.finmanChargeNewService.insertFinmanChargeNew(adminRequest);
         if (count > 0) {
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;
@@ -105,6 +109,7 @@ public class FinmanChargeNewController extends BaseController {
         int count = this.finmanChargeNewService.updateFinmanChargeNew(adminRequest);
         if (count > 0) {
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;
@@ -122,6 +127,7 @@ public class FinmanChargeNewController extends BaseController {
         int count = this.finmanChargeNewService.deleteFinmanChargeNew(adminRequest);
         if (count > 0) {
             response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;

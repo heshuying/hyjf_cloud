@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author: sunpeikai
  * @version: UserPortraitBatchController, v0.1 2018/6/28 18:31
  * 用户画像batch
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-user/batch")
 public class UserPortraitBatchController{

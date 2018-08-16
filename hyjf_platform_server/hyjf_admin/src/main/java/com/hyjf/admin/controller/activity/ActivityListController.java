@@ -36,7 +36,7 @@ import java.util.Map;
  * @author yaoy
  * @version ActivityListController, v0.1 2018/6/26 16:13
  */
-@Api(value = "活动列表接口", tags = "活动列表")
+@Api(tags = "活动列表")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
 public class ActivityListController extends BaseController {
@@ -45,7 +45,7 @@ public class ActivityListController extends BaseController {
     /** 权限关键字 */
     public static final String PERMISSIONS = "activitylist";
 
-    @Value("${http://cdn.huiyingdai.com/}")
+    @Value("${file.domain.url}")
     private String fileDomainUrl;
 
     @Autowired

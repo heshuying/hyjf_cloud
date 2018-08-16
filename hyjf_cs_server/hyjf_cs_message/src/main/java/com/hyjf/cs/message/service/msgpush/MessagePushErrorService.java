@@ -4,7 +4,7 @@
 package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import java.util.List;
@@ -27,7 +27,7 @@ public interface MessagePushErrorService {
      *
      * @return
      */
-    List<MessagePushMsgHistory> getRecordList(MessagePushErrorRequest request, int offset, int limit);
+    List<MessagePushMsgHistory> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
 
     /**
      * 获取标签列表
@@ -35,13 +35,6 @@ public interface MessagePushErrorService {
      * @return
      */
     List<MessagePushTag> getTagList();
-
-    /**
-     * 获取数据字典名称
-     *
-     * @return
-     */
-    List<ParamName> getParamNameList(String msg_push_send_status);
 
     /**
      * 获取单个信息
@@ -56,5 +49,5 @@ public interface MessagePushErrorService {
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
-    void sendMessage(MessagePushMsgHistory msg);
+    void sendMessage(MessagePushErrorVO msg);
 }

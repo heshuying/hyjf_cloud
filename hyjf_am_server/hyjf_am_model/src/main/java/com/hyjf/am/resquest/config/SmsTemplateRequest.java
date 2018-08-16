@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.Request;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import com.hyjf.am.resquest.Request;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fuqiang
@@ -17,11 +19,11 @@ public class SmsTemplateRequest extends Request implements Serializable {
     private Integer id;
 
     private String tplCode;
-
+    @ApiModelProperty(value = "模板名称")
     private String tplName;
-
+    @ApiModelProperty(value = "状态: 0关闭, 1开启")
     private Integer status;
-
+    @ApiModelProperty(value = "模版内容")
     private String tplContent;
 
     private Integer createUserId;

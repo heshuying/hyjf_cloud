@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * @author by xiehuili on 2018/7/30.
  */
-@Api(value = "配置中心借款项目配置---流程配置",tags = "配置中心借款项目配置---流程配置")
+@Api(tags = "配置中心借款项目配置---流程配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowflow")
 public class BorrowFlowController extends BaseController {
