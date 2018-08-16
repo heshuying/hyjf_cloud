@@ -135,4 +135,21 @@ public class HjhRepayServiceImpl implements HjhRepayService {
         List<HjhRepayVO> repayMentVoList = CommonUtils.convertBeanList(repayMentList, HjhRepayVO.class);
         return repayMentVoList;
     }
+
+    /**
+     * 订单退出超过两天邮件预警list
+     * @author zhangyk
+     * @date 2018/8/15 15:48
+     */
+    @Override
+    public List<HjhRepay> getPlanExitCheck() {
+        HjhRepayExample hjhRepayExample = new HjhRepayExample();
+        //获取当前的时间减去两天的时间就是前天的时间
+        int nowTime1 = GetDate.getNowTime10()-172800;
+        HjhRepayExample.Criteria createCriteria = hjhRepayExample.createCriteria();
+        createCriteria.andOrderStatusEqualTo(5);
+        createCriteria.andRepayShouldTimeLessThanOrEqualTo(nowTime1);
+        List<HjhRepay> repayList = hjhRepayMapper.selectByExample(hjhRepayExample);
+        return repayList;
+    }
 }
