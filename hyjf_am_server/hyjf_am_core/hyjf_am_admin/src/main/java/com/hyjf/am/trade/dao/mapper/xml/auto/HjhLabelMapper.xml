@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.HjhLabelMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+    <result column="label_term_start" property="labelTermStart" jdbcType="INTEGER" />
+    <result column="label_term_end" property="labelTermEnd" jdbcType="INTEGER" />
+    <result column="label_term_type" property="labelTermType" jdbcType="VARCHAR" />
+    <result column="label_apr_start" property="labelAprStart" jdbcType="DECIMAL" />
+    <result column="label_apr_end" property="labelAprEnd" jdbcType="DECIMAL" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+    <result column="label_payment_account_start" property="labelPaymentAccountStart" jdbcType="DECIMAL" />
+    <result column="label_payment_account_end" property="labelPaymentAccountEnd" jdbcType="DECIMAL" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+    <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+    <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+    <result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
+    <result column="is_credit" property="isCredit" jdbcType="TINYINT" />
+    <result column="is_late" property="isLate" jdbcType="TINYINT" />
+    <result column="credit_sum_max" property="creditSumMax" jdbcType="INTEGER" />
+    <result column="push_time_start" property="pushTimeStart" jdbcType="TIME" />
+    <result column="push_time_end" property="pushTimeEnd" jdbcType="TIME" />
+    <result column="remaining_days_start" property="remainingDaysStart" jdbcType="INTEGER" />
+    <result column="remaining_days_end" property="remainingDaysEnd" jdbcType="INTEGER" />
+    <result column="label_state" property="labelState" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, label_name, label_term_start, label_term_end, label_term_type, label_apr_start, 
+    label_apr_end, borrow_style, borrow_style_name, label_payment_account_start, label_payment_account_end, 
+    inst_code, inst_name, asset_type, asset_type_name, project_type, project_type_name, 
+    is_credit, is_late, credit_sum_max, push_time_start, push_time_end, remaining_days_start, 
+    remaining_days_end, label_state, create_user_id, update_user_id, del_flag, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabelExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_hjh_label
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_hjh_label
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_hjh_label
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabelExample" >
+    delete from ht_hjh_label
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_label (label_name, label_term_start, label_term_end, 
+      label_term_type, label_apr_start, label_apr_end, 
+      borrow_style, borrow_style_name, label_payment_account_start, 
+      label_payment_account_end, inst_code, inst_name, 
+      asset_type, asset_type_name, project_type, 
+      project_type_name, is_credit, is_late, 
+      credit_sum_max, push_time_start, push_time_end, 
+      remaining_days_start, remaining_days_end, label_state, 
+      create_user_id, update_user_id, del_flag, 
+      create_time, update_time)
+    values (#{labelName,jdbcType=VARCHAR}, #{labelTermStart,jdbcType=INTEGER}, #{labelTermEnd,jdbcType=INTEGER}, 
+      #{labelTermType,jdbcType=VARCHAR}, #{labelAprStart,jdbcType=DECIMAL}, #{labelAprEnd,jdbcType=DECIMAL}, 
+      #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, #{labelPaymentAccountStart,jdbcType=DECIMAL}, 
+      #{labelPaymentAccountEnd,jdbcType=DECIMAL}, #{instCode,jdbcType=VARCHAR}, #{instName,jdbcType=VARCHAR}, 
+      #{assetType,jdbcType=TINYINT}, #{assetTypeName,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, 
+      #{projectTypeName,jdbcType=VARCHAR}, #{isCredit,jdbcType=TINYINT}, #{isLate,jdbcType=TINYINT}, 
+      #{creditSumMax,jdbcType=INTEGER}, #{pushTimeStart,jdbcType=TIME}, #{pushTimeEnd,jdbcType=TIME}, 
+      #{remainingDaysStart,jdbcType=INTEGER}, #{remainingDaysEnd,jdbcType=INTEGER}, #{labelState,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{delFlag,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_hjh_label
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="labelName != null" >
+        label_name,
+      </if>
+      <if test="labelTermStart != null" >
+        label_term_start,
+      </if>
+      <if test="labelTermEnd != null" >
+        label_term_end,
+      </if>
+      <if test="labelTermType != null" >
+        label_term_type,
+      </if>
+      <if test="labelAprStart != null" >
+        label_apr_start,
+      </if>
+      <if test="labelAprEnd != null" >
+        label_apr_end,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="borrowStyleName != null" >
+        borrow_style_name,
+      </if>
+      <if test="labelPaymentAccountStart != null" >
+        label_payment_account_start,
+      </if>
+      <if test="labelPaymentAccountEnd != null" >
+        label_payment_account_end,
+      </if>
+      <if test="instCode != null" >
+        inst_code,
+      </if>
+      <if test="instName != null" >
+        inst_name,
+      </if>
+      <if test="assetType != null" >
+        asset_type,
+      </if>
+      <if test="assetTypeName != null" >
+        asset_type_name,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="projectTypeName != null" >
+        project_type_name,
+      </if>
+      <if test="isCredit != null" >
+        is_credit,
+      </if>
+      <if test="isLate != null" >
+        is_late,
+      </if>
+      <if test="creditSumMax != null" >
+        credit_sum_max,
+      </if>
+      <if test="pushTimeStart != null" >
+        push_time_start,
+      </if>
+      <if test="pushTimeEnd != null" >
+        push_time_end,
+      </if>
+      <if test="remainingDaysStart != null" >
+        remaining_days_start,
+      </if>
+      <if test="remainingDaysEnd != null" >
+        remaining_days_end,
+      </if>
+      <if test="labelState != null" >
+        label_state,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="labelName != null" >
+        #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="labelTermStart != null" >
+        #{labelTermStart,jdbcType=INTEGER},
+      </if>
+      <if test="labelTermEnd != null" >
+        #{labelTermEnd,jdbcType=INTEGER},
+      </if>
+      <if test="labelTermType != null" >
+        #{labelTermType,jdbcType=VARCHAR},
+      </if>
+      <if test="labelAprStart != null" >
+        #{labelAprStart,jdbcType=DECIMAL},
+      </if>
+      <if test="labelAprEnd != null" >
+        #{labelAprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyleName != null" >
+        #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="labelPaymentAccountStart != null" >
+        #{labelPaymentAccountStart,jdbcType=DECIMAL},
+      </if>
+      <if test="labelPaymentAccountEnd != null" >
+        #{labelPaymentAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instName != null" >
+        #{instName,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="assetTypeName != null" >
+        #{assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="projectTypeName != null" >
+        #{projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="isCredit != null" >
+        #{isCredit,jdbcType=TINYINT},
+      </if>
+      <if test="isLate != null" >
+        #{isLate,jdbcType=TINYINT},
+      </if>
+      <if test="creditSumMax != null" >
+        #{creditSumMax,jdbcType=INTEGER},
+      </if>
+      <if test="pushTimeStart != null" >
+        #{pushTimeStart,jdbcType=TIME},
+      </if>
+      <if test="pushTimeEnd != null" >
+        #{pushTimeEnd,jdbcType=TIME},
+      </if>
+      <if test="remainingDaysStart != null" >
+        #{remainingDaysStart,jdbcType=INTEGER},
+      </if>
+      <if test="remainingDaysEnd != null" >
+        #{remainingDaysEnd,jdbcType=INTEGER},
+      </if>
+      <if test="labelState != null" >
+        #{labelState,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabelExample" resultType="java.lang.Integer" >
+    select count(*) from ht_hjh_label
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_hjh_label
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelName != null" >
+        label_name = #{record.labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.labelTermStart != null" >
+        label_term_start = #{record.labelTermStart,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelTermEnd != null" >
+        label_term_end = #{record.labelTermEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelTermType != null" >
+        label_term_type = #{record.labelTermType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.labelAprStart != null" >
+        label_apr_start = #{record.labelAprStart,jdbcType=DECIMAL},
+      </if>
+      <if test="record.labelAprEnd != null" >
+        label_apr_end = #{record.labelAprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowStyleName != null" >
+        borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.labelPaymentAccountStart != null" >
+        label_payment_account_start = #{record.labelPaymentAccountStart,jdbcType=DECIMAL},
+      </if>
+      <if test="record.labelPaymentAccountEnd != null" >
+        label_payment_account_end = #{record.labelPaymentAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instName != null" >
+        inst_name = #{record.instName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetType != null" >
+        asset_type = #{record.assetType,jdbcType=TINYINT},
+      </if>
+      <if test="record.assetTypeName != null" >
+        asset_type_name = #{record.assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectTypeName != null" >
+        project_type_name = #{record.projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isCredit != null" >
+        is_credit = #{record.isCredit,jdbcType=TINYINT},
+      </if>
+      <if test="record.isLate != null" >
+        is_late = #{record.isLate,jdbcType=TINYINT},
+      </if>
+      <if test="record.creditSumMax != null" >
+        credit_sum_max = #{record.creditSumMax,jdbcType=INTEGER},
+      </if>
+      <if test="record.pushTimeStart != null" >
+        push_time_start = #{record.pushTimeStart,jdbcType=TIME},
+      </if>
+      <if test="record.pushTimeEnd != null" >
+        push_time_end = #{record.pushTimeEnd,jdbcType=TIME},
+      </if>
+      <if test="record.remainingDaysStart != null" >
+        remaining_days_start = #{record.remainingDaysStart,jdbcType=INTEGER},
+      </if>
+      <if test="record.remainingDaysEnd != null" >
+        remaining_days_end = #{record.remainingDaysEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.labelState != null" >
+        label_state = #{record.labelState,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_hjh_label
+    set id = #{record.id,jdbcType=INTEGER},
+      label_name = #{record.labelName,jdbcType=VARCHAR},
+      label_term_start = #{record.labelTermStart,jdbcType=INTEGER},
+      label_term_end = #{record.labelTermEnd,jdbcType=INTEGER},
+      label_term_type = #{record.labelTermType,jdbcType=VARCHAR},
+      label_apr_start = #{record.labelAprStart,jdbcType=DECIMAL},
+      label_apr_end = #{record.labelAprEnd,jdbcType=DECIMAL},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
+      label_payment_account_start = #{record.labelPaymentAccountStart,jdbcType=DECIMAL},
+      label_payment_account_end = #{record.labelPaymentAccountEnd,jdbcType=DECIMAL},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      inst_name = #{record.instName,jdbcType=VARCHAR},
+      asset_type = #{record.assetType,jdbcType=TINYINT},
+      asset_type_name = #{record.assetTypeName,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      project_type_name = #{record.projectTypeName,jdbcType=VARCHAR},
+      is_credit = #{record.isCredit,jdbcType=TINYINT},
+      is_late = #{record.isLate,jdbcType=TINYINT},
+      credit_sum_max = #{record.creditSumMax,jdbcType=INTEGER},
+      push_time_start = #{record.pushTimeStart,jdbcType=TIME},
+      push_time_end = #{record.pushTimeEnd,jdbcType=TIME},
+      remaining_days_start = #{record.remainingDaysStart,jdbcType=INTEGER},
+      remaining_days_end = #{record.remainingDaysEnd,jdbcType=INTEGER},
+      label_state = #{record.labelState,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
+    update ht_hjh_label
+    <set >
+      <if test="labelName != null" >
+        label_name = #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="labelTermStart != null" >
+        label_term_start = #{labelTermStart,jdbcType=INTEGER},
+      </if>
+      <if test="labelTermEnd != null" >
+        label_term_end = #{labelTermEnd,jdbcType=INTEGER},
+      </if>
+      <if test="labelTermType != null" >
+        label_term_type = #{labelTermType,jdbcType=VARCHAR},
+      </if>
+      <if test="labelAprStart != null" >
+        label_apr_start = #{labelAprStart,jdbcType=DECIMAL},
+      </if>
+      <if test="labelAprEnd != null" >
+        label_apr_end = #{labelAprEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStyleName != null" >
+        borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="labelPaymentAccountStart != null" >
+        label_payment_account_start = #{labelPaymentAccountStart,jdbcType=DECIMAL},
+      </if>
+      <if test="labelPaymentAccountEnd != null" >
+        label_payment_account_end = #{labelPaymentAccountEnd,jdbcType=DECIMAL},
+      </if>
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instName != null" >
+        inst_name = #{instName,jdbcType=VARCHAR},
+      </if>
+      <if test="assetType != null" >
+        asset_type = #{assetType,jdbcType=TINYINT},
+      </if>
+      <if test="assetTypeName != null" >
+        asset_type_name = #{assetTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="projectTypeName != null" >
+        project_type_name = #{projectTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="isCredit != null" >
+        is_credit = #{isCredit,jdbcType=TINYINT},
+      </if>
+      <if test="isLate != null" >
+        is_late = #{isLate,jdbcType=TINYINT},
+      </if>
+      <if test="creditSumMax != null" >
+        credit_sum_max = #{creditSumMax,jdbcType=INTEGER},
+      </if>
+      <if test="pushTimeStart != null" >
+        push_time_start = #{pushTimeStart,jdbcType=TIME},
+      </if>
+      <if test="pushTimeEnd != null" >
+        push_time_end = #{pushTimeEnd,jdbcType=TIME},
+      </if>
+      <if test="remainingDaysStart != null" >
+        remaining_days_start = #{remainingDaysStart,jdbcType=INTEGER},
+      </if>
+      <if test="remainingDaysEnd != null" >
+        remaining_days_end = #{remainingDaysEnd,jdbcType=INTEGER},
+      </if>
+      <if test="labelState != null" >
+        label_state = #{labelState,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.HjhLabel" >
+    update ht_hjh_label
+    set label_name = #{labelName,jdbcType=VARCHAR},
+      label_term_start = #{labelTermStart,jdbcType=INTEGER},
+      label_term_end = #{labelTermEnd,jdbcType=INTEGER},
+      label_term_type = #{labelTermType,jdbcType=VARCHAR},
+      label_apr_start = #{labelAprStart,jdbcType=DECIMAL},
+      label_apr_end = #{labelAprEnd,jdbcType=DECIMAL},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      label_payment_account_start = #{labelPaymentAccountStart,jdbcType=DECIMAL},
+      label_payment_account_end = #{labelPaymentAccountEnd,jdbcType=DECIMAL},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      inst_name = #{instName,jdbcType=VARCHAR},
+      asset_type = #{assetType,jdbcType=TINYINT},
+      asset_type_name = #{assetTypeName,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      project_type_name = #{projectTypeName,jdbcType=VARCHAR},
+      is_credit = #{isCredit,jdbcType=TINYINT},
+      is_late = #{isLate,jdbcType=TINYINT},
+      credit_sum_max = #{creditSumMax,jdbcType=INTEGER},
+      push_time_start = #{pushTimeStart,jdbcType=TIME},
+      push_time_end = #{pushTimeEnd,jdbcType=TIME},
+      remaining_days_start = #{remainingDaysStart,jdbcType=INTEGER},
+      remaining_days_end = #{remainingDaysEnd,jdbcType=INTEGER},
+      label_state = #{labelState,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

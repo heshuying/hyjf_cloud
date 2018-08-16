@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper">
+	<resultMap id="selectFddTempletListMap" type="com.hyjf.am.trade.dao.model.customize.FddTempletCustomize">
+        <result column="templet_id" property="templetId" jdbcType="INTEGER" />
+        <result column="protocol_type" property="protocolType" jdbcType="TINYINT" />
+        <result column="is_active" property="isActive" jdbcType="TINYINT" />
+        <result column="ca_flag" property="caFlag" jdbcType="TINYINT" />
+        <result column="certificate_time" property="certificateTime" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="INTEGER" />
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+
+    </resultMap>
+	 <select id="selectFddTempletList" resultMap="selectFddTempletListMap" parameterType="com.hyjf.am.trade.dao.model.customize.FddTempletCustomize">
+        SELECT
+        id,
+        templet_id,
+        protocol_type,
+        is_active,
+        ca_flag,
+        certificate_time,
+        remark,
+        create_time,
+        create_user_id,
+        create_user_name,
+        update_time,
+        update_user_id,
+        update_user_name,
+        FROM
+        ht_fdd_templet ft
+        ORDER BY
+        ft.create_time DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+	
+</mapper>

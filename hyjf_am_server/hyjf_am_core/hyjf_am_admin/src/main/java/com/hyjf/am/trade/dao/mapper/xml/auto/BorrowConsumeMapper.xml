@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowConsumeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowConsume" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="consume_class" property="consumeClass" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="company_or_personal" property="companyOrPersonal" jdbcType="TINYINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="com_reg_time" property="comRegTime" jdbcType="VARCHAR" />
+    <result column="reg_captial" property="regCaptial" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" extends="BaseResultMap" >
+    <result column="borrow_contents" property="borrowContents" jdbcType="LONGVARCHAR" />
+    <result column="account_contents" property="accountContents" jdbcType="LONGVARCHAR" />
+    <result column="files" property="files" jdbcType="LONGVARCHAR" />
+    <result column="borrow_measures_instit" property="borrowMeasuresInstit" jdbcType="LONGVARCHAR" />
+    <result column="borrow_company_instruction" property="borrowCompanyInstruction" jdbcType="LONGVARCHAR" />
+    <result column="borrow_measures_mea" property="borrowMeasuresMea" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, consume_class, `name`, project_type, user_name, company_or_personal, username, 
+    province, city, area, com_reg_time, reg_captial, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    borrow_contents, account_contents, files, borrow_measures_instit, borrow_company_instruction, 
+    borrow_measures_mea
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_borrow_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_borrow_consume
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow_consume
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeExample" >
+    delete from ht_borrow_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_consume (consume_class, `name`, project_type, 
+      user_name, company_or_personal, username, 
+      province, city, area, 
+      com_reg_time, reg_captial, update_time, 
+      borrow_contents, account_contents, 
+      files, borrow_measures_instit, borrow_company_instruction, 
+      borrow_measures_mea)
+    values (#{consumeClass,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, 
+      #{userName,jdbcType=VARCHAR}, #{companyOrPersonal,jdbcType=TINYINT}, #{username,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{comRegTime,jdbcType=VARCHAR}, #{regCaptial,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{borrowContents,jdbcType=LONGVARCHAR}, #{accountContents,jdbcType=LONGVARCHAR}, 
+      #{files,jdbcType=LONGVARCHAR}, #{borrowMeasuresInstit,jdbcType=LONGVARCHAR}, #{borrowCompanyInstruction,jdbcType=LONGVARCHAR}, 
+      #{borrowMeasuresMea,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_consume
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="consumeClass != null" >
+        consume_class,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="companyOrPersonal != null" >
+        company_or_personal,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="comRegTime != null" >
+        com_reg_time,
+      </if>
+      <if test="regCaptial != null" >
+        reg_captial,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="borrowContents != null" >
+        borrow_contents,
+      </if>
+      <if test="accountContents != null" >
+        account_contents,
+      </if>
+      <if test="files != null" >
+        files,
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        borrow_measures_instit,
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        borrow_company_instruction,
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        borrow_measures_mea,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="consumeClass != null" >
+        #{consumeClass,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyOrPersonal != null" >
+        #{companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="comRegTime != null" >
+        #{comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="regCaptial != null" >
+        #{regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borrowContents != null" >
+        #{borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="accountContents != null" >
+        #{accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="files != null" >
+        #{files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        #{borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_consume
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_consume
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.consumeClass != null" >
+        consume_class = #{record.consumeClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=TINYINT},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyOrPersonal != null" >
+        company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null" >
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comRegTime != null" >
+        com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regCaptial != null" >
+        reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.borrowContents != null" >
+        borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.accountContents != null" >
+        account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.files != null" >
+        files = #{record.files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowMeasuresInstit != null" >
+        borrow_measures_instit = #{record.borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowCompanyInstruction != null" >
+        borrow_company_instruction = #{record.borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.borrowMeasuresMea != null" >
+        borrow_measures_mea = #{record.borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_borrow_consume
+    set id = #{record.id,jdbcType=INTEGER},
+      consume_class = #{record.consumeClass,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      username = #{record.username,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
+      reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      borrow_contents = #{record.borrowContents,jdbcType=LONGVARCHAR},
+      account_contents = #{record.accountContents,jdbcType=LONGVARCHAR},
+      files = #{record.files,jdbcType=LONGVARCHAR},
+      borrow_measures_instit = #{record.borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      borrow_company_instruction = #{record.borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      borrow_measures_mea = #{record.borrowMeasuresMea,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_consume
+    set id = #{record.id,jdbcType=INTEGER},
+      consume_class = #{record.consumeClass,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      company_or_personal = #{record.companyOrPersonal,jdbcType=TINYINT},
+      username = #{record.username,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      com_reg_time = #{record.comRegTime,jdbcType=VARCHAR},
+      reg_captial = #{record.regCaptial,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" >
+    update ht_borrow_consume
+    <set >
+      <if test="consumeClass != null" >
+        consume_class = #{consumeClass,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyOrPersonal != null" >
+        company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="comRegTime != null" >
+        com_reg_time = #{comRegTime,jdbcType=VARCHAR},
+      </if>
+      <if test="regCaptial != null" >
+        reg_captial = #{regCaptial,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="borrowContents != null" >
+        borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="accountContents != null" >
+        account_contents = #{accountContents,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="files != null" >
+        files = #{files,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresInstit != null" >
+        borrow_measures_instit = #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowCompanyInstruction != null" >
+        borrow_company_instruction = #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="borrowMeasuresMea != null" >
+        borrow_measures_mea = #{borrowMeasuresMea,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsumeWithBLOBs" >
+    update ht_borrow_consume
+    set consume_class = #{consumeClass,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      username = #{username,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      com_reg_time = #{comRegTime,jdbcType=VARCHAR},
+      reg_captial = #{regCaptial,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      borrow_contents = #{borrowContents,jdbcType=LONGVARCHAR},
+      account_contents = #{accountContents,jdbcType=LONGVARCHAR},
+      files = #{files,jdbcType=LONGVARCHAR},
+      borrow_measures_instit = #{borrowMeasuresInstit,jdbcType=LONGVARCHAR},
+      borrow_company_instruction = #{borrowCompanyInstruction,jdbcType=LONGVARCHAR},
+      borrow_measures_mea = #{borrowMeasuresMea,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowConsume" >
+    update ht_borrow_consume
+    set consume_class = #{consumeClass,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      company_or_personal = #{companyOrPersonal,jdbcType=TINYINT},
+      username = #{username,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      com_reg_time = #{comRegTime,jdbcType=VARCHAR},
+      reg_captial = #{regCaptial,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

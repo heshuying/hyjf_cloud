@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AdminTransferExceptionLogCustomizeMapper">
+	<resultMap id="selectTransferExceptionMap" type="com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize">
+		<id column="uuid" property="uuid" jdbcType="VARCHAR" />
+	    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="respcode" property="respcode" jdbcType="VARCHAR" />
+	    <result column="trans_amt" property="transAmt" jdbcType="DECIMAL" />
+	    <result column="cus_id" property="cusId" jdbcType="VARCHAR" />
+	    <result column="acct_id" property="acctId" jdbcType="VARCHAR" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+	    <result column="create_time_view" property="createTimeView" jdbcType="INTEGER" />
+	    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+	    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
+	    <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
+	    <result column="username" property="username" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+	    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+	    <result column="del_flg" property="delFlg" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Where_Clause">
+		<where>
+			el.del_flag = 0
+			AND el.`status` <![CDATA[<>]]> 0
+			<if test="orderId != null and orderId != ''">
+				AND el.order_id LIKE CONCAT('%', #{orderId}, '%')
+			</if>
+			<if test="username != null and username != ''">
+				AND u.username LIKE CONCAT('%', #{username}, '%')
+			</if>
+			<if test="type != null and type != ''">
+				AND el.`type` = #{type}
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( el.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</sql>
+	<select id="selectTransferExceptionList" resultMap="selectTransferExceptionMap" parameterType="java.util.Map">
+		SELECT
+			el.uuid,
+			el.order_id,
+			CASE
+		WHEN el.type = 0 THEN
+			'体验金收益回款'
+		WHEN el.type = 1 THEN
+			'加息券收益回款'
+		WHEN el.type = 2 THEN
+			'代金券收益回款'
+		ELSE
+			''
+		END trade_type,
+		 el. STATUS,
+		 CASE
+		WHEN el. STATUS = 1 THEN
+			'失败'
+		WHEN el.STATUS = 2 THEN
+		    '失败'
+		WHEN el.STATUS = 0 THEN
+		    '成功'
+		END trade_status,
+		 el.respcode,
+		 el.trans_amt,
+		 el.cus_id,
+		 el.acct_id,
+		 el.user_id,
+		 u.username,
+		 el.remark,
+		 FROM_UNIXTIME(
+			el.create_time,
+			'%Y-%m-%d %H:%i:%S'
+		) AS create_time_view,
+		 el.create_user,
+		 el.update_time,
+		 el.update_user,
+		 el.del_flag
+		FROM
+			ht_transfer_exception_log el
+		LEFT JOIN ht_r_user u ON u.user_id = el.user_id
+		<include refid="Where_Clause" />
+		ORDER BY update_time DESC
+		<if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	
+    <select id="countTransferException" resultType="java.lang.Integer" parameterType="java.util.Map">
+	    SELECT
+			count(1)
+		FROM ht_transfer_exception_log el
+		     LEFT JOIN ht_r_user u ON u.user_id = el.user_id
+		<include refid="Where_Clause" />
+	</select>
+	
+	<select id="getCouponUserCode" resultType="java.lang.String" parameterType="java.util.Map">
+	    SELECT
+			u.coupon_user_code
+		FROM
+			ht_coupon_tender t
+		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
+		WHERE
+			t.order_id = #{tenderNid}
+	</select>
+</mapper>

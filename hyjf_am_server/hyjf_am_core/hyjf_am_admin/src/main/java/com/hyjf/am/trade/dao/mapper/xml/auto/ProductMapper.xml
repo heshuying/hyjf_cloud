@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Product" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pnumber" property="pnumber" jdbcType="VARCHAR" />
+    <result column="interest_rate" property="interestRate" jdbcType="DECIMAL" />
+    <result column="pupper" property="pupper" jdbcType="DECIMAL" />
+    <result column="plower" property="plower" jdbcType="DECIMAL" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="allpupper" property="allpupper" jdbcType="DECIMAL" />
+    <result column="is_tender" property="isTender" jdbcType="TINYINT" />
+    <result column="is_redeem" property="isRedeem" jdbcType="TINYINT" />
+    <result column="error_remark" property="errorRemark" jdbcType="VARCHAR" />
+    <result column="pnumber_new" property="pnumberNew" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, pnumber, interest_rate, pupper, plower, total, allpupper, is_tender, is_redeem, 
+    error_remark, pnumber_new, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProductExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProductExample" >
+    delete from ht_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_product (pnumber, interest_rate, pupper, 
+      plower, total, allpupper, 
+      is_tender, is_redeem, error_remark, 
+      pnumber_new, create_time)
+    values (#{pnumber,jdbcType=VARCHAR}, #{interestRate,jdbcType=DECIMAL}, #{pupper,jdbcType=DECIMAL}, 
+      #{plower,jdbcType=DECIMAL}, #{total,jdbcType=DECIMAL}, #{allpupper,jdbcType=DECIMAL}, 
+      #{isTender,jdbcType=TINYINT}, #{isRedeem,jdbcType=TINYINT}, #{errorRemark,jdbcType=VARCHAR}, 
+      #{pnumberNew,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_product
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pnumber != null" >
+        pnumber,
+      </if>
+      <if test="interestRate != null" >
+        interest_rate,
+      </if>
+      <if test="pupper != null" >
+        pupper,
+      </if>
+      <if test="plower != null" >
+        plower,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="allpupper != null" >
+        allpupper,
+      </if>
+      <if test="isTender != null" >
+        is_tender,
+      </if>
+      <if test="isRedeem != null" >
+        is_redeem,
+      </if>
+      <if test="errorRemark != null" >
+        error_remark,
+      </if>
+      <if test="pnumberNew != null" >
+        pnumber_new,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pnumber != null" >
+        #{pnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRate != null" >
+        #{interestRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pupper != null" >
+        #{pupper,jdbcType=DECIMAL},
+      </if>
+      <if test="plower != null" >
+        #{plower,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="allpupper != null" >
+        #{allpupper,jdbcType=DECIMAL},
+      </if>
+      <if test="isTender != null" >
+        #{isTender,jdbcType=TINYINT},
+      </if>
+      <if test="isRedeem != null" >
+        #{isRedeem,jdbcType=TINYINT},
+      </if>
+      <if test="errorRemark != null" >
+        #{errorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="pnumberNew != null" >
+        #{pnumberNew,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProductExample" resultType="java.lang.Integer" >
+    select count(*) from ht_product
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_product
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.pnumber != null" >
+        pnumber = #{record.pnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interestRate != null" >
+        interest_rate = #{record.interestRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.pupper != null" >
+        pupper = #{record.pupper,jdbcType=DECIMAL},
+      </if>
+      <if test="record.plower != null" >
+        plower = #{record.plower,jdbcType=DECIMAL},
+      </if>
+      <if test="record.total != null" >
+        total = #{record.total,jdbcType=DECIMAL},
+      </if>
+      <if test="record.allpupper != null" >
+        allpupper = #{record.allpupper,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isTender != null" >
+        is_tender = #{record.isTender,jdbcType=TINYINT},
+      </if>
+      <if test="record.isRedeem != null" >
+        is_redeem = #{record.isRedeem,jdbcType=TINYINT},
+      </if>
+      <if test="record.errorRemark != null" >
+        error_remark = #{record.errorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pnumberNew != null" >
+        pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_product
+    set id = #{record.id,jdbcType=INTEGER},
+      pnumber = #{record.pnumber,jdbcType=VARCHAR},
+      interest_rate = #{record.interestRate,jdbcType=DECIMAL},
+      pupper = #{record.pupper,jdbcType=DECIMAL},
+      plower = #{record.plower,jdbcType=DECIMAL},
+      total = #{record.total,jdbcType=DECIMAL},
+      allpupper = #{record.allpupper,jdbcType=DECIMAL},
+      is_tender = #{record.isTender,jdbcType=TINYINT},
+      is_redeem = #{record.isRedeem,jdbcType=TINYINT},
+      error_remark = #{record.errorRemark,jdbcType=VARCHAR},
+      pnumber_new = #{record.pnumberNew,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
+    update ht_product
+    <set >
+      <if test="pnumber != null" >
+        pnumber = #{pnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="interestRate != null" >
+        interest_rate = #{interestRate,jdbcType=DECIMAL},
+      </if>
+      <if test="pupper != null" >
+        pupper = #{pupper,jdbcType=DECIMAL},
+      </if>
+      <if test="plower != null" >
+        plower = #{plower,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="allpupper != null" >
+        allpupper = #{allpupper,jdbcType=DECIMAL},
+      </if>
+      <if test="isTender != null" >
+        is_tender = #{isTender,jdbcType=TINYINT},
+      </if>
+      <if test="isRedeem != null" >
+        is_redeem = #{isRedeem,jdbcType=TINYINT},
+      </if>
+      <if test="errorRemark != null" >
+        error_remark = #{errorRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="pnumberNew != null" >
+        pnumber_new = #{pnumberNew,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Product" >
+    update ht_product
+    set pnumber = #{pnumber,jdbcType=VARCHAR},
+      interest_rate = #{interestRate,jdbcType=DECIMAL},
+      pupper = #{pupper,jdbcType=DECIMAL},
+      plower = #{plower,jdbcType=DECIMAL},
+      total = #{total,jdbcType=DECIMAL},
+      allpupper = #{allpupper,jdbcType=DECIMAL},
+      is_tender = #{isTender,jdbcType=TINYINT},
+      is_redeem = #{isRedeem,jdbcType=TINYINT},
+      error_remark = #{errorRemark,jdbcType=VARCHAR},
+      pnumber_new = #{pnumberNew,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

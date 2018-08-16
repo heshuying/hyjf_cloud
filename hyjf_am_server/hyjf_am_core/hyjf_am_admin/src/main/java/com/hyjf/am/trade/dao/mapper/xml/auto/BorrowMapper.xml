@@ -1,0 +1,1230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="TINYINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
+    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+    <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
+    <result column="label_id" property="labelId" jdbcType="INTEGER" />
+    <result column="is_show" property="isShow" jdbcType="TINYINT" />
+    <result column="is_engine_used" property="isEngineUsed" jdbcType="TINYINT" />
+    <result column="is_installment" property="isInstallment" jdbcType="TINYINT" />
+    <result column="is_month" property="isMonth" jdbcType="TINYINT" />
+    <result column="regist_status" property="registStatus" jdbcType="TINYINT" />
+    <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+    <result column="regist_user_id" property="registUserId" jdbcType="INTEGER" />
+    <result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
+    <result column="verify_status" property="verifyStatus" jdbcType="TINYINT" />
+    <result column="verify_over_time" property="verifyOverTime" jdbcType="INTEGER" />
+    <result column="verify_time" property="verifyTime" jdbcType="INTEGER" />
+    <result column="verify_userid" property="verifyUserid" jdbcType="VARCHAR" />
+    <result column="verify_user_name" property="verifyUserName" jdbcType="VARCHAR" />
+    <result column="verify_remark" property="verifyRemark" jdbcType="VARCHAR" />
+    <result column="verify_contents" property="verifyContents" jdbcType="VARCHAR" />
+    <result column="borrow_status" property="borrowStatus" jdbcType="TINYINT" />
+    <result column="ontime" property="ontime" jdbcType="INTEGER" />
+    <result column="borrow_end_time" property="borrowEndTime" jdbcType="VARCHAR" />
+    <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+    <result column="borrow_full_status" property="borrowFullStatus" jdbcType="TINYINT" />
+    <result column="borrow_full_time" property="borrowFullTime" jdbcType="INTEGER" />
+    <result column="tender_times" property="tenderTimes" jdbcType="INTEGER" />
+    <result column="borrow_account_yes" property="borrowAccountYes" jdbcType="DECIMAL" />
+    <result column="borrow_account_wait" property="borrowAccountWait" jdbcType="DECIMAL" />
+    <result column="borrow_account_scale" property="borrowAccountScale" jdbcType="DECIMAL" />
+    <result column="borrow_service" property="borrowService" jdbcType="VARCHAR" />
+    <result column="reverify_status" property="reverifyStatus" jdbcType="TINYINT" />
+    <result column="reverify_time" property="reverifyTime" jdbcType="INTEGER" />
+    <result column="reverify_userid" property="reverifyUserid" jdbcType="VARCHAR" />
+    <result column="reverify_user_name" property="reverifyUserName" jdbcType="VARCHAR" />
+    <result column="reverify_remark" property="reverifyRemark" jdbcType="VARCHAR" />
+    <result column="reverify_contents" property="reverifyContents" jdbcType="VARCHAR" />
+    <result column="recover_last_time" property="recoverLastTime" jdbcType="INTEGER" />
+    <result column="repay_last_time" property="repayLastTime" jdbcType="INTEGER" />
+    <result column="repay_next_time" property="repayNextTime" jdbcType="INTEGER" />
+    <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+    <result column="repay_full_status" property="repayFullStatus" jdbcType="TINYINT" />
+    <result column="repay_fee_normal" property="repayFeeNormal" jdbcType="DECIMAL" />
+    <result column="repay_account_all" property="repayAccountAll" jdbcType="DECIMAL" />
+    <result column="repay_account_interest" property="repayAccountInterest" jdbcType="DECIMAL" />
+    <result column="repay_account_capital" property="repayAccountCapital" jdbcType="DECIMAL" />
+    <result column="repay_account_yes" property="repayAccountYes" jdbcType="DECIMAL" />
+    <result column="repay_account_interest_yes" property="repayAccountInterestYes" jdbcType="DECIMAL" />
+    <result column="repay_account_capital_yes" property="repayAccountCapitalYes" jdbcType="DECIMAL" />
+    <result column="repay_account_wait" property="repayAccountWait" jdbcType="DECIMAL" />
+    <result column="repay_account_interest_wait" property="repayAccountInterestWait" jdbcType="DECIMAL" />
+    <result column="repay_account_capital_wait" property="repayAccountCapitalWait" jdbcType="DECIMAL" />
+    <result column="borrow_manager" property="borrowManager" jdbcType="VARCHAR" />
+    <result column="service_fee_rate" property="serviceFeeRate" jdbcType="VARCHAR" />
+    <result column="manage_fee_rate" property="manageFeeRate" jdbcType="VARCHAR" />
+    <result column="differential_rate" property="differentialRate" jdbcType="VARCHAR" />
+    <result column="late_interest_rate" property="lateInterestRate" jdbcType="VARCHAR" />
+    <result column="late_free_days" property="lateFreeDays" jdbcType="TINYINT" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, borrow_nid, project_type, user_id, borrow_user_name, `status`, account, borrow_valid_time, 
+    borrow_style, borrow_period, borrow_apr, label_id, is_show, is_engine_used, is_installment, 
+    is_month, regist_status, regist_time, regist_user_id, regist_user_name, verify_status, 
+    verify_over_time, verify_time, verify_userid, verify_user_name, verify_remark, verify_contents, 
+    borrow_status, ontime, borrow_end_time, plan_nid, borrow_full_status, borrow_full_time, 
+    tender_times, borrow_account_yes, borrow_account_wait, borrow_account_scale, borrow_service, 
+    reverify_status, reverify_time, reverify_userid, reverify_user_name, reverify_remark, 
+    reverify_contents, recover_last_time, repay_last_time, repay_next_time, repay_status, 
+    repay_full_status, repay_fee_normal, repay_account_all, repay_account_interest, repay_account_capital, 
+    repay_account_yes, repay_account_interest_yes, repay_account_capital_yes, repay_account_wait, 
+    repay_account_interest_wait, repay_account_capital_wait, borrow_manager, service_fee_rate, 
+    manage_fee_rate, differential_rate, late_interest_rate, late_free_days, create_user_name, 
+    add_ip, create_time, updatetime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_borrow
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
+    delete from ht_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow (borrow_nid, project_type, user_id, 
+      borrow_user_name, `status`, account, 
+      borrow_valid_time, borrow_style, borrow_period, 
+      borrow_apr, label_id, is_show, 
+      is_engine_used, is_installment, is_month, 
+      regist_status, regist_time, regist_user_id, 
+      regist_user_name, verify_status, verify_over_time, 
+      verify_time, verify_userid, verify_user_name, 
+      verify_remark, verify_contents, borrow_status, 
+      ontime, borrow_end_time, plan_nid, 
+      borrow_full_status, borrow_full_time, tender_times, 
+      borrow_account_yes, borrow_account_wait, borrow_account_scale, 
+      borrow_service, reverify_status, reverify_time, 
+      reverify_userid, reverify_user_name, reverify_remark, 
+      reverify_contents, recover_last_time, repay_last_time, 
+      repay_next_time, repay_status, repay_full_status, 
+      repay_fee_normal, repay_account_all, repay_account_interest, 
+      repay_account_capital, repay_account_yes, repay_account_interest_yes, 
+      repay_account_capital_yes, repay_account_wait, 
+      repay_account_interest_wait, repay_account_capital_wait, 
+      borrow_manager, service_fee_rate, manage_fee_rate, 
+      differential_rate, late_interest_rate, late_free_days, 
+      create_user_name, add_ip, create_time, 
+      updatetime)
+    values (#{borrowNid,jdbcType=VARCHAR}, #{projectType,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
+      #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, 
+      #{borrowValidTime,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, 
+      #{borrowApr,jdbcType=DECIMAL}, #{labelId,jdbcType=INTEGER}, #{isShow,jdbcType=TINYINT}, 
+      #{isEngineUsed,jdbcType=TINYINT}, #{isInstallment,jdbcType=TINYINT}, #{isMonth,jdbcType=TINYINT}, 
+      #{registStatus,jdbcType=TINYINT}, #{registTime,jdbcType=TIMESTAMP}, #{registUserId,jdbcType=INTEGER}, 
+      #{registUserName,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=TINYINT}, #{verifyOverTime,jdbcType=INTEGER}, 
+      #{verifyTime,jdbcType=INTEGER}, #{verifyUserid,jdbcType=VARCHAR}, #{verifyUserName,jdbcType=VARCHAR}, 
+      #{verifyRemark,jdbcType=VARCHAR}, #{verifyContents,jdbcType=VARCHAR}, #{borrowStatus,jdbcType=TINYINT}, 
+      #{ontime,jdbcType=INTEGER}, #{borrowEndTime,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{borrowFullStatus,jdbcType=TINYINT}, #{borrowFullTime,jdbcType=INTEGER}, #{tenderTimes,jdbcType=INTEGER}, 
+      #{borrowAccountYes,jdbcType=DECIMAL}, #{borrowAccountWait,jdbcType=DECIMAL}, #{borrowAccountScale,jdbcType=DECIMAL}, 
+      #{borrowService,jdbcType=VARCHAR}, #{reverifyStatus,jdbcType=TINYINT}, #{reverifyTime,jdbcType=INTEGER}, 
+      #{reverifyUserid,jdbcType=VARCHAR}, #{reverifyUserName,jdbcType=VARCHAR}, #{reverifyRemark,jdbcType=VARCHAR}, 
+      #{reverifyContents,jdbcType=VARCHAR}, #{recoverLastTime,jdbcType=INTEGER}, #{repayLastTime,jdbcType=INTEGER}, 
+      #{repayNextTime,jdbcType=INTEGER}, #{repayStatus,jdbcType=TINYINT}, #{repayFullStatus,jdbcType=TINYINT}, 
+      #{repayFeeNormal,jdbcType=DECIMAL}, #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccountInterest,jdbcType=DECIMAL}, 
+      #{repayAccountCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{repayAccountInterestYes,jdbcType=DECIMAL}, 
+      #{repayAccountCapitalYes,jdbcType=DECIMAL}, #{repayAccountWait,jdbcType=DECIMAL}, 
+      #{repayAccountInterestWait,jdbcType=DECIMAL}, #{repayAccountCapitalWait,jdbcType=DECIMAL}, 
+      #{borrowManager,jdbcType=VARCHAR}, #{serviceFeeRate,jdbcType=VARCHAR}, #{manageFeeRate,jdbcType=VARCHAR}, 
+      #{differentialRate,jdbcType=VARCHAR}, #{lateInterestRate,jdbcType=VARCHAR}, #{lateFreeDays,jdbcType=TINYINT}, 
+      #{createUserName,jdbcType=VARCHAR}, #{addIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time,
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr,
+      </if>
+      <if test="labelId != null" >
+        label_id,
+      </if>
+      <if test="isShow != null" >
+        is_show,
+      </if>
+      <if test="isEngineUsed != null" >
+        is_engine_used,
+      </if>
+      <if test="isInstallment != null" >
+        is_installment,
+      </if>
+      <if test="isMonth != null" >
+        is_month,
+      </if>
+      <if test="registStatus != null" >
+        regist_status,
+      </if>
+      <if test="registTime != null" >
+        regist_time,
+      </if>
+      <if test="registUserId != null" >
+        regist_user_id,
+      </if>
+      <if test="registUserName != null" >
+        regist_user_name,
+      </if>
+      <if test="verifyStatus != null" >
+        verify_status,
+      </if>
+      <if test="verifyOverTime != null" >
+        verify_over_time,
+      </if>
+      <if test="verifyTime != null" >
+        verify_time,
+      </if>
+      <if test="verifyUserid != null" >
+        verify_userid,
+      </if>
+      <if test="verifyUserName != null" >
+        verify_user_name,
+      </if>
+      <if test="verifyRemark != null" >
+        verify_remark,
+      </if>
+      <if test="verifyContents != null" >
+        verify_contents,
+      </if>
+      <if test="borrowStatus != null" >
+        borrow_status,
+      </if>
+      <if test="ontime != null" >
+        ontime,
+      </if>
+      <if test="borrowEndTime != null" >
+        borrow_end_time,
+      </if>
+      <if test="planNid != null" >
+        plan_nid,
+      </if>
+      <if test="borrowFullStatus != null" >
+        borrow_full_status,
+      </if>
+      <if test="borrowFullTime != null" >
+        borrow_full_time,
+      </if>
+      <if test="tenderTimes != null" >
+        tender_times,
+      </if>
+      <if test="borrowAccountYes != null" >
+        borrow_account_yes,
+      </if>
+      <if test="borrowAccountWait != null" >
+        borrow_account_wait,
+      </if>
+      <if test="borrowAccountScale != null" >
+        borrow_account_scale,
+      </if>
+      <if test="borrowService != null" >
+        borrow_service,
+      </if>
+      <if test="reverifyStatus != null" >
+        reverify_status,
+      </if>
+      <if test="reverifyTime != null" >
+        reverify_time,
+      </if>
+      <if test="reverifyUserid != null" >
+        reverify_userid,
+      </if>
+      <if test="reverifyUserName != null" >
+        reverify_user_name,
+      </if>
+      <if test="reverifyRemark != null" >
+        reverify_remark,
+      </if>
+      <if test="reverifyContents != null" >
+        reverify_contents,
+      </if>
+      <if test="recoverLastTime != null" >
+        recover_last_time,
+      </if>
+      <if test="repayLastTime != null" >
+        repay_last_time,
+      </if>
+      <if test="repayNextTime != null" >
+        repay_next_time,
+      </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
+      <if test="repayFullStatus != null" >
+        repay_full_status,
+      </if>
+      <if test="repayFeeNormal != null" >
+        repay_fee_normal,
+      </if>
+      <if test="repayAccountAll != null" >
+        repay_account_all,
+      </if>
+      <if test="repayAccountInterest != null" >
+        repay_account_interest,
+      </if>
+      <if test="repayAccountCapital != null" >
+        repay_account_capital,
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes,
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        repay_account_interest_yes,
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        repay_account_capital_yes,
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait,
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        repay_account_interest_wait,
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        repay_account_capital_wait,
+      </if>
+      <if test="borrowManager != null" >
+        borrow_manager,
+      </if>
+      <if test="serviceFeeRate != null" >
+        service_fee_rate,
+      </if>
+      <if test="manageFeeRate != null" >
+        manage_fee_rate,
+      </if>
+      <if test="differentialRate != null" >
+        differential_rate,
+      </if>
+      <if test="lateInterestRate != null" >
+        late_interest_rate,
+      </if>
+      <if test="lateFreeDays != null" >
+        late_free_days,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="addIp != null" >
+        add_ip,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowValidTime != null" >
+        #{borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowApr != null" >
+        #{borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="labelId != null" >
+        #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="isShow != null" >
+        #{isShow,jdbcType=TINYINT},
+      </if>
+      <if test="isEngineUsed != null" >
+        #{isEngineUsed,jdbcType=TINYINT},
+      </if>
+      <if test="isInstallment != null" >
+        #{isInstallment,jdbcType=TINYINT},
+      </if>
+      <if test="isMonth != null" >
+        #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="registStatus != null" >
+        #{registStatus,jdbcType=TINYINT},
+      </if>
+      <if test="registTime != null" >
+        #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registUserId != null" >
+        #{registUserId,jdbcType=INTEGER},
+      </if>
+      <if test="registUserName != null" >
+        #{registUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyStatus != null" >
+        #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="verifyOverTime != null" >
+        #{verifyOverTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyTime != null" >
+        #{verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUserid != null" >
+        #{verifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserName != null" >
+        #{verifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyRemark != null" >
+        #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyContents != null" >
+        #{verifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStatus != null" >
+        #{borrowStatus,jdbcType=TINYINT},
+      </if>
+      <if test="ontime != null" >
+        #{ontime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowEndTime != null" >
+        #{borrowEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowFullStatus != null" >
+        #{borrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="borrowFullTime != null" >
+        #{borrowFullTime,jdbcType=INTEGER},
+      </if>
+      <if test="tenderTimes != null" >
+        #{tenderTimes,jdbcType=INTEGER},
+      </if>
+      <if test="borrowAccountYes != null" >
+        #{borrowAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccountWait != null" >
+        #{borrowAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccountScale != null" >
+        #{borrowAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowService != null" >
+        #{borrowService,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyStatus != null" >
+        #{reverifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="reverifyTime != null" >
+        #{reverifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="reverifyUserid != null" >
+        #{reverifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyUserName != null" >
+        #{reverifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyRemark != null" >
+        #{reverifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyContents != null" >
+        #{reverifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverLastTime != null" >
+        #{recoverLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayLastTime != null" >
+        #{repayLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayNextTime != null" >
+        #{repayNextTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayFullStatus != null" >
+        #{repayFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayFeeNormal != null" >
+        #{repayFeeNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountAll != null" >
+        #{repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterest != null" >
+        #{repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapital != null" >
+        #{repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        #{repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        #{repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowManager != null" >
+        #{borrowManager,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeeRate != null" >
+        #{serviceFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="manageFeeRate != null" >
+        #{manageFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="differentialRate != null" >
+        #{differentialRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateInterestRate != null" >
+        #{lateInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateFreeDays != null" >
+        #{lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="addIp != null" >
+        #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=TINYINT},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowUserName != null" >
+        borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowValidTime != null" >
+        borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowStyle != null" >
+        borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowApr != null" >
+        borrow_apr = #{record.borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.labelId != null" >
+        label_id = #{record.labelId,jdbcType=INTEGER},
+      </if>
+      <if test="record.isShow != null" >
+        is_show = #{record.isShow,jdbcType=TINYINT},
+      </if>
+      <if test="record.isEngineUsed != null" >
+        is_engine_used = #{record.isEngineUsed,jdbcType=TINYINT},
+      </if>
+      <if test="record.isInstallment != null" >
+        is_installment = #{record.isInstallment,jdbcType=TINYINT},
+      </if>
+      <if test="record.isMonth != null" >
+        is_month = #{record.isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="record.registStatus != null" >
+        regist_status = #{record.registStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.registTime != null" >
+        regist_time = #{record.registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.registUserId != null" >
+        regist_user_id = #{record.registUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.registUserName != null" >
+        regist_user_name = #{record.registUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyStatus != null" >
+        verify_status = #{record.verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.verifyOverTime != null" >
+        verify_over_time = #{record.verifyOverTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyTime != null" >
+        verify_time = #{record.verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.verifyUserid != null" >
+        verify_userid = #{record.verifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyUserName != null" >
+        verify_user_name = #{record.verifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyRemark != null" >
+        verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.verifyContents != null" >
+        verify_contents = #{record.verifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowStatus != null" >
+        borrow_status = #{record.borrowStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.ontime != null" >
+        ontime = #{record.ontime,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowEndTime != null" >
+        borrow_end_time = #{record.borrowEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.planNid != null" >
+        plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowFullStatus != null" >
+        borrow_full_status = #{record.borrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowFullTime != null" >
+        borrow_full_time = #{record.borrowFullTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderTimes != null" >
+        tender_times = #{record.tenderTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowAccountYes != null" >
+        borrow_account_yes = #{record.borrowAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowAccountWait != null" >
+        borrow_account_wait = #{record.borrowAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowAccountScale != null" >
+        borrow_account_scale = #{record.borrowAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowService != null" >
+        borrow_service = #{record.borrowService,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reverifyStatus != null" >
+        reverify_status = #{record.reverifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.reverifyTime != null" >
+        reverify_time = #{record.reverifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.reverifyUserid != null" >
+        reverify_userid = #{record.reverifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reverifyUserName != null" >
+        reverify_user_name = #{record.reverifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reverifyRemark != null" >
+        reverify_remark = #{record.reverifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reverifyContents != null" >
+        reverify_contents = #{record.reverifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recoverLastTime != null" >
+        recover_last_time = #{record.recoverLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayLastTime != null" >
+        repay_last_time = #{record.repayLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayNextTime != null" >
+        repay_next_time = #{record.repayNextTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayStatus != null" >
+        repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayFullStatus != null" >
+        repay_full_status = #{record.repayFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.repayFeeNormal != null" >
+        repay_fee_normal = #{record.repayFeeNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountAll != null" >
+        repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterest != null" >
+        repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapital != null" >
+        repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountYes != null" >
+        repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterestYes != null" >
+        repay_account_interest_yes = #{record.repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapitalYes != null" >
+        repay_account_capital_yes = #{record.repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountWait != null" >
+        repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountInterestWait != null" >
+        repay_account_interest_wait = #{record.repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repayAccountCapitalWait != null" >
+        repay_account_capital_wait = #{record.repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowManager != null" >
+        borrow_manager = #{record.borrowManager,jdbcType=VARCHAR},
+      </if>
+      <if test="record.serviceFeeRate != null" >
+        service_fee_rate = #{record.serviceFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manageFeeRate != null" >
+        manage_fee_rate = #{record.manageFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.differentialRate != null" >
+        differential_rate = #{record.differentialRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lateInterestRate != null" >
+        late_interest_rate = #{record.lateInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lateFreeDays != null" >
+        late_free_days = #{record.lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserName != null" >
+        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.addIp != null" >
+        add_ip = #{record.addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow
+    set id = #{record.id,jdbcType=INTEGER},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=TINYINT},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      account = #{record.account,jdbcType=DECIMAL},
+      borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
+      borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
+      borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      borrow_apr = #{record.borrowApr,jdbcType=DECIMAL},
+      label_id = #{record.labelId,jdbcType=INTEGER},
+      is_show = #{record.isShow,jdbcType=TINYINT},
+      is_engine_used = #{record.isEngineUsed,jdbcType=TINYINT},
+      is_installment = #{record.isInstallment,jdbcType=TINYINT},
+      is_month = #{record.isMonth,jdbcType=TINYINT},
+      regist_status = #{record.registStatus,jdbcType=TINYINT},
+      regist_time = #{record.registTime,jdbcType=TIMESTAMP},
+      regist_user_id = #{record.registUserId,jdbcType=INTEGER},
+      regist_user_name = #{record.registUserName,jdbcType=VARCHAR},
+      verify_status = #{record.verifyStatus,jdbcType=TINYINT},
+      verify_over_time = #{record.verifyOverTime,jdbcType=INTEGER},
+      verify_time = #{record.verifyTime,jdbcType=INTEGER},
+      verify_userid = #{record.verifyUserid,jdbcType=VARCHAR},
+      verify_user_name = #{record.verifyUserName,jdbcType=VARCHAR},
+      verify_remark = #{record.verifyRemark,jdbcType=VARCHAR},
+      verify_contents = #{record.verifyContents,jdbcType=VARCHAR},
+      borrow_status = #{record.borrowStatus,jdbcType=TINYINT},
+      ontime = #{record.ontime,jdbcType=INTEGER},
+      borrow_end_time = #{record.borrowEndTime,jdbcType=VARCHAR},
+      plan_nid = #{record.planNid,jdbcType=VARCHAR},
+      borrow_full_status = #{record.borrowFullStatus,jdbcType=TINYINT},
+      borrow_full_time = #{record.borrowFullTime,jdbcType=INTEGER},
+      tender_times = #{record.tenderTimes,jdbcType=INTEGER},
+      borrow_account_yes = #{record.borrowAccountYes,jdbcType=DECIMAL},
+      borrow_account_wait = #{record.borrowAccountWait,jdbcType=DECIMAL},
+      borrow_account_scale = #{record.borrowAccountScale,jdbcType=DECIMAL},
+      borrow_service = #{record.borrowService,jdbcType=VARCHAR},
+      reverify_status = #{record.reverifyStatus,jdbcType=TINYINT},
+      reverify_time = #{record.reverifyTime,jdbcType=INTEGER},
+      reverify_userid = #{record.reverifyUserid,jdbcType=VARCHAR},
+      reverify_user_name = #{record.reverifyUserName,jdbcType=VARCHAR},
+      reverify_remark = #{record.reverifyRemark,jdbcType=VARCHAR},
+      reverify_contents = #{record.reverifyContents,jdbcType=VARCHAR},
+      recover_last_time = #{record.recoverLastTime,jdbcType=INTEGER},
+      repay_last_time = #{record.repayLastTime,jdbcType=INTEGER},
+      repay_next_time = #{record.repayNextTime,jdbcType=INTEGER},
+      repay_status = #{record.repayStatus,jdbcType=TINYINT},
+      repay_full_status = #{record.repayFullStatus,jdbcType=TINYINT},
+      repay_fee_normal = #{record.repayFeeNormal,jdbcType=DECIMAL},
+      repay_account_all = #{record.repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{record.repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{record.repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{record.repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{record.repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{record.repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{record.repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{record.repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{record.repayAccountCapitalWait,jdbcType=DECIMAL},
+      borrow_manager = #{record.borrowManager,jdbcType=VARCHAR},
+      service_fee_rate = #{record.serviceFeeRate,jdbcType=VARCHAR},
+      manage_fee_rate = #{record.manageFeeRate,jdbcType=VARCHAR},
+      differential_rate = #{record.differentialRate,jdbcType=VARCHAR},
+      late_interest_rate = #{record.lateInterestRate,jdbcType=VARCHAR},
+      late_free_days = #{record.lateFreeDays,jdbcType=TINYINT},
+      create_user_name = #{record.createUserName,jdbcType=VARCHAR},
+      add_ip = #{record.addIp,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    update ht_borrow
+    <set >
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="borrowUserName != null" >
+        borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowStyle != null" >
+        borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr = #{borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="labelId != null" >
+        label_id = #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="isShow != null" >
+        is_show = #{isShow,jdbcType=TINYINT},
+      </if>
+      <if test="isEngineUsed != null" >
+        is_engine_used = #{isEngineUsed,jdbcType=TINYINT},
+      </if>
+      <if test="isInstallment != null" >
+        is_installment = #{isInstallment,jdbcType=TINYINT},
+      </if>
+      <if test="isMonth != null" >
+        is_month = #{isMonth,jdbcType=TINYINT},
+      </if>
+      <if test="registStatus != null" >
+        regist_status = #{registStatus,jdbcType=TINYINT},
+      </if>
+      <if test="registTime != null" >
+        regist_time = #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registUserId != null" >
+        regist_user_id = #{registUserId,jdbcType=INTEGER},
+      </if>
+      <if test="registUserName != null" >
+        regist_user_name = #{registUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyStatus != null" >
+        verify_status = #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="verifyOverTime != null" >
+        verify_over_time = #{verifyOverTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyTime != null" >
+        verify_time = #{verifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUserid != null" >
+        verify_userid = #{verifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyUserName != null" >
+        verify_user_name = #{verifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyRemark != null" >
+        verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyContents != null" >
+        verify_contents = #{verifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowStatus != null" >
+        borrow_status = #{borrowStatus,jdbcType=TINYINT},
+      </if>
+      <if test="ontime != null" >
+        ontime = #{ontime,jdbcType=INTEGER},
+      </if>
+      <if test="borrowEndTime != null" >
+        borrow_end_time = #{borrowEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="planNid != null" >
+        plan_nid = #{planNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowFullStatus != null" >
+        borrow_full_status = #{borrowFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="borrowFullTime != null" >
+        borrow_full_time = #{borrowFullTime,jdbcType=INTEGER},
+      </if>
+      <if test="tenderTimes != null" >
+        tender_times = #{tenderTimes,jdbcType=INTEGER},
+      </if>
+      <if test="borrowAccountYes != null" >
+        borrow_account_yes = #{borrowAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccountWait != null" >
+        borrow_account_wait = #{borrowAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccountScale != null" >
+        borrow_account_scale = #{borrowAccountScale,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowService != null" >
+        borrow_service = #{borrowService,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyStatus != null" >
+        reverify_status = #{reverifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="reverifyTime != null" >
+        reverify_time = #{reverifyTime,jdbcType=INTEGER},
+      </if>
+      <if test="reverifyUserid != null" >
+        reverify_userid = #{reverifyUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyUserName != null" >
+        reverify_user_name = #{reverifyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyRemark != null" >
+        reverify_remark = #{reverifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="reverifyContents != null" >
+        reverify_contents = #{reverifyContents,jdbcType=VARCHAR},
+      </if>
+      <if test="recoverLastTime != null" >
+        recover_last_time = #{recoverLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayLastTime != null" >
+        repay_last_time = #{repayLastTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayNextTime != null" >
+        repay_next_time = #{repayNextTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayFullStatus != null" >
+        repay_full_status = #{repayFullStatus,jdbcType=TINYINT},
+      </if>
+      <if test="repayFeeNormal != null" >
+        repay_fee_normal = #{repayFeeNormal,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountAll != null" >
+        repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterest != null" >
+        repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapital != null" >
+        repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountYes != null" >
+        repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestYes != null" >
+        repay_account_interest_yes = #{repayAccountInterestYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalYes != null" >
+        repay_account_capital_yes = #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountWait != null" >
+        repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountInterestWait != null" >
+        repay_account_interest_wait = #{repayAccountInterestWait,jdbcType=DECIMAL},
+      </if>
+      <if test="repayAccountCapitalWait != null" >
+        repay_account_capital_wait = #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowManager != null" >
+        borrow_manager = #{borrowManager,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceFeeRate != null" >
+        service_fee_rate = #{serviceFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="manageFeeRate != null" >
+        manage_fee_rate = #{manageFeeRate,jdbcType=VARCHAR},
+      </if>
+      <if test="differentialRate != null" >
+        differential_rate = #{differentialRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateInterestRate != null" >
+        late_interest_rate = #{lateInterestRate,jdbcType=VARCHAR},
+      </if>
+      <if test="lateFreeDays != null" >
+        late_free_days = #{lateFreeDays,jdbcType=TINYINT},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="addIp != null" >
+        add_ip = #{addIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
+    update ht_borrow
+    set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      account = #{account,jdbcType=DECIMAL},
+      borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
+      borrow_style = #{borrowStyle,jdbcType=VARCHAR},
+      borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      borrow_apr = #{borrowApr,jdbcType=DECIMAL},
+      label_id = #{labelId,jdbcType=INTEGER},
+      is_show = #{isShow,jdbcType=TINYINT},
+      is_engine_used = #{isEngineUsed,jdbcType=TINYINT},
+      is_installment = #{isInstallment,jdbcType=TINYINT},
+      is_month = #{isMonth,jdbcType=TINYINT},
+      regist_status = #{registStatus,jdbcType=TINYINT},
+      regist_time = #{registTime,jdbcType=TIMESTAMP},
+      regist_user_id = #{registUserId,jdbcType=INTEGER},
+      regist_user_name = #{registUserName,jdbcType=VARCHAR},
+      verify_status = #{verifyStatus,jdbcType=TINYINT},
+      verify_over_time = #{verifyOverTime,jdbcType=INTEGER},
+      verify_time = #{verifyTime,jdbcType=INTEGER},
+      verify_userid = #{verifyUserid,jdbcType=VARCHAR},
+      verify_user_name = #{verifyUserName,jdbcType=VARCHAR},
+      verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      verify_contents = #{verifyContents,jdbcType=VARCHAR},
+      borrow_status = #{borrowStatus,jdbcType=TINYINT},
+      ontime = #{ontime,jdbcType=INTEGER},
+      borrow_end_time = #{borrowEndTime,jdbcType=VARCHAR},
+      plan_nid = #{planNid,jdbcType=VARCHAR},
+      borrow_full_status = #{borrowFullStatus,jdbcType=TINYINT},
+      borrow_full_time = #{borrowFullTime,jdbcType=INTEGER},
+      tender_times = #{tenderTimes,jdbcType=INTEGER},
+      borrow_account_yes = #{borrowAccountYes,jdbcType=DECIMAL},
+      borrow_account_wait = #{borrowAccountWait,jdbcType=DECIMAL},
+      borrow_account_scale = #{borrowAccountScale,jdbcType=DECIMAL},
+      borrow_service = #{borrowService,jdbcType=VARCHAR},
+      reverify_status = #{reverifyStatus,jdbcType=TINYINT},
+      reverify_time = #{reverifyTime,jdbcType=INTEGER},
+      reverify_userid = #{reverifyUserid,jdbcType=VARCHAR},
+      reverify_user_name = #{reverifyUserName,jdbcType=VARCHAR},
+      reverify_remark = #{reverifyRemark,jdbcType=VARCHAR},
+      reverify_contents = #{reverifyContents,jdbcType=VARCHAR},
+      recover_last_time = #{recoverLastTime,jdbcType=INTEGER},
+      repay_last_time = #{repayLastTime,jdbcType=INTEGER},
+      repay_next_time = #{repayNextTime,jdbcType=INTEGER},
+      repay_status = #{repayStatus,jdbcType=TINYINT},
+      repay_full_status = #{repayFullStatus,jdbcType=TINYINT},
+      repay_fee_normal = #{repayFeeNormal,jdbcType=DECIMAL},
+      repay_account_all = #{repayAccountAll,jdbcType=DECIMAL},
+      repay_account_interest = #{repayAccountInterest,jdbcType=DECIMAL},
+      repay_account_capital = #{repayAccountCapital,jdbcType=DECIMAL},
+      repay_account_yes = #{repayAccountYes,jdbcType=DECIMAL},
+      repay_account_interest_yes = #{repayAccountInterestYes,jdbcType=DECIMAL},
+      repay_account_capital_yes = #{repayAccountCapitalYes,jdbcType=DECIMAL},
+      repay_account_wait = #{repayAccountWait,jdbcType=DECIMAL},
+      repay_account_interest_wait = #{repayAccountInterestWait,jdbcType=DECIMAL},
+      repay_account_capital_wait = #{repayAccountCapitalWait,jdbcType=DECIMAL},
+      borrow_manager = #{borrowManager,jdbcType=VARCHAR},
+      service_fee_rate = #{serviceFeeRate,jdbcType=VARCHAR},
+      manage_fee_rate = #{manageFeeRate,jdbcType=VARCHAR},
+      differential_rate = #{differentialRate,jdbcType=VARCHAR},
+      late_interest_rate = #{lateInterestRate,jdbcType=VARCHAR},
+      late_free_days = #{lateFreeDays,jdbcType=TINYINT},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      add_ip = #{addIp,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

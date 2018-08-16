@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtPlanInfoStaticMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="wait_invest" property="waitInvest" jdbcType="DECIMAL" />
+    <result column="wait_credit" property="waitCredit" jdbcType="DECIMAL" />
+    <result column="yes_invest" property="yesInvest" jdbcType="INTEGER" />
+    <result column="yes_credit" property="yesCredit" jdbcType="INTEGER" />
+    <result column="wait_repay" property="waitRepay" jdbcType="DECIMAL" />
+    <result column="yes_repay" property="yesRepay" jdbcType="DECIMAL" />
+    <result column="plan_repay_wait" property="planRepayWait" jdbcType="DECIMAL" />
+    <result column="plan_repay_yes" property="planRepayYes" jdbcType="DECIMAL" />
+    <result column="plan_accede_all" property="planAccedeAll" jdbcType="DECIMAL" />
+    <result column="expire_fair_value" property="expireFairValue" jdbcType="DECIMAL" />
+    <result column="invest_period_one" property="investPeriodOne" jdbcType="INTEGER" />
+    <result column="invest_period_two_four" property="investPeriodTwoFour" jdbcType="INTEGER" />
+    <result column="invest_period_five_eight" property="investPeriodFiveEight" jdbcType="INTEGER" />
+    <result column="invest_period_nine_twel" property="investPeriodNineTwel" jdbcType="INTEGER" />
+    <result column="invest_period_twel_tf" property="investPeriodTwelTf" jdbcType="INTEGER" />
+    <result column="invest_period_tf" property="investPeriodTf" jdbcType="INTEGER" />
+    <result column="credit_period_one" property="creditPeriodOne" jdbcType="INTEGER" />
+    <result column="credit_period_two_four" property="creditPeriodTwoFour" jdbcType="INTEGER" />
+    <result column="credit_period_five_eight" property="creditPeriodFiveEight" jdbcType="INTEGER" />
+    <result column="credit_period_nine_twel" property="creditPeriodNineTwel" jdbcType="INTEGER" />
+    <result column="credit_period_twel_tf" property="creditPeriodTwelTf" jdbcType="INTEGER" />
+    <result column="credit_period_tf" property="creditPeriodTf" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="data_date" property="dataDate" jdbcType="VARCHAR" />
+    <result column="data_month" property="dataMonth" jdbcType="VARCHAR" />
+    <result column="data_hour" property="dataHour" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, wait_invest, wait_credit, yes_invest, yes_credit, wait_repay, yes_repay, plan_repay_wait, 
+    plan_repay_yes, plan_accede_all, expire_fair_value, invest_period_one, invest_period_two_four, 
+    invest_period_five_eight, invest_period_nine_twel, invest_period_twel_tf, invest_period_tf, 
+    credit_period_one, credit_period_two_four, credit_period_five_eight, credit_period_nine_twel, 
+    credit_period_twel_tf, credit_period_tf, create_time, data_date, data_month, data_hour
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_plan_info_static
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_plan_info_static
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_plan_info_static
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticExample" >
+    delete from ht_debt_plan_info_static
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan_info_static (wait_invest, wait_credit, yes_invest, 
+      yes_credit, wait_repay, yes_repay, 
+      plan_repay_wait, plan_repay_yes, plan_accede_all, 
+      expire_fair_value, invest_period_one, invest_period_two_four, 
+      invest_period_five_eight, invest_period_nine_twel, 
+      invest_period_twel_tf, invest_period_tf, credit_period_one, 
+      credit_period_two_four, credit_period_five_eight, 
+      credit_period_nine_twel, credit_period_twel_tf, 
+      credit_period_tf, create_time, data_date, 
+      data_month, data_hour)
+    values (#{waitInvest,jdbcType=DECIMAL}, #{waitCredit,jdbcType=DECIMAL}, #{yesInvest,jdbcType=INTEGER}, 
+      #{yesCredit,jdbcType=INTEGER}, #{waitRepay,jdbcType=DECIMAL}, #{yesRepay,jdbcType=DECIMAL}, 
+      #{planRepayWait,jdbcType=DECIMAL}, #{planRepayYes,jdbcType=DECIMAL}, #{planAccedeAll,jdbcType=DECIMAL}, 
+      #{expireFairValue,jdbcType=DECIMAL}, #{investPeriodOne,jdbcType=INTEGER}, #{investPeriodTwoFour,jdbcType=INTEGER}, 
+      #{investPeriodFiveEight,jdbcType=INTEGER}, #{investPeriodNineTwel,jdbcType=INTEGER}, 
+      #{investPeriodTwelTf,jdbcType=INTEGER}, #{investPeriodTf,jdbcType=INTEGER}, #{creditPeriodOne,jdbcType=INTEGER}, 
+      #{creditPeriodTwoFour,jdbcType=INTEGER}, #{creditPeriodFiveEight,jdbcType=INTEGER}, 
+      #{creditPeriodNineTwel,jdbcType=INTEGER}, #{creditPeriodTwelTf,jdbcType=INTEGER}, 
+      #{creditPeriodTf,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{dataDate,jdbcType=VARCHAR}, 
+      #{dataMonth,jdbcType=VARCHAR}, #{dataHour,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_plan_info_static
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="waitInvest != null" >
+        wait_invest,
+      </if>
+      <if test="waitCredit != null" >
+        wait_credit,
+      </if>
+      <if test="yesInvest != null" >
+        yes_invest,
+      </if>
+      <if test="yesCredit != null" >
+        yes_credit,
+      </if>
+      <if test="waitRepay != null" >
+        wait_repay,
+      </if>
+      <if test="yesRepay != null" >
+        yes_repay,
+      </if>
+      <if test="planRepayWait != null" >
+        plan_repay_wait,
+      </if>
+      <if test="planRepayYes != null" >
+        plan_repay_yes,
+      </if>
+      <if test="planAccedeAll != null" >
+        plan_accede_all,
+      </if>
+      <if test="expireFairValue != null" >
+        expire_fair_value,
+      </if>
+      <if test="investPeriodOne != null" >
+        invest_period_one,
+      </if>
+      <if test="investPeriodTwoFour != null" >
+        invest_period_two_four,
+      </if>
+      <if test="investPeriodFiveEight != null" >
+        invest_period_five_eight,
+      </if>
+      <if test="investPeriodNineTwel != null" >
+        invest_period_nine_twel,
+      </if>
+      <if test="investPeriodTwelTf != null" >
+        invest_period_twel_tf,
+      </if>
+      <if test="investPeriodTf != null" >
+        invest_period_tf,
+      </if>
+      <if test="creditPeriodOne != null" >
+        credit_period_one,
+      </if>
+      <if test="creditPeriodTwoFour != null" >
+        credit_period_two_four,
+      </if>
+      <if test="creditPeriodFiveEight != null" >
+        credit_period_five_eight,
+      </if>
+      <if test="creditPeriodNineTwel != null" >
+        credit_period_nine_twel,
+      </if>
+      <if test="creditPeriodTwelTf != null" >
+        credit_period_twel_tf,
+      </if>
+      <if test="creditPeriodTf != null" >
+        credit_period_tf,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="dataDate != null" >
+        data_date,
+      </if>
+      <if test="dataMonth != null" >
+        data_month,
+      </if>
+      <if test="dataHour != null" >
+        data_hour,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="waitInvest != null" >
+        #{waitInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="waitCredit != null" >
+        #{waitCredit,jdbcType=DECIMAL},
+      </if>
+      <if test="yesInvest != null" >
+        #{yesInvest,jdbcType=INTEGER},
+      </if>
+      <if test="yesCredit != null" >
+        #{yesCredit,jdbcType=INTEGER},
+      </if>
+      <if test="waitRepay != null" >
+        #{waitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="yesRepay != null" >
+        #{yesRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayWait != null" >
+        #{planRepayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayYes != null" >
+        #{planRepayYes,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeAll != null" >
+        #{planAccedeAll,jdbcType=DECIMAL},
+      </if>
+      <if test="expireFairValue != null" >
+        #{expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="investPeriodOne != null" >
+        #{investPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTwoFour != null" >
+        #{investPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodFiveEight != null" >
+        #{investPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodNineTwel != null" >
+        #{investPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTwelTf != null" >
+        #{investPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTf != null" >
+        #{investPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodOne != null" >
+        #{creditPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTwoFour != null" >
+        #{creditPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodFiveEight != null" >
+        #{creditPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodNineTwel != null" >
+        #{creditPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTwelTf != null" >
+        #{creditPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTf != null" >
+        #{creditPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataDate != null" >
+        #{dataDate,jdbcType=VARCHAR},
+      </if>
+      <if test="dataMonth != null" >
+        #{dataMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="dataHour != null" >
+        #{dataHour,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStaticExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_plan_info_static
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_plan_info_static
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.waitInvest != null" >
+        wait_invest = #{record.waitInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.waitCredit != null" >
+        wait_credit = #{record.waitCredit,jdbcType=DECIMAL},
+      </if>
+      <if test="record.yesInvest != null" >
+        yes_invest = #{record.yesInvest,jdbcType=INTEGER},
+      </if>
+      <if test="record.yesCredit != null" >
+        yes_credit = #{record.yesCredit,jdbcType=INTEGER},
+      </if>
+      <if test="record.waitRepay != null" >
+        wait_repay = #{record.waitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="record.yesRepay != null" >
+        yes_repay = #{record.yesRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayWait != null" >
+        plan_repay_wait = #{record.planRepayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planRepayYes != null" >
+        plan_repay_yes = #{record.planRepayYes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.planAccedeAll != null" >
+        plan_accede_all = #{record.planAccedeAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.expireFairValue != null" >
+        expire_fair_value = #{record.expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investPeriodOne != null" >
+        invest_period_one = #{record.investPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="record.investPeriodTwoFour != null" >
+        invest_period_two_four = #{record.investPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="record.investPeriodFiveEight != null" >
+        invest_period_five_eight = #{record.investPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="record.investPeriodNineTwel != null" >
+        invest_period_nine_twel = #{record.investPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="record.investPeriodTwelTf != null" >
+        invest_period_twel_tf = #{record.investPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="record.investPeriodTf != null" >
+        invest_period_tf = #{record.investPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodOne != null" >
+        credit_period_one = #{record.creditPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodTwoFour != null" >
+        credit_period_two_four = #{record.creditPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodFiveEight != null" >
+        credit_period_five_eight = #{record.creditPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodNineTwel != null" >
+        credit_period_nine_twel = #{record.creditPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodTwelTf != null" >
+        credit_period_twel_tf = #{record.creditPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="record.creditPeriodTf != null" >
+        credit_period_tf = #{record.creditPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dataDate != null" >
+        data_date = #{record.dataDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataMonth != null" >
+        data_month = #{record.dataMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataHour != null" >
+        data_hour = #{record.dataHour,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_plan_info_static
+    set id = #{record.id,jdbcType=INTEGER},
+      wait_invest = #{record.waitInvest,jdbcType=DECIMAL},
+      wait_credit = #{record.waitCredit,jdbcType=DECIMAL},
+      yes_invest = #{record.yesInvest,jdbcType=INTEGER},
+      yes_credit = #{record.yesCredit,jdbcType=INTEGER},
+      wait_repay = #{record.waitRepay,jdbcType=DECIMAL},
+      yes_repay = #{record.yesRepay,jdbcType=DECIMAL},
+      plan_repay_wait = #{record.planRepayWait,jdbcType=DECIMAL},
+      plan_repay_yes = #{record.planRepayYes,jdbcType=DECIMAL},
+      plan_accede_all = #{record.planAccedeAll,jdbcType=DECIMAL},
+      expire_fair_value = #{record.expireFairValue,jdbcType=DECIMAL},
+      invest_period_one = #{record.investPeriodOne,jdbcType=INTEGER},
+      invest_period_two_four = #{record.investPeriodTwoFour,jdbcType=INTEGER},
+      invest_period_five_eight = #{record.investPeriodFiveEight,jdbcType=INTEGER},
+      invest_period_nine_twel = #{record.investPeriodNineTwel,jdbcType=INTEGER},
+      invest_period_twel_tf = #{record.investPeriodTwelTf,jdbcType=INTEGER},
+      invest_period_tf = #{record.investPeriodTf,jdbcType=INTEGER},
+      credit_period_one = #{record.creditPeriodOne,jdbcType=INTEGER},
+      credit_period_two_four = #{record.creditPeriodTwoFour,jdbcType=INTEGER},
+      credit_period_five_eight = #{record.creditPeriodFiveEight,jdbcType=INTEGER},
+      credit_period_nine_twel = #{record.creditPeriodNineTwel,jdbcType=INTEGER},
+      credit_period_twel_tf = #{record.creditPeriodTwelTf,jdbcType=INTEGER},
+      credit_period_tf = #{record.creditPeriodTf,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      data_date = #{record.dataDate,jdbcType=VARCHAR},
+      data_month = #{record.dataMonth,jdbcType=VARCHAR},
+      data_hour = #{record.dataHour,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
+    update ht_debt_plan_info_static
+    <set >
+      <if test="waitInvest != null" >
+        wait_invest = #{waitInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="waitCredit != null" >
+        wait_credit = #{waitCredit,jdbcType=DECIMAL},
+      </if>
+      <if test="yesInvest != null" >
+        yes_invest = #{yesInvest,jdbcType=INTEGER},
+      </if>
+      <if test="yesCredit != null" >
+        yes_credit = #{yesCredit,jdbcType=INTEGER},
+      </if>
+      <if test="waitRepay != null" >
+        wait_repay = #{waitRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="yesRepay != null" >
+        yes_repay = #{yesRepay,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayWait != null" >
+        plan_repay_wait = #{planRepayWait,jdbcType=DECIMAL},
+      </if>
+      <if test="planRepayYes != null" >
+        plan_repay_yes = #{planRepayYes,jdbcType=DECIMAL},
+      </if>
+      <if test="planAccedeAll != null" >
+        plan_accede_all = #{planAccedeAll,jdbcType=DECIMAL},
+      </if>
+      <if test="expireFairValue != null" >
+        expire_fair_value = #{expireFairValue,jdbcType=DECIMAL},
+      </if>
+      <if test="investPeriodOne != null" >
+        invest_period_one = #{investPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTwoFour != null" >
+        invest_period_two_four = #{investPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodFiveEight != null" >
+        invest_period_five_eight = #{investPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodNineTwel != null" >
+        invest_period_nine_twel = #{investPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTwelTf != null" >
+        invest_period_twel_tf = #{investPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="investPeriodTf != null" >
+        invest_period_tf = #{investPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodOne != null" >
+        credit_period_one = #{creditPeriodOne,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTwoFour != null" >
+        credit_period_two_four = #{creditPeriodTwoFour,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodFiveEight != null" >
+        credit_period_five_eight = #{creditPeriodFiveEight,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodNineTwel != null" >
+        credit_period_nine_twel = #{creditPeriodNineTwel,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTwelTf != null" >
+        credit_period_twel_tf = #{creditPeriodTwelTf,jdbcType=INTEGER},
+      </if>
+      <if test="creditPeriodTf != null" >
+        credit_period_tf = #{creditPeriodTf,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataDate != null" >
+        data_date = #{dataDate,jdbcType=VARCHAR},
+      </if>
+      <if test="dataMonth != null" >
+        data_month = #{dataMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="dataHour != null" >
+        data_hour = #{dataHour,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtPlanInfoStatic" >
+    update ht_debt_plan_info_static
+    set wait_invest = #{waitInvest,jdbcType=DECIMAL},
+      wait_credit = #{waitCredit,jdbcType=DECIMAL},
+      yes_invest = #{yesInvest,jdbcType=INTEGER},
+      yes_credit = #{yesCredit,jdbcType=INTEGER},
+      wait_repay = #{waitRepay,jdbcType=DECIMAL},
+      yes_repay = #{yesRepay,jdbcType=DECIMAL},
+      plan_repay_wait = #{planRepayWait,jdbcType=DECIMAL},
+      plan_repay_yes = #{planRepayYes,jdbcType=DECIMAL},
+      plan_accede_all = #{planAccedeAll,jdbcType=DECIMAL},
+      expire_fair_value = #{expireFairValue,jdbcType=DECIMAL},
+      invest_period_one = #{investPeriodOne,jdbcType=INTEGER},
+      invest_period_two_four = #{investPeriodTwoFour,jdbcType=INTEGER},
+      invest_period_five_eight = #{investPeriodFiveEight,jdbcType=INTEGER},
+      invest_period_nine_twel = #{investPeriodNineTwel,jdbcType=INTEGER},
+      invest_period_twel_tf = #{investPeriodTwelTf,jdbcType=INTEGER},
+      invest_period_tf = #{investPeriodTf,jdbcType=INTEGER},
+      credit_period_one = #{creditPeriodOne,jdbcType=INTEGER},
+      credit_period_two_four = #{creditPeriodTwoFour,jdbcType=INTEGER},
+      credit_period_five_eight = #{creditPeriodFiveEight,jdbcType=INTEGER},
+      credit_period_nine_twel = #{creditPeriodNineTwel,jdbcType=INTEGER},
+      credit_period_twel_tf = #{creditPeriodTwelTf,jdbcType=INTEGER},
+      credit_period_tf = #{creditPeriodTf,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      data_date = #{dataDate,jdbcType=VARCHAR},
+      data_month = #{dataMonth,jdbcType=VARCHAR},
+      data_hour = #{dataHour,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

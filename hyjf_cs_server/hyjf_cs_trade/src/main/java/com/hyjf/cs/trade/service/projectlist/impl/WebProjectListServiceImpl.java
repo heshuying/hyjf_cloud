@@ -256,7 +256,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 可用优惠券张数开始 pccvip */
             request.setMoney("0");
             Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
-            other.put("couponAvailableCount", String.valueOf(couponAvailableCount));
+            other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
             other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
@@ -629,8 +629,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         Map<String, Object> result = new HashMap<>();
         // 获取债转的详细参数
-        //BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
-        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);//
+        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);
         BorrowCreditDetailVO creditDetail = response.getResult();
         if (Validator.isNull(creditDetail)) {
             throw new RuntimeException("债转详情不存在");
@@ -942,12 +941,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             logger.error("web查询原子层计划专区计划列表数据count异常");
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
-      /*  // 上部统计数据
-        Map<String, Object> map = amTradeClient.searchPlanData(request);
-        if (map == null) {
-            logger.error("web查询原子层计划专区统计数据异常");
-            throw new RuntimeException("web查询原子层计划专区统计数据异常");
-        }*/
         if (count > 0) {
             List<HjhPlanCustomizeVO> list = amTradeClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)) {
@@ -1031,7 +1024,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             myCouponListRequest.setUserId(userId);
             myCouponListRequest.setBorrowNid(planNid);
            // BestCouponListVO bestCouponList = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
-            availableCouponListCount = amTradeClient.countAvaliableCoupon(myCouponListRequest);
+            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);//countAvaliableCoupon(myCouponListRequest);
             /** 获取用户优惠券总张数开始 pccvip */
             result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */

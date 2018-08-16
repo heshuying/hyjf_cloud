@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AppAccountTradeCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.AppAccountTradeListCustomize">
+		<id column="value" property="value" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectTradeTypeList" resultMap="BaseResultMap">
+		SELECT
+			hydat.`value`,
+			CASE
+		WHEN hydat.`value` = 'tender_recover_yes' THEN
+			'收到还款'
+		WHEN hydat.`value` ='increase_interest_repay_yes' THEN 
+			'加息收益'
+		ELSE
+		
+			hydat.`name`
+		END AS `name`
+		FROM
+			ht_account_trade hydat
+		WHERE
+			hydat.`status` = 1
+		AND hydat.`value` IN (
+			'recharge',
+			'borrow_success',
+			'tender_recover_yes',
+			'credit_tender_recover_yes',
+			'plan_repay',
+			'increase_interest_repay_yes',
+			'recharge_offline',
+			'tender_success',
+			'cash_success',
+			'creditassign',
+			'hjh_invest',
+			'hjh_quit'
+		)
+		ORDER BY
+			hydat.id
+	</select>
+</mapper>
