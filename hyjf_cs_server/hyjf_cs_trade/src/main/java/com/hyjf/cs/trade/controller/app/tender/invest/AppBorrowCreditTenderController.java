@@ -28,7 +28,7 @@ import java.util.Map;
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(tags = "app端-散标债转投资")
+@Api(value = "app端-散标债转投资",tags = "app端-散标债转投资")
 @RestController
 @RequestMapping("/hyjf-app/tender/credit")
 public class AppBorrowCreditTenderController extends BaseTradeController {

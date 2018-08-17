@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * app端散标投资
  */
-@Api(tags = "app端-散标投资")
+@Api(value = "app端-散标投资",tags = "app端-散标投资")
 @RestController
 @RequestMapping("/hyjf-app/user/invest")
 public class AppBorrowTenderController extends BaseTradeController {
