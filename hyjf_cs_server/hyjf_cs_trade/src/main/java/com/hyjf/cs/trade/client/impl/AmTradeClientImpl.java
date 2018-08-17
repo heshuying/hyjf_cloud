@@ -3908,4 +3908,32 @@ public class AmTradeClientImpl implements AmTradeClient {
         return repaymentPlanAjaxBean;
     }
 
+    /**
+     * 待计算提成加入列表
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> getAccedesWaitCompute() {
+        Response<HjhAccedeVO> response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", Response.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 提成计算
+     * @param hjhLockVo
+     * @return
+     */
+    @Override
+    public Boolean commisionCompute(HjhLockVo hjhLockVo){
+        Response response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhcommision/compute",hjhLockVo,Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return true;
+        }
+        return false;
+    }
+
 }

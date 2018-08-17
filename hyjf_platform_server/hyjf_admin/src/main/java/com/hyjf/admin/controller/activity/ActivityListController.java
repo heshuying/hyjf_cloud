@@ -36,7 +36,7 @@ import java.util.Map;
  * @author yaoy
  * @version ActivityListController, v0.1 2018/6/26 16:13
  */
-@Api(tags = "活动列表")
+@Api(tags = "活动中心-活动列表")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
 public class ActivityListController extends BaseController {
@@ -51,18 +51,18 @@ public class ActivityListController extends BaseController {
     @Autowired
     private ActivityListService activityListService;
 
-    @ApiOperation(value = "活动列表", notes = "页面初始化")
-    @PostMapping(value = "/activityListInit")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject activityListInit() {
-        JSONObject jsonObject = new JSONObject();
-        logger.info("上传文件url:{}", fileDomainUrl);
-        String url = UploadFileUtils.getDoPath(fileDomainUrl);
-        jsonObject.put("url", url);
-        return jsonObject;
-    }
+//    @ApiOperation(value = "页面初始化", notes = "页面初始化")
+//    @PostMapping(value = "/activityListInit")
+//    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
+//    public JSONObject activityListInit() {
+//        JSONObject jsonObject = new JSONObject();
+//        logger.info("上传文件url:{}", fileDomainUrl);
+//        String url = UploadFileUtils.getDoPath(fileDomainUrl);
+//        jsonObject.put("url", url);
+//        return jsonObject;
+//    }
 
-    @ApiOperation(value = "活动列表",notes = "查询列表")
+    @ApiOperation(value = "查询列表",notes = "查询列表")
     @PostMapping("/activityRecordList")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
@@ -138,7 +138,7 @@ public class ActivityListController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "活动列表", notes = "获取活动修改初始信息")
+    @ApiOperation(value = "活动修改初试页面", notes = "活动修改初试页面")
     @RequestMapping(value = "/initUpdateActivity",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {

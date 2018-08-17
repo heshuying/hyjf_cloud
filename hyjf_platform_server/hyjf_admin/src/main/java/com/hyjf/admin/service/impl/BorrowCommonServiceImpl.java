@@ -117,9 +117,9 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 
 
 	@Override
-	public boolean isBorrowUserCACheck(String param, String name) {
+	public boolean isBorrowUserCACheck(String name) {
 	
-		return Response.isSuccess(amUserClient.selectCertificateAuthorityByIdNoName(param, name));
+		return Response.isSuccess(amUserClient.selectCertificateAuthorityByIdNoName( name));
 	}
 
 	@Override

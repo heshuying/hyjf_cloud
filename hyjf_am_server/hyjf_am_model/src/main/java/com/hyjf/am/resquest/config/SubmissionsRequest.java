@@ -3,6 +3,7 @@ package com.hyjf.am.resquest.config;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,36 +28,22 @@ public class SubmissionsRequest extends SubmissionsCustomizeVO {
 
     /************************* 以下字段画面检索用 ************************/
 
-    /**
-     * 被选中的意见反馈
-     */
+
+    @ApiModelProperty(value = "被选中的意见反馈")
     private String selectedSubId;
-
-    /**
-     * 开始时间
-     */
+    @ApiModelProperty(value = "开始时间")
     private String addTimeStart;
-
-    /**
-     * 结束时间
-     */
+    @ApiModelProperty(value = "结束时间")
     private String addTimeEnd;
-
-    /**
-     * 处理状态
-     */
+    @ApiModelProperty(value = "处理状态")
     private List<ParamName> subStateList = new ArrayList<ParamName>();
-
-    /**
-     * 系统类别
-     */
+    @ApiModelProperty(value = "系统类别")
     private List<ParamName> sysTypeList = new ArrayList<ParamName>();
 
     /**
      * 翻页机能用的隐藏变量
      */
     private int paginatorPage = 1;
-
     /**
      * 列表画面自定义标签上的用翻页对象：paginator
      */

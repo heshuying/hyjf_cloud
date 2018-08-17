@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.AppCouponRequest;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.validator.Validator;
@@ -69,11 +70,13 @@ public class MyCouponListController {
 
     @ApiOperation(value = "web根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表", notes = "根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表")
     @PostMapping("/getborrowcoupon")
-    public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "userId") Integer userId, @RequestParam String borrowNid,
-                                                    @RequestParam String money, @RequestParam String borrowType,
-                                                    @RequestParam String platform) throws Exception {
+    public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "userId") Integer userId,@RequestBody AppCouponRequest appCouponRequest) throws Exception {
         JSONObject ret = new JSONObject();
         // 检查参数正确性
+        String borrowNid = appCouponRequest.getBorrowNid();
+        String investType = appCouponRequest.getBorrowType();
+        String money = appCouponRequest.getMoney();
+        String platform = appCouponRequest.getPlatform();
         if ( Validator.isNull(borrowNid)||  Validator.isNull(platform)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
@@ -82,7 +85,6 @@ public class MyCouponListController {
         if(money==null||"".equals(money)||money.length()==0){
             money="0";
         }
-        String investType = borrowType;
         logger.info("investType is :{}", investType);
         JSONObject json = new JSONObject();
         if(investType != null){

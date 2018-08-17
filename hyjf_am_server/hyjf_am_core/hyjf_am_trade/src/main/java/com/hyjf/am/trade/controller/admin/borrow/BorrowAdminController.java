@@ -100,6 +100,10 @@ public class BorrowAdminController  {
 		corrowCommonCustomize.setPlanNidSrch(form.getPlanNidSrch());
 		// 资金来源编号
 		corrowCommonCustomize.setInstCodeSrch(form.getInstCodeSrch());
+		// ADD BY zhangyunkai 增加初审时间查询条件 start
+		corrowCommonCustomize.setVerifyTimeStartSrch(form.getVerifyTimeStartSrch());
+		corrowCommonCustomize.setVerifyTimeEndSrch(form.getVerifyTimeEndSrch());
+		// ADD BY zhangyunkai 增加初审时间查询条件 end
 
 		Long count = this.borrowService.countBorrow(corrowCommonCustomize);
 		mcr.setRecordTotal(count.intValue());

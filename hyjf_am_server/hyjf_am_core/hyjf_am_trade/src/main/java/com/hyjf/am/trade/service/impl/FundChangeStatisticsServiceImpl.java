@@ -41,4 +41,9 @@ public class FundChangeStatisticsServiceImpl extends BaseServiceImpl implements 
     public Integer getNumberOfInvestors(Map<String, Object> params) {
         return this.fundChangeStatisticsCustomizeMapper.getNumberOfInvestors(params);
     }
+
+    @Override
+    public Integer countTodayNewRechargeNum(Map<String, Object> params) {
+        return this.fundChangeStatisticsCustomizeMapper.countTodayNewRechargeNum(params);
+    }
 }

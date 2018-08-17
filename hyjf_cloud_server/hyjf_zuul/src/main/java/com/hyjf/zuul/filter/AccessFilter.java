@@ -285,8 +285,8 @@ public class AccessFilter extends ZuulFilter {
 	 * 未登录请求响应
 	 * 
 	 * @param ctx
-	 * @param gatewayCode
-	 * @param errorMessage
+	 * @param
+	 * @param
 	 * @return
 	 */
 	private Object buildNoneLoginResponse(RequestContext ctx, String channel) {
@@ -295,7 +295,7 @@ public class AccessFilter extends ZuulFilter {
 		JSONObject result = new JSONObject();
 
 		if (APP_CHANNEL.equals(channel)) {
-			result.put("status", "1");
+			result.put("status", "708");
 			result.put("statusDesc", "need login");
 		} else {
 			result.put("status", "999");
