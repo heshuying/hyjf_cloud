@@ -2,9 +2,10 @@ package com.hyjf.cs.trade.service.assetmanage;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 
@@ -56,5 +57,12 @@ public interface AssetManageService extends BaseTradeService {
      * @param request
      * @return
      */
-    RepaymentPlanAjaxBean getRepayPlanInfo(WebGetRepayMentRequestVO request);
+    RepayPlanInfoBean getRepayPlanInfo(WebGetRepayMentRequestVO request);
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
 }

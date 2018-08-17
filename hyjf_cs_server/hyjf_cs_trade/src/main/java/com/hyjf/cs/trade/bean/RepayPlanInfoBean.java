@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author wangjun
- * @version RepaymentPlanAjaxBean, v0.1 2018/8/15 17:04
+ * @version RepayPlanInfoBean, v0.1 2018/8/15 17:04
  */
-public class RepaymentPlanAjaxBean {
+public class RepayPlanInfoBean {
     //当前持有计划列表
     private List<CurrentHoldRepayMentPlanListCustomizeVO> currentHoldRepayMentPlanList;
     //当前持有计划数量

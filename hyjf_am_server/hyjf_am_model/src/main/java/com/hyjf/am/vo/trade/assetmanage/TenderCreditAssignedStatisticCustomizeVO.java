@@ -1,6 +1,6 @@
-package com.hyjf.am.trade.dao.model.customize;
+package com.hyjf.am.vo.trade.assetmanage;
 
-public class TenderCreditAssignedStatisticCustomize {
+public class TenderCreditAssignedStatisticCustomizeVO {
     /**
      * 投资本金总额
      */
