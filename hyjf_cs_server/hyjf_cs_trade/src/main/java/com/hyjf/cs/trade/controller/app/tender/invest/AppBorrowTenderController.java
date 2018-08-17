@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +70,7 @@ public class AppBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
-    @ApiOperation(value = "APP端散标异步处理", notes = "APP端散标异步处理")
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {

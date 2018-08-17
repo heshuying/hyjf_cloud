@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "web端用户提现接口")
+@Api(tags = "web端-用户提现接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/withdraw")
@@ -100,7 +101,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
+    @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     @ResponseBody
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
