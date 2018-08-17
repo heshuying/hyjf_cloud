@@ -4,9 +4,10 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
@@ -162,13 +163,23 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "获取用户还款计划页面json数据", notes = "获取用户还款计划页面json数据")
+    @ApiOperation(value = "获取用户还款计划页面数据", notes = "获取用户还款计划页面数据")
     @PostMapping(value = "/getRepayPlanInfo", produces = "application/json;charset=utf-8")
     public WebResult<Object> getRepayPlanInfo(@RequestBody @Valid WebGetRepayMentRequestVO requestVO){
-        logger.info("web端获取用户还款计划页面json数据, borrowNid:{}, nid:{}, type:{}", requestVO.getBorrowNid(),requestVO.getNid(),requestVO.getTypeStr());
+        logger.info("web端获取用户还款计划页面数据, borrowNid:{}, nid:{}, type:{}", requestVO.getBorrowNid(), requestVO.getNid(), requestVO.getTypeStr());
         WebResult<Object> result = new WebResult<Object>();
-        RepaymentPlanAjaxBean repaymentPlanAjaxBean = assetManageService.getRepayPlanInfo(requestVO);
-        result.setData(repaymentPlanAjaxBean);
+        RepayPlanInfoBean repayPlanInfo = assetManageService.getRepayPlanInfo(requestVO);
+        result.setData(repayPlanInfo);
+        return result;
+    }
+
+    @ApiOperation(value = "获取用户散标转让记录详情", notes = "获取用户散标转让记录详情")
+    @GetMapping(value = "/getMyCreditAssignDetail/{creditNid}")
+    public WebResult<Object> getMyCreditAssignDetail(@RequestHeader(value = "userId") Integer userId, @PathVariable String creditNid){
+        logger.info("web端获取用户散标转让记录详情, userId:{}, creditNid:{}", userId, creditNid);
+        WebResult<Object> result = new WebResult<Object>();
+        MyCreditDetailBean myCreditDetailBean = assetManageService.getMyCreditAssignDetail(creditNid);
+        result.setData(myCreditDetailBean);
         return result;
     }
 }

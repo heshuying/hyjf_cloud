@@ -11,6 +11,8 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.TenderCreditAssignedCustomize;
+import com.hyjf.am.trade.dao.model.customize.TenderCreditAssignedStatisticCustomize;
 import com.hyjf.am.trade.dao.model.customize.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize;
 
@@ -35,5 +37,10 @@ public interface TenderCreditCustomizeMapper {
 	List<TenderToCreditDetailCustomize> selectHJHWebCreditTenderDetail(Map<String, Object> params);
 	
     List<TenderToCreditDetailCustomize> selectWebCreditTenderDetailForContract(Map<String, Object> params);
-	
+
+	int countCreditTenderAssigned(Map<String, Object> params);
+
+	List<TenderCreditAssignedCustomize> selectCreditTenderAssigned(Map<String, Object> params);
+
+	List<TenderCreditAssignedStatisticCustomize> selectCreditTenderAssignedStatistic(Map<String, Object> params);
 }
