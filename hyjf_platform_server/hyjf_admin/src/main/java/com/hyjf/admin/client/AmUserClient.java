@@ -615,7 +615,7 @@ public interface AmUserClient {
      * @param tureName
      * @return
      */
-    CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
+    CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String tureName);
 
     CertificateAuthorityResponse isCAIdNoCheck(String param, String name);
 

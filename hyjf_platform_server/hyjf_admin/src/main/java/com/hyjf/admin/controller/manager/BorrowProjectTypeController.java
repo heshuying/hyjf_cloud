@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/27.
  */
-@Api(tags = "配置中心借款项目配置---项目流程的项目类型")
+@Api(tags = "配置中心-借款项目配置---项目流程的项目类型")
 @RestController
 @RequestMapping("/hyjf-admin/config/projecttype")
 public class BorrowProjectTypeController extends BaseController {

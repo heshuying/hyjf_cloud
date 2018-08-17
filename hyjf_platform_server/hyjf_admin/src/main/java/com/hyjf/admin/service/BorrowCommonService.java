@@ -126,7 +126,7 @@ public interface BorrowCommonService {
 
 	public UserInfoVO findUserInfoById(@PathVariable int userId);
 
-	public boolean isBorrowUserCACheck(String param, String name);
+	public boolean isBorrowUserCACheck(String name);
 
 	public boolean isCAIdNoCheck(String param, String name);
 	public BorrowCustomizeResponse init(BorrowBeanRequest form);

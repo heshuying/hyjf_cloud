@@ -521,7 +521,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                     continue;
                 }
             }else if("2".equals(tenderQuota)){
-                if(new Double(bestCoupon.getTenderQuota())> new Double(money)){
+                if("不限".equals(bestCoupon.getTenderQuota()) || new Double(bestCoupon.getTenderQuota())> new Double(money)){
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getProjectExpirationType());
                     notAvailableCouponList.add(couponBean);
                     continue;
