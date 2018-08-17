@@ -68,7 +68,7 @@ public class MyCouponListController {
     }
 
     @ApiOperation(value = "web根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表", notes = "根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表")
-    @PostMapping("/getborrowCoupon")
+    @PostMapping("/getborrowcoupon")
     public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "userId") Integer userId, @RequestParam String borrowNid,
                                                     @RequestParam String money, @RequestParam String borrowType,
                                                     @RequestParam String platform) throws Exception {
