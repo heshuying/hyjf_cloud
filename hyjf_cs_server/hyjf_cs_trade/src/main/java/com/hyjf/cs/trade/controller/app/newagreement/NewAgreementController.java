@@ -29,7 +29,6 @@ import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +53,7 @@ import java.util.Map;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "APP端协议接口", tags = "APP端协议接口")
+@Api(description = "app端-协议接口", tags = "app端-协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{

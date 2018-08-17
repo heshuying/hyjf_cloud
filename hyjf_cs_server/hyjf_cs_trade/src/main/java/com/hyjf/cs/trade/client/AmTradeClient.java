@@ -39,7 +39,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1665,7 +1666,8 @@ public interface AmTradeClient {
      * @param type
      * @return
      */
-    RepaymentPlanAjaxBean getRepayPlanInfo(String borrowNid, String nid, String type);
+    RepayPlanInfoBean getRepayPlanInfo(String borrowNid, String nid, String type);
+
     /**
      * 待计算提成加入列表
      * @return
@@ -1677,4 +1679,11 @@ public interface AmTradeClient {
      * @return
      */
     Boolean commisionCompute(HjhLockVo hjhLockVo);
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
 }

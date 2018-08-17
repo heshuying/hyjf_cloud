@@ -9,12 +9,13 @@ import com.hyjf.cs.trade.service.batch.RedPacketSmsNoticeBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author PC-LIUSHOUYI
  * @version RedPacketSmsNoticeBatchController, v0.1 2018/6/21 17:46
  */
-
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-trade/redPacket")
 public class RedPacketSmsNoticeBatchController {

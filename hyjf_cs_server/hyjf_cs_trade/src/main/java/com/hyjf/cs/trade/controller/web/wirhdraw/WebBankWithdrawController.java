@@ -50,7 +50,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "web端获取用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
@@ -69,7 +69,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date  用户提现调用银行页面
      */
-    @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     @RequestLimit(seconds=3)
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "userId") int userId,
@@ -128,7 +128,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
+    @ApiOperation(value = "查询提现失败原因", notes = "查询提现失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {

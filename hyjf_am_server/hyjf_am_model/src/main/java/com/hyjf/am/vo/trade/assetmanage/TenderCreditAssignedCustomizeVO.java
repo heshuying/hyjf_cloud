@@ -1,11 +1,11 @@
-package com.hyjf.am.trade.dao.model.customize;
+package com.hyjf.am.vo.trade.assetmanage;
 
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 
-public class TenderCreditAssignedCustomize {
+public class TenderCreditAssignedCustomizeVO {
     /* 主键 */
     private String assignId;
     /* 用户名称 */
@@ -322,20 +322,11 @@ public class TenderCreditAssignedCustomize {
     }
 
     public String getTenderTime() {
-        if (StringUtils.isNotEmpty(tenderTime)) {
-            return tenderTime;
-        } else {
-            return GetDate.date_sdf.format(new Date());
-        }
-
+        return tenderTime;
     }
 
     public void setTenderTime(String tenderTime) {
-        if (StringUtils.isNotEmpty(tenderTime)) {
-            this.tenderTime = tenderTime;
-        } else {
-            this.tenderTime = GetDate.date_sdf.format(new Date());
-        }
+        this.tenderTime = tenderTime;
     }
 
     public String getCreditAssignUserTrueName() {
@@ -343,18 +334,6 @@ public class TenderCreditAssignedCustomize {
     }
 
     public void setCreditAssignUserTrueName(String creditAssignUserTrueName) {
-        String creditUserFormat = "";
-        if (creditAssignUserTrueName.length() > 2) {
-            char[] replaceArry = creditAssignUserTrueName.toCharArray();
-            creditUserFormat = String.valueOf(replaceArry[0]) + String.valueOf(replaceArry[1]);
-            for (int i = 2; i < replaceArry.length; i++) {
-                creditUserFormat += "*";
-            }
-        } else if (creditAssignUserTrueName.length() == 1) {
-            creditUserFormat = creditAssignUserTrueName + "*";
-        } else {
-            creditUserFormat = "**";
-        }
-        this.creditAssignUserTrueName = creditUserFormat;
+        this.creditAssignUserTrueName = creditAssignUserTrueName;
     }
 }

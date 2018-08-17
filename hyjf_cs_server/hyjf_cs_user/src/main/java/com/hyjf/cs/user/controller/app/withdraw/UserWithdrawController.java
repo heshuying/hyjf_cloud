@@ -8,7 +8,7 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.SecretUtil;
-import com.hyjf.cs.user.bean.UserWithdrawResultBean;
+import com.hyjf.cs.user.bean.BankCardBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
@@ -53,17 +53,20 @@ public class UserWithdrawController extends BaseUserController {
             ret.put("request","/hyjf-app/bank/user/withdraw/getBankCardAction");
             // 取得用户iD
             Integer userId = SecretUtil.getUserId(sign);
+            logger.info("获取我的银行卡userId:[{}]",userId);
             // 取得银行卡信息
             List<AccountBankVO> banks = userWithdrawService.getBankCardByUserId(userId);
-            List<UserWithdrawResultBean> bankcards = new ArrayList<>();
+            List<BankCardBean> bankcards = new ArrayList<>();
             if (banks != null) {
                 ret.put("cnt", banks.size() + "");
                 for (AccountBankVO bank : banks) {
-                    UserWithdrawResultBean bankCardBean = new UserWithdrawResultBean();
+
+                    BankCardBean bankCardBean = new BankCardBean();
                     bankCardBean.setBank(bank.getBank());
                     BankConfigVO bankConfig = userWithdrawService.getBankInfo(bank.getBank());
                     // 应前台要求，logo路径给绝对路径
                     bankCardBean.setLogo(systemConfig.webHost + bankConfig.getAppLogo());
+                    bankCardBean.setBankCode(bankConfig.getCode());
                     // 银行名称 汉字
                     bankCardBean.setBank(bankConfig.getName());
                     bankCardBean.setCardNo(bank.getAccount());
