@@ -11,10 +11,7 @@ import com.hyjf.cs.trade.service.reward.RewardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +41,7 @@ public class AppRewardController {
      * @param response
      * @return
      */
-    @PostMapping("/hyjf-app/user/reward")
+    @GetMapping("/hyjf-app/user/reward")
     @ApiOperation(value = "我的奖励初始化数据", notes = "我的奖励初始化数据")
     public JSONObject reward(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -102,7 +99,7 @@ public class AppRewardController {
      * 奖励记录
      * @author pcc
      */
-    @PostMapping("/hyjf-app/user/reward/rewardRecord")
+    @GetMapping("/hyjf-app/user/reward/rewardRecord")
     @ApiOperation(value = "奖励记录", notes = "奖励记录")
     public JSONObject rewardList(@RequestParam(value = "currentPage", defaultValue = "1") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request,

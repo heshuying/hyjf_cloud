@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -13,18 +14,18 @@ import java.util.Date;
  */
 public class ContentLandingPageRequestBean extends BaseRequest {
 
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "着落页名称")
     private String pageName;
-
+    @ApiModelProperty(value = "渠道")
     private String channelName;
-
+    @ApiModelProperty(value = "地址")
     private String pageUrl;
-
+    @ApiModelProperty(value = "上传图片-二维码")
     private String codeUrl;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
 
     private Date createTime;
 
