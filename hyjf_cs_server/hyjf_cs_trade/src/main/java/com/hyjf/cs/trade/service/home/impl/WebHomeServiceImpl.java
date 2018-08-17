@@ -100,7 +100,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setLoginFlag("1");
             int count = couponUserClient.getUserCouponCount(Integer.valueOf(userId), "0");
             result.setCouponCount(count);
-            if (userVO.getBankOpenAccount() == 1) { // 已开户
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) { // 已开户
                 result.setOpenFlag(CustomConstants.FLAG_OPENACCOUNT_YES);
                 AccountVO accountVO = accountClient.getAccountByUserId(Integer.valueOf(userId));
                 result.setUserInterest(accountVO != null ? (accountVO.getBankInterestSum() != null ? accountVO.getBankInterestSum() : BigDecimal.valueOf(0.00)) : BigDecimal.valueOf(0.00));

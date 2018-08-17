@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -53,6 +54,17 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         return accedeList;
     }
 
+    private HjhAccede getAccede(String accedeOrderId){
+        HjhAccedeExample example = new HjhAccedeExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
+        List<HjhAccede> list = hjhAccedeMapper.selectByExample(example);
+        if(list != null && !list.isEmpty()){
+            return list.get(0);
+        }
+        return null;
+    }
+
+
     /**
      *
      * 计算提成
@@ -63,6 +75,18 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
     @Override
     public void commisionCompute(HjhAccede record, HjhLockVo hjhLockVo) {
         Integer commisionUserId = null;
+
+        if(record == null){
+            record = getAccede(hjhLockVo.getAccedeOrderId());
+        }
+
+        // 并发控制
+        String redisKey = "hjhcommision_compute:" + hjhLockVo.getAccedeOrderId();
+        boolean redisResult = RedisUtils.tranactionSet(redisKey, 300);
+        if(!redisResult){
+            logger.info("汇计划提成当前记录正在进行计算，订单号：" + hjhLockVo.getAccedeOrderId());
+            return;
+        }
 
         PushMoney pushMoneyOnline = getCommisionConfig(2, "线上员工");
         PushMoney pushMoney51 = getCommisionConfig(2, "51老用户");
