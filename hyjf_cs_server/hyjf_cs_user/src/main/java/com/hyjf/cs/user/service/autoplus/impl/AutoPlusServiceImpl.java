@@ -79,7 +79,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public Map<String, Object> userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode) {
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
-        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1) {
+        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_2)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
+        }else if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_1)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
