@@ -2,8 +2,7 @@ spring:
   application:
     name: SPRING-BOOT-ADMIN
   profiles:
-    active:
-      - secure
+    active: insecure
 
 eureka:
   instance:
@@ -13,7 +12,7 @@ eureka:
   client:
     registryFetchIntervalSeconds: 5
     serviceUrl:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:1111}/eureka/
+      defaultZone: ${EUREKA_SERVICE_URL:http://micoserver:1111}/eureka/
 
 server:
   port: 18080
@@ -43,5 +42,6 @@ spring:
 eureka:
   instance:
     metadata-map:
-      user.name: "hyjf"         #These two are needed so that the server
-      user.password: "hyjf1234" #can access the protected client endpoints
+      #These two are needed so that the server can access the protected client endpoints
+      user.name: "hyjf"
+      user.password: "hyjf1234"
