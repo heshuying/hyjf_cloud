@@ -6,9 +6,11 @@ package com.hyjf.cs.user.service.withdraw.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -54,7 +56,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
      * @return
      */
     @Override
-    public List<AccountBankVO> getBankCardByUserId(Integer userId) {
+    public List<AccountBankVO> getBankHfCardByUserId(Integer userId) {
         return amUserClient.getAccountBankByUserId(userId);
     }
     /**
@@ -67,6 +69,30 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
     public BankConfigVO getBankInfo(String bank) {
         return amConfigClient.getBankConfigByCode(bank);
     }
+
+    /**
+     * 根据id查询银行配置
+     * @auth sunpeikai
+     * @param bankId 主键id
+     * @return
+     */
+    @Override
+    public JxBankConfigVO getJxBankConfigByBankId(Integer bankId) {
+        return amConfigClient.getJxBankConfigById(bankId);
+    }
+
+    @Override
+    public List<BankCardVO> getBankCardByUserId(Integer userId) {
+        return amUserClient.getBankOpenAccountById(userId);
+    }
+
+    /**
+     * 根据userId获取BankCard
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+
 
     @Override
     public JSONObject getCashInfo(Integer userId, JSONObject ret,String version, String bankCode, String getcash) {

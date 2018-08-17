@@ -5,7 +5,9 @@ package com.hyjf.cs.user.service.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.AccountBankVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.common.service.BaseService;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public interface UserWithdrawService extends BaseService {
      * @param userId 用户id
      * @return
      */
-    List<AccountBankVO> getBankCardByUserId(Integer userId);
+    List<AccountBankVO> getBankHfCardByUserId(Integer userId);
 
     /**
      * 根据银行名查询银行配置
@@ -30,6 +32,14 @@ public interface UserWithdrawService extends BaseService {
      * @return
      */
     BankConfigVO getBankInfo(String bank);
+
+    /**
+     * 根据id查询银行配置
+     * @auth sunpeikai
+     * @param bankId 主键id
+     * @return
+     */
+    JxBankConfigVO getJxBankConfigByBankId(Integer bankId);
 
     /**
      * 获取提现信息
@@ -41,4 +51,12 @@ public interface UserWithdrawService extends BaseService {
      * @return
      */
     JSONObject getCashInfo(Integer userId, JSONObject ret, String version, String bankCode, String getcash);
+
+    /**
+     * 根据userId获取BankCard
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    List<BankCardVO> getBankCardByUserId(Integer userId);
 }
