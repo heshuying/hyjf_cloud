@@ -8,6 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
  * @Author: Zha Daojian
  */
 public class BorrowRepayAgreementRequest extends BasePage {
+
+    @ApiModelProperty(value = "借款编号(批量生成垫付债转协议时使用,'借款编号_期数'组合JSONArray)")
+    private String ids;
     @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
 
@@ -16,6 +19,14 @@ public class BorrowRepayAgreementRequest extends BasePage {
 
     @ApiModelProperty(value = "垫付时间结束")
     private String timeEndSrch;
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
 
     public String getBorrowNidSrch() {
         return borrowNidSrch;

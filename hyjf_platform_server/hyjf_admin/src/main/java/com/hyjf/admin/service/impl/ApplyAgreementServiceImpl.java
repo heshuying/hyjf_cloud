@@ -5,6 +5,7 @@ import com.hyjf.admin.beans.request.BorrowRepayAgreementRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.ApplyAgreementService;
+import com.hyjf.admin.service.TenderCancelExceptionService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
@@ -29,6 +30,9 @@ import java.util.List;
  */
 @Service
 public class ApplyAgreementServiceImpl implements ApplyAgreementService {
+
+    @Autowired
+    protected TenderCancelExceptionService tenderCancelExceptionService;
 
     @Autowired
     private BaseClient baseClient;
@@ -125,6 +129,20 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             result.setData(bean);
         }
         return result;
+    }
+
+    /**
+     * 批量生成垫付债转协议
+     *
+     * @param request
+     * @author Zha Daojian
+     * @date 2018/7/12 10:52
+     */
+    @Override
+    public AdminResult generateContract(BorrowRepayAgreementRequest request) {
+
+        AdminResult result = new AdminResult();
+        return null;
     }
 
 }

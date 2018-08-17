@@ -40,4 +40,12 @@ public class ApplyAgreementController  extends BaseController {
         AdminResult result =  applyAgreementService.getAddApplyAgreementListDetail(request);
         return result;
     }
+
+    @ApiOperation(value = "批量生成垫付债转协议", notes = "批量生成垫付债转协议")
+    @PostMapping("/generateContract")
+    @ResponseBody
+    public AdminResult generateContract(@RequestBody BorrowRepayAgreementRequest request){
+        AdminResult result =  applyAgreementService.getAddApplyAgreementListDetail(request);
+        return result;
+    }
 }

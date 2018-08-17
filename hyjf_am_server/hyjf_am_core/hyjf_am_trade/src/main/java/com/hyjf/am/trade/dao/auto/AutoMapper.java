@@ -476,5 +476,8 @@ public class AutoMapper {
     @Resource
     protected ApplyAgreementMapper applyAgreementMapper;
 
+    @Resource
+    protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
+
 }
 

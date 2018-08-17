@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement;
 
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.ApplyAgreement;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.trade.service.BaseService;
@@ -60,4 +61,11 @@ public interface ApplyAgreementService extends BaseService {
      * @return
      */
     List<BorrowRepayAgreementCustomize> getList(Map map, int limitStart, int limitEnd);
+
+    /**
+     * 批量生成垫付债转协议
+     * @author Zha Daojian
+     * @date 2018/7/12 10:52
+     */
+    Integer generateContract(BorrowRepayAgreementRequest request);
 }

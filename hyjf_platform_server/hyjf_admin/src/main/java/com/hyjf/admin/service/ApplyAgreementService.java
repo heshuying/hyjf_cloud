@@ -24,5 +24,12 @@ public interface ApplyAgreementService {
      */
     AdminResult getAddApplyAgreementListDetail(BorrowRepayAgreementRequest request);
 
+    /**
+     * 批量生成垫付债转协议
+     * @author Zha Daojian
+     * @date 2018/7/12 10:52
+     */
+    AdminResult generateContract(BorrowRepayAgreementRequest request);
+
 
 }
