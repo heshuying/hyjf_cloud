@@ -9,7 +9,6 @@ import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.user.bean.BankCardBean;
-import com.hyjf.cs.user.bean.UserWithdrawResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
