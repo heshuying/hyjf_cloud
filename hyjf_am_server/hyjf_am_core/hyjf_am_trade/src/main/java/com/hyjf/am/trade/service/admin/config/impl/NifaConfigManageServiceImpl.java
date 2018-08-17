@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.trade.service.admin.config.impl;
 
+import com.hyjf.am.trade.dao.mapper.auto.NifaContractTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.NifaFieldDefinitionMapper;
-import com.hyjf.am.trade.dao.model.auto.NifaFieldDefinition;
-import com.hyjf.am.trade.dao.model.auto.NifaFieldDefinitionExample;
+import com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.config.NifaConfigManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,6 +25,10 @@ import java.util.List;
 public class NifaConfigManageServiceImpl extends BaseServiceImpl implements NifaConfigManageService{
     @Autowired
     private NifaFieldDefinitionMapper nifaFieldDefinitionMapper;
+    @Autowired
+    private NifaContractTemplateMapper nifaContractTemplateMapper;
+    @Autowired
+    private FddTempletCustomizeMapper fddTempletCustomizeMapper;
     /**
      * 添加胡进字段定义
      * @param nifaFieldDefinition
@@ -85,5 +91,83 @@ public class NifaConfigManageServiceImpl extends BaseServiceImpl implements Nifa
     @Override
     public int updateNifaFieldDefinition(NifaFieldDefinition nifaFieldDefinition){
         return nifaFieldDefinitionMapper.updateByPrimaryKeySelective(nifaFieldDefinition);
+    }
+    /**
+     * 添加合同模版约定条款表
+     * @param nifaContractTemplate
+     * @return
+     */
+    @Override
+    public int insertNifaContractTemplate(NifaContractTemplate nifaContractTemplate){
+        return nifaContractTemplateMapper.insertSelective(nifaContractTemplate);
+    }
+    /**
+     * 查找发大大合同id
+     * @return
+     */
+    @Override
+    public List<FddTempletCustomize> selectTempletId(){
+        return fddTempletCustomizeMapper.selectContractTempId();
+    }
+    /**
+     * 根据id查找合同模版约定条款表
+     * @return
+     */
+    @Override
+    public NifaContractTemplate selelctNifaContractTemplateById(String nifaId){
+        if(StringUtils.isNotBlank(nifaId)){
+            int id = Integer.parseInt(nifaId);
+            NifaContractTemplateExample example = new NifaContractTemplateExample();
+            example.createCriteria().andIdEqualTo(id);
+            List<NifaContractTemplate> nifaFieldDefinitionList = nifaContractTemplateMapper.selectByExample(example);
+            if(CollectionUtils.isNotEmpty(nifaFieldDefinitionList)){
+                return nifaFieldDefinitionList.get(0);
+            }
+        }
+        return null;
+    }
+    /**
+     * 修改同模版约定条款表
+     * @param nifaContractTemplate
+     * @return
+     */
+    @Override
+    public int updateNifaContractTemplate(NifaContractTemplate nifaContractTemplate){
+        return  nifaContractTemplateMapper.updateByPrimaryKeySelective(nifaContractTemplate);
+    }
+    /**
+     * 修改同模版约定条款表
+     * @param nifaId
+     * @return
+     */
+    @Override
+    public int deleteNifaContractTemplate(int nifaId) {
+        return nifaContractTemplateMapper.deleteByPrimaryKey(nifaId);
+    }
+    /**
+     * 统计模版约定条款总数
+     * @return
+     */
+    @Override
+    public int countNifaContractTemplate(){
+        NifaContractTemplateExample example = new NifaContractTemplateExample();
+        return nifaContractTemplateMapper.countByExample(example);
+    }
+    /**
+     * 显示合同模版约定条款表列表
+     * @param limtStart
+     * @param limtEnd
+     * @return
+     */
+    @Override
+    public List<NifaContractTemplate> selectNifaContractTemplateList(int limtStart, int limtEnd){
+        NifaContractTemplateExample example = new NifaContractTemplateExample();
+        if (limtStart != -1) {
+            example.setLimitStart(limtStart);
+            example.setLimitEnd(limtEnd);
+        }
+        example.setOrderByClause(" create_time DESC ");
+        List<NifaContractTemplate> nifaFieldDefinitionInterfaceList = nifaContractTemplateMapper.selectByExample(example);
+        return nifaFieldDefinitionInterfaceList;
     }
 }

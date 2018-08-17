@@ -40,7 +40,7 @@ public class MessagePushController extends BaseController {
 	private MsgPushService msgPushService;
 
 	@ApiOperation(value = "获取提醒列表", notes = "获取提醒列表")
-	@GetMapping("/getTagListAction")
+	@PostMapping("/getTagListAction")
 	public JSONObject getTagListAction(@RequestHeader(value = "userId") Integer userId,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
@@ -104,7 +104,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
-	@GetMapping("/getMsgListAction")
+	@PostMapping("/getMsgListAction")
 	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
@@ -181,7 +181,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
-	@GetMapping("/alreadyReadAction")
+	@PostMapping("/alreadyReadAction")
 	public JSONObject alreadyReadAction(HttpServletRequest request, @RequestHeader(value = "userId")Integer userId) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");

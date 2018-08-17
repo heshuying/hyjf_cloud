@@ -11,10 +11,11 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import org.apache.commons.lang3.StringUtils;
+import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,5 +242,15 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         // 获取用户转让记录总数
         int tenderCreditDetailCount = amTradeClient.countCreditRecordTotal(request);
         result.setTenderCreditDetailCount(tenderCreditDetailCount);
+    }
+
+    /**
+     * 获取用户还款计划数据
+     * @param request
+     * @return
+     */
+    @Override
+    public RepaymentPlanAjaxBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
+        return amTradeClient.getRepayPlanInfo(request.getBorrowNid(), request.getNid(), request.getTypeStr());
     }
 }

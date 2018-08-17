@@ -339,7 +339,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
-    @ApiImplicitParam(name = "nid", value = "投资订单号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "nid", value = "投资订单号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/pdf_preview/{nid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {

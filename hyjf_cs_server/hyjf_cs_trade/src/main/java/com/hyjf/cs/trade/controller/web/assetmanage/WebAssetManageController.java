@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,4 +165,13 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    @ApiOperation(value = "获取用户还款计划页面json数据", notes = "获取用户还款计划页面json数据")
+    @PostMapping(value = "/getRepayPlanInfo", produces = "application/json;charset=utf-8")
+    public WebResult<Object> getRepayPlanInfo(@RequestBody @Valid WebGetRepayMentRequestVO requestVO){
+        logger.info("web端获取用户还款计划页面json数据, borrowNid:{}, nid:{}, type:{}", requestVO.getBorrowNid(),requestVO.getNid(),requestVO.getTypeStr());
+        WebResult<Object> result = new WebResult<Object>();
+        RepaymentPlanAjaxBean repaymentPlanAjaxBean = assetManageService.getRepayPlanInfo(requestVO);
+        result.setData(repaymentPlanAjaxBean);
+        return result;
+    }
 }

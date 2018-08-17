@@ -57,6 +57,7 @@ import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -3888,5 +3889,23 @@ public class AmTradeClientImpl implements AmTradeClient {
         return false;
     }
 
+    /**
+     * 获取用户还款计划数据
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    @Override
+    public RepaymentPlanAjaxBean getRepayPlanInfo(String borrowNid, String nid, String type){
+        RepaymentPlanAjaxBean repaymentPlanAjaxBean = new RepaymentPlanAjaxBean();
+        String url = "http://AM-TRADE/am-trade/assetmanage/getRepayPlanInfo/" + borrowNid + "/" + nid + "/" + type;
+        RepayPlanResponse response = restTemplate.getForEntity(url,RepayPlanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            repaymentPlanAjaxBean.setCurrentHoldRepayMentPlanList(response.getCurrentHoldRepayMentPlanList());
+            repaymentPlanAjaxBean.setCurrentHoldRepayMentPlanDetails(response.getCurrentHoldRepayMentPlanDetails());
+        }
+        return repaymentPlanAjaxBean;
+    }
 
 }

@@ -5,6 +5,7 @@ import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.app.AppTenderToCreditListCustomizeResponse;
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
+import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -18,10 +19,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -391,5 +389,15 @@ public class AssetManageController extends BaseController {
         return response;
     }
 
-
+    /**
+     * 获取用户还款计划
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    @GetMapping("/getRepayPlanInfo/{borrowNid}/{nid}/{type}")
+    public RepayPlanResponse getRepayPlanInfo(@PathVariable String borrowNid, @PathVariable String nid, @PathVariable String type){
+        return assetManageService.getRepayPlanInfo(borrowNid, nid, type);
+    }
 }

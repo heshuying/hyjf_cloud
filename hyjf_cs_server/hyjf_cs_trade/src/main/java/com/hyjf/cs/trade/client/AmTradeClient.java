@@ -39,6 +39,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1656,4 +1657,13 @@ public interface AmTradeClient {
      * @return
      */
     Integer getCommisionConfig(HashMap map);
+
+    /**
+     * 获取用户还款计划数据
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    RepaymentPlanAjaxBean getRepayPlanInfo(String borrowNid, String nid, String type);
 }

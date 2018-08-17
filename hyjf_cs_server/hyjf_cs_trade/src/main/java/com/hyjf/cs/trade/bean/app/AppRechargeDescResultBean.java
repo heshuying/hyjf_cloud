@@ -11,7 +11,7 @@ import java.util.List;
  * @author wangjun
  * @version AppRechargeDescResultBean, v0.1 2018/7/25 14:53
  */
-public class AppRechargeDescResultBean implements Serializable {
+public class AppRechargeDescResultBean extends BaseResultBeanFrontEnd implements Serializable {
     // 充值限额说明
     private List<RechargeLimitAmountDesc> list;
 

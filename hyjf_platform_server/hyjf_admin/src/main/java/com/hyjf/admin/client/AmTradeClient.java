@@ -15,25 +15,24 @@ import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
+import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.BorrowCreditVO;
-import com.hyjf.am.vo.admin.TenderCommissionVO;
-import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.PushMoneyVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -2571,5 +2570,46 @@ public interface AmTradeClient {
      * @auth nxl
      */
     Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest request);
+
+    /**
+     * 添加合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean insertNifaContractTemplate(NifaContractTemplateAddRequest request);
+    /**
+     * 查找合同模板id
+     * @return
+     */
+    FddTempletResponse selectFddTempletId();
+    /**
+     * 修改合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean updateNifaContractTemplate(NifaContractTemplateAddRequest request);
+    /**
+     * 根据id查找合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+   NifaContractTemplateResponse selectNifaContractTemplateById(String nifaId);
+    /**
+     * 根据id删除合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    Boolean deleteNifaContractTemplateById(int nifaId);
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    NifaContractTemplateResponse selectNifaContractTemplateList(NifaContractTemplateRequest request);
 }
 

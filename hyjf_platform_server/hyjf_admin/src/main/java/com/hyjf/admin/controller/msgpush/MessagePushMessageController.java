@@ -89,10 +89,10 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "详情页信息", notes = "详情页信息")
     @RequestMapping(value = "/infoAction",method = RequestMethod.POST)
-    public AdminResult<MessagePushMsgResponse> infoAction(Integer id, MessagePushMsgRequest form) {
+    public AdminResult<MessagePushMsgResponse> infoAction(@RequestBody MessagePushMsgRequest form) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         try {
-            response = messagePushMsgService.getRecord(id);
+            response = messagePushMsgService.getRecord(form.getId());
             if (response.getResult() != null) {
                 MessagePushMsgVO record = response.getResult();
                 BeanUtils.copyProperties(record, form);
@@ -134,7 +134,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "添加手动发送短信", notes = "添加手动发送短信")
     @RequestMapping(value = "/insertAction",method = RequestMethod.POST)
-    public AdminResult<MessagePushMsgResponse> insertAction(HttpServletRequest request, MessagePushMsgRequest templateRequest) {
+    public AdminResult<MessagePushMsgResponse> insertAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
@@ -186,7 +186,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "修改手动发放消息", notes = "修改手动发放消息")
     @RequestMapping(value = "/updateAction",method = RequestMethod.POST)
-    public AdminResult updateAction(HttpServletRequest request, MessagePushMsgRequest templateRequest) {
+    public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();

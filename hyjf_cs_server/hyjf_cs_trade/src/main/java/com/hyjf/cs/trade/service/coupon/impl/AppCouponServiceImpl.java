@@ -45,7 +45,8 @@ public class AppCouponServiceImpl extends BaseTradeServiceImpl implements AppCou
         requestBean.setPlatform(platform);
         CouponResponse couponResponse = amTradeClient.getBorrowCoupon(requestBean);
         if (null != couponResponse){
-            jsonObject = (JSONObject)couponResponse.getResult();
+            String json = JSONObject.toJSONString(couponResponse.getResult());
+            jsonObject = JSONObject.parseObject(json);
         }
         return jsonObject;
     }
@@ -60,7 +61,8 @@ public class AppCouponServiceImpl extends BaseTradeServiceImpl implements AppCou
         requestBean.setPlatform(platform);
         CouponResponse couponResponse = amTradeClient.getPlanCoupon(requestBean);
         if (null != couponResponse){
-            jsonObject = (JSONObject)couponResponse.getResult();
+            String json = JSONObject.toJSONString(couponResponse.getResult());
+            jsonObject = JSONObject.parseObject(json);
         }
         return jsonObject;
     }
