@@ -46,7 +46,7 @@ public class BankExceptionController {
 	 * @return
 	 */
 	@ApiOperation(value = "投资撤销掉单异常处理", notes = "投资撤销掉单异常处理")
-	@RequestMapping(value = "/bankTenderCancelExceptionHandle")
+	@GetMapping(value = "/bankTenderCancelExceptionHandle")
 	public void bankTenderCancelExceptionHandle() {
 		logger.info("投资撤销掉单异常处理start...");
 		bankTenderCancelExceptionService.handle();
@@ -84,7 +84,7 @@ public class BankExceptionController {
 	 * @return
 	 */
 	@ApiOperation(value = "投资异步掉单异常处理", notes = "投资异步掉单异常处理")
-	@RequestMapping(value = "/investExceptionHandle")
+	@GetMapping(value = "/investExceptionHandle")
 	public String investExceptionHandle() {
 		logger.info("投资异步掉单异常处理start...");
 		batchBankInvestService.handle();
@@ -97,7 +97,7 @@ public class BankExceptionController {
 	 * 投资全部掉单异常处理
 	 */
 	@ApiOperation(value = "投资异常全部掉单异常处理", notes = "投资异常全部掉单异常处理")
-	@RequestMapping(value = "/investAllExceptionHandle")
+	@GetMapping(value = "/investAllExceptionHandle")
 	public void investAllExceptionHandle() {
 		logger.info("投资异常全部掉单跑批任务开始start...");
 		batchBankInvestAllService.updateTender();
