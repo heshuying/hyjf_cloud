@@ -12,7 +12,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
-import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -35,9 +34,6 @@ public class SmsLogController extends BaseController {
 	@Autowired
 	private SmsLogService smsLogService;
 
-	@Autowired
-	private SmsLogDao smsLogDao;
-
 	/**
 	 * 查询消息中心短信发送记录
 	 * @return
@@ -45,7 +41,7 @@ public class SmsLogController extends BaseController {
 	@RequestMapping("/list")
 	public JSONObject smsLogList() {
 		JSONObject jsonObject = new JSONObject();
-		List<SmsLog> list = smsLogDao.findAll();
+		List<SmsLog> list = smsLogService.findSmsLogList();
 		jsonObject.put("smsLogList", list);
 		return jsonObject;
 	}

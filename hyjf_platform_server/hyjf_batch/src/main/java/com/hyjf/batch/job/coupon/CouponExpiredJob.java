@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 @DisallowConcurrentExecution
 public class CouponExpiredJob extends BaseJob implements Job {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponRepayJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(CouponExpiredJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

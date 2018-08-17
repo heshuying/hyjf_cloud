@@ -47,4 +47,11 @@ public interface FundChangeStatisticsService {
      * @return
      */
     Integer getNumberOfInvestors(Map<String, Object> params);
+
+    /**
+     * 今日新增充值次数
+     * @param params
+     * @return
+     */
+    Integer countTodayNewRechargeNum(Map<String, Object> params);
 }

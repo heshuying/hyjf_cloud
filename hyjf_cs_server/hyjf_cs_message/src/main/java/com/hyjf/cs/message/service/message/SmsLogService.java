@@ -34,4 +34,10 @@ public interface SmsLogService {
      * @return
      */
     Integer queryLogCount(SmsLogRequest request);
+
+    /**
+     * 查询所有短信发送记录
+     * @return
+     */
+    List<SmsLog> findSmsLogList();
 }
