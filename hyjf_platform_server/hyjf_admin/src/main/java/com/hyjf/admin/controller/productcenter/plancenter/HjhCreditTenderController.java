@@ -262,7 +262,7 @@ public class HjhCreditTenderController extends BaseController{
     }
 	
 	/**
-	 * PDF脱敏图片预览
+	 * PDF脱敏图片预览    已测试
 	 * @param request
 	 * @return
 	 */
@@ -301,7 +301,7 @@ public class HjhCreditTenderController extends BaseController{
     }
     
 	/**
-	 * PDF文件签署
+	 * PDF文件签署   已测试
 	 * @param request
 	 * @return
 	 */
@@ -376,7 +376,7 @@ public class HjhCreditTenderController extends BaseController{
 	 * @param form
      * @return
      */
-    @ApiOperation(value = "汇计划承接记录列表", notes = "计划列表运营记录 - 承接明细")
+/*    @ApiOperation(value = "汇计划承接记录列表", notes = "计划列表运营记录 - 承接明细")
     @PostMapping(value = "/optactionsearch")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -413,6 +413,5 @@ public class HjhCreditTenderController extends BaseController{
 		} else {
 			return new AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>>(ListResult.build(volist, 0));
 		}
-    }
-
+    }*/
 }

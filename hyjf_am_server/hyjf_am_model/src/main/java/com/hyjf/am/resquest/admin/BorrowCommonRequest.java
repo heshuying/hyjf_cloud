@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 
 /**
  * @package com.hyjf.admin.maintenance.AlllBorrowCustomize;
- * @author GOGTZ-Z
+ * @author dongzeshan
  * @date 2015/07/09 17:00
  * @version V1.0  
  */

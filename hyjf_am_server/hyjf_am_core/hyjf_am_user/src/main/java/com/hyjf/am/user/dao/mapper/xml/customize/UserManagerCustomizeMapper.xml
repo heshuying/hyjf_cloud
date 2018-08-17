@@ -31,15 +31,8 @@
     </resultMap>
 
     <select id="selectUserMemberList" parameterType="Map" resultMap="UserListVOMap">
-        SELECT
-        t.*,
-        `od3`.`name` AS `regionName`,
-        `od2`.`name` AS `branchName`,
-        `od`.`name` AS `departmentName`
-        FROM
-        (
-        SELECT
-        hydu.user_id,
+      SELECT
+		hydu.user_id,
         hydu.username AS user_name,
         hydui.truename AS real_name,
         hydu.mobile,
@@ -77,7 +70,34 @@
         hydu.inst_code AS instCode,
         hca.customer_id,
         hboa.account,
-        hboa.create_time AS bank_open_time
+        hboa.create_time AS bank_open_time,
+		CASE
+				hydui.attribute 
+				WHEN 1 THEN
+				d1.NAME 
+				WHEN 2 THEN
+				dd1.NAME 
+				WHEN 3 THEN
+				dd1.NAME 
+			END AS `regionName`,
+		CASE
+				hydui.attribute 
+				WHEN 1 THEN
+				d2.NAME 
+				WHEN 2 THEN
+				dd2.NAME 
+				WHEN 3 THEN
+				dd2.NAME 
+			END AS `branchName`,
+		CASE
+				hydui.attribute 
+				WHEN 1 THEN
+				d3.NAME 
+				WHEN 2 THEN
+				dd3.NAME 
+				WHEN 3 THEN
+				dd3.NAME 
+			END AS `departmentName`
         FROM
         <choose>
             <when test='whereFlag == "0"'>
@@ -92,29 +112,23 @@
                 ht_user hydu
             </otherwise>
         </choose>
-        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
-        LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
-        LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
-        WHERE 1=1
-        <if test="userName != null and userName !=''">
-            AND hydu.username = #{userName}
-        </if>
-        <if test="mobile != null and mobile != ''">
-            AND hydu.mobile = #{mobile}
-        </if>
-        <if test="userType != null and userType != ''">
-            AND hydu.user_type = #{userType,jdbcType=INTEGER}
-        </if>
-        ) t
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+			LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+			LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+			LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+			LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
+			LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
+			LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
+			AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+			LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL 
+			LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
+			LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
+			LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+			LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
+			LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
+		 	LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd3.parentid
         <include refid="Admin_Where_Clause"/>
         <if test='whereFlag != "0"'>
-            ORDER BY t.reg_time DESC
+            ORDER BY hydu.reg_time DESC
             <if test="limitStart != null and limitEnd !=null">
                 LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
             </if>
@@ -124,39 +138,48 @@
     <sql id="Admin_Where_Clause">
         <where>
             <if test="realName != null and realName != ''">
-                AND t.real_name LIKE CONCAT(#{realName}, '%')
+                AND hydui.truename LIKE CONCAT(#{realName}, '%')
             </if>
             <if test="recommendName != null and recommendName != ''">
-                AND t.recommend_name LIKE CONCAT(#{recommendName}, '%')
+                AND hydur.username LIKE CONCAT(#{recommendName}, '%')
             </if>
             <if test="userRole != null and userRole != ''">
-                AND t.role_id = #{userRole,jdbcType=INTEGER}
+                AND hydui.role_id = #{userRole,jdbcType=INTEGER}
             </if>
             <if test="userProperty != null and userProperty != ''">
-                AND t.attribute = #{userProperty,jdbcType=INTEGER}
+                AND hydui.attribute = #{userProperty,jdbcType=INTEGER}
             </if>
             <if test="accountStatus != null and accountStatus != ''">
-                AND t.bank_open_account = #{accountStatus,jdbcType=INTEGER}
+                AND hydu.bank_open_account = #{accountStatus,jdbcType=INTEGER}
             </if>
             <if test="userStatus != null and userStatus != ''">
-                AND t.`status` = #{userStatus,jdbcType=INTEGER}
+                AND hydu.`status` = #{userStatus,jdbcType=INTEGER}
             </if>
 
             <if test="regTimeStart != null and regTimeStart != '' ">
-                AND t.regTime <![CDATA[>=]]>  concat(#{regTimeStart},' 00:00:00')
+                AND hydu.reg_time <![CDATA[>=]]>  concat(#{regTimeStart},' 00:00:00')
             </if>
             <if test="regTimeEnd != null and regTimeEnd != ''">
-                AND t.regTime <![CDATA[<=]]> concat(#{regTimeEnd},' 23:59:59')
+                AND hydu.reg_time <![CDATA[<=]]> concat(#{regTimeEnd},' 23:59:59')
             </if>
             <if test="combotreeListSrch != null and combotreeListSrch != ''">
-                AND od.id in
+                AND dd3.id in
                 <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
                     #{dep}
                 </foreach>
             </if>
             <if test="instCodeSrch != null and instCodeSrch != ''">
-                AND t.instCode = #{instCodeSrch,jdbcType=INTEGER}
+                AND config.inst_code = #{instCodeSrch,jdbcType=INTEGER}
             </if>
+            <if test="userName != null and userName !=''">
+				AND hydu.username = #{userName}
+			</if>
+			<if test="mobile != null and mobile != ''">
+				AND hydu.mobile = #{mobile}
+			</if>
+			<if test="userType != null and userType != ''">
+				AND hydu.user_type = #{userType,jdbcType=INTEGER}
+			</if>
         </where>
     </sql>
 
@@ -169,69 +192,22 @@
                 ht_user
             </when>
             <otherwise>
-                SELECT COUNT(*) FROM(
-                SELECT
-                hydu.user_id,
-                hydu.username AS user_name,
-                hydui.truename AS real_name,
-                hydu.mobile,
-                hydu.user_type AS type_id,
-                hydui.role_id,
-                hydui.attribute,
-                hydui.birthday,
-                hydui.sex,
-                hydui.idcard,
-                concat(province, city, area) AS regist_area,
-                hydu.open_account,
-                hydu.`status`,
-                hydu.reg_esb,
-                hydu.reg_time AS regTime,
-                hydui.role_id AS user_role,
-                hydui.attribute AS user_property,
-                hydu.open_account AS account_status,
-                hydu.`status` AS user_status,
-                hydu.reg_esb AS regist_plat,
-                hydu.user_type AS user_type,
-                hydur.username AS recommend_name,
-                date_format(
-                hydu.reg_time,
-                '%Y-%m-%d %H:%i:%s'
-                ) AS reg_time,
-                CASE
-                WHEN hydui.attribute = 2
-                OR hydui.attribute = 3 THEN
-                hydu.user_id
-                ELSE
-                hydsu.spreads_user_id
-                END AS hyd_id,
-                hydui.borrower_type,
-                hydu.bank_open_account bank_open_account,
-                hydu.inst_code AS instCode,
-                hca.customer_id,
-                hboa.account,
-                hboa.create_time AS bank_open_time
-                FROM
+                SELECT COUNT(*) FROM
                 ht_user hydu
-                LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-                LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-                LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
-                LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
-                LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
-                WHERE 1=1
-                <if test="userName != null and userName !=''">
-                    AND hydu.username = #{userName}
-                </if>
-                <if test="mobile != null and mobile != ''">
-                    AND hydu.mobile = #{mobile}
-                </if>
-                <if test="userType != null and userType != ''">
-                    AND hydu.user_type = #{userType,jdbcType=INTEGER}
-                </if>
-                ) t
-                LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2','Q21')
-                LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
-                LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-                LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+				LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+				LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+				LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+				LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
+				LEFT JOIN ht_certificate_authority hca ON hydu.user_id = hca.user_id
+				LEFT JOIN ht_r_oa_users u ON u.hyd_id = hydsu.spreads_user_id 
+				AND u.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				LEFT JOIN ht_r_oa_department d3 ON d3.id = u.departmentid AND d3.id IS NOT NULL 
+				LEFT JOIN ht_r_oa_department d2 ON d2.id = d3.parentid
+				LEFT JOIN ht_r_oa_department d1 ON d1.id = d2.parentid
+				LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hydu.user_id AND ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+				LEFT JOIN ht_r_oa_department dd3 ON dd3.id = ou.departmentid AND dd3.id IS NOT NULL
+				LEFT JOIN ht_r_oa_department dd2 ON dd2.id = dd3.parentid
+			 	LEFT JOIN ht_r_oa_department dd1 ON dd1.id = dd3.parentid
                 <include refid="Admin_Where_Clause"/>
             </otherwise>
         </choose>

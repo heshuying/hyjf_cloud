@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,51 +13,32 @@ import java.io.Serializable;
 
 public class AppBorrowImageRequest extends BasePage implements Serializable {
 
-
-    /**
-     * serialVersionUID
-     */
-    private Integer id;
-
     private static final long serialVersionUID = 3803722754627032581L;
 
-    private String isEdit;
-
-    private String borrowImage;
-
+    @ApiModelProperty(value = "id")
+    private Integer id;
+    @ApiModelProperty(value = "图片标题")
     private String borrowImageTitle;
-
+    @ApiModelProperty(value = "图片名称")
     private String borrowImageName;
+    @ApiModelProperty(value = "图片路径")
+    private String borrowImageUrl;
+    @ApiModelProperty(value = "排序")
+    private Integer sort;
+    @ApiModelProperty(value = "配置状态：0启用 1禁用")
+    private Integer status;
+    @ApiModelProperty(value = "最大版本号")
+    private String versionMax;
+    @ApiModelProperty(value = "跳转标示")
+    private String jumpName;
 
     private String borrowImageRealname;
-
-    private String borrowImageUrl;
-
-    private String notes;
-
-    private Integer sort; //排序
-
+    private String isEdit;
+    private String borrowImage;
     private String pageUrl;
-
     private String pageType;
-
+    private String notes;
     private String version;
-    /*
-     * 新增字段
-     * 是否禁用：0否  1是
-     */
-    private Integer status;
-    /*
-     * 新增字段
-     * 最大版本号
-     */
-    private String versionMax;
-
-    /*
-     * 新增字段
-     * 跳转标示
-     */
-    private String jumpName;
 
 
 

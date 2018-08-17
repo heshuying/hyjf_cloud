@@ -224,7 +224,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
-        return null;
+        return new LinkResponse();
     }
 
     /**
