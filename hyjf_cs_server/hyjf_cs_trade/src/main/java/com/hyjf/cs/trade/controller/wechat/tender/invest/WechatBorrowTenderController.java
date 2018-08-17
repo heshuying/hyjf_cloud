@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * wechat端-散标投资
  */
-@Api(value = "wechat端-散标投资")
+@Api(tags = "wechat端-散标投资")
 @RestController
 @RequestMapping("/hyjf-wechat/user/invest")
 public class WechatBorrowTenderController extends BaseTradeController {
