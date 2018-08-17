@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,50 +20,62 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
     /**
      * 标签类型查询
      */
+    @ApiModelProperty(value = "标签类型查询")
     private String historyTagIdSrch;
     /**
      * 标题查询
      */
+    @ApiModelProperty(value = "标题查询")
     private String historyTitleSrch;
     /**
      * 消息编码查询
      */
+    @ApiModelProperty(value = "消息编码查询")
     private String historyCodeSrch;
     /**
      * 作者查询
      */
+    @ApiModelProperty(value = "作者查询")
     private String historyCreateUserNameSrch;
     /**
      * 推送平台查询
      */
+    @ApiModelProperty(value = "推送平台查询")
     private String historyTerminalSrch;
     /**
      * 首次阅读终端查询
      */
+    @ApiModelProperty(value = "首次阅读终端查询")
     private String historyFirstReadTerminalSrch;
     /**
      * 状态查询
      */
+    @ApiModelProperty(value = "状态查询")
     private Integer historySendStatusSrch;
     /**
      * 指定的原生界面
      */
+    @ApiModelProperty(value = "指定的原生界面")
     private String historyActionUrl1;
     /**
      * 指定的原生界面
      */
+    @ApiModelProperty(value = "指定的原生界面")
     private String historyActionUrl2;
     /**
      * 发送开始时间查询
      */
+    @ApiModelProperty(value = "发送开始时间查询")
     private String startSendTimeSrch;
     /**
      * 发送截止时间查询
      */
+    @ApiModelProperty(value = "发送截止时间查询")
     private String endSendTimeSrch;
     /**
      * 发送时间
      */
+    @ApiModelProperty(value = "发送时间")
     private String historyPreSendTimeStr;
 
     private String ids;
@@ -72,16 +85,19 @@ public class MessagePushHistoryRequest extends MessagePushMsgHistoryVO implement
     /**
      * 更新或是转发,0为更新1为转发
      */
+    @ApiModelProperty(value = "更新或是转发,0为更新1为转发")
     private String updateOrReSend;
 
     /**
      * 当前页码
      */
+    @ApiModelProperty(value = "当前页码")
     private int currPage;
 
     /**
      * 当前页条数
      */
+    @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
     public int getCurrPage() {
