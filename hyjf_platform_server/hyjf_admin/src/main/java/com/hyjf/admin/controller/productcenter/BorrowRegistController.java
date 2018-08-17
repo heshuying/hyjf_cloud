@@ -77,7 +77,7 @@ public class BorrowRegistController extends BaseController {
     }
 
     @ApiOperation(value = "标的备案", notes = "标的备案")
-    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/debt_regist/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {

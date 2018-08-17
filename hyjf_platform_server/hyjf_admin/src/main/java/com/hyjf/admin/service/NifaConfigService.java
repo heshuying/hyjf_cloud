@@ -3,9 +3,13 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
+import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.resquest.admin.NifaContractTemplateAddRequest;
 import com.hyjf.am.resquest.admin.NifaFieldDefinitionAddRequest;
-import com.hyjf.am.resquest.user.NifaFieldDefinitionRequest;
+import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
+import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 
 /**
  * @author nxl
@@ -38,4 +42,44 @@ public interface NifaConfigService {
      * @return
      */
     Boolean updateNifaFieldDefinition(NifaFieldDefinitionAddRequest nifaFieldDefinitionAddRequest);
+
+    /**
+     * 添加合同模版约定条款表
+     * @param request
+     * @return
+     */
+    Boolean insertNifaContractTemplate(NifaContractTemplateAddRequest request);
+    /**
+     * 查找合同模板id
+     * @return
+     */
+    FddTempletResponse selectFddTempletId();
+    /**
+     * 修改合同模版约定条款表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    Boolean updateNifaContractTemplate(NifaContractTemplateAddRequest request);
+    /**
+     * 根据id查找合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    NifaContractTemplateResponse selectNifaContractTemplateById(String nifaId);
+    /**
+     * 根据id删除合同模版约定条款表
+     * @param nifaId
+     * @auth nxl
+     * @return
+     */
+    Boolean deleteNifaContractTemplateById(int nifaId);
+    /**
+     * 查找互金字段定义列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    NifaContractTemplateResponse selectNifaContractTemplateList(NifaContractTemplateRequest request);
 }

@@ -2583,4 +2583,504 @@
 
 	</select>
 
+	<!-- 还款计划列表 -->
+	<resultMap id="creditorRepayMentPlanMap" type="com.hyjf.am.trade.dao.model.customize.CurrentHoldRepayMentPlanListCustomize">
+		<result column="borrow_nid" property="borrowNid" />
+		<result column="nid" property="nid" />
+		<result column="recover_period" property="recoverPeriod" />
+		<result column="recover_account_wait" property="recoverAccountWait" />
+		<result column="recover_capital_wait" property="recoverCapitalWait" />
+		<result column="recover_interest_wait" property="recoverInterestWait" />
+		<result column="recover_account" property="recoverAccount" />
+		<result column="recover_time" property="recoverTime" />
+		<result column="recover_status" property="recoveStatus" />
+	</resultMap>
+
+	<!-- 获取当前持有现金投资不分期还款计划列表 -->
+	<select id="realInvestmentRepaymentPlanNoStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hbr.borrow_nid borrow_nid,
+			hbr.nid nid,
+			hbr.recover_period recover_period,
+			hbr.recover_account recover_account_wait,
+			hbr.recover_capital recover_capital_wait,
+			hbr.recover_interest recover_interest_wait,
+			hbr.recover_account_yes recover_account,
+			FROM_UNIXTIME(IFNULL(IF((hbr.recover_yestime='' OR hbr.recover_yestime=0),NULL,hbr.recover_yestime),hbr.recover_time), '%Y-%m-%d' ) recover_time,
+			IF(hbr.recover_status=0,'未还款','已还款') recover_status
+		FROM
+			ht_borrow_recover hbr
+		WHERE
+			hbr.nid=#{nid}
+	</select>
+
+	<!-- 还款计划详情 -->
+	<resultMap id="creditorRepayMentPlanDetailsMap" type="com.hyjf.am.trade.dao.model.customize.CurrentHoldRepayMentPlanDetailsCustomize">
+		<result column="recover_account_wait" property="recoverAccountWait" />
+		<result column="recover_capital_wait" property="recoverCapitalWait" />
+		<result column="recover_interest_wait" property="recoverInterestWait" />
+		<result column="recover_account_yes" property="recoverAccountYes" />
+		<result column="createTime" property="createTime" />
+		<result column="borrow_nid" property="borrowNid" />
+	</resultMap>
+
+	<!-- 获取当前持有现金投资不分期还款计划详情 -->
+	<select id="realInvestmentRepaymentPlanNoStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			hbr.recover_account_wait recover_account_wait,
+			hbr.recover_capital_wait recover_capital_wait,
+			hbr.recover_interest_wait recover_interest_wait,
+			hbr.recover_account_yes recover_account_yes,
+			DATE_FORMAT( MIN(hbt.create_time), '%Y-%m-%d %H:%i:%s' ) createTime,
+			hbr.borrow_nid borrow_nid
+		FROM
+			ht_borrow_recover hbr
+		INNER JOIN ht_borrow_tender hbt ON hbr.nid = hbt.nid
+		WHERE
+			hbr.nid = #{nid}
+	</select>
+
+	<!-- 获取当前持有现金投资分期还款计划列表 -->
+	<select id="realInvestmentRepaymentPlanStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hbr.borrow_nid borrow_nid,
+			hbr.nid nid,
+			hbr.recover_period recover_period,
+			hbr.recover_account recover_account_wait,
+			hbr.recover_capital recover_capital_wait,
+			hbr.recover_interest recover_interest_wait,
+			hbr.recover_account_yes recover_account,
+			FROM_UNIXTIME(IFNULL(IF((hbr.recover_yestime='' OR hbr.recover_yestime=0),NULL,hbr.recover_yestime),hbr.recover_time), '%Y-%m-%d' ) recover_time,
+			IF(hbr.recover_status=0,'未还款','已还款') recover_status
+		FROM
+			ht_borrow_recover_plan hbr
+		WHERE
+			hbr.nid = #{nid}
+	</select>
+
+	<!-- 获取当前持有现金投资分期还款计划详情 -->
+	<select id="realInvestmentRepaymentPlanStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			hbr.recover_account_wait recover_account_wait,
+			hbr.recover_capital_wait recover_capital_wait,
+			hbr.recover_interest_wait recover_interest_wait,
+			hbr.recover_account_yes recover_account_yes,
+			DATE_FORMAT( MIN(hbt.create_time), '%Y-%m-%d %H:%i:%s' ) createTime,
+			hbr.borrow_nid borrow_nid
+		FROM
+			ht_borrow_recover hbr
+		INNER JOIN ht_borrow_tender hbt ON hbr.nid = hbt.nid
+		WHERE
+			hbr.nid = #{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让不分期还款计划列表 -->
+	<select id="assignRepaymentPlanNoStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hbrp.borrow_nid borrow_nid,
+			hbrp.nid,
+			hbrp.recover_account - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_account
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_account_wait,
+			hbrp.recover_capital - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_capital
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_capital_wait,
+			hbrp.recover_interest - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_interest
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_interest_wait,
+			hbrp.recover_account_yes - IFNULL(
+				(
+					SELECT
+						SUM(cr.assign_repay_account)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_account,
+			hbrp.recover_period recover_period,
+			FROM_UNIXTIME(
+				IFNULL(
+					IF (
+						hbrp.recover_yestime = 0,
+						NULL,
+						hbrp.recover_yestime
+					),
+					hbrp.recover_time
+				),
+				'%Y-%m-%d'
+			) recover_time,
+
+			IF (
+				hbrp.recover_status = 0,
+				'未还款',
+				'已还款'
+			) recover_status
+		FROM
+			ht_borrow_recover hbrp
+		WHERE
+			hbrp.nid=#{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让不分期还款计划详情 -->
+	<select id="assignRepaymentPlanNoStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			hbr.recover_account_wait - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_account - ct.assign_repay_account
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_account_wait,
+			hbr.recover_capital_wait-IFNULL((
+				SELECT
+					SUM(
+						ct.assign_capital - ct.assign_repay_capital
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_capital_wait,
+			hbr.recover_interest_wait - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_interest - ct.assign_repay_interest
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_interest_wait,
+			hbr.recover_account_yes - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_repay_account
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_account_yes,
+			DATE_FORMAT(
+				hbt.create_time,
+				'%Y-%m-%d %H:%i:%s'
+			) createTime,
+			hbr.borrow_nid borrow_nid,
+		hbr.nid
+		FROM
+			ht_borrow_recover hbr
+		INNER JOIN ht_borrow_tender hbt ON hbr.nid = hbt.nid
+		WHERE
+			hbr.nid=#{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让分期还款计划列表 -->
+	<select id="assignRepaymentPlanStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hbrp.borrow_nid borrow_nid,
+			hbrp.nid,
+			hbrp.recover_account - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_account
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_account_wait,
+			hbrp.recover_capital - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_capital
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_capital_wait,
+			hbrp.recover_interest - IFNULL(
+				(
+					SELECT
+						SUM(
+							cr.assign_interest
+						)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_interest_wait,
+			hbrp.recover_account_yes - IFNULL(
+				(
+					SELECT
+						SUM(cr.assign_repay_account)
+					FROM
+						ht_credit_repay cr
+					WHERE
+						cr.credit_tender_nid = hbrp.nid
+					AND cr.recover_period = hbrp.recover_period
+				),
+				0
+			) recover_account,
+			hbrp.recover_period recover_period,
+			FROM_UNIXTIME(
+				IFNULL(
+					IF (
+						hbrp.recover_yestime = 0,
+						NULL,
+						hbrp.recover_yestime
+					),
+					hbrp.recover_time
+				),
+				'%Y-%m-%d'
+			) recover_time,
+
+		IF (
+			hbrp.recover_status = 0,
+			'未还款',
+			'已还款'
+		) recover_status
+		FROM
+			ht_borrow_recover_plan hbrp
+		WHERE
+			hbrp.nid=#{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让分期还款计划详情 -->
+	<select id="assignRepaymentPlanStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			hbr.recover_account_wait - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_account - ct.assign_repay_account
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_account_wait,
+			hbr.recover_capital_wait - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_capital - ct.assign_repay_capital
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_capital_wait,
+			hbr.recover_interest_wait - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_interest - ct.assign_repay_interest
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_interest_wait,
+			hbr.recover_account_yes - IFNULL((
+				SELECT
+					SUM(
+						ct.assign_repay_account
+					)
+				FROM
+					ht_credit_tender ct
+				WHERE
+					ct.credit_tender_nid = hbr.nid
+			),0) recover_account_yes,
+			DATE_FORMAT(
+				hbt.create_time,
+				'%Y-%m-%d %H:%i:%s'
+			) createTime,
+			hbr.borrow_nid borrow_nid,
+		hbr.nid
+		FROM
+			ht_borrow_recover hbr
+		INNER JOIN ht_borrow_tender hbt ON hbr.nid = hbt.nid
+		WHERE
+			hbr.nid=#{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让还款计划列表 -->
+	<select id="creditRepaymentPlanList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hcr.credit_nid borrow_nid,
+			hcr.assign_nid nid,
+			hcr.assign_repay_period recover_period,
+			hcr.assign_account recover_account_wait,
+			hcr.assign_capital recover_capital_wait,
+			hcr.assign_interest recover_interest_wait,
+			hcr.assign_repay_account recover_account,
+			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_end_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
+			IF(hcr.status=0,'未还款','已还款') recover_status
+		FROM
+			ht_credit_repay hcr
+		WHERE
+			hcr.assign_nid=#{nid}
+	</select>
+
+	<!-- 获取当前持有债权转让还款计划详情 -->
+	<select id="creditRepaymentPlanDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			hct.assign_account - hct.assign_repay_account recover_account_wait,
+			hct.assign_capital - hct.assign_repay_capital recover_capital_wait,
+			hct.assign_interest - hct.assign_repay_interest recover_interest_wait,
+			hct.assign_repay_account recover_account_yes,
+			DATE_FORMAT(
+				MIN(hct.create_time),
+				'%Y-%m-%d %H:%i:%s'
+			) createTime,
+			hct.bid_nid borrow_nid
+		FROM
+			ht_credit_tender hct
+		WHERE
+			hct.assign_nid = #{nid}
+	</select>
+
+	<!-- 获取当前持有优惠券还款计划列表 -->
+	<select id="couponRepaymentPlanList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hcr.tender_id nid,
+			hcr.recover_period recover_period,
+			hcr.recover_account recover_account_wait,
+			hcr.recover_capital recover_capital_wait,
+			IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest) recover_interest_wait,
+			hcr.recover_account_yes recover_account,
+			FROM_UNIXTIME(IFNULL(hcr.recover_yestime,hcr.recover_time), '%Y-%m-%d' ) recover_time,
+			IF(hcr.recover_status=0,'未回款','已回款') recover_status
+		FROM
+			ht_coupon_recover hcr
+		WHERE hcr.tender_id=#{nid}
+	</select>
+
+	<!-- 获取当前持有优惠券还款计划详情 -->
+	<select id="couponRepaymentPlanDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			SUM(IF(hcr.recover_status=0,hcr.recover_account,0)) recover_account_wait,
+			SUM(IF(hcr.recover_status=0,hcr.recover_capital,0)) recover_capital_wait,
+			IF(SUM(IF(hcr.recover_status=0,hcr.recover_capital,0))>0,
+					SUM(IF(hcr.recover_status=0,hcr.recover_account,0))-SUM(IF(hcr.recover_status=0,hcr.recover_capital,0)),
+					SUM(IF(hcr.recover_status=0,hcr.recover_interest,0))) recover_interest_wait,
+			SUM(hcr.recover_account_yes) recover_account_yes,
+			DATE_FORMAT( MIN(hbtc.create_time), '%Y-%m-%d %H:%i:%s' ) createTime,
+			hbtc.borrow_nid borrow_nid
+		FROM
+			ht_coupon_recover hcr
+		INNER JOIN ht_borrow_tender_cpn hbtc ON hcr.tender_id=hbtc.nid
+		WHERE hcr.tender_id=#{nid}
+	</select>
+
+	<!-- 获取当前持有融通宝不分期还款计划列表 -->
+	<select id="rtbRepaymentPlanNoStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hiil.invest_order_id nid,
+			1 recover_period,
+			hiil.loan_interest recover_account_wait,
+			0 recover_capital_wait,
+			hiil.loan_interest recover_interest_wait,
+			hiil.repay_interest_yes recover_account,
+			FROM_UNIXTIME(IFNULL(hiil.repay_action_time,hiil.repay_time), '%Y-%m-%d' ) recover_time,
+			IF(hiil.repay_status=0,'未还款','已还款') recover_status
+		FROM
+			ht_increase_interest_loan hiil
+		WHERE hiil.invest_order_id=#{nid}
+	</select>
+
+	<!-- 获取当前持有融通宝不分期还款计划详情 -->
+	<select id="rtbRepaymentPlanNoStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			SUM(IF(hiil.repay_status=0,hiil.loan_interest,0)) recover_account_wait,
+			0 recover_capital_wait,
+			SUM(IF(hiil.repay_status=0,hiil.loan_interest,0)) recover_interest_wait,
+			SUM(hiil.repay_interest_yes) recover_account_yes,
+			DATE_FORMAT( MIN(hiii.create_time), '%Y-%m-%d %H:%i:%s' ) createTime,
+			hiii.borrow_nid borrow_nid
+		FROM
+			ht_increase_interest_loan hiil
+			INNER JOIN ht_increase_interest_invest hiii ON hiil.invest_order_id=hiii.order_id
+		WHERE hiil.invest_order_id=#{nid}
+	</select>
+
+	<!-- 获取当前持有融通宝分期还款计划列表 -->
+	<select id="rtbRepaymentPlanStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
+		SELECT
+			hiil.invest_order_id nid,
+			hiil.repay_period recover_period,
+			hiil.loan_interest recover_account_wait,
+			0 recover_capital_wait,
+			hiil.loan_interest recover_interest_wait,
+			hiil.repay_interest_yes recover_account,
+			FROM_UNIXTIME(IFNULL(hiil.repay_action_time,hiil.repay_time), '%Y-%m-%d' ) recover_time,
+			IF(hiil.repay_status=0,'未还款','已还款') recover_status
+		FROM
+			ht_increase_interest_loan_detail hiil
+		WHERE hiil.invest_order_id=#{nid}
+	</select>
+
+	<!-- 获取当前持有融通宝分期还款计划详情 -->
+	<select id="rtbRepaymentPlanStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
+		SELECT
+			SUM(IF(hiil.repay_status=0,hiil.loan_interest,0)) recover_account_wait,
+			0 recover_capital_wait,
+			SUM(IF(hiil.repay_status=0,hiil.loan_interest,0)) recover_interest_wait,
+			SUM(hiil.repay_interest_yes) recover_account_yes,
+			DATE_FORMAT( MIN(hiii.create_time), '%Y-%m-%d %H:%i:%s' ) createTime,
+			hiii.borrow_nid borrow_nid
+		FROM
+			ht_increase_interest_loan_detail hiil
+			INNER JOIN ht_increase_interest_invest hiii ON hiil.invest_order_id=hiii.order_id
+		WHERE hiil.invest_order_id=#{nid}
+	</select>
+
 </mapper>

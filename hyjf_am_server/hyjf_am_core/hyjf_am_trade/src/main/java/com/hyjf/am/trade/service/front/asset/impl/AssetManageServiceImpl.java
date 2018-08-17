@@ -1,16 +1,22 @@
 package com.hyjf.am.trade.service.front.asset.impl;
 
+import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.service.front.asset.AssetManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldRepayMentPlanDetailsCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldRepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -272,5 +278,190 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         params.put("limitStart", request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
         return params;
+    }
+
+    /**
+     * 获取用户还款计划
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    @Override
+    public RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type){
+        //type 投资记录类型  0现金投资，1部分债转，2债权承接，3优惠券投资，4 融通宝产品加息
+        RepayPlanResponse response = null;
+        Borrow borrow = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid", borrowNid);
+        params.put("nid", nid);
+        switch (type) {
+            case "0":
+                borrow= this.getBorrow(borrowNid);
+                if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
+                    //真实投资不分期还款计划查询
+                    response = this.realInvestmentRepaymentPlanNoStages(params);
+                } else {
+                    //真实投资分期还款计划查询
+                    response = this.realInvestmentRepaymentPlanStages(params);
+                }
+                break;
+            case "1":
+                borrow = this.getBorrow(borrowNid);
+                if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
+                    //部分债转不分期还款计划查询
+                    response = this.assignRepaymentPlanNoStages(params);
+                } else {
+                    //部分债转分期还款计划查询
+                    response = this.assignRepaymentPlanStages(params);
+                }
+
+                break;
+            case "2":
+                //债权承接还款计划查询
+                response = this.creditRepaymentPlan(params);
+                break;
+            case "3":
+                //优惠券还款计划查询
+                response = this.couponRepaymentPlan(params);
+                break;
+            case "4":
+                borrow=this.getBorrow(borrowNid);
+                if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
+                    //融通宝不分期还款计划查询
+                    response = this.rtbRepaymentPlanNoStages(params);
+                } else {
+                    //融通宝分期还款计划查询
+                    response = this.rtbRepaymentPlanStages(params);
+                }
+                break;
+        }
+        return response;
+    }
+
+    /**
+     * 真实投资不分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse realInvestmentRepaymentPlanNoStages(Map<String, Object> params){
+        // 获取当前持有现金投资不分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.realInvestmentRepaymentPlanNoStagesList(params);
+        //获取当前持有现金投资不分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.realInvestmentRepaymentPlanNoStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 真实投资分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse realInvestmentRepaymentPlanStages(Map<String, Object> params){
+        //获取当前持有现金投资分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.realInvestmentRepaymentPlanStagesList(params);
+        //获取当前持有现金投资分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.realInvestmentRepaymentPlanStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 部分债转不分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse assignRepaymentPlanNoStages(Map<String, Object> params){
+        //获取当前持有债权转让不分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.assignRepaymentPlanNoStagesList(params);
+        //获取当前持有债权转让不分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.assignRepaymentPlanNoStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 部分转让分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse assignRepaymentPlanStages(Map<String, Object> params){
+        //获取当前持有部分债转分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.assignRepaymentPlanStagesList(params);
+        //获取当前持有债权转让分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.assignRepaymentPlanStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 债权承接还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse creditRepaymentPlan(Map<String, Object> params){
+        //债权承接还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.creditRepaymentPlanList(params);
+        //获取当前持有债权转让还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.creditRepaymentPlanDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 优惠券还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse couponRepaymentPlan(Map<String, Object> params){
+        //获取当前持有优惠券还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.couponRepaymentPlanList(params);
+        //获取当前持有优惠券还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.couponRepaymentPlanDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 融通宝不分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse rtbRepaymentPlanNoStages(Map<String, Object> params){
+        //获取当前持有融通宝不分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list=assetManageCustomizeMapper.rtbRepaymentPlanNoStagesList(params);
+        //获取当前持有融通宝不分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details=assetManageCustomizeMapper.rtbRepaymentPlanNoStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 融通宝分期还款计划查询
+     * @param params
+     * @return
+     */
+    private RepayPlanResponse rtbRepaymentPlanStages(Map<String, Object> params){
+        //获取当前持有融通宝分期还款计划列表
+        List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.rtbRepaymentPlanStagesList(params);
+        //获取当前持有融通宝分期还款计划详情
+        CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.rtbRepaymentPlanStagesDetails(params);
+        return setResponse(list, details);
+    }
+
+    /**
+     * 返回类封装
+     * @param list
+     * @param details
+     * @return
+     */
+    private RepayPlanResponse setResponse(List<CurrentHoldRepayMentPlanListCustomize> list, CurrentHoldRepayMentPlanDetailsCustomize details){
+        RepayPlanResponse response = new RepayPlanResponse();
+        //列表
+        if(!CollectionUtils.isEmpty(list)){
+            List<CurrentHoldRepayMentPlanListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldRepayMentPlanListCustomizeVO.class);
+            response.setCurrentHoldRepayMentPlanList(voList);
+        }
+        //明细
+        if(details != null){
+            CurrentHoldRepayMentPlanDetailsCustomizeVO vo = new CurrentHoldRepayMentPlanDetailsCustomizeVO();
+            BeanUtils.copyProperties(details, vo);
+            response.setCurrentHoldRepayMentPlanDetails(vo);
+        }
+        return response;
     }
 }
