@@ -7,16 +7,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 上海大屏幕运营数据 注册人数
+ * 上海大屏幕运营数据 公司动态
  * @Author : huanghui
+ * 禁止并发
  */
-@DisallowConcurrentExecution            //禁止并发
-public class OperationalUserDataJob extends BaseJob implements Job {
+@DisallowConcurrentExecution
+public class OperationalArticleDataJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("OperationalDataJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-USER/am-user/batch/registrantChangeStatistics", String.class);
+        restTemplate.getForEntity("http://AM-CONFIG/am-config/contentArticle/getContentList", String.class);
         logger.info("OperationalDataJob: {} execute end...");
     }
+
 }
