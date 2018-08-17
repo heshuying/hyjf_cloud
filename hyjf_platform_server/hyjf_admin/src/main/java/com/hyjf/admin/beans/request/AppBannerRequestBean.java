@@ -31,11 +31,10 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
     private String code;
     @ApiModelProperty(value = "id")
     private Integer id;
-
     private String startCreate;
 
     private String endCreate;
-
+    @ApiModelProperty(value = "删除使用的id")
     private String ids;
 
 

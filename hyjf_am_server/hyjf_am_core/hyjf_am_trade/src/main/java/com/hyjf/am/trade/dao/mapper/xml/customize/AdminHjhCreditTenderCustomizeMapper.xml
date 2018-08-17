@@ -48,15 +48,15 @@
 			</if>
 			<!-- 时间 -->
 			<if test="assignTimeStart != null and assignTimeStart != ''">
-				AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00'))
+				<!-- AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00')) -->
+				AND ct.create_time <![CDATA[>=]]> STR_TO_DATE(#{assignTimeStart}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="assignTimeEnd != null and assignTimeEnd != ''">
-				AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59'))
+				<!-- AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59')) -->
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{assignTimeEnd}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
-	
-	
 	<resultMap id="DebtCreditTenderMap" type="com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO">
 		<result column="id" property="id" jdbcType="VARCHAR" />
 		<result column="assign_user_name" property="assignUserName" jdbcType="VARCHAR" />
@@ -72,7 +72,7 @@
 		<result column="assign_interest_advance" property="assignInterestAdvance" jdbcType="VARCHAR" />
 		<result column="assign_pay" property="assignPay" jdbcType="VARCHAR" />
 		<result column="assign_type_name" property="assignTypeName" jdbcType="VARCHAR" />
-		<result column="assign_time" property="assignTime" jdbcType="VARCHAR" />
+		<result column="assign_time" property="assignTime" />
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
 		<result column="assign_period" property="assignPeriod" jdbcType="VARCHAR" />
 		<!--合同状态-->
@@ -103,10 +103,7 @@
 			ct.assign_interest_advance,
 			ct.assign_pay,
 			ct.assign_type AS assign_type_name,
-			FROM_UNIXTIME(
-				ct.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS assign_time,
+			DATE_FORMAT(ct.create_time, '%Y-%m-%d %H:%i:%s' ) AS assign_time,
 			CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
  			bc.assign_period,
 		    hta.status AS contractStatus,

@@ -7,9 +7,9 @@ import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.admin.NifaContractTemplateAddRequest;
+import com.hyjf.am.resquest.admin.NifaContractTemplateRequest;
 import com.hyjf.am.resquest.admin.NifaFieldDefinitionAddRequest;
-import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
-import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
+import com.hyjf.am.resquest.admin.NifaFieldDefinitionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -23,9 +23,9 @@ import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.admin.NifaContractTemplateAddRequest;
+import com.hyjf.am.resquest.admin.NifaContractTemplateRequest;
 import com.hyjf.am.resquest.admin.NifaFieldDefinitionAddRequest;
-import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
-import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
+import com.hyjf.am.resquest.admin.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.NifaContractTemplateVO;
 import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -82,7 +82,7 @@ public class NifaConfigController  extends BaseController
         if(null!=response.getResultList()&&response.getResultList().size()>0){
             nifaFieldDefinitionCustomizeVOList = CommonUtils.convertBeanList(response.getResultList(),NifaFieldDefinitionCustomizeVO.class);
         }
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss");
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(null!=nifaFieldDefinitionCustomizeVOList&&nifaFieldDefinitionCustomizeVOList.size()>0){
             for(NifaFieldDefinitionCustomizeVO nifaFieldDefinitionCustomizeVO:nifaFieldDefinitionCustomizeVOList){
                 //根据创建者id查找admin,获取创建者用户名
@@ -296,7 +296,7 @@ public class NifaConfigController  extends BaseController
         if(null!=response.getResultList()&&response.getResultList().size()>0){
             nifaFieldDefinitionCustomizeVOList = CommonUtils.convertBeanList(response.getResultList(),NifaContractTemplateCustomizeVO.class);
         }
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-mm-dd  HH:mm:ss");
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(null!=nifaFieldDefinitionCustomizeVOList&&nifaFieldDefinitionCustomizeVOList.size()>0){
             for(NifaContractTemplateCustomizeVO nifaFieldDefinitionCustomizeVO:nifaFieldDefinitionCustomizeVOList){
                 //根据创建者id查找admin,获取创建者用户名

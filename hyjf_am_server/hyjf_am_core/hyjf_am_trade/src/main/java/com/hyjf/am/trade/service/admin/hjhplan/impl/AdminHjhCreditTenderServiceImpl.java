@@ -155,7 +155,7 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 
 	@Override
 	public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest request) {
-		HjhDebtCreditTenderVO vo = null;
+		HjhDebtCreditTenderVO vo = new HjhDebtCreditTenderVO();
 		HjhDebtCreditTender tender;
 		HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
 		HjhDebtCreditTenderExample.Criteria cra = example.createCriteria();

@@ -214,14 +214,8 @@
 					hdpa.commission_count_time,
 					'%Y-%m-%d %H:%i'
 				) AS commission_count_time,
-				
-				
-<!-- 				FROM_UNIXTIME(
-					hdpa.create_time,
-					'%Y-%m-%d %H:%i'
-				) AS create_time, -->
-				hdpa.create_time AS create_time,
-				
+				<!-- hdpa.create_time AS create_time, -->
+				DATE_FORMAT(hdpa.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 				hdpa.create_time AS add_time_long,
 				hdpa.invite_user_name referee_name, 
 				hdpa.invite_user_attribute AS recommend_attr, 

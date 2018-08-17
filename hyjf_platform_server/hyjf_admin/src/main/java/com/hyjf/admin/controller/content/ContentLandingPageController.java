@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author tanyy
  * @version ContentLandingPageController, v0.1 2018/7/16 10:35
  */
-@Api(tags = "着路页管理")
+@Api(value = "着路页管理",tags = "内容中心-着路页管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentlandingpage")
 public class ContentLandingPageController extends BaseController {

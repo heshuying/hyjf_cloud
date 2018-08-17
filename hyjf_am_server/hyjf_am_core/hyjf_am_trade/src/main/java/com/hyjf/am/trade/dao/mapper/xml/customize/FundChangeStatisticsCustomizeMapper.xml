@@ -67,7 +67,7 @@
 
     <sql id="Where_NumberOfInvestors">
         <where>
-            1=1
+            status =2
             <if test="startTime != null and startTime !='' ">
                 AND create_time <![CDATA[>=]]>concat(#{startTime,jdbcType=VARCHAR},' 00:00:00')
             </if>
@@ -78,6 +78,10 @@
     </sql>
     <select id="getNumberOfInvestors" resultType="java.lang.Integer" parameterType="java.lang.Integer">
         SELECT count(distinct user_id) as all_user FROM ht_borrow_tender <include refid="Where_NumberOfInvestors" />
+    </select>
+
+    <select id="countTodayNewRechargeNum" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(*) as total from  ht_account_recharge  <include refid="Where_NumberOfInvestors" />
     </select>
 
 </mapper>
