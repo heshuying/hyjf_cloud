@@ -147,9 +147,9 @@ public class LoanCoverUserManagerController extends BaseController {
      * @param tureName
      * @return
      */
-    @RequestMapping("/selectCertificateAuthorityByIdNoName/{strIdNo}/{tureName}")
-    public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(@PathVariable String strIdNo,@PathVariable String tureName){
-        CertificateAuthority certificateAuthority = loanCoverUserManagerService.selectCertificateAuthorityByIdNoName(strIdNo,tureName);
+    @RequestMapping("/selectCertificateAuthorityByIdNoName/{tureName}")
+    public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(@PathVariable String tureName){
+        CertificateAuthority certificateAuthority = loanCoverUserManagerService.selectCertificateAuthorityByIdNoName(tureName);
         CertificateAuthorityResponse response = new CertificateAuthorityResponse();
         String status = Response.FAIL;
         String returnMsg = Response.FAIL_MSG;

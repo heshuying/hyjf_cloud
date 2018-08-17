@@ -143,6 +143,15 @@ public class BorrowBeanRequest extends BasePage implements Serializable{
 	private String borrowPeriod;
 
 	/**
+	 * 初审时间段 开始
+	 */
+	private String verifyTimeStartSrch;
+	/**
+	 * 初审时间段 结束
+	 */
+	private String verifyTimeEndSrch;
+
+	/**
 	 * recoverTimeStartSrch
 	 * 
 	 * @return the recoverTimeStartSrch
@@ -596,5 +605,20 @@ public class BorrowBeanRequest extends BasePage implements Serializable{
 	public void setLabelNameSrch(String labelNameSrch) {
 		this.labelNameSrch = labelNameSrch;
 	}
-	
+
+	public String getVerifyTimeStartSrch() {
+		return verifyTimeStartSrch;
+	}
+
+	public void setVerifyTimeStartSrch(String verifyTimeStartSrch) {
+		this.verifyTimeStartSrch = verifyTimeStartSrch;
+	}
+
+	public String getVerifyTimeEndSrch() {
+		return verifyTimeEndSrch;
+	}
+
+	public void setVerifyTimeEndSrch(String verifyTimeEndSrch) {
+		this.verifyTimeEndSrch = verifyTimeEndSrch;
+	}
 }

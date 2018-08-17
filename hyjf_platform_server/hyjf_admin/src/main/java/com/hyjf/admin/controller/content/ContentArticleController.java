@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Api(tags = "内容中心-文章管理")
 @RestController
-@RequestMapping("/hyjf-admin/content/contentarticle")
+@RequestMapping(value = "/hyjf-admin/content/contentarticle")
 public class ContentArticleController extends BaseController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-条件列表查询", notes = "文章管理-条件列表查询")
     @RequestMapping(value = "/searchaction",method = RequestMethod.POST)
-    public AdminResult<ListResult<ContentArticleVO>> searchAction(ContentArticleRequest requestBean) {
+    public AdminResult<ListResult<ContentArticleVO>> searchAction(@RequestBody ContentArticleRequest requestBean) {
         logger.info("查询内容中心-文章管理-条件列表查询开始......");
         ContentArticleResponse response = contentArticleService.searchAction(requestBean);
         if (response == null) {
@@ -52,7 +52,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-添加", notes = "文章管理-添加")
     @RequestMapping(value ="/insert",method = RequestMethod.POST)
-    public AdminResult add(ContentArticleRequest requestBean) {
+    public AdminResult add(@RequestBody ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.inserAction(requestBean);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -65,7 +65,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-修改根据id查找所需要数据", notes = "文章管理-修改根据id查找所需要数据")
     @RequestMapping(value ="/infoaction",method = RequestMethod.POST)
-    public AdminResult infoAction(ContentArticleRequest requestBean) {
+    public AdminResult infoAction(@RequestBody ContentArticleRequest requestBean) {
 
         if (StringUtils.isEmpty(requestBean.getIds())) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -84,7 +84,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-修改", notes = "文章管理-修改")
     @RequestMapping(value ="/update",method = RequestMethod.POST)
-    public AdminResult update(ContentArticleRequest requestBean) {
+    public AdminResult update(@RequestBody ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.updateAction(requestBean);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

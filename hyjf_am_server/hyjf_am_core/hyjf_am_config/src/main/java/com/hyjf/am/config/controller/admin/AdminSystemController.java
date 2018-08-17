@@ -65,31 +65,19 @@ public class AdminSystemController extends BaseConfigController {
 			// 如果状态不可用
 			if ("1".equals(adminSystem.getState())) {
 				asr.setMessage("该用户已禁用");
+				asr.setRtn(Response.ERROR);
 				return asr;
 			}
 			BeanUtils.copyProperties(adminSystemr, asv);
 			asr.setResult(asv);
 			return asr;
 		} else {
+			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
 		}
 
 	}
-
-	/**
-	 * 登出
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	@GetMapping("/loginOut/{userId}")
-	public AdminSystemResponse loginOut(@PathVariable String userId) {
-
-		AdminSystemResponse asr = new AdminSystemResponse();
-		return asr;
-	}
-
 	/**
 	 * 获取该用户权限
 	 * 
