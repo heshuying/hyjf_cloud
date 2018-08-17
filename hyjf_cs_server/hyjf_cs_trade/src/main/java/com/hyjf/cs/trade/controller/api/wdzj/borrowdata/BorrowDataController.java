@@ -31,7 +31,7 @@ import java.util.Map;
  * @author hesy
  * @version BorrowDataController, v0.1 2018/7/16 15:04
  */
-@Api(tags = "api端网贷之家标的列表接口")
+@Api(tags = "api端-网贷之家标的列表接口")
 @Controller
 @RequestMapping("/hyjf-api/wdzj/borrowdata")
 public class BorrowDataController extends BaseController {

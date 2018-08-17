@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(tags = "Web端债转投资")
+@Api(tags = "web端-债转投资")
 @RestController
 @RequestMapping("/hyjf-web/credit")
 public class CreditController {

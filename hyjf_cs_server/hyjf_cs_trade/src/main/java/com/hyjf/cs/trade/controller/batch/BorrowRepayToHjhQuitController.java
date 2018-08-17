@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import java.util.UUID;
  * @author PC-LIUSHOUYI
  * @version BorrowRepayToHjhQuitController, v0.1 2018/6/25 9:33
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/borrowRepay")
 public class BorrowRepayToHjhQuitController {
