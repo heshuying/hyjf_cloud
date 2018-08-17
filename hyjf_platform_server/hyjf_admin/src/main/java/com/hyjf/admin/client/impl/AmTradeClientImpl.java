@@ -12,7 +12,6 @@ import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.AccountRechargeResponse;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -27,23 +26,22 @@ import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.PushMoneyVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -5452,4 +5450,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response;
     }
 
+    /**
+     * 互金协会报送日志列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public NifaReportLogResponse selectNifaReportLogList(NifaReportLogRequest request){
+        String url = tradeService + "/datacenter/nifareportlog/selectNifaReportLogList";
+        NifaReportLogResponse response = restTemplate.postForEntity(url,request,NifaReportLogResponse.class).getBody();
+        return response;
+    }
 }

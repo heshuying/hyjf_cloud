@@ -15,8 +15,6 @@ import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.NifaContractTemplateRequest;
-import com.hyjf.am.resquest.config.NifaFieldDefinitionRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
@@ -2611,5 +2609,13 @@ public interface AmTradeClient {
      * @auth nxl
      */
     NifaContractTemplateResponse selectNifaContractTemplateList(NifaContractTemplateRequest request);
+
+    /**
+     * 互金协会报送日志列表
+     * @param request
+     * @return
+     * @auth nxl
+     */
+    NifaReportLogResponse selectNifaReportLogList(NifaReportLogRequest request);
 }
 
