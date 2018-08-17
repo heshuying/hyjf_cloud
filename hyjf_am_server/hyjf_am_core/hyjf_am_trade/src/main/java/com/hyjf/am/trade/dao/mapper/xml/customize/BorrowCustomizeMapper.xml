@@ -607,6 +607,9 @@ WHERE
 		  <result column="businame" property="businame" jdbcType="VARCHAR" />
 		  <result column="usertype" property="userType" jdbcType="VARCHAR" />
 		  <!-- ADD BY LIUSHOUYI 合规检查 END -->
+         <!-- ADD BY zhangyk 增加初审时间 start -->
+         <result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
+         <!-- ADD BY zhangyk 增加初审时间 end -->
 		 </resultMap>
 		 <select id="selectBorrowList" resultMap="selectBorrowListMap"
 		  parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">

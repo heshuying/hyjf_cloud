@@ -32,7 +32,7 @@ import javax.validation.Valid;
  */
 @Api(value = "微信端用户开户",tags = "weChat端-用户开户")
 @RestController
-@RequestMapping("/hyjf-wechat/user/open")
+@RequestMapping("/hyjf-wechat/wx/user")
 public class WeChatBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatBankOpenController.class);
 
@@ -46,7 +46,7 @@ public class WeChatBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
-    @PostMapping(value = "/userInfo")
+    @PostMapping(value = "/initopen")
     @ResponseBody
     public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId) {
         logger.info("openAccount userInfo start, userId is :{}", userId);
@@ -68,7 +68,7 @@ public class WeChatBankOpenController extends BaseUserController {
     }
 
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
-    @PostMapping(value = "/openBankAccount")
+    @PostMapping(value = "/open")
     @ResponseBody
     public ModelAndView openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
