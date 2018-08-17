@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import java.util.Map;
  * @version CheckCouponController, v0.1 2018/7/6 16:15
  */
 @RestController
+@ApiIgnore
 @RequestMapping("/cs-trade/checkCoupon")
 public class CheckCouponController extends BaseTradeController {
 

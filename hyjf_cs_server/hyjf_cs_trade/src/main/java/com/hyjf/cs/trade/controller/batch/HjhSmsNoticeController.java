@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 投资调单异常处理controller
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jun
  * @since 20180623
  */
+@ApiIgnore
 @RestController
 @RequestMapping(value = "/cs-trade/hjhSmsNotice")
 public class HjhSmsNoticeController {
