@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -18,47 +19,62 @@ public class WhereaboutsPageVo extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //活动页id
+    @ApiModelProperty(value = "活动页id")
     private String id;
     //页面title
+    @ApiModelProperty(value = "页面title")
     private String title;
     //平台
+    @ApiModelProperty(value = "平台")
     private String sourceName;
-    //渠道名称
+    //渠道Id
+    @ApiModelProperty(value = "渠道Id")
     private String utmId;
     //渠道名称
+    @ApiModelProperty(value = "渠道名称")
     private String utmSource;
     //推荐人id
+    @ApiModelProperty(value = "推荐人id")
     private String referrer;
     //样式：通用模板/大转盘
+    @ApiModelProperty(value = "选择样式：通用模板/大转盘")
     private Integer style;
 
     //地址
+    @ApiModelProperty(value = "地址")
     private String jumpPath;
     //描述
+    @ApiModelProperty(value = "描述")
     private String describe;
     //开启状态
+    @ApiModelProperty(value = "开启状态")
     private Integer statusOn;
     /**
      * 检索条件渠道名称
      */
+    @ApiModelProperty(value = "检索条件渠道名称")
     private String utmName;
     /**
      * 检索条件推荐人名称
      */
+    @ApiModelProperty(value = "推荐人用户名")
     private String referrerName;
     /**
      * 检索条件页面title
      */
+    @ApiModelProperty(value = "检索条件页面title")
     private String titleName;
 
     /**
      * 检索条件 时间开始
      */
+    @ApiModelProperty(value = "检索条件 时间开始")
     private String timeStartSrch;
 
     /**
      * 检索条件 时间结束
      */
+    @ApiModelProperty(value = "检索条件 时间结束")
     private String timeEndSrch;
 
 

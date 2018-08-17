@@ -91,6 +91,7 @@ public class WebBindCardController extends BaseUserController {
             resultMap.put("bankname", StringUtils.isBlank(bankCardVO.getBank())?"":bankCardVO.getBank());
         }
 		resultMap.put("bankcard", BankCardUtil.getCardNo(bankCardVO.getCardNo()));
+		resultMap.put("bankcardNotEncrypt", bankCardVO.getCardNo());
 		resultMap.put("cardId", bankCardVO.getId());
 
 		result.setData(resultMap);
