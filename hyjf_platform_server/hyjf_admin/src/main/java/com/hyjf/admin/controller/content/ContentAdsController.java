@@ -29,7 +29,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "广告管理-条件列表查询", notes = "广告管理-条件列表查询")
     @PostMapping("/searchaction")
-    public AdminResult<ListResult<ContentAdsBeanVO>> searchAction(ContentAdsRequest request){
+    public AdminResult<ListResult<ContentAdsBeanVO>> searchAction(@RequestBody  ContentAdsRequest request){
         logger.info("查询内容中心-广告管理-条件列表查询开始......");
         ContentAdsResponse response = contentAdsService.searchAction(request);
         if (response == null) {
@@ -57,7 +57,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "广告管理-添加", notes = "广告管理-添加")
     @PostMapping("/insert")
-    public AdminResult insert(ContentAdsRequest request){
+    public AdminResult insert(@RequestBody ContentAdsRequest request){
         logger.info("添加内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.inserAction(request);
         if (response == null) {
@@ -71,7 +71,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "广告管理-修改", notes = "广告管理-修改")
     @PostMapping("/update")
-    public AdminResult update(ContentAdsRequest request){
+    public AdminResult update(@RequestBody ContentAdsRequest request){
         logger.info("修改内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.updateAction(request);
         if (response == null) {
