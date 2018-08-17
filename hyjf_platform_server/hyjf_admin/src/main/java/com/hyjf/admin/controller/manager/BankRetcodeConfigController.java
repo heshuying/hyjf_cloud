@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(tags = "配置中心返回码配置")
+@Api(tags = "配置中心-返回码配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankretcodeconfig")
 public class BankRetcodeConfigController extends BaseController {

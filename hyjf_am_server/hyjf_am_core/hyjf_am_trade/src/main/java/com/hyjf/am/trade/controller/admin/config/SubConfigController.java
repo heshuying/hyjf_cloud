@@ -32,7 +32,7 @@ public class SubConfigController {
 
     @Autowired
     private SubConfigService subConfigService;
-    private static Logger logger = LoggerFactory.getLogger(InstConfigController.class);
+    private static Logger logger = LoggerFactory.getLogger(SubConfigController.class);
     /**
      * 分页查询配置中心分账名单列表
      * @return
