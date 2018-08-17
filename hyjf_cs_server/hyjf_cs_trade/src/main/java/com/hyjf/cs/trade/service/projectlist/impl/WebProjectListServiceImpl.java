@@ -175,7 +175,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         ProjectCustomeDetailCsVO detailCsVO = CommonUtils.convertBean(projectCustomeDetail, ProjectCustomeDetailCsVO.class);
 
         UserVO userVO = null;
-        Map<String, Object> other = new HashMap(); // 原来独立于实体之外的属性，单独放在一个map中
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
         // 已经登录
         if (userId != null) {
             userVO = amUserClient.findUserById(Integer.valueOf(userId));
@@ -366,9 +367,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             other.put("repayPlanList", repayPlanList);
-            //相关文件
-           /* List<BorrowFileCustomBean> files = this.borrowService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            other.put("fileList", files);*/  // TODO: 2018/6/25  文件后期处理
             // 还款信息
             BorrowRepayVO borrowRepay = null;
             List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -644,13 +642,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         if (borrowInfoVO.getIsNew() == 0) {
             // 如果项目为汇资产项目
-            if (projectType == 9) {  // TODO: 2018/6/26 汇资产暂不处理
-                // 4查询相应的汇资产的首页信息
-//                WebHzcProjectDetailCustomize borrowInfo = this.projectService.searchHzcProjectDetail(borrowNid);
-//                result.put("borrowInfo", borrowInfo);
-//                // 处置预案
-//                WebHzcDisposalPlanCustomize disposalPlan = this.projectService.searchDisposalPlan(borrowNid);
-//                result.put("disposalPlan", disposalPlan);
+            if (projectType == 9) {
+            // 已经没有汇资产项目，不在处理
             }
             // 项目为非汇资产项目
             else {
@@ -664,12 +657,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     WebProjectPersonDetailVO borrowInfo = amTradeClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
                 }
-                // 风控信息
-                // TODO: 2018/6/26  待实现  WebRiskControlVO riskControl = this.projectService.selectRiskControl(borrowNid);
-//                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-//                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
-//                // 添加风控信息
-//                result.put("riskControl", riskControl);
                 List<BorrowCarinfoVO> borrowCarinfoVOList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
                 if (!CollectionUtils.isEmpty(borrowCarinfoVOList)) {
                     List<WebCarinfoVO> vehiclePledgeList = new ArrayList<>();
@@ -690,9 +677,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }
                 // 添加相应的汽车抵押信息
             }
-            // 获取图片信息
-            /*List<BorrowFileCustomBean> projectFileList = projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            result.put("borrowFiles", projectFileList);*/  // TODO: 2018/6/26 后期处理   zyk
             // 还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             result.put("repayPlanList", repayPlanList);
@@ -713,9 +697,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             result.put("repayPlanList", repayPlanList);
-            // 相关文件
-           /* List<BorrowFileCustomBean> files = this.projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            result.put("fileList", files);  // TODO: 2018/6/26  图片后期处理 */
             // 还款信息
             BorrowRepayVO borrowRepay = null;
             List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
