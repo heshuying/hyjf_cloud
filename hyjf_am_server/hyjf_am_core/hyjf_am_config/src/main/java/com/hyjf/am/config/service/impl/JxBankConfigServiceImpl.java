@@ -33,4 +33,21 @@ public class JxBankConfigServiceImpl implements JxBankConfigService {
         cra.andDelFlagEqualTo(0);
         return jxBankConfigMapper.selectByExample(example);
     }
+
+    /**
+     * 根据bankId获取江西银行配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<JxBankConfig> getJxBankConfigByBankId(Integer bankId) {
+        JxBankConfigExample example = new JxBankConfigExample();
+        JxBankConfigExample.Criteria cra = example.createCriteria();
+        //bankId
+        cra.andBankIdEqualTo(bankId);
+        //未删除
+        cra.andDelFlagEqualTo(0);
+        return jxBankConfigMapper.selectByExample(example);
+    }
 }

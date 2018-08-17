@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.BankRechargeConfigVo;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -203,20 +204,20 @@ public class AppRechargeController extends BaseUserController {
                         // 银行代码
                         result.setCode("");
                         Integer bankId = bankCard.getBankId();
-                        BankConfigVO banksConfig = appRechargeService.getBankConfigByBankId(bankId);
+                        JxBankConfigVO jxBankConfigVO = appRechargeService.getJxBankConfigByBankId(bankId);
 
-                        if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getLogo())) {
-                            result.setLogo(systemConfig.webHost + banksConfig.getLogo());
+                        if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankLogo())) {
+                            result.setLogo(systemConfig.webHost + jxBankConfigVO.getBankLogo());
                         } else {
                             result.setLogo(systemConfig.webHost + "/data/upfiles/filetemp/image/bank_log.png");
                         }
 
-                        if(banksConfig !=null && StringUtils.isNotEmpty(banksConfig.getName())){
-                            result.setBank(banksConfig.getName());
+                        if(jxBankConfigVO !=null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())){
+                            result.setBank(jxBankConfigVO.getBankName());
                         }
 
                         // 是否快捷卡
-                        if(banksConfig != null && banksConfig.getQuickPayment() == 1){
+                        if(jxBankConfigVO != null && jxBankConfigVO.getQuickPayment() == 1){
                             result.setIsDefault("2");
                         }else {
                             result.setIsDefault("0");
@@ -247,25 +248,22 @@ public class AppRechargeController extends BaseUserController {
                             // 拼接展示信息字符串
                             //String moneyInfo = AppRechargeDefine.FEE + CustomConstants.DF_FOR_VIEW.format(fee) + AppRechargeDefine.RECHARGE_INFO_SUFFIX + AppRechargeDefine.BALANCE
                             //+ CustomConstants.DF_FOR_VIEW.format(balance) + AppRechargeDefine.RECHARGE_INFO_SUFFIX;
-                            BankRechargeConfigVo bankRechargeConfigVo = appRechargeService.getBankRechargeConfigByBankId(bankId);
-                            if (bankRechargeConfigVo != null) {
+                            if (jxBankConfigVO != null) {
 /*                                BigDecimal timesLimit = bankRechargeConfigVo.getSingleQuota();
                                 timesLimit = (timesLimit == null)?BigDecimal.ZERO:timesLimit;
                                 BigDecimal dayLimit = bankRechargeConfigVo.getSingleCardQuota();
                                 dayLimit = (dayLimit == null)?BigDecimal.ZERO:dayLimit;*/
                                 // 每次限额 单位：万元
-                                BigDecimal timesLimitAmount = bankRechargeConfigVo.getSingleQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                                BigDecimal timesLimitAmount = jxBankConfigVO.getSingleQuota().divide(new BigDecimal(AMOUNT_UNIT));
                                 // 每日限额 单位：万元
-                                BigDecimal dayLimitAmount = bankRechargeConfigVo.getSingleCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                                BigDecimal dayLimitAmount = jxBankConfigVO.getSingleCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
                                 // 每月限额 单位: 万元
-                                // 月限额是否还有必要,因为数据库里没有
-                                //BigDecimal monthLimitAmount = bankRechargeConfigVo.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
+                                BigDecimal monthLimitAmount = jxBankConfigVO.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
 								/*// 是否支持快捷支付1:支持 2:不支持
 								Integer quickPayment = banksConfig.getQuickPayment();*/
-                                BigDecimal monthLimitAmount = BigDecimal.ZERO;
-/*                                if (monthLimitAmount == null) {
+                                if (monthLimitAmount == null) {
                                     monthLimitAmount = BigDecimal.ZERO;
-                                }*/
+                                }
                                 String moneyInfo = MessageFormat.format(CARD_DESC, (BigDecimal.ZERO.compareTo(timesLimitAmount) == 0)?"不限":timesLimitAmount.toString() + "万元",
                                         (BigDecimal.ZERO.compareTo(dayLimitAmount)==0)?"不限":dayLimitAmount.toString() + "万元",
                                         (BigDecimal.ZERO.compareTo(monthLimitAmount)==0)?"不限":monthLimitAmount.toString() + "万元");
