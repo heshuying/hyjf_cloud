@@ -9,9 +9,10 @@ import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -250,7 +251,17 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
      * @return
      */
     @Override
-    public RepaymentPlanAjaxBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
+    public RepayPlanInfoBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
         return amTradeClient.getRepayPlanInfo(request.getBorrowNid(), request.getNid(), request.getTypeStr());
+    }
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public MyCreditDetailBean getMyCreditAssignDetail(String creditNid){
+        return amTradeClient.getMyCreditAssignDetail(creditNid);
     }
 }
