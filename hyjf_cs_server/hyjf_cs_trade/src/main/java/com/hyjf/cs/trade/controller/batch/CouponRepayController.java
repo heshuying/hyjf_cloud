@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.List;
  * 体验金收益期限还款
  */
 @RestController
-@RequestMapping("/batch/couponPeriodRepay")
+@RequestMapping("/cs-trade/batch/couponPeriodRepay")
 public class CouponRepayController extends BaseTradeController {
     @Autowired
     private CouponRepayService couponRepayService;

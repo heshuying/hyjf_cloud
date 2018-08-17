@@ -39,7 +39,6 @@ public class BankSettingController {
      */
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
-        //logger.info("江西银行列表..." + JSONObject.toJSON(adminRequest));
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(new JxBankConfig(), -1, -1);
         if (recordList != null) {

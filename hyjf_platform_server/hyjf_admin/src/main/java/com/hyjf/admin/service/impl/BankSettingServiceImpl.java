@@ -6,7 +6,6 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.BankSettingClient;
 import com.hyjf.admin.service.BankSettingService;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;

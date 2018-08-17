@@ -224,7 +224,7 @@ public class AmConfigClientImpl implements AmConfigClient {
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
-        return null;
+        return new LinkResponse();
     }
 
     /**
@@ -896,8 +896,10 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<JxBankConfigVO> getRecordList(JxBankConfigVO bank, int limitStart, int limitEnd) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/searchForInsert",
-                bank, List.class);
+        AdminBankSettingResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/searchForInsert",
+                bank, AdminBankSettingResponse.class);
+
+        return response.getResultList();
     }
 
     /**

@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -15,9 +16,10 @@ public class CouponUserBeanRequest extends Request implements Serializable {
 
     private Integer id;
 
+    @ApiModelProperty(value = "优惠券id")
     private Integer couponId;
 
-    //优惠券编码
+    @ApiModelProperty(value = "优惠券编码")
     private String couponCode;
 
     //优惠券编码
@@ -26,7 +28,7 @@ public class CouponUserBeanRequest extends Request implements Serializable {
     //优惠券名字
     private String couponName;
 
-    //优惠券类型
+    @ApiModelProperty(value = "优惠券类型")
     private String couponType;
 
     //优惠券额度
@@ -47,18 +49,18 @@ public class CouponUserBeanRequest extends Request implements Serializable {
     //活动id
     private Integer activityId;
 
-    //优惠券来源
+    @ApiModelProperty(value = "优惠券来源")
     private String couponFrom;
 
     private Integer userId;
 
-    //用户名
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     //备注
     private String content;
 
-    //使用状态
+    @ApiModelProperty(value = "使用状态")
     private String usedFlag;
 
     //使用状态（页面展现）
@@ -103,24 +105,17 @@ public class CouponUserBeanRequest extends Request implements Serializable {
      */
     private String auditStatus;
 
-    /**
-     * 检索条件 有效时间开始
-     */
+    @ApiModelProperty(value = "有效时间开始")
     private String timeStartSrch;
 
-    /**
-     * 检索条件 有效时间结束
-     */
+    @ApiModelProperty(value = "有效时间结束")
     private String timeEndSrch;
 
-    /**
-     * 检索条件 添加开始时间
-     */
+
+    @ApiModelProperty(value = "优惠券获得时间开始")
     private String timeStartAddSrch;
 
-    /**
-     * 检索条件 添加结束时间
-     */
+    @ApiModelProperty(value = "优惠券获取时间结束")
     private String timeEndAddSrch;
     /**
      * 检索条件 审批备注
