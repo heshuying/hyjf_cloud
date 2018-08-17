@@ -39,11 +39,11 @@ public class OperationReportVO extends BaseVO implements Serializable {
     private BigDecimal allProfit;
     @ApiModelProperty(value = "平台注册人数")
     private BigDecimal registNum;
-
+    @ApiModelProperty(value = "本月成交笔数")
     private Integer successDealNum;
-
+    @ApiModelProperty(value = "本月成交金额")
     private BigDecimal operationAmount;
-
+    @ApiModelProperty(value = "本月赚取收益")
     private BigDecimal operationProfit;
     @ApiModelProperty(value = "是否发布")
     private Integer isRelease;
