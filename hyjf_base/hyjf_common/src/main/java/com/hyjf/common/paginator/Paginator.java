@@ -71,6 +71,9 @@ public class Paginator implements java.io.Serializable {
     /** 是否是禁用的页 */
     private boolean disabledPage;
 
+    public Paginator() {
+    }
+
     /**
      * @param page
      *            当前第几页

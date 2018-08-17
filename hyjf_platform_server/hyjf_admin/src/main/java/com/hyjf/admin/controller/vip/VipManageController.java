@@ -34,7 +34,7 @@ import java.util.Map;
  * @author yaoyong
  * @version VIPManageController, v0.1 2018/7/2 14:49
  */
-@Api(value = "vip管理", tags = "vip管理")
+@Api(tags = "VIP中心-VIP管理")
 @RestController
 @RequestMapping("/hyjf-admin/vipmanage")
 public class VipManageController extends BaseController {
@@ -45,7 +45,7 @@ public class VipManageController extends BaseController {
     @Autowired
     private VipManageService vipManageService;
 
-    @ApiOperation(value = "vip管理", notes = "vip管理页面初始化")
+    @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject vipManageInit() {
@@ -53,10 +53,10 @@ public class VipManageController extends BaseController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "vip管理", notes = "vip管理列表查询")
+    @ApiOperation(value = "VIP管理列表查询", notes = "VIP管理列表查询")
     @PostMapping("/vipManageList")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, VipManageRequest vipManageRequest) {
+    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
         VipManageResponse vmr = vipManageService.searchList(vipManageRequest);
         if (vmr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -68,10 +68,10 @@ public class VipManageController extends BaseController {
         return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount()));
     }
 
-    @ApiOperation(value = "vip管理", notes = "vip详情页面")
-    @PostMapping("/vipdetailInit")
+    @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
+    @RequestMapping (value = "/vipdetailInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(HttpServletRequest request, HttpServletResponse response, @PathVariable String userId) {
         VipDetailListRequest vdr = new VipDetailListRequest();
         vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
@@ -85,10 +85,10 @@ public class VipManageController extends BaseController {
         return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
     }
 
-    @ApiOperation(value = "vip管理", notes = "vip升级详情页面")
-    @PostMapping("/vipupgradeInit")
+    @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
+    @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @PathVariable String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);

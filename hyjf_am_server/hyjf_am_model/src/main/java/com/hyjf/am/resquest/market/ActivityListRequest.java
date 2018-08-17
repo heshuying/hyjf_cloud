@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.market;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author yaoy
  * @version ActivityListRequest, v0.1 2018/6/26 17:03
@@ -11,17 +13,20 @@ package com.hyjf.am.resquest.market;
 public class ActivityListRequest {
 
     private int id;
-    /** 活动名称 */
+
+    @ApiModelProperty(value = "活动名称")
     private String title;
-    /**
-     * 前台时间接收
-     */
+
+    @ApiModelProperty(value = "活动开始时间")
     private Integer startTime;
 
+    @ApiModelProperty(value = "活动结束时间")
     private Integer endTime;
 
+    @ApiModelProperty(value = "活动创建开始时间")
     private String startCreate;
 
+    @ApiModelProperty(value = "活动创建结束时间")
     private String endCreate;
 
     // 平台（Android或iOS）

@@ -89,7 +89,7 @@ public class ValidatorFieldCheckUtil {
 	/**
 	 * 必须输入项目
 	 *
-	 * @param ModelAndView
+	 * @param mav
 	 * @param itemname
 	 * @param value
 	 * @return true:正常 false:错误

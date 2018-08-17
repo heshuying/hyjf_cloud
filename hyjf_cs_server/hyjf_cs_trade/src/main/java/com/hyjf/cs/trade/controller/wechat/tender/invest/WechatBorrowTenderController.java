@@ -64,7 +64,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
-    @RequestMapping("/bgReturn")
+    @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
         logger.info("wechat端-散标投资异步处理start,userId:{}", bean.getLogUserId());
