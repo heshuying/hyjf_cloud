@@ -15,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import java.util.List;
  * @author dangzw
  * @version MessagePushErrorController, v0.1 2018/8/14 22:39
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/msgpush/error")
 public class MessagePushErrorController {

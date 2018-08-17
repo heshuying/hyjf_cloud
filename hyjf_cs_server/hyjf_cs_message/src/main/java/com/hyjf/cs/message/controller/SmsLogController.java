@@ -12,13 +12,13 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
-import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -26,15 +26,13 @@ import java.util.List;
  * @author fuqiang
  * @version SmsLogController, v0.1 2018/6/23 14:10
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/sms_log")
 public class SmsLogController extends BaseController {
 
 	@Autowired
 	private SmsLogService smsLogService;
-
-	@Autowired
-	private SmsLogDao smsLogDao;
 
 	/**
 	 * 查询消息中心短信发送记录
@@ -43,7 +41,7 @@ public class SmsLogController extends BaseController {
 	@RequestMapping("/list")
 	public JSONObject smsLogList() {
 		JSONObject jsonObject = new JSONObject();
-		List<SmsLog> list = smsLogDao.findAll();
+		List<SmsLog> list = smsLogService.findSmsLogList();
 		jsonObject.put("smsLogList", list);
 		return jsonObject;
 	}

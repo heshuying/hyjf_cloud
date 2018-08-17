@@ -3,32 +3,34 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author yaoyong
  * @version VipManageRequest, v0.1 2018/7/2 15:13
  */
 public class VipManageRequest {
-    /** 注册开始时间 */
+    @ApiModelProperty(value = "注册开始时间")
     public String regTimeStart;
-    /** 注册结束时间 */
+    @ApiModelProperty(value = "注册结束时间")
     public String regTimeEnd;
-    /** 用户名 */
+    @ApiModelProperty(value = "用户名")
     public String userName;
-    /** 真实姓名 */
+    @ApiModelProperty(value = "姓名")
     public String realName;
-    /** 用户手机号 */
+    @ApiModelProperty(value = "手机号")
     public String mobile;
-    /** 推荐人名称 */
+    @ApiModelProperty(value = "推荐人")
     public String recommendName;
-    /** 部门 */
+    @ApiModelProperty(value = "部门")
     public String combotreeListSrch;
-    /** 用戶角色 */
+    @ApiModelProperty(value = "用户角色")
     public String userRole;
-    /** 用戶属性 */
+    @ApiModelProperty(value = "用户属性")
     public String userProperty;
-    /** 用户状态 */
+    @ApiModelProperty(value = "用户状态")
     public String userStatus;
-    /** 是否51老用户 */
+    @ApiModelProperty(value = "是否51用户")
     public String is51;
 
     public int limit;

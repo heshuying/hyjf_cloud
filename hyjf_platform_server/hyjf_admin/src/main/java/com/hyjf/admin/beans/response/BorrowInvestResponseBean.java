@@ -5,11 +5,10 @@ package com.hyjf.admin.beans.response;
 
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 投资明细共用返回bean
@@ -27,13 +26,13 @@ public class BorrowInvestResponseBean {
     private Integer total;
 
     @ApiModelProperty(value = "操作平台")
-    private Map<String,String> clientList;
+    private List<DropDownVO> clientList;
 
     @ApiModelProperty(value = "还款方式")
-    private List<BorrowStyleVO> borrowStyleList;
+    private List<DropDownVO> borrowStyleList;
 
     @ApiModelProperty(value = "投资方式")
-    private Map<String,String> investTypeList;
+    private List<DropDownVO> investTypeList;
 
     @ApiModelProperty(value = "投资人债券明细")
     List<InvestorDebtBean> detailList;
@@ -68,27 +67,27 @@ public class BorrowInvestResponseBean {
         this.total = total;
     }
 
-    public Map<String, String> getClientList() {
+    public List<DropDownVO> getClientList() {
         return clientList;
     }
 
-    public void setClientList(Map<String, String> clientList) {
+    public void setClientList(List<DropDownVO> clientList) {
         this.clientList = clientList;
     }
 
-    public List<BorrowStyleVO> getBorrowStyleList() {
+    public List<DropDownVO> getBorrowStyleList() {
         return borrowStyleList;
     }
 
-    public void setBorrowStyleList(List<BorrowStyleVO> borrowStyleList) {
+    public void setBorrowStyleList(List<DropDownVO> borrowStyleList) {
         this.borrowStyleList = borrowStyleList;
     }
 
-    public Map<String, String> getInvestTypeList() {
+    public List<DropDownVO> getInvestTypeList() {
         return investTypeList;
     }
 
-    public void setInvestTypeList(Map<String, String> investTypeList) {
+    public void setInvestTypeList(List<DropDownVO> investTypeList) {
         this.investTypeList = investTypeList;
     }
 

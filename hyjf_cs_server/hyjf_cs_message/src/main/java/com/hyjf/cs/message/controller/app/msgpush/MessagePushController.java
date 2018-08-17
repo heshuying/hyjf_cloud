@@ -19,10 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +40,7 @@ public class MessagePushController extends BaseController {
 	private MsgPushService msgPushService;
 
 	@ApiOperation(value = "获取提醒列表", notes = "获取提醒列表")
-	@RequestMapping("/getTagListAction")
+	@PostMapping("/getTagListAction")
 	public JSONObject getTagListAction(@RequestHeader(value = "userId") Integer userId,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
@@ -107,7 +104,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
-	@RequestMapping("/getMsgListAction")
+	@PostMapping("/getMsgListAction")
 	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
@@ -184,8 +181,8 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
-	@RequestMapping("/alreadyReadAction")
-	public JSONObject alreadyReadAction(HttpServletRequest request) {
+	@PostMapping("/alreadyReadAction")
+	public JSONObject alreadyReadAction(HttpServletRequest request, @RequestHeader(value = "userId")Integer userId) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");
 		// 版本号
@@ -200,20 +197,6 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
-		// 取得用户iD
-		Integer userId = null;
-		try {
-			userId = SecretUtil.getUserId(sign);
-		} catch (Exception e) {
-			userId = null;
-		}
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		this.msgPushService.updateAllMsgPushMsgHistory(userId, platform);
@@ -221,7 +204,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息及消息推送已读", notes = "消息及消息推送已读")
-	@RequestMapping("/msgReadAction")
+	@GetMapping("/msgReadAction")
 	public JSONObject msgReadAction(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
@@ -262,7 +245,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "通知详情页", notes = "通知详情页")
-	@RequestMapping("/msgDetailAction")
+	@GetMapping("/msgDetailAction")
 	public JSONObject msgDetailAction(HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		// 唯一标识

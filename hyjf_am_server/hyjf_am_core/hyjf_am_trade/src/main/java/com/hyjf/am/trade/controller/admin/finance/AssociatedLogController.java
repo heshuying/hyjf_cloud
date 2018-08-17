@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,7 @@ public class AssociatedLogController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询绑定日志count",notes = "根据筛选条件查询绑定日志count")
     @PostMapping("/getbindlogcount")
-    public Integer getBindLogCount(BindLogListRequest request){
+    public Integer getBindLogCount(@RequestBody BindLogListRequest request){
         return associatedLogService.getBindLogCount(request);
     }
 
@@ -51,12 +52,12 @@ public class AssociatedLogController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询绑定日志list",notes = "根据筛选条件查询绑定日志list")
     @PostMapping("/searchbindloglist")
-    public BindLogResponse searchBindLogList(BindLogListRequest request){
+    public BindLogResponse searchBindLogList(@RequestBody BindLogListRequest request){
         BindLogResponse response = new BindLogResponse();
         Integer count = associatedLogService.getBindLogCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }

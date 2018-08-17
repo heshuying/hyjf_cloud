@@ -11,11 +11,11 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.HjhAccountBalanceService;
 import com.hyjf.cs.message.service.HjhPlanCapitalService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author liubin
  * @version PlanCapitalController, v0.1 2018/7/31 16:48
  */
-@Api(value = "汇计划资本预估统计(每日)任务")
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/hjh_plan_capital")
 public class HjhPlanCapitalController extends BaseController {

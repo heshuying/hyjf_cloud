@@ -4,7 +4,9 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
+import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 
 /**
  * @author pangchengchao
@@ -48,4 +50,11 @@ public interface AssetManageService extends BaseTradeService {
      * @Date
      */
     PlanAjaxBean getRepayMentPlan(AssetManageBeanRequest form);
+
+    /**
+     * 获取用户还款计划数据
+     * @param request
+     * @return
+     */
+    RepaymentPlanAjaxBean getRepayPlanInfo(WebGetRepayMentRequestVO request);
 }

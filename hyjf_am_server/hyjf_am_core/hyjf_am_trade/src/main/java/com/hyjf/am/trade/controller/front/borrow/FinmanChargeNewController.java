@@ -90,8 +90,7 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         int count = this.finmanChargeNewService.insertFinmanChargeNew(adminRequest);
         if (count > 0) {
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
+            response.setRtn(Response.SUCCESS);
             return response;
         }
         return null;
@@ -108,8 +107,7 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         int count = this.finmanChargeNewService.updateFinmanChargeNew(adminRequest);
         if (count > 0) {
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
+            response.setRtn(Response.SUCCESS);
             return response;
         }
         return null;
@@ -126,8 +124,7 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         int count = this.finmanChargeNewService.deleteFinmanChargeNew(adminRequest);
         if (count > 0) {
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
+            response.setRtn(Response.SUCCESS);
             return response;
         }
         return null;

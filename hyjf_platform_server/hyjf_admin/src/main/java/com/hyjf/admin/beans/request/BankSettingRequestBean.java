@@ -5,10 +5,10 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author dangzw
@@ -24,72 +24,70 @@ public class BankSettingRequestBean extends BasePage implements Serializable {
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "查询的id")
     private String ids;
 
+    @ApiModelProperty(value = "查询的开始时间")
     private String startCreate;
 
+    @ApiModelProperty(value = "查询的结束时间")
     private String endCreate;
 
-    public String getStartCreate() {
-        return startCreate;
-    }
-
-    public void setStartCreate(String startCreate) {
-        this.startCreate = startCreate;
-    }
-
-    public String getIds() {
-        return ids;
-    }
-
-    public void setIds(String ids) {
-        this.ids = ids;
-    }
-
-    public String getEndCreate() {
-        return endCreate;
-    }
-
-    public void setEndCreate(String endCreate) {
-        this.endCreate = endCreate;
-    }
-
+    @ApiModelProperty(value = "江西银行的银行卡配置表主键")
     private Integer id;
 
+    @ApiModelProperty(value = "银行ID")
     private Integer bankId;
 
+    @ApiModelProperty(value = "银行名称")
     private String bankName;
 
+    @ApiModelProperty(value = "银行总行的行联号")
     private String payAllianceCode;
 
+    @ApiModelProperty(value = "银行代码")
     private String bankCode;
 
+    @ApiModelProperty(value = "银行icon")
     private String bankIcon;
 
+    @ApiModelProperty(value = "银行logo")
     private String bankLogo;
 
+    @ApiModelProperty(value = "支持快捷支付：0 不支持  1 支持")
     private Integer quickPayment;
 
+    @ApiModelProperty(value = "单笔限额")
     private BigDecimal singleQuota;
 
+    @ApiModelProperty(value = "单卡单日限额")
     private BigDecimal singleCardQuota;
 
+    @ApiModelProperty(value = "提现手续费")
     private BigDecimal feeWithdraw;
 
+    @ApiModelProperty(value = "排序id")
     private Integer sortId;
 
+    @ApiModelProperty(value = "备注说明")
     private String remark;
 
+    @ApiModelProperty(value = "创建人")
     private Integer createUser;
 
+    @ApiModelProperty(value = "创建时间")
     private Integer createTime;
 
+    @ApiModelProperty(value = "修改人")
     private Integer updateUser;
 
+    @ApiModelProperty(value = "修改时间")
     private Integer updateTime;
 
+    @ApiModelProperty(value = "删除标识")
     private Integer delFlg;
 
+    @ApiModelProperty(value = "单月限额")
     private BigDecimal monthCardQuota;
 
     public Integer getId() {
@@ -244,6 +242,30 @@ public class BankSettingRequestBean extends BasePage implements Serializable {
         this.monthCardQuota = monthCardQuota;
     }
 
+    public String getStartCreate() {
+        return startCreate;
+    }
+
+    public void setStartCreate(String startCreate) {
+        this.startCreate = startCreate;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    public String getEndCreate() {
+        return endCreate;
+    }
+
+    public void setEndCreate(String endCreate) {
+        this.endCreate = endCreate;
+    }
+
     /**
      * 翻页机能用的隐藏变量
      */
@@ -272,5 +294,4 @@ public class BankSettingRequestBean extends BasePage implements Serializable {
     public void setPaginator(Paginator paginator) {
         this.paginator = paginator;
     }
-
 }

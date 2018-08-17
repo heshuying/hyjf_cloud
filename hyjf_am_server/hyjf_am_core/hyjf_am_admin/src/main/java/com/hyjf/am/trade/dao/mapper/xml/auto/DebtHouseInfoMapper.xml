@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.DebtHouseInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.DebtHouseInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="houses_type" property="housesType" jdbcType="VARCHAR" />
+    <result column="houses_location" property="housesLocation" jdbcType="VARCHAR" />
+    <result column="houses_area" property="housesArea" jdbcType="VARCHAR" />
+    <result column="houses_price" property="housesPrice" jdbcType="VARCHAR" />
+    <result column="houses_toprice" property="housesToprice" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_pre_nid" property="borrowPreNid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, houses_type, houses_location, houses_area, houses_price, houses_toprice, borrow_nid, 
+    borrow_pre_nid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_debt_house_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_debt_house_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_debt_house_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfoExample" >
+    delete from ht_debt_house_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_house_info (houses_type, houses_location, houses_area, 
+      houses_price, houses_toprice, borrow_nid, 
+      borrow_pre_nid)
+    values (#{housesType,jdbcType=VARCHAR}, #{housesLocation,jdbcType=VARCHAR}, #{housesArea,jdbcType=VARCHAR}, 
+      #{housesPrice,jdbcType=VARCHAR}, #{housesToprice,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
+      #{borrowPreNid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_debt_house_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="housesType != null" >
+        houses_type,
+      </if>
+      <if test="housesLocation != null" >
+        houses_location,
+      </if>
+      <if test="housesArea != null" >
+        houses_area,
+      </if>
+      <if test="housesPrice != null" >
+        houses_price,
+      </if>
+      <if test="housesToprice != null" >
+        houses_toprice,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="housesType != null" >
+        #{housesType,jdbcType=VARCHAR},
+      </if>
+      <if test="housesLocation != null" >
+        #{housesLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="housesArea != null" >
+        #{housesArea,jdbcType=VARCHAR},
+      </if>
+      <if test="housesPrice != null" >
+        #{housesPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="housesToprice != null" >
+        #{housesToprice,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        #{borrowPreNid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ht_debt_house_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_debt_house_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.housesType != null" >
+        houses_type = #{record.housesType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.housesLocation != null" >
+        houses_location = #{record.housesLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.housesArea != null" >
+        houses_area = #{record.housesArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.housesPrice != null" >
+        houses_price = #{record.housesPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.housesToprice != null" >
+        houses_toprice = #{record.housesToprice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPreNid != null" >
+        borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_debt_house_info
+    set id = #{record.id,jdbcType=INTEGER},
+      houses_type = #{record.housesType,jdbcType=VARCHAR},
+      houses_location = #{record.housesLocation,jdbcType=VARCHAR},
+      houses_area = #{record.housesArea,jdbcType=VARCHAR},
+      houses_price = #{record.housesPrice,jdbcType=VARCHAR},
+      houses_toprice = #{record.housesToprice,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{record.borrowPreNid,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfo" >
+    update ht_debt_house_info
+    <set >
+      <if test="housesType != null" >
+        houses_type = #{housesType,jdbcType=VARCHAR},
+      </if>
+      <if test="housesLocation != null" >
+        houses_location = #{housesLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="housesArea != null" >
+        houses_area = #{housesArea,jdbcType=VARCHAR},
+      </if>
+      <if test="housesPrice != null" >
+        houses_price = #{housesPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="housesToprice != null" >
+        houses_toprice = #{housesToprice,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPreNid != null" >
+        borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.DebtHouseInfo" >
+    update ht_debt_house_info
+    set houses_type = #{housesType,jdbcType=VARCHAR},
+      houses_location = #{housesLocation,jdbcType=VARCHAR},
+      houses_area = #{housesArea,jdbcType=VARCHAR},
+      houses_price = #{housesPrice,jdbcType=VARCHAR},
+      houses_toprice = #{housesToprice,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_pre_nid = #{borrowPreNid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

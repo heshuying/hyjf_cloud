@@ -56,7 +56,7 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "app验证验证码",notes = "验证验证码")
+    @ApiOperation(value = "验证验证码",notes = "验证验证码")
     @PostMapping(value = "/validateVerificationCodeAction")
     public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();

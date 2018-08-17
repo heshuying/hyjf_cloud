@@ -7,8 +7,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
 import com.hyjf.cs.message.bean.ic.SubEntity;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -31,10 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author xiasq
+ * @author tanyy
  * @version OperationalDataController, v0.1 2018/1/16 17:39
  */
-
+@ApiIgnore
 @RestController
 @RequestMapping("/hyjf-wechat/find/operationalData")
 public class OperationalDataWechatController {
@@ -42,13 +41,7 @@ public class OperationalDataWechatController {
 	private Logger _log = LoggerFactory.getLogger(OperationalDataWechatController.class);
 
 	@Autowired
-	private OperationMongoGroupDao operationMongoGroupDao;
-	@Autowired
-	private OperationMongDao operationMongDao;
-	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
-
-
 
 	/**
 	 * 获取平台实时数据
@@ -67,7 +60,7 @@ public class OperationalDataWechatController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
 			JSONObject info = new JSONObject();
 
@@ -92,7 +85,7 @@ public class OperationalDataWechatController {
 			fieldsObject.put("tradeCountMonth", true);
 			query = new BasicQuery(dbObject, fieldsObject);			query.limit(12);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			List<OperationReportEntity> list = operationMongDao.find(query);
+			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList(query);
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -140,7 +133,7 @@ public class OperationalDataWechatController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
 			JSONObject detail = new JSONObject();
 			
@@ -201,10 +194,10 @@ public class OperationalDataWechatController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
 			if(Validator.isNull(oe)) {
 				result.put("status", "99");
-				result.put("statusDesc", "获取投资人地域分布数据失败");
+				result.put("statusDesc", "投资人地域分布数据为空");
 				return result;
 			}
 
@@ -245,7 +238,7 @@ public class OperationalDataWechatController {
 			Query query = new Query();
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
 			// 投资人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
             int maleCount = 0;

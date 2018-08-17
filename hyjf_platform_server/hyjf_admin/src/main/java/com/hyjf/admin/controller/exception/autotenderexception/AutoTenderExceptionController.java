@@ -60,11 +60,6 @@ public class AutoTenderExceptionController extends BaseController {
     private AutoTenderExceptionService autoTenderExceptionService;
     @Autowired
     private BorrowInvestService borrowInvestService;
-    @Autowired
-    private UserCenterService userCenterService;
-    @Autowired
-    private HjhCreditEndExceptionService hjhCreditEndExceptionService;
-
 
     private static final String PERMISSIONS = "accedelist";
 

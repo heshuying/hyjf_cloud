@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
+import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
 import com.hyjf.cs.trade.bean.WebCreditRequestBean;
 import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -101,6 +102,20 @@ public interface WebProjectListService extends BaseTradeService {
      * @date 2018/7/24 18:51
      */
     public WebResult getPlanAccedeList(WebPlanRequestBean requestBean,  String userId);
+
+    /**
+     * 根据计划编号和用户id查询用户优惠券
+     * @author zhangyk
+     * @date 2018/8/16 11:08
+     */
+    public WebResult getProjectAvailableUserCoupon(WebPlanRequestBean requestBean,  Integer userId);
+
+    /**
+     * 查询计划标的组成的标的详情
+     * @author zhangyk
+     * @date 2018/8/17 9:49
+     */
+    public WebResult getPlanAccedeBorrowDetail(WebBorrowRequestBean requestBean , Integer userId);
 
 
 

@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.front.asset;
 
+import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.dao.model.customize.*;
@@ -60,4 +61,13 @@ public interface AssetManageService  extends BaseService {
     List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(AssetManageBeanRequest request);
 
     List<AppTenderToCreditListCustomize> selectTenderToCreditList(Map<String,Object> params);
+
+    /**
+     * 获取用户还款计划
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type);
 }

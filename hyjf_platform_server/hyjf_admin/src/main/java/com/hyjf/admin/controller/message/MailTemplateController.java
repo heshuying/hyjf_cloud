@@ -4,6 +4,9 @@
 package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MailTemplateService;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
@@ -12,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +27,7 @@ import java.util.List;
 @Api(tags = "邮件模板")
 @RestController
 @RequestMapping("/hyjf-admin/mail/template")
-public class MailTemplateController {
+public class MailTemplateController extends BaseController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,11 +41,12 @@ public class MailTemplateController {
 	 */
 	@ApiOperation(value = "查询所有邮件配置模板", notes = "查询所有邮件配置模板")
 	@GetMapping("/find_all")
-	public JSONObject findAll() {
-		JSONObject jsonObject = new JSONObject();
+	public AdminResult<ListResult<SmsMailTemplateVO>> findAll() {
 		List<SmsMailTemplateVO> voList = mailTemplateService.findAll();
-		jsonObject.put("mailTemplateList", voList);
-		return jsonObject;
+		if (CollectionUtils.isEmpty(voList)) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		return new AdminResult<ListResult<SmsMailTemplateVO>>(ListResult.build(voList, voList.size()));
 	}
 
 	/**
@@ -51,11 +56,9 @@ public class MailTemplateController {
 	 */
 	@ApiOperation(value = "根据条件查询邮件配置模板", notes = "根据条件查询邮件配置模板")
 	@PostMapping("/find_mail_template")
-	public JSONObject findMailTemplate(@RequestBody MailTemplateRequest request) {
-		JSONObject jsonObject = new JSONObject();
+	public AdminResult<ListResult<SmsMailTemplateVO>> findMailTemplate(@RequestBody MailTemplateRequest request) {
 		List<SmsMailTemplateVO> voList = mailTemplateService.findMailTemplate(request);
-		jsonObject.put("mailTemplateList", voList);
-		return jsonObject;
+		return new AdminResult<ListResult<SmsMailTemplateVO>>(ListResult.build(voList, voList.size()));
 	}
 
 	/**

@@ -8,11 +8,13 @@ import com.hyjf.cs.message.service.totalinterest.TotalInvestAndInterestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author fq
  * @version TotalInvestAndInterestController, v0.1 2018/7/31 11:17
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-message/totalinvestandinterest")
 public class TotalInvestAndInterestController extends BaseController {

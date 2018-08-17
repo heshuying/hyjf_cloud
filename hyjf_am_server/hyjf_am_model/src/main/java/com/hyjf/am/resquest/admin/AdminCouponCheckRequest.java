@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 
 /**
@@ -17,6 +18,7 @@ public class AdminCouponCheckRequest extends BasePage {
 
     private String filePath;
 
+    @ApiModelProperty(value = "发放状态")
     private Integer status;
 
     private String remark;
@@ -29,8 +31,9 @@ public class AdminCouponCheckRequest extends BasePage {
 
     private String createTime;
 
+    @ApiModelProperty(value = "添加时间开始")
     private String createTimeStart;
-
+    @ApiModelProperty(value = "添加时间结束")
     private String createTimeEnd;
 
     private String updateTime;

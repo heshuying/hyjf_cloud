@@ -2,31 +2,28 @@ package com.hyjf.cs.trade.service.projectlist.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.resquest.trade.CreditListRequest;
-import com.hyjf.am.resquest.trade.HjhAccedeRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.UserCouponConfigCustomizeVo;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -171,7 +168,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         ProjectCustomeDetailCsVO detailCsVO = CommonUtils.convertBean(projectCustomeDetail, ProjectCustomeDetailCsVO.class);
 
         UserVO userVO = null;
-        Map<String, Object> other = new HashMap(); // 原来独立于实体之外的属性，单独放在一个map中
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
         // 已经登录
         if (userId != null) {
             userVO = amUserClient.findUserById(Integer.valueOf(userId));
@@ -252,7 +250,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 可用优惠券张数开始 pccvip */
             request.setMoney("0");
             Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
-            other.put("couponAvailableCount", String.valueOf(couponAvailableCount));
+            other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
             other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
@@ -280,7 +278,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }
             //账户信息
             AccountVO account = amTradeClient.getAccountByUserId(userId);
-            String userBalance = account.getBankBalance().toString();
+            String userBalance= "";
+            if (account != null && account.getBankBalance() != null){
+                userBalance = account.getBankBalance().toString();
+            }else{
+                userBalance = "0.00";
+            }
             other.put("userBalance", userBalance);
 
             /* 用户基本信息 结束*/
@@ -336,26 +339,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         borrow.setBorrowInterest(borrowInterest.toString());
 
-        // TODO: 2018/6/25 汇资产项目后期处理
         if ("9".equals(borrow.getType())) {// 如果项目为汇资产项目
-//            // 添加相应的项目详情信息
-//            other.put("projectDeatil", borrow);
-//            // 4查询相应的汇资产的首页信息
-//            WebHzcProjectDetailCustomize borrowInfo = this.borrowService.searchHzcProjectDetail(borrowNid);
-//            other.put("borrowInfo", borrowInfo);
-//            // 处置预案
-//            WebHzcDisposalPlanCustomize disposalPlan = this.borrowService.searchDisposalPlan(borrowNid);
-//            other.put("disposalPlan", disposalPlan);
-//            // 5查询相应的还款计划
-//            List<BorrowRepayPlanCustomBean> repayPlanList = this.borrowService.getRepayPlan(borrowNid);
-//            other.put("repayPlanList", repayPlanList);
-//            // 相关文件
-//            List<BorrowFileCustomBean> files = this.borrowService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-//            other.put("fileList", files);
-//            /**
-//             * 借款类型  1、企业借款 2、借款人  3、汇资产
-//             */
-//            other.put("borrowType", "3");
+            // 已经没有汇资产标的, 不在处理
 
         } else {// 项目为非汇资产项目
             // 添加相应的项目详情信息
@@ -375,9 +360,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             other.put("repayPlanList", repayPlanList);
-            //相关文件
-           /* List<BorrowFileCustomBean> files = this.borrowService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            other.put("fileList", files);*/  // TODO: 2018/6/25  文件后期处理
             // 还款信息
             BorrowRepayVO borrowRepay = null;
             List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -625,8 +607,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         Map<String, Object> result = new HashMap<>();
         // 获取债转的详细参数
-        //BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
-        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);//
+        BorrowCreditDetailResponse response = baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid, BorrowCreditDetailResponse.class);
         BorrowCreditDetailVO creditDetail = response.getResult();
         if (Validator.isNull(creditDetail)) {
             throw new RuntimeException("债转详情不存在");
@@ -654,13 +635,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         if (borrowInfoVO.getIsNew() == 0) {
             // 如果项目为汇资产项目
-            if (projectType == 9) {  // TODO: 2018/6/26 汇资产暂不处理
-                // 4查询相应的汇资产的首页信息
-//                WebHzcProjectDetailCustomize borrowInfo = this.projectService.searchHzcProjectDetail(borrowNid);
-//                result.put("borrowInfo", borrowInfo);
-//                // 处置预案
-//                WebHzcDisposalPlanCustomize disposalPlan = this.projectService.searchDisposalPlan(borrowNid);
-//                result.put("disposalPlan", disposalPlan);
+            if (projectType == 9) {
+            // 已经没有汇资产项目，不在处理
             }
             // 项目为非汇资产项目
             else {
@@ -674,12 +650,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     WebProjectPersonDetailVO borrowInfo = amTradeClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
                 }
-                // 风控信息
-                // TODO: 2018/6/26  待实现  WebRiskControlVO riskControl = this.projectService.selectRiskControl(borrowNid);
-//                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-//                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
-//                // 添加风控信息
-//                result.put("riskControl", riskControl);
                 List<BorrowCarinfoVO> borrowCarinfoVOList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
                 if (!CollectionUtils.isEmpty(borrowCarinfoVOList)) {
                     List<WebCarinfoVO> vehiclePledgeList = new ArrayList<>();
@@ -700,9 +670,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }
                 // 添加相应的汽车抵押信息
             }
-            // 获取图片信息
-            /*List<BorrowFileCustomBean> projectFileList = projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            result.put("borrowFiles", projectFileList);*/  // TODO: 2018/6/26 后期处理   zyk
             // 还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             result.put("repayPlanList", repayPlanList);
@@ -723,9 +690,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             result.put("repayPlanList", repayPlanList);
-            // 相关文件
-           /* List<BorrowFileCustomBean> files = this.projectService.searchProjectFiles(borrowNid, CustomConstants.HOST);
-            result.put("fileList", files);  // TODO: 2018/6/26  图片后期处理 */
             // 还款信息
             BorrowRepayVO borrowRepay = null;
             List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -938,12 +902,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             logger.error("web查询原子层计划专区计划列表数据count异常");
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
-      /*  // 上部统计数据
-        Map<String, Object> map = amTradeClient.searchPlanData(request);
-        if (map == null) {
-            logger.error("web查询原子层计划专区统计数据异常");
-            throw new RuntimeException("web查询原子层计划专区统计数据异常");
-        }*/
         if (count > 0) {
             List<HjhPlanCustomizeVO> list = amTradeClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)) {
@@ -1014,46 +972,29 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             DecimalFormat df = null;
             df = CustomConstants.DF_FOR_VIEW;
             /** 计算最优优惠券开始 pccvip isThereCoupon 1是有最优优惠券，0无最有优惠券 */
-            UserCouponConfigCustomizeVo couponConfig = null;
             //获取用户优惠券总张数
             int recordTotal = 0;
             //可用优惠券张数
             int availableCouponListCount = 0;
 
-            /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
+            /*优惠券模块开始 */
             MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
             myCouponListRequest.setMoney("0");
             myCouponListRequest.setPlatform("0");
             myCouponListRequest.setUserId(userId);
             myCouponListRequest.setBorrowNid(planNid);
-           // BestCouponListVO bestCouponList = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
-            availableCouponListCount = amTradeClient.countAvaliableCoupon(myCouponListRequest);
+            availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(myCouponListRequest);
             /** 获取用户优惠券总张数开始 pccvip */
             result.put("recordTotal", recordTotal);
             /** 获取用户优惠券总张数结束 pccvip */
              /** 可用优惠券张数开始 pccvip */
             result.put("couponAvailableCount", availableCouponListCount);
             /** 可用优惠券张数结束 pccvip */
-            BigDecimal couponInterest = BigDecimal.ZERO;
             result.put("interest", BigDecimal.ZERO);
-           /* if (couponConfig != null) {
-                result.put("isThereCoupon", 1);
 
-                couponInterest = planService.getCouponInterest(couponConfig.getUserCouponId(), planNid, "0");
-                couponConfig.setCouponInterest(df.format(couponInterest));
-                if(couponConfig!=null && couponConfig.getCouponType()==3){
-                    result.put("interest", df.format(couponInterest.subtract(couponConfig.getCouponQuota())));
-                }else{
-                    result.put("interest", df.format(couponInterest));
-                }
-
-            } else {
-                result.put("isThereCoupon", 0);
-            }*/
 
             /*优惠券模块结束 */
             result.put("isThereCoupon", 0);
-            //result.put("couponConfig", couponConfig);
             /** 计算最优优惠券结束 */
             /** 汇添金优惠券使用结束 pcc */
 
@@ -1132,10 +1073,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
                 // 获取用户账户余额
                 AccountVO account = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
-                if (Validator.isNotNull(account)) {
-                    String userBalance = account.getBankBalance().toString();
-                    result.put("userBalance", userBalance);
+                String userBalance = "";
+                if (Validator.isNotNull(account) && account.getBankBalance() != null) {
+                    userBalance = account.getBankBalance().toString();
+                }else{
+                    userBalance = "0.00";
                 }
+                result.put("userBalance", userBalance);
                 // 用户是否完成自动授权标识
                 HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
                 if (Validator.isNotNull(hjhUserAuth)) {
@@ -1217,7 +1161,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             accedeTotal = 0.00;
         } else {
             count = (Integer) totalData.get("count");
-            accedeTotal = (double) totalData.get("sum");
+            accedeTotal =  totalData.get("sum") == null ? 0.00 : (double) totalData.get("sum");
         }
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         info.put("planAccedeList", new ArrayList<>());
@@ -1278,4 +1222,305 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     }
 
 
+    /**
+     * 根据计划编号和用户id查询用户优惠券
+     * @author zhangyk
+     * @date 2018/8/16 11:08
+     */
+    @Override
+    public WebResult getProjectAvailableUserCoupon(WebPlanRequestBean requestBean, Integer userId) {
+        WebResult result = new WebResult();
+       /* String planNid = requestBean.getPlanNid();
+        String money = requestBean.getMoney();
+        CheckUtil.check(StringUtils.isNotBlank(planNid),MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
+        if (StringUtils.isBlank(money)){
+            money = "0";
+        }
+        if (userId == null){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("availableCouponList",  new ArrayList<CouponBeanVo>());
+            jsonObject.put("notAvailableCouponList", new ArrayList<CouponBeanVo>());
+            jsonObject.put("availableCouponListCount", 0);
+            jsonObject.put("notAvailableCouponListCount", 0);
+            result.setData(jsonObject);
+            return result;
+        }
+        String platform = CustomConstants.CLIENT_PC;
+        Object object = getAvailableUserCoupon(planNid,userId,money,platform);
+        result.setData(object);*/
+        return result;
+    }
+
+    private Object getAvailableUserCoupon(String planNid,Integer userId,String money,String platform){
+       MyCouponListRequest request = new MyCouponListRequest();
+       request.setBorrowNid(planNid);
+       request.setUserId(userId.toString());
+       request.setPlatform(platform);
+       request.setMoney(money);
+       CouponResponse response = amTradeClient.getPlanCoupon(request);
+       if (Response.isSuccess(response)){
+           return response.getResult();
+       }
+       return null;
+    }
+
+
+    /**
+     * 查询计划标的组成的标的详情
+     * @author zhangyk
+     * @date 2018/8/17 9:52
+     */
+    @Override
+    public WebResult getPlanAccedeBorrowDetail(WebBorrowRequestBean requestBean, Integer userId) {
+        WebResult result = new WebResult();
+        String borrowNid = requestBean.getBorrowNid();
+        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_REQUIRED, "标的编号");
+        Map<String,Object> map = new HashMap<>();
+        map.put("borrowNid",borrowNid);
+        // 根据项目标号获取相应的项目信息
+        ProjectCustomeDetailVO borrowDetailVo = amTradeClient.searchProjectDetail(map);
+        //没有标的信息
+        if (borrowDetailVo == null) {
+            throw  new CheckException("标的信息不存在！");
+        }
+
+        this.getPlanBorrowDetail(result,borrowDetailVo,userId);
+        return result;
+    }
+
+   /**
+    * 查询标的详情并封装返回
+    * @author zhangyk
+    * @date 2018/8/17 10:28
+    */
+   private void getPlanBorrowDetail(WebResult result, ProjectCustomeDetailVO borrowDetailVo, Integer userId){
+       JSONObject info = new JSONObject();
+       String borrowNid = borrowDetailVo.getBorrowNid();
+       info.put("projectDeatil",borrowDetailVo);
+       info.put("borrowType",borrowDetailVo.getComOrPer());
+
+       //借款人企业信息
+       BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+       //借款人信息
+       BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
+       //房产抵押信息
+       List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
+       //车辆抵押信息
+       List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
+       //还款计划
+       List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+       if (CollectionUtils.isEmpty(repayPlanList)){
+           repayPlanList = new ArrayList<>();
+       }
+       info.put("repayPlanList", repayPlanList);
+       // 还款信息
+       BorrowRepayVO borrowRepay = null;
+       List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
+       if (org.apache.commons.collections.CollectionUtils.isNotEmpty(list)){
+           borrowRepay = list.get(0);
+       }
+
+       //资产列表
+       JSONArray json = new JSONArray();
+       List<BorrowDetailBean> emptyTable = new ArrayList<>();
+       //基础信息
+       List<BorrowDetailBean> baseTableData = emptyTable;
+       //资产信息
+       List<BorrowDetailBean> assetsTableData = emptyTable;
+       //项目介绍
+       List<BorrowDetailBean> intrTableData = emptyTable;
+       //信用状况
+       List<BorrowDetailBean> credTableData = emptyTable;
+       //审核信息
+       List<BorrowDetailBean> reviewTableData = emptyTable;
+       //其他信息
+       List<BorrowDetailBean> otherTableData = emptyTable;
+
+       //借款类型
+       int borrowType = Integer.parseInt(borrowDetailVo.getComOrPer());
+
+       if(borrowType == 1 && borrowUsers != null){
+           //基础信息
+           baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, borrowDetailVo.getBorrowLevel());
+           //信用状况
+           credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, borrowDetailVo.getBorrowLevel());
+           //审核信息
+           reviewTableData =  ProjectConstant.packDetail(borrowUsers, 5, borrowType, borrowDetailVo.getBorrowLevel());
+           //其他信息
+           otherTableData =  ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrowDetailVo.getBorrowLevel());
+       }else{
+           if(borrowManinfo != null){
+               //基础信息
+               baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, borrowDetailVo.getBorrowLevel());
+               //信用状况
+               credTableData = ProjectConstant.packDetail(borrowManinfo, 4, borrowType, borrowDetailVo.getBorrowLevel());
+               //审核信息
+               reviewTableData =ProjectConstant.packDetail(borrowManinfo, 5, borrowType, borrowDetailVo.getBorrowLevel());
+               //其他信息
+               otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrowDetailVo.getBorrowLevel());
+           }
+       }
+
+       //资产信息
+       if(borrowHousesList != null && borrowHousesList.size() > 0){
+           for (BorrowHousesVO  borrowHouses: borrowHousesList) {
+               json.add(ProjectConstant.packDetail(borrowHouses, 2, borrowType, borrowDetailVo.getBorrowLevel()));
+           }
+       }
+       if(borrowCarinfoList != null && borrowCarinfoList.size() > 0){
+           for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
+               json.add(ProjectConstant.packDetail(borrowCarinfo, 2, borrowType, borrowDetailVo.getBorrowLevel()));
+           }
+       }
+
+       //项目介绍
+       intrTableData = ProjectConstant.packDetail(borrowDetailVo, 3, borrowType, borrowDetailVo.getBorrowLevel());
+
+       //基础信息
+       info.put("baseTableData", baseTableData);
+       //资产信息
+       info.put("assetsTableData", assetsTableData);
+       //项目介绍
+       info.put("intrTableData", intrTableData);
+       //信用状况
+       info.put("credTableData", credTableData);
+       //审核信息
+       info.put("reviewTableData", reviewTableData);
+       // 信批需求新增(放款后才显示)
+       if(borrowDetailVo.getStatusOrginal()>=4 && borrowRepay != null){
+           //其他信息
+           info.put("otherTableData", otherTableData);
+           Date createDate = borrowRepay.getCreateTime();
+           Integer startLong= null ;
+           if (null != createDate){
+               startLong = Integer.valueOf(String.valueOf(createDate.getTime()/1000));
+           }
+          info.put("updateTime", ProjectConstant.getUpdateTime(startLong, borrowRepay.getRepayYestime() == null ? null :borrowRepay.getRepayYestime()));
+       }else{
+           //其他信息
+           info.put("otherTableData", new ArrayList<BorrowDetailBean>());
+       }
+
+       //用户未登陆（默认都是否状态）
+       if(userId == null){
+          info.put("loginFlag", "0");//登录状态 0未登陆 1已登录
+           info.put("openFlag", "0"); //开户状态 0未开户 1已开户
+           info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+           info.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
+           info.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
+           info.put("viewableFlag", "0");// add by nxl 未登录不可见
+       }else{
+           info.put("loginFlag", "1");//登录状态 0未登陆 1已登录
+           //用户信息
+           UserVO user = amUserClient.findUserById(userId);
+           if (user.getBankOpenAccount() != null) {
+               info.put("openFlag", "1");
+           } else {
+               info.put("openFlag", "0");
+           }
+
+           int count = 0;
+           if(userId!=null) {
+               count = amTradeClient.countUserInvest(userId,borrowNid);
+           }
+           if (count > 0) {
+               info.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+           }else{
+               info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+           }
+
+           // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
+           /**
+            * 查看标的详情
+            * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
+            * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+            */
+           String viewableFlag ="0";
+           int intCount = 0;
+           DebtCreditRequest request = new DebtCreditRequest();
+           request.setBorrowNid(borrowNid);
+           List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+           // add by nxl 是否发生过债转
+           Boolean isDebt = false;
+           if(CollectionUtils.isEmpty(listHjhDebtCredit)) {
+               // 部分承接
+               request.setCreditStatus(Arrays.asList(0, 1));
+               List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+               if(!CollectionUtils.isEmpty(listHjhDebtCreditOnePlace)) {
+                   //部分债转
+                   viewableFlag ="1";
+               }else {
+                   // 完全债转
+                   for(HjhDebtCreditVO deptcredit:listHjhDebtCredit) {
+                       //待承接本金 = 0
+                       if(null!=deptcredit.getCreditCapitalWait()&&deptcredit.getCreditCapitalWait().compareTo(BigDecimal.ZERO) == 0) {
+                           Map<String, Object> mapParam = new HashMap<String, Object>();
+                           mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
+                           mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
+                           int tenderCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                           if(tenderCount>0 || count>0) {
+                               viewableFlag = "1";
+                           }
+                       }
+                   }
+               }
+               isDebt = true;
+           }else {
+               //原始标
+               //复审中，还款中和已还款状态投资者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
+               if(null != borrowDetailVo.getStatusOrginal() && (borrowDetailVo.getStatusOrginal() == 3 || borrowDetailVo.getStatusOrginal()== 4 || borrowDetailVo.getStatusOrginal() == 5)  ) {
+                   if(count>0) {
+                       //可以查看标的详情
+                       viewableFlag ="1";
+                   }else {
+                       //提示仅投资者可看
+                       viewableFlag ="0";
+                   }
+               }else {
+                   viewableFlag="1";
+               }
+           }
+           info.put("viewableFlag", viewableFlag);
+           info.put("isDebt", isDebt);
+           // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
+           //是否设置交易密码
+           if(null != user.getIsSetPassword() && user.getIsSetPassword() == 1){
+               info.put("setPwdFlag", "1");
+           }else{
+               info.put("setPwdFlag", "0");
+           }
+           try {
+               if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+                   //测评到期日
+                   Long lCreate = user.getEvaluationExpiredTime().getTime();
+                   //当前日期
+                   Long lNow = System.currentTimeMillis();
+                   if (lCreate <= lNow) {
+                       //已过期需要重新评测
+                       info.put("riskFlag", "2");
+                   } else {
+                       //未到一年有效期
+                       info.put("riskFlag", "1");
+                   }
+               }else{
+                   info.put("riskFlag", "0");
+               }
+               // modify by liuyang 20180411 用户是否完成风险测评标识 end
+           } catch (Exception e) {
+               logger.error("查询用户是否完成风险测评标识出错....", e);
+               info.put("riskFlag", "0");
+           }
+
+           AccountVO account = amTradeClient.getAccount(userId);
+           String userBalance = "";
+           if (Validator.isNotNull(account) && account.getBankBalance() != null) {
+               userBalance = account.getBankBalance().toString();
+           }else{
+               userBalance = "0.00";
+           }
+           info.put("userBalance", userBalance);
+
+       }
+    result.setData(info);
+   }
 }

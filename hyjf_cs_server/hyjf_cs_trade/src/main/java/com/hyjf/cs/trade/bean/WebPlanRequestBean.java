@@ -4,7 +4,9 @@ import com.hyjf.am.vo.BasePage;
 
 public class WebPlanRequestBean extends BasePage {
 
+
     private String planNid;
+
 
     public String getPlanNid() {
         return planNid;
@@ -13,4 +15,5 @@ public class WebPlanRequestBean extends BasePage {
     public void setPlanNid(String planNid) {
         this.planNid = planNid;
     }
+
 }

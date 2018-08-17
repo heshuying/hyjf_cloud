@@ -19,6 +19,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,6 +51,7 @@ public class DeleteCardController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "用户删除银行卡")
     @PostMapping(value = "/deletecard")
     public ModelAndView deleteCard(HttpServletRequest request, HttpServletResponse response) {
         logger.info("解绑卡接口start");

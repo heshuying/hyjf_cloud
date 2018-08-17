@@ -79,7 +79,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public Map<String, Object> userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode) {
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
-        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1) {
+        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_2)) {
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
+        }else if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_1)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
@@ -225,14 +227,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = "http://CS-USER/hyjf-web/user/invesbgreturn";
+            bgRetUrl = systemConfig.getWebHost()+"/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = "http://CS-USER/hyjf-web/user/creditbgreturn";
+            bgRetUrl = systemConfig.getWebHost()+"/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app
