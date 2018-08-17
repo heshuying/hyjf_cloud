@@ -1666,4 +1666,15 @@ public interface AmTradeClient {
      * @return
      */
     RepaymentPlanAjaxBean getRepayPlanInfo(String borrowNid, String nid, String type);
+    /**
+     * 待计算提成加入列表
+     * @return
+     */
+    List<HjhAccedeVO> getAccedesWaitCompute();
+    /**
+     * 提成计算
+     * @param hjhLockVo
+     * @return
+     */
+    Boolean commisionCompute(HjhLockVo hjhLockVo);
 }
