@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * app端散标投资
  */
-@Api(value = "APP端散标投资")
+@Api(tags = "APP端散标投资")
 @RestController
 @RequestMapping("/hyjf-app/user/invest")
 public class AppBorrowTenderController extends BaseTradeController {
@@ -69,6 +69,7 @@ public class AppBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
+    @ApiOperation(value = "APP端散标异步处理", notes = "APP端散标异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
