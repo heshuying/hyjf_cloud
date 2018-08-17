@@ -1,23 +1,9 @@
 package com.hyjf.common.util;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import org.apache.commons.codec.binary.Base64;
+
+import java.io.*;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -25,9 +11,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Enumeration;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 
 public class RSAKeyUtil {
 	private PublicKey publicKey;
@@ -181,7 +164,7 @@ public class RSAKeyUtil {
 
 	/**
 	 * 获取私钥
-	 * @param p12Path 文件路径
+	 * @paramp12Path 文件路径
 	 * @param pwd 私钥密码
 	 *            the pcks12 keystore file path in class path
 	 * @return PrivateKey
@@ -284,7 +267,7 @@ public class RSAKeyUtil {
 	/**
 	 * 根据输入流密码获取keystore
 	 * @param is
-	 * @param pwds
+	 * @parampwds
 	 * @return
 	 * @throws IOException
 	 * @throws GeneralSecurityException
@@ -312,24 +295,5 @@ public class RSAKeyUtil {
 			}
 		}
 		return null;
-	}
-
-	/////////////////////// test method//////////////////////
-	public static void testGenerateKeyPair() {
-		try {
-			KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
-			keygen.initialize(1024, new SecureRandom("credit2go".getBytes()));
-			KeyPair keys = keygen.genKeyPair();
-			PublicKey publicKey = keys.getPublic();
-			PrivateKey privateKey = keys.getPrivate();
-
-			System.out.println("publicKey : " + new String(Hex.encodeHex(publicKey.getEncoded())));
-			System.out.println("publicKey : " + Base64.encodeBase64String(publicKey.getEncoded()));
-
-			System.out.println("privateKey: " + new String(Hex.encodeHex(privateKey.getEncoded())));
-			System.out.println("privateKey: " + Base64.encodeBase64String(privateKey.getEncoded()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

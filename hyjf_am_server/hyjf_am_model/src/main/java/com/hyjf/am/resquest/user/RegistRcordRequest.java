@@ -1,10 +1,12 @@
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author nxl
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
-public class RegistRcordRequest {
+public class RegistRcordRequest extends BasePage{
 	//用户名
 	private String userName;
 	//手机号
@@ -17,19 +19,8 @@ public class RegistRcordRequest {
 	private String regTimeStart;
 	//注册时间（结束）
 	private String regTimeEnd;
-
-	public int limit;
-
-	private int paginatorPage = 1;
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-	public void setPaginatorPage(int paginatorPage) {
-		this.paginatorPage = paginatorPage;
-	}
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
 
 	public String getUserName() {
 		return userName;
@@ -79,13 +70,12 @@ public class RegistRcordRequest {
 		this.regTimeEnd = regTimeEnd;
 	}
 
-	public int getLimit() {
-		return limit;
+	public boolean isLimitFlg() {
+		return limitFlg;
 	}
 
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
 	}
-
 }
 

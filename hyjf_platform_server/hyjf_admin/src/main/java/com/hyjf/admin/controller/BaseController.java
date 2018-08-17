@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
  * @version BaseController.java, v0.1 2018年6月21日 下午7:26:10
  * admin 基础类
  */
-@Api(value = "admin基类")
+@Api(value = "admin基类",tags ="admin基类")
 @RestController
 public class BaseController {
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
@@ -30,13 +30,14 @@ public class BaseController {
 	public static final String USER="user";
 	public static final String STATUS="status";
 	public static final String MSG="msg";
-	public static final String SUCCESS="00";
+	public static final String SUCCESS="000";
 	public static final String SUCCESS_DESC = "成功";
 	public static final String FAIL="99";
 	public static final String FAIL_DESC = "失败";
 	//返回集合
 	public static final String LIST="list";
-	
+	public static final String RECORD="record";
+
 	public static final String CURR="currPage";
 	public static final String PAGE="pageSize";
 	public static final String TRCORD="recordTotal";
@@ -80,10 +81,11 @@ public class BaseController {
 		info.put(LIST, List);
 		return info;
 	}
+
 	//返回失败
 	public JSONObject  fail(String failmsg) {
 		JSONObject info = new JSONObject();
-		if(failmsg.equals("")) {
+		if("".equals(failmsg)) {
 			info.put(MSG, "失败");
 		}else {
 			info.put(MSG, failmsg);

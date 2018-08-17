@@ -5,6 +5,8 @@ package com.hyjf.am.config.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 
 /**
@@ -32,7 +34,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 
 	@Override
 	public MessagePushTemplate findMessagePushTemplateByCode(String tplCode) {
-		MessagePushTemplate messagePushTemplate = RedisUtils.getObj(RedisKey.MESSAGE_PUSH_TEMPLATE,
+		MessagePushTemplate messagePushTemplate = RedisUtils.getObj(RedisConstants.MESSAGE_PUSH_TEMPLATE,
 				MessagePushTemplate.class);
 		if (messagePushTemplate == null) {
 			MessagePushTemplateExample example = new MessagePushTemplateExample();
@@ -41,7 +43,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 			List<MessagePushTemplate> messagePushTemplateList = templateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(messagePushTemplateList)) {
 				messagePushTemplate = messagePushTemplateList.get(0);
-				RedisUtils.setObjEx(RedisKey.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
 				return messagePushTemplate;
 			}
 		}
@@ -85,5 +87,89 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 		MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
 		BeanUtils.copyProperties(request, messagePushTemplate);
 		templateMapper.insert(messagePushTemplate);
+	}
+
+	@Override
+	public Integer countRecord(MsgPushTemplateRequest request) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria criteria = example.createCriteria();
+		if (request.getTagId() != null) {
+			criteria.andTagIdEqualTo(request.getTagId());
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
+			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		return this.templateMapper.countByExample(example);
+	}
+
+	@Override
+	public List<MessagePushTemplate> searchList(MsgPushTemplateRequest request, int limitStart, int limitEnd) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+		if (request.getTagId() != null) {
+			criteria.andTagIdEqualTo(request.getTagId());
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
+			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		example.setOrderByClause("create_time DESC");
+		return this.templateMapper.selectByExample(example);
+	}
+
+	@Override
+	public MessagePushTemplate findMsgPushTemplateById(Integer id) {
+		MessagePushTemplate page = templateMapper.selectByPrimaryKey(id);
+		return page;
+	}
+
+    @Override
+    public Integer insertMessagePushTemplate(MessagePushTemplate messagePushTemplate) {
+        return templateMapper.insertSelective(messagePushTemplate);
+    }
+
+	@Override
+	public Integer updateAction(MessagePushTemplate messagePushTemplate) {
+		return templateMapper.updateByPrimaryKeySelective(messagePushTemplate);
+	}
+
+	@Override
+	public Integer deleteAction(List<Integer> ids) {
+		Integer result = 0;
+		for (Integer id : ids) {
+			result = templateMapper.deleteByPrimaryKey(id);
+			result++;
+		}
+		return result;
+	}
+
+	@Override
+	public Integer countByTemplate(Integer id, String templateCode) {
+		MessagePushTemplateExample example = new MessagePushTemplateExample();
+		MessagePushTemplateExample.Criteria cra = example.createCriteria();
+		if (Validator.isNotNull(id)) {
+			cra.andIdNotEqualTo(id);
+		}
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(templateCode)) {
+			cra.andTemplateCodeEqualTo(templateCode);
+		}
+		int cnt = templateMapper.countByExample(example);
+		return cnt;
 	}
 }

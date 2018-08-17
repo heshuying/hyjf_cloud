@@ -102,5 +102,54 @@ public class CommonConstant {
     //该活动用户已参与
     public final static String ACTIVITY_LIMIT="该活动用户已参与";
 
+    //APP改版 start
+    /** 设置交易密码验证失败*/
+    public static final String JUMP_HTML_FAILED_PATH = "/user/setting/bankPassword/result/failed";
+    /** 设置交易密码处理中*/
+    public static final String JUMP_HTML_HANDLING_PATH = "/user/setting/bankPassword/result/handling";
+    /** 设置交易密码成功*/
+    public static final String JUMP_HTML_SUCCESS_PATH = "/user/setting/bankPassword/result/success";
 
+    /** @RequestMapping值 */
+    public static final String REQUEST_MAPPING = "/bank/user/transpassword";
+
+    /** @RequestMapping值 */
+    public static final String RETURL_SYN_PASSWORD_ACTION = "/passwordReturn";
+    /** @RequestMapping值 */
+    public static final String RETURN_ASY_PASSWORD_ACTION = "/passwordBgreturn";
+
+
+    /** 重置交易密码 */
+    public static final String RESETPASSWORD_ACTION = "/resetPassword";
+    /** 重置交易密码同步回调 */
+    public static final String RETURL_SYN_RESETPASSWORD_ACTION = "/resetPasswordReturn";
+    /** 重置交易密码异步回调 */
+    public static final String RETURN_ASY_RESETPASSWORD_ACTION = "/resetPasswordBgreturn";
+
+    /**前端的url*/
+    public static final String JUMP_HTML_ERROR_PATH = "/user/setting/authorization/result/failed";
+
+    /** JSP 汇付天下跳转画面 */
+    public static final String JSP_CHINAPNR_RESULT = "/chinapnr/chinapnr_result";
+
+    /** JSP 跳转到汇付天下画面 */
+    public static final String JSP_CHINAPNR_SEND = "/chinapnr/chinapnr_send";
+
+    /** chinapnrForm值 */
+    public static final String CHINAPNR_FORM = "chinapnrForm";
+
+    public static final  String PAGE_LIMIT_START = "limitStart";
+
+    public static final  String PAGE_LIMIT_END =   "limitEnd";
+
+    /** ValidateForm请求返回值 */
+    public static final String JSON_IF_EVALUATION_KEY = "ifEvaluation";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_EVALATION_RESULT_KEY = "userEvalationResult";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_QUESRION_LIST_KEY = "questionList";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_KEY = "userError";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_VLUES = "userError";
 }

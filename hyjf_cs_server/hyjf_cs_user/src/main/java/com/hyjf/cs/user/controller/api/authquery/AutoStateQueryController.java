@@ -11,6 +11,7 @@ import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.authquery.AutoStateQueryService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,14 +25,15 @@ import javax.validation.Valid;
  * @version AutoStateQueryController, v0.1 2018/6/12 9:21
  */
 
-@Api(value = "api端授权状态查询")
+@Api(value = "api端授权状态查询",tags = "api端-授权状态查询")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/hyjf-api/user")
 public class AutoStateQueryController extends BaseUserController {
 
     @Autowired
     AutoStateQueryService autoStateQueryService;
 
+    @ApiOperation(value = " 授权状态查询",notes = " 授权状态查询")
     @PostMapping(value = "query", produces = "application/json; charset=utf-8")
     public  ApiResult<AutoStateQueryResultBean> queryStatus(@RequestBody @Valid AutoStateQueryRequest autoStateQuery) {
         ApiResult<AutoStateQueryResultBean> result = new ApiResult<>();

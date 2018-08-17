@@ -85,6 +85,8 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	// 计划状态名字描述
 	private String statusNameDesc;
+
+	private String mark;
 	// add by fuqiang 20171204 end 首页项目展示
 
 	/**
@@ -301,5 +303,13 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	public void setBorrowPeriodInt(Integer borrowPeriodInt) {
 		this.borrowPeriodInt = borrowPeriodInt;
+	}
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
 	}
 }

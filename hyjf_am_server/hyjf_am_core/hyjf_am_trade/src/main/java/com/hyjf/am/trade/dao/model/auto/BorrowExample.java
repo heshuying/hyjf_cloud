@@ -256,6 +256,66 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
+        public Criteria andProjectTypeIsNull() {
+            addCriterion("project_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeIsNotNull() {
+            addCriterion("project_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeEqualTo(Integer value) {
+            addCriterion("project_type =", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeNotEqualTo(Integer value) {
+            addCriterion("project_type <>", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeGreaterThan(Integer value) {
+            addCriterion("project_type >", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("project_type >=", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeLessThan(Integer value) {
+            addCriterion("project_type <", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("project_type <=", value, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeIn(List<Integer> values) {
+            addCriterion("project_type in", values, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeNotIn(List<Integer> values) {
+            addCriterion("project_type not in", values, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeBetween(Integer value1, Integer value2) {
+            addCriterion("project_type between", value1, value2, "projectType");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("project_type not between", value1, value2, "projectType");
+            return (Criteria) this;
+        }
+
         public Criteria andUserIdIsNull() {
             addCriterion("user_id is null");
             return (Criteria) this;
@@ -503,6 +563,66 @@ public class BorrowExample {
 
         public Criteria andAccountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("account not between", value1, value2, "account");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeIsNull() {
+            addCriterion("borrow_valid_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeIsNotNull() {
+            addCriterion("borrow_valid_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeEqualTo(Integer value) {
+            addCriterion("borrow_valid_time =", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeNotEqualTo(Integer value) {
+            addCriterion("borrow_valid_time <>", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeGreaterThan(Integer value) {
+            addCriterion("borrow_valid_time >", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("borrow_valid_time >=", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeLessThan(Integer value) {
+            addCriterion("borrow_valid_time <", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("borrow_valid_time <=", value, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeIn(List<Integer> values) {
+            addCriterion("borrow_valid_time in", values, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeNotIn(List<Integer> values) {
+            addCriterion("borrow_valid_time not in", values, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeBetween(Integer value1, Integer value2) {
+            addCriterion("borrow_valid_time between", value1, value2, "borrowValidTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowValidTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("borrow_valid_time not between", value1, value2, "borrowValidTime");
             return (Criteria) this;
         }
 
@@ -2263,6 +2383,66 @@ public class BorrowExample {
 
         public Criteria andBorrowAccountWaitNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("borrow_account_wait not between", value1, value2, "borrowAccountWait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleIsNull() {
+            addCriterion("borrow_account_scale is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleIsNotNull() {
+            addCriterion("borrow_account_scale is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleEqualTo(BigDecimal value) {
+            addCriterion("borrow_account_scale =", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleNotEqualTo(BigDecimal value) {
+            addCriterion("borrow_account_scale <>", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleGreaterThan(BigDecimal value) {
+            addCriterion("borrow_account_scale >", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("borrow_account_scale >=", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleLessThan(BigDecimal value) {
+            addCriterion("borrow_account_scale <", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("borrow_account_scale <=", value, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleIn(List<BigDecimal> values) {
+            addCriterion("borrow_account_scale in", values, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleNotIn(List<BigDecimal> values) {
+            addCriterion("borrow_account_scale not in", values, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("borrow_account_scale between", value1, value2, "borrowAccountScale");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountScaleNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("borrow_account_scale not between", value1, value2, "borrowAccountScale");
             return (Criteria) this;
         }
 

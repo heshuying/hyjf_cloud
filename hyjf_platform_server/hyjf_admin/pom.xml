@@ -10,15 +10,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>hyjf_admin</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>hyjf_admin Maven Webapp</name>
 	<url>http://www.example.com</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- tiles版本号 -->
 		<tiles.version>3.0.5</tiles.version>
 	</properties>
@@ -92,18 +92,6 @@
 			<artifactId>hyjf_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
-		<!--swagger -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.2.2</version>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -137,20 +125,64 @@
 			<version>1.4.7</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>core-renderer</artifactId>
+			<version>R8pre2</version>
+		</dependency>
+		<dependency>  
+		        <groupId>org.springframework.session</groupId>  
+		        <artifactId>spring-session-data-redis</artifactId>  
+		</dependency>
+		<dependency>
+			<groupId>hyjf-emayclient</groupId>
+			<artifactId>hyjf-emayclient</artifactId>
+			<version>1.0</version>
+		</dependency>
     </dependencies>
+
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.hyjf.admin.AdminApplication</mainClass>
+					<requiresUnpack>
+						<dependency>
+							<groupId>org.apache.axis2</groupId>
+							<artifactId>axis2</artifactId>
+						</dependency>
+					</requiresUnpack>
+					<finalName>hyjf-admin</finalName>
+				</configuration>
 			</plugin>
-		     <plugin>  
-	            <groupId>org.apache.maven.plugins</groupId>  
-	            <artifactId>maven-war-plugin</artifactId>   
-	            <configuration>  
-	                <failOnMissingWebXml>false</failOnMissingWebXml>  
-	            </configuration>  
-	        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+			<!--	<configuration>
+					<excludes>
+						<exclude>**/application.yml</exclude>
+						<exclude>**/bootstrap.yml</exclude>
+					</excludes>
+				</configuration>-->
+			</plugin>
 		</plugins>
 	</build>
+
 </project>

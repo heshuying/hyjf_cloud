@@ -9,6 +9,7 @@
     <result column="retryable" property="retryable" jdbcType="TINYINT" />
     <result column="enabled" property="enabled" jdbcType="TINYINT" />
     <result column="strip_prefix" property="stripPrefix" jdbcType="INTEGER" />
+    <result column="secure_visit_flag" property="secureVisitFlag" jdbcType="TINYINT" />
     <result column="api_name" property="apiName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `path`, service_id, url, retryable, enabled, strip_prefix, api_name
+    id, `path`, service_id, url, retryable, enabled, strip_prefix, secure_visit_flag, 
+    api_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfigExample" >
     select
@@ -111,10 +113,10 @@
     </selectKey>
     insert into ht_gateway_api_config (`path`, service_id, url, 
       retryable, enabled, strip_prefix, 
-      api_name)
+      secure_visit_flag, api_name)
     values (#{path,jdbcType=VARCHAR}, #{serviceId,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
       #{retryable,jdbcType=TINYINT}, #{enabled,jdbcType=TINYINT}, #{stripPrefix,jdbcType=INTEGER}, 
-      #{apiName,jdbcType=VARCHAR})
+      #{secureVisitFlag,jdbcType=TINYINT}, #{apiName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.GatewayApiConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -140,6 +142,9 @@
       <if test="stripPrefix != null" >
         strip_prefix,
       </if>
+      <if test="secureVisitFlag != null" >
+        secure_visit_flag,
+      </if>
       <if test="apiName != null" >
         api_name,
       </if>
@@ -162,6 +167,9 @@
       </if>
       <if test="stripPrefix != null" >
         #{stripPrefix,jdbcType=INTEGER},
+      </if>
+      <if test="secureVisitFlag != null" >
+        #{secureVisitFlag,jdbcType=TINYINT},
       </if>
       <if test="apiName != null" >
         #{apiName,jdbcType=VARCHAR},
@@ -198,6 +206,9 @@
       <if test="record.stripPrefix != null" >
         strip_prefix = #{record.stripPrefix,jdbcType=INTEGER},
       </if>
+      <if test="record.secureVisitFlag != null" >
+        secure_visit_flag = #{record.secureVisitFlag,jdbcType=TINYINT},
+      </if>
       <if test="record.apiName != null" >
         api_name = #{record.apiName,jdbcType=VARCHAR},
       </if>
@@ -215,6 +226,7 @@
       retryable = #{record.retryable,jdbcType=TINYINT},
       enabled = #{record.enabled,jdbcType=TINYINT},
       strip_prefix = #{record.stripPrefix,jdbcType=INTEGER},
+      secure_visit_flag = #{record.secureVisitFlag,jdbcType=TINYINT},
       api_name = #{record.apiName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -241,6 +253,9 @@
       <if test="stripPrefix != null" >
         strip_prefix = #{stripPrefix,jdbcType=INTEGER},
       </if>
+      <if test="secureVisitFlag != null" >
+        secure_visit_flag = #{secureVisitFlag,jdbcType=TINYINT},
+      </if>
       <if test="apiName != null" >
         api_name = #{apiName,jdbcType=VARCHAR},
       </if>
@@ -255,6 +270,7 @@
       retryable = #{retryable,jdbcType=TINYINT},
       enabled = #{enabled,jdbcType=TINYINT},
       strip_prefix = #{stripPrefix,jdbcType=INTEGER},
+      secure_visit_flag = #{secureVisitFlag,jdbcType=TINYINT},
       api_name = #{apiName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

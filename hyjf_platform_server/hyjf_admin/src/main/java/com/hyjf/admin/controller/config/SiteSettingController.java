@@ -4,9 +4,7 @@
 package com.hyjf.admin.controller.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.admin.beans.request.SiteSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -23,15 +21,15 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version SiteSettingController, v0.1 2018/7/10 11:21
  */
-@Api(value = "网站设置")
+@Api(tags = "网站设置")
 @RestController
 @RequestMapping("/hyjf-admin/sitesetting")
 public class SiteSettingController extends BaseController {
 	@Autowired
 	private SiteSettingService siteSettingService;
 
-	@ApiOperation(value = "网站设置", notes = "网站设置初始化")
-	@RequestMapping("/init")
+	@ApiOperation(value = "网站设置初始化", notes = "网站设置初始化")
+	@GetMapping("/init")
 	public AdminResult<SiteSettingsVO> init() {
 		SiteSettingsResponse response = siteSettingService.selectSiteSetting();
 		if (response == null) {
@@ -43,8 +41,8 @@ public class SiteSettingController extends BaseController {
 		return new AdminResult<>(response.getResult());
 	}
 
-	@ApiOperation(value = "网站设置", notes = "修改网站设置")
-	@RequestMapping("/update")
+	@ApiOperation(value = "修改网站设置", notes = "修改网站设置")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);
 		if (response == null) {

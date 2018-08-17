@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.finance.bank.merchant.redpacket;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankRedPacketAccountService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
 import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
@@ -24,7 +25,7 @@ import java.util.*;
  * @author zhangqingqing
  * @version BankRedPacketAccountController, v0.1 2018/7/9 18:06
  */
-@Api(value = "江西银行商户子账户")
+@Api(value = "资金中心-银行平台账户-红包账户信息",tags ="资金中心-银行平台账户-红包账户信息")
 @RestController
 @RequestMapping("/hyjf-admin/bank/merchant/redpacket")
 public class BankRedPacketAccountController extends BaseController {
@@ -52,9 +53,9 @@ public class BankRedPacketAccountController extends BaseController {
         request.setTypeList(mapToList(type));
         request.setTransTypeList(mapToList(transType));
         request.setStatusList(mapToList(status));
-        result.put("bankMerType",type);
-        result.put("transTypes",transType);
-        result.put("transStatus",status);
+        result.put("bankMerType",ConvertUtils.convertParamMapToDropDown(type));
+        result.put("transTypes",ConvertUtils.convertParamMapToDropDown(transType));
+        result.put("transStatus",ConvertUtils.convertParamMapToDropDown(status));
         BankMerchantAccountListCustomizeResponse response = bankRedPacketAccountService.selectBankMerchantAccountList(request);
         if(response == null||response.getRecordTotal()==0) {
             return new AdminResult<>(FAIL, FAIL_DESC);

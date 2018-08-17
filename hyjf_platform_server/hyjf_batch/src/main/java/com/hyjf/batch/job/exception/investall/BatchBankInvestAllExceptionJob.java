@@ -1,6 +1,7 @@
 package com.hyjf.batch.job.exception.investall;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -12,8 +13,8 @@ import org.slf4j.LoggerFactory;
  * @author jun
  * @since 20180619	
  */
+@DisallowConcurrentExecution
 public class BatchBankInvestAllExceptionJob extends BaseJob implements Job{
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

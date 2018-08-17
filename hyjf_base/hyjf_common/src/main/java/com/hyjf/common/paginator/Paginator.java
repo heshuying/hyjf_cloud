@@ -71,6 +71,9 @@ public class Paginator implements java.io.Serializable {
     /** 是否是禁用的页 */
     private boolean disabledPage;
 
+    public Paginator() {
+    }
+
     /**
      * @param page
      *            当前第几页
@@ -127,7 +130,12 @@ public class Paginator implements java.io.Serializable {
      * 取得最小。
      */
     public int getLimit() {
-        return limit;
+    	if(limit==-1) {
+    		return totalCount;
+    	}else {
+    		return limit;
+    	}
+        
     }
 
     /**

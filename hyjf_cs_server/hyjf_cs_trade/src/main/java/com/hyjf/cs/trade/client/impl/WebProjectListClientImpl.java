@@ -1,16 +1,13 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.AppProjectListResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.ProjectDetailResponse;
+import com.hyjf.am.response.trade.HjhPlanDetailResponse;
+import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.resquest.trade.AppProjectListRequest;
-import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.cs.trade.client.WebProjectListClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class WebProjectListClientImpl implements WebProjectListClient {
@@ -40,79 +36,14 @@ public class WebProjectListClientImpl implements WebProjectListClient {
        return null;
     }
 
-    @Override
-    public Integer countProjectList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getCount();
-        }
-        return null;
-    }
-
-    @Override
-    public ProjectCustomeDetailVO searchProjectDetail(Map map) {
-        ProjectDetailResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectDetail",map,ProjectDetailResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-
-    @Override
-    public CreditListResponse countCreditList(CreditListRequest request) {
-        CreditListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countCreditList",request,CreditListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countCreditList --> response = {}",response);
-        return response;
-    }
-
-    @Override
-    public CreditListResponse searchCreditList(CreditListRequest request) {
-        CreditListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchCreditList",request,CreditListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> searchCreditList --> response = {}",response);
-        return response;
-    }
-
-    /**
-     * web:查询计划专区上部统计数据
-     * @author zhangyk
-     * @date 2018/6/21 15:27
-     */
-    @Override
-    public Map<String, Object> searchPlanData(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/planData",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getTotalData();
-        }
-        return null;
-    }
-
-    /**
-     * web:查询计划专区总数据count
-     * @author zhangyk
-     * @date 2018/6/21 15:28
-     */
-    @Override
-    public Integer countPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countPlanList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getCount();
-        }
-        return null;
-    }
-
     /**
      * web:查询计划专区总数据list
      * @author zhangyk
      * @date 2018/6/21 15:29
      */
     @Override
-    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request,ProjectListResponse.class).getBody();
+    public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request) {
+        HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request,HjhPlanResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getResultList();
@@ -120,95 +51,19 @@ public class WebProjectListClientImpl implements WebProjectListClient {
         return null;
     }
 
+    /**
+     * 查询计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:20
+     */
+    @Override
+    public PlanDetailCustomizeVO getPlanDetail(String planNid){
+        HjhPlanDetailResponse response = restTemplate.getForEntity(BASE_URL + "/web/searchPlanDetail/" + planNid,HjhPlanDetailResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 
     /*******************************  web end *************************************/
-    /******************************  app start **************************************/
-    /**
-     *  app端获取散标投资项目count
-     * @author zhangyk
-     * @date 2018/6/20 17:23
-     */
-    @Override
-    public Integer countAppProjectList(AppProjectListRequest request) {
-        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,AppProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getCount();
-        }
-        return null;
-    }
-
-    /**
-     * app端获取散标投资项目列表
-     * @author zhangyk
-     * @date 2018/6/20 17:24
-     */
-    @Override
-    public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
-        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     *  app端查询债权转让所有分页总数
-     * @author zhangyk
-     * @date 2018/6/19 16:39
-     */
-
-    @Override
-    public ProjectListResponse countAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppCreditList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
-        return response;
-    }
-
-    /**
-     *  APP端查询债权转让数据列表
-     * @author zhangyk
-     * @date 2018/6/19 16:39
-     */
-    @Override
-    public ProjectListResponse searchAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
-        return response;
-    }
-
-    /**
-     * APP端查询计划数据count
-     * @author zhangyk
-     * @date 2018/6/22 9:59
-     */
-    @Override
-    public Integer countAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> countAppPlanList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getCount();
-        }
-        return null;
-    }
-
-
-    /**
-     * APP端查询计划数据list
-     * @author zhangyk
-     * @date 2018/6/22 9:59
-     */
-    @Override
-    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
-        logger.info("WebProjectListClientImpl --> searchAppPlanList --> response = {}",response);
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-
-    /******************************  app end **************************************/
 }

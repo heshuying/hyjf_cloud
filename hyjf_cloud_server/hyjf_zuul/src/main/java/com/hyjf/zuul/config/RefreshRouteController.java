@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author xiasq
  * @version RefreshRouteController, v0.1 2018/4/13 10:08
+ * 手动刷新路由配置
  */
 
 @RestController

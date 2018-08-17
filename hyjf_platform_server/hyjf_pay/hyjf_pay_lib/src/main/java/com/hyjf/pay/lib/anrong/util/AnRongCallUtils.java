@@ -7,10 +7,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 /**
  * 
@@ -26,8 +29,8 @@ public class AnRongCallUtils implements Serializable {
 
 	/** 接口路径(后台) */
 	private static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg.json";
-	@Value("${hyjf.anrong.payUrl}")
-	private static String payurl;
+	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
 
 	/**
@@ -44,7 +47,7 @@ public class AnRongCallUtils implements Serializable {
 			// bean转换成参数
 			bean.convert();
 
-			if (Validator.isNull(payurl)) {
+			if (Validator.isNull(paySystemConfig.getPayUrl())) {
 				throw new Exception("接口工程URL不能为空");
 			}
 			Map<String, String> allParams = bean.getAllParams();
@@ -73,12 +76,40 @@ public class AnRongCallUtils implements Serializable {
 				allParams.put("logBankDetailUrl", bean.getLogBankDetailUrl());
 			}
 			// 调用安融接口
-			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIBG, allParams);
+			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
+			String result = restTemplate
+				.postForEntity(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams, String.class).getBody();
 			ret = result;
 		} catch (Exception e) {
 			log.error(String.valueOf(e));
 		} finally {
 			log.debug("[调用接口结束, 消息类型:" + (bean == null ? "" : bean) + "]");
+		}
+		return ret;
+	}
+	/**
+	 * 调用接口
+	 *
+	 * @param bean
+	 * @return
+	 * @throws Exception
+	 */
+	public static String callApiBgSend( Map<String, String> params ) {
+
+		String ret = null;
+		try {
+			log.info("[调用接口开始, 消息类型:" + (params == null ? "" : params.toString()) + "]");
+			// bean转换成参数
+	
+			// 调用安融接口
+			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
+			String result = restTemplate
+				.postForEntity(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, params, String.class).getBody();
+			ret = result;
+		} catch (Exception e) {
+			log.error(String.valueOf(e));
+		} finally {
+			log.debug("[调用接口结束, 消息类型:" + (params == null ? "" : params.toString()) + "]");
 		}
 		return ret;
 	}

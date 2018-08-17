@@ -1,14 +1,14 @@
 package com.hyjf.am.config.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.dao.mapper.auto.*;
-import com.hyjf.am.config.dao.model.auto.*;
-import com.hyjf.am.config.service.BankConfigService;
+import com.hyjf.am.config.dao.mapper.auto.FeeConfigMapper;
+import com.hyjf.am.config.dao.model.auto.FeeConfig;
+import com.hyjf.am.config.dao.model.auto.FeeConfigExample;
 import com.hyjf.am.config.service.FeeConfigService;
-import org.apache.commons.lang3.StringUtils;
+import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
+import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -30,5 +30,87 @@ public class FeeConfigServiceImpl implements FeeConfigService {
         feeConfigExample.createCriteria().andBankCodeEqualTo(bankCode == null ? "" : bankCode);
         List<FeeConfig> listFeeConfig = feeConfigMapper.selectByExample(feeConfigExample);
         return listFeeConfig;
+    }
+
+    /**
+     *  查询手续费配置列表条数
+     * @return
+     */
+    @Override
+    public Integer getFeeConfigListCount(AdminFeeConfigRequest request,int limitStart,int limitEnd){
+        FeeConfigExample example = new FeeConfigExample();
+
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        FeeConfigExample.Criteria criteria = example.createCriteria();
+        // 条件查询
+        if (request.getName() != null) {
+            criteria.andNameEqualTo(request.getName());
+        }
+        return feeConfigMapper.countByExample(example);
+    }
+    /**
+     *  查询手续费配置列表
+     * @return
+     */
+    @Override
+    public  List<FeeConfig> getFeeConfigListByPage(AdminFeeConfigRequest request, int limitStart, int limitEnd){
+        FeeConfigExample example = new FeeConfigExample();
+
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+       FeeConfigExample.Criteria criteria = example.createCriteria();
+        // 条件查询
+        if (request.getName() != null) {
+            criteria.andNameEqualTo(request.getName());
+        }
+        return feeConfigMapper.selectByExample(example);
+    }
+
+    /*
+     *根据id查询手续费配置详情
+     * */
+    @Override
+    public FeeConfig getFeeConfigInfoById(Integer userId){
+        return feeConfigMapper.selectByPrimaryKey(userId);
+    }
+
+
+    /**
+     * 添加手续费配置
+     * @param req
+     */
+    @Override
+    public Integer insertFeeConfig(AdminFeeConfigRequest req) {
+        FeeConfig feeConfig = new FeeConfig();
+        BeanUtils.copyProperties(req,feeConfig);
+        req.setCreateTime(GetDate.getDate());
+        req.setUpdateTime(GetDate.getDate());
+        return feeConfigMapper.insertSelective(feeConfig);
+    }
+
+    /**
+     * 修改手续费配置
+     * @param req
+     */
+    @Override
+    public Integer updateFeeConfig( AdminFeeConfigRequest req) {
+        FeeConfig record = new FeeConfig();
+        BeanUtils.copyProperties(req,record);
+        record.setUpdateTime(GetDate.getDate());
+        return  feeConfigMapper.updateByPrimaryKeySelective(record);
+    }
+
+    /**
+     * 删除手续费配置
+     * @param id
+     */
+    @Override
+    public void deleteFeeConfig( Integer id) {
+        feeConfigMapper.deleteByPrimaryKey(id);
     }
 }

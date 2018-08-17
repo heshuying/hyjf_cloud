@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ManualReverseCustomizeMapper">
+	<resultMap id="manualReverseListMap" type="com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize">
+		<result column="seq_no" property="seqNo" /> <!-- 原交易流水号 -->
+		<result column="bank_seq_no" property="bankSeqNo"/><!-- 交易流水号 -->
+		<result column="tx_time" property="txTime"/><!-- 交易时间 -->
+		<result column="username" property="userName"/><!-- 用户名 -->
+		<result column="account_id" property="accountId"/><!-- 电子账号 -->
+		<result column="is_bank" property="isBank"/><!-- 资金托管平台 -->
+		<result column="type" property="type"/><!-- 收支类型 -->
+		<result column="trans_type" property="transType"/><!-- 交易类型 -->
+		<result column="amount" property="amount"/><!-- 操作金额 -->
+		<result column="status" property="status"/><!-- 操作状态 -->
+	</resultMap>
+	<sql id="Where_Clause">
+		<where>
+			<!-- 原交易流水号 -->
+			<if test="seqNoSrch != null and seqNoSrch != ''">
+				AND hmr.seq_no = #{seqNoSrch}
+			</if>
+			<!-- 用户Id -->
+			<if test="userIdSrch != null and userIdSrch != ''">
+				AND hus.user_id = #{userIdSrch}
+			</if>
+			<!-- 用户名 -->
+			<if test="userNameSrch != null and userNameSrch != ''">
+				AND hmr.username = #{userNameSrch}
+			</if>
+			<!-- 电子账户号 -->
+			<if test="accountIdSrch != null and accountIdSrch != ''">
+				AND hmr.account_id = #{accountIdSrch}
+			</if>
+			<if test="txTimeStartSrch != null and txTimeStartSrch != ''">
+				AND DATE_FORMAT(hmr.tx_time, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{txTimeStartSrch },'%Y-%m-%d') 
+			</if>
+			<if test="txTimeEndSrch != null and txTimeEndSrch != ''">
+				AND DATE_FORMAT(hmr.tx_time, '%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{txTimeEndSrch },'%Y-%m-%d')
+			</if>
+		</where>
+	</sql>
+
+	<!-- 检索手动冲正数量-->
+	<select id="countManualReverse" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+			count(hmr.seq_no)
+		FROM
+			ht_manual_reverse hmr
+		INNER JOIN ht_r_user hru ON hmr.username = hru.username
+		<include refid="Where_Clause" />
+	</select>
+
+	<!-- 获取已开户用户列表-->
+	<select id="selectManualReverseList" parameterType="java.util.Map"  resultMap="manualReverseListMap">
+		SELECT
+			hmr.seq_no,
+			hmr.bank_seq_no,
+			hmr.tx_time,
+			hmr.username,
+			hmr.account_id,
+			hmr.is_bank,
+			hmr.type,
+			hmr.trans_type,
+			hmr.amount,
+			hmr.status
+		FROM
+			ht_manual_reverse hmr
+		INNER JOIN ht_r_user hru ON hmr.username = hru.username
+		<include refid="Where_Clause" />
+		ORDER BY hmr.tx_time desc
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+	
+	<!-- 插入手动调帐数据 -->
+	<insert id="insertManualReverse" parameterType="com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+	      SELECT LAST_INSERT_ID()
+	    </selectKey>
+	    insert into ht_manual_reverse (
+	      seq_no,
+	      bank_seq_no,
+	      tx_time,
+	      username,
+	      account_id,
+	      is_bank,
+	      type,
+	      trans_type,
+	      amount,
+	      status,
+	      create_user_id,
+	      create_time)
+	    values (
+	      #{seqNo,jdbcType=INTEGER},
+	      #{bankSeqNo,jdbcType=INTEGER},
+	      #{txTime,jdbcType=VARCHAR},
+	      #{userName,jdbcType=VARCHAR},
+	      #{accountId,jdbcType=VARCHAR},
+	      #{isBank,jdbcType=VARCHAR},
+	      #{type,jdbcType=VARCHAR}, 
+	      #{transType,jdbcType=VARCHAR},
+	      #{amount,jdbcType=VARCHAR},
+	      #{status,jdbcType=VARCHAR},
+	      #{createUserId,jdbcType=INTEGER},
+	      #{createTime,jdbcType=INTEGER}
+	      )
+	</insert>
+	
+	<select id="selectUserIdsByAccount" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT
+			ha.user_id
+		FROM
+			ht_account ha
+		INNER JOIN ht_r_user hru ON ha.user_id = hru.user_id
+		WHERE ha.account = #{accountId}
+	</select> 
+	
+	<select id="selectUserNamebyAccountId" parameterType="java.util.Map" resultType="java.lang.String">
+		SELECT ha.user_name
+		FROM ht_account	 ha
+		INNER JOIN ht_r_user hru ON ha.user_id = hru.user_id
+		where ha.account = #{accountId}
+	</select>
+	
+	<select id="countAccountList"  parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(hal.id)
+		from ht_account_list hal
+		INNER JOIN ht_r_user hu ON hu.user_id = hal.user_id
+		where hu.username = #{userName}
+		and hal.seq_no = #{seqNo}
+		and hal.bank_seq_no = #{bankSeqNo}
+	</select>
+</mapper>

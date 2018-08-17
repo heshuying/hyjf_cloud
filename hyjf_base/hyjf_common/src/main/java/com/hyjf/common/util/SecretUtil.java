@@ -1,13 +1,13 @@
 package com.hyjf.common.util;
 
-import java.util.*;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.validator.Validator;
+import java.util.*;
 
 /**
  * 
@@ -16,7 +16,7 @@ import com.hyjf.common.validator.Validator;
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年2月18日
- * @see 上午9:21:27
+ * @see9:21:27
  */
 public class SecretUtil {
 
@@ -73,6 +73,24 @@ public class SecretUtil {
     }
 
     /**
+     *
+     * 生成规则：
+     *
+     * @return
+     */
+    public static String createToken( Integer userId, String username , String accountId) {
+        // 参数校验
+        if (userId <= 0 || StringUtils.isEmpty(username.trim())) {
+            throw new RuntimeException("参数异常");
+        }
+        AppUserToken token = new AppUserToken(userId, username, accountId);
+        String encryptString = JSON.toJSONString(token);
+        String sign = createSign();
+        RedisUtils.set(RedisConstants.SIGN+sign, encryptString, RedisUtils.signExpireTime);
+        return sign;
+    }
+
+    /**
      * 验证Order
      *
      * @param key
@@ -94,7 +112,6 @@ public class SecretUtil {
      * 验证Order
      *
      * @param key
-     * @param token
      * @param randomString
      * @param order
      * @return
@@ -177,7 +194,7 @@ public class SecretUtil {
      * @return
      */
     public static String getKey(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if (value != null) {
             SignValue signValue = JSON.parseObject(value, SignValue.class);
             return signValue.getKey();
@@ -220,13 +237,13 @@ public class SecretUtil {
      */
 	public static void clearToken(String sign) {
 		// 获取sign缓存
-		String value = RedisUtils.get(sign);
+		String value = RedisUtils.get(RedisConstants.SIGN+sign);
 		if (!Validator.isNull(value)) {
 			SignValue signValue = JSON.parseObject(value, SignValue.class);
 			// 清除token
 			signValue.setToken(null);
 			// 更新缓存
-			RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+			RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 		}
 	}
 
@@ -251,13 +268,12 @@ public class SecretUtil {
     /**
      * 验证token 业务代码不需要再单独调用此方法，废弃
      *
-     * @param key
      * @param sign
      * @param token
      * @return
      */
     public static boolean checkToken(String sign, String token) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         SignValue signValue = JSON.parseObject(value, SignValue.class);
         if (null != token) {
             if (token.equals(signValue.getToken())) {
@@ -318,7 +334,7 @@ public class SecretUtil {
      */
     public static String createSignSec(String sign) {
         String signSec = createSign();
-        RedisUtils.set(signSec, RedisUtils.get(sign));
+        RedisUtils.set(RedisConstants.SIGN+signSec, RedisUtils.get(RedisConstants.SIGN+sign));
         return signSec;
     }
 
@@ -330,7 +346,7 @@ public class SecretUtil {
      * @return
      */
     public static String getToken(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -346,7 +362,7 @@ public class SecretUtil {
      */
     public static Integer getUserId(String sign) {
     	// 获取sign缓存
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -359,13 +375,63 @@ public class SecretUtil {
         if (null != token) {
             appUserToken = JSON.parseObject(DES.decodeValue(signValue.getKey(), token), AppUserToken.class);
         } else {
-            throw new RuntimeException("用户未登陆");
+            return null;
         }
         if(appUserToken.getUserId()==null){
-            throw new RuntimeException("用户未登陆");
+            return null;
         }
         return appUserToken.getUserId();
     }
+
+
+    public static AppUserToken getAppUserToken(String sign) {
+        // 获取sign缓存
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
+        if(StringUtils.isBlank(value)){
+            return null;
+        }
+        AppUserToken signValue = JSON.parseObject(value, AppUserToken.class);
+        if (null == signValue) {
+            throw new RuntimeException("用户未登陆");
+        }
+        return signValue;
+    }
+
+    public static void refreshSign(String sign) {
+        if(StringUtils.isEmpty(sign)){
+            return ;
+        }
+        // 获取sign缓存
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
+        if(StringUtils.isEmpty(value)){
+            return ;
+        }
+        RedisUtils.expire(RedisConstants.SIGN+sign,RedisUtils.signExpireTime);
+    }
     
-    
+    /**
+     * 从token中取得用户ID
+     *
+     * @param sign
+     * @return
+     */
+    public static Integer getUserIdNoException(String sign) {
+        if(StringUtils.isEmpty(sign)){
+            return null;
+        }
+        // 获取sign缓存
+        String value = RedisUtils.get(sign);
+        if(StringUtils.isEmpty(value)){
+            return null;
+        }
+        
+        SignValue signValue = JSON.parseObject(value, SignValue.class);
+        String token = signValue.getToken();
+        AppUserToken appUserToken;
+        if (null != token) {
+            appUserToken = JSON.parseObject(DES.decodeValue(signValue.getKey(), token), AppUserToken.class);
+            return appUserToken.getUserId();
+        } 
+        return null;
+    }
 }

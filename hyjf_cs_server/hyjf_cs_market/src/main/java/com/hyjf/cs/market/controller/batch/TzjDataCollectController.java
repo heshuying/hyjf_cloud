@@ -5,6 +5,7 @@ import com.hyjf.cs.market.service.TzjDataCollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author xiasq
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/cs-market/tzj")
+@Deprecated
+@ApiIgnore
 public class TzjDataCollectController extends BaseMarketController {
     @Autowired
     TzjDataCollectService tzjDataCollectService;

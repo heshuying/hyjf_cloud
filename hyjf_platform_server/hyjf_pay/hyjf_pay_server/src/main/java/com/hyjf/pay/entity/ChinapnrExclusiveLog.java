@@ -1,9 +1,20 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
 package com.hyjf.pay.entity;
 
 import java.io.Serializable;
 
+/**
+ * @author zhangqingqing
+ * @version ChinapnrExclusiveLog, v0.1 2018/7/12 13:44
+ */
 public class ChinapnrExclusiveLog implements Serializable {
-    private String id;
+    private String content;
+
+    private String result;
+
+    private Long id;
 
     private String uuid;
 
@@ -41,17 +52,29 @@ public class ChinapnrExclusiveLog implements Serializable {
 
     private Integer client;
 
-    private String content;
-
-    private String result;
-
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -60,7 +83,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setUuid(String uuid) {
-        this.uuid = uuid == null ? null : uuid.trim();
+        this.uuid = uuid;
     }
 
     public String getOrdid() {
@@ -68,7 +91,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setOrdid(String ordid) {
-        this.ordid = ordid == null ? null : ordid.trim();
+        this.ordid = ordid;
     }
 
     public String getCmdid() {
@@ -76,7 +99,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setCmdid(String cmdid) {
-        this.cmdid = cmdid == null ? null : cmdid.trim();
+        this.cmdid = cmdid;
     }
 
     public String getResptype() {
@@ -84,7 +107,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setResptype(String resptype) {
-        this.resptype = resptype == null ? null : resptype.trim();
+        this.resptype = resptype;
     }
 
     public String getType() {
@@ -92,7 +115,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setType(String type) {
-        this.type = type == null ? null : type.trim();
+        this.type = type;
     }
 
     public String getStatus() {
@@ -100,7 +123,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+        this.status = status;
     }
 
     public String getRespcode() {
@@ -108,7 +131,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setRespcode(String respcode) {
-        this.respcode = respcode == null ? null : respcode.trim();
+        this.respcode = respcode;
     }
 
     public String getRemark() {
@@ -116,7 +139,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+        this.remark = remark;
     }
 
     public String getDelFlag() {
@@ -124,7 +147,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag == null ? null : delFlag.trim();
+        this.delFlag = delFlag;
     }
 
     public String getCreatetime() {
@@ -132,7 +155,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setCreatetime(String createtime) {
-        this.createtime = createtime == null ? null : createtime.trim();
+        this.createtime = createtime;
     }
 
     public String getUpdatetime() {
@@ -140,7 +163,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime == null ? null : updatetime.trim();
+        this.updatetime = updatetime;
     }
 
     public String getCreateuser() {
@@ -148,7 +171,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setCreateuser(String createuser) {
-        this.createuser = createuser == null ? null : createuser.trim();
+        this.createuser = createuser;
     }
 
     public String getUpdateuser() {
@@ -156,7 +179,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setUpdateuser(String updateuser) {
-        this.updateuser = updateuser == null ? null : updateuser.trim();
+        this.updateuser = updateuser;
     }
 
     public Integer getTxDate() {
@@ -180,7 +203,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo == null ? null : seqNo.trim();
+        this.seqNo = seqNo;
     }
 
     public String getChannel() {
@@ -188,7 +211,7 @@ public class ChinapnrExclusiveLog implements Serializable {
     }
 
     public void setChannel(String channel) {
-        this.channel = channel == null ? null : channel.trim();
+        this.channel = channel;
     }
 
     public Integer getClient() {
@@ -198,21 +221,4 @@ public class ChinapnrExclusiveLog implements Serializable {
     public void setClient(Integer client) {
         this.client = client;
     }
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getResult() {
-		return result;
-	}
-
-	public void setResult(String result) {
-		this.result = result;
-	}
-	
 }

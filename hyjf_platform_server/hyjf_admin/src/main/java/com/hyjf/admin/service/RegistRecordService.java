@@ -4,13 +4,9 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -23,6 +19,13 @@ public interface RegistRecordService {
      * @param request
      * @return
      */
-    List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request);
+    RegistRecordResponse findRegistRecordList(RegistRcordRequest request);
+
+    /**
+     * 获取下拉列表的值
+     * @return
+     */
+    UserManagerInitResponseBean initRegist();
+
 
 }

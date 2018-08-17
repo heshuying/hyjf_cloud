@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Link implements Serializable {
-    private Short id;
+    private Integer id;
 
     private Integer type;
 
     private Integer status;
 
-    private Short order;
+    private Integer order;
 
     private String url;
 
@@ -62,11 +62,11 @@ public class Link implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -86,11 +86,11 @@ public class Link implements Serializable {
         this.status = status;
     }
 
-    public Short getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(Short order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 

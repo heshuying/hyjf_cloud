@@ -21,10 +21,38 @@ public class ProjectListRequest extends BasePage {
     private Integer limitStart;
 
     private Integer limitEnd;
+
+    private String platform;
+
+    private String type;
+
+    private String host;
     /**
      * app端计划列表查询使用
      */
     private String isHome;
+
+    /**
+     * app债转列表用
+     */
+    private String creditStatus;
+
+    /**
+     * 翻页机能用的隐藏变量（app原来的参数）
+     */
+    private int page = 1;
+
+    public int getPage() {
+        if (page == 0) {
+            page = 1;
+        }
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
 
     public String getProjectType() {
         return projectType;
@@ -64,5 +92,38 @@ public class ProjectListRequest extends BasePage {
 
     public void setIsHome(String isHome) {
         this.isHome = isHome;
+    }
+
+    public String getCreditStatus() {
+        return creditStatus;
+    }
+
+    public void setCreditStatus(String creditStatus) {
+        this.creditStatus = creditStatus;
+    }
+
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }

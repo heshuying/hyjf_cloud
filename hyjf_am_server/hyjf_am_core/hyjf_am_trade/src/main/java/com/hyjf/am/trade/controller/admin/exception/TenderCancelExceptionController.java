@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/tendercancelexception")
-@Api(value = "异常中心-银行投资撤销异常")
+@Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
 public class TenderCancelExceptionController extends BaseController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询银行投资撤销异常的数据count", notes = "根据筛选条件查询银行投资撤销异常的数据count")
     @PostMapping(value = "/gettendercancelexceptioncount")
-    public Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request){
+    public Integer getTenderCancelExceptionCount(@RequestBody TenderCancelExceptionRequest request){
         return tenderCancelExceptionService.getTenderCancelExceptionCount(request);
     }
 
@@ -55,12 +55,12 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询银行投资撤销异常list", notes = "根据筛选条件查询银行投资撤销异常list")
     @PostMapping(value = "/searchtendercancelexceptionlist")
-    public BorrowTenderTmpResponse searchTenderCancelExceptionList(TenderCancelExceptionRequest request){
+    public BorrowTenderTmpResponse searchTenderCancelExceptionList(@RequestBody TenderCancelExceptionRequest request){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
         Integer count = tenderCancelExceptionService.getTenderCancelExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }

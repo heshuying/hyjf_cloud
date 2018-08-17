@@ -19,9 +19,16 @@
         <module>hyjf_am_config</module>
         <module>hyjf_am_market</module>
         <module>hyjf_am_user</module>
-        <module>hyjf_am_data_collect</module>
         <module>hyjf_am_trade</module>
+        <module>hyjf_am_admin</module>
     </modules>
+<dependencies>
 
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+
+</dependencies>
 
 </project>

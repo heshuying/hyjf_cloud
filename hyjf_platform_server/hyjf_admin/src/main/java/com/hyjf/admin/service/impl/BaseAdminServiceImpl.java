@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.config.SystemConfig;
@@ -23,6 +24,9 @@ public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminSe
 
 	@Autowired
 	public AmConfigClient amConfigClient;
+
+	@Autowired
+	public CsMessageClient csMessageClient;
 
 	@Autowired
 	public SystemConfig systemConfig;

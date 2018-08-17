@@ -17,7 +17,7 @@ public class OntimeMessageJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("OntimeMessageJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/message/ontimeMessage", Object.class);
+		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_ontime/send", Object.class);
 		logger.info("OntimeMessageJob execute end...");
 	}
 }

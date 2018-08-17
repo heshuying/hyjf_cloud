@@ -3,8 +3,15 @@
  */
 package com.hyjf.cs.market.controller.web.aboutus;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
-import com.hyjf.common.paginator.Paginator;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.datacollect.TotalMessageVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.AboutUsService;
@@ -12,10 +19,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -26,7 +35,7 @@ import java.util.Map;
  * @author fuqiang
  * @version AboutUsController, v0.1 2018/7/9 9:40
  */
-@Api(value = "信息披露")
+@Api(tags = "web端-信息披露")
 @RestController
 @RequestMapping("/web/cs-market/aboutus")
 public class AboutUsController extends BaseController {
@@ -38,7 +47,7 @@ public class AboutUsController extends BaseController {
 
 
 	@ApiOperation(value = "信息披露", notes = "关于我们")
-	@RequestMapping("/about")
+	@GetMapping("/about")
 	public WebResult<Map<String, Object>> aboutus() {
 		logger.info("web端获取关于我们数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -68,7 +77,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "合作伙伴")
-	@RequestMapping("/partners")
+	@GetMapping("/partners")
 	public WebResult<Map<String, Object>> partners() {
 		logger.info("web端获取合作伙伴数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -93,7 +102,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "公司历程")
-	@RequestMapping("/events")
+	@GetMapping("/events")
 	public WebResult<Map<String, Object>> events() {
 		logger.info("web端获取公司历程数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -112,7 +121,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "网站公告列表")
-	@RequestMapping("/getNoticeListPage")
+	@GetMapping("/getNoticeListPage")
 	public WebResult<Map<String, Object>> getNoticeListPage() {
 		logger.info("web端获取网站公告列表数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -131,7 +140,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "根据id获取网站公告")
-	@RequestMapping("/events/{id}")
+	@GetMapping("/events/{id}")
 	public WebResult<Map<String, Object>> getCompanyNoticeDetail(@PathVariable Integer id) {
 		logger.info("web端根据id获取网站公告数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -155,7 +164,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "招贤纳士", notes = "招贤纳士列表查询")
-	@RequestMapping("/recurit")
+	@GetMapping("/recurit")
 	public WebResult<List<JobsVo>> getRecurit(){
 		List<JobsVo> jobsList = aboutUsService.getJobsList();
 		WebResult webResult = new WebResult(jobsList);
@@ -169,8 +178,8 @@ public class AboutUsController extends BaseController {
 	 */
 
 	@ApiOperation(value = "联系我们", notes = "联系我们查询")
-	@RequestMapping("/contactus")
-	public WebResult<List<JobsVo>> contactus(){
+	@GetMapping("/contactus")
+	public WebResult<List<ContentArticleVO>> contactus(){
 		ContentArticleVO contactUs = aboutUsService.getContactUs();
 		WebResult webResult = new WebResult(contactUs);
 		return webResult;
@@ -181,10 +190,111 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
-	@RequestMapping("/getKnowReportList")
-	public WebResult<List<JobsVo>> get(){
-		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList();
+	@GetMapping("/getKnowReportList")
+	public WebResult<List<ContentArticleVO>> getKnowReportList(ContentArticleRequest request ){
+		request.setNoticeType("3");
+		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
 		WebResult webResult = new WebResult(homeNoticeList);
+		return webResult;
+	}
+
+
+	/**
+	 * 风险教育信息
+	 * @return
+	 */
+	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
+	@GetMapping("/getFXReportList")
+	public WebResult<List<ContentArticleVO>> getFXReportList(ContentArticleRequest request ){
+		request.setNoticeType("101");
+		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
+		WebResult webResult = new WebResult(homeNoticeList);
+		return webResult;
+	}
+
+
+
+	/**
+	 * 帮助中心：注册登录
+	 * @return
+	 */
+	@ApiOperation(value = "帮助中心：注册登录", notes = "帮助中心：注册登录")
+	@GetMapping("/index")
+	public WebResult<List<ContentArticleVO>> help_index(ContentArticleRequest request ){
+		List<ContentArticleVO> homeNoticeList = aboutUsService.getIndex(request);
+		WebResult webResult = new WebResult(homeNoticeList);
+		return webResult;
+	}
+
+
+	/**
+	 * 新手指引(新手进阶)请求
+
+	 * @return
+	 */
+	@ApiOperation(value = "新手指引(新手进阶)请求", notes = "新手指引(新手进阶)请求")
+	@GetMapping("/fresher")
+	public WebResult<TotalMessageVO> noviceGuide() {
+		WebResult webResult = new WebResult();
+
+		TotalMessageVO totalMessageVO = new TotalMessageVO();
+		TotalInvestAndInterestVO totalInvestAndInterestVO = aboutUsService.searchData();
+		//投资总额(亿元) tenderSum
+		String tenderSum = totalInvestAndInterestVO.getTotalInvestAmount().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
+		//收益总额(亿元) interestSum
+		String interestSum = totalInvestAndInterestVO.getTotalInterestAmount().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
+		//累计投资人数(万人) totalTenderSum
+		int totalTenderSum = totalInvestAndInterestVO.getTotalInvestNum() / 10000;
+		//当前时间 date
+		String date = GetDate.getDataString(GetDate.date_sdf_wz);
+		// TODO 查询用户是否登录
+		/*WebViewUser wuser = WebUtils.getUser(request);
+		if (wuser == null) {
+			modelAndView.addObject("isLogin", "0");//未登陆
+		}else{
+			modelAndView.addObject("isLogin", "1");//已登陆
+		}*/
+		totalMessageVO.setDate(date);
+		totalMessageVO.setTenderSum(tenderSum);
+		totalMessageVO.setInterestSum(interestSum);
+		totalMessageVO.setTotalTenderSum(totalTenderSum);
+		return webResult;
+	}
+
+
+	/**
+	 * 服务中心
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "服务中心", notes = "服务中心")
+	@GetMapping("/getSecurityPage")
+	public WebResult<BanksConfigVO>  getSecurityPage(HttpServletRequest request) {
+		WebResult webResult=null;
+		//ModelAndView modelAndView=null;
+		String pageType = request.getParameter("pageType");
+		if(StringUtils.isBlank(pageType)){
+			// TODO 参数为空转跳页面
+			//modelAndView = new ModelAndView("/contentarticle/bank-page");
+		}else{
+			/*if(null != pageType) {
+				pageType = pageType.replace(".", "");
+			}*/
+			//modelAndView = new ModelAndView("/contentarticle/" + pageType);
+			JSONArray data = aboutUsService.getBanksList().getJSONArray("data");
+			String str = data.toJSONString();
+			List<BanksConfigVO> list = JSONObject.parseArray(str, BanksConfigVO.class);
+			for (BanksConfigVO banksConfig : list) {
+				BigDecimal monthCardQuota = banksConfig.getMonthCardQuota();
+				BigDecimal singleQuota = banksConfig.getSingleQuota();
+				BigDecimal singleCardQuota = banksConfig.getSingleCardQuota();
+				banksConfig.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
+				banksConfig.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
+				banksConfig.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
+			}
+			webResult = new WebResult(list);
+
+		}
 		return webResult;
 	}
 }

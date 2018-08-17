@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author zhangqingqing
  * @version MerchantAccountController, v0.1 2018/7/5 10:01
  */
-@Api(value = "商户子账户信息")
+@Api(value = "资金中心-平台账户-账户信息",tags ="资金中心-平台账户-账户信息")
 @RestController
 @RequestMapping("/hyjf-admin/merchant/account")
 public class MerchantAccountController extends BaseController {
@@ -39,7 +39,7 @@ public class MerchantAccountController extends BaseController {
      * @param form
      * @return
      */
-    @ApiOperation(value = "商户子账户列表",notes = "商户子账户列表")
+    @ApiOperation(value = "账户信息",notes = "账户信息")
     @PostMapping(value = "/accountList")
     public AdminResult init(@RequestBody MerchantAccountListBean form) {
         MerchantAccountListRequest request = new MerchantAccountListRequest();

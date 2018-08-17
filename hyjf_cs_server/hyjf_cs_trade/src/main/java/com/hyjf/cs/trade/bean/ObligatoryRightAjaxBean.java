@@ -4,10 +4,11 @@ import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
 
 import java.util.List;
 
-public class ObligatoryRightAjaxBean extends WebResult {
+public class ObligatoryRightAjaxBean{
 
 	private static final long serialVersionUID = 3278149257478770256L;
 	
@@ -24,6 +25,17 @@ public class ObligatoryRightAjaxBean extends WebResult {
 	private Integer repayMentCount=0;
 	//转让债权数量
 	private Integer tenderCreditDetailCount=0;
+
+    // 分页对象
+    private Page page;
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
 
 
     public static long getSerialVersionUID() {

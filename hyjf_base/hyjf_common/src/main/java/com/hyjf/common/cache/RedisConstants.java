@@ -12,12 +12,12 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app_";
+    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web_";
+    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
     /**
      * 用户一秒内的登录次数(ip)
@@ -43,7 +43,7 @@ public class RedisConstants {
     /**
      * 风险保证金前缀
      */
-    public static final String CAPITAL_TOPLIMIT_ = "CAPITAL_TOPLIMIT_";
+    public static final String CAPITAL_TOPLIMIT_ = "CAPITAL_TOPLIMIT:";
 
     /**
      * 汇计划发标redis key
@@ -53,12 +53,12 @@ public class RedisConstants {
     /**
      * 加入计划防重校验
      */
-    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT";
+    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT:";
 
     /**
      * 汇计划可投余额前缀
      */
-    public static final String HJH_PLAN = "HJHBAL_";
+    public static final String HJH_PLAN = "HJHBAL:";
 
     /**
      * 汇计划进入锁定期处理中队列
@@ -116,4 +116,203 @@ public class RedisConstants {
     // _tmp
     public static final String HJH_SLASH_TMP = "_tmp";
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
+
+    /**
+     * 散标投资防重校验
+     */
+    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT:";
+
+
+    /**
+     * 投资防重校验过期时间
+     */
+    public static final Integer TENDER_OUT_TIME = 300;
+
+    /**
+     * 短信模板缓存
+     */
+    public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode:";
+
+    /**
+     * 网关路由配置
+     */
+    public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key";
+
+    /**
+     * PARAM表配置
+     */
+    public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
+
+    /**
+     * 短信单手机控制
+     */
+    public static final String CACHE_MAX_PHONE_COUNT = "MaxPhoneCount:";
+
+    /**
+     * 单IP最大登录控制
+     */
+    public static final String CACHE_MAX_IP_COUNT = "MaxIpCount:";
+
+    /**
+     * 自动关联计划redis防重复
+     */
+    public static final String AUTO_ISSUE_REPEAT = "borrowissue";
+
+    /**
+     * 单用户防止重复提交redis 前缀
+     */
+    public static final String PRE_REQUEST_LIMIT = "ReqLimit:";
+
+    /**
+     * borrowNid
+     */
+    public static final String BORROW_NID = "BORROW_NID:";
+    /**
+     * wechat sign
+     */
+    public static final String SIGN = "SIGN:";
+    /**
+     * admin单点登陆用户
+     */
+    public static final String ADMIN_REQUEST = "Admin:";
+    
+    /**
+     * 协议模板---协议前台展示名称的别名
+     */
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
+    
+    /**
+     * 协议模板---协议文件存储Redis前缀
+     */
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
+    
+
+    /**
+     * 用户token令牌前缀
+     */
+    public static final String USERID_KEY = "userId:";
+
+    /**
+     * 放款批次号key
+     */
+    public static final String BATCH_NO = "batchNo";
+    /**
+     *
+     */
+    public static final String DATA_BATCH_NO = "dataBatchNo";
+    /**
+     * 短信配置key
+     */
+    public static final String SMS_CONFIG = "smsConfig";
+
+    /**
+     * 记录密码错误次数Redis前缀
+     */
+    public static final String PASSWORD_ERR_COUNT = "password_err_count:";
+
+    /**
+     * 邮件配置key
+     */
+    public static final String SITE_SETTINGS = "site_settings";
+
+    /**
+     * 消息推送模版key
+     */
+    public static final String MESSAGE_PUSH_TEMPLATE = "message_push_template";
+
+    /**
+     * 短信通知配置key
+     */
+    public static final String SMS_NOTICE_CONFIG = "sms_notice_config";
+
+    /**
+     * 短信模版key
+     */
+    public static final String SMS_TEMPLATE = "sms_template";
+
+    /**
+     * 邮件模版key
+     */
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template:";
+
+    /**
+     * 运营报告定时任务key
+     */
+    public static final String Statistics_Operation_Report = "StatisticsOperationReportTask";
+
+    /** CONTROLLOR @value值 */
+    public static final String CONTROLLOR_CLASS_NAME = "UserRegistDefine:";
+
+    /**
+     * 充值防重校验
+     */
+    public static final String RECHARGE_ORDERID = "recharge_orderid:";
+
+    /**
+     * 定时发标key
+     */
+    public static final String ON_TIME = "ON_TIME:";
+
+    /**
+     * 用户画像评分
+     */
+    public static final String USERPORTRAIT_SCORE = "userPortrait_score";
+
+    /**
+	 * 汇计划提成
+	 * 之前是大寫PUSH_MONEY
+	 * add by libin
+	 */
+	public static final String PUSH_MONEY_ = "push_money:";
+
+	/**
+	 * 四端平台名称rediskey
+	 * @author zhangyk
+	 * @date 2018/8/13 9:24
+	 */
+	public static final String CLIENT = "CLIENT";
+
+    //某计划连续开放额度不同次数
+    public static final String CONT_WARN_OF_HJH_ACCOUNT = "contWarnOfHjhAccount:";
+
+    /**
+     * 群发短信--剩余短信条数
+     */
+    public static final String REMAIN_NUMBER = "remain_number";
+
+    /**
+     * 群发短信--短信余额
+     */
+    public static final String REMAIN_MONEY = "remain_money";
+
+    /**
+     * 上海大屏幕运营数据
+     */
+    public static final String SH_OPERATIONAL_DATA = "SH_OPERATIONAL_DATA:";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资人
+     */
+    public static final String STATISTICAL_INVESTOR = "STATISTICAL_INVESTOR";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资
+     */
+    public static final String STATISTICAL_INVESTMENT = "STATISTICAL_INVESTMENT";
+
+    /**
+     * 上海大屏幕运营数据 : 统计充值
+     */
+    public static final String STATISTICAL_RECHARGE = "STATISTICAL_RECHARGE";
+
+    /**
+     * 上海大屏幕运营数据 : 注册人统计
+     */
+    public static final String REGISTRANT_STATISTICS = "REGISTRANT_STATISTICS";
+
+    /**
+     * 上海大屏幕运营数据 : 公司动态列表
+     */
+    public static final String ARTICLE_LIST = "ARTICLE_LIST";
 }

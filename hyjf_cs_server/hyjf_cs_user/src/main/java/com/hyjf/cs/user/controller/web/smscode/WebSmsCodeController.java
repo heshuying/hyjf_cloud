@@ -26,10 +26,10 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码")
+@Api(tags = "web端-验证码")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user/sms")
+@RequestMapping("/hyjf-web/user/sms")
 public class WebSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebSmsCodeController.class);
 
@@ -39,15 +39,16 @@ public class WebSmsCodeController extends BaseUserController {
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
 	 * @param param 修改手机号码验证原手机号：validCodeType=TPL_YZYSJH  绑定新手机号：validCodeType=TPL_BDYSJH
-	 * @param token
+	 * @param
 	 * @param request
 	 * @return
 	 * @throws MQException
 	 */
+	@ApiOperation(value = "发送验证码",notes = "发送验证码")
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
-								 @RequestHeader(value = "token", required = false)String token,
+								 @RequestHeader(value = "userId", required = false) Integer userId,
 								 HttpServletRequest request)
 			throws MQException {
 		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
@@ -55,7 +56,8 @@ public class WebSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
-		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
 
@@ -75,7 +77,7 @@ public class WebSmsCodeController extends BaseUserController {
 		// 手机号码(必须,数字,最大长度)
 		String mobile = request.getMobile();
 		sendSmsCode.checkParam(verificationType,code,mobile);
-		int cnt = sendSmsCode.updateCheckMobileCode(mobile, code, verificationType, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+		int cnt = sendSmsCode.updateCheckMobileCode(mobile, code, verificationType, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN,true);
 		CheckUtil.check(cnt > 0,MsgEnum.STATUS_ZC000015);
 		return  result;
 	}

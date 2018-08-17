@@ -1,18 +1,18 @@
 package com.hyjf.cs.trade.controller.web.tradedetail;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.TradeDetailService;
+import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +26,10 @@ import java.util.Map;
  * @author pangchengchao
  * @version TradeDetail, v0.1 2018/6/27 10:10
  */
-@Api(value = "Web交易明细页面")
+@Api(tags = "Web交易明细页面")
 @RestController
-@RequestMapping("/web/tradedetail")
+@RequestMapping("/hyjf-web/tradedetail")
 public class TradeDetailController  extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(TradeDetailController.class);
     @Autowired
     private TradeDetailService tradeDetailService;
     /**
@@ -41,12 +40,15 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "初始化交易类型列表", notes = "初始化交易类型列表")
     @PostMapping(value = "/getAccountTradeList")
-    public Map<String,Object> getAccountTradeList( HttpServletRequest request) {
+    public WebResult<Object> getAccountTradeList( HttpServletRequest request) {
+
         logger.info("web初始化交易类型列表");
-        Map<String,Object> result = new HashMap<>();
+        WebResult<Object> result=new WebResult<Object>();
         // 交易类型列表
         List<AccountTradeVO> trades = this.tradeDetailService.selectTradeTypes();
-        result.put("trades", trades);
+        result.setData(trades);
+        result.setStatus(BaseResult.SUCCESS);
+        result.setStatusDesc(BaseResult.SUCCESS_DESC);
         return result;
     }
 
@@ -59,11 +61,11 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户收支明细列表分页数据", notes = "获取用户收支明细列表分页数据")
     @PostMapping(value = "/searchUserTradeList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "token", required = true) String token,
-                                               @RequestBody @Valid TradeDetailBeanRequest form,
-                                               HttpServletRequest request) {
-        logger.info("web获取用户收支明细列表分页数据, token is :{}", JSONObject.toJSONString(token));
-        WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+    public TradeDetailBean searchUserTradeList(@RequestHeader(value = "userId") int userId,
+                                               @RequestBody @Valid TradeDetailBeanRequest form) {
+        logger.info("web获取用户收支明细列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
+        WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserTradeList(form);
@@ -80,11 +82,11 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户充值记录列表分页数据", notes = "获取用户充值记录列表分页数据")
     @PostMapping(value = "/searchUserRechargeList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserRechargeList(@RequestHeader(value = "token", required = true) String token,
-                                               @RequestBody @Valid TradeDetailBeanRequest form,
-                                               HttpServletRequest request) {
-        logger.info("web获取用户充值记录列表分页数据, token is :{}", JSONObject.toJSONString(token));
-        WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+    public TradeDetailBean searchUserRechargeList(@RequestHeader(value = "userId", required = true) int userId,
+                                               @RequestBody @Valid TradeDetailBeanRequest form) {
+        logger.info("web获取用户充值记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
+        WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserRechargeList(form);
@@ -100,11 +102,11 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户提现记录列表分页数据", notes = "获取用户提现记录列表分页数据")
     @PostMapping(value = "/searchUserWithdrawList", produces = "application/json;charset=utf-8")
-    public TradeDetailBean searchUserWithdrawList(@RequestHeader(value = "token", required = true) String token,
-                                                  @RequestBody @Valid TradeDetailBeanRequest form,
-                                                  HttpServletRequest request) {
-        logger.info("web获取用户提现记录列表分页数据, token is :{}", JSONObject.toJSONString(token));
-        WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+    public TradeDetailBean searchUserWithdrawList(@RequestHeader(value = "userId", required = true) int userId,
+                                                  @RequestBody @Valid TradeDetailBeanRequest form) {
+        logger.info("web获取用户提现记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
+        WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserWithdrawList(form);

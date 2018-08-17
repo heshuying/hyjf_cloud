@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class UserPortraitRequestBean extends BaseRequest implements Serializable {
 
     @ApiModelProperty(value = "用户id")
-    private String userId;
+    private Integer userId;
     @ApiModelProperty(value = "用户名")
     private String userName;
     @ApiModelProperty(value = "学历")
@@ -35,6 +35,7 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
     private String currentOwner;
     @ApiModelProperty(value = "是否加微信：0否,1是")
     private String addWechat;
+    @ApiModelProperty(value = "投资进程")
     private String investProcess;
     @ApiModelProperty(value = "客户投诉")
     private String customerComplaint;
@@ -156,11 +157,11 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
         this.remark = remark;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 }

@@ -4,38 +4,39 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
 /**
  * @author liubin
  * @version UpdateCreditForAutoTenderRequest, v0.1 2018/7/5 18:12
  */
 public class UpdateBorrowForAutoTenderRequest {
-    private BorrowVO borrowVO;
-    private HjhAccedeVO hjhAccedeVO;
+    private String borrowNid;
+    private String accedeOrderId;
     private BankCallBeanVO bankCallBeanVO;
 
-    public UpdateBorrowForAutoTenderRequest(BorrowVO borrowVO, HjhAccedeVO hjhAccedeVO, BankCallBeanVO bankCallBeanVO) {
-        this.borrowVO = borrowVO;
-        this.hjhAccedeVO = hjhAccedeVO;
+    public UpdateBorrowForAutoTenderRequest() {
+    }
+
+    public UpdateBorrowForAutoTenderRequest(String borrowNid, String accedeOrderId, BankCallBeanVO bankCallBeanVO) {
+        this.borrowNid = borrowNid;
+        this.accedeOrderId = accedeOrderId;
         this.bankCallBeanVO = bankCallBeanVO;
     }
 
-    public BorrowVO getBorrowVO() {
-        return borrowVO;
+    public String getBorrowNid() {
+        return borrowNid;
     }
 
-    public void setBorrowVO(BorrowVO borrowVO) {
-        this.borrowVO = borrowVO;
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 
-    public HjhAccedeVO getHjhAccedeVO() {
-        return hjhAccedeVO;
+    public String getAccedeOrderId() {
+        return accedeOrderId;
     }
 
-    public void setHjhAccedeVO(HjhAccedeVO hjhAccedeVO) {
-        this.hjhAccedeVO = hjhAccedeVO;
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
     }
 
     public BankCallBeanVO getBankCallBeanVO() {

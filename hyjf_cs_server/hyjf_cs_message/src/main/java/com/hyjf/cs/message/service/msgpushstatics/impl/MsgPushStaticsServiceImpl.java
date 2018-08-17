@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.MessagePushMsgHistory;
-import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.jpush.JPush;
 import com.hyjf.cs.message.jpush.JPushPro;
-import com.hyjf.cs.message.mongo.MessagePushMsgHistoryDao;
-import com.hyjf.cs.message.mongo.MessagePushTemplateStaticsDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
 
 import cn.jpush.api.report.ReceivedsResult;

@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.AllocationEngineClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AllocationEngineService;
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
 import com.hyjf.am.response.admin.HjhRegionResponse;
@@ -25,120 +25,119 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 public class AllocationEngineServiceImpl implements  AllocationEngineService{
 
 	@Autowired
-	//专区跟配置共用AllocationEngineClient
-	public AllocationEngineClient allocationEngineClient;
+	public AmTradeClient amTradeClient;
 	
 	@Override
 	public HjhRegionResponse getHjhRegionList(AllocationEngineRuquest form) {
-		HjhRegionResponse list = allocationEngineClient.getHjhRegionList(form);
+		HjhRegionResponse list = amTradeClient.getHjhRegionList(form);
 		return list;
 	}
 
 	@Override
 	public String getPlanNameByPlanNid(AllocationEngineRuquest form) {
-		String planName = allocationEngineClient.getPlanNameByPlanNid(form);
+		String planName = amTradeClient.getPlanNameByPlanNid(form);
 		return planName;
 	}
 
 	@Override
 	public int insertRecord(HjhRegionVO request) {
-		int flg = allocationEngineClient.insertRecord(request);
+		int flg = amTradeClient.insertRecord(request);
 		return flg;
 	}
 
 	@Override
 	public HjhRegionResponse getPlanNidAjaxCheck(String planNid) {
-		HjhRegionResponse response = allocationEngineClient.getPlanNidAjaxCheck(planNid);
+		HjhRegionResponse response = amTradeClient.getPlanNidAjaxCheck(planNid);
 		return response;
 	}
 
 	@Override
 	public HjhRegionVO getHjhRegionVOById(String id) {
-		HjhRegionVO vo = allocationEngineClient.getHjhRegionVOById(id);
+		HjhRegionVO vo = amTradeClient.getHjhRegionVOById(id);
 		return vo;
 	}
 
 	@Override
 	public int updateHjhRegionRecord(HjhRegionVO vo) {
-		int flg = allocationEngineClient.updateHjhRegionRecord(vo);
+		int flg = amTradeClient.updateHjhRegionRecord(vo);
 		return flg;
 	}
 
 	@Override
 	public HjhRegionResponse updateAllocationEngineRecord(HjhRegionVO vo) {
-		HjhRegionResponse response = allocationEngineClient.updateAllocationEngineRecord(vo);
+		HjhRegionResponse response = amTradeClient.updateAllocationEngineRecord(vo);
 		return response;
 	}
 
 	@Override
 	public List<HjhRegionVO> getHjhRegionListWithOutPage(AllocationEngineRuquest request) {
-		List<HjhRegionVO> list = allocationEngineClient.getHjhRegionListWithOutPage(request);
+		List<HjhRegionVO> list = amTradeClient.getHjhRegionListWithOutPage(request);
 		return list;
 	}
 
 	@Override
 	public HjhAllocationEngineResponse getHjhAllocationEngineList(AllocationEngineRuquest form ) {
-		HjhAllocationEngineResponse response = allocationEngineClient.getHjhAllocationEngineList(form);
+		HjhAllocationEngineResponse response = amTradeClient.getHjhAllocationEngineList(form);
 		return response;
 	}
 
 	@Override
 	public List<HjhAllocationEngineVO> getAllocationList(AllocationEngineRuquest form) {
-		List<HjhAllocationEngineVO> list = allocationEngineClient.getAllocationList(form);
+		List<HjhAllocationEngineVO> list = amTradeClient.getAllocationList(form);
 		return list;
 	}
 
 	@Override
 	public HjhAllocationEngineVO getPlanConfigRecord(Integer engineId) {
-		HjhAllocationEngineVO vo = allocationEngineClient.getPlanConfigRecord(engineId);
+		HjhAllocationEngineVO vo = amTradeClient.getPlanConfigRecord(engineId);
 		return vo;
 	}
 
 	@Override
 	public int updateHjhAllocationEngineRecord(HjhAllocationEngineVO vo) {
-		int flg = allocationEngineClient.updateHjhAllocationEngineRecord(vo);
+		int flg = amTradeClient.updateHjhAllocationEngineRecord(vo);
 		return flg;
 	}
 
 	@Override
 	public HjhAllocationEngineVO getPlanConfigRecordByParam(AllocationEngineRuquest form) {
-		HjhAllocationEngineVO vo = allocationEngineClient.getPlanConfigRecordByParam(form);
+		HjhAllocationEngineVO vo = amTradeClient.getPlanConfigRecordByParam(form);
 		return vo;
 	}
 
 	@Override
 	public boolean checkRepeat(String labelName, String planNid) {
-		boolean flg = allocationEngineClient.checkRepeat(labelName,planNid);
+		boolean flg = amTradeClient.checkRepeat(labelName,planNid);
 		return flg;
 	}
 
 	@Override
 	public String getPlanBorrowStyle(String planNid) {
-		String borrowStyle = allocationEngineClient.getPlanBorrowStyle(planNid);
+		String borrowStyle = amTradeClient.getPlanBorrowStyle(planNid);
 		return borrowStyle;
 	}
 
 	@Override
 	public HjhRegionVO getHjhRegionRecordByPlanNid(String planNid) {
-		HjhRegionVO vo = allocationEngineClient.getHjhRegionRecordByPlanNid(planNid);
+		HjhRegionVO vo = amTradeClient.getHjhRegionRecordByPlanNid(planNid);
 		return vo;
 	}
 
 	@Override
 	public int insertHjhAllocationEngineRecord(HjhAllocationEngineVO newForm) {
-		int flg = allocationEngineClient.insertHjhAllocationEngineRecord(newForm);
+		int flg = amTradeClient.insertHjhAllocationEngineRecord(newForm);
 		return flg;
 	}
 
 	@Override
 	public List<HjhPlanVO> getHjhPlanByPlanNid(String planNid) {
-		List<HjhPlanVO> list = allocationEngineClient.getHjhPlanByPlanNid(planNid);
+		List<HjhPlanVO> list = amTradeClient.getHjhPlanByPlanNid(planNid);
 		return list;
 	}
 
 	@Override
 	public List<HjhRegionVO> getHjhRegioByPlanNid(String planNid) {
-		List<HjhRegionVO> list = allocationEngineClient.getHjhRegioByPlanNid(planNid);
+		List<HjhRegionVO> list = amTradeClient.getHjhRegioByPlanNid(planNid);
 		return list;
 	}
 }

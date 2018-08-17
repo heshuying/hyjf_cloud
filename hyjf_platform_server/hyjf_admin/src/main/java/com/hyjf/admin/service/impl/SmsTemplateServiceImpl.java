@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.SmsTemplateClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.SmsTemplateService;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
@@ -20,20 +20,35 @@ import java.util.List;
 public class SmsTemplateServiceImpl implements SmsTemplateService {
 
 	@Autowired
-	private SmsTemplateClient smsTemplateClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public List<SmsTemplateVO> findAll() {
-		return smsTemplateClient.findAll();
+		return amConfigClient.findSmsAll();
 	}
 
 	@Override
 	public List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request) {
-		return smsTemplateClient.findSmsTemplate(request);
+		return amConfigClient.findSmsTemplate(request);
 	}
 
 	@Override
 	public void insertSmsTemplate(SmsTemplateRequest request) {
-		smsTemplateClient.insertSmsTemplate(request);
+		amConfigClient.insertSmsTemplate(request);
+	}
+
+	@Override
+	public void openAction(SmsTemplateRequest request) {
+		amConfigClient.openSmsTemplate(request);
+	}
+
+	@Override
+	public void closeAction(SmsTemplateRequest request) {
+		amConfigClient.closeSmsTemplate(request);
+	}
+
+	@Override
+	public void updateSmsTemplate(SmsTemplateRequest request) {
+		amConfigClient.updateSmsTemplate(request);
 	}
 }

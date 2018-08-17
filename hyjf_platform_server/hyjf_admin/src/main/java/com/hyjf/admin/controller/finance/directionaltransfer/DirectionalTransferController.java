@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.finance.directionaltransfer;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.DirectionalTransferService;
@@ -19,13 +20,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Api(value = "资金中心-定向转账-定向转账")
+@Api(value = "资金中心-定向转账-定向转账",tags = "资金中心-定向转账-定向转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/directionaltransfer")
+@RequestMapping(value = "/hyjf-admin/finance/directionaltransfer")
 public class DirectionalTransferController extends BaseController {
 
     @Autowired
@@ -38,14 +42,11 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping(value = "/getdirectionaltransferlist")
-    public JSONObject getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<AccountDirectionalTransferVO>> getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
         Integer count = directionaltransferService.getDirectionalTransferCount(request);
         count = (count == null)?0:count;
-        jsonObject.put("count",count);
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = directionaltransferService.searchDirectionalTransferList(request);
-        jsonObject.put("accountDirectionalTransferList",accountDirectionalTransferVOList);
-        return jsonObject;
+        return new AdminResult<>(ListResult.build(accountDirectionalTransferVOList,count));
     }
 
 
@@ -65,7 +66,7 @@ public class DirectionalTransferController extends BaseController {
         String sheetName = "定向转账列表";
         // 文件名称
         String fileName =
-                sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+                URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 检索列表
         List<AccountDirectionalTransferVO> resultList = directionaltransferService.searchDirectionalTransferList(request);

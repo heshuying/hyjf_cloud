@@ -6,7 +6,9 @@ package com.hyjf.am.resquest.trade;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
@@ -17,23 +19,41 @@ import java.math.BigDecimal;
  * @Date 2018/6/19 9:37
  */
 public class TenderRequest extends BaseVO {
-    // 债转编号
+    /**
+     * 债转编号  债转需要上送
+     */
+    @ApiModelProperty(value = "债转编号  债转需要上送")
     private String creditNid ;
-    // 优惠券投资
+    /**
+     * 优惠券编号
+     */
+    @ApiModelProperty(value = "优惠券编号")
     private Integer couponGrantId ;
-    // 项目编号
+    /**
+     * 项目编号
+     */
+    @ApiModelProperty(value = "项目编号 投资 加入计划用")
     private String borrowNid ;
-    // 防止重复加入计划
+    /**
+     * 防止重复加入计划
+     */
+    @ApiModelProperty(value = "防止重复加入计划")
     private String tenderToken;
     // 投资Ip
     private String ip;
-    // 投资平台
+    /**
+     * 投资平台
+     */
+    @ApiModelProperty(value = "投资平台 app需要上送")
     private String platform;
-    // 登录的token
-    private String token;
-    // 登录的用户对象
-    private WebViewUserVO user;
-    // 投资金额
+    // 登录的userId
+    private Integer userId;
+    // 当前登录user对象
+    private UserVO user;
+    /**
+     * 投资金额
+     */
+    @ApiModelProperty(value = "投资金额")
     private String account;
 
     // 内部操作用
@@ -111,19 +131,19 @@ public class TenderRequest extends BaseVO {
         this.platform = platform;
     }
 
-    public String getToken() {
-        return token;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public WebViewUserVO getUser() {
+    public UserVO getUser() {
         return user;
     }
 
-    public void setUser(WebViewUserVO user) {
+    public void setUser(UserVO user) {
         this.user = user;
     }
 

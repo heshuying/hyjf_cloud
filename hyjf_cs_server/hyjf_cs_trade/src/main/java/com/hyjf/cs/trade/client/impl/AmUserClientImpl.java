@@ -1,21 +1,23 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,20 +149,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 我的邀请列表
-	 * @param requestBean
-	 * @return
-	 */
-	@Override
-	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
-		String url = urlBase + "invite/myInviteList";
-		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
 
 	@Override
 	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
@@ -275,15 +263,6 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return false;
     }
-
-	/**
-	 * 查如vipUser
-	 */
-	@Override
-	public boolean insertVipUserTender(JSONObject para) {
-		String url = "http://AM-USER/am-user/user/insertVipUserTender";	
-		return restTemplate.postForEntity(url, para, Boolean.class).getBody();
-	}
 
 	/**
 	 * 获取用户投资数量
@@ -417,5 +396,230 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	@Override
+	public int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/updatecertificateauthority", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 
+    @Override
+    public String getChannelNameByUserId(int userId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId,UtmResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getChannelName();
+		}
+        return null;
+    }
+
+	/**
+	 * 插入certificateAuthorityVO数据
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 参数
+	 * @return
+	 */
+	@Override
+	public int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/insertcertificateauthority", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankCardVO selectBankCardByUserId(Integer userId) {
+		com.hyjf.am.response.trade.BankCardResponse response = restTemplate
+				.getForEntity(urlBase +"bankCard/getBankCard/" + userId, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+	@Override
+	public BankCardVO getBankCardByCardNo(Integer userId, String cardNo){
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankCard/getBankCard/" + userId+"/"+cardNo, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+    @Override
+    public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
+        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer countAvaliableCoupon(MyCouponListRequest request) {
+        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCouponCount();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<SpreadsUserVO> selectByUserId(Integer userId) {
+        SpreadsUserResponse response = restTemplate
+                .getForEntity("http://AM-USER//am-user/user/selectspreadsuserbyuserid/" + userId,SpreadsUserResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+	@Override
+	public UserVO findUserByMobile(String mobile) {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER//am-user/user/findByMobile/" + mobile, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+    /**
+     * 获取银行卡信息
+     * @param userId
+     * @param status
+     * @return
+     */
+    @Override
+    public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+        com.hyjf.am.response.user.BankCardResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+	@Override
+	public UtmPlatVO selectUtmPlatByUserId(Integer userId) {
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户信息（user表）
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByNameAndCard/" + truename + "/" + idcard;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户信息（userinfo表）
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO selectUsersById(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public UserVO selectUserInfoByUsername(String userName) {
+		String url = "http://AM-USER/am-user/user/selectUserInfoByUsername/" + userName;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByUserId/" + userId;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName) {
+		String url = "http://AM-USER/am-user/corpOpenAccountRecord/selectUserBusiNameByUsername/" + userName;
+		CorpOpenAccountRecordResponse response = restTemplate.getForEntity(url, CorpOpenAccountRecordResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public List<UserInfoCustomizeVO> queryDepartmentInfoByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryDepartmentInfoByUserId/" + userId;
+		UserInfoListCustomizeReponse response = restTemplate.getForEntity(url, UserInfoListCustomizeReponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.finance.platformtransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformTransferService;
@@ -25,16 +27,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
  * @version: PlatformTransferController, v0.1 2018/7/9 10:13
  */
-@Api(value = "资金中心-转账管理-平台转账")
+@Api(value = "资金中心-转账管理-平台转账",tags = "资金中心-转账管理-平台转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/platformtransfer")
+@RequestMapping(value = "/hyjf-admin/finance/platformtransfer")
 public class PlatformTransferController extends BaseController {
 
     @Autowired
@@ -48,14 +54,11 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public JSONObject transferList(@RequestBody PlatformTransferListRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult<ListResult<AccountRechargeVO>> transferList(@RequestBody PlatformTransferListRequest request){
         Integer count = platformTransferService.getPlatformTransferCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
         List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(request);
-        result.put("accountRechargeVOList",accountRechargeVOList);
-        return result;
+        return new AdminResult<>(ListResult.build(accountRechargeVOList,count));
     }
 
     /**
@@ -66,7 +69,7 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-根据username查询用户信息",notes = "平台转账-根据username查询用户信息")
     @PostMapping(value = "/getuserinfobyusername")
-    public JSONObject getUserInfoByUserName(@RequestBody String userName){
+    public AdminResult getUserInfoByUserName(@RequestBody String userName){
         logger.info("userName=[{}]",userName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(userName)){
@@ -74,7 +77,11 @@ public class PlatformTransferController extends BaseController {
         }else{
             result.put("info","用户账号不能为空");
         }
-        return result;
+        if("0".equals(result.get("status"))){
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
+        }else{
+            return new AdminResult(FAIL,result.getString("info"));
+        }
     }
 
     /**
@@ -85,14 +92,18 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账",notes = "平台转账")
     @PostMapping(value = "/handrecharge")
-    public JSONObject handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+    public AdminResult handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
         JSONObject result = platformTransferService.handRecharge(userId,request,platformTransferRequest);
-        return result;
+        if("0".equals(result.get("status"))){
+            return new AdminResult(SUCCESS,result.getString("result"));
+        }else{
+            return new AdminResult(FAIL,result.getString("result"));
+        }
     }
 
     @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")
     @PostMapping(value = "/platformtransferlist")
-    public void exportPlatformTransferList(HttpServletResponse response, @RequestBody PlatformTransferListRequest platformTransferListRequest){
+    public void exportPlatformTransferList(HttpServletResponse response, @RequestBody PlatformTransferListRequest platformTransferListRequest) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         platformTransferListRequest.setCurrPage(-1);
         // 表格sheet名称
@@ -109,7 +120,7 @@ public class PlatformTransferController extends BaseController {
         //BeanUtils.copyProperties(platformTransferListRequest, rechargeCustomize);
         //rechargeCustomize.setTypeSearch("ADMIN");
         //List<RechargeCustomize> rechargeCustomizes = this.rechargeService.queryRechargeList(rechargeCustomize);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
         // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };

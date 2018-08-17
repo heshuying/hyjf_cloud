@@ -1,10 +1,14 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.trade.config.SystemConfig;
 
 import java.math.BigDecimal;
 
@@ -16,7 +20,7 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/12 10:34
      */
-    WebViewUserVO getUsersByToken(String token);
+    WebViewUserVO getUserFromCache(int userId);
 
     UserVO getUserByUserId(Integer userId);
 
@@ -52,4 +56,8 @@ public interface BaseTradeService extends BaseService{
     public boolean checkIsNewUserCanInvest(Integer userId);
 
     AccountVO getAccountByUserId(Integer userId);
+
+    BankCardVO getBankCardVOByUserId(Integer userId);
+
+    BorrowVO getBorrowByNid(String borrowNid);
 }

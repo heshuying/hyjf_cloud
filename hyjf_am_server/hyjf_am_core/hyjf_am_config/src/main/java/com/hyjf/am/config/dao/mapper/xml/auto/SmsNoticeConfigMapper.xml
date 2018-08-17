@@ -5,7 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <id column="name" property="name" jdbcType="VARCHAR" />
     <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="config_value" property="configValue" jdbcType="VARCHAR" />
     <result column="pvalue" property="pvalue" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
@@ -74,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `name`, title, `value`, pvalue, content, create_user_id, update_user_id, create_time, 
-    update_time, remark, `status`
+    id, `name`, title, config_value, pvalue, content, create_user_id, update_user_id, 
+    create_time, update_time, remark, `status`
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample" >
     select
@@ -116,11 +116,11 @@
     <selectKey resultType="java.lang.String" keyProperty="name" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_sms_notice_config (id, title, `value`, 
+    insert into ht_sms_notice_config (id, title, config_value, 
       pvalue, content, create_user_id, 
       update_user_id, create_time, update_time, 
       remark, `status`)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
       #{pvalue,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT})
@@ -134,11 +134,14 @@
       <if test="id != null" >
         id,
       </if>
+      <if test="name != null" >
+        `name`,
+      </if>
       <if test="title != null" >
         title,
       </if>
-      <if test="value != null" >
-        `value`,
+      <if test="configValue != null" >
+        config_value,
       </if>
       <if test="pvalue != null" >
         pvalue,
@@ -169,11 +172,14 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="value != null" >
-        #{value,jdbcType=VARCHAR},
+      <if test="configValue != null" >
+        #{configValue,jdbcType=VARCHAR},
       </if>
       <if test="pvalue != null" >
         #{pvalue,jdbcType=VARCHAR},
@@ -219,8 +225,8 @@
       <if test="record.title != null" >
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.value != null" >
-        `value` = #{record.value,jdbcType=VARCHAR},
+      <if test="record.configValue != null" >
+        config_value = #{record.configValue,jdbcType=VARCHAR},
       </if>
       <if test="record.pvalue != null" >
         pvalue = #{record.pvalue,jdbcType=VARCHAR},
@@ -256,7 +262,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       `name` = #{record.name,jdbcType=VARCHAR},
       title = #{record.title,jdbcType=VARCHAR},
-      `value` = #{record.value,jdbcType=VARCHAR},
+      config_value = #{record.configValue,jdbcType=VARCHAR},
       pvalue = #{record.pvalue,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -275,8 +281,8 @@
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="value != null" >
-        `value` = #{value,jdbcType=VARCHAR},
+      <if test="configValue != null" >
+        config_value = #{configValue,jdbcType=VARCHAR},
       </if>
       <if test="pvalue != null" >
         pvalue = #{pvalue,jdbcType=VARCHAR},
@@ -309,7 +315,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfig" >
     update ht_sms_notice_config
     set title = #{title,jdbcType=VARCHAR},
-      `value` = #{value,jdbcType=VARCHAR},
+      config_value = #{configValue,jdbcType=VARCHAR},
       pvalue = #{pvalue,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},

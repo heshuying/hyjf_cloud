@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.beans.response;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,20 +12,28 @@ import java.math.BigDecimal;
  * @version BorrowBailInfoResponseBean, v0.1 2018/7/3 18:50
  */
 public class BorrowBailInfoResponseBean {
+    @ApiModelProperty(value = "用户姓名")
     private String userName;
 
+    @ApiModelProperty(value = "借款编号")
     private String borrowNid;
 
+    @ApiModelProperty(value = "借款标题")
     private String name;
 
+    @ApiModelProperty(value = "借贷总金额")
     private BigDecimal account;
 
+    @ApiModelProperty(value = "借款利率")
     private BigDecimal borrowApr;
 
+    @ApiModelProperty(value = "借款期限")
     private Integer borrowPeriod;
 
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyle;
 
+    @ApiModelProperty(value = "保证金金额")
     private double accountBail;
 
     public String getUserName() {

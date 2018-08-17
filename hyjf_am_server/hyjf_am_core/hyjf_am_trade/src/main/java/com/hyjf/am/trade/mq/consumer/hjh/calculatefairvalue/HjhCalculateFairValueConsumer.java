@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.HjhCalculateFairValueService;
+import com.hyjf.am.trade.service.front.hjh.HjhCalculateFairValueService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
 import com.hyjf.common.constants.MQConstant;
 
@@ -97,8 +97,6 @@ public class HjhCalculateFairValueConsumer extends Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         }

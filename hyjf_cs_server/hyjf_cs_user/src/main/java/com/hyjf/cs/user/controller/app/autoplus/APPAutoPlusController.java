@@ -4,8 +4,10 @@
 package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
@@ -13,9 +15,10 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -31,27 +34,29 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:20
  */
-@Api(value = "app端用户授权自动投资自动债转接口")
+@Api(value = "app端-用户授权自动投资自动债转接口",tags = "app端-用户授权自动投资自动债转接口")
 @RestController
-@RequestMapping("/app/user/bank/autoplus")
+@RequestMapping("/hyjf-app/bank/user/autoplus")
 public class APPAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(APPAutoPlusController.class);
     @Autowired
     AutoPlusService autoPlusService;
 
+    @Autowired
+    SystemConfig systemConfig;
+
     @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
-    @RequestMapping(value = "/sendcode", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sendcode")
     public AutoPlusResultBean autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType,
                                                @RequestParam(value = "mobile", required = false) String mobile) {
         logger.info("app端授权发送短信验证码, mobile :{}", mobile);
-        String returnRequest = "/user/bank/autoplus/sendcode";
+        String returnRequest = "/bank/user/autoplus/sendcode";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         CheckUtil.check(userId != null, MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = autoPlusService.getUsersById(userId);
@@ -90,10 +95,10 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "自动投标授权url获取", notes = "自动投标授权url获取")
-    @RequestMapping(value = "/getUserAuthInvesUrl")
+    @PostMapping(value = "/getUserAuthInvesUrl")
     @ResponseBody
     public AutoPlusResultBean getUserAuthInvesUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode, @RequestParam String code) {
-        String returnRequest = "/user/bank/autoplus/getUserAuthInvesUrl";
+        String returnRequest = "/bank/user/autoplus/getUserAuthInvesUrl";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
             result.setStatusDesc("验证码或前导业务码不能为空");
@@ -103,7 +108,7 @@ public class APPAutoPlusController extends BaseUserController {
         if (userAuth != null && userAuth.getAutoInvesStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
-        String url = "http://app:8080/user/bank/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
+        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -116,11 +121,11 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "自动债转授权url获取", notes = "自动债转授权url获取")
-    @RequestMapping("/getUserAuthCreditUrl")
+    @PostMapping("/getUserAuthCreditUrl")
     @ResponseBody
     public AutoPlusResultBean getUserAuthCreditUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode,
                                                    @RequestParam String code) {
-        String returnRequest = "/user/bank/autoplus/getUserAuthCreditUrl";
+        String returnRequest = "/bank/user/autoplus/getUserAuthCreditUrl";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
             result.setStatusDesc("验证码或前导业务码不能为空");
@@ -132,7 +137,7 @@ public class APPAutoPlusController extends BaseUserController {
             result.setStatusDesc("自动投标已授权");
             return result;
         }
-        String url = "http://app:8080/user/bank/autoplus/userAuthCredit?code=" + code
+        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthCredit?code=" + code
                 + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
@@ -148,7 +153,8 @@ public class APPAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthCredit")
+    @ApiOperation(value = "用户授权自动债转")
+    @PostMapping(value = "/userAuthCredit")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -172,7 +178,7 @@ public class APPAutoPlusController extends BaseUserController {
             modelAndView = new ModelAndView("/jumpHTML");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction("http://app:8080/user/setting/authorization/result/failed");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
             modelAndView.addObject("callBackForm", baseMapBean);
         }
         return modelAndView;
@@ -183,10 +189,11 @@ public class APPAutoPlusController extends BaseUserController {
      * @param bean
      * @return
      */
-    @RequestMapping(value = "/userAuthCreditReturn")
+    @ApiOperation(value = "用户授权自动债转同步回调")
+    @GetMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@ModelAttribute BankCallBean bean) {
-        String errorPath = "http://app:8080/user/setting/authorization/result/failed";
-        String successPath = "http://app:8080/user/setting/authorization/result/success";
+        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
+        String successPath = systemConfig.getAppServerHost()+"/user/setting/authorization/result/success";
         ModelAndView modelAndView = new ModelAndView();
         bean.convert();
         // 返回失败
@@ -272,7 +279,7 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
-    @RequestMapping(value = "/userAuthInves")
+    @PostMapping(value = "/userAuthInves")
     public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -295,7 +302,7 @@ public class APPAutoPlusController extends BaseUserController {
             modelAndView = new ModelAndView("/jumpHTML");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction("http://app:8080/user/setting/authorization/result/failed");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
             modelAndView.addObject("callBackForm", baseMapBean);
         }
         return modelAndView;
@@ -307,9 +314,9 @@ public class APPAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资同步回调",notes = "用户授权自动投资同步回调")
-    @RequestMapping(value = "/userAuthInvesReturn")
+    @GetMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean) {
-        String errorPath = "http://app:8080/user/setting/authorization/result/failed";
+        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
         ModelAndView modelAndView = new ModelAndView();
         bean.convert();
         // 返回失败
@@ -338,7 +345,7 @@ public class APPAutoPlusController extends BaseUserController {
                 baseMapBean.set("autoCreditStatus",hjhUserAuth.getAutoCreditStatus()+"");
                 baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
                 baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-                baseMapBean.setCallBackAction("http://app:8080/user/setting/authorization/result/success");
+                baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/setting/authorization/result/success");
                 modelAndView.addObject("callBackForm", baseMapBean);
                 return modelAndView;
             }
@@ -385,8 +392,8 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
-    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthInvesBgreturn")
+    public String userAuthInvesBgreturn(BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;

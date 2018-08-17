@@ -3,15 +3,10 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
+import com.hyjf.am.vo.trade.HjhLockVo;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.trade.client.BatchHjhBorrowRepayClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,172 +25,33 @@ public class BatchHjhBorrowRepayClientImpl implements BatchHjhBorrowRepayClient 
     private RestTemplate restTemplate;
 
     /**
-     * 标的投资详情表 拉取出事状态的数据
-     * 查询条件：AccedeOrderIdEqualTo(accedeOrderId)                     ht_borrow_tender
-     *           TenderTypeEqualTo(0) 状态(0:初始,1:已放款,2:放款失败)
-     * @param accedeOrderId
-     * @return
+     * 计划锁定
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
      */
     @Override
-    public List<BorrowTenderVO> selectBorrowTenderListByAccedeOrderId(String accedeOrderId) {
-        BorrowTenderResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectBorrowTenderListByAccedeOrderId/" + accedeOrderId , BorrowTenderResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
+    public void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateLockRepayInfo";
+        HjhLockVo hjhLockVo = new HjhLockVo();
+        hjhLockVo.setAccedeOrderId(accedeOrderId);
+        hjhLockVo.setInverestUserInfo(inverestUserInfo);
+        hjhLockVo.setCommissioUserInfoVO(commissioUserInfoVO);
+        hjhLockVo.setBankOpenAccountVO(bankOpenAccountVO);
+        hjhLockVo.setUserInfoCustomizeVOS(userInfoCustomizeVOS);
+        restTemplate.postForEntity(url,hjhLockVo,null);
     }
 
     /**
-     * 根据订单号获取汇计划加入明细
+     * 计划退出
      *
      * @param accedeOrderId
-     * @return
      */
     @Override
-    public List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId) {
-        HjhAccedeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListByOrderId/" + accedeOrderId , HjhAccedeResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public List<HjhAccedeVO> selectHjhAccedeListById(Integer id) {
-        HjhAccedeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListById/" + id , HjhAccedeResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public List<HjhPlanVO> selectHjhPlanListByPlanNid(String planNid) {
-        HjhPlanResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhPlanListByPlanNid/" + planNid , HjhPlanResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer updateHjhBorrowRepayInterest(HjhAccedeVO hjhAccedeVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateHjhBorrowRepayInterest/", hjhAccedeVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public Integer updateHjhAccedeByPrimaryKey(HjhAccedeVO hjhAccedeVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateHjhAccedeByPrimaryKey/", hjhAccedeVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public List<BorrowRecoverVO> selectBorrowRecoverListByAccedeOrderId(String accedeOrderId) {
-        BorrowRecoverResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectBorrowRecoverListByAccedeOrderId/" + accedeOrderId , BorrowRecoverResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public List<HjhRepayVO> selectHjhRepayListByAccedeOrderId(String accedeOrderId) {
-        HjhRepayResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhRepayListByAccedeOrderId/" + accedeOrderId , HjhRepayResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public HjhRepayVO selectHjhRepayListById(Integer Id) {
-        HjhRepayResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhRepayListById/" + Id , HjhRepayResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer insertHjhBorrowRepay(HjhRepayVO hjhRepayVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/insertHjhBorrowRepay/", hjhRepayVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public Integer updateBankTotalForLockPlan(AccountVO accountVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateBankTotalForLockPlan/", accountVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public Integer updateHjhRepayByPrimaryKey(HjhRepayVO hjhRepayVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateHjhRepayByPrimaryKey/", hjhRepayVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public Integer updateHjhPlanByPrimaryKey(HjhPlanVO hjhPlanVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateHjhPlanByPrimaryKey/", hjhPlanVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
-    }
-
-    @Override
-    public List<CalculateInvestInterestVO> selectCalculateInvestInterest() {
-        CalculateInvestInterestResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectCalculateInvestInterest/" , CalculateInvestInterestResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterestVO calculateInvestInterestVO) {
-        Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateCalculateInvestByPrimaryKey/", calculateInvestInterestVO,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
-        }
-        return result;
+    public void updateForQuit(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateQuitRepayInfo/" + accedeOrderId;
+        restTemplate.getForEntity(url, String.class);
     }
 }

@@ -3,17 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
@@ -38,6 +27,15 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
@@ -45,8 +43,6 @@ import com.hyjf.common.validator.CheckUtil;
  */
 @Service
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmUserClient amUserClient;
@@ -104,6 +100,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject searchBalanceByUsername(String userName) {
         JSONObject jsonObject = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
@@ -140,6 +137,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject checkCustomerTransferParam(CustomerTransferRequest request) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isNotEmpty(request.getOutUserName())) {
@@ -192,6 +190,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertTransfer(CustomerTransferRequest request) {
         return amTradeClient.insertUserTransfer(request);
     }

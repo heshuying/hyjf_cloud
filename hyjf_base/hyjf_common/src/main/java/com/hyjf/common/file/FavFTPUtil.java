@@ -66,7 +66,9 @@ public class FavFTPUtil {
                 String[] dirs = filePath.split("/");
                 String tempPath = basePath;
                 for (String dir : dirs) {
-                    if (null == dir || "".equals(dir)) continue;
+                    if (null == dir || "".equals(dir)) {
+                        continue;
+                    }
                     tempPath += "/" + dir;
                     if (!ftp.changeWorkingDirectory(tempPath)) {
                         if (!ftp.makeDirectory(tempPath)) {
@@ -237,13 +239,13 @@ public class FavFTPUtil {
     /**
      * Description: 从FTP服务器下载文件夹
      *
-     * @param host       FTP服务器hostname
-     * @param port       FTP服务器端口
-     * @param username   FTP登录账号
-     * @param password   FTP登录密码
-     * @param remotePath FTP服务器上的相对路径
-     * @param fileName   要下载的文件名
-     * @param localPath  下载后保存到本地的路径
+     * host       FTP服务器hostname
+     *  port       FTP服务器端口
+     *  username   FTP登录账号
+     *  password   FTP登录密码
+     *  remotePath FTP服务器上的相对路径
+     *  fileName   要下载的文件名
+     *  localPath  下载后保存到本地的路径
      * @return
      */
     public static File downloadDirectory(SFTPParameter para) {
@@ -458,11 +460,11 @@ public class FavFTPUtil {
        swapStream.close();
        return in2b;
    }
-    public static void main(String[] args) throws FileNotFoundException {
+   /* public static void main(String[] args) throws FileNotFoundException {
         FileInputStream in = new FileInputStream(new File("D:\\test\\333.png"));  
         //boolean flag = FavFTPUtil.uploadFile("39.106.9.158", 21, "developer", "hyjf2018", "/hyjfdata/upfiles/contract/img", "/2017/01/16", "hello.png", in);
         boolean flag = downloadFile("39.106.9.158", 21, "developer", "hyjf2018", "/hyjfdata/upfiles/contract/img/", "", "D:\\test");
                
             System.out.println(flag);
-    }
+    }*/
 }

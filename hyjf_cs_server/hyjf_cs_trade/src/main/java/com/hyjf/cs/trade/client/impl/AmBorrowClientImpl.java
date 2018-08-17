@@ -1,14 +1,15 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.TenderBgVO;
+import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.cs.trade.client.AmBorrowClient;
@@ -101,34 +102,6 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 	}
 
 	/**
-	 * 获取userInfo对象
-	 */
-	@Override
-	public BorrowInfoVO getBorrowInfoByNid(String borrowNid) {
-		String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/"+borrowNid;
-		BorrowInfoResponse response=restTemplate.getForEntity(url,BorrowInfoResponse.class).getBody();
-		if(response!=null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * 投资之前插入tmp表
-	 *
-	 * @param request
-	 */
-	@Override
-	public boolean updateBeforeChinaPnR(TenderRequest request) {
-		Integer result = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
-		if (result != null) {
-			return result == 0 ? false : true;
-		}
-		return false;
-	}
-
-	/**
 	 * 用户投资散标操作表
 	 *
 	 * @param tenderBg
@@ -185,7 +158,12 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 		}
 		return null;
 	}
-
+	
+    /**
+     * 会计划投资详情
+     * @param params
+     * @return
+     */
 	@Override
 	public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
 		String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";

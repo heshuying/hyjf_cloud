@@ -7,12 +7,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.MsgPushTemplateService;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import java.util.List;
  * @author fuqiang
  * @version MsgPushController, v0.1 2018/6/26 9:31
  */
+@Api(tags = "消息推送")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/template")
 public class MsgPushController {
@@ -34,7 +35,8 @@ public class MsgPushController {
 	 *
 	 * @return
 	 */
-	@RequestMapping("/findAll")
+	@ApiOperation(value = "查询所有消息推送模板", notes = "查询所有消息推送模板")
+	@GetMapping("/findAll")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
 		List<MessagePushTemplateVO> voList = msgPushTemplateService.findAll();
@@ -47,7 +49,8 @@ public class MsgPushController {
 	 *
 	 * @return
 	 */
-	@RequestMapping("/findMsgPushTemplate")
+	@ApiOperation(value = "根据条件查询消息推送模板", notes = "根据条件查询消息推送模板")
+	@PostMapping("/findMsgPushTemplate")
 	public JSONObject findMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<MessagePushTemplateVO> voList = msgPushTemplateService.findMsgPushTemplate(request);
@@ -61,7 +64,8 @@ public class MsgPushController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/insertMsgPushTemplate")
+	@ApiOperation(value = "新增消息推送模板", notes = "新增消息推送模板")
+	@PostMapping("/insertMsgPushTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {

@@ -1,18 +1,14 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepaymentinfo.infolist;
 
-import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.beans.BorrowRepaymentInfoListBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentInfoListRequestBean;
-import com.hyjf.admin.beans.request.BorrowRepaymentInfoRequsetBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRepaymentInfoListService;
-import com.hyjf.admin.service.BorrowRepaymentInfoService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoListRequset;
-import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
-import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
@@ -35,9 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -46,9 +40,9 @@ import java.util.List;
  * @version BorrowRepaymentInfoListController, v0.1 2018/7/10 9:30
  */
 
-@Api(value = "产品中心-汇直投-还款明细列表")
+@Api(value = "产品中心-汇直投-还款明细列表",tags ="产品中心-汇直投-还款明细列表")
 @RestController
-@RequestMapping("/borrow/borrowrepaymentinfo/infolist")
+@RequestMapping("/hyjf-admin/borrow/borrowrepaymentinfo/infolist")
 public class BorrowRepaymentInfoListController {
     @Autowired
     private BorrowRepaymentInfoListService borrowRepaymentInfoListService;
@@ -67,7 +61,8 @@ public class BorrowRepaymentInfoListController {
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentInfoListBean bean = borrowRepaymentInfoListService.selectBorrowRepaymentInfoListList(copyForm);
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentInfoListService.selectHjhInstConfigByInstCode("-1");
-        bean.setHjhInstConfigList(hjhInstConfigList);
+        // 资金来源
+        bean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"instCode","instName"));
         AdminResult<BorrowRepaymentInfoListBean> result=new AdminResult<BorrowRepaymentInfoListBean> ();
         result.setData(bean);
         return result;
@@ -90,7 +85,7 @@ public class BorrowRepaymentInfoListController {
         // 表格sheet名称
         String sheetName = "还款详情导出数据";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRepaymentInfoListCustomizeVO> resultList = this.borrowRepaymentInfoListService.selectExportBorrowRepaymentInfoListList(copyForm);
         // 列头
@@ -158,11 +153,11 @@ public class BorrowRepaymentInfoListController {
                     }
                     // 借款金额
                     else if (celLength == 8) {
-                        cell.setCellValue(record.getBorrowAccount().equals("") ? 0 : Double.valueOf(record.getBorrowAccount()));
+                        cell.setCellValue("".equals(record.getBorrowAccount()) ? 0 : Double.valueOf(record.getBorrowAccount()));
                     }
                     // 借到金额
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrowAccountYes().equals("") ? 0 : Double.valueOf(record.getBorrowAccountYes()));
+                        cell.setCellValue("".equals(record.getBorrowAccountYes()) ? 0 : Double.valueOf(record.getBorrowAccountYes()));
                     }
                     // 还款方式
                     else if (celLength == 10) {
@@ -182,23 +177,23 @@ public class BorrowRepaymentInfoListController {
                     }
                     // 投资金额
                     else if (celLength == 14) {
-                        cell.setCellValue(record.getRecoverTotal().equals("") ? 0 : Double.valueOf(record.getRecoverTotal()));
+                        cell.setCellValue("".equals(record.getRecoverTotal()) ? 0 : Double.valueOf(record.getRecoverTotal()));
                     }
                     // 应还本金
                     else if (celLength == 15) {
-                        cell.setCellValue(record.getRecoverCapital().equals("") ? 0 : Double.valueOf(record.getRecoverCapital()));
+                        cell.setCellValue("".equals(record.getRecoverCapital()) ? 0 : Double.valueOf(record.getRecoverCapital()));
                     }
                     // 应还利息
                     else if (celLength == 16) {
-                        cell.setCellValue(record.getRecoverInterest().equals("") ? 0 : Double.valueOf(record.getRecoverInterest()));
+                        cell.setCellValue("".equals(record.getRecoverInterest()) ? 0 : Double.valueOf(record.getRecoverInterest()));
                     }
                     // 应还本息
                     else if (celLength == 17) {
-                        cell.setCellValue(record.getRecoverAccount().equals("") ? 0 : Double.valueOf(record.getRecoverAccount()));
+                        cell.setCellValue("".equals(record.getRecoverAccount()) ? 0 : Double.valueOf(record.getRecoverAccount()));
                     }
                     // 管理费
                     else if (celLength == 18) {
-                        cell.setCellValue(record.getRecoverFee().equals("") ? 0 : Double.valueOf(record.getRecoverFee()));
+                        cell.setCellValue("".equals(record.getRecoverFee()) ? 0 : Double.valueOf(record.getRecoverFee()));
                     }
                     // 提前天数
                     else if (celLength == 19) {

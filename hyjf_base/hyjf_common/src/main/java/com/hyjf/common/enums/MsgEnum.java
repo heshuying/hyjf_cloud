@@ -61,6 +61,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 
+	ERR_DATA_VERIFICATION("EDT000101","数据验证失败"),
+
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
@@ -81,7 +83,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_LOGIN("EUS000002", "登录失败,账号或密码错误"),
 	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
 	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
-	ERR_USER_REGISTER("EUS000005","注册失败"),
+	ERR_USER_REGISTER("1","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
 	ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
 	ERR_USER_INFO_GET("EUS000008","查询用户失败"),
@@ -89,6 +91,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_LOGIN_EXPIRE("EUS000010","登录失效，请重新登陆"),
 	ERR_USER_USERNAME_AND_PASSWORD_REQUIRED("EUS000011","用户名或密码不能为空"),
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
+	ERR_USER_AUTH("EUS000013","用户认证失败"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
@@ -152,6 +155,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_REALNAME_MORE_THAN_TEN("EBK000007","真实姓名不能超过十位"),
 	ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED("EBK000008","身份证不能为空"),
 	ERR_BANK_ACCOUNT_IDCARDNO_EXIST("EBK000009","身份证号已存在"),
+	ERR_BANK_ACCOUNT_NOT_EXIST("EBK0000010","userId={0}没有账户信息！"),
+
 
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
@@ -228,6 +233,10 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM_UNKNOWN("ESY000001","未知错误，请稍后再试"),
 	ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
 	ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
+	ERR_SYSTEM_BUSY("ESY000004","系统繁忙，请稍后再试"),
+
+	// 订单相关ERR_ORDER_
+	ERR_ORDER_VERIFY("EOD000001","订单验证失败"),
 
 
 
@@ -355,6 +364,10 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_CREDIT_DISCOUNT_NULL("1","折让率不能为空"),
 	ERROR_CREDIT_DISCOUNT_ERROR("1","折让率范围错误"),
 	ERROR_CREDIT_DISCOUNT_FORMAT_ERROR("1","折让率格式错误"),
+	ERROR_CREDIT_QUERY_ERROR("1","查询债转状态异常"),
+	ERROR_CREDIT_UPDATE_ERROR("1","更新债转数据异常"),
+	ERROR_CREDIT_FIND_LOG_ERROR("1","未查询到债转承接记录"),
+	ERROR_CREDIT_AUTH_CODE_ERROR("1","未查询到债转授权码"),
 
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
 	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),
@@ -363,10 +376,11 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_CANT_BBY_YOURSELF("1","不可以承接自己出让的债权"),
 	ERROR_CREDIT_NO_BORROW_RECOVER("1","未查询到用户的放款记录"),
 	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
-
-
-
+	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
+	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
+	ERR_DIC_NO_MATCH("ENM000001","字典表中没有值={0}的平台"),
+
 	// 枚举终结
 	ERR_ENUM("", "");
 

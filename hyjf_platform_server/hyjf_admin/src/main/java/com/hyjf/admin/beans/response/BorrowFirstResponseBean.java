@@ -3,48 +3,53 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.admin.beans.vo.AdminBorrowFirstCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
  * @version BorrowFirstResponseBean, v0.1 2018/7/5 15:36
  */
 public class BorrowFirstResponseBean {
-    private List<HjhInstConfigVO> hjhInstConfigList;
+    @ApiModelProperty(value = "资产来源下拉框")
+    private List<DropDownVO> hjhInstConfigList;
 
-    private Map<String, String> borrowStatusList;
+    @ApiModelProperty(value = "初审状态下拉框")
+    private List<DropDownVO> borrowStatusList;
 
-    private List<BorrowFirstCustomizeVO> recordList;
+    @ApiModelProperty(value = "初审列表")
+    private List<AdminBorrowFirstCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "列表统计")
     private String sumAccount;
 
+    @ApiModelProperty(value = "总条数")
     private Integer total;
 
-    public List<HjhInstConfigVO> getHjhInstConfigList() {
+    public List<DropDownVO> getHjhInstConfigList() {
         return hjhInstConfigList;
     }
 
-    public void setHjhInstConfigList(List<HjhInstConfigVO> hjhInstConfigList) {
+    public void setHjhInstConfigList(List<DropDownVO> hjhInstConfigList) {
         this.hjhInstConfigList = hjhInstConfigList;
     }
 
-    public Map<String, String> getBorrowStatusList() {
+    public List<DropDownVO> getBorrowStatusList() {
         return borrowStatusList;
     }
 
-    public void setBorrowStatusList(Map<String, String> borrowStatusList) {
+    public void setBorrowStatusList(List<DropDownVO> borrowStatusList) {
         this.borrowStatusList = borrowStatusList;
     }
 
-    public List<BorrowFirstCustomizeVO> getRecordList() {
+    public List<AdminBorrowFirstCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowFirstCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowFirstCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 

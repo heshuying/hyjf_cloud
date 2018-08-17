@@ -1,21 +1,24 @@
 package com.hyjf.admin.service.impl.coupon;
 
-import com.hyjf.admin.client.CouponTenderClient;
-import com.hyjf.admin.controller.vip.coupon.CouponTenderHjhController;
-import com.hyjf.admin.service.coupon.CouponTenderHjhService;
-import com.hyjf.am.response.admin.CouponTenderResponse;
-import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
-import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
+import java.util.List;
+import java.util.Map;
+
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmMarketClient;
+import com.hyjf.admin.client.AmTradeClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import com.hyjf.admin.client.CouponTenderClient;
+import com.hyjf.admin.service.coupon.CouponTenderHjhService;
+import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.resquest.admin.CouponTenderRequest;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
+import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 
 /**
  * @author walter.limeng
@@ -25,11 +28,15 @@ import java.util.Map;
 public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
     private Logger logger = LoggerFactory.getLogger(CouponTenderHjhServiceImpl.class);
     @Autowired
-    private CouponTenderClient couponTenderClient;
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmMarketClient amMarketClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     @Override
     public Integer countRecord(CouponTenderRequest couponTenderRequest) {
-        CouponTenderResponse couponTenderResponse = couponTenderClient.countRecordHjh(couponTenderRequest);
+        CouponTenderResponse couponTenderResponse = amTradeClient.countRecordHjh(couponTenderRequest);
         if(null != couponTenderResponse){
             return couponTenderResponse.getRecordTotal();
         }
@@ -38,7 +45,7 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
 
     @Override
     public String queryInvestTotalHjh(CouponTenderRequest couponTenderRequest) {
-        CouponTenderResponse couponTenderResponse = couponTenderClient.queryInvestTotalHjh(couponTenderRequest);
+        CouponTenderResponse couponTenderResponse = amTradeClient.queryInvestTotalHjh(couponTenderRequest);
         if(null != couponTenderResponse){
             return couponTenderResponse.getAmountTotal();
         }
@@ -49,7 +56,7 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
     public List<CouponTenderCustomize> getRecordList(CouponTenderRequest couponTenderRequest) {
         couponTenderRequest.setLimitStart(couponTenderRequest.getLimitStart());
         couponTenderRequest.setLimitEnd(couponTenderRequest.getLimitEnd());
-        CouponTenderResponse couponTenderResponse = couponTenderClient.getRecordListHjh(couponTenderRequest);
+        CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHjh(couponTenderRequest);
         if(null != couponTenderResponse){
             return couponTenderResponse.getResultList();
         }
@@ -58,7 +65,7 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
 
     @Override
     public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String, Object> paramMap) {
-        CouponTenderResponse couponTenderResponse = couponTenderClient.getHjhCouponTenderDetailCustomize(paramMap);
+        CouponTenderResponse couponTenderResponse = amTradeClient.getHjhCouponTenderDetailCustomize(paramMap);
         if(null != couponTenderResponse){
             CouponTenderDetailVo couponTenderDetailVo = couponTenderResponse.getDetail();
             if(null != couponTenderDetailVo){
@@ -67,7 +74,7 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
                 }else if("2".equals(couponTenderDetailVo.getCouponContent())){
                     Integer activityId = couponTenderDetailVo.getActivityId();
                     if(null != activityId){
-                        CouponTenderResponse couponTenderResponse1 = couponTenderClient.getActivityById(activityId);
+                        CouponTenderResponse couponTenderResponse1 = amMarketClient.getActivityById(activityId);
                         couponTenderDetailVo.setCouponContent(couponTenderResponse1.getAttrbute());
                     }
                 }else if("3".equals(couponTenderDetailVo.getCouponContent())){
@@ -79,7 +86,7 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
                 if(null != userId && "40".equals(userId)){
                     couponTenderDetailVo.setGrantWay("系统");
                 }else{
-                    CouponTenderResponse couponTenderResponse2 = couponTenderClient.getAdminUserByUserId(userId);
+                    CouponTenderResponse couponTenderResponse2 = amConfigClient.getAdminUserByUserId(userId);
                     couponTenderDetailVo.setGrantWay(couponTenderResponse2.getAttrbute());
                 }
             }
@@ -89,8 +96,8 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
     }
 
     @Override
-    public List<CouponRecoverVo> getCouponRecoverCustomize(Map<String, Object> paramMap) {
-        CouponTenderResponse couponTenderResponse = couponTenderClient.getHjhCouponRecoverCustomize(paramMap);
+    public List<CouponRecoverVO> getCouponRecoverCustomize(Map<String, Object> paramMap) {
+        CouponTenderResponse couponTenderResponse = amTradeClient.getHjhCouponRecoverCustomize(paramMap);
         if(null != couponTenderResponse){
             return couponTenderResponse.getCouponRecoverList();
         }

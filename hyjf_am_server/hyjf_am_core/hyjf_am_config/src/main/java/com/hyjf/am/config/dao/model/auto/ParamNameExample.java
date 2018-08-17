@@ -205,52 +205,62 @@ public class ParamNameExample {
             return (Criteria) this;
         }
 
-        public Criteria andNameCdEqualTo(Short value) {
+        public Criteria andNameCdEqualTo(String value) {
             addCriterion("name_cd =", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdNotEqualTo(Short value) {
+        public Criteria andNameCdNotEqualTo(String value) {
             addCriterion("name_cd <>", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdGreaterThan(Short value) {
+        public Criteria andNameCdGreaterThan(String value) {
             addCriterion("name_cd >", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdGreaterThanOrEqualTo(Short value) {
+        public Criteria andNameCdGreaterThanOrEqualTo(String value) {
             addCriterion("name_cd >=", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdLessThan(Short value) {
+        public Criteria andNameCdLessThan(String value) {
             addCriterion("name_cd <", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdLessThanOrEqualTo(Short value) {
+        public Criteria andNameCdLessThanOrEqualTo(String value) {
             addCriterion("name_cd <=", value, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdIn(List<Short> values) {
+        public Criteria andNameCdLike(String value) {
+            addCriterion("name_cd like", value, "nameCd");
+            return (Criteria) this;
+        }
+
+        public Criteria andNameCdNotLike(String value) {
+            addCriterion("name_cd not like", value, "nameCd");
+            return (Criteria) this;
+        }
+
+        public Criteria andNameCdIn(List<String> values) {
             addCriterion("name_cd in", values, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdNotIn(List<Short> values) {
+        public Criteria andNameCdNotIn(List<String> values) {
             addCriterion("name_cd not in", values, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdBetween(Short value1, Short value2) {
+        public Criteria andNameCdBetween(String value1, String value2) {
             addCriterion("name_cd between", value1, value2, "nameCd");
             return (Criteria) this;
         }
 
-        public Criteria andNameCdNotBetween(Short value1, Short value2) {
+        public Criteria andNameCdNotBetween(String value1, String value2) {
             addCriterion("name_cd not between", value1, value2, "nameCd");
             return (Criteria) this;
         }

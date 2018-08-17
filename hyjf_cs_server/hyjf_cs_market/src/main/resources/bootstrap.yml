@@ -1,29 +1,30 @@
 spring:
   application:
     name: CS-MARKET
+  cloud:
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: cs-market
   boot:
     admin:
       client:
-        url: http://127.0.0.1:18080
+        url: http://micoserver:18080
   sleuth:
     sampler:
       percentage: 1.0
-  rabbitmq:
-    host: 47.95.176.244
-    port: 5672
-    username: admin
-    password: admin1234
-    vhost: /
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:8888/eureka/
-  instance:
-    preferIpAddress: true
+
 server:
   port: 8083
 
 logging:
   file: cs-market.log
+
+hyjf.api.web.url: http://test.hyjf.com:8080/hyjf-api-web/
+
+hyjf.web.host: http://test.hyjf.com:8080/hyjf-web
+#swagger启用开关
+swagger:
+ enable: true

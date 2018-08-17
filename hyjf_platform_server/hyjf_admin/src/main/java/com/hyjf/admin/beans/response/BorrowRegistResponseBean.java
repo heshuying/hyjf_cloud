@@ -3,59 +3,64 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.admin.beans.vo.AdminBorrowRegistCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
  * @version BorrowRegistResponseBean, v0.1 2018/7/5 18:24
  */
 public class BorrowRegistResponseBean {
-    List<BorrowProjectTypeVO> borrowProjectTypeList;
+    @ApiModelProperty(value = "项目类型")
+    private List<DropDownVO> borrowProjectTypeList;
 
-    List<BorrowStyleVO> borrowStyleList;
+    @ApiModelProperty(value = "还款方式")
+    private List<DropDownVO> borrowStyleList;
 
-    private Map<String, String> borrowRegistStatusList;
+    @ApiModelProperty(value = "备案状态")
+    private List<DropDownVO> borrowRegistStatusList;
 
-    private List<BorrowRegistCustomizeVO> recordList;
+    @ApiModelProperty(value = "标的备案列表")
+    private List<AdminBorrowRegistCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "列表统计")
     private String sumAccount;
 
+    @ApiModelProperty(value = "总条数")
     private Integer total;
 
-    public List<BorrowProjectTypeVO> getBorrowProjectTypeList() {
+    public List<DropDownVO> getBorrowProjectTypeList() {
         return borrowProjectTypeList;
     }
 
-    public void setBorrowProjectTypeList(List<BorrowProjectTypeVO> borrowProjectTypeList) {
+    public void setBorrowProjectTypeList(List<DropDownVO> borrowProjectTypeList) {
         this.borrowProjectTypeList = borrowProjectTypeList;
     }
 
-    public List<BorrowStyleVO> getBorrowStyleList() {
+    public List<DropDownVO> getBorrowStyleList() {
         return borrowStyleList;
     }
 
-    public void setBorrowStyleList(List<BorrowStyleVO> borrowStyleList) {
+    public void setBorrowStyleList(List<DropDownVO> borrowStyleList) {
         this.borrowStyleList = borrowStyleList;
     }
 
-    public Map<String, String> getBorrowRegistStatusList() {
+    public List<DropDownVO> getBorrowRegistStatusList() {
         return borrowRegistStatusList;
     }
 
-    public void setBorrowRegistStatusList(Map<String, String> borrowRegistStatusList) {
+    public void setBorrowRegistStatusList(List<DropDownVO> borrowRegistStatusList) {
         this.borrowRegistStatusList = borrowRegistStatusList;
     }
 
-    public List<BorrowRegistCustomizeVO> getRecordList() {
+    public List<AdminBorrowRegistCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowRegistCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowRegistCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 

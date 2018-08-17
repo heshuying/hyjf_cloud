@@ -3,21 +3,26 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.LoanCoverClient;
+import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
+import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.LoanCoverService;
-import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
+import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +33,7 @@ import java.util.Map;
 @Service
 public class LoanCoverServiceImpl implements LoanCoverService {
     @Autowired
-    private LoanCoverClient loanCoverClient;
+    private AmUserClient loanCoverClient;
     /**
      * 查找借款盖章用户信息
      *
@@ -36,16 +41,20 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      * @return
      */
     @Override
-    public List<LoanCoverUserVO> selectUserMemberList(LoanCoverUserRequest request){
-        List<LoanCoverUserVO> loanCoverUserVOList = loanCoverClient.selectUserMemberList(request);
+    public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request){
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectUserMemberList(request);
         SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
-            for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
-                loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
-                loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+        if(null!=loanCoverUserResponse){
+            List<LoanCoverUserVO> loanCoverUserVOList = loanCoverUserResponse.getResultList();
+            if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
+                for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
+                    loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
+                    loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+                }
             }
+
         }
-        return loanCoverUserVOList;
+        return loanCoverUserResponse;
     }
     /**
      * 保存记录
@@ -67,7 +76,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         return true;
     }
     /**
-     * 根据id查找记录
+     * 根据证件号码查找记录
      */
     @Override
     public LoanCoverUserVO selectRecordByIdNo(String strIdNo){
@@ -77,47 +86,79 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         }
         return null;
     }
+
+    /**
+     * 根据id查找借款主体CA认证记录表
+     * @param id
+     * @return
+     */
+    @Override
+    public LoanCoverUserResponse getLoanCoverUserById(String id){
+        LoanCoverUserResponse response = loanCoverClient.selectIsExistsRecordById(id);
+        return response;
+    }
+
+    /**
+     * 更新借款主体CA认证记录表
+     * @param loanCoverUserRequest
+     * @return
+     */
+    @Override
+    public boolean updateLoanCoverUserRecord(LoanCoverUserRequest loanCoverUserRequest){
+        int intUpd = loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+        if(intUpd>0){
+            return true;
+        }
+        return false;
+    }
     /**
      * 更新记录
      */
     @Override
-    public JSONObject updateLoanCoverUser(Map<String,Object> mapParam){
-        JSONObject result = new JSONObject();
-        if(StringUtils.isNotBlank(mapParam.get("id").toString())){
-            LoanCoverUserVO loanCoverUserVO = loanCoverClient.selectIsExistsRecordById(mapParam.get("id").toString());
-            if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
-                if (!loanCoverUserVO.getMobile().equals(mapParam.get("mobile"))) {
-                    DzqzCallBean bean = new DzqzCallBean();
-                    bean.setUserId(0);
-                    bean.setTxCode("infochange");
-                    bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-                    bean.setV(DzqzConstant.HYJF_FDD_VERSION);
-                    bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
-                    bean.setCustomer_id(loanCoverUserVO.getCustomerId());// 客户编号
-                    if(mapParam.containsKey("email")&&!loanCoverUserVO.getEmail().equals(mapParam.get("emai"))){
-                        bean.setEmail(mapParam.get("emai").toString());// 电子邮箱
+    public AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean,int loginUserId,String loginUserName){
+        if(StringUtils.isNotBlank(String.valueOf(loanCoverUserRequestBean.getId()))){
+            LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectIsExistsRecordById(String.valueOf(loanCoverUserRequestBean.getId()));
+            if(null!=loanCoverUserResponse){
+                LoanCoverUserVO loanCoverUserVO = loanCoverUserResponse.getResult();
+                LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+                BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+                if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
+                    if (!loanCoverUserVO.getMobile().equals(loanCoverUserRequestBean.getMobile())) {
+                        DzqzCallBean bean = new DzqzCallBean();
+                        bean.setUserId(0);
+                        bean.setTxCode("infochange");
+                        bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
+                        bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+                        bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
+                        bean.setCustomer_id(loanCoverUserVO.getCustomerId());// 客户编号
+                        if(null!=loanCoverUserRequestBean.getEmail()&&null!=loanCoverUserVO.getEmail()){
+                            if(!loanCoverUserVO.getEmail().equals(loanCoverUserRequestBean.getEmail())){
+                                bean.setEmail(loanCoverUserRequestBean.getEmail());// 电子邮箱
+                            }
+                        }
+                        bean.setMobile(loanCoverUserRequestBean.getMobile());// 手机号
+                        DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
+                        if (resultt != null && "success".equals(resultt.getResult())) {
+                            // 更新
+                            loanCoverUserRequest.setUpdateUserName(loginUserName);
+                            loanCoverUserRequest.setUpdateUserId(loginUserId);
+                            loanCoverUserRequest.setUpdateTime(new Date());
+                            loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+                            return new AdminResult<>();
+                        } else {
+                            return new AdminResult<>("99", "更新失败");
+                        }
                     }
-                    bean.setMobile(mapParam.get("mobile").toString());// 手机号
-                    DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
-                    if (resultt != null && "success".equals(resultt.getResult())) {
-                        // 更新
-                        LoanCoverUserRequest loanCoverUserRequest = serParamRequest(mapParam);
-                        loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
-                        result.put("status", Response.SUCCESS);
-                        return result;
-                    } else {
-                        result.put("status", Response.FAIL);
-                        result.put("msg", "更新失败");
-                        return result;
-                    }
+                    loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+                    return new AdminResult<>();
                 }
             }
 
         }else{
-            result.put("statu", Response.FAIL);
-            result.put("msg", "参数错误");
+            return new AdminResult<>("99", "参数错误");
         }
-        return result;
+
+        return new AdminResult<>();
     }
     private LoanCoverUserRequest serParamRequest(Map<String, Object> mapParam) {
         LoanCoverUserRequest request = new LoanCoverUserRequest();
@@ -149,11 +190,25 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                 request.setStartCreate(mapParam.get("StartCreate").toString());
             }
 
-            if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+            /*if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
                 request.setLimit((Integer) mapParam.get("limit"));
-            }
+            }*/
         }
         return request;
     }
 
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    @Override
+    public CertificateAuthorityVO selectCertificateAuthorityByIdNoName(String strIdNo, String tureName){
+        CertificateAuthorityResponse response = loanCoverClient.selectCertificateAuthorityByIdNoName(tureName);
+        if(null!=response){
+            return  response.getResult();
+        }
+        return null;
+    }
 }

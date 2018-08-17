@@ -9,7 +9,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
-import com.hyjf.cs.trade.service.MyCreditListService;
+import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(value = "Web端债转投资")
+@Api(tags = "Web端债转投资")
 @RestController
-@RequestMapping("/web/credit")
+@RequestMapping("/hyjf-web/credit")
 public class CreditController {
 
     @Autowired

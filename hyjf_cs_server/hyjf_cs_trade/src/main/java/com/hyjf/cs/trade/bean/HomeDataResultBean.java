@@ -1,9 +1,9 @@
 package com.hyjf.cs.trade.bean;
 
 import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -38,13 +38,13 @@ public class HomeDataResultBean implements Serializable {
     private BigDecimal tenderSum;
 
     /*收益总额*/
-    private BigDecimal interestSum;
+    private String interestSum;
 
     /*上线总年数*/
     private Integer yearSum;
 
     /*首页轮播图*/
-    private List<AdsVO> bannerList;
+    private List<AppAdsCustomizeVO> bannerList;
 
     /*公告*/
     private Object  noticeInfo;
@@ -56,7 +56,7 @@ public class HomeDataResultBean implements Serializable {
     private List<WebProjectListCustomizeVO> projectList;
 
     /*首页汇计划列表 前四条*/
-    private List<HjhPlanVO> hjhPlanList;
+    private List<HjhPlanCustomizeVO> hjhPlanList;
 
     /*首页公司动态 第一条特殊处理*/
     private ContentArticleVO companyArticle;
@@ -65,7 +65,7 @@ public class HomeDataResultBean implements Serializable {
     private List<ContentArticleVO> companyDynamicsList;
 
     /*当前系统时间*/
-    private int  nowTime;
+    private String  nowTime;
 
 
     public String getLoginFlag() {
@@ -116,11 +116,11 @@ public class HomeDataResultBean implements Serializable {
         this.tenderSum = tenderSum;
     }
 
-    public BigDecimal getInterestSum() {
+    public String getInterestSum() {
         return interestSum;
     }
 
-    public void setInterestSum(BigDecimal interestSum) {
+    public void setInterestSum(String interestSum) {
         this.interestSum = interestSum;
     }
 
@@ -132,11 +132,11 @@ public class HomeDataResultBean implements Serializable {
         this.yearSum = yearSum;
     }
 
-    public List<AdsVO> getBannerList() {
+    public List<AppAdsCustomizeVO> getBannerList() {
         return bannerList;
     }
 
-    public void setBannerList(List<AdsVO> bannerList) {
+    public void setBannerList(List<AppAdsCustomizeVO> bannerList) {
         this.bannerList = bannerList;
     }
 
@@ -164,11 +164,11 @@ public class HomeDataResultBean implements Serializable {
         this.projectList = projectList;
     }
 
-    public List<HjhPlanVO> getHjhPlanList() {
+    public List<HjhPlanCustomizeVO> getHjhPlanList() {
         return hjhPlanList;
     }
 
-    public void setHjhPlanList(List<HjhPlanVO> hjhPlanList) {
+    public void setHjhPlanList(List<HjhPlanCustomizeVO> hjhPlanList) {
         this.hjhPlanList = hjhPlanList;
     }
 
@@ -180,11 +180,11 @@ public class HomeDataResultBean implements Serializable {
         this.companyArticle = companyArticle;
     }
 
-    public int getNowTime() {
+    public String getNowTime() {
         return nowTime;
     }
 
-    public void setNowTime(int nowTime) {
+    public void setNowTime(String nowTime) {
         this.nowTime = nowTime;
     }
 

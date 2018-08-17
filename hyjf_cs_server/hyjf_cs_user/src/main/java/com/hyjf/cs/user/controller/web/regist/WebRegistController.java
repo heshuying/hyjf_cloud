@@ -13,8 +13,9 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,15 +33,51 @@ import java.util.Map;
  * @version RegistController, v0.1 2018/6/11 13:59
  */
 
-@Api(value = "web端用户注册接口")
+@Api(value = "web端用户注册接口",tags = "web端-用户注册接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebRegistController.class);
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
+
+    /**
+     * 初期化,跳转到注册页面
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "注册初始化",notes = "注册初始化")
+    @ApiImplicitParam(name = "param",value = "{referer:'推荐人',from:'原有逻辑推荐方'}",dataType = "Map")
+    @PostMapping(value = "/init")
+    public WebResult init(HttpServletRequest request,@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String referer = request.getHeader("Referer");
+        if (null != referer && referer.contains("activity/activity68/getUserStatus")) {
+            ret.put("activity68", "1");
+        }
+        // 如果有推荐人，把推荐人带过去。 着陆页跳转。。。
+        String reff = param.get("referer");
+     /*   if (StringUtils.isEmpty(reff)) {
+            Object rr = request.getSession().getAttribute("from_id");
+            if (rr != null) {
+                reff = rr.toString();
+            }
+        }*/
+        if (reff != null && !"".equals(reff.trim())) {
+            ret.put("newRegReferree", reff);
+        } else {// 这是原有逻辑
+            ret.put("newRegReferree", param.get("from"));
+        }
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
+    }
+
 
     /**
      * @param request
@@ -53,18 +89,19 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+        WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
+        String password = registerRequest.getPassword();
+        password = RSAJSPUtil.rsaToPassword(password);
+        registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
-            Map<String,Object> resultMap = new HashMap<>();
-            resultMap.put("token",webViewUserVO.getToken());
-            result.setData(resultMap);
+            result.setData(webViewUserVO);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.FAIL);
@@ -138,6 +175,7 @@ public class WebRegistController extends BaseUserController {
      * @param request
      * @param
      */
+    @ApiOperation(value = "生成图片验证码",notes = "生成图片验证码")
     @PostMapping(value = "getcaptcha", produces = "application/json; charset=utf-8")
     public void randomCode(HttpServletRequest request) {
 
@@ -149,6 +187,7 @@ public class WebRegistController extends BaseUserController {
      * @param request
      * @param
      */
+    @ApiOperation(value = "检查图片验证码",notes = "检查图片验证码")
     @PostMapping(value = "checkcaptcha", produces = "application/json; charset=utf-8")
     public boolean checkcaptcha(HttpServletRequest request) {
         RandomValidateCode randomValidateCode = new RandomValidateCode();
@@ -163,6 +202,7 @@ public class WebRegistController extends BaseUserController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = " 判断推荐人是否存在",notes = " 判断推荐人是否存在")
     @PostMapping(value = "checkRecommend", produces = "application/json; charset=utf-8")
     public boolean checkRecommend(@RequestBody Map<String,String> param) {
         logger.info("Web端判断推荐人是否存在, param is :{}",JSONObject.toJSONString(param));

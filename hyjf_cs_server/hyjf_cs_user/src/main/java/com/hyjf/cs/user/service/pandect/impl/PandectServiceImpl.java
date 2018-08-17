@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.pandect.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.file.UploadFileUtils;
@@ -11,7 +12,7 @@ import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.pandect.PandectService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,9 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,8 +47,8 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
     AmDataCollectClient amDataCollectClient;
 
     @Override
-    public Map<String, Object> pandect(UserVO user) {
-        Map<String,Object> result = new HashMap<>();
+    public JSONObject pandect(UserVO user) {
+        JSONObject result = new JSONObject();
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(user,webViewUserVO);
         Integer userId = user.getUserId();
@@ -127,18 +126,28 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("account", account);
         // 获取用户的汇付信息
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
+        result.put("accountChinapnr", chinapnr);
         if (chinapnr != null) {
-            result.put("accountChinapnr", chinapnr);
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
         result.put("webViewUser", user);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
-        if (bankAccount != null) {
-            result.put("bankOpenAccount", bankAccount);
-        }
+        result.put("bankOpenAccount", bankAccount);
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
+        // 登录用户
+        UserInfoVO userInfo = this.getUserInfo(userId);
+        result.put("currentUsersInfo", userInfo);
+        boolean isVip = userInfo.getVipId() != null ? true : false;
+        result.put("isVip", isVip);
+        if (isVip) {
+            VipInfoVO vipInfo = amUserClient.findVipInfoById(userInfo.getVipId());
+            result.put("vipName", vipInfo.getVipName());
+        }
+
+        Integer validCount = amTradeClient.countCouponValid(userId);
+        result.put("couponValidCount", validCount);
         return result;
     }
 

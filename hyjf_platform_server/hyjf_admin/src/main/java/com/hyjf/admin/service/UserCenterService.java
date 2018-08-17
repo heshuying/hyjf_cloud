@@ -3,28 +3,32 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
  * @version UserCenterService, v0.1 2018/6/20 15:34
  */
 public interface UserCenterService {
-
-    JSONObject initUserManaget();
+    /**
+     * 初始化用户管理页面
+     * @return
+     */
+    UserManagerInitResponseBean initUserManaget();
     /**
      *查找用户信息
      * @param request
      * @return
      */
-    JSONObject selectUserMemberList(UserManagerRequest request);
+    UserManagerResponse selectUserMemberList(UserManagerRequest request);
 
     /**
      * 根据机构编号获取机构列表
@@ -81,7 +85,7 @@ public interface UserCenterService {
     /**
      * 更新用户信息
      */
-    int updataUserInfo( Map<String, String> map);
+    int updataUserInfo(UserManagerUpdateRequest userRequest);
 
     /**
      * 根据用户id获取推荐人信息
@@ -108,7 +112,7 @@ public interface UserCenterService {
     /**
      * @Description 根据accountid调用接口查找企业信息
      */
-    CompanyInfoVO queryCompanyInfoByAccoutnId(Integer userId, String accountId);
+    CompanyInfoSearchResponseBean queryCompanyInfoByAccoutnId(Integer userId, String accountId);
     /**
      * 根据用户id查找用户表
      * @param userId
@@ -123,18 +127,8 @@ public interface UserCenterService {
      * @return
      */
     CompanyInfoVO selectCompanyInfoByUserId(String userId);
-    /**
-     * 根據accounId獲取開戶信息
-     * @param accountId
-     * @return
-     */
-    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
 
-    /**
-     * 保存企业信息
-     * @return
-     */
-    JSONObject saveCompanyInfo(Map<String,String> mapParam);
+
     /**
      * 获取某一用户的信息修改列表
      * @param request
@@ -154,4 +148,49 @@ public interface UserCenterService {
      * @return
      */
     UserVO selectUserByRecommendName(String recommendName);
+
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    int updateUserRecommend(AdminUserRecommendRequest request);
+
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    int updateUserIdCard(AdminUserRecommendRequest request);
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
+
+    /**
+     * 保存企业信息
+     * @param updCompanyRequest
+     * @return
+     */
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    /**
+     * 发送CA认证信息修改MQ
+     * @param form
+     */
+    void sendCAChangeMQ(UserManagerUpdateRequest form);
+    /**
+     * 发送CA认证信息修改MQ
+     * @param form
+     */
+    void sendCAChangeMQ(AdminUserRecommendRequest form);
+    /**
+     *
+     * @Description:通过身份证号获取户籍所在地
+     * @param idCard
+     * @return String
+     * @exception:
+     */
+    String getAreaByIdCard(String idCard);
 }

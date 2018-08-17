@@ -3,10 +3,9 @@
  */
 package com.hyjf.cs.user.service.pandect;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.service.BaseUserService;
-
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -14,5 +13,10 @@ import java.util.Map;
  */
 public interface PandectService extends BaseUserService {
 
-    Map<String,Object> pandect(UserVO user);
+    /**
+     * 获取账户总览信息
+     * @param user
+     * @return
+     */
+    JSONObject pandect(UserVO user);
 }

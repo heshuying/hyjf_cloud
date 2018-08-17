@@ -1,11 +1,11 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
-import com.hyjf.admin.client.BorrowRepaymentClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
@@ -23,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -35,13 +33,10 @@ import java.util.Map;
 public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
 
     @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
-
-    @Autowired
-    private BorrowRepaymentClient borrowRepaymentClient;
+    private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 
@@ -49,15 +44,15 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
     public BorrowRepaymentBean searchBorrowRepayment(BorrowRepaymentRequest request) {
 
         BorrowRepaymentBean bean=new BorrowRepaymentBean();
-        Integer count = this.borrowRepaymentClient.countBorrowRepayment(request);
+        Integer count = this.amTradeClient.countBorrowRepayment(request);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (count != null && count > 0) {
-            List<BorrowRepaymentCustomizeVO> recordList = this.borrowRepaymentClient.selectBorrowRepaymentList(request);
+            List<BorrowRepaymentCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentList(request);
             bean.setRecordList(recordList);
-            BorrowRepaymentCustomizeVO sumObject = this.borrowRepaymentClient.sumBorrowRepaymentInfo(request);
+            BorrowRepaymentCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentInfo(request);
             bean.setSumObject(sumObject);
         }else{
             bean.setSumObject(new BorrowRepaymentCustomizeVO());
@@ -68,27 +63,27 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
 
     @Override
     public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
-        return  this.borrowRepaymentClient.exportRepayClkActBorrowRepaymentInfoList(request);
+        return  this.amTradeClient.exportRepayClkActBorrowRepaymentInfoList(request);
     }
 
     @Override
     public List<BorrowRepaymentCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentRequest request) {
-        return this.borrowRepaymentClient.selectBorrowRepaymentList(request);
+        return this.amTradeClient.selectBorrowRepaymentList(request);
     }
 
     @Override
     public DelayRepayInfoBean getDelayRepayInfo(String borrowNid) {
         DelayRepayInfoBean bean=new DelayRepayInfoBean();
-        AdminRepayDelayCustomizeVO repayDelay = this.borrowRepaymentClient.selectBorrowInfo(borrowNid);
+        AdminRepayDelayCustomizeVO repayDelay = this.amTradeClient.selectBorrowInfo(borrowNid);
         bean.setBorrowRepayInfo(repayDelay);
         // 单期标
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
-            BorrowRepayVO borrowRepay = this.borrowRepaymentClient.getBorrowRepayDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            BorrowRepayVO borrowRepay = this.amTradeClient.getBorrowRepayDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
             bean.setRepayInfo(borrowRepay);
             bean.setRepayTime(GetDate.formatDate(Long.valueOf(borrowRepay.getRepayTime()) * 1000L));
             bean.setDelayDays(borrowRepay.getDelayDays());
         } else {
-            BorrowRepayPlanVO borrowRepayPlan = this.borrowRepaymentClient.getBorrowRepayPlanDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            BorrowRepayPlanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
             bean.setRepayInfo(borrowRepayPlan);
             bean.setRepayTime(GetDate.formatDate(Long.valueOf(borrowRepayPlan.getRepayTime()) * 1000L));
             bean.setDelayDays(borrowRepayPlan.getDelayDays());
@@ -122,7 +117,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
             return bean;
         }
 
-        this.borrowRepaymentClient.updateBorrowRepayDelayDays(borrowNid, delayDays);
+        this.amTradeClient.updateBorrowRepayDelayDays(borrowNid, delayDays);
         bean.setSuccess("success");
         return bean;
     }

@@ -2,22 +2,24 @@ package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * @author xiasq
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
@@ -34,7 +38,7 @@ import java.util.List;
 
 @Service
 public class AmUserClientImpl implements AmUserClient {
-	private static Logger logger = LoggerFactory.getLogger(AmUserClient.class);
+	private static Logger logger = getLogger(AmUserClient.class);
 
 	@Value("${am.user.service.name}")
 	private String userService;
@@ -74,6 +78,78 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+
+
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UserAliasVO findAliasesByUserId(Integer userId) {
+		UserAliasResponse response = restTemplate
+				.getForEntity(userService+"/userAlias/findAliasesByUserId/" + userId, UserAliasResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAliases(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/updateMobileCode", mobileCode, Integer.class).getBody();
+
+	}
+
+	@Override
+	public void insertMobileCode(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/insertMobileCode", mobileCode, Integer.class).getBody();
+	}
+
+	@Override
+	public VipInfoVO findVipInfoById(Integer vipId) {
+		VipInfoResponse response = restTemplate
+				.getForEntity(userService+"/vipInfo/findVipInfoById/" + vipId, VipInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public List<AccountBankVO> selectAccountBank(Integer userId, int status) {
+		AccountBankResponse response = restTemplate
+				.getForEntity(userService+"/accountbank/selectAccountBank/" + userId+"/"+status, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 
 	@Override
 	public UserVO findUserById(int userId) {
@@ -123,7 +199,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-			Integer searchStatus, Integer updateStatus) {
+			Integer searchStatus, Integer updateStatus,boolean isUpdate) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(verificationCode);
@@ -131,7 +207,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setPlatform(platform);
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
-
+		request.setUpdate(isUpdate);
 		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
 				.getBody();
 		if (result == null) {
@@ -550,7 +626,9 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setTrueName(bean.getName());
 		request.setIdNo(bean.getIdNo());
 		request.setMobile(bean.getMobile());
-
+		// 设置角色
+		/** 开户角色属性   1：出借角色2：借款角色3：代偿角色*/
+		request.setRoleId(Integer.parseInt(bean.getIdentity()));
 		Integer result = restTemplate
 				.postForEntity(userService+"/bankopen/updateUserAccount", request, Integer.class).getBody();
 		if (result != null) {
@@ -671,9 +749,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<BankCardVO> getBankOpenAccountById(UserVO user) {
+	public List<BankCardVO> getBankOpenAccountById(Integer userId) {
 		BankCardResponse bankCardResponse = restTemplate
-				.getForEntity(userService+"/callcenter/getTiedCardForBank/" + user.getUserId(), BankCardResponse.class)
+				.getForEntity(userService+"/callcenter/getTiedCardForBank/" + userId, BankCardResponse.class)
 				.getBody();
 		if (bankCardResponse != null) {
 			return bankCardResponse.getResultList();
@@ -762,7 +840,12 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
 		String url = userService+"/batch/updateAccountMobileSynch";
-		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
+		AccountMobileSynchResponse response =
+				restTemplate.postForEntity(url,accountMobileSynchRequest, AccountMobileSynchResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getUpdateFlag();
+		}
+		return false;
 	}
 	/**
 	 * 集团组织结构查询
@@ -825,4 +908,148 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
 	}
 
+	@Override
+	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	@Override
+	public UserVO surongRegister(RegisterUserRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 * @auther: hesy
+	 * @date: 2018/7/19
+	 */
+	@Override
+	public Boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean){
+		Response<Boolean> response = restTemplate
+				.postForEntity(userService+"/card/update_after_deletecard", requestBean, Response.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return false;
+	}
+
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
+		String url = userService + "/accountbank/getAccountBankByUserId/" + userId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId) {
+		String url = userService+"/accountbank/queryAllBankOpenAccount/"+userId;
+		AdminBankAccountCheckCustomizeResponse response = restTemplate.getForEntity(url,AdminBankAccountCheckCustomizeResponse.class).getBody();
+		if (Validator.isNotNull(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据accounId获取开户信息
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity(userService+"/user/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	@Override
+	public Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId) {
+		Integer id = restTemplate.getForEntity(userService+"/userManager/getUserIdByBind/"+bindUniqueId+"/"+bindPlatformId, Integer.class).getBody();
+		return id;
+	}
+
+	@Override
+	public String getBindUniqueIdByUserId(int userId, int bindPlatformId) {
+		return restTemplate.getForEntity(userService+"/userManager/getBindUniqueIdByUserId/"+userId+"/"+bindPlatformId, String.class).getBody();
+	}
+
+	@Override
+	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
+		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	}
+
+	/**
+	 * 根据userId查询BankCard
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(Integer userId) {
+		String url = userService + "/bankCard/getBankCard/" + userId;
+		BankCardResponse response = restTemplate
+				.getForEntity(url, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer countAllUser(){
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/countAll",UserResponse.class).getBody();
+		if (!Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getCount();
+	}
+	/**
+	 * 插入各种信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
+		String url = userService + "/user/insertUserActionUtm";
+		UserResponse response = restTemplate.postForEntity(url,userActionUtmRequest,UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
+		UserEvalationResultResponse response = restTemplate.getForEntity(userService+"/user/skipEvaluate/"+userId+"/"+countScore,UserEvalationResultResponse.class).getBody();
+		if(null!=response){
+			return   response.getResult();
+		}
+		return  null;
+	}
 }

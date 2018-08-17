@@ -1,0 +1,44 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.config.controller.app.find.contentArticle;
+
+import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.ContentArticle;
+import com.hyjf.am.config.service.app.AppContentArticleService;
+import com.hyjf.am.response.app.AppContentArticleResponse;
+import com.hyjf.am.vo.app.AppContentArticleVO;
+import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author dangzw
+ * @version AppContentArticleController, v0.1 2018/7/31 0:53
+ */
+@RestController
+@RequestMapping(value = "/am-config/find/contentArticle/")
+public class AppContentArticleController extends BaseConfigController {
+
+    @Autowired
+    private AppContentArticleService appContentArticleService;
+
+    /**
+     * 根据id获取网贷知识
+     * @param id
+     * @return
+     */
+    @RequestMapping("/getContentArticleById/{id}")
+    public AppContentArticleResponse getContentArticleById(@PathVariable(value = "id") Integer id){
+        AppContentArticleResponse response = new AppContentArticleResponse();
+        ContentArticle list = appContentArticleService.getContentArticleById(id);
+        if(list != null){
+            AppContentArticleVO voList = CommonUtils.convertBean(list, AppContentArticleVO.class);
+            response.setResult(voList);
+        }
+        return response;
+    }
+
+}

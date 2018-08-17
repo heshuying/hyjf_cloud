@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -22,9 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.admin.beans.request.AllocationEngineViewRequest;
+import com.hyjf.admin.beans.vo.AdminHjhRegionVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AllocationEngineService;
@@ -37,8 +42,8 @@ import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
-import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -50,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
  */
-@Api(value = "计划专区列表")
+@Api(value = "计划专区列表",tags = "计划专区列表")
 @RestController
 @RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{
@@ -59,6 +64,8 @@ public class AllocationEngineController extends BaseController{
 	private AllocationEngineService allocationEngineService;
 	@Autowired
 	private HjhLabelService labelService;
+	// 查看权限
+	public static final String PERMISSIONS = "allocation";
     /**
      * 画面初始化
      *
@@ -68,8 +75,14 @@ public class AllocationEngineController extends BaseController{
     @ApiOperation(value = "计划专区列表", notes = "计划专区列表初始化")
     @PostMapping(value = "/search")
     @ResponseBody
-   /* @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)*/
-    public AdminResult<ListResult<HjhRegionVO>> search(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<AdminHjhRegionVO>> search(HttpServletRequest request, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
+    	// 初始化原子层请求实体
+    	AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 初始化返回LIST
+		List<AdminHjhRegionVO> volist = null;
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	// 画面检索 计划编号/计划名称/添加时间/专区状态 无需初始化
     	// 根据删选条件获取计划专区列表
     	HjhRegionResponse response = this.allocationEngineService.getHjhRegionList(form);
@@ -79,7 +92,13 @@ public class AllocationEngineController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-        return new AdminResult<ListResult<HjhRegionVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminHjhRegionVO.class);
+			return new AdminResult<ListResult<AdminHjhRegionVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminHjhRegionVO>>(ListResult.build(volist, 0));
+		}
     }
     
 	/**
@@ -91,8 +110,9 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
 	@PostMapping(value = "/reginfo")
 	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	// 计划专区根据业务要求只有添加计划而没有修改计划
-	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// 初始画面没有需要初期化的数据
 		// 计划编号 和 状态
@@ -108,8 +128,13 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区列表", notes = "添加画面确认后添加到计划专区")
 	@PostMapping(value = "/insert")
 	@ResponseBody
-	public JSONObject addPlanToRegion(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+	public JSONObject addPlanToRegion(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+		// 初始化原子层请求实体
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		// 与实体bean一致 用于转型
 		HjhRegionVO VOrequest = new HjhRegionVO();
 		// 获取当前登陆者id
@@ -148,7 +173,7 @@ public class AllocationEngineController extends BaseController{
 	private void validatorFieldCheck(JSONObject jsonObject, AllocationEngineRuquest form) {
 		// 计划编号非空判断(状态是二选一不需要判断)
 		if(StringUtils.isEmpty(form.getPlanNidSrch())){
-			jsonObject.put("validatorMsg1", "在专区中添加计划时请输入计划编号!");
+			jsonObject.put("validatorMsg", "在专区中添加计划时请输入计划编号!");
 		}
 	}
 	
@@ -162,10 +187,10 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区列表", notes = "校验入力的计划编号相关")
 	@PostMapping(value = "/ajaxcheck")
 	@ResponseBody
-	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)*/
-	@ApiImplicitParam(name = "planNid", value = "计划编号", required = true, dataType = "String")
-	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody String planNid) { // 注意 ：这里的传值可以改为 form 形式
-		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(planNid);
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@ApiImplicitParam(name = "planNameSrch", value = "计划编号查询", required = true, dataType = "String")
+	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) {
+		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNameSrch());
 		if(response==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -184,14 +209,15 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区列表", notes = "计划专区停用/启用状态修改")
 	@PostMapping(value = "/status")
 	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	// 注意 ：此 id 并非画面序号，而是画面上未显示的 计划专区表主键
 	@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")
-	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody String id) { // 注意 ：这里的传值可以改为 form 形式
+	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) { // 注意 ：这里的传值可以改为 form 形式
 		HjhRegionResponse response = new HjhRegionResponse();
 		// 修改状态
-		if (StringUtils.isNotEmpty(id)) {
+		if (StringUtils.isNotEmpty(viewRequest.getId())) {
 			// 首先获取更新之前的 HjhRegion
-			HjhRegionVO vo = this.allocationEngineService.getHjhRegionVOById(id);
+			HjhRegionVO vo = this.allocationEngineService.getHjhRegionVOById(viewRequest.getId());
 			if (vo.getConfigStatus() == 1) {
 				vo.setConfigStatus(0);
 			} else {
@@ -222,15 +248,19 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区列表", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/regionexport")
 	@ResponseBody
-	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) throws Exception {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划专区";
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","计划编号", "计划名称","添加时间", "状态" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		// 带检索条件的列表查询(无分页)
 		List<HjhRegionVO> resultList = this.allocationEngineService.getHjhRegionListWithOutPage(form);
 		if (resultList != null && resultList.size() > 0) {
@@ -298,9 +328,11 @@ public class AllocationEngineController extends BaseController{
     @ApiOperation(value = "计划引擎配置列表", notes = "计划引擎配置列表初始化")
     @PostMapping(value = "/searchengine")
     @ResponseBody
-    /* @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)*/
-    public AdminResult<ListResult<HjhAllocationEngineVO>> searchEngine(HttpServletRequest request,@RequestBody @Valid AllocationEngineRuquest form) {
-    	
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<HjhAllocationEngineVO>> searchEngine(HttpServletRequest request,@RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
+    	AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
     	// 计划引擎配置列表无过滤条件直接查询
     	// 根据计划专区传入的计划编号获取计划名称返回前台展示
@@ -328,15 +360,20 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划引擎配置列表", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/engineexport")
 	@ResponseBody
-	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) throws Exception {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划配置";
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","标签编号", "标签名称","添加时间", "状态","排序" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		List<HjhAllocationEngineVO> resultList = null;
     	if(StringUtils.isNotEmpty(form.getPlanNidSrch())){
     		// 不带分页的查询 
@@ -401,7 +438,6 @@ public class AllocationEngineController extends BaseController{
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);	
 	}
 	
-	
     /**
      * 计划配置画面 停用/启用状态修改
      *
@@ -411,6 +447,7 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面停用/启用状态修改")
 	@PostMapping(value = "/labelstatus")
 	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	// 注意 ：此 id 并非画面序号，而是计划引擎配置画面上 未显示的 计划引擎配置表主键
 	@ApiImplicitParam(name = "engineId", value = "计划引擎配置表主键", required = true, dataType = "String")
 	public AdminResult<String> labelStatusChange(HttpServletRequest request, @RequestBody String engineId) {  // 注意 ：这里的传值可以改为 form 形式
@@ -443,8 +480,11 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划引擎配置列表", notes = "生成计划配置添加/修改画面")
 	@PostMapping(value = "/info")
 	@ResponseBody
-	public JSONObject getEngineAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject getEngineAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		//1.添加计划配置时，往画面放一个隐藏域 planNid
 		if(form.getPlanNidSrch()!= null){
 			jsonObject.put("planNid", form.getPlanNidSrch());
@@ -469,12 +509,15 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面标签名称相关输入校验")
-	@PostMapping(value = "/checkInputlabelname")
+	@PostMapping(value = "/checkinputlabelname")
 	@ResponseBody
-	public JSONObject checkInputlabelname(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject checkInputlabelname(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
 		HjhLabelCustomizeVO hjhLabel = new HjhLabelCustomizeVO();
 		JSONObject jsonObject = new JSONObject();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		String labelName = form.getLabelName();
 		String planNid = form.getPlanNid();
 		if(StringUtils.isEmpty(labelName)){
@@ -538,11 +581,14 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面标签排序相关输入校验")
-	@PostMapping(value = "/checkInputlabelSort")
+	@PostMapping(value = "/checkinputlabelSort")
 	@ResponseBody
-	public JSONObject checkInputlabelSort(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject checkInputlabelSort(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhAllocationEngineResponse hjhAllocationEngineResponse = new HjhAllocationEngineResponse();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		String labelSort = form.getLabelSort();
 		String planNid = form.getPlanNid();
 		
@@ -560,13 +606,13 @@ public class AllocationEngineController extends BaseController{
 		hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
 		List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
 		
-		
+
 		if (hjhAllocationEngineList != null) {
 			for(HjhAllocationEngineVO object : hjhAllocationEngineList){
 				//取自DB的LabelSort
 				Integer planLabelSort = object.getLabelSort();
 				//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
-				if(planLabelSort !=null && planLabelSort == Integer.valueOf(labelSort)){
+				if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
 					jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
 					jsonObject.put("status", "n");
 					return jsonObject;
@@ -588,13 +634,16 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划配置列表", notes = "将Info入力数据添加到计划引擎配置")
-	@PostMapping(value = "/insertConfigAction")
+	@PostMapping(value = "/insertconfig")
 	@ResponseBody
-	public JSONObject insertConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject insertConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
 		// 与实体bean一致 用于转型
 		HjhAllocationEngineVO newForm = new HjhAllocationEngineVO();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		// 校验已经在前面异步校验了
 		// (1).从专区表中查出必要信息
 		HjhRegionVO record = this.allocationEngineService.getHjhRegionRecordByPlanNid(form.getPlanNid());
@@ -670,17 +719,19 @@ public class AllocationEngineController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "生成换绑详情info画面")
-	@PostMapping(value = "/changeAction")
+	@PostMapping(value = "/change")
 	@ResponseBody
-	public JSONObject getEngineChangeView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject getEngineChangeView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		if(form.getPlanNidSrch()!= null){
 			jsonObject.put("planNid", form.getPlanNidSrch());
 			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecord(Integer.parseInt(form.getId()));
 			jsonObject.put("labelName", vo.getLabelName());
 		}
 		if (StringUtils.isNotEmpty(form.getLabelId())) {
-			
 			HjhAllocationEngineVO hjhAllocationEngineVO = this.allocationEngineService.getPlanConfigRecordByParam(form);
 			jsonObject.put("hjhAllocationEngineVO", hjhAllocationEngineVO);
 		}
@@ -698,10 +749,13 @@ public class AllocationEngineController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面换绑确认后修改DB")
-	@PostMapping(value = "/updateConfigActionInfo")
+	@PostMapping(value = "/updateconfigactioninfo")
 	@ResponseBody
-	public AdminResult<String> updateConfigActionInfo(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+	public AdminResult<String> updateConfigActionInfo(HttpServletRequest request, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		//获取原计划的计划编号
 		String planNidSrch = form.getPlanNidSrch();
 		//获取到当前输入的订单号
@@ -739,12 +793,15 @@ public class AllocationEngineController extends BaseController{
 	 * @return
 	 */	
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置画面修改完后更新DB")
-	@PostMapping(value = "/updateConfigAction")
+	@PostMapping(value = "/updateconfigaction")
 	@ResponseBody
-	public AdminResult<String> updateConfigAction(HttpServletRequest request, @RequestBody @Valid AllocationEngineRuquest form) {
+	public AdminResult<String> updateConfigAction(HttpServletRequest request, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
 		// 开始插表
 		HjhAllocationEngineVO record = new HjhAllocationEngineVO();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		if (StringUtils.isNotEmpty(form.getPlanNid()) && StringUtils.isNotEmpty(form.getLabelName())) {
 			record = this.allocationEngineService.getPlanConfigRecordByParam(form);
 			//1.
@@ -813,11 +870,14 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "计划配置info画面修改前报消息")
-	@PostMapping(value = "/reportAction")
+	@PostMapping(value = "/report")
 	@ResponseBody
-	public JSONObject reportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject reportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelRequest label = new HjhLabelRequest();
+		AllocationEngineRuquest form = new AllocationEngineRuquest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		//原始画面已经存在，不需要校验为空
 		String labelId = form.getLabelId();
 		String planNid = form.getPlanNid();
@@ -859,9 +919,9 @@ public class AllocationEngineController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划引擎配置列表", notes = "校验计划编号是否存在")
-	@PostMapping(value = "/isExistsPlaneNumber")
+	@PostMapping(value = "/isexistsplanenumber")
 	@ResponseBody
-	public JSONObject isExistsPlaneNumber(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineRuquest form) {
+	public JSONObject isExistsPlaneNumber(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// request实际从前台传入的就是 planNid
 		String planNid = request.getParameter("param");

@@ -27,16 +27,45 @@ import java.util.Map;
 public class ProjectConstant {
 
 
-     public static final  String REQUEST_HOME = "/hyjf-app";
+     public static final String REQUEST_HOME = "/hyjf-app";
 
-     public static final  String REQUEST_MAPPING = "/project";
+     public static final String REQUEST_MAPPING = "/project";
 
-     public static final  String PROJECT_DETAIL_ACTION = "/getProjectDetail";
+     public static final String PROJECT_DETAIL_ACTION = "/getProjectDetail";
+
+     public static final String APP_PAGE = "page";
+
+     public static final String APP_PROJECT_TOTAL = "projectTotal";
+
+     public static final String APP_PROJECT_LIST = "projectList";
+
+     public static final String CREDIT_DETAIL = "/transfer";
+
+     public static final String APP_REQUEST_MAPPING = "/hyjf-app/projectlist";
+
+     public static final String APP_CREDIT_LIST_METHOD = "/creditList";
+
+     public static final String APP_PLAN_LIST_METHOD = "/planList";
+
+     public static final String APP_BORROW_PROJECT_METHOD = "/borrowProjectList";
 
     /**
      * 加入条件
      */
     public  static  final String PLAN_ADD_CONDITION = "{0}元起，以{1}元的倍数递增";
+
+    /**
+     * 交易详情类请求地址
+     */
+    public static final String USER_TRADE_REQUEST_MAPPING = "/user/trade";
+
+
+    /**
+     * 交易详情-交易类型
+     */
+    public static final String USER_TRADE_TYPES_ACTION = "/getTradeTypes";
+
+
     /**
      * 计息时间
      */
@@ -54,6 +83,8 @@ public class ProjectConstant {
     public static final String PARAM_CREDIT_NID = "creditNid";
 
     /*计划参数*/
+    public static final String METHOD_PLAN = "/plan/";
+
     public static final String PARAM_PLAN_NID = "planNid";
 
     public static final String PARAM_APP_PLAN_NID = "planId";
@@ -73,10 +104,22 @@ public class ProjectConstant {
     public static final String APP_HOME_DATA_URL = "/getProjectList";
 
     /*   --------------------------  web端 开始 --------------------------------*/
-    /*顶部统计数据*/
+    /*顶部统计数据 返回值*/
     public static final String WEB_PLAN_TOTAL_DATA = "totalData";
 
     public static final String WEB_PLAN_LIST = "resultList";
+
+    /*汇计划接口相关 开始*/
+    public static final String HJH_DATA_ACCEDE_ACCOUNT_TOTAL = "accedeAccountTotal";
+
+    public static final String HJH_DATA_INTEREST_TOTAL = "interestTotal";
+
+    public static final String HJH_DATA_ACCEDE_TIMES = "accedeTimes";
+
+    /*展示给app的计划详情链接*/
+    public static final String HJH_DETAIL_INFO_URL = "/plan/";
+    /*汇计划接口相关 结束*/
+
 
 
     /*   --------------------------  web端 结束 --------------------------------*/

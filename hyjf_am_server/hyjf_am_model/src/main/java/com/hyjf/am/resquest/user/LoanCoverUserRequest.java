@@ -3,13 +3,15 @@
  */
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.util.Date;
 
 /**
  * @author Administrator
  * @version LoanCoverUserRequest, v0.1 2018/6/26 17:25
  */
-public class LoanCoverUserRequest {
+public class LoanCoverUserRequest extends BasePage {
 
     private Integer id;
 
@@ -47,19 +49,9 @@ public class LoanCoverUserRequest {
     private  String startCreate;
     //结束时间
     private  String endCreate;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    private boolean limitFlg = false;
 
-    public int limit;
-
-    private int paginatorPage = 1;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
 
     public Integer getId() {
         return id;
@@ -189,14 +181,6 @@ public class LoanCoverUserRequest {
         this.endCreate = endCreate;
     }
 
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -211,5 +195,13 @@ public class LoanCoverUserRequest {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
+
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
     }
 }

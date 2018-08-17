@@ -1,27 +1,33 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
+import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,16 +50,34 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
         BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
         if(null != bankConfig){
-            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BankConfigVO banksConfigVO = new BankConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);
             response.setResult(banksConfigVO);
         }
         return response;
     }
+
+    /**
+     * 获取银行卡配置信息
+     * @param code
+     * @return
+     */
+    @GetMapping("/selectBankConfigByCode/{code}")
+    public BankConfigResponse selectBankConfigByCode(@PathVariable String  code){
+        BankConfigResponse response = new BankConfigResponse();
+        BankConfig bankConfig = bankConfigService.selectBankConfigByCode(code);
+        if(null != bankConfig){
+            BankConfigVO banksConfigVO = new BankConfigVO();
+            BeanUtils.copyProperties(bankConfig,banksConfigVO);
+            response.setResult(banksConfigVO);
+        }
+        return response;
+    }
+
 
     /**
      *
@@ -95,6 +119,17 @@ public class BanksConfigController extends BaseConfigController{
         return response;
     }
 
+    @RequestMapping("/getNewAppQuestionList")
+    public NewAppQuestionCustomizeResponse getNewAppQuestionList() {
+        NewAppQuestionCustomizeResponse response = new NewAppQuestionCustomizeResponse();
+        List<NewAppQuestionCustomize> questionCustomizes = questionService.getNewAppQuestionList();
+        if(!CollectionUtils.isEmpty(questionCustomizes)){
+            List<NewAppQuestionCustomizeVO> questionCustomizeVOS = CommonUtils.convertBeanList(questionCustomizes,NewAppQuestionCustomizeVO.class);
+            response.setResultList(questionCustomizeVOS);
+        }
+        return response;
+    }
+
     @RequestMapping("/countScore")
     public int countScore(@RequestBody  AnswerRequest answerList) {
         int countScore = questionService.countScore(answerList.getResultList());
@@ -104,11 +139,11 @@ public class BanksConfigController extends BaseConfigController{
      * 获取银行列表
      */
     @RequestMapping("/selectBankConfigList")
-    public BanksConfigResponse selectBankConfigList(){
-        BanksConfigResponse response=null;
+    public BankConfigResponse selectBankConfigList(){
+        BankConfigResponse response = new BankConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
             response.setResultList(listBanksConfig);
             //代表成功
             response.setRtn(Response.SUCCESS);
@@ -116,6 +151,52 @@ public class BanksConfigController extends BaseConfigController{
         return response;
     }
 
+
+    /**
+     * 获取快捷支付银行
+     */
+    @RequestMapping("/getRechargeQuotaLimit")
+    public BankConfigResponse getRechargeQuotaLimit(){
+        BankConfigResponse response = new BankConfigResponse();
+        List<JxBankConfig> listBankConfig = bankConfigService.getRechargeQuotaLimit(1);
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+            response.setResultList(listBanksConfig);
+        }else{
+            response.setResultList(new ArrayList<BankConfigVO>());
+        }
+        //代表成功
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+    /**
+     * 获取status=1的银行列表
+     */
+    @RequestMapping("/getBankConfigListByStatus")
+    public AdminBankConfigResponse getBankConfigListByStatus(BankConfigVO bankConfigVO){
+        AdminBankConfigResponse response=new AdminBankConfigResponse();
+        List<BankConfig> listBankConfig = bankConfigService.getBankConfigListByStatus(bankConfigVO);
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+            response.setResultList(listBanksConfig);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 获取银行列表(快捷支付卡)
+     */
+    @RequestMapping("/getBankRecordListByQuickPayment")
+    public List<BankConfigVO> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+        List<BankConfigVO> listBanksConfig=null;
+        List<BankConfig> listBankConfig = bankConfigService.getBankRecordListByQuickPayment(bankConfigVO);
+        if(!CollectionUtils.isEmpty(listBankConfig)){
+            listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+        }
+        return listBanksConfig;
+    }
 
     @GetMapping("/getParamNameList/{nameClass}")
     public ParamNameResponse getParamNameList(@PathVariable String nameClass){
@@ -129,4 +210,185 @@ public class BanksConfigController extends BaseConfigController{
         return response;
     }
 
+    @GetMapping("/getParamName/{other1}")
+    public ParamNameResponse getParamName(@PathVariable String other1) {
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNameList = bankConfigService.getParamName(other1);
+        if (CollectionUtils.isNotEmpty(paramNameList)) {
+            List<ParamNameVO> paramNameVOList = CommonUtils.convertBeanList(paramNameList,ParamNameVO.class);
+            response.setResultList(paramNameVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 分页查询银行配置列表
+     */
+    @RequestMapping("/selectBankConfigListByPage")
+    public AdminBankConfigResponse selectBankConfigListByPage(AdminBankConfigRequest adminRequest){
+        AdminBankConfigResponse response=new AdminBankConfigResponse();
+
+        BankConfigVO vo = new BankConfigVO();
+        BankConfig co = new BankConfig();
+        BeanUtils.copyProperties(co,vo);
+        //查询保证金配置条数
+        List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo,-1,-1);
+        if(!CollectionUtils.isEmpty(listBankConfig)){
+//            BeanUtils.copyProperties(listBankConfig,listRes);
+//            for(BanksConfigVO banksConfig : listRes) {
+//                // 不支持快捷支付
+//                if (0 == banksConfig.getQuickPayment()) {
+//                    banksConfig.setMonthCardQuota(new BigDecimal(0));
+//                }
+//            }
+            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(),listBankConfig.size());
+//            BanksConfigVO bc=new BanksConfigVO();
+//            bc.setBankName(adminRequest.getBankName());
+//            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
+            listBankConfig = bankConfigService.selectBankConfigListByPage(vo, paginator.getOffset(), paginator.getLimit());
+            if(!CollectionUtils.isEmpty(listBankConfig)){
+                List<BankConfigVO> banksConfigVOList =CommonUtils.convertBeanList(listBankConfig,BankConfigVO.class);
+                response.setResultList(banksConfigVOList);
+                response.setRecordTotal(banksConfigVOList.size());
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
+            return null;
+        }
+        return null;
+    }
+    /**
+     * 根据bankName查询银行配置
+     * @param bankName
+     * @return
+     */
+    @RequestMapping("/selectBankConfigByBankName")
+    public List<BankConfigVO> selectBankConfigByBankName(@RequestBody String bankName){
+        BankConfigVO bankConfig = new BankConfigVO();
+        bankConfig.setName(bankName);
+        List<BankConfig> list = bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
+        List<BankConfigVO> res=null;
+        BeanUtils.copyProperties(list,res);
+        return res;
+    }
+
+    /**
+     * 添加银行配置
+     * @param adminBankConfigRequest
+     * @return
+     */
+    @RequestMapping("/insertBankConfig")
+    public AdminBankConfigResponse insertBankConfig(@RequestBody AdminBankConfigRequest adminBankConfigRequest){
+        AdminBankConfigResponse res =new AdminBankConfigResponse();
+        int result = bankConfigService.insertBankConfig(adminBankConfigRequest);
+        if(result >0){
+            res.setRtn(AdminResponse.SUCCESS);
+            res.setRtn(AdminResponse.SUCCESS_MSG);
+            return res;
+        }
+        res.setRtn(AdminResponse.FAIL);
+        res.setRtn(AdminResponse.FAIL_MSG);
+        return res;
+    }
+
+    /**
+     * 添加银行配置
+     * @param adminBankConfigRequest
+     * @return
+     */
+    @RequestMapping("/updadteBankConfig")
+    public AdminBankConfigResponse updadteBankConfig(@RequestBody AdminBankConfigRequest adminBankConfigRequest){
+        AdminBankConfigResponse res =new AdminBankConfigResponse();
+        int result = bankConfigService.updadteBankConfig(adminBankConfigRequest);
+        if(result >0){
+            res.setRtn(Response.SUCCESS);
+            return res;
+        }
+        res.setRtn(Response.FAIL);
+        return res;
+    }
+    /**
+     * 删除银行配置
+     * @param id
+     */
+    @RequestMapping("/deleteBankConfigById")
+    public AdminBankConfigResponse deleteBankConfigById(@RequestBody Integer id) {
+        AdminBankConfigResponse res =new AdminBankConfigResponse();
+        try{
+            this.bankConfigService.deleteBankConfigById(id);
+            res.setRtn(Response.SUCCESS);
+        }catch (Exception e){
+            res.setRtn(Response.FAIL);
+        }
+        return  res;
+    }
+
+    /**
+     * 保存银行配置之前的字段校验
+     * @param adminBankConfigRequest
+     */
+    @RequestMapping("/validateFeildBeforeSave")
+    public AdminBankConfigResponse validateFeildBeforeSave(@RequestBody AdminBankConfigRequest adminBankConfigRequest) {
+        AdminBankConfigResponse res =new AdminBankConfigResponse();
+        BankConfigVO bankConfig = new BankConfigVO();
+        BeanUtils.copyProperties(adminBankConfigRequest,bankConfig);
+        List<BankConfig> list = this.bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
+        if(!CollectionUtils.isEmpty(list)){
+            if (bankConfig.getId() != null) {
+                Boolean hasnot = true;
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getId().equals(bankConfig.getId())) {
+                        hasnot = false;
+                        break;
+                    }
+                }
+                if (hasnot) {
+                    res.setRtn(Response.FAIL);
+                    res.setMessage("银行名称或银行代码不可重复添加");
+                } else {
+                    res.setRtn(Response.SUCCESS);
+                }
+            } else {
+                res.setRtn(Response.FAIL);
+                res.setMessage("银行名称或银行代码不可重复添加");
+            }
+        }
+        return  res;
+    }
+
+    /**
+     * 根据银行code获取银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    @GetMapping(value = "/getBankConfigByCode/{code}")
+    public BankConfigResponse getBankConfigByCode(@PathVariable String code){
+        BankConfigResponse response = new BankConfigResponse();
+        List<BankConfig> bankConfigList = bankConfigService.getBankConfigByCode(code);
+        if(!CollectionUtils.isEmpty(bankConfigList)){
+            BankConfigVO bankConfigVO = CommonUtils.convertBean(bankConfigList.get(0),BankConfigVO.class);
+            response.setResult(bankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+    /**
+     * 获取银行卡配置信息
+     * @auth sunpeikai
+     * @param bankId 主键id
+     * @return
+     */
+    @GetMapping("/getBankConfigByBankId/{bankId}")
+    public BankConfigResponse getBankConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
+        BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
+        if(null != bankConfig){
+            BankConfigVO bankConfigVO = CommonUtils.convertBean(bankConfig,BankConfigVO.class);
+            response.setResult(bankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

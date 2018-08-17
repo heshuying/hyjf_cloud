@@ -1,14 +1,13 @@
 package com.hyjf.cs.trade.controller.batch;
 
-import com.hyjf.cs.trade.service.BatchBankInvestAllService;
-import com.hyjf.cs.trade.service.BatchBankInvestService;
-import com.hyjf.cs.trade.service.HjhSmsNoticeService;
+import com.hyjf.cs.trade.service.batch.HjhSmsNoticeService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 投资调单异常处理controller
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author jun
  * @since 20180623
  */
-@Controller
+@RestController
 @RequestMapping(value = "/cs-trade/hjhSmsNotice")
 public class HjhSmsNoticeController {
 
@@ -31,10 +30,11 @@ public class HjhSmsNoticeController {
 	 * @return
 	 */
 	@ApiOperation(value = "标的还款逾期短信提醒", notes = "标的还款逾期短信提醒")
-	@RequestMapping(value = "/overdueSmsNotice")
-	public void overdueSmsNotice() {
-		logger.info("投资异常全部掉单跑批任务开始start...");
+	@GetMapping(value = "/overdueSmsNotice")
+	public String overdueSmsNotice() {
+		logger.info("标的还款逾期短信提醒跑批任务开始start...");
 		hjhSmsNoticeService.overdueSmsNotice();
-		logger.info("投资异常全部掉单跑批任务结束end...");
+		logger.info("标的还款逾期短信提醒跑批任务结束end...");
+		return "SUCCESS";
 	}
 }

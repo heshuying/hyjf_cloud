@@ -1,31 +1,34 @@
 spring:
   application:
     name: ADMIN
+  cloud:
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: admin
   boot:
     admin:
       client:
-        url: http://127.0.0.1:18080
+        url: http://micoserver:18080
   sleuth:
     sampler:
       percentage: 1.0
-  rabbitmq:
-    host: 47.95.176.244
-    port: 5672
-    username: admin
-    password: admin1234
-    vhost: /
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:8888/eureka/
-  instance:
-    preferIpAddress: true
 server:
   port: 9093
   session:
-     timeout:36000
+     timeout: 36000
 logging:
   file: admin.log
+file:
+   physical:
+      path:D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
+   domain:
+      url:http://test.hyjf.com:8083/hyjf-admin/
+   upload:
+      temp:
+         path:/data/upfiles/filetemp/image
+#swagger启用开关
+swagger:
+ enable: true

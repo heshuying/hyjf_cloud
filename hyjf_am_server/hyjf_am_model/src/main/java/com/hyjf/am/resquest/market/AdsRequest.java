@@ -13,6 +13,11 @@ public class AdsRequest {
     private String host;
     private String code;
 
+    private Integer typeId;
+
+    private Integer isIndex;
+
+
     public int getLimitStart() {
         return limitStart;
     }
@@ -43,5 +48,21 @@ public class AdsRequest {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
+
+    public Integer getIsIndex() {
+        return isIndex;
+    }
+
+    public void setIsIndex(Integer isIndex) {
+        this.isIndex = isIndex;
     }
 }

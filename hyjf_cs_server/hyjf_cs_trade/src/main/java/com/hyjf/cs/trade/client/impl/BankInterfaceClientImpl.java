@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.cs.trade.client.BankInterfaceClient;
 import org.springframework.beans.factory.annotation.Autowired;

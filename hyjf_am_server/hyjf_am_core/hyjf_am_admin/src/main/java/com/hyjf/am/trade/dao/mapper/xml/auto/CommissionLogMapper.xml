@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.CommissionLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="spreads_user_id" property="spreadsUserId" jdbcType="INTEGER" />
+    <result column="nid" property="nid" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="spreads_type" property="spreadsType" jdbcType="VARCHAR" />
+    <result column="account_type" property="accountType" jdbcType="VARCHAR" />
+    <result column="scales" property="scales" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="tender_id" property="tenderId" jdbcType="INTEGER" />
+    <result column="repay_id" property="repayId" jdbcType="INTEGER" />
+    <result column="account_all" property="accountAll" jdbcType="DECIMAL" />
+    <result column="account_capital" property="accountCapital" jdbcType="DECIMAL" />
+    <result column="account_interest" property="accountInterest" jdbcType="DECIMAL" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_ip" property="createIp" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="TINYINT" />
+    <result column="is_valid" property="isValid" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, spreads_user_id, nid, `type`, spreads_type, account_type, scales, borrow_nid, 
+    tender_id, repay_id, account_all, account_capital, account_interest, account, remark, 
+    create_ip, pay_status, is_valid, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_commission_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_commission_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_commission_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" >
+    delete from ht_commission_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_commission_log (user_id, spreads_user_id, nid, 
+      `type`, spreads_type, account_type, 
+      scales, borrow_nid, tender_id, 
+      repay_id, account_all, account_capital, 
+      account_interest, account, remark, 
+      create_ip, pay_status, is_valid, 
+      create_time, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{spreadsUserId,jdbcType=INTEGER}, #{nid,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{spreadsType,jdbcType=VARCHAR}, #{accountType,jdbcType=VARCHAR}, 
+      #{scales,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{tenderId,jdbcType=INTEGER}, 
+      #{repayId,jdbcType=INTEGER}, #{accountAll,jdbcType=DECIMAL}, #{accountCapital,jdbcType=DECIMAL}, 
+      #{accountInterest,jdbcType=DECIMAL}, #{account,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{createIp,jdbcType=VARCHAR}, #{payStatus,jdbcType=TINYINT}, #{isValid,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_commission_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="spreadsUserId != null" >
+        spreads_user_id,
+      </if>
+      <if test="nid != null" >
+        nid,
+      </if>
+      <if test="type != null" >
+        `type`,
+      </if>
+      <if test="spreadsType != null" >
+        spreads_type,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="scales != null" >
+        scales,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="tenderId != null" >
+        tender_id,
+      </if>
+      <if test="repayId != null" >
+        repay_id,
+      </if>
+      <if test="accountAll != null" >
+        account_all,
+      </if>
+      <if test="accountCapital != null" >
+        account_capital,
+      </if>
+      <if test="accountInterest != null" >
+        account_interest,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createIp != null" >
+        create_ip,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="spreadsUserId != null" >
+        #{spreadsUserId,jdbcType=INTEGER},
+      </if>
+      <if test="nid != null" >
+        #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="spreadsType != null" >
+        #{spreadsType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="scales != null" >
+        #{scales,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderId != null" >
+        #{tenderId,jdbcType=INTEGER},
+      </if>
+      <if test="repayId != null" >
+        #{repayId,jdbcType=INTEGER},
+      </if>
+      <if test="accountAll != null" >
+        #{accountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="accountCapital != null" >
+        #{accountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInterest != null" >
+        #{accountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createIp != null" >
+        #{createIp,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_commission_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_commission_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.spreadsUserId != null" >
+        spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.nid != null" >
+        nid = #{record.nid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        `type` = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.spreadsType != null" >
+        spreads_type = #{record.spreadsType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountType != null" >
+        account_type = #{record.accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.scales != null" >
+        scales = #{record.scales,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderId != null" >
+        tender_id = #{record.tenderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayId != null" >
+        repay_id = #{record.repayId,jdbcType=INTEGER},
+      </if>
+      <if test="record.accountAll != null" >
+        account_all = #{record.accountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accountCapital != null" >
+        account_capital = #{record.accountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="record.accountInterest != null" >
+        account_interest = #{record.accountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createIp != null" >
+        create_ip = #{record.createIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payStatus != null" >
+        pay_status = #{record.payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_commission_log
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
+      nid = #{record.nid,jdbcType=VARCHAR},
+      `type` = #{record.type,jdbcType=VARCHAR},
+      spreads_type = #{record.spreadsType,jdbcType=VARCHAR},
+      account_type = #{record.accountType,jdbcType=VARCHAR},
+      scales = #{record.scales,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      tender_id = #{record.tenderId,jdbcType=INTEGER},
+      repay_id = #{record.repayId,jdbcType=INTEGER},
+      account_all = #{record.accountAll,jdbcType=DECIMAL},
+      account_capital = #{record.accountCapital,jdbcType=DECIMAL},
+      account_interest = #{record.accountInterest,jdbcType=DECIMAL},
+      account = #{record.account,jdbcType=DECIMAL},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_ip = #{record.createIp,jdbcType=VARCHAR},
+      pay_status = #{record.payStatus,jdbcType=TINYINT},
+      is_valid = #{record.isValid,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    update ht_commission_log
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="spreadsUserId != null" >
+        spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
+      </if>
+      <if test="nid != null" >
+        nid = #{nid,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="spreadsType != null" >
+        spreads_type = #{spreadsType,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="scales != null" >
+        scales = #{scales,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderId != null" >
+        tender_id = #{tenderId,jdbcType=INTEGER},
+      </if>
+      <if test="repayId != null" >
+        repay_id = #{repayId,jdbcType=INTEGER},
+      </if>
+      <if test="accountAll != null" >
+        account_all = #{accountAll,jdbcType=DECIMAL},
+      </if>
+      <if test="accountCapital != null" >
+        account_capital = #{accountCapital,jdbcType=DECIMAL},
+      </if>
+      <if test="accountInterest != null" >
+        account_interest = #{accountInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createIp != null" >
+        create_ip = #{createIp,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    update ht_commission_log
+    set user_id = #{userId,jdbcType=INTEGER},
+      spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
+      nid = #{nid,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=VARCHAR},
+      spreads_type = #{spreadsType,jdbcType=VARCHAR},
+      account_type = #{accountType,jdbcType=VARCHAR},
+      scales = #{scales,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      tender_id = #{tenderId,jdbcType=INTEGER},
+      repay_id = #{repayId,jdbcType=INTEGER},
+      account_all = #{accountAll,jdbcType=DECIMAL},
+      account_capital = #{accountCapital,jdbcType=DECIMAL},
+      account_interest = #{accountInterest,jdbcType=DECIMAL},
+      account = #{account,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_ip = #{createIp,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=TINYINT},
+      is_valid = #{isValid,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

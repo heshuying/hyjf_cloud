@@ -57,14 +57,16 @@ public class MD5Util2 {
      * @throws IOException 
      */  
     public static String getFileMD5String(File file) throws IOException {         
-        InputStream fis;  
-        fis = new FileInputStream(file);  
-        byte[] buffer = new byte[1024];  
-        int numRead = 0;  
-        while ((numRead = fis.read(buffer)) > 0) {  
-            messagedigest.update(buffer, 0, numRead);  
-        }  
-        fis.close();  
+        try (InputStream fis = new FileInputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int numRead = 0;
+            while ((numRead = fis.read(buffer)) > 0) {
+                messagedigest.update(buffer, 0, numRead);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return bufferToHex(messagedigest.digest());  
     }  
   
@@ -80,13 +82,16 @@ public class MD5Util2 {
      * @return 
      * @throws IOException 
      */  
-    public static String getFileMD5String_old(File file) throws IOException {  
-        FileInputStream in = new FileInputStream(file);  
-        FileChannel ch = in.getChannel();  
-        MappedByteBuffer byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0,  
-                file.length());  
-        messagedigest.update(byteBuffer);  
-        return bufferToHex(messagedigest.digest());  
+    public static String getFileMD5String_old(File file) throws IOException {
+        try (FileInputStream in = new FileInputStream(file)) {
+            FileChannel ch = in.getChannel();
+            MappedByteBuffer byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0,
+                    file.length());
+            messagedigest.update(byteBuffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bufferToHex(messagedigest.digest());
     }  
   
     public static String getMD5String(byte[] bytes) {  

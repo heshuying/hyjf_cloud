@@ -1,48 +1,56 @@
 package com.hyjf.cs.user.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
+import com.hyjf.common.util.RSAKeyUtil;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.Cipher;
+import java.io.*;
 import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
-import javax.crypto.Cipher;
-
-import org.apache.commons.codec.binary.Base64;
-
-import com.hyjf.common.util.RSAKeyUtil;
-import org.springframework.beans.factory.annotation.Value;
-
+@Component
 public class RSAJSPUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(RSAJSPUtil.class);
 	private static String RSAKeyStore = "RSAKey.txt";
 
-	@Value("${hyjf.req.pri.key}")
+
 	private static String HYJF_REQ_PRI_KEY_PATH;
-	@Value("${hyjf.req.pub.key}")
+
 	private static String HYJF_REQ_PUB_KEY_PATH;
 
 	// 私钥文件名
 	private static final String PRIK_NAME = "prik.crt";
 	// 公钥文件名
 	private static final String PUBK_NAME = "pubk.crt";
+
+
+	public static String getHyjfReqPriKeyPath() {
+		return RSAJSPUtil.HYJF_REQ_PRI_KEY_PATH;
+	}
+
+	@Value("${hyjf.req.pri.key}")
+	public void setHyjfReqPriKeyPath(String hyjfReqPriKeyPath) {
+		RSAJSPUtil.HYJF_REQ_PRI_KEY_PATH = hyjfReqPriKeyPath;
+	}
+
+	public static String getHyjfReqPubKeyPath() {
+		return RSAJSPUtil.HYJF_REQ_PUB_KEY_PATH;
+	}
+
+	@Value("${hyjf.req.pub.key}")
+	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
+		RSAJSPUtil.HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+	}
 
 	/**
 	 * 生成秘钥对
@@ -54,7 +62,8 @@ public class RSAJSPUtil {
 		try {
 			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
 					new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			final int KEY_SIZE = 1024;// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
+			// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
+			final int KEY_SIZE = 1024;
 			keyPairGen.initialize(KEY_SIZE, new SecureRandom());
 			KeyPair keyPair = keyPairGen.generateKeyPair();
 
@@ -68,19 +77,30 @@ public class RSAJSPUtil {
 
 	public static KeyPair getKeyPair() throws Exception {
 		FileInputStream fis = new FileInputStream(RSAKeyStore);
-		ObjectInputStream oos = new ObjectInputStream(fis);
-		KeyPair kp = (KeyPair) oos.readObject();
-		oos.close();
-		fis.close();
+		KeyPair kp = null;
+		try (ObjectInputStream oos = new ObjectInputStream(fis)) {
+			kp = (KeyPair) oos.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fis != null) {
+				fis.close();
+			}
+		}
 		return kp;
 	}
 
 	public static void saveKeyPair(KeyPair kp) throws Exception {
 		FileOutputStream fos = new FileOutputStream(RSAKeyStore);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(kp);
-		oos.close();
-		fos.close();
+		try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(kp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+		}
 	}
 
 	public static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) throws Exception {
@@ -206,7 +226,8 @@ public class RSAJSPUtil {
 			// DPlhyzu6yya5op4h21BpZhopBQ6o2jamdN6KxC2oxQxPAkGBtO2Kao35jikN
 			// WSYs6QJ+CghZNNXSW8XlrnFqHQNTlpwehsdxpqH8N4OcPC3jl/ZkZdYhvfoY
 			// CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");
-			prik = readToString(HYJF_REQ_PRI_KEY_PATH + PRIK_NAME);
+			String req = getHyjfReqPriKeyPath();
+			prik = readToString(req + PRIK_NAME);
 			byte[] keyBytes3 = Base64.decodeBase64(prik);
 			PrivateKey privateKey = RSAKeyUtil.getPrivateKey(keyBytes3);
 
@@ -233,7 +254,8 @@ public class RSAJSPUtil {
 	 * @return
 	 */
 	public static String getPunlicKeys() {
-		String filePath = HYJF_REQ_PUB_KEY_PATH + PUBK_NAME;
+		String filePath = getHyjfReqPubKeyPath() + PUBK_NAME;
+		logger.info("公钥存放路径"+filePath);
 		return readToString(filePath);
 	}
 
@@ -248,19 +270,16 @@ public class RSAJSPUtil {
 		File file = new File(filePath);
 		Long filelength = file.length();
 		byte[] filecontent = new byte[filelength.intValue()];
-		try {
-			FileInputStream in = new FileInputStream(file);
+
+
+		try (FileInputStream in = new FileInputStream(file)) {
 			in.read(filecontent);
-			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
 			return new String(filecontent, encoding);
 		} catch (UnsupportedEncodingException e) {
-			System.err.println("The OS does not support " + encoding);
 			e.printStackTrace();
 			return null;
 		}

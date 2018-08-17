@@ -3,27 +3,16 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -32,31 +21,38 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangc
@@ -75,10 +71,13 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private AmConfigClient amConfigClient;
 
     @Autowired
+    private AmDataCollectClient amDataCollectClient;
+
+    @Autowired
     private SmsProducer smsProducer;
 
     @Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
 
     /**
      * 修改用户登录密码
@@ -111,6 +110,8 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         if (accountFlag!=1) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
+        int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+        CheckUtil.check(count>0, MsgEnum.ERR_CARD_NOT_BIND);
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
         CheckUtil.check(passwordFlag != 1, MsgEnum.STATUS_TP000001);
@@ -140,17 +141,18 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+        //channel=0：设置交易密码/1：重置交易密码
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/app/user/password/passwordBgreturn";
+        String bgRetUrl = systemConfig.getWebHost()+"/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+       /* LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
@@ -191,17 +193,18 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+        //channel=0：设置交易密码/1：重置交易密码
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
         // 异步调用路
-        String bgRetUrl = systemConfig.webHost + "/web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.getWebHost()+"/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+        /*LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
@@ -217,12 +220,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure) {
-        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
-        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
-        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
-        newPW = RSAJSPUtil.rsaToPassword(newPW);
-        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
-        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         // 验证用的password
         oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + userVO.getSalt());
         CheckUtil.check(oldPW.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
@@ -231,10 +228,30 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public void weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
-        oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
-        CheckUtil.check( StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
+    public JSONObject weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
+        JSONObject ret = new JSONObject();
         checkPassword(newPassword);
+        // 检查参数正确性
+        if (Validator.isNull(userVO) || Validator.isNull(newPassword) || Validator.isNull(oldPassword)) {
+            ret.put("status", "997");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        try {
+            // 验证旧密码
+            oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
+            if(StringUtils.isBlank(oldPassword) || !oldPassword.equals(userVO.getPassword())){
+                ret.put("status", "99");
+                ret.put("statusDesc", "旧密码不正确");
+                return ret;
+            }
+        } catch (Exception e) {
+            logger.error("校验用户密码失败...");
+            ret.put("status", "99");
+            ret.put("statusDesc", e.getMessage());
+        }
+        return ret;
     }
 
     @Override
@@ -315,7 +332,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
      * @param sendSmsVO
      */
     @Override
-    public void sendCode(SendSmsVO sendSmsVO) {
+    public JSONObject sendCode(SendSmsVO sendSmsVO) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", "000");
+        jsonObject.put("statusDesc", "短信发送成功");
         try {
             //获取系统参数
             SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
@@ -323,20 +343,30 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             this.validateData(sendSmsVO,smsConfig);
             //发送短信并将发送数据存到数据库和Redis
             this.sendSms(sendSmsVO,smsConfig);
-        } catch (Exception e){
-            throw new CheckException(MsgEnum.ERR_SYSTEM_UNUSUAL);
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        }catch (Exception e){
+            logger.error("发送短信异常",e);
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc","失败");
         }
+        return jsonObject;
     }
 
     @Override
-    public void backCheck(SmsCodeRequest request, String newPassword) {
+    public void backCheck(SendSmsVO sendSmsVo) {
+        if(StringUtils.isBlank(sendSmsVo.getMobile())){
+            throw new CheckException("99","手机号不能为空");
+        }
+        if(StringUtils.isBlank(sendSmsVo.getSmscode())){
+            throw new CheckException("99","验证码不能为空");
+        }
         // 检查参数正确性
-        CheckUtil.check(StringUtils.isNotBlank(newPassword) ||StringUtils.isNotBlank(request.getVerificationCode()),MsgEnum.STATUS_CE000001);
-        checkPassword(newPassword);
-        CheckUtil.check(StringUtils.isNotBlank(request.getMobile()),MsgEnum.ERR_OBJECT_REQUIRED,"手机号");
-        CheckUtil.check(StringUtils.isNotBlank(request.getVerificationCode()),MsgEnum.ERR_OBJECT_REQUIRED,"验证码");
-        int cnt = amUserClient.checkMobileCode( request.getMobile(),request.getVerificationCode(),request.getVerificationType(),request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt > 0,MsgEnum.STATUS_ZC000015);
+        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+        if (cnt<=0){
+            throw new CheckException("99","验证码不正确");
+        }
     }
 
     @Override
@@ -431,10 +461,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-         retUrl = systemConfig.getFrontHost() + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
-         String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+         retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
+         String successUrl =super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) +"/password/openSuccess";
         // 异步调用路
-         bgRetUrl = systemConfig.webHost + "/api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
+         bgRetUrl = systemConfig.webHost + "/hyjf-api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
         // 调用设置密码接口
         System.out.println(retUrl+"..."+bgRetUrl);
         BankCallBean bean = new BankCallBean();
@@ -468,6 +498,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private void sendSms(SendSmsVO sendSmsVO,SmsConfigVO smsConfig) throws MQException {
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
+        if(systemConfig.isHyjfEnvTest()){
+            // 测试环境验证码111111
+            checkCode = "111111";
+        }
         Map<String, String> param = new HashMap<String, String>();
         param.put("val_code", checkCode);
 
@@ -476,11 +510,11 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 发送
         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             // 累加手机次数
-            String currentMaxPhoneCount = RedisUtils.get(sendSmsVO.getMobile() + ":MaxPhoneCount");
+            String currentMaxPhoneCount = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVO.getMobile());
             if (StringUtils.isBlank(currentMaxPhoneCount)) {
                 currentMaxPhoneCount = "0";
             }
-            RedisUtils.set(sendSmsVO.getMobile() + ":MaxPhoneCount", (Integer.valueOf(currentMaxPhoneCount) + 1) + "", RedisUtils.getRemainMiao());
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVO.getMobile(), (Integer.valueOf(currentMaxPhoneCount) + 1) + "", RedisUtils.getRemainMiao());
             // 保存短信验证码(由于验证没有用到，将其注释掉)
             amUserClient.saveSmsCode(sendSmsVO.getMobile(), checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
             // 发送checkCode最大时间间隔，默认60秒
@@ -492,22 +526,115 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
      * @param sendSmsVo
      */
     private void validateData(SendSmsVO sendSmsVo,SmsConfigVO smsConfig) {
-        CheckUtil.check(StringUtils.isNotBlank(sendSmsVo.getMobile()),MsgEnum.ERR_OBJECT_REQUIRED,"手机号");
-        CheckUtil.check(Validator.isMobile(sendSmsVo.getMobile()),MsgEnum.STATUS_CE000010);
-        //查询该手机号是在数据库中已存在
-        CheckUtil.check(existUser(sendSmsVo.getMobile()),MsgEnum.ERR_USER_NOT_EXISTS);
+        //手机号为空
+        if (Validator.isNull(sendSmsVo.getMobile())) {
+            throw new CheckException("2001","请填写手机号");
+        }
+        //手机格式
+        if (!Validator.isMobile(sendSmsVo.getMobile())) {
+            throw new CheckException("2002","手机号格式不对");
+        }
+        //该手机号用户是否存在
+        if(!existUser(sendSmsVo.getMobile())){
+            throw new CheckException("2003","您的手机号尚未注册");
+        }
         // 判断发送间隔时间
         String key = sendSmsVo.getMobile() + ":" + CustomConstants.PARAM_TPL_ZHAOHUIMIMA + ":IntervalTime";
         String intervalTime = RedisUtils.get(key);
-        CheckUtil.check(StringUtils.isBlank(intervalTime),MsgEnum.ERR_SMSCODE_SEND_TOO_FAST);
+        if (StringUtils.isNotBlank(intervalTime)) {
+            throw new CheckException("2005","操作过于频繁,请稍后重试");
+        }
         //判断该设备号的发送次数（暂时不做）
-
         // 判断最大发送数max_phone_count（当日该手机号发送的次数）
         String count = RedisUtils.get(sendSmsVo.getMobile() + ":MaxPhoneCount");
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
             RedisUtils.set(sendSmsVo.getMobile() + ":MaxPhoneCount", "0");
         }
-        CheckUtil.check(Integer.valueOf(count) <= smsConfig.getMaxPhoneCount(),MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
+        if (Integer.valueOf(count) > smsConfig.getMaxPhoneCount()) {
+            throw new CheckException("2006","该手机号短信请求次数超限，请明日再试");
+        }
+    }
+
+    @Override
+    public Map<String,Object> checkStatus(String token, String sign){
+        Map<String,Object> result = new HashMap<>();
+        BaseMapBean baseMapBean=new BaseMapBean();
+        if(token==null){
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否登录
+        Integer userId = SecretUtil.getUserId(sign);
+        if(userId==null||userId<=0){
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否开户
+        UserVO user= this.getUsersById(userId);
+        if (user.getBankOpenAccount().intValue() != 1) {
+            //未开户
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未开户！");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 1) {
+            //已设置交易密码
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "已设置交易密码！");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        result.put("user",user);
+        return result;
+    }
+
+    @Override
+    public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean isUpdate) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", "000");
+        jsonObject.put("statusDesc", "验证成功");
+        try {
+            if(StringUtils.isBlank(sendSmsVo.getMobile())){
+                throw new CheckException("2001","手机号不能为空");
+            }
+            if(StringUtils.isBlank(sendSmsVo.getSmscode())){
+                throw new CheckException("2002","验证码不能为空");
+            }
+            //验证
+           amUserClient.checkMobileCode( sendSmsVo.getMobile(),  sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA  ,  sendSmsVo.getPlatform(), CommonConstant.CKCODE_NEW,CommonConstant.CKCODE_YIYAN,isUpdate);
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        } catch (Exception e){
+            logger.error("发送短信异常",e);
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc","短信验证失败");
+        }
+        return jsonObject;
+    }
+
+    @Override
+    public String getFiledMess(String logOrdId) {
+        //根据ordid获取retcode
+        String retCode = amDataCollectClient.getRetCode(logOrdId);
+        if (retCode==null){
+            return "未知错误";
+        }
+        //根据retCode获取retMsg
+        String retMsg = this.getBankRetMsg(retCode);
+        return retMsg;
+
     }
 }

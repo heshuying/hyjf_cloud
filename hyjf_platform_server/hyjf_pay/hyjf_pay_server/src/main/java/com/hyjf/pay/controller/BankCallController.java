@@ -1,28 +1,5 @@
 package com.hyjf.pay.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,11 +12,28 @@ import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.BankCallDefine;
 import com.hyjf.pay.call.BankCallApi;
 import com.hyjf.pay.config.SystemConfig;
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.entity.BankExclusiveLog;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.service.BankPayLogService;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.helper.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/bankcall")
@@ -113,7 +107,7 @@ public class BankCallController extends BaseController {
 
             {
                 // 发送前插入日志记录
-                String sendLogFlag = payLogService.insertChinapnrSendLog(bean, bean);
+                String sendLogFlag = payLogService.insertChinapnrSendLog(bean);
                 if (StringUtils.isNotBlank(sendLogFlag)) {
                     bean.setAction(systemConfig.getBankPageUrl() + bean.getLogBankDetailUrl());
                     resultMap.put(BankCallDefine.BANK_FORM, bean);
@@ -200,7 +194,7 @@ public class BankCallController extends BaseController {
             // 查询相应的订单记录
             if (Validator.isNotNull(logOrderId)) {
                 // 获取主键
-                ChinapnrExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -256,7 +250,7 @@ public class BankCallController extends BaseController {
             }
         } else {
             if (StringUtils.isNotBlank(logOrderId)) {
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -314,7 +308,8 @@ public class BankCallController extends BaseController {
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");
         logger.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
-        logger.debug("消息内容=【" + bgData + "】");
+        logger.info("消息内容=【" + bean + "】");
+        logger.info("消息内容=【" + bgData + "】");
 
         Map<String, String> mapParam;
         try {
@@ -373,7 +368,7 @@ public class BankCallController extends BaseController {
             // 返回参数中含有logOrderId时, 更新状态记录
             if (Validator.isNotNull(logOrderId)) {
                 // 取得检证数据
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -499,7 +494,7 @@ public class BankCallController extends BaseController {
 
             {
                 // 发送前插入日志记录
-                this.payLogService.insertChinapnrSendLog(bean, bean);
+                this.payLogService.insertChinapnrSendLog(bean);
                 String result = api.callChinaPnrApi(bean);
 
                 Map<String, String> mapParam;
@@ -547,6 +542,7 @@ public class BankCallController extends BaseController {
                     backBean.setLogOrderId(bean.getLogOrderId());
                     backBean.setLogUserId(bean.getLogUserId());
                     backBean.setLogClient(bean.getLogClient());
+                    backBean.setLogOrderStatus(bean.getLogOrderStatus());
                     payLogService.updateChinapnrExclusiveLog(logOrderId, backBean, nowTime);
                     // 验签成功时
                     if (verifyResult.isLogVerifyFlag()) {
@@ -621,7 +617,7 @@ public class BankCallController extends BaseController {
             // 返回参数中含有logOrderId时, 更新状态记录
             if (Validator.isNotNull(logOrderId)) {
                 // 取得检证数据
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -661,7 +657,9 @@ public class BankCallController extends BaseController {
                                 bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
                                 bean.setSign(null);
                                 bean.setVersion(null);
+                                notifyUrl = StringEscapeUtils.unescapeHtml(notifyUrl);
                                 content = HttpDeal.post(notifyUrl, bean.getAllParams());
+                                logger.info("联机异步调用notifyUrl: "+notifyUrl+"   返回结果为: "+content);
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);
                                     if (callResult.isStatus()) {
@@ -720,7 +718,7 @@ public class BankCallController extends BaseController {
         // 验签成功时, 跳转到各功能模块的回调URL
         ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         if (StringUtils.isNotBlank(logOrderId)) {
-            ChinapnrExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+            BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
             if (record != null) {
                 bean.setLogOrderId(logOrderId);
                 bean.setLogClient(record.getClient());

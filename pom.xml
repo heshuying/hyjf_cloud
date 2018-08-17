@@ -37,14 +37,14 @@
         <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
         <druid.version>1.1.1</druid.version>
         <fastjson.version>1.2.47</fastjson.version>
-        <rocketmq.version>4.2.0</rocketmq.version>
+        <rocketmq.version>4.3.0</rocketmq.version>
         <common.pool2.version>2.4.2</common.pool2.version>
         <commons.lang.version>2.4</commons.lang.version>
         <commons.lang3.version>3.7</commons.lang3.version>
         <commons.io.version>2.6</commons.io.version>
         <jwt.version>3.3.0</jwt.version>
         <google.coll.version>1.0-rc2</google.coll.version>
-        <springfox.swagger.version>2.2.2</springfox.swagger.version>
+        <springfox.swagger.version>2.7.0</springfox.swagger.version>
     </properties>
 
     <dependencies>
@@ -166,7 +166,7 @@
         <repository>
             <id>nexus</id>
             <name>Local Repo</name>
-            <url>http://219.147.28.242:18080/nexus-2.9.0/content/groups/public/</url>
+            <url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -178,13 +178,13 @@
         <repository>
             <id>nexus-releases</id>
             <url>
-                http://219.147.28.242:18080/nexus-2.9.0/content/repositories/releases/
+                http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/
             </url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <url>
-                http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/
+                http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
             </url>
         </snapshotRepository>
     </distributionManagement>

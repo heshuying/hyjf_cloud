@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.AssociatedRecordsService;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements AssociatedRecordsService {
 
     @Autowired
-    private AmTradeClient amTradeClient;
+    private CsMessageClient csMessageClient;
 
     /**
      * 根据筛选条件查询数据count
@@ -31,7 +31,7 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
      */
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
-        return amTradeClient.getAssociatedRecordsCount(request);
+        return csMessageClient.getAssociatedRecordsCount(request);
     }
 
     /**
@@ -42,6 +42,6 @@ public class AssociatedRecordsServiceImpl extends BaseServiceImpl implements Ass
      */
     @Override
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
-        return amTradeClient.getAssociatedRecordList(request);
+        return csMessageClient.getAssociatedRecordList(request);
     }
 }

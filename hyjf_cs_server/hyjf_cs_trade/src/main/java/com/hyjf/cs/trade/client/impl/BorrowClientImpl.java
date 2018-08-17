@@ -27,11 +27,4 @@ public class BorrowClientImpl implements BorrowClient {
         return null;
     }
 
-
-    @Override
-    public int getTotalInvestCountByUserId(Integer userId) {
-        return 0;
-    }
-
-
 }

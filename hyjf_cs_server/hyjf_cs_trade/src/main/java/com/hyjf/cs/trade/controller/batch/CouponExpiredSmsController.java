@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.trade.service.CouponExpiredSmsService;
+import com.hyjf.cs.trade.service.batch.CouponExpiredSmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 优惠券过期短信提醒
  */
 @RestController
-@RequestMapping("batch/couponExpiredSms")
+@RequestMapping("/cs-trade/batch/couponExpiredSms")
 public class CouponExpiredSmsController {
 
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredSmsController.class);

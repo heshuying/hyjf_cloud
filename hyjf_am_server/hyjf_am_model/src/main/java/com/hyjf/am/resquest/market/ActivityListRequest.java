@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.market;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author yaoy
  * @version ActivityListRequest, v0.1 2018/6/26 17:03
@@ -11,19 +13,23 @@ package com.hyjf.am.resquest.market;
 public class ActivityListRequest {
 
     private int id;
-    //活动名称
+
+    @ApiModelProperty(value = "活动名称")
     private String title;
-    /**
-     * 前台时间接收
-     */
-    private int startTime;
 
-    private int endTime;
+    @ApiModelProperty(value = "活动开始时间")
+    private Integer startTime;
 
+    @ApiModelProperty(value = "活动结束时间")
+    private Integer endTime;
+
+    @ApiModelProperty(value = "活动创建开始时间")
     private String startCreate;
 
+    @ApiModelProperty(value = "活动创建结束时间")
     private String endCreate;
 
+    // 平台（Android或iOS）
     private String platform;
 
     private String imgPc;
@@ -50,11 +56,26 @@ public class ActivityListRequest {
 
     private String description;
 
-    private int createTime;
+    private String createTime;
 
     private int updateTime;
 
     private int limit;
+
+    // 版本号
+    private String version;
+
+    // 网络状态
+    private String netStatus;
+
+    // 唯一标识
+    private String sign;
+
+    //页码
+    private Integer page = 1;
+
+    //每页显示条数
+    private Integer pageSize = 10;
 
     /**
      * 翻页机能用的隐藏变量
@@ -91,19 +112,19 @@ public class ActivityListRequest {
         this.endCreate = endCreate;
     }
 
-    public int getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(Integer startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 
@@ -227,11 +248,11 @@ public class ActivityListRequest {
         this.description = description;
     }
 
-    public int getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -241,5 +262,45 @@ public class ActivityListRequest {
 
     public void setUpdateTime(int updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getNetStatus() {
+        return netStatus;
+    }
+
+    public void setNetStatus(String netStatus) {
+        this.netStatus = netStatus;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

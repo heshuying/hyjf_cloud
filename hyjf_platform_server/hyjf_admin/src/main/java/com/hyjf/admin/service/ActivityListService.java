@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 
@@ -21,28 +22,28 @@ public interface ActivityListService {
      * @param activityListRequest
      * @return
      */
-    List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest);
+    ActivityListResponse getRecordList(ActivityListRequest activityListRequest);
 
     /**
      * 添加活动
-     * @param map
+     * @param request
      * @return
      */
-    int insertRecord(Map<String, String> map);
+    ActivityListResponse insertRecord(ActivityListRequest request);
 
     /**
      * 根据活动id查询活动信息
-     * @param id
+     * @param activityListRequest
      * @return
      */
-    ActivityListVO selectActivityById(int id);
+    ActivityListResponse selectActivityById(ActivityListRequest activityListRequest);
 
     /**
      * 修改活动信息
-     * @param map
+     * @param activityListRequest
      * @return
      */
-    int updateActivity(Map<String, String> map);
+    ActivityListResponse updateActivity(ActivityListRequest activityListRequest);
 
     /**
      * 资料上传
@@ -54,8 +55,8 @@ public interface ActivityListService {
 
     /**
      * 删除活动配置信息
-     * @param id
+     * @param request
      * @return
      */
-    int deleteActivity(int id);
+    ActivityListResponse deleteActivity(ActivityListRequest request);
 }

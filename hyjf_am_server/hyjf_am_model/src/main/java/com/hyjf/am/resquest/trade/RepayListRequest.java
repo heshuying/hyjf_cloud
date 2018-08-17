@@ -1,7 +1,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * 还款列表Bean
@@ -10,6 +9,7 @@ import com.hyjf.am.vo.BaseVO;
  */
 public class RepayListRequest extends BasePage {
     String userId;
+    String roleId;
     String status;
     String repayStatus;
     String startDate;
@@ -98,5 +98,13 @@ public class RepayListRequest extends BasePage {
 
     public void setRepayStatus(String repayStatus) {
         this.repayStatus = repayStatus;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

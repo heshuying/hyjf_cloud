@@ -35,9 +35,9 @@ import java.util.Map;
  * @version AutoPlusController, v0.1 2018/6/11 14:31
  */
 
-@Api(value = "api端用户授权自动投资自动授权接口")
+@Api(tags = "api端-用户授权自动投资自动授权接口")
 @RestController
-@RequestMapping("/api/user/auto")
+@RequestMapping("/hyjf-api/user/auto")
 public class ApiAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiAutoPlusController.class);
@@ -52,6 +52,7 @@ public class ApiAutoPlusController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/sendcode", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "前导发送短信验证码",notes = "前导发送短信验证码")
     public ApiResult sendCode(@RequestHeader(value = "userId") Integer userId,@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
         ApiResult result = new ApiResult();
@@ -135,6 +136,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 10:11 2018/5/31
      * @Return:
      */
+    @ApiOperation(value = "自动投资授权同步回调",notes = "自动投资授权同步回调")
     @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
@@ -154,6 +156,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 10:11 2018/5/31
      * @Return:
      */
+    @ApiOperation(value = "自动债转授权同步回调",notes = "自动债转授权同步回调")
     @PostMapping(value = "/userCreditAuthInvesReturn", produces = "application/json; charset=utf-8")
     public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
@@ -172,6 +175,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = "异步回调",notes = "异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -187,6 +191,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = "异步回调",notes = "异步回调")
     @PostMapping(value = "/userCreditAuthInvesBgreturn", produces = "application/json; charset=utf-8")
     public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");

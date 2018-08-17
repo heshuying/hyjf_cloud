@@ -1,5 +1,6 @@
 package com.hyjf.batch.job.exception.credittenderexception;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -12,14 +13,13 @@ import com.hyjf.batch.job.BaseJob;
  * @author jun
  * @since 20180619	
  */
+@DisallowConcurrentExecution
 public class BankCreditTenderExceptionJob extends BaseJob implements Job{
 	
-	Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BankCreditTenderExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/creditTenderExceptionHandle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/creditTenderExceptionHandle", String.class).getBody();
         logger.info("BankCreditTenderExceptionJob execute end...");
     }
 

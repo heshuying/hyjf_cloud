@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller.admin;
 import java.util.List;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -58,37 +59,25 @@ public class AdminSystemController extends BaseConfigController {
 		adminSystem.setUsername(adminSystemR.getUsername());
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
 		adminSystem.setState("NOT CHECK");
-		adminSystem = adminSystemService.getUserInfo(adminSystem);
-		if (adminSystem != null) {
+		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
+		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
 			// 如果状态不可用
 			if ("1".equals(adminSystem.getState())) {
 				asr.setMessage("该用户已禁用");
+				asr.setRtn(Response.ERROR);
 				return asr;
 			}
-			BeanUtils.copyProperties(adminSystem, asv);
+			BeanUtils.copyProperties(adminSystemr, asv);
 			asr.setResult(asv);
 			return asr;
 		} else {
+			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
 		}
 
 	}
-
-	/**
-	 * 登出
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	@GetMapping("/loginOut/{userId}")
-	public AdminSystemResponse loginOut(@PathVariable String userId) {
-
-		AdminSystemResponse asr = new AdminSystemResponse();
-		return asr;
-	}
-
 	/**
 	 * 获取该用户权限
 	 * 
@@ -113,7 +102,6 @@ public class AdminSystemController extends BaseConfigController {
 	 * @param userId 用户id
 	 * @return response admin用户信息
 	 */
-	@ApiOperation(value = "根据userId查询admin用户信息",notes = "根据userId查询admin用户信息")
 	@GetMapping(value = "/get_admin_system_by_userid/{userId}")
 	public AdminSystemResponse getAdminSystemByUserId(@PathVariable Integer userId){
 		logger.info("userId========{}",userId);
@@ -136,6 +124,20 @@ public class AdminSystemController extends BaseConfigController {
 		CouponTenderResponse response = new CouponTenderResponse();
 		AdminSystem adminSystem = adminSystemService.getUserInfoByUserId(userId);
 		response.setAttrbute(adminSystem==null?"":adminSystem.getUsername());
+		return response;
+	}
+	/**
+	 * 项目申请人是否存在
+	 * @param request
+	 * @return
+	 */
+	@GetMapping(value = "/isexistsapplicant/{applicant}")
+	public AdminSystemResponse isExistsApplicant(@PathVariable String applicant) {
+		int ea=adminSystemService.isExistsApplicant(applicant);
+		AdminSystemResponse response = new AdminSystemResponse();
+		if (ea == 0) {
+			response.setRtn(Response.FAIL);
+		}
 		return response;
 	}
 }

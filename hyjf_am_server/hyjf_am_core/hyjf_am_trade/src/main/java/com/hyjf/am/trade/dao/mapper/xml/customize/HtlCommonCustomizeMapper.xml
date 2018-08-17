@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HtlCommonCustomizeMapper">
+	<resultMap id="getRecordsForPage" type="com.hyjf.am.trade.dao.model.customize.ProductSearchForPage">
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="time" property="time" jdbcType="VARCHAR" />
+	    <result column="amount" property="amount" jdbcType="DECIMAL" />
+	    <result column="restInterest" property="restInterest" jdbcType="DECIMAL" />
+	    <result column="alreadyInterest" property="alreadyInterest" jdbcType="DECIMAL" />
+	    <result column="amountStr" property="amountStr" jdbcType="VARCHAR" />
+	    <result column="interestStr" property="interestStr" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+    <!-- 获取汇天利本金 -->
+	<select id="selectUserPrincipal" resultMap="getRecordsForPage" parameterType="com.hyjf.am.trade.dao.model.customize.ProductSearchForPage">
+		SELECT
+		  TRUNCATE (SUM(p.rest_amount), 2) AS principal
+		  FROM ht_product_list p
+		<where>
+		  p.`status` = 0 AND p.invest_status=0
+	    <if test="userId != null" >
+	      AND p.user_id = #{userId}
+	    </if>
+		</where>
+	</select>
+
+
+</mapper>

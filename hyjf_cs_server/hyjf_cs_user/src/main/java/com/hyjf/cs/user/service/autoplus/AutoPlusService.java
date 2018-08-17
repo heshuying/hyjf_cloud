@@ -50,22 +50,70 @@ public interface AutoPlusService extends BaseUserService {
      */
     String userBgreturn(BankCallBean bean,String type);
 
+    /**
+     * api检查参数
+     * @param payRequestBean
+     * @return
+     */
     Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
 
-    Map<String,String> getErrorMV(AutoPlusRequestBean payRequestBean, String status);
-
+    /**
+     * api授权
+     * @param type
+     * @param smsSeq
+     * @param payRequestBean
+     * @return
+     */
     Map<String,Object> apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
 
+    /**
+     * api自动投资授权同步回调
+     * @param bean
+     * @param callback
+     * @param acqRes
+     * @param type
+     * @return
+     */
     AutoPlusRetBean userAuthCreditReturn(BankCallBean bean, String callback, String acqRes, String type);
 
+    /**
+     * api异步回调
+     * @param bean
+     * @param callback
+     * @param acqRes
+     * @return
+     */
     BankCallResult userAuthInvesBgreturn(BankCallBean bean, String callback, String acqRes);
 
+    /**
+     * 银行短信
+     * @param userId
+     * @param type
+     * @return
+     */
     BankCallBean getUserAuthQUery(Integer userId, String type);
 
+    /**
+     *
+     * @param userId
+     * @param channel
+     * @return
+     */
     BankCallBean getTermsAuthQuery(int userId, String channel);
 
+    /**
+     * 验证用户信息
+     * @param users
+     * @param lastSrvAuthCode
+     * @param smsCode
+     */
     void checkUserMessage(UserVO users, String lastSrvAuthCode, String smsCode);
 
+    /**
+     * 授权状态接口
+     * @param userId
+     * @return
+     */
     Map<String,Integer> userAutoStatus(Integer userId);
 
     /**
@@ -81,10 +129,33 @@ public interface AutoPlusService extends BaseUserService {
      */
     String checkSmsParam(UserVO user, String userAutoType);
 
+    /**
+     * 前导发送短信验证码
+     * @param autoPlusRequestBean
+     * @return
+     */
     String checkApiSmsParam(AutoPlusRequestBean autoPlusRequestBean);
 
+    /**
+     * app组装发往江西银行参数
+     * @param users
+     * @param i
+     * @param srvAuthCode
+     * @param code
+     * @param sign
+     * @param token
+     * @return
+     */
     BankCallBean appGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign, String token);
 
+    /**
+     * app用户授权自动债转
+     * @param srvAuthCode
+     * @param code
+     * @param checkResult
+     * @param userId
+     * @return
+     */
     BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId);
 
     /**
@@ -96,5 +167,15 @@ public interface AutoPlusService extends BaseUserService {
      */
     void insertUserAuthLog(UserVO user, BankCallBean bean, Integer client, String authType);
 
-    String getBankRetMsg(String retCode);
+
+    /**
+     * 微信 组装发往江西银行参数
+     * @param users
+     * @param i
+     * @param srvAuthCode
+     * @param code
+     * @param sign
+     * @return
+     */
+    BankCallBean weChatGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign);
 }

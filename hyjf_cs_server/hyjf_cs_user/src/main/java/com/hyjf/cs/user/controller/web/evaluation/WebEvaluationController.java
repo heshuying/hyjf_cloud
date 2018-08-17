@@ -13,7 +13,6 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +26,10 @@ import java.util.Map;
  * @author zhangqingqing
  * @version EvaluationController, v0.1 2018/6/15 19:09
  */
-@Api(value = "web端风险测评接口")
+@Api(value = "web端风险测评接口",tags = "web端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebEvaluationController extends BaseUserController {
 
     @Autowired
@@ -108,7 +107,6 @@ public class WebEvaluationController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户测评结果", notes = "用户测评结果")
-    @ApiImplicitParam(name = "param", value = "{userAnswer:string}", dataType = "Map")
     @PostMapping(value = "/evaluationResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String, Object>> evaluationResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
         WebResult<Map<String, Object>> result = new WebResult<>();
@@ -119,7 +117,7 @@ public class WebEvaluationController extends BaseUserController {
         String userAnswer = qo.getUserAnswer();
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_PC,null);
         //优惠券发放
-        if (returnMap.get("sendCount") != null) {
+        if (null!=returnMap&&returnMap.get("sendCount") != null) {
             int sendCount = (int) returnMap.get("sendCount");
             resultMap.put("sendCount", sendCount);
         }

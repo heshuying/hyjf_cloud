@@ -7,11 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.AssetListClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AssetListService;
+import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
@@ -23,47 +23,85 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 public class AssetListServiceImpl implements AssetListService {
 
 	@Autowired
-	public AssetListClient assetListClient;
+	public AmTradeClient amTradeClient;
 
+	/**
+	 * 获取资金来源
+	 * @param 
+	 * @return List<HjhInstConfigVO>
+	 */
 	@Override
 	public List<HjhInstConfigVO> getHjhInstConfigList() {
-		List<HjhInstConfigVO> hjhInstConfigList = assetListClient.findHjhInstConfigList();
+		List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
 		return hjhInstConfigList;
 	}
 
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
 	@Override
 	public List<HjhAssetTypeVO> hjhAssetTypeList(String instCodeSrch) {
-		List<HjhAssetTypeVO> hjhAssetTypeList = assetListClient.findHjhAssetTypeList(instCodeSrch);
+		List<HjhAssetTypeVO> hjhAssetTypeList = amTradeClient.findHjhAssetTypeList(instCodeSrch);
 		return hjhAssetTypeList;
 	}
-
+	
+	/**
+	 * param原相关查询
+	 *
+	 * @return List<HjhAssetTypeVO>
+	 */
 	@Override
 	public Map<String, String> getParamNameMap(String param) {
-		Map<String, String> paramMap = assetListClient.findParamNameMap(param);
+		Map<String, String> paramMap = amTradeClient.findParamNameMap(param);
 		return paramMap;
 	}
 
+	/**
+	 * 资产列表查询
+	 *
+	 * @return List<HjhAssetTypeVO>
+	 */
 	@Override
-	public List<AssetListCustomizeVO> findAssetList(AssetListRequest request) {
-		List<AssetListCustomizeVO> assetList = assetListClient.findAssetList(request);
-		return assetList;
+	public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
+		AssetListCustomizeResponse response = amTradeClient.findAssetList(request);
+		return response;
 	}
-
+	
+	/**
+	 * 查询详情
+	 *
+	 * @return 查询详情
+	 */
 	@Override
 	public AssetDetailCustomizeVO getDetailById(AssetListRequest assetListRequest) {
-		AssetDetailCustomizeVO assetDetailCustomizeVO = assetListClient.findDetailById(assetListRequest);
+		AssetDetailCustomizeVO assetDetailCustomizeVO = amTradeClient.findDetailById(assetListRequest);
 		return assetDetailCustomizeVO;
 	}
 
+	/**
+	 * 查询记录总数
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
 	@Override
 	public Integer getRecordCount(AssetListRequest request) {
-		Integer count = assetListClient.getRecordCount(request);
+		Integer count = amTradeClient.getRecordCount(request);
 		return count;
 	}
 
+	/**
+	 * 列总计查询
+	 *
+	 * @param request
+	 * @return 
+	 */
 	@Override
 	public BigDecimal sumAccount(AssetListRequest request) {
-		BigDecimal sum = assetListClient.sumAccount(request);
+		BigDecimal sum = amTradeClient.sumAccount(request);
 		return sum;
 	}
 }

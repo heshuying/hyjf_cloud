@@ -11,4 +11,13 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
  * @version CouponRecoverCustomizeResponse, v0.1 2018/6/21 16:48
  */
 public class CouponRecoverCustomizeResponse extends Response<CouponRecoverCustomizeVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

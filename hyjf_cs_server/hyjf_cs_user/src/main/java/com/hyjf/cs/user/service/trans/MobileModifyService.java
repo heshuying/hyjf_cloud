@@ -3,20 +3,57 @@
  */
 package com.hyjf.cs.user.service.trans;
 
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.text.ParseException;
 
 /**
  * @author zhangqingqing
  * @version MobileModifyService, v0.1 2018/6/14 16:47
  */
 public interface MobileModifyService extends BaseUserService {
+    /**
+     * 更换手机号条件校验
+     * @param newMobile
+     * @param smsCode
+     * @return
+     */
     boolean checkForMobileModify(String newMobile, String smsCode);
 
+    /**
+     * 用户手机号修改信息查询
+     * @param userId
+     * @return
+     */
     MobileModifyResultBean queryForMobileModify(Integer userId);
 
+    /**
+     * 更换手机号码验证（已开户）
+     * @param newMobile
+     * @param smsCode
+     * @param srvAuthCode
+     * @return
+     */
 	boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode);
 
+    /**
+     * 调用电子账号手机号修改增强
+     * @param userId
+     * @param newMobile
+     * @param smsCode
+     * @param srvAuthCode
+     * @return
+     */
 	BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode);
+
+    /**
+     * 发送同步CA认证信息修改MQ
+     * @param userId
+     * @throws ParseException
+     * @throws MQException
+     */
+    void updateUserCAMQ(int userId) throws ParseException, MQException;
 }

@@ -1,14 +1,13 @@
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
-import java.util.Date;
 
 /**
  * 银行卡管理請求參數
  * @author nxl
  */
-public class BankCardManagerRequest {
+public class BankCardManagerRequest extends BasePage{
 	private String userName;
 	private String bank;
 	private String account;
@@ -19,17 +18,8 @@ public class BankCardManagerRequest {
 	private String mobile;
 	private String realName;
 
-	public int limit;
-	private int paginatorPage = 1;
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-	public void setPaginatorPage(int paginatorPage) {
-		this.paginatorPage = paginatorPage;
-	}
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
 
 	public String getUserName() {
 		return userName;
@@ -104,11 +94,11 @@ public class BankCardManagerRequest {
 		this.realName = realName;
 	}
 
-	public int getLimit() {
-		return limit;
+	public boolean isLimitFlg() {
+		return limitFlg;
 	}
 
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
 	}
 }

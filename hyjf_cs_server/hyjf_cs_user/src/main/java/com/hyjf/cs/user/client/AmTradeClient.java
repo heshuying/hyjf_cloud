@@ -3,14 +3,26 @@
  */
 package com.hyjf.cs.user.client;
 
-import java.util.List;
-import java.util.Map;
-
-import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
+import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.vo.app.*;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -32,4 +44,244 @@ public interface AmTradeClient {
 
     List<CouponUserListCustomizeVO> selectCouponUserList(Map<String,Object> mapParameter);
 
+    /**
+     * 获取账户信息通过userId范围
+     * @param ids
+     * @return
+     */
+    List<AccountVO> getAccountByUserIds(List<Integer> ids);
+
+    /**
+     * 获取投资人本金信息
+     * @param productSearchForPage
+     * @return
+     */
+    ProductSearchForPageVO selectUserPrincipal(ProductSearchForPageVO productSearchForPage);
+
+    /**
+     * 已回收本金和 已回收利息
+     * @param userId
+     * @return
+     */
+    WebPandectRecoverMoneyCustomizeVO queryRecoverMoney(Integer userId);
+
+    /**
+     * 融通宝累计收益计算
+     * @param userId
+     * @return
+     */
+    WebPandectRecoverMoneyCustomizeVO queryRecoverMoneyForRtb(Integer userId);
+
+    /**
+     * 待收本金和 待收利息
+     * @param userId
+     * @return
+     */
+    WebPandectWaitMoneyCustomizeVO queryWaitMoney(Integer userId);
+
+    /**
+     * 插入预约授权记录表
+     * @param userId
+     * @return
+     */
+    WebPandectWaitMoneyCustomizeVO queryWaitMoneyForRtb(Integer userId);
+
+    /**
+     * 获取汇天利 购买明细表可赎回金额总额
+     * @param userId
+     * @return
+     */
+    BigDecimal queryHtlSumRestAmount(Integer userId);
+
+    /**
+     * 债转统计
+     * @param userId
+     * @return
+     */
+    WebPandectCreditTenderCustomizeVO queryCreditInfo(Integer userId);
+
+    /**
+     * 债转信息
+     * 去掉已债转（r.recover_status=1）; 去掉待收已债转（r.recover_status=0）
+     * @param userId
+     * @param recoverStatus
+     * @return
+     */
+    WebPandectBorrowRecoverCustomizeVO queryRecoverInfo(Integer userId, int recoverStatus);
+
+    /**
+     * 获取汇天利 总收益
+     * @param userId
+     * @return
+     */
+    BigDecimal queryHtlSumInterest(Integer userId);
+
+    /**
+     * 获取某用户优惠券待收收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponInterestTotal(Integer userId);
+
+    /**
+     *获取某用户优惠券累计收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponReceivedInterestTotal(Integer userId);
+
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @param userId
+     * @return
+     */
+    int selectUserTenderCount(Integer userId);
+
+    /**
+     * 查询有效未读的优惠券列表
+     * @param userId
+     * @return
+     */
+    List<CouponUserCustomizeVO> selectLatestCouponValidUNReadList(Integer userId);
+
+    /**
+     * 获得购买列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countHtlIntoRecord(HtlTradeRequest htlTradeRequest);
+
+
+    /**
+     * 获取购买产品列表
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest);
+
+    /**
+     * 获得汇天利转出列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countProductRedeemRecord(HtlTradeRequest htlTradeRequest);
+    /**
+     * 获取汇天利转出记录列表(自定义)
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest);
+
+    /**
+     *获取用户当前持有债权列表总数
+     * @param
+     * @return
+     */
+    int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户当前持有债权列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldObligatoryRightListCustomizeVO> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户已回款债权列表总数
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotal(AssetManageBeanRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    List<AppAlreadyRepayListCustomizeVO> selectAlreadyRepayList(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户转让列表数量
+     * @param request
+     * @return
+     */
+    int countCreditRecordTotal(AssetManageBeanRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    List<AppTenderCreditRecordListCustomizeVO> searchCreditRecordList(AssetManageBeanRequest request);
+
+    /**
+     * 获取当前持有计划列表总数
+     * @param request
+     * @return
+     */
+    int countCurrentHoldPlanTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取当前持有计划列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldPlanListCustomizeVO> selectCurrentHoldPlanList(AssetManageBeanRequest request);
+
+    /**
+     * 获取已回款计划列表总数
+     * @param request
+     * @return
+     */
+    Integer countRepayMentPlanTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取已回款计划列表
+     * @param request
+     * @return
+     */
+    List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request);
+
+
+    CouponConfigVO getCouponConfig(String nid);
+
+    BorrowVO selectBorrowByBorrowNid(String borrowNid);
+
+    BorrowStyleVO selectBorrowStyleByStyle(String borrowStyle);
+
+    int countRepayRecoverListRecordTotal(AppRepayPlanListBeanRequest params);
+
+    List<AppRepayPlanListCustomizeVO> selectRepayRecoverList(AppRepayPlanListBeanRequest params);
+
+    int countRepayPlanListRecordTotal(AppRepayPlanListBeanRequest params);
+
+    List<AppRepayPlanListCustomizeVO> selectRepayPlanList(AppRepayPlanListBeanRequest params);
+
+    int countCouponRepayRecoverListRecordTotal(AppRepayPlanListBeanRequest params);
+
+    String selectReceivedInterest(AppRepayPlanListBeanRequest params);
+
+    List<AppRepayPlanListCustomizeVO> selectCouponRepayRecoverList(AppRepayPlanListBeanRequest params);
+
+    AppProjectContractDetailCustomizeVO selectProjectContractDetail(AppProjectContractDetailBeanRequest params);
+
+    AppProjectDetailCustomizeVO selectProjectDetail(String borrowNid);
+
+    List<AppProjectContractRecoverPlanCustomizeVO> selectProjectContractRecoverPlan(AppProjectContractDetailBeanRequest params);
+
+    BorrowCreditVO selectCreditTenderByCreditNid(String creditNid);
+
+    List<AppTenderCreditRepayPlanListCustomizeVO> selectTenderCreditRepayPlanList(AppRepayPlanListBeanRequest params);
+
+    List<AppTenderCreditRepayPlanListCustomizeVO> selectTenderCreditRepayRecoverPlanList(AppRepayPlanListBeanRequest params);
+
+    List<AppTenderToCreditListCustomizeVO> selectTenderToCreditList(Map<String,Object> params);
+
+    /**
+     * APP获取我的优惠券分页数据
+     * @param requestBean 参数
+     * @return List<CouponUserForAppCustomizeVO>
+     */
+    List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
 }

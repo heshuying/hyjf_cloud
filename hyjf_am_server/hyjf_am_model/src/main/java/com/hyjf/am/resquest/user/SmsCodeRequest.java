@@ -19,6 +19,18 @@ public class SmsCodeRequest extends BaseVO {
 	private Integer status;
 	// 验证码更新状态
 	private Integer updateStatus;
+	/**
+	 * 是否更新数据库
+	 */
+	private boolean isUpdate;
+
+	public boolean isUpdate() {
+		return isUpdate;
+	}
+
+	public void setUpdate(boolean update) {
+		isUpdate = update;
+	}
 
 	public String getMobile() {
 		return mobile;

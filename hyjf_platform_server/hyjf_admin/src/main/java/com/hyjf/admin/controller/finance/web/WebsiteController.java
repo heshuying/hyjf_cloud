@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version WebsiteController, v0.1 2018/7/6 9:43
  */
-@Api(value = "网站收支")
+@Api(value = "资金中心-平台账户-网站收支", tags ="资金中心-平台账户-网站收支")
 @RestController
 @RequestMapping("/hyjf-admin/finance/web")
 public class WebsiteController extends BaseController {
@@ -89,7 +90,7 @@ public class WebsiteController extends BaseController {
      * @param form
      * @return
      */
-    @ApiOperation(value = "网站收支  查询条件",notes = "网站收支  查询条件")
+    @ApiOperation(value = "网站收支-查询条件",notes = "网站收支-查询条件")
     @PostMapping(value = "/searchAction")
     //View
     public AdminResult initWithQ(@RequestBody WebBean form) {
@@ -123,7 +124,8 @@ public class WebsiteController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/exportWeblistExcel")
+    @ApiOperation(value = "导出网站收支列表")
+    @PostMapping(value = "/exportWeblistExcel")
     //EXPORT
     public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
         AccountWebListVO accountWebList = new AccountWebListVO();
@@ -142,7 +144,7 @@ public class WebsiteController extends BaseController {
         }
         AccountWebListResponse accountWebListResponse = websiteService.queryAccountWebList(accountWebList);
         List<AccountWebListVO> recordList = accountWebListResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "订单号", "分公司", "分部", "团队", "用户名", "姓名", "收支类型", "交易金额", "交易类型", "说明", "发生时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -195,7 +197,7 @@ public class WebsiteController extends BaseController {
                     }
                     // 收支类型
                     else if (celLength == 7) {
-                        cell.setCellValue(bean.getTrade().equals("1")?"收入":"支出");
+                        cell.setCellValue("1".equals(bean.getTrade()) ?"收入":"支出");
                     }
                     // 交易金额
                     else if (celLength == 8) {

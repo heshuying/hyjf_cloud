@@ -34,5 +34,23 @@ public interface MailTemplateService {
      * @param request
      * @return
      */
-    List<SmsMailTemplateVO> insertMailTemplate(MailTemplateRequest request);
+    void insertMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 修改邮件模板
+     * @param request
+     */
+    void updateMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 关闭模板
+     * @param request
+     */
+    void closeAction(MailTemplateRequest request);
+
+    /**
+     * 开启模板
+     * @param request
+     */
+    void openAction(MailTemplateRequest request);
 }

@@ -423,7 +423,9 @@ public class GetDate extends PropertyEditorSupport {
 		if (null == date) {
 			return null;
 		}
-		return date_sdf.format(date);
+		synchronized (date_sdf){
+			return date_sdf.format(date);
+		}
 	}
 
 	/**
@@ -979,9 +981,16 @@ public class GetDate extends PropertyEditorSupport {
 		return (int) (getMillis() / 1000);
 	}
 
-	public static Date getNowTime(){
+	/**
+	 * 原来的getNowTime,感觉太繁琐了,似乎没什么用
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Deprecated
+	public static Date getNowTime2(){
 		Date date=new Date();
-		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date1=temp.format(date);
 		Date date2= null;
 		try {
@@ -991,7 +1000,15 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		return date2;
 	}
-
+	/**
+	 * 获取系统当前时间
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	public static Date getNowTime(){
+		return new Date();
+	}
 	/**
 	 * 转换10时间
 	 *
@@ -1034,6 +1051,22 @@ public class GetDate extends PropertyEditorSupport {
 			monthday = String.valueOf(yearnow) + String.valueOf(monthnow);
 		}
 		return monthday;
+	}
+	/**
+	 * 获得当前的时间月份 例：201512
+	 *
+	 * @return
+	 */
+	public static String getMonth() {
+		String month = "";
+		Calendar cal = Calendar.getInstance();
+		int monthnow = cal.get(Calendar.MONTH) + 1;
+		if (monthnow < 10) {
+			month =  "0" + String.valueOf(monthnow);
+		} else {
+			month =  String.valueOf(monthnow);
+		}
+		return month;
 	}
 
 	/**
@@ -1393,6 +1426,12 @@ public class GetDate extends PropertyEditorSupport {
 	public static String getDateTimeMyTimeInMillis(Integer milliseconds) {
 		// 时间转换
 		Date date = new Date((long) milliseconds * 1000);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(date);
+	}
+
+	public static String getDateTimeMyTimeInMillis(Date date) {
+		// 时间转换
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
@@ -1937,5 +1976,33 @@ public class GetDate extends PropertyEditorSupport {
 		} else {
 			return result;
 		}
+	}
+
+	/**
+	 * 返回yyyymmdd的int值
+	 *
+	 * @param seconds 秒数
+	 *
+	 * @return 指定毫秒数表示的日期
+	 */
+	public static int getIntYYMMDD(int seconds) {
+		Date repayEndDate = new Date((long)seconds * 1000);
+		return getIntYYMMDD(repayEndDate);
+	}
+
+	/**
+	 * 返回yyyymmdd的int值
+	 *
+	 * @param seconds 秒数
+	 *
+	 * @return 指定毫秒数表示的日期
+	 */
+	public static int getIntYYMMDD(Date repayEndDate) {
+		String enddateStr = new SimpleDateFormat("yyyyMMdd").format(repayEndDate);
+		return Integer.parseInt(enddateStr);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getDateTimeMyTimeInMillis(1483163187));
 	}
 }

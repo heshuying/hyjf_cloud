@@ -112,7 +112,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
 
     /**
-     * 获取推荐人姓名查找用户
+     * 获取userId查找推荐人
      * @param userId
      * @return
      */
@@ -133,6 +133,30 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         if (bankOpenAccountList != null && bankOpenAccountList.size() == 1) {
             return bankOpenAccountList.get(0);
         }
+        return null;
+    }
+
+    /**
+     * 根据电子账号获取用户
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @Override
+    public User getUserByAccountId(String accountId){
+        BankOpenAccountExample example = new BankOpenAccountExample();
+        example.createCriteria().andAccountEqualTo(accountId);
+        List<BankOpenAccount> accountList = bankOpenAccountMapper.selectByExample(example);
+
+        if(accountList != null && !accountList.isEmpty()){
+            BankOpenAccount account = accountList.get(0);
+            UserExample userExample = new UserExample();
+            userExample.createCriteria().andUserIdEqualTo(account.getUserId());
+            List<User> userList = userMapper.selectByExample(userExample);
+            if(userList != null && !userList.isEmpty()){
+                return userList.get(0);
+            }
+        }
+
         return null;
     }
 

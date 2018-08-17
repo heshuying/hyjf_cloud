@@ -8,13 +8,19 @@ public class Event implements Serializable {
 
     private String eventTime;
 
+    private String title;
+
     private String content;
 
     private Integer eventYear;
 
+    private Integer status;
+
     private String addAdmin;
 
     private Integer actTime;
+
+    private String thumb;
 
     private Integer createUserId;
 
@@ -42,6 +48,14 @@ public class Event implements Serializable {
         this.eventTime = eventTime == null ? null : eventTime.trim();
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
     public String getContent() {
         return content;
     }
@@ -58,6 +72,14 @@ public class Event implements Serializable {
         this.eventYear = eventYear;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public String getAddAdmin() {
         return addAdmin;
     }
@@ -72,6 +94,14 @@ public class Event implements Serializable {
 
     public void setActTime(Integer actTime) {
         this.actTime = actTime;
+    }
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb == null ? null : thumb.trim();
     }
 
     public Integer getCreateUserId() {

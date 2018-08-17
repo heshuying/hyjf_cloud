@@ -18,12 +18,7 @@ basic:
 ignore:
   urls:
     app:
-      key: /server/getBestServerAction,
-      user: /smsCode/send,/user/register,/user/login
-    web: /smsCode/send,/user/register,/user/login,/user/password/checkpassword
-    wechat: /smsCode/send,/user/register,/user/login
-    api: /smsCode/send,/user/register,/user/login
-
+      key: /hyjf-app/server/getBestServerAction,/hyjf-app/server/getKeyAction,/hyjf-app/appUser/uploadAvatarAction
 
 hyjf:
   domain:
@@ -33,3 +28,9 @@ am:
   config:
     service:
       name: http://AM-CONFIG/am-config
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2Mb
+      maxRequestSize: 2Mb

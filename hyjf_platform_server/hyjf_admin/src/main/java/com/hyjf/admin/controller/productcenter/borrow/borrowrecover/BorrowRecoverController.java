@@ -8,6 +8,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRecoverService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -23,11 +24,15 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +41,9 @@ import java.util.Map;
  * @author pangchengchao
  * @version BorrowRecoverController, v0.1 2018/7/2 10:13
  */
-@Api(value = "产品中心-汇直投-放款明细")
+@Api(value = "产品中心-汇直投-放款明细",tags = "产品中心-汇直投-放款明细")
 @RestController
-@RequestMapping("/borrow/borrowrecover")
+@RequestMapping("/hyjf-admin/borrow/borrowrecover")
 public class BorrowRecoverController extends BaseController {
     @Autowired
     private BorrowRecoverService borrowRecoverService;
@@ -59,8 +64,8 @@ public class BorrowRecoverController extends BaseController {
         BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRecoverBean bean = borrowRecoverService.searchBorrowRecover(copyForm);
-        Map<String, String> map=CacheUtil.getParamNameMap("LOAN_STATUS");
-        bean.setLoanStarusList(map);
+        bean.setLoanStarusList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("LOAN_STATUS")));
+
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRecoverService.selectHjhInstConfigByInstCode("-1");
         bean.setHjhInstConfigList(hjhInstConfigList);
@@ -89,7 +94,7 @@ public class BorrowRecoverController extends BaseController {
         // 表格sheet名称
         String sheetName = "放款明细";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
         // 列头

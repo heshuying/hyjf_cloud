@@ -3,9 +3,6 @@
  */
 package com.hyjf.zuul.security;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
@@ -19,6 +16,9 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -84,7 +84,7 @@ public class ShiroConfiguration {
 		ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
 		factoryBean.setSecurityManager(getSecurityManager());
 		filterChainDefinitionMap.put("/**", "authcBasic");
-		factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+		//factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return factoryBean;
 	}
 }

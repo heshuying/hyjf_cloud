@@ -4,9 +4,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.Map;
 
@@ -15,46 +12,49 @@ import java.util.Map;
  * @version UpdateCreditForAutoTenderRequest, v0.1 2018/7/5 18:12
  */
 public class UpdateCreditForAutoTenderRequest {
-    private HjhDebtCreditVO hjhDebtCreditVO;
-    private HjhAccedeVO hjhAccedeVO;
-    private HjhPlanVO hjhPlanVO;
+    private String creditNid;
+    private String accedeOrderId;
+    private String planNid;
     private BankCallBeanVO bankCallBeanVO;
     private String tenderUsrcustid;
     private String sellerUsrcustid;
     private Map<String, Object> resultMap;
 
-    public UpdateCreditForAutoTenderRequest(HjhDebtCreditVO hjhDebtCreditVO, HjhAccedeVO hjhAccedeVO, HjhPlanVO hjhPlanVO, BankCallBeanVO bankCallBeanVO, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
-        this.hjhDebtCreditVO = hjhDebtCreditVO;
-        this.hjhAccedeVO = hjhAccedeVO;
-        this.hjhPlanVO = hjhPlanVO;
+    public UpdateCreditForAutoTenderRequest() {
+    }
+
+    public UpdateCreditForAutoTenderRequest(String creditNid, String accedeOrderId, String planNid, BankCallBeanVO bankCallBeanVO, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
+        this.creditNid = creditNid;
+        this.accedeOrderId = accedeOrderId;
+        this.planNid = planNid;
         this.bankCallBeanVO = bankCallBeanVO;
         this.tenderUsrcustid = tenderUsrcustid;
         this.sellerUsrcustid = sellerUsrcustid;
         this.resultMap = resultMap;
     }
 
-    public HjhDebtCreditVO getHjhDebtCreditVO() {
-        return hjhDebtCreditVO;
+    public String getCreditNid() {
+        return creditNid;
     }
 
-    public void setHjhDebtCreditVO(HjhDebtCreditVO hjhDebtCreditVO) {
-        this.hjhDebtCreditVO = hjhDebtCreditVO;
+    public void setCreditNid(String creditNid) {
+        this.creditNid = creditNid;
     }
 
-    public HjhAccedeVO getHjhAccedeVO() {
-        return hjhAccedeVO;
+    public String getAccedeOrderId() {
+        return accedeOrderId;
     }
 
-    public void setHjhAccedeVO(HjhAccedeVO hjhAccedeVO) {
-        this.hjhAccedeVO = hjhAccedeVO;
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
     }
 
-    public HjhPlanVO getHjhPlanVO() {
-        return hjhPlanVO;
+    public String getPlanNid() {
+        return planNid;
     }
 
-    public void setHjhPlanVO(HjhPlanVO hjhPlanVO) {
-        this.hjhPlanVO = hjhPlanVO;
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
     }
 
     public BankCallBeanVO getBankCallBeanVO() {

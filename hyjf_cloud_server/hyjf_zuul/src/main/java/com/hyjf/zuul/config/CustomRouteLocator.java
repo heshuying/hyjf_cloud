@@ -1,10 +1,13 @@
 package com.hyjf.zuul.config;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.zuul.client.AmConfigClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +76,10 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 		Map<String, ZuulRoute> routes = new LinkedHashMap<String, ZuulRoute>();
 		List<GatewayApiConfigVO> results = amConfigClient.findGatewayConfigs();
 		if (!CollectionUtils.isEmpty(results)) {
+			Map<String, GatewayApiConfigVO> map = new HashMap<>(results.size());
 			for (GatewayApiConfigVO result : results) {
 				ZuulRoute zuulRoute = new ZuulRoute();
-				//去掉请求前缀
+				// 去掉请求前缀
 				zuulRoute.setStripPrefix(false);
 				try {
 					BeanUtils.copyProperties(result, zuulRoute);
@@ -83,7 +87,9 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 					logger.error("load zuul routes from DB error", e);
 				}
 				routes.put(zuulRoute.getPath(), zuulRoute);
+				map.put(result.getPath(), result);
 			}
+			RedisUtils.setObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, map);
 		}
 
 		return routes;

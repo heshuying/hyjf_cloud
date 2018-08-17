@@ -10,7 +10,9 @@ import java.io.Serializable;
  */
 public class GatewayApiConfigVO extends BaseVO implements Serializable {
 
-	private String id;
+    private static final long serialVersionUID = 7326476174923393500L;
+
+    private String id;
 
 	private String path;
 
@@ -25,6 +27,8 @@ public class GatewayApiConfigVO extends BaseVO implements Serializable {
 	private Integer stripPrefix;
 
 	private String apiName;
+
+    private Integer secureVisitFlag;
 
     public String getId() {
         return id;
@@ -88,5 +92,13 @@ public class GatewayApiConfigVO extends BaseVO implements Serializable {
 
     public void setApiName(String apiName) {
         this.apiName = apiName == null ? null : apiName.trim();
+    }
+
+    public Integer getSecureVisitFlag() {
+        return secureVisitFlag;
+    }
+
+    public void setSecureVisitFlag(Integer secureVisitFlag) {
+        this.secureVisitFlag = secureVisitFlag;
     }
 }

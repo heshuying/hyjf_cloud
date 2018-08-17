@@ -1,11 +1,10 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.Page;
 import com.hyjf.admin.beans.BorrowRecoverBean;
-import com.hyjf.admin.client.BorrowRecoverClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRecoverService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -22,26 +21,25 @@ import java.util.List;
 @Service
 public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     @Autowired
-    private BorrowRecoverClient borrowRecoverClient;
-    @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
+    private AmTradeClient amTradeClient;
+
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 
     @Override
     public BorrowRecoverBean searchBorrowRecover(BorrowRecoverRequest request) {
         BorrowRecoverBean bean=new BorrowRecoverBean();
-        Integer count = this.borrowRecoverClient.countBorrowRecover(request);
+        Integer count = this.amTradeClient.countBorrowRecover(request);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (count != null && count > 0) {
-            List<BorrowRecoverCustomizeVO> recordList = this.borrowRecoverClient.selectBorrowRecoverList(request);
-            BorrowRecoverCustomizeVO sumAccount = this.borrowRecoverClient.sumBorrowRecoverList(request);
+            List<BorrowRecoverCustomizeVO> recordList = this.amTradeClient.selectBorrowRecoverList(request);
+            BorrowRecoverCustomizeVO sumAccount = this.amTradeClient.sumBorrowRecoverList(request);
             bean.setSumAccount(sumAccount);
             bean.setRecordList(recordList);
         }else{
@@ -54,7 +52,7 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
 
     @Override
     public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
-        List<BorrowRecoverCustomizeVO> recordList = this.borrowRecoverClient.selectBorrowRecoverList(request);
+        List<BorrowRecoverCustomizeVO> recordList = this.amTradeClient.selectBorrowRecoverList(request);
         return recordList;
     }
 

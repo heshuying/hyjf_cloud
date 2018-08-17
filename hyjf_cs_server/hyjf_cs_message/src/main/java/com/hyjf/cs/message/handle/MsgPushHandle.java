@@ -5,18 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.cs.message.bean.MessagePush;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.jpush.*;
-import com.hyjf.cs.message.mongo.MessagePushMsgDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hyjf.cs.message.bean.MessagePushMsgHistory;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.MessagePushMsgHistoryDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -89,6 +90,12 @@ public class MsgPushHandle {
 		if (userVO == null) {
 			return -1;
 		}
+
+		UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userVO.getUserId());
+		// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
+		replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
+		replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
+
 		return sendMessages(tplCode, replaceStrs, userVO.getMobile());
 	}
 
@@ -347,11 +354,11 @@ public class MsgPushHandle {
 				userId = commonBean.getUserId();
 				pcode = commonBean.getPackageCode();
 				client = commonBean.getClient();
-				if (StringUtils.isEmpty(commonBean.getMobileCode())) {
+				if (StringUtils.isEmpty(commonBean.getAlias())) {
 					errorMsg = "该用户设备不存在";
 				} else {
 					payload = JPush.buildPushObject_all_alias_alert(HtmlUtil.getTextFromHtml(msg.getMsgContent()),
-							msg.getId(), msg.getMsgAction(), msg.getMsgActionUrl(), commonBean.getMobileCode());
+							msg.getId(), msg.getMsgAction(), msg.getMsgActionUrl(), commonBean.getAlias());
 				}
 			} else {
 				errorMsg = "该用户设备不存在";

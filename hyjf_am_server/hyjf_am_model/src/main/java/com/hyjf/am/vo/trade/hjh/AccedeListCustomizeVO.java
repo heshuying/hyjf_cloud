@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.trade.hjh;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -81,7 +83,7 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	/**
 	 * 加入时间
 	 */
-	private String createTime;
+	private Date createTime;
 	/**
 	 * 计息时间
 	 */
@@ -260,6 +262,46 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	
 	private Integer quitTime;
 	
+	/**
+	 * 自动投标进度
+	 */
+	private String autoBidProgress;
+	
+	/**
+	 * 冻结金额
+	 */
+	private String frostAccount;
+	
+	/**
+	 * 公允价值
+	 */
+	private String fairValue;
+	
+	/**
+	 * 实际年化收益率
+	 */
+	private String actualApr;
+	
+	/**
+	 * 投资笔数
+	 */
+	private String investCounts;
+	
+	/**
+	 * 匹配期
+	 */
+	private String matchDates;
+	
+	/**
+	 * 计算用加入金额
+	 */
+	private BigDecimal jAccedeAccount;
+	
+	/**
+	 * 计算用已投资金额
+	 */
+	private BigDecimal jalreadyInvest;
+	
 	public String getPlanOrderId() {
 		return planOrderId;
 	}
@@ -380,11 +422,11 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 		this.orderStatus = orderStatus;
 	}
 
-	public String getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
@@ -747,6 +789,68 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	public void setQuitTime(Integer quitTime) {
 		this.quitTime = quitTime;
 	}
-	
-	
+
+	public String getAutoBidProgress() {
+		return autoBidProgress;
+	}
+
+	public void setAutoBidProgress(String autoBidProgress) {
+		this.autoBidProgress = autoBidProgress;
+	}
+
+	public String getFrostAccount() {
+		return frostAccount;
+	}
+
+	public void setFrostAccount(String frostAccount) {
+		this.frostAccount = frostAccount;
+	}
+
+	public String getFairValue() {
+		return fairValue;
+	}
+
+	public void setFairValue(String fairValue) {
+		this.fairValue = fairValue;
+	}
+
+	public String getActualApr() {
+		return actualApr;
+	}
+
+	public void setActualApr(String actualApr) {
+		this.actualApr = actualApr;
+	}
+
+	public String getInvestCounts() {
+		return investCounts;
+	}
+
+	public void setInvestCounts(String investCounts) {
+		this.investCounts = investCounts;
+	}
+
+	public String getMatchDates() {
+		return matchDates;
+	}
+
+	public void setMatchDates(String matchDates) {
+		this.matchDates = matchDates;
+	}
+
+	public BigDecimal getjAccedeAccount() {
+		return jAccedeAccount;
+	}
+
+	public void setjAccedeAccount(BigDecimal jAccedeAccount) {
+		this.jAccedeAccount = jAccedeAccount;
+	}
+
+	public BigDecimal getJalreadyInvest() {
+		return jalreadyInvest;
+	}
+
+	public void setJalreadyInvest(BigDecimal jalreadyInvest) {
+		this.jalreadyInvest = jalreadyInvest;
+	}
 }

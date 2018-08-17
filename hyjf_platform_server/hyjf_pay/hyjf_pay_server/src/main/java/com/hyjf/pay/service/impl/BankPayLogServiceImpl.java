@@ -7,48 +7,45 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.entity.BankExclusiveLog;
+import com.hyjf.pay.entity.BankLog;
+import com.hyjf.pay.entity.BankSendlog;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.mongo.ChinapnrExclusiveLogDao;
-import com.hyjf.pay.mongo.ChinapnrLog;
-import com.hyjf.pay.mongo.ChinapnrLogDao;
-import com.hyjf.pay.mongo.ChinapnrSendLogDao;
-import com.hyjf.pay.mongo.ChinapnrSendlog;
+import com.hyjf.pay.mongo.BankExclusiveLogDao;
+import com.hyjf.pay.mongo.BankLogDao;
+import com.hyjf.pay.mongo.BankSendLogDao;
 import com.hyjf.pay.service.BankPayLogService;
 
 @Service
 public class BankPayLogServiceImpl implements BankPayLogService {
 
     @Autowired
-    private ChinapnrLogDao chinapnrLogDao;
+    private BankLogDao bankLogDao;
 
     @Autowired
-    private ChinapnrSendLogDao chinapnrSendLogDao;
+    private BankSendLogDao bankSendLogDao;
 
     @Autowired
-    private ChinapnrExclusiveLogDao chinapnrExclusiveLogDao;
-
-    private static final String SENDLOG = "banksendlog";
-    private static final String BACKLOG = "banklog";
-    private static final String EXCLUSENDLOG = "bankexclusivelog";
+    private BankExclusiveLogDao bankExclusiveLogDao;
 
     /**
      * 保存发送日志
      *
-     * @param chinapnrSendlog
+     * @param
      */
     @Override
     public void saveChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean) {
 
         int nowTime = GetDate.getNowTime10();
-        ChinapnrSendlog sendlog = new ChinapnrSendlog();
+        BankSendlog sendlog = new BankSendlog();
         sendlog.setOrdid(bean.getLogOrderId());
         sendlog.setOrddate(bean.getLogOrderDate());
         sendlog.setClient(bean.getLogClient());
@@ -64,33 +61,33 @@ public class BankPayLogServiceImpl implements BankPayLogService {
         sendlog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
         sendlog.setSeqNo(bean.getSeqNo());
 
-        chinapnrSendLogDao.save(sendlog, SENDLOG);
+        bankSendLogDao.save(sendlog);
 
     }
 
     /**
      * 保存接受日志
      *
-     * @param chinapnrLog
+     * @param
      */
     @Override
     public void saveChinapnrLog(BankCallBean bean, int returnType) {
         String nowTime = GetDate.getServerDateTime(8, new Date());
-        ChinapnrLog chinapnrLog = new ChinapnrLog();
-        chinapnrLog.setIsbg(returnType);
-        chinapnrLog.setOrdid(bean.getLogOrderId());
-        chinapnrLog.setUserId(StringUtils.isNotEmpty(bean.getLogUserId()) ? Integer.parseInt(bean.getLogUserId()) : null);
-        chinapnrLog.setClient(bean.getLogClient());
-        chinapnrLog.setMsgType(bean.getTxCode());
-        chinapnrLog.setMsgdata(bean.getJsonMap());
-        chinapnrLog.setTxDate(StringUtils.isNotEmpty(bean.getTxDate()) ? Integer.valueOf(bean.getTxDate()) : null);
-        chinapnrLog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
-        chinapnrLog.setSeqNo(bean.getSeqNo());
-        chinapnrLog.setRemark(bean.getLogRemark());
-        chinapnrLog.setIp(bean.getLogIp());
-        chinapnrLog.setAddtime(nowTime);
+        BankLog bankLog = new BankLog();
+        bankLog.setIsbg(returnType);
+        bankLog.setOrdid(bean.getLogOrderId());
+        bankLog.setUserId(StringUtils.isNotEmpty(bean.getLogUserId()) ? Integer.parseInt(bean.getLogUserId()) : null);
+        bankLog.setClient(bean.getLogClient());
+        bankLog.setMsgType(bean.getTxCode());
+        bankLog.setMsgdata(bean.getJsonMap());
+        bankLog.setTxDate(StringUtils.isNotEmpty(bean.getTxDate()) ? Integer.valueOf(bean.getTxDate()) : null);
+        bankLog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
+        bankLog.setSeqNo(bean.getSeqNo());
+        bankLog.setRemark(bean.getLogRemark());
+        bankLog.setIp(bean.getLogIp());
+        bankLog.setAddtime(nowTime);
 
-        chinapnrLogDao.save(chinapnrLog, BACKLOG);
+        bankLogDao.save(bankLog);
     }
 
     @Override
@@ -107,17 +104,17 @@ public class BankPayLogServiceImpl implements BankPayLogService {
      * @return
      */
     @Override
-    public ChinapnrExclusiveLog selectChinapnrExclusiveLogByOrderId(String orderId) {
+    public BankExclusiveLog selectChinapnrExclusiveLogByOrderId(String orderId) {
         Query query = new Query();
         Criteria criteria = Criteria.where("ordid").is(orderId);
         query.addCriteria(criteria);
-        return this.chinapnrExclusiveLogDao.findOne(query, EXCLUSENDLOG);
+        return this.bankExclusiveLogDao.findOne(query);
     }
 
     @Override
-    public String insertChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean) {
+    public String insertChinapnrSendLog(BankCallBean bean) {
         int nowTime = GetDate.getNowTime10();
-        ChinapnrSendlog sendlog = new ChinapnrSendlog();
+        BankSendlog sendlog = new BankSendlog();
         sendlog.setOrdid(bean.getLogOrderId());
         sendlog.setOrddate(bean.getLogOrderDate());
         sendlog.setClient(bean.getLogClient());
@@ -125,7 +122,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
         sendlog.setMsgType(bean.getTxCode());
         sendlog.setMsgdata(bean.get(BankCallConstant.PARAM_LOGMSGDATA));
         sendlog.setChkvalue(bean.get(BankCallConstant.PARAM_SIGN));
-        sendlog.setContent(pnrApiBean.getJsonMap());
+        sendlog.setContent(bean.getJsonMap());
         sendlog.setRemark(bean.getLogRemark());
         sendlog.setClient(GetterUtil.getInteger(bean.get(BankCallConstant.PARAM_LOGCLIENT)));
         sendlog.setCreateTime(nowTime);
@@ -133,7 +130,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
         sendlog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
         sendlog.setSeqNo(bean.getSeqNo());
 
-        this.chinapnrSendLogDao.insert(sendlog, SENDLOG);
+        this.bankSendLogDao.insert(sendlog);
 
         return sendlog.getId();
     }
@@ -141,7 +138,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     @Override
     public String insertChinapnrExclusiveLog(BankCallBean bean) {
         int nowTime = GetDate.getNowTime10();
-        ChinapnrExclusiveLog exclusiveLog = new ChinapnrExclusiveLog();
+        BankExclusiveLog exclusiveLog = new BankExclusiveLog();
         exclusiveLog.setClient(bean.getLogClient());
         exclusiveLog.setCmdid(bean.getTxCode());
         exclusiveLog.setOrdid(bean.getLogOrderId());
@@ -156,7 +153,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
         exclusiveLog.setCreatetime(String.valueOf(nowTime));
         exclusiveLog.setUpdateuser(bean.getLogUserId());
         exclusiveLog.setUpdatetime(String.valueOf(nowTime));
-        this.chinapnrExclusiveLogDao.insert(exclusiveLog, EXCLUSENDLOG);
+        this.bankExclusiveLogDao.insert(exclusiveLog);
 
         return exclusiveLog.getId();
     }
@@ -164,22 +161,22 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     @Override
     public String insertChinapnrLog(BankCallBean bean, int returnType) {
         String nowTime = GetDate.getServerDateTime(8, new Date());
-        ChinapnrLog chinapnrLog = new ChinapnrLog();
-        chinapnrLog.setIsbg(returnType);
-        chinapnrLog.setOrdid(bean.getLogOrderId());
-        chinapnrLog.setUserId(StringUtils.isNotEmpty(bean.getLogUserId()) ? Integer.parseInt(bean.getLogUserId()) : null);
-        chinapnrLog.setClient(bean.getLogClient());
-        chinapnrLog.setMsgType(bean.getTxCode());
-        chinapnrLog.setMsgdata(bean.getJsonMap());
-        chinapnrLog.setTxDate(StringUtils.isNotEmpty(bean.getTxDate()) ? Integer.valueOf(bean.getTxDate()) : null);
-        chinapnrLog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
-        chinapnrLog.setSeqNo(bean.getSeqNo());
-        chinapnrLog.setRemark(bean.getLogRemark());
-        chinapnrLog.setIp(bean.getLogIp());
-        chinapnrLog.setAddtime(nowTime);
-        this.chinapnrLogDao.insert(chinapnrLog, BACKLOG);
+        BankLog bankLog = new BankLog();
+        bankLog.setIsbg(returnType);
+        bankLog.setOrdid(bean.getLogOrderId());
+        bankLog.setUserId(StringUtils.isNotEmpty(bean.getLogUserId()) ? Integer.parseInt(bean.getLogUserId()) : null);
+        bankLog.setClient(bean.getLogClient());
+        bankLog.setMsgType(bean.getTxCode());
+        bankLog.setMsgdata(bean.getJsonMap());
+        bankLog.setTxDate(StringUtils.isNotEmpty(bean.getTxDate()) ? Integer.valueOf(bean.getTxDate()) : null);
+        bankLog.setTxTime(StringUtils.isNotEmpty(bean.getTxTime()) ? Integer.valueOf(bean.getTxTime()) : null);
+        bankLog.setSeqNo(bean.getSeqNo());
+        bankLog.setRemark(bean.getLogRemark());
+        bankLog.setIp(bean.getLogIp());
+        bankLog.setAddtime(nowTime);
+        this.bankLogDao.insert(bankLog);
 
-        return chinapnrLog.getId();
+        return bankLog.getId();
     }
 
     @Override
@@ -192,28 +189,44 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     @Override
     public void updateChinapnrExclusiveLog(String orderId, BankCallBean bean, int nowTime) {
 
-        ChinapnrExclusiveLog exclusiveLogInDb = this.chinapnrExclusiveLogDao.findOne(
-                Query.query(Criteria.where("ordid").is(orderId)), EXCLUSENDLOG);
-        // 拼接相应的参数
-        exclusiveLogInDb.setStatus(bean.getLogOrderStatus());
-        exclusiveLogInDb.setResult(bean.getJson());
-        exclusiveLogInDb.setRespcode(bean.getRetCode());
-        exclusiveLogInDb.setUpdatetime(String.valueOf(nowTime));
-        exclusiveLogInDb.setUpdateuser(bean.getLogUserId());
+//        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
+//                Query.query(Criteria.where("ordid").is(orderId)));
+//        // 拼接相应的参数
+//        exclusiveLogInDb.setStatus(bean.getLogOrderStatus());
+//        exclusiveLogInDb.setResult(bean.getJson());
+//        exclusiveLogInDb.setRespcode(bean.getRetCode());
+//        exclusiveLogInDb.setUpdatetime(String.valueOf(nowTime));
+//        exclusiveLogInDb.setUpdateuser(bean.getLogUserId());
+//        this.bankExclusiveLogDao.save(exclusiveLogInDb);
 
-        this.chinapnrExclusiveLogDao.save(exclusiveLogInDb, EXCLUSENDLOG);
+        
+        Query q1 = Query.query(Criteria.where("ordid").is(orderId));
+        Update u1 = new Update();
+        u1.set("status", bean.getLogOrderStatus());
+        u1.set("result", bean.getJson());
+        u1.set("respcode", bean.getRetCode());
+        u1.set("updatetime", String.valueOf(nowTime));
+        u1.set("updateuser", bean.getLogUserId());
+        
+        this.bankExclusiveLogDao.findAndModify(q1, u1);
 
     }
 
     @Override
     public void updateChinapnrExclusiveLog(String orderId, int status) {
 
-        ChinapnrExclusiveLog exclusiveLogInDb = this.chinapnrExclusiveLogDao.findOne(
-                Query.query(Criteria.where("ordid").is(orderId)), EXCLUSENDLOG);
-        // 拼接相应的参数
-        exclusiveLogInDb.setStatus(status + "");
-
-        this.chinapnrExclusiveLogDao.save(exclusiveLogInDb, EXCLUSENDLOG);
+//        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
+//                Query.query(Criteria.where("ordid").is(orderId)));
+//        // 拼接相应的参数
+//        exclusiveLogInDb.setStatus(status + "");
+//
+//        this.bankExclusiveLogDao.save(exclusiveLogInDb);
+        
+        Query q1 = Query.query(Criteria.where("ordid").is(orderId));
+        Update u1 = new Update();
+        u1.set("status", status + "");
+        
+        this.bankExclusiveLogDao.findAndModify(q1, u1);
     }
 
 

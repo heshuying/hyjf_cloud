@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SubCommissionListConfigResponse;
 import com.hyjf.am.response.admin.SubCommissionResponse;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 10:12
  */
-@Api(value = "资金中心-平台账户分佣")
+@Api(value = "资金中心-平台账户分佣",tags ="资金中心-平台账户分佣")
 @RestController
 @RequestMapping(value = "/am-trade/subcommission")
 public class SubCommissionController extends BaseController {
@@ -76,37 +77,13 @@ public class SubCommissionController extends BaseController {
     @GetMapping(value = "/searchsubcommissionbyorderid/{orderId}")
     public SubCommissionResponse searchSubCommissionByOrderId(@PathVariable String orderId){
         SubCommissionResponse response = new SubCommissionResponse();
-        List<SubCommission> subCommissionList = subCommissionService.searchSubCommissionByOrderId(orderId);
-        if(subCommissionList != null && subCommissionList.size() == 1){
-            SubCommissionVO subCommissionVO = CommonUtils.convertBean(subCommissionList.get(0),SubCommissionVO.class);
+        SubCommission subCommission = subCommissionService.searchSubCommissionByOrderId(orderId);
+        if(subCommission != null){
+            SubCommissionVO subCommissionVO = CommonUtils.convertBean(subCommission,SubCommissionVO.class);
             response.setResult(subCommissionVO);
             response.setRtn(Response.SUCCESS);
         }
         return response;
-    }
-
-    /**
-     * 更新分佣数据
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @ApiOperation(value = "更新分佣数据",notes = "更新分佣数据")
-    @PostMapping(value = "/updatesubcommission")
-    public Integer updateSubCommission(@RequestBody SubCommissionVO subCommissionVO){
-        return subCommissionService.updateSubCommission(subCommissionVO);
-    }
-
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    @ApiOperation(value = "根据订单号查询是否存在重复的AccountWebList数据",notes = "根据订单号查询是否存在重复的AccountWebList数据")
-    @GetMapping(value = "/accountweblistbyorderid/{orderId}")
-    public Integer accountWebListByOrderId(@PathVariable String orderId){
-        return subCommissionService.accountWebListByOrderId(orderId);
     }
 
     /**
@@ -134,7 +111,7 @@ public class SubCommissionController extends BaseController {
         Integer count = subCommissionService.getSubCommissionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
@@ -145,6 +122,21 @@ public class SubCommissionController extends BaseController {
             response.setResultList(subCommissionVOList);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param request 参数
+     * @return
+     */
+    @ApiOperation(value = "平台转账-发起平台账户分佣",notes = "平台转账-发起平台账户分佣")
+    @PostMapping(value = "/subCommission")
+    public SubCommissionResponse subCommission(@RequestBody SubCommissionRequest request){
+        SubCommissionResponse response = new SubCommissionResponse();
+        JSONObject jsonObject = subCommissionService.subCommission(request);
+        response.setJsonObject(jsonObject);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 

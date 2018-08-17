@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,45 +15,47 @@ import java.util.Date;
  * @author: sunpeikai
  * @version: SubCommissionVO, v0.1 2018/7/10 10:01
  */
+@ApiModel(value = "平台账户分佣返回值参数")
 public class SubCommissionVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "主键id")
     private Integer id;
-
+    @ApiModelProperty(value = "订单号")
     private String orderId;
-
+    @ApiModelProperty(value = "转出用户电子账户号")
     private String accountId;
-
+    @ApiModelProperty(value = "收款方用户ID")
     private Integer receiveUserId;
-
+    @ApiModelProperty(value = "收款用户名")
     private String receiveUserName;
-
+    @ApiModelProperty(value = "收款方电子账户号")
     private String receiveAccountId;
-
+    @ApiModelProperty(value = "转账金额")
     private BigDecimal account;
-
+    @ApiModelProperty(value = "转入姓名")
     private String truename;
-
+    @ApiModelProperty(value = "交易状态(0:初始 1:成功 2:失败 )")
     private Integer tradeStatus;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "错误信息")
     private String errorMsg;
-
+    @ApiModelProperty(value = "交易日期")
     private Integer txDate;
-
+    @ApiModelProperty(value = "交易时间")
     private Integer txTime;
-
+    @ApiModelProperty(value = "交易流水号")
     private String seqNo;
-
+    @ApiModelProperty(value = "创建用户ID")
     private Integer createUserId;
-
+    @ApiModelProperty(value = "创建用户名")
     private String createUserName;
-
+    @ApiModelProperty(value = "更新用户ID")
     private Integer updateUserId;
-
+    @ApiModelProperty(value = "更新用户名")
     private String updateUserName;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

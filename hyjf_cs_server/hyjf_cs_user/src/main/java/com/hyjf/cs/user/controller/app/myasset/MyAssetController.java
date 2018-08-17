@@ -3,17 +3,6 @@
  */
 package com.hyjf.cs.user.controller.app.myasset;
 
-import java.text.DecimalFormat;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -22,16 +11,26 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myasset.MyAssetService;
-
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
 
 /**
+ * app端账户总览
  * @author jun
  * @version MyAssetController, v0.1 2018/7/5 17:04
  */
-@Api(value = "app端账户总览")
+@Api(value = "app端账户总览",tags = "app端-账户总览")
 @Controller
-@RequestMapping(value = MyAssetDefine.REQUEST_MAPPING)
+@RequestMapping(value = "/hyjf-app/myasset")
 public class MyAssetController extends BaseUserController {
 	
 	@Autowired
@@ -44,11 +43,12 @@ public class MyAssetController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = MyAssetDefine.MYASSET_ACTION, method = RequestMethod.POST)
+	@ApiOperation(value = "获取我的财富")
+	@RequestMapping(value ="/info", method = RequestMethod.POST)
 	public JSONObject getMyAsset(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("获取我的财富...myasset...info");
 		JSONObject ret = new JSONObject();
-		ret.put("request", MyAssetDefine.RETURN_REQUEST);
+		ret.put("request","/hyjf-app/myasset/info");
 		// 版本号
 		String version = request.getParameter("version");
 		// 网络状态
@@ -117,7 +117,7 @@ public class MyAssetController extends BaseUserController {
 			e.printStackTrace();
 			logger.info("用户账户信息异常");
 		}
-		logger.info(MyAssetDefine.MYASSET_ACTION+":"+ret);
+		logger.info("info:"+ret);
 		return ret;
 	}
 	

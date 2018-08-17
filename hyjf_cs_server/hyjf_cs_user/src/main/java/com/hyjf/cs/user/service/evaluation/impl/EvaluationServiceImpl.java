@@ -3,29 +3,14 @@
  */
 package com.hyjf.cs.user.service.evaluation.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
-import com.hyjf.am.vo.user.ActivityListVO;
-import com.hyjf.am.vo.user.EvalationVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.QuestionCustomizeVO;
-import com.hyjf.am.vo.user.UserEvalationBehaviorVO;
-import com.hyjf.am.vo.user.UserEvalationResultCustomizeVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -37,18 +22,22 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.base.Producer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.soa.apiweb.CommonParamBean;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -96,18 +85,22 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
      */
     @Override
     public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId,String behaviorId) {
-        String[] answer = userAnswer.split(",");
-        List<String> answerList = new ArrayList<String>();
-        List<String> questionList = new ArrayList<String>();
-        for (String string : answer) {
-            if (string.split("_").length == 2) {
-                questionList.add(string.split("_")[0]);
-                answerList.add(string.split("_")[1]);
+        int countScore = 0;
+        if (!Strings.isNullOrEmpty(userAnswer)) {
+            String[] answer = userAnswer.split(",");
+            List<String> answerList = new ArrayList<String>();
+            List<String> questionList = new ArrayList<String>();
+            for (String string : answer) {
+                if (string.split("_").length == 2) {
+                    questionList.add(string.split("_")[0]);
+                    answerList.add(string.split("_")[1]);
+                }
             }
+            AnswerRequest answerRequest = new AnswerRequest();
+            answerRequest.setResultList(answerList);
+            countScore = amConfigClient.countScore(answerRequest);
         }
-        AnswerRequest answerRequest = new AnswerRequest();
-        answerRequest.setResultList(answerList);
-        int countScore = amConfigClient.countScore(answerRequest);
+
         UserEvalationRequest userEvalationRequest = new UserEvalationRequest();
         userEvalationRequest.setUserId(userId);
         userEvalationRequest.setCountScore(countScore);
@@ -116,6 +109,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         UserEvalationResultVO userEvalationResult = amUserClient.insertUserEvalationResult(userEvalationRequest);
         return userEvalationResult;
     }
+
 
 
     /**
@@ -189,7 +183,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             return CommonConstant.ACTIVITYID_IS_NULL;
         }
         ActivityListVO activityList = amMarketClient.selectActivityList(new Integer(activityId));
-        if (activityList.getPlatform().indexOf(platform) == -1) {
+        if (activityList!=null&&activityList.getPlatform().indexOf(platform) == -1) {
             // 操作平台
             Map<String, String> clients = CacheUtil.getParamNameMap("CLIENT");
             // 被选中操作平台
@@ -301,6 +295,33 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
     @Override
     public void updateUserEvalationBehavior(UserEvalationBehaviorVO userEvalationBehavior) {
         amUserClient.updateUserEvaluationBehavior(userEvalationBehavior);
+    }
+
+    @Override
+    public List<NewAppQuestionCustomizeVO> getNewAppQuestionList() {
+        List<NewAppQuestionCustomizeVO> result = amConfigClient.getNewAppQuestionList();
+        return result;
+    }
+
+    /**
+     * 修改user表的风险测评标志
+     * @param userId
+     */
+    @Override
+    public void updateUser(int userId){
+        //修改users表标志位
+        UserVO users = this.getUsersById(userId);
+        if (users != null) {
+            users.setIsEvaluationFlag(1);
+            users.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(),1,1), 5,-1));
+            this.updateUserByUserId(users);
+        }
+    }
+
+    @Override
+    public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
+        UserEvalationResultVO userEvalationResult = amUserClient.skipEvaluate(userId,countScore);
+        return userEvalationResult;
     }
 
 }

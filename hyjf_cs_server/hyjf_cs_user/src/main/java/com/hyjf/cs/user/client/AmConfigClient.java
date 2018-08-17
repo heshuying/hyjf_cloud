@@ -1,10 +1,10 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 
 import java.util.List;
@@ -14,6 +14,10 @@ import java.util.List;
  * @version AmConfigClient, v0.1 2018/4/23 20:00
  */
 public interface AmConfigClient {
+    /**
+     * 获取短信配置表-最大量，有效时间等 配置只有一条
+     * @return
+     */
     SmsConfigVO findSmsConfig();
 
     /**
@@ -32,14 +36,46 @@ public interface AmConfigClient {
      */
     BanksConfigVO getBankNameByBankId(String bankId);
 
+    /**
+     * 测评问题列表
+     * @return
+     */
     List<QuestionCustomizeVO> getNewQuestionList();
 
-    int countScore(AnswerRequest answerList);
+    List<NewAppQuestionCustomizeVO> getNewAppQuestionList();
 
+    /**
+     * 计算测评得分
+     * @param answerList
+     * @return
+     */
+    int countScore(AnswerRequest answerList);
+    /**
+     * 根据返回码获取返回信息
+     * @param retCode
+     * @return
+     */
+    String getBankRetMsg(String retCode);
+
+    /**
+     * 根据返回码获取返回码配置
+     * @param retCode
+     * @return
+     */
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
+    /**
+     * 根据银行卡号查询银行id
+     * @param cardNo
+     * @return
+     */
     String queryBankIdByCardNo(String cardNo);
 
+    /**
+     * 根据银行id查询银行配置
+     * @param bankId
+     * @return
+     */
     BanksConfigVO getBanksConfigByBankId(String bankId);
 
     /**
@@ -48,4 +84,82 @@ public interface AmConfigClient {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
+
+    /**
+     * 获取版本信息
+     * @param type
+     * @return
+     */
+    VersionVO getNewVersionByType(Integer type);
+
+    /**
+     * 获取强制更新版本号
+     * @param type
+     * @param isupdate
+     * @param versionStr
+     * @return
+     */
+    VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr);
+
+    /**
+     * 根据银行code查询银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    BankConfigVO getBankConfigByCode(String code);
+
+    /**
+     * 根据主键id查询银行配置
+     * @auth sunpeikai
+     * @param id 数据库表的主键id
+     * @return
+     */
+    BankConfigVO getBankConfigById(Integer id);
+
+    /**
+     * 银行配置信息
+     * @param code
+     * @return
+     */
+    BankConfigVO selectBankConfigByCode(String code);
+
+    /**
+     * 判断江西银行绑卡使用新
+     * @param type
+     * @return
+     */
+    Integer getBankInterfaceFlagByType(String type);
+
+    /**
+     * 根据设备唯一标识获取用户角标
+     * @auth sunpeikai
+     * @param sign 设备唯一标识
+     * @return
+     */
+    UserCornerVO getUserCornerBySign(String sign);
+
+    /**
+     * 更新用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer updateUserCorner(UserCornerVO userCornerVO);
+
+    /**
+     * 插入一条新的用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer insertUserCorner(UserCornerVO userCornerVO);
+
+    /**
+     * 根据bankId查询BankRechargeConfig
+     * @auth sunpeikai
+     * @param bankId
+     * @return
+     */
+    BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId);
 }

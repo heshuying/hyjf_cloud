@@ -4,7 +4,11 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,78 +16,53 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: SubCommissionRequest, v0.1 2018/7/10 10:43
  */
+@ApiModel(value = "平台账户分佣请求参数")
 public class SubCommissionRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 1251849043086260227L;
 
-    /**
-     * 转入用户名检索
-     */
+    @ApiModelProperty(value = "转入用户名(检索用)")
     private String receiveUserNameSrch;
 
-    /**
-     * 转入姓名
-     */
+    @ApiModelProperty(value = "转入姓名(发起分佣)")
     private String truename;
 
-    /**
-     * 订单号检索用
-     */
+    @ApiModelProperty(value = "订单号(检索用)")
     private String orderIdSrch;
 
-    /**
-     * 转账状态检索用
-     */
+    @ApiModelProperty(value = "转账状态(检索用)")
     private String tradeStatusSrch;
 
-    /**
-     * 添加时间开始(检索用)
-     */
+    @ApiModelProperty(value = "添加时间开始(检索用)")
     private String timeStartSrch;
-    /**
-     * 添加时间结束(检索用)
-     */
+
+    @ApiModelProperty(value = "添加时间结束(检索用)")
     private String timeEndSrch;
 
-    /**
-     * 转出方用户电子账户号
-     */
+    @ApiModelProperty(value = "转出方用户电子账户号(发起分佣)")
     private String accountId;
 
-    /**
-     * 收款方用户ID
-     */
+    @ApiModelProperty(value = "收款方用户ID(发起分佣)")
     private Integer receiveUserId;
 
-    /**
-     * 收款方用户名
-     */
+    @ApiModelProperty(value = "收款方用户名(发起分佣)")
     private String receiveUserName;
 
-    /**
-     * 收款方用户电子账户号
-     */
+    @ApiModelProperty(value = "收款方用户电子账户号(发起分佣)")
     private String receiveAccountId;
 
-    /**
-     * 分佣金额
-     */
+    @ApiModelProperty(value = "分佣金额(发起分佣)")
     private String txAmount;
-    /**
-     * 交易密码
-     */
+
+    @ApiModelProperty(value = "交易密码(发起分佣)")
     private String password;
 
-    /**
-     * 账户余额
-     */
+    @ApiModelProperty(value = "账户余额(发起分佣)")
     private String balance;
 
-    /**
-     * 备注说明
-     */
+    @ApiModelProperty(value = "备注说明(发起分佣)")
     private String remark;
 
     /**
@@ -91,6 +70,24 @@ public class SubCommissionRequest extends BasePage implements Serializable {
      */
     private int limitStart = -1;
     private int limitEnd = -1;
+
+    // 请求银行的bean
+    private BankCallBeanVO requestBean;
+
+    // 银行返回的bean
+    private BankCallBeanVO resultBean;
+
+    // 调用银行接口成功
+    private boolean callBankSuccess;
+
+    // 银行返回的错误代码对应的错误信息
+    private String errorMsg;
+
+    // 网站收支  账户分佣时用
+    private AccountWebListVO accountWebList;
+
+    // 登录者信息 账户分佣时用
+    private AdminSystemVO adminSystemVO;
 
     public String getReceiveUserNameSrch() {
         return receiveUserNameSrch;
@@ -218,5 +215,53 @@ public class SubCommissionRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public BankCallBeanVO getRequestBean() {
+        return requestBean;
+    }
+
+    public void setRequestBean(BankCallBeanVO requestBean) {
+        this.requestBean = requestBean;
+    }
+
+    public BankCallBeanVO getResultBean() {
+        return resultBean;
+    }
+
+    public void setResultBean(BankCallBeanVO resultBean) {
+        this.resultBean = resultBean;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    public boolean isCallBankSuccess() {
+        return callBankSuccess;
+    }
+
+    public void setCallBankSuccess(boolean callBankSuccess) {
+        this.callBankSuccess = callBankSuccess;
+    }
+
+    public AccountWebListVO getAccountWebList() {
+        return accountWebList;
+    }
+
+    public void setAccountWebList(AccountWebListVO accountWebList) {
+        this.accountWebList = accountWebList;
+    }
+
+    public AdminSystemVO getAdminSystemVO() {
+        return adminSystemVO;
+    }
+
+    public void setAdminSystemVO(AdminSystemVO adminSystemVO) {
+        this.adminSystemVO = adminSystemVO;
     }
 }

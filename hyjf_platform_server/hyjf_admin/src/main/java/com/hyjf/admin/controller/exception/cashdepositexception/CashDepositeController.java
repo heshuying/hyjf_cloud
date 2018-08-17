@@ -1,28 +1,38 @@
 package com.hyjf.admin.controller.exception.cashdepositexception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AssetListViewRequest;
+import com.hyjf.admin.beans.response.InitCashDepositListResponse;
+import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
+import com.hyjf.admin.beans.vo.AdminHjhInstConfigAPIVO;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.admin.service.CashDepositeService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-
+import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 保证金不足
  * @author jijun
  * @date 20180706
  */
-@Controller
+@Api(value = "admin端-保证金不足",tags = "admin端-保证金不足")
+@RestController
 @RequestMapping("/exception/cashdepositexception")
 public class CashDepositeController extends BaseController {
 
@@ -33,26 +43,38 @@ public class CashDepositeController extends BaseController {
     
     /**
      *  保证金不足的资产列表
-     * @param request
      * @return 进入资产列表页面
      */
     @ApiOperation(value = "保证金不足的资产列表", notes = "保证金不足的资产列表")
     @PostMapping("/searchList")
-    public JSONObject searchList(AssetListRequest request) {
+    public AdminResult<InitCashDepositListResponse> searchList(AssetListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
+    	List<AssetListCustomizeVO> list = null ;
     	// 总条数
-        Integer count = assetListService.getRecordCount(request);
-        jsonObject.put("count",count);
+        AssetListRequest request = new AssetListRequest();
+        BeanUtils.copyProperties(viewRequest,request);
         // 保证金不足的资产列表list
-        List<AssetListCustomizeVO> recordList=assetListService.findAssetList(request);
-        jsonObject.put("recordList",recordList);
+    	AssetListCustomizeResponse response = assetListService.findAssetList(request);
+        //返回给前端
+        InitCashDepositListResponse initCashDepositResponse = new InitCashDepositListResponse();
+
+    	if(response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+		}else if(!Response.isSuccess(response)){
+            return new AdminResult<>(FAIL, response.getMessage());
+        }else{
+            initCashDepositResponse.setAssetList(CommonUtils.convertBeanList(response.getResultList(),AdminAssetListCustomizeVO.class));
+        }
         // 资金来源 下拉框
         List<HjhInstConfigVO> hjhInstConfigList=assetListService.getHjhInstConfigList();
-        jsonObject.put("hjhInstConfigList", hjhInstConfigList);
-        return jsonObject;
+    	if (CollectionUtils.isNotEmpty(hjhInstConfigList)){
+            initCashDepositResponse.setHjhInstConfigList(CommonUtils.convertBeanList(hjhInstConfigList,AdminHjhInstConfigAPIVO.class));
+        }
+
+        return new AdminResult<InitCashDepositListResponse>(initCashDepositResponse);
     }
 
-   
+
     /**
      * 批量处理
      * 根据选择的方式，处理标的（重新校验保证金，或者流标）
@@ -60,8 +82,9 @@ public class CashDepositeController extends BaseController {
      * @param menuHide  1  重新验证保证金 0 流标
      * @return
      */
+    @ApiOperation(value = "批量处理", notes = "批量处理")
     @PostMapping("/modifyAsset")
-    private JSONObject modifyAction(AssetListRequest form,String menuHide){
+    private JSONObject modifyAction(AssetListViewRequest form,String menuHide){
         JSONObject ret = new JSONObject();
         String assetId = form.getAssetIdSrch();
         String[] split = assetId.split(",");

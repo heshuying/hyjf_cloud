@@ -1,19 +1,23 @@
 spring:
   application:
     name: CONFIG-SERVER
+#  profiles:
+#    active: native
   cloud:
     config:
       server:
+#        native:
+#          searchLocations: D:/hyjf/git/0709/micro-deploy-master-9f3d4cab6ee35303fc7a0498ac61120addd0005a/src/main/resources
         git:
-          uri: http://10.10.2.12/java_new/configRepository.git
-          ##searchPaths: config_files
-          username: xiashuqing@shizitegong.com
-          password: xsq123456
+          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
+          searchPaths: src/main/resources
+          username: deployment
+          password: deploy2018
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://127.0.0.1:8888/eureka/
+      defaultZone: http://micoserver:1111/eureka/
   instance:
     preferIpAddress: true
 

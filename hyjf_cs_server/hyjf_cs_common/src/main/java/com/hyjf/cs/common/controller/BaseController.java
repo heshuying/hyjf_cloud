@@ -3,10 +3,10 @@
  */
 package com.hyjf.cs.common.controller;
 
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.StringUtil;
-import com.hyjf.cs.common.bean.result.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * 组合层共用Controller基类
@@ -83,4 +85,22 @@ public class BaseController {
         result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
         return result;
     }
+
+    /**
+     *
+     * 特殊字符编码
+     * @author pangchengchao
+     * @return
+     * @throws Exception
+     */
+    public String strEncode(String str) {
+        try {
+            str = URLEncoder.encode(str, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+
 }

@@ -9,12 +9,21 @@ public class SystemConfig {
     @Value("${aop.interface.accesskey}")
     public String aopAccesskey;
 
+    @Value("${release.coupon.accesskey}")
+    public String couponAccesskey;
+
     @Value("${hyjf.api.web.url}")
     public String apiWebUrl;
 
     @Value("${hyjf.web.host}")
     public String webHost;
-    
+
+    @Value("${hyjf.app.host}")
+    public String appHost;
+
+    @Value("${hyjf.weChat.host}")
+    public String weChatHost;
+
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
@@ -39,8 +48,26 @@ public class SystemConfig {
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
 
+    @Value("${hyjf.app.server.host}")
+    public String appServerHost;
+
+    /**
+     * pc前端地址
+     */
     @Value("${hyjf.front.host}")
     public String frontHost;
+
+    /**
+     * app前端地址
+     */
+    @Value("${hyjf.front.app.host}")
+    public String AppFrontHost;
+
+    /**
+     * 微信前端地址
+     */
+    @Value("${hyjf.front.wei.host}")
+    public String WeiFrontHost;
 
     @Value("${hyjf.activity.id}")
     public String activityId;
@@ -65,6 +92,92 @@ public class SystemConfig {
 
     @Value("${hyjf.app.version.new}")
     private String newVersion;
+
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatQrcodeUrl;
+
+    @Value("${wcsr.retranspassword}")
+    // 需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack
+    private String retransPassword;
+
+    @Value("${wcsr.resetpassword}")
+    // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
+    private String resetpassword;
+    @Value("${wcsr.deletecard.callback}")
+    // 需要在配置文件中 添加 wcsr.deletecard.callback=http://app.rongdongfeng.zhugedai.com/wcsr-app/deletecard/callBack
+    private String surongDeletecard;
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
+
+    @Value("${hyjf.chinapnr.mercustid}")
+    private String chinapnrMercustid;
+    @Value("${publickey.hjs}")
+    private String publickeyhjs;
+    @Value("${privatekey.hjs}")
+    private String privatekeyhjs;
+
+    public String getAppServerHost() {
+        return appServerHost;
+    }
+
+    public void setAppServerHost(String appServerHost) {
+        this.appServerHost = appServerHost;
+    }
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
+    public String getPublickeyhjs() {
+		return publickeyhjs;
+	}
+
+	public void setPublickeyhjs(String publickeyhjs) {
+		this.publickeyhjs = publickeyhjs;
+	}
+
+	public String getPrivatekeyhjs() {
+		return privatekeyhjs;
+	}
+
+	public void setPrivatekeyhjs(String privatekeyhjs) {
+		this.privatekeyhjs = privatekeyhjs;
+	}
+    public String getChinapnrMercustid() {
+        return chinapnrMercustid;
+    }
+
+    public void setChinapnrMercustid(String chinapnrMercustid) {
+        this.chinapnrMercustid = chinapnrMercustid;
+    }
+
+    public String getWechatQrcodeUrl() {
+        return wechatQrcodeUrl;
+    }
+
+    public void setWechatQrcodeUrl(String wechatQrcodeUrl) {
+        this.wechatQrcodeUrl = wechatQrcodeUrl;
+    }
+
+    public String getWeChatHost() {
+        return weChatHost;
+    }
+
+    public void setWeChatHost(String weChatHost) {
+        this.weChatHost = weChatHost;
+    }
+
+    public String getAppHost() {
+        return appHost;
+    }
+
+    public void setAppHost(String appHost) {
+        this.appHost = appHost;
+    }
 
     public String getNewVersion() {
         return newVersion;
@@ -224,5 +337,53 @@ public class SystemConfig {
 
     public void setFrontHost(String frontHost) {
         this.frontHost = frontHost;
+    }
+
+    public String getAppFrontHost() {
+        return AppFrontHost;
+    }
+
+    public void setAppFrontHost(String appFrontHost) {
+        AppFrontHost = appFrontHost;
+    }
+
+    public String getWeiFrontHost() {
+        return WeiFrontHost;
+    }
+
+    public void setWeiFrontHost(String weiFrontHost) {
+        WeiFrontHost = weiFrontHost;
+    }
+
+	public String getRetransPassword() {
+		return retransPassword;
+	}
+
+	public void setRetransPassword(String retransPassword) {
+		this.retransPassword = retransPassword;
+	}
+
+	public String getResetpassword() {
+		return resetpassword;
+	}
+
+    public void setResetpassword(String resetpassword) {
+        this.resetpassword = resetpassword;
+    }
+
+    public boolean isHyjfEnvTest() {
+        return hyjfEnvTest;
+    }
+
+    public void setHyjfEnvTest(boolean hyjfEnvTest) {
+        this.hyjfEnvTest = hyjfEnvTest;
+    }
+
+    public String getSurongDeletecard() {
+        return surongDeletecard;
+    }
+
+    public void setSurongDeletecard(String surongDeletecard) {
+        this.surongDeletecard = surongDeletecard;
     }
 }

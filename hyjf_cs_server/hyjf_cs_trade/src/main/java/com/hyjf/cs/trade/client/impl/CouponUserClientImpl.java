@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -65,7 +66,7 @@ public class CouponUserClientImpl implements CouponUserClient {
 
     @Override
     public String selectChannelNameByUserId(Integer userId) {
-        String chanelName = restTemplate.getForEntity("http:AM-USER/am-user/channel/selectChannelNameById/"+userId,String.class).getBody();
+        String chanelName = restTemplate.getForEntity("http://AM-USER/am-user/channel/selectChannelNameById/"+userId,String.class).getBody();
         return chanelName;
     }
 
@@ -74,6 +75,13 @@ public class CouponUserClientImpl implements CouponUserClient {
         String url = "http://AM-TRADE/am-trade/couponUser/insertCouponUser";
         CouponUserResponse response = restTemplate.postForEntity(url,couponUser,CouponUserResponse.class).getBody();
         return response.getCount();
+    }
+
+    @Override
+    public boolean getSendRepeat(CouponUserSearchRequest couponUserRequest) {
+        String url = "http://AM-TRADE/am-trade/couponUser/getsendrepeat";
+        CouponUserResponse response = restTemplate.postForEntity(url,couponUserRequest,CouponUserResponse.class).getBody();
+        return response.getIsSend();
     }
 
 

@@ -19,13 +19,20 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 后台系统admin的id */
     public static final int USERID_ADMIN = 3;
 
+    public static final String CURRENTHOLD_TYPE = "currentHold";
+    public static final String REPAYMENT_TYPE = "repayment";
+    public static final String CREDITRECORD_TYPE = "creditRecord";
+
+    public static final String HOLD_PLAN_TYPE = "holdPlan";
+    public static final String REPAYMENT_PLAN_TYPE = "repayMentPlan";
+
     /** 服务地址 */
 //    @Value("${hyjf.web.host}")
     public static String HOST = "";
 //    public static final String HOST = PropUtils.getSystem("hyjf.web.host");
     /** 微信服务地址 */
 //    @Value("${hyjf.wechat.web.host}")
-    private static String WECHAT_HOST = "";
+    public static String WECHAT_HOST = "";
 //    public static final String WECHAT_HOST = PropUtils.getSystem("hyjf.wechat.web.host");
     
     /** 服务地址 */
@@ -99,12 +106,12 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /** 注册送888元新手红包 */
 //    @Value("${hyjf.activity.888.id}")
-    private static String REGIST_888_ACTIVITY_ID = "";
+    public static String REGIST_888_ACTIVITY_ID = "";
 //    public static final String REGIST_888_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.888.id");
     
     /** 投之家用户注册送加息券 */
 //    @Value("${hyjf.activity.regist.tzj.id}")
-    private static String REGIST_TZJ_ACTIVITY_ID = "";
+    public static String REGIST_TZJ_ACTIVITY_ID = "";
 //    public static final String REGIST_TZJ_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.tzj.id");
     /** 账户分佣交易密码 */
 //    @Value("${hyjf.sub.commission.password}")
@@ -694,7 +701,10 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 自动放款发送邮件 */
     public static final String EMAILPARAM_TPL_LOANS = "TPL_EMAIL_LOANS";
-    
+
+    /** 汇计划自动发标修复 */
+    public static final String MAILSENDFORMAILINGADDRESSMSG = "TPL_EMAIL_AUTOISSUERECOVER";
+
     /** 计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功 */
     public static final String EMAITPL_EMAIL_LOCK_REPAY = "TPL_EMAIL_LOCK_REPAY";
 

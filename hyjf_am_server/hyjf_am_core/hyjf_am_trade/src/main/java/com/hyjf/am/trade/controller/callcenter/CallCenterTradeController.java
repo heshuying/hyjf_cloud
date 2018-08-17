@@ -3,24 +3,23 @@
  */
 package com.hyjf.am.trade.controller.callcenter;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.callcenter.*;
+import com.hyjf.am.response.trade.RUserResponse;
 import com.hyjf.am.resquest.callcenter.*;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.callcenter.*;
+import com.hyjf.am.trade.dao.model.auto.RUser;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.*;
+import com.hyjf.am.vo.trade.RUserVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author wangjun
@@ -235,5 +234,22 @@ public class CallCenterTradeController extends BaseController {
             callcenterHtjInvestResponse.setResultList(callcenterHtjInvestVO);
         }
         return callcenterHtjInvestResponse;
+    }
+
+    /**
+     * 根据用户ID查询推荐人信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getRefereerInfoByUserId/{userId}")
+    public RUserResponse getRefereerInfoByUserId(@PathVariable Integer userId){
+        RUserResponse response = new RUserResponse();
+        RUser rUser = callCenterTradeService.getRefereerInfoByUserId(userId);
+        if(rUser != null){
+            RUserVO vo = new RUserVO();
+            BeanUtils.copyProperties(rUser, vo);
+            response.setResult(vo);
+        }
+        return response;
     }
 }

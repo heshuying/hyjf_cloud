@@ -9,8 +9,8 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
 /**
- * @author xiasq
- * @version SmsProducer, v0.1 2018/4/12 15:09
+ * @author dxj
+ * @version BorrowLoanRepayProducer, v0.1 2018/4/12 15:09
  */
 
 @Component

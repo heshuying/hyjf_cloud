@@ -12,7 +12,7 @@
 
 hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 ├── hyjf_cloud_server           -- spring cloud 组件
-|     ├── hyjf_eureka           -- 注册中心[端口:8888]
+|     ├── hyjf_eureka           -- 注册中心[端口:1111]
 |     ├── hyjf_config           -- 配置中心[端口:2222]
 |     ├── hyjf_spring_boot_admin-- 服务监控[端口:18080]
 |     ├── hyjf_zipkin           -- 全链路监控[端口:9411]  废弃，使用官方推荐jar
@@ -28,7 +28,6 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
 |   |   ├── hyjf_am_trade      -- 标的、交易、资金、资产微服务[端口:8096]
 |   |   ├── hyjf_am_config      -- 公用配置微服务[端口:8091]
 |   |   ├── hyjf_am_market      -- 市场微服务[端口:8094] 包含活动、券等
-|   |   ├── hyjf_am_data_collect-- 数据收集微服务[端口:8095] 统计数据
 |   |   └── hyjf_am_user        -- 用户中心微服务[端口:8092]
 ├── hyjf_cs_server
 |   ├── hyjf_cs_trade          -- 核心组合微服务 [端口:8082] 

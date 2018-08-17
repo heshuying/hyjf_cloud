@@ -103,14 +103,4 @@ public class DynamicDataSourceContextHolder {
         CONTEXT_HOLDER.remove();
     }
 
-    /**
-     * Check if give DataSource is in current DataSource list
-     *
-     * @param key the key
-     * @return boolean boolean
-     */
-    public static boolean containDataSourceKey(DbType key) {
-        return dataSourceKeys.contains(key);
-    }
-
 }

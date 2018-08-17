@@ -2,6 +2,7 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.vo.market.EventsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,12 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmConfigClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -119,5 +126,40 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<UserVO> queryUser(JSONObject params) {
 		return null;// todo
+	}
+
+	@Override
+	public List<MessagePushTemplateVO> getAllTemplates() {
+		MessagePushTemplateResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates", MessagePushTemplateResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public EventResponse getEvents(int userId,int begin, int end) {
+		EventResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/getEvents/"+userId+"/" + begin+"/"+end,
+						EventResponse.class)
+				.getBody();
+		return response;
+	}
+
+
+	@Override
+	public EventVO selectPercentage(int percentage, int begin, int end, int userId) {
+		EventVO response = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/wxWeekly/selectPercentage/"+percentage+"/" + begin+"/"+end+"/"+userId,
+						EventVO.class)
+				.getBody();
+		return response;
+	}
+	@Override
+	public int updateAppNewsConfig(UserVO users) {
+		return restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, int.class).getBody();
 	}
 }

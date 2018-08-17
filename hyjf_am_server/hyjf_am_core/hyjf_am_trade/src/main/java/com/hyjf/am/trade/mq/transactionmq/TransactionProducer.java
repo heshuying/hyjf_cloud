@@ -1,19 +1,24 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
 import java.io.Serializable;
+import java.util.concurrent.*;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.*;
+import org.apache.rocketmq.client.producer.LocalTransactionState;
+import org.apache.rocketmq.client.producer.TransactionListener;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
@@ -38,54 +43,52 @@ public abstract class TransactionProducer {
 		producer.setNamesrvAddr(namesrvAddr);
 		producer.setVipChannelEnabled(false);
 		producer.setInstanceName(wrapper.getInstanceName());
-		producer.setCheckThreadPoolMinSize(2);
-		producer.setCheckThreadPoolMaxSize(2);
-		producer.setCheckRequestHoldMax(2000);
+
 		// 设置事务决断处理类
-		producer.setTransactionCheckListener(msg -> {
-			// 现在的版本取消了回查,这块不再执行，如果需要，自定义回查的代码，目前暂时不用
-			logger.info("message callback, do nothing...");
-			logger.info("server checking TrMsg %s%n", msg);
-			return LocalTransactionState.UNKNOW;
-		});
+		TransactionListener transactionListener = new TransactionListenerImpl();
+		producer.setTransactionListener(transactionListener);
+
+		ExecutorService executorService = new ThreadPoolExecutor(2, 5, 100, TimeUnit.SECONDS,
+				new ArrayBlockingQueue<Runnable>(2000), new ThreadFactory() {
+					@Override
+					public Thread newThread(Runnable r) {
+						Thread thread = new Thread(r);
+						thread.setName("client-transaction-msg-check-thread");
+						return thread;
+					}
+				});
+		producer.setExecutorService(executorService);
+
 		producer.start();
 	}
 
 	protected abstract ProducerFieldsWrapper getFieldsWrapper();
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 *            消息体
-	 * @param localTransactionExecuter
-	 *            本地事务执行
 	 * @return
 	 * @throws MQClientException
 	 */
-	protected TransactionSendResult send(Message message, LocalTransactionExecuter localTransactionExecuter)
-			throws MQClientException {
+	protected LocalTransactionState send(Message message) throws MQClientException {
 		logger.info("mq address--->{}, 开始发送事务消息, message is :{}", namesrvAddr, message);
-		TransactionSendResult transactionSendResult = producer.sendMessageInTransaction(message,
-				localTransactionExecuter, null);
-
+		TransactionSendResult transactionSendResult = producer.sendMessageInTransaction(message, null);
 		logger.info("事务消息发送结果: {}", JSONObject.toJSONString(transactionSendResult));
-		return transactionSendResult;
+		return transactionSendResult != null ? transactionSendResult.getLocalTransactionState() : null;
 	}
 
 	/**
 	 *
 	 * @param messageContent
-	 * @param localTransactionExecuter
-	 *            本地事务执行
 	 * @return
 	 * @throws MQException
 	 */
-	protected TransactionSendResult messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
-			throws MQException {
+	protected LocalTransactionState messageSend(MassageContent messageContent) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
-			return send(message, localTransactionExecuter);
+			return send(message);
 		} catch (MQClientException e) {
 			throw new MQException("mq send error", e);
 		}
@@ -94,8 +97,6 @@ public abstract class TransactionProducer {
 	public TransactionMQProducer getTransactionMQProducer() throws MQClientException {
 		return producer;
 	}
-
-	public abstract boolean messageSend(MassageContent messageContent) throws MQException;
 
 	public static class MassageContent implements Serializable {
 		private static final long serialVersionUID = -6846413929342308237L;
@@ -135,6 +136,57 @@ public abstract class TransactionProducer {
 
 		public void setInstanceName(String instanceName) {
 			this.instanceName = instanceName;
+		}
+	}
+
+	/**
+	 * 执行本地事务
+	 *
+	 * @param message
+	 * @param obj
+	 * @return
+	 */
+	protected abstract LocalTransactionState doExecuteLocalTransaction(Message message, Object obj);
+
+	class TransactionListenerImpl implements TransactionListener {
+		private Logger logger = LoggerFactory.getLogger(getClass());
+
+		/**
+		 * 执行本地事务
+		 * 
+		 * @param message
+		 * @param obj
+		 * @return
+		 */
+		@Override
+		public LocalTransactionState executeLocalTransaction(Message message, Object obj) {
+			logger.info("execute local transaction start...");
+			LocalTransactionState localTransactionState = doExecuteLocalTransaction(message, obj);
+			// 本地事务执行结果存入redis，便于回查使用
+			String redisKey = getLocalTransactionResultKey(message.getTopic(), message.getTags(), message.getKeys());
+			RedisUtils.setObj(redisKey, localTransactionState);
+			logger.info("execute local transaction end, result is: {}", localTransactionState);
+			return localTransactionState == null ? LocalTransactionState.UNKNOW : localTransactionState;
+		}
+
+		/**
+		 * 检查本地事务执行结果
+		 * 
+		 * @param messageExt
+		 * @return
+		 */
+		@Override
+		public LocalTransactionState checkLocalTransaction(MessageExt messageExt) {
+			logger.info("mq server check local transaction start...");
+			String redisKey = getLocalTransactionResultKey(messageExt.getTopic(), messageExt.getTags(),
+					messageExt.getKeys());
+			LocalTransactionState localTransactionState = RedisUtils.getObj(redisKey, LocalTransactionState.class);
+			logger.info("mq server check local transaction end, result is: {}", localTransactionState);
+			return localTransactionState == null ? LocalTransactionState.UNKNOW : localTransactionState;
+		}
+
+		private String getLocalTransactionResultKey(String topic, String tags, String key) {
+			return topic + ":" + tags + ":" + key;
 		}
 	}
 }

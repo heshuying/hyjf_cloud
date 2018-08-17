@@ -20,9 +20,9 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.SmsOntime;
+import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
-import com.hyjf.cs.message.mongo.SmsOntimeMongoDao;
+import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.SmsProducer;
 import com.hyjf.cs.message.service.message.MessageService;
@@ -50,6 +50,7 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
+		//todo
 		return null;
 	}
 

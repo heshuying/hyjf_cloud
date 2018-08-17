@@ -7,7 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.RechargeService;
+import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,10 +34,10 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "wechat端用户充值接口")
+@Api(tags = "wechat端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/wechat/recharge")
+@RequestMapping(value = "/hyjf-wechat/recharge")
 public class WechatRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(WechatRechargeController.class);
@@ -59,10 +59,10 @@ public class WechatRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
-	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
+	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("wechat充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
+		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			modelAndView = BankCallUtils.callApi(bean);

@@ -3,40 +3,13 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.resquest.user.UsersContractRequest;
 import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.BindEmailLogVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserLoginLogVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UsersContactVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -46,12 +19,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -59,11 +27,24 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
-
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import sun.misc.BASE64Decoder;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -132,7 +113,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
-    }
+        }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
@@ -151,14 +132,22 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 紧急联系人类型 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
-
+        // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
+        List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
+        BankCardVO bankCard = new BankCardVO();
+        if (bankCards != null && !bankCards.isEmpty()) {
+            bankCard = bankCards.get(0);
+            bankCard.setCardNoNotEncrypt(bankCard.getCardNo());
+            bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
+        }
+        resultMap.put("bankCard", bankCard);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);
         resultMap.put("chinapnr", chinapnr);
 
         UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
-        if (userEvalationResult != null && userEvalationResult.getId() != 0) {
+        if (userEvalationResult != null && userEvalationResult.getId() != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
@@ -187,7 +176,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost() + "/user/regist?from=" + user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;
     }
 
@@ -302,14 +291,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -351,7 +340,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 紧急联系人参数校验
      */
     @Override
-    public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user) {
+    public void checkForContractSave(String relationId, String rlName, String rlPhone) {
         // 请求参数空值校验
         if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
@@ -370,12 +359,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 保存紧急联系人
      */
     @Override
-    public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUserVO user) throws MQException {
+    public boolean saveContract(String relationId, String rlName, String rlPhone, int userId) throws MQException {
         UsersContractRequest requestBean = new UsersContractRequest();
         requestBean.setRelation(Integer.parseInt(relationId));
         requestBean.setRlName(rlName);
         requestBean.setRlPhone(rlPhone);
-        requestBean.setUserId(user.getUserId());
+        requestBean.setUserId(userId);
         int cnt = amUserClient.updateUserContract(requestBean);
 
         if (cnt <= 0) {
@@ -422,19 +411,19 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     @Override
     public boolean updateSmsConfig(Integer userId, String smsKey, Integer smsValue, UserVO user) {
-        if (smsKey.equals("rechargeSms")) {
+        if ("rechargeSms".equals(smsKey)) {
             //充值成功短信
             user.setRechargeSms(smsValue);
         }
-        if (smsKey.equals("withdrawSms")) {
+        if ("withdrawSms".equals(smsKey)) {
             //提现成功短信
             user.setWithdrawSms(smsValue);
         }
-        if (smsKey.equals("investSms")) {
+        if ("investSms".equals(smsKey)) {
             //投资成功短信
             user.setInvestSms(smsValue);
         }
-        if (smsKey.equals("recieveSms")) {
+        if ("recieveSms".equals(smsKey)) {
             //回收成功短信
             user.setRecieveSms(smsValue);
         }
@@ -463,15 +452,18 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 指定图片要存放的位置
         String imgFilePath = logoSaveFile + "/" + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
-        FileOutputStream out = new FileOutputStream(imgFilePath);
-        // 利用文件输出器将二进制格式decodedBytes输出
-        out.write(decodedBytes);
-        out.close(); // 关闭文件输出器
-        // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
-        String iconUrl = fileRealName;
-        user.setIconUrl(iconUrl);
-        // 保存到数据库
-        amUserClient.updateUserById(user);
+        try (FileOutputStream out = new FileOutputStream(imgFilePath)) {
+            // 利用文件输出器将二进制格式decodedBytes输出
+            out.write(decodedBytes);
+            out.close(); // 关闭文件输出器
+            // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
+            String iconUrl = fileRealName;
+            user.setIconUrl(iconUrl);
+            // 保存到数据库
+            amUserClient.updateUserById(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return imgFilePath;
     }
 
@@ -499,12 +491,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     }
 
     @Override
-    public String updateAvatar(String token, MultipartFile iconImg) throws Exception {
+    public String updateAvatar(Integer userId, MultipartFile iconImg) throws Exception {
         // 单位字节
         Long allowFileLength = 5000000L;
-        UserVO userVO = this.getUsers(token);
+        UserVO userVO = this.getUsersById(userId);
         // 取得用户ID
-        Integer userId = userVO.getUserId();
         CheckUtil.check(null != userId, MsgEnum.STATUS_CE000006);
         // 从配置文件获取上传文件的各个URL
         // 上传文件的CDNURL
@@ -525,7 +516,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         fileRealName = "appIconImg_" + userId + fileRealName + UploadFileUtils.getSuffix(iconImg.getOriginalFilename());
         // 上传至服务器
         String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
-        if (!returnMessage.equals("上传文件成功！")) {
+        if (!"上传文件成功！".equals(returnMessage)) {
             throw new CheckException(returnMessage);
         }
         // 保存到数据库的路径=上传文件的CDNURL+图片的文件名

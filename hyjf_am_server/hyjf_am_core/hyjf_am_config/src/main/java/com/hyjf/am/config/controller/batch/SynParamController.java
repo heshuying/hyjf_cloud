@@ -21,6 +21,7 @@ import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.config.service.SynParamService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
@@ -104,4 +105,17 @@ public class SynParamController extends BaseConfigController {
         
         return response;
     }
+
+    
+    /**
+     *  测试生产消息
+     * @return
+     * @throws Exception 
+     */
+    @GetMapping("/testRedis")
+    public Map testRedis(){
+    	
+    	return CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+    }
+    
 }

@@ -2,19 +2,12 @@ package com.hyjf.cs.message.client;
 
 import java.util.List;
 
-import com.hyjf.am.response.config.SmsNoticeConfigResponse;
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserVO;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @author xiasq
@@ -68,4 +61,19 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int countAliasByClient(String clientAndroid);
+
+	/**
+	 * 查看用户详情
+	 * @param userId
+	 * @return
+	 */
+	 UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	MessagePushErrorVO getMobileCodeByNumber(String mobile);
 }

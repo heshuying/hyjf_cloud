@@ -1,25 +1,5 @@
 package com.hyjf.cs.trade.controller.api.synbalance;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -37,29 +17,44 @@ import com.hyjf.cs.trade.bean.ResultBean;
 import com.hyjf.cs.trade.bean.SynBalanceResultBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.SynBalanceService;
+import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "api端同步余额信息接口")
+@Api(value = "api端同步余额信息接口",tags = "api端同步余额信息接口")
 @Controller
-@RequestMapping("/api/synbalance")
+@RequestMapping("/hyjf-api/synbalance")
 public class SynBalanceController extends BaseTradeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(SynBalanceController.class);
     @Autowired
     private SynBalanceService synBalanceService;
-    @ApiOperation(value = "用户银行提现", notes = "用户提现")
-    @PostMapping("/synbalance")
+    @ApiOperation(value = "第三方同步余额", notes = "同步余额")
+    @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public SynBalanceResultBean synBalance(@RequestBody SynBalanceRequestBean synBalanceRequestBean, HttpServletRequest request) {
         logger.info(synBalanceRequestBean.getAccountId()+"第三方同步余额开始-----------------------------");
         logger.info("第三方请求参数："+JSONObject.toJSONString(synBalanceRequestBean));
@@ -103,7 +98,7 @@ public class SynBalanceController extends BaseTradeController {
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
         // TODO 从配置文件获取
-        if("true".equals("false")){
+        if("true".equals("true")){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));
@@ -141,8 +136,6 @@ public class SynBalanceController extends BaseTradeController {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             logger.info("-------------------同步余额失败--------------------");
             resultBean.setStatusDesc("同步余额失败");
-
-            logger.info(this.getClass().getName(), "/synbalance");
             return resultBean;
         }
         //返回失败

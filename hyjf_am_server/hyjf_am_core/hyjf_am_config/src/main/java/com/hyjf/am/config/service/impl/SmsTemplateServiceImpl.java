@@ -3,22 +3,20 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.mapper.auto.SmsTemplateMapper;
+import com.hyjf.am.config.dao.model.auto.SmsTemplate;
+import com.hyjf.am.config.dao.model.auto.SmsTemplateExample;
+import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.config.dao.mapper.auto.SmsTemplateMapper;
-import com.hyjf.am.config.dao.model.auto.SmsTemplate;
-import com.hyjf.am.config.dao.model.auto.SmsTemplateExample;
-import com.hyjf.am.config.service.SmsTemplateService;
-import com.hyjf.am.resquest.config.SmsTemplateRequest;
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -32,7 +30,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 
 	@Override
 	public SmsTemplate findSmsTemplateByCode(String tplCode) {
-		SmsTemplate smsTemplate = RedisUtils.getObj(RedisKey.SMS_TEMPLATE, SmsTemplate.class);
+		SmsTemplate smsTemplate = RedisUtils.getObj(RedisConstants.SMS_TEMPLATE, SmsTemplate.class);
 		if (smsTemplate == null) {
 			SmsTemplateExample example = new SmsTemplateExample();
 			SmsTemplateExample.Criteria criteria = example.createCriteria();
@@ -40,7 +38,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			List<SmsTemplate> smsTemplateList = smsTemplateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(smsTemplateList)) {
 				smsTemplate = smsTemplateList.get(0);
-				RedisUtils.setObjEx(RedisKey.SMS_TEMPLATE, smsTemplate, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.SMS_TEMPLATE, smsTemplate, 24 * 60 * 60);
 				return smsTemplate;
 			}
 		}
@@ -78,5 +76,30 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			BeanUtils.copyProperties(request, smsTemplate);
 			smsTemplateMapper.insert(smsTemplate);
 		}
+	}
+
+	@Override
+	public void openSmsTemplate(SmsTemplateRequest request) {
+		SmsTemplate smsTemplate = new SmsTemplate();
+		BeanUtils.copyProperties(request, smsTemplate);
+		// 开启
+		smsTemplate.setStatus(1);
+		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	}
+
+	@Override
+	public void closeSmsTemplate(SmsTemplateRequest request) {
+		SmsTemplate smsTemplate = new SmsTemplate();
+		BeanUtils.copyProperties(request, smsTemplate);
+		// 关闭
+		smsTemplate.setStatus(0);
+		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	}
+
+	@Override
+	public void updateSmsTemplate(SmsTemplateRequest request) {
+		SmsTemplate smsTemplate = new SmsTemplate();
+		BeanUtils.copyProperties(request, smsTemplate);
+		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
 	}
 }

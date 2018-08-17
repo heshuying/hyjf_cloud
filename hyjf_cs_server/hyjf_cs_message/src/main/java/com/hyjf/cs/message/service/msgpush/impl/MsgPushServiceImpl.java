@@ -3,12 +3,6 @@
  */
 package com.hyjf.cs.message.service.msgpush.impl;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -16,14 +10,23 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.MessagePush;
-import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
-import com.hyjf.cs.message.client.messagePushTemplateClient.MessagePushTemplateClient;
-import com.hyjf.cs.message.mongo.MessagePushMsgDao;
-import com.hyjf.cs.message.mongo.MessagePushTemplateStaticsDao;
+import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.client.AmConfigClient;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.AppMessageProducer;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -31,6 +34,7 @@ import com.hyjf.cs.message.service.msgpush.MsgPushService;
  */
 @Service
 public class MsgPushServiceImpl implements MsgPushService {
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private MessagePushMsgDao messagePushMsgDao;
@@ -42,7 +46,10 @@ public class MsgPushServiceImpl implements MsgPushService {
 	private AppMessageProducer appMessageProducer;
 
 	@Autowired
-	private MessagePushTemplateClient messagePushTemplateClient;
+	private AmConfigClient amConfigClient;
+
+	@Autowired
+	private MessagePushMsgHistoryDao msgHistoryDao;
 
 	@Override
 	public void pushMessage() {
@@ -64,12 +71,37 @@ public class MsgPushServiceImpl implements MsgPushService {
 	@Override
 	public List<MessagePushTemplateVO> getAllTemplates() {
 		// 获取所有模板
-		List<MessagePushTemplateVO> templateList = messagePushTemplateClient.getAllTemplates();
+		List<MessagePushTemplateVO> templateList = amConfigClient.getAllTemplates();
 		// 插入统计数据
 		for (int i = 0; i < templateList.size(); i++) {
 			this.insertTemplateStatics(templateList.get(i));
 		}
 		return null;
+	}
+
+	@Override
+	public Integer countMsgHistoryRecord(Integer tagId, Integer userId, String platform) {
+		return msgHistoryDao.countMsgHistoryRecord(tagId, userId, platform);
+	}
+
+	@Override
+	public List<MessagePushMsgHistory> getMsgHistoryList(Integer tagId, Integer userId, String platform, int limitStart, int limitEnd) {
+		return msgHistoryDao.getMsgHistoryList(tagId, userId, platform, limitStart, limitEnd);
+	}
+
+	@Override
+	public MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId) {
+		return msgHistoryDao.getMsgPushMsgHistoryById(msgId);
+	}
+
+	@Override
+	public void updateMsgPushMsgHistory(MessagePushMsgHistory msgHistory) {
+		msgHistoryDao.updateMsgPushMsgHistory(msgHistory);
+	}
+
+	@Override
+	public void updateAllMsgPushMsgHistory(Integer userId, String platform) {
+		logger.info("全部已读什么都不做，等二期处理....");
 	}
 
 	private void insertTemplateStatics(MessagePushTemplateVO template) {

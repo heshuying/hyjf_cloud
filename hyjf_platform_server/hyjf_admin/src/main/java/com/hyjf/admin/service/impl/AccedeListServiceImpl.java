@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.admin.client.AccedeListClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
@@ -36,61 +37,116 @@ import com.hyjf.common.exception.MQException;
 public class AccedeListServiceImpl implements AccedeListService{
 	
     @Autowired
-    private AccedeListClient accedeListClient;
+    private AmTradeClient amTradeClient;
+    
+    @Autowired
+    private AmUserClient amUserClient;
     
 	@Autowired
 	private FddProducer fddProducer;
 	
 	private static final Logger _log = LoggerFactory.getLogger(AccedeListController.class);
-
+	/**
+     * 获取加入计划列表
+     * @return
+     */
 	@Override
 	public AccedeListResponse getAccedeListByParam(AccedeListRequest form) {
-		AccedeListResponse response = accedeListClient.getAccedeListByParam(form);
+		AccedeListResponse response = amTradeClient.getAccedeListByParam(form);
 		return response;
 	}
-
+	
+	/**
+     * 获取加入计划列表不分页
+     * @return
+     */
 	@Override
 	public List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form) {
-		List<AccedeListCustomizeVO> list = accedeListClient.getAccedeListByParamWithoutPage(form);
+		List<AccedeListCustomizeVO> list = amTradeClient.getAccedeListByParamWithoutPage(form);
 		return list;
 	}
-
+	
+	/**
+     * 获取加入计划列表列总计
+     * @return
+     */
 	@Override
 	public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form) {
-		HjhAccedeSumVO vo = accedeListClient.getCalcSumByParam(form);
+		HjhAccedeSumVO vo = amTradeClient.getCalcSumByParam(form);
 		return vo;
 	}
-
+	
+	/**
+	 * EMAIL入力后发送协议
+	 * @author pcc
+	 * @param userid
+	 * @param planOrderId
+	 * @param debtPlanNid
+	 */
 	@Override
 	public String resendMessageAction(String userid, String planOrderId, String debtPlanNid, String sendEmail) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * 通过用户id获取用户信息   抽成共通
+	 * @author pcc
+	 * @param userid
+	 * @param planOrderId
+	 * @param debtPlanNid
+	 */
 	@Override
 	public UserVO getUserByUserId(int userId) {
-		UserVO vo = accedeListClient.getUserByUserId(userId);
+		UserVO vo = amUserClient.getUserByUserId(userId);
 		return vo;
 	}
 
+	/**
+	 * 通过计划订单号查询法大大协议列表
+	 * @param userid
+	 * @param planOrderId
+	 * @param debtPlanNid
+	 */
 	@Override
 	public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
-		List<TenderAgreementVO> tenderAgreementList = accedeListClient.selectTenderAgreementByNid(planOrderId);
+		List<TenderAgreementVO> tenderAgreementList = amTradeClient.selectTenderAgreementByNid(planOrderId);
 		return tenderAgreementList;
 	}
 
+	/**
+	 * 通过userid获取用户详情
+	 * @author pcc
+	 * @param userid
+	 * @param planOrderId
+	 * @param debtPlanNid
+	 */
 	@Override
 	public UserInfoVO getUsersInfoByUserId(int userid) {
-		UserInfoVO vo = accedeListClient.selectUsersInfoByUserId(userid);
+		UserInfoVO vo = amUserClient.selectUsersInfoByUserId(userid);
 		return vo;
 	}
 
+	/**
+	 * 更新协议发送状态
+	 * @author 
+	 * @param userid
+	 * @param planOrderId
+	 * @param debtPlanNid
+	 */
 	@Override
 	public int updateSendStatusByParam(AccedeListRequest request) {
-		int flg = accedeListClient.updateSendStatusByParam(request);
+		int flg = amTradeClient.updateSendStatusByParam(request);
 		return flg;
 	}
 
+	/**
+	 * PDF下载加脱敏
+	 * @param tenderAgreement
+	 * @param borrowNid
+	 * @param transType
+	 * @param instCode
+	 */
 	@Override
 	public void updateSaveSignInfo(TenderAgreementVO tenderAgreement, String borrowNid, Integer transType,
 			String instCode) {
@@ -123,9 +179,16 @@ public class AccedeListServiceImpl implements AccedeListService{
 		}
 	}
 
+	/**
+	 * 查询用户投资详情
+	 * @param tenderAgreement
+	 * @param borrowNid
+	 * @param transType
+	 * @param instCode
+	 */
 	@Override
 	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
-		UserHjhInvistDetailVO vo = accedeListClient.selectUserHjhInvistDetail(request);
+		UserHjhInvistDetailVO vo = amTradeClient.selectUserHjhInvistDetail(request);
 		return vo;
 	}
 }

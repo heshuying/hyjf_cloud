@@ -3,14 +3,18 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.trade.TenderCityCountVO;
+import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.annotation.Cilent;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,6 +70,91 @@ public class AmTradeClientImpl implements AmTradeClient {
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
+		return null;
+	}
+
+	@Override
+	public List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public List<TenderSexCountVO> getTenderSexGroupBy(Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public int getTenderAgeByRange(Date date, int firstAge, int endAge) {
+		return 0;
+	}
+
+	@Override
+	public OperationReportEntityVO getOperationReport(int i) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getAccountByMonth(Date firstDay, Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public int getTradeCountByMonth(Date firstDay, Date lastDay) {
+		return 0;
+	}
+
+	@Override
+	public int getLoanNum(Date lastDay) {
+		return 0;
+	}
+
+	@Override
+	public double getInvestLastDate(Date lastDay) {
+		return 0;
+	}
+
+	@Override
+	public int getTenderCount(Date lastDay) {
+		return 0;
+	}
+
+	@Override
+	public float getFullBillAverageTime(Date lastDay) {
+		return 0;
+	}
+
+	@Override
+	public BigDecimal getRepayTotal(Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public Integer countBorrowUser() {
+		return null;
+	}
+
+	@Override
+	public Integer countCurrentBorrowUser() {
+		return null;
+	}
+
+	@Override
+	public Integer countCurrentTenderUser() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoney(Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoneyTopTen() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoneyTopOne() {
 		return null;
 	}
 }

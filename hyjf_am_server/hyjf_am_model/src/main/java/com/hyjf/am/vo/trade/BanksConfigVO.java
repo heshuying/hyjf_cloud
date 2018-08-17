@@ -12,6 +12,8 @@ public class BanksConfigVO extends BaseVO implements Serializable {
 
     private String bankName;
 
+    private String name;
+
     private String payAllianceCode;
 
     private String bankCode;
@@ -196,5 +198,13 @@ public class BanksConfigVO extends BaseVO implements Serializable {
 
     public void setMonthCardQuota(BigDecimal monthCardQuota) {
         this.monthCardQuota = monthCardQuota;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

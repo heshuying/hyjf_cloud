@@ -1,8 +1,7 @@
 package com.hyjf.cs.trade.controller.app.home;
 
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.service.AppHomeService;
-import com.hyjf.cs.trade.util.AppHomePageDefine;
+import com.hyjf.cs.trade.service.home.AppHomeService;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/5 13:40
  */
-@Api(value = "Web端首页")
+@Api(value = "APP端首页",tags = "APP端首页")
 @RestController
-//@RequestMapping("/app/home")
-@RequestMapping(AppHomePageDefine.REQUEST_MAPPING)  // 保留原来请去路径
+@RequestMapping(HomePageDefine.REQUEST_MAPPING)  // 保留原来请求路径
 public class AppHomeController {
 
 
@@ -35,7 +33,7 @@ public class AppHomeController {
      * @return
      */
     @ApiOperation(value = "APP:获取首页各项数据", notes = "APP:获取首页各项数据")
-    @PostMapping(value = AppHomePageDefine.PROJECT_LIST_ACTION, produces = "application/json; charset=utf-8")
+    @PostMapping(value = HomePageDefine.PROJECT_LIST_ACTION, produces = "application/json; charset=utf-8")
     public Object getHomeData(HttpServletRequest request , @RequestHeader(value = "userId" , required = false )String userId){
         // controller 不做业务处理
         Object object =  appHomeService.getAppHomeData(request,userId);

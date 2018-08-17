@@ -3,43 +3,51 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.admin.beans.InvestorDebtBean;
+import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
+ * 投资明细共用返回bean
  * @author wangjun
  * @version BorrowInvestResponseBean, v0.1 2018/7/10 17:15
  */
 public class BorrowInvestResponseBean {
-    private List<BorrowInvestCustomizeVO> recordList;
+    @ApiModelProperty(value = "投资明细列表")
+    private List<AdminBorrowInvestCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "列表统计")
     private String sumAccount;
 
+    @ApiModelProperty(value = "总条数")
     private Integer total;
 
-    /**
-     * 操作平台
-     */
-    private Map<String,String> clientList;
+    @ApiModelProperty(value = "操作平台")
+    private List<DropDownVO> clientList;
 
-    /**
-     * 还款方式
-     */
-    private List<BorrowStyleVO> borrowStyleList;
+    @ApiModelProperty(value = "还款方式")
+    private List<DropDownVO> borrowStyleList;
 
-    /**
-     * 投资方式
-     */
-    private Map<String,String> investTypeList;
+    @ApiModelProperty(value = "投资方式")
+    private List<DropDownVO> investTypeList;
 
-    public List<BorrowInvestCustomizeVO> getRecordList() {
+    @ApiModelProperty(value = "投资人债券明细")
+    List<InvestorDebtBean> detailList;
+
+    @ApiModelProperty(value = "PDF脱敏图片(PDF脱敏图片预览接口)")
+    List<String> imgList;
+
+    @ApiModelProperty(value = "文件服务器(PDF脱敏图片预览接口)")
+    String fileDomainUrl;
+
+    public List<AdminBorrowInvestCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowInvestCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowInvestCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 
@@ -59,27 +67,51 @@ public class BorrowInvestResponseBean {
         this.total = total;
     }
 
-    public Map<String, String> getClientList() {
+    public List<DropDownVO> getClientList() {
         return clientList;
     }
 
-    public void setClientList(Map<String, String> clientList) {
+    public void setClientList(List<DropDownVO> clientList) {
         this.clientList = clientList;
     }
 
-    public List<BorrowStyleVO> getBorrowStyleList() {
+    public List<DropDownVO> getBorrowStyleList() {
         return borrowStyleList;
     }
 
-    public void setBorrowStyleList(List<BorrowStyleVO> borrowStyleList) {
+    public void setBorrowStyleList(List<DropDownVO> borrowStyleList) {
         this.borrowStyleList = borrowStyleList;
     }
 
-    public Map<String, String> getInvestTypeList() {
+    public List<DropDownVO> getInvestTypeList() {
         return investTypeList;
     }
 
-    public void setInvestTypeList(Map<String, String> investTypeList) {
+    public void setInvestTypeList(List<DropDownVO> investTypeList) {
         this.investTypeList = investTypeList;
+    }
+
+    public List<InvestorDebtBean> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<InvestorDebtBean> detailList) {
+        this.detailList = detailList;
+    }
+
+    public List<String> getImgList() {
+        return imgList;
+    }
+
+    public void setImgList(List<String> imgList) {
+        this.imgList = imgList;
+    }
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
     }
 }

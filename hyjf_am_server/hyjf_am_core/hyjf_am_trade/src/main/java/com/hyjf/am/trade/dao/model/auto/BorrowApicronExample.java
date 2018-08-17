@@ -2236,6 +2236,66 @@ public class BorrowApicronExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsAllrepayIsNull() {
+            addCriterion("is_allrepay is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayIsNotNull() {
+            addCriterion("is_allrepay is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayEqualTo(Integer value) {
+            addCriterion("is_allrepay =", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayNotEqualTo(Integer value) {
+            addCriterion("is_allrepay <>", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayGreaterThan(Integer value) {
+            addCriterion("is_allrepay >", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_allrepay >=", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayLessThan(Integer value) {
+            addCriterion("is_allrepay <", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayLessThanOrEqualTo(Integer value) {
+            addCriterion("is_allrepay <=", value, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayIn(List<Integer> values) {
+            addCriterion("is_allrepay in", values, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayNotIn(List<Integer> values) {
+            addCriterion("is_allrepay not in", values, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayBetween(Integer value1, Integer value2) {
+            addCriterion("is_allrepay between", value1, value2, "isAllrepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAllrepayNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_allrepay not between", value1, value2, "isAllrepay");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

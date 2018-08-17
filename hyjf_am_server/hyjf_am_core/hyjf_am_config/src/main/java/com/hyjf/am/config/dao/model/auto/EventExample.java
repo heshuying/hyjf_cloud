@@ -255,6 +255,76 @@ public class EventExample {
             return (Criteria) this;
         }
 
+        public Criteria andTitleIsNull() {
+            addCriterion("title is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleIsNotNull() {
+            addCriterion("title is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleEqualTo(String value) {
+            addCriterion("title =", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleNotEqualTo(String value) {
+            addCriterion("title <>", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleGreaterThan(String value) {
+            addCriterion("title >", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleGreaterThanOrEqualTo(String value) {
+            addCriterion("title >=", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleLessThan(String value) {
+            addCriterion("title <", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleLessThanOrEqualTo(String value) {
+            addCriterion("title <=", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleLike(String value) {
+            addCriterion("title like", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleNotLike(String value) {
+            addCriterion("title not like", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleIn(List<String> values) {
+            addCriterion("title in", values, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleNotIn(List<String> values) {
+            addCriterion("title not in", values, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleBetween(String value1, String value2) {
+            addCriterion("title between", value1, value2, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleNotBetween(String value1, String value2) {
+            addCriterion("title not between", value1, value2, "title");
+            return (Criteria) this;
+        }
+
         public Criteria andContentIsNull() {
             addCriterion("content is null");
             return (Criteria) this;
@@ -385,6 +455,66 @@ public class EventExample {
             return (Criteria) this;
         }
 
+        public Criteria andStatusIsNull() {
+            addCriterion("`status` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("`status` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("`status` =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("`status` <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("`status` >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`status` >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("`status` <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("`status` <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("`status` in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("`status` not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("`status` between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("`status` not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
         public Criteria andAddAdminIsNull() {
             addCriterion("add_admin is null");
             return (Criteria) this;
@@ -512,6 +642,76 @@ public class EventExample {
 
         public Criteria andActTimeNotBetween(Integer value1, Integer value2) {
             addCriterion("act_time not between", value1, value2, "actTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbIsNull() {
+            addCriterion("thumb is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbIsNotNull() {
+            addCriterion("thumb is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbEqualTo(String value) {
+            addCriterion("thumb =", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbNotEqualTo(String value) {
+            addCriterion("thumb <>", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbGreaterThan(String value) {
+            addCriterion("thumb >", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbGreaterThanOrEqualTo(String value) {
+            addCriterion("thumb >=", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbLessThan(String value) {
+            addCriterion("thumb <", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbLessThanOrEqualTo(String value) {
+            addCriterion("thumb <=", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbLike(String value) {
+            addCriterion("thumb like", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbNotLike(String value) {
+            addCriterion("thumb not like", value, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbIn(List<String> values) {
+            addCriterion("thumb in", values, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbNotIn(List<String> values) {
+            addCriterion("thumb not in", values, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbBetween(String value1, String value2) {
+            addCriterion("thumb between", value1, value2, "thumb");
+            return (Criteria) this;
+        }
+
+        public Criteria andThumbNotBetween(String value1, String value2) {
+            addCriterion("thumb not between", value1, value2, "thumb");
             return (Criteria) this;
         }
 

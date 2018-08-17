@@ -4,24 +4,29 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BindCardPageBean;
+import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -33,11 +38,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,15 +76,15 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamSendcode(Integer userId, String mobile, String cardNo) {
         // 手机号校验
         if(StringUtils.isBlank(mobile)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
+			throw new CheckException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(cardNo)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+			throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+			throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 	
@@ -92,24 +99,24 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamBindCard(BindCardVO bindCardVO, Integer userId) {
 		// 短信授权码校验
         if (StringUtils.isBlank(bindCardVO.getLastSrvAuthCode())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_CODE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_AUTHORIZE_CODE_BLANK);
         }
         // 手机号校验
         if(StringUtils.isBlank(bindCardVO.getMobile())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+        	throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
         // 短信验证码校验
         if(StringUtils.isBlank(bindCardVO.getSmsCode())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_SMSCODE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_SMSCODE_BLANK);
         }
 
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        	throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 
@@ -132,6 +139,83 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	/**
+	 * 绑卡校验APP
+	 * @param user
+	 */
+	@Override
+	public String checkParamBindCardPageAPP(WebViewUserVO user) {
+		if(user == null){
+			return "用户未登录";
+		}
+		if(!this.checkIsOpen(user.getUserId())){
+			return "用户未开户";
+		}
+		if(user.getIsSetPassword() != 1){
+			return "未设置过交易密码，请先设置交易密码";
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		if(count > 0){
+			return "用户已绑定银行卡,请先解除绑定,然后重新操作！";
+		}
+
+		return "";
+	}
+
+	/**
+	 * 绑卡校验wechat
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public ResultEnum checkParamBindCardPageWeChat(WebViewUserVO user) {
+		if(user == null){
+			return ResultEnum.NOTLOGIN;
+		}
+		if(!this.checkIsOpen(user.getUserId())){
+			return ResultEnum.USER_ERROR_200;
+		}
+		if(user.getIsSetPassword() != 1){
+			return ResultEnum.USER_ERROR_200;
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		if(count > 0){
+			return ResultEnum.USER_ERROR_217;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 绑卡校验API端
+	 * @param bankCardRequestBean
+	 * @return
+	 */
+	@Override
+	public Map<String,String> checkParamBindCardPageApi(BindCardPageRequestBean bankCardRequestBean) {
+		Map<String,String> resultMap = new HashMap<>();
+		BankOpenAccountVO openAccountVO = amUserClient.selectBankOpenAccountByAccountId(bankCardRequestBean.getAccountId());
+		if(openAccountVO == null){
+			resultMap.put("key","CE000004");
+			resultMap.put("msg","没有根据电子银行卡找到用户");
+			logger.info("没有根据电子银行卡找到用户");
+		}
+		UserVO userVO = this.getUsersById(openAccountVO.getUserId());
+		if(userVO.getIsSetPassword() != 1){
+			resultMap.put("key","TP000002");
+			resultMap.put("msg","用户未设置交易密码");
+			logger.info("用户未设置交易密码");
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(userVO.getUserId()));
+		if(count > 0){
+			resultMap.put("key","BC000001");
+			resultMap.put("msg","用户已绑定银行卡,请先解除绑定,然后重新操作");
+			logger.info("用户已绑定银行卡,请先解除绑定,然后重新操作");
+		}
+
+		return resultMap;
+	}
+
+	/**
 	 * 绑卡接口请求
 	 * @auther: hesy
 	 * @date: 2018/6/22
@@ -139,11 +223,11 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
         // 回调路径
-        String retUrl = systemConfig.getFrontHost().trim();
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
         // 交易成功跳转链接
-        String successfulUrl = systemConfig.getFrontHost().trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+		String notifyUrl = systemConfig.getWebHost().trim() + "/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getWebHost().trim();
 
@@ -205,6 +289,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         bean.setUserIP(userIp);// 客户IP
         LogAcqResBean logAcq = new LogAcqResBean();
         logAcq.setCardNo(bindCardVO.getCardNo());
+        logAcq.setMobile(bindCardVO.getMobile());
         bean.setLogAcqResBean(logAcq);
         
         try {
@@ -215,6 +300,42 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         }
         
         return retBean;
+	}
+
+	@Override
+	public ModelAndView getCallbankMV(BindCardPageBean bean) {
+		ModelAndView mv = new ModelAndView();
+		// 获取共同参数
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String idType = BankCallConstant.ID_TYPE_IDCARD;
+
+		// 调用开户接口
+		BankCallBean bindCardBean = new BankCallBean();
+		bindCardBean.setTxCode(bean.getTxCode());// 消息类型(用户开户)
+		bindCardBean.setIdType(idType);
+		bindCardBean.setIdNo(bean.getIdNo());
+		bindCardBean.setName(bean.getName());
+		bindCardBean.setAccountId(bean.getAccountId());
+		bindCardBean.setUserIP(bean.getUserIP());
+		bindCardBean.setRetUrl(bean.getRetUrl());
+		bindCardBean.setSuccessfulUrl(bean.getSuccessfulUrl());
+		bindCardBean.setForgotPwdUrl(bean.getForgetPassworedUrl());
+		bindCardBean.setNotifyUrl(bean.getNotifyUrl());
+		// 页面调用必须传的
+		String orderId = GetOrderIdUtils.getOrderId2(bean.getUserId());
+		bindCardBean.setLogBankDetailUrl(BankCallConstant.BANK_URL_BIND_CARD_PAGE);
+		bindCardBean.setLogOrderId(orderId);
+		bindCardBean.setLogOrderDate(orderDate);
+		bindCardBean.setLogUserId(String.valueOf(bean.getUserId()));
+		bindCardBean.setLogRemark("外部服务接口:绑卡页面");
+		bindCardBean.setLogIp(bean.getUserIP());
+		bindCardBean.setLogClient(Integer.parseInt(bean.getPlatform()));
+		try {
+			mv = BankCallUtils.callApi(bindCardBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
 	}
 	
 	/**
@@ -264,6 +385,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					if(bankId == null) {
 						bankId = "0";
 					}
+					logger.info("根据银行卡号查询出的bankId：" + bankId);
 					// 查询银行配置信息
 					BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
 					
@@ -273,7 +395,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					bank.setStatus(1);// 默认都是1
 					bank.setCardNo(obj.getString("cardNo"));
 					bank.setBankId(bankId == null ? 0 : Integer.valueOf(bankId));
-					bank.setBank(bankConfig.getBankName());
+					if(bankConfig != null){
+						bank.setBank(bankConfig.getBankName());
+					}
 					// 银行联号
 					String payAllianceCode = "";
 					// 调用江西银行接口查询银行联号
@@ -282,7 +406,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 						payAllianceCode = payAllianceCodeQueryBean.getPayAllianceCode();
 					}
 					// 如果此时银联行号还是为空,根据bankId查询本地存的银联行号
-					if (StringUtils.isBlank(payAllianceCode)) {
+					if (StringUtils.isBlank(payAllianceCode) && bankConfig != null) {
 						payAllianceCode = bankConfig.getPayAllianceCode();
 					}
 					bank.setPayAllianceCode(payAllianceCode);
@@ -296,7 +420,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				for (BankCardRequest bank : bankCardList) {
 					boolean isInsertFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
 					if (!isInsertFlag) {
-						throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
+						throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 					}
 				}
 			}
@@ -315,20 +439,22 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setUserId(userId);
 		bankCardLogRequest.setUserName(userVO.getUsername());
 		bankCardLogRequest.setBankCode(String.valueOf(bankId));
-		bankCardLogRequest.setBankName(bankConfig.getBankName());
+		if(bankConfig != null){
+			bankCardLogRequest.setBankName(bankConfig.getBankName());
+		}
 		bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
 		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
 		bankCardLogRequest.setStatus(0);// 成功
 		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 		if (!isUpdateFlag) {
-			throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
+			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 		}
 		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
         if (retCard != null) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());
-            bankCard.setMobile(callBean.getMobile());
+            bankCard.setMobile(logAcq.getMobile());
             amUserClient.updateUserCard(bankCard);
         }
 		
@@ -364,17 +490,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	
 	/**
 	 * 请求银行解绑卡接口
-	 * @param bindCardVO
-	 * @param userId
-	 * @return
 	 */
 	@Override
-	public BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId) {
+	public BankCallBean callBankUnBindCard(String cardNo, Integer userId) {
 		BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
 		UserInfoVO  userInfo = amUserClient.findUserInfoById(userId);
 		UserVO user = amUserClient.findUserById(userId);
 		
-		BankCallBean retBean = null;
 		BankCallBean bean = new BankCallBean();
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
 		bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
@@ -391,19 +513,12 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bean.setIdNo(userInfo.getIdcard());// 证件号
 		bean.setName(userInfo.getTruename());// 姓名
 		bean.setMobile(user.getMobile());// 手机号
-		bean.setCardNo(bindCardVO.getCardNo());// 银行卡号
+		bean.setCardNo(cardNo);// 银行卡号
 		LogAcqResBean logAcqResBean = new LogAcqResBean();
-		logAcqResBean.setCardNo(bindCardVO.getCardNo());// 银行卡号
+		logAcqResBean.setCardNo(cardNo);// 银行卡号
 		bean.setLogAcqResBean(logAcqResBean);
 		
-		try {
-			retBean = BankCallUtils.callApiBg(bean);
-		} catch (Exception e) {
-			logger.info("解绑卡请求银行接口失败", e);
-            return null;
-		}
-        
-        return retBean;
+		return BankCallUtils.callApiBg(bean);
 	}
 	
 	/**
@@ -447,13 +562,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamUnBindCard(BindCardVO bindCardVO, Integer userId) {
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+        	throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
 
         // 开户校验
         BankOpenAccountVO openAccount = amUserClient.selectById(userId);
         if (openAccount == null || StringUtils.isBlank(openAccount.getAccount())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        	throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         
         // 账户余额校验
@@ -461,15 +576,51 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         BigDecimal bankBalance = this.queryBankBlance(userId, openAccount.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_UNBIND_HAVE_BALANCE);
+        	throw new CheckException(MsgEnum.ERR_CARD_UNBIND_HAVE_BALANCE);
 		}
         
         // 待解绑卡校验
         BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), bindCardVO.getCardNo());
         if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_EXIST);
+        	throw new CheckException(MsgEnum.ERR_CARD_NOT_EXIST);
 		}
         
+	}
+
+	/**
+	 * app端解绑银行卡校验
+	 * @param webViewUserVO
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public String checkParamUnBindCardAPP(WebViewUserVO webViewUserVO, String cardNo) {
+		// 银行卡号校验
+		if(StringUtils.isBlank(cardNo)) {
+			return "银行卡号未填写";
+		}
+
+		// 开户校验
+		if (!webViewUserVO.isOpenAccount()) {
+			return "用户未开户";
+		}
+
+		// 账户余额校验
+		AccountVO account = amTradeClient.getAccount(webViewUserVO.getUserId());
+		BigDecimal bankBalance = this.queryBankBlance(webViewUserVO.getUserId(), webViewUserVO.getBankAccount());
+		if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
+				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
+			return "账户尚有余额，不能解绑银行卡";
+		}
+
+		// 待解绑卡校验
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(webViewUserVO.getUserId()), cardNo);
+		if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
+			return "没有要解绑的银行卡";
+		}
+
+		return "";
+
 	}
 	
 	/**
@@ -477,7 +628,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 * @param bean
 	 */
 	@Override
-	public void updateAfterUnBindCard(BankCallBean bean) {
+	public boolean updateAfterUnBindCard(BankCallBean bean) {
 		LogAcqResBean logAcqResBean = bean.getLogAcqResBean();
 		UserVO user = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
 		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(bean.getLogUserId()), logAcqResBean.getCardNo());
@@ -493,13 +644,73 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
 			bankCardLogRequest.setOperationType(1);// 操作类型 0绑定 1删除
 			bankCardLogRequest.setStatus(0);// 成功
-			bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
+//			bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 			boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 			if (!isUpdateFlag) {
-				throw new ReturnMessageException(MsgEnum.ERR_CARD_DELETE);
+				throw new CheckException(MsgEnum.ERR_CARD_DELETE);
 			}
+			return isUpdateFlag;
 		}
-		
+		return true;
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 */
+	@Override
+	public boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo){
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
+		if(bankCard == null){
+			return false;
+		}
+
+		BankCardUpdateRequest requestBean = new BankCardUpdateRequest();
+		requestBean.setUserId(userId);
+		requestBean.setCardNo(cardNo);
+		requestBean.setUserName(userName);
+		return amUserClient.updateAfterDeleteCard(requestBean);
+	}
+
+	/**
+	 * 判断江西银行绑卡使用新/旧接口
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public Integer getBankInterfaceFlagByType(String type) {
+		return amConfigClient.getBankInterfaceFlagByType(type);
+	}
+
+	/**
+	 * 查询用户已绑定的有效卡
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public BankCardVO queryUserCardValid(String userId, String cardNo) {
+		return amUserClient.queryUserCardValid(userId, cardNo);
+	}
+
+	/**
+	 * 根据银行卡id获取银行配置信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public BankConfigVO getBankConfigById(Integer id) {
+		return amConfigClient.getBankConfigById(id);
+	}
+
+	/**
+	 * 根据电子账号查询用户在江西银行的可用余额
+	 * @param userId
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BigDecimal getBankBalance(Integer userId, String accountId) {
+		return this.queryBankBlance(userId, accountId);
 	}
 }
 

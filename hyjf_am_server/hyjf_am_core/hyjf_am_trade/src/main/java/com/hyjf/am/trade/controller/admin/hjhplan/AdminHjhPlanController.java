@@ -3,17 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.hjhplan;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -24,14 +13,20 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.paginator.Paginator;
-import org.springframework.util.CollectionUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author libin
  * @version AdminHjhPlanController.java, v0.1 2018年7月6日 上午10:04:37
  */
-@Api(value = "计划列表")
+@Api(value = "计划列表",tags ="计划列表")
 @RestController
 @RequestMapping("/am-trade/planList")
 public class AdminHjhPlanController {
@@ -176,7 +171,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isExistsRecord/{planNid}", method = RequestMethod.POST)
+    @GetMapping(value = "/isExistsRecord/{planNid}")
     public boolean isExistsRecord(@PathVariable String planNid) {
     	boolean Flag = adminHjhPlanService.isExistsRecord(planNid);
     	return Flag;
@@ -186,7 +181,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/countByPlanName/{planName}", method = RequestMethod.POST)
+    @GetMapping(value = "/countByPlanName/{planName}")
     public Integer countByPlanName(@PathVariable String planName) {
     	int Flag = adminHjhPlanService.countByPlanName(planName);
     	return Flag;
@@ -196,7 +191,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}", method = RequestMethod.POST)
+    @GetMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}")
     public Integer isLockPeriodExist(@PathVariable String lockPeriod, @PathVariable String borrowStyle, @PathVariable String isMonth) {
     	int Flag = adminHjhPlanService.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
     	return Flag;
@@ -222,6 +217,22 @@ public class AdminHjhPlanController {
 	public int insertRecord(@RequestBody PlanListRequest form) throws Exception {
 		int flg = adminHjhPlanService.insertRecord(form);
 		return flg;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :计划列表无分页
+	 */
+	@RequestMapping(value = "/getHjhPlanListByParamWithoutPage",method = RequestMethod.POST)
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(@RequestBody @Valid PlanListRequest request){
+		HjhPlanResponse response = new HjhPlanResponse();
+		List<HjhPlanVO> list = adminHjhPlanService.selectHjhPlanListWithoutPage(request);
+        if(!CollectionUtils.isEmpty(list)&&list.size() > 0){
+			response.setResultList(list);
+			//代表成功
+			response.setRtn(Response.SUCCESS);
+        }
+		return response;
 	}
     
 }

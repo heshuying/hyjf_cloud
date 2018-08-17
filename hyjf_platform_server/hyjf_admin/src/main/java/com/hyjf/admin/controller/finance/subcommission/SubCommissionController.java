@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.finance.subcommission;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SubCommissionService;
@@ -24,16 +26,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 9:28
  */
-@Api(value = "资金中心-平台账户分佣")
+@Api(value = "资金中心-平台账户分佣",tags = "资金中心-平台账户分佣")
 @RestController
-@RequestMapping(value = "/hyjf-admin/subcommission")
+@RequestMapping(value = "/hyjf-admin/finance/subcommission")
 public class SubCommissionController extends BaseController {
 
     @Autowired
@@ -47,14 +53,11 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣列表查询",notes = "平台账户分佣列表查询")
     @PostMapping(value = "/subcommissionlist")
-    public JSONObject subCommissionList(@RequestBody SubCommissionRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult<ListResult<SubCommissionVO>> subCommissionList(@RequestBody SubCommissionRequest request){
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        result.put("subCommissionVOList",subCommissionVOList);
-        return result;
+        return new AdminResult<>(ListResult.build(subCommissionVOList,count));
     }
 
     /**
@@ -65,13 +68,13 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣导出",notes = "平台账户分佣导出")
     @PostMapping(value = "/subcommissionlistexport")
-    public void exportSubCommissionList(HttpServletResponse response, @RequestBody SubCommissionRequest request){
+    public void exportSubCommissionList(HttpServletResponse response, @RequestBody SubCommissionRequest request) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
         // 表格sheet名称
         String sheetName = "账户分佣明细";
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "转账订单号", "转出电子账户号", "转账金额", "转入用户名","转入姓名", "转入电子账户号", "转账状态", "转账时间", "操作人", "备注" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -154,8 +157,9 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")
     @PostMapping(value = "/searchdetails")
-    public JSONObject searchDetails(@RequestHeader(value = "userId")Integer userId){
-        return subCommissionService.searchDetails(userId);
+    public AdminResult searchDetails(@RequestHeader(value = "userId")Integer userId){
+        JSONObject result = subCommissionService.searchDetails(userId);
+        return new AdminResult(result);
     }
 
     /**
@@ -166,8 +170,8 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣")
     @PostMapping(value = "/subcommission")
-    public JSONObject subCommission(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody SubCommissionRequest request){
+    public AdminResult subCommission(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody SubCommissionRequest request){
         JSONObject jsonObject = subCommissionService.subCommission(loginUserId,request);
-        return jsonObject;
+        return new AdminResult(jsonObject);
     }
 }

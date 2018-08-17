@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.FinmanNewChargeCustomizeMapper">
+    <resultMap id="borrowFinmanNewChargeCustomizeMapperResult" type="com.hyjf.am.vo.trade.borrow.BorrowFinmanNewChargeVO">
+        <result column="man_charge_cd" property="manChargeCd" />
+        <result column="man_charge_type" property="manChargeType" /> <!-- 管理费类型 -->
+        <result column="man_charge_time" property="manChargeTime" /> <!-- 管理费时间 -->
+        <result column="man_charge_time_type" property="manChargeTimeType" /> <!-- 管理费时间类型 -->
+        <result column="project_type" property="projectType" /> <!-- 项目类型 -->
+        <result column="borrow_name" property="projectName" /> <!-- 项目名称 -->
+        <result column="man_charge_rate" property="manChargeRate" /> <!-- 管理费率 -->
+        <result column="return_rate" property="returnRate" /> <!-- 收益差率 -->
+        <result column="status" property="status" /> <!-- 状态  -->
+        <result column="remark" property="remark" /> <!-- 说明  -->
+        <result column="inst_code" property="instCode" /> <!-- 机构编号  -->
+        <result column="asset_type" property="assetType" /> <!-- 产品类型  -->
+        <result column="auto_borrow_apr" property="autoBorrowApr" /> <!-- 自动发表利率  -->
+        <result column="charge_rate" property="chargeRate" /> <!-- 服务费率  -->
+        <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+        <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
+        <result column="late_interest" property="lateInterest" jdbcType="VARCHAR" />
+        <result column="late_free_days" property="lateFreeDays" jdbcType="VARCHAR" />
+        <!-- 汇计划一期新增 -->
+        <result column="charge_mode" property="chargeMode" jdbcType="TINYINT" /><!-- 服务费收取方式 1-按比例 2-按金额-->
+        <result column="service_fee_total" property="serviceFeeTotal" jdbcType="DECIMAL" /><!-- 服务费总额 -->
+        <result column="auto_repay" property="autoRepay" jdbcType="TINYINT" /><!-- 是否自动还款:1-是；2-否 -->
+        <result column="repayer_type" property="repayerType" jdbcType="TINYINT" /><!-- 扣款账户：1-担保账户；2-借款人账户 -->
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            1=1
+            <!-- 类型 -->
+            <if test="manChargeTypeSear != null and manChargeTypeSear != ''">
+                AND c.man_charge_time_type = #{manChargeTypeSear}
+            </if>
+            <!-- 期限 -->
+            <if test="manChargeTimeSear != null and manChargeTimeSear != ''">
+                AND c.man_charge_time = #{manChargeTimeSear}
+            </if>
+            <!-- 项目类型 -->
+            <if test="projectTypeSear != null and projectTypeSear != ''">
+                AND c.project_type = #{projectTypeSear}
+            </if>
+            <!-- 状态 -->
+            <if test="statusSear != null and statusSear != ''">
+                AND c.status = #{statusSear}
+            </if>
+            <!-- 资产来源 -->
+            <if test="instCodeSrch != null and instCodeSrch != ''">
+                AND c.inst_code = #{instCodeSrch}
+            </if>
+            <!-- 产品类型 -->
+            <if test="assetTypeSrch != null and assetTypeSrch != ''">
+                AND c.asset_type = #{assetTypeSrch}
+            </if>
+
+        </where>
+    </sql>
+    <select id="countRecordTotal" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.FinmanChargeNewRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        ht_borrow_finman_new_charge c
+        <include refid="Where_Clause" />
+    </select>
+
+    <select id="getRecordList" resultMap="borrowFinmanNewChargeCustomizeMapperResult" parameterType="com.hyjf.am.resquest.admin.FinmanChargeNewRequest">
+        SELECT
+        c.man_charge_cd,
+        c.man_charge_type,
+        c.man_charge_time,
+        c.man_charge_time_type,
+        c.project_type,
+        t.borrow_name,
+        c.man_charge_rate,
+        c.return_rate,
+        c.status,
+        c.remark,
+        c.auto_borrow_apr,
+        c.charge_rate,
+        c.inst_code,
+        c.asset_type,
+        c.late_interest,
+        c.late_free_days,
+        c.charge_mode,
+        c.service_fee_total,
+        c.auto_repay,
+        c.repayer_type,
+        hic.inst_name,
+        hat.asset_type_name
+        FROM
+        ht_borrow_finman_new_charge c
+        LEFT JOIN
+        ht_borrow_project_type t ON t.borrow_class = c.project_type
+        LEFT JOIN ht_hjh_inst_config hic ON c.inst_code = hic.inst_code
+        LEFT JOIN ht_hjh_asset_type hat on c.inst_code = hat.inst_code AND c.asset_type = hat.asset_type
+        <include refid="Where_Clause" />
+        ORDER BY
+        c.man_charge_time_type ASC,c.man_charge_time ASC, c.project_type DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+</mapper>

@@ -15,11 +15,10 @@ public class ChangeLogClientImpl  implements ChangeLogClient{
 	@Override
 	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
 		ChangeLogResponse response = restTemplate
-                .postForEntity("http://AM-USER/am-user/userauth/userauthlist",clr, ChangeLogResponse.class)
+                .postForEntity("http://AM-USER/am-user/changelog/init",clr, ChangeLogResponse.class)
                 .getBody();
 
         return response;
-		
 	}
 
 }

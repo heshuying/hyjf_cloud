@@ -24,17 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PreRegistRequestBean extends BaseRequest implements Serializable {
     
-    /**
-	 * aprlr.setMobile(map.get("mobile"));
-		aprlr.setReferrer(map.get("referrer"));
-		aprlr.setSource(map.get("source"));
-		aprlr.setRegistFlag(map.get("registFlag"));
-		aprlr.setId(map.get("id"));
-		aprlr.setReferrer(map.get("referrer"));
-		aprlr.setSource(map.get("source"));
-		aprlr.setUtm(map.get("utm"));
-		aprlr.setRemark(map.get("remark"));
-	 */
+
 	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value = "主键")
     public String id;

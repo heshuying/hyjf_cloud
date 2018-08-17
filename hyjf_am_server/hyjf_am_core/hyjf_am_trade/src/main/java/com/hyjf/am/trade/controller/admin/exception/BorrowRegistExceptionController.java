@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -33,7 +33,7 @@ import java.util.List;
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 15:05
  * 异常中心-标的备案掉单
  */
-@Api(value = "异常中心-标的备案掉单")
+@Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
 @RestController
 @RequestMapping("/am-trade/borrow_regist_exception")
 public class BorrowRegistExceptionController extends BaseController {
@@ -101,7 +101,7 @@ public class BorrowRegistExceptionController extends BaseController {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
         Integer recordTotal = borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
         logger.info("selectBorrowRegistList::::::::::recordTotal=[{}]",recordTotal);
-        Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal);
+        Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal,borrowRegistListRequest.getPageSize());
         borrowRegistListRequest.setLimitStart(paginator.getOffset());
         borrowRegistListRequest.setLimitEnd(paginator.getLimit());
         logger.info("selectBorrowRegistList::::::::::limitStart=[{}],limitEnd=[{}]",borrowRegistListRequest.getLimitStart(),borrowRegistListRequest.getLimitEnd());

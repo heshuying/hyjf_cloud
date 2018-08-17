@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserTransferResponse;
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/6 10:12
  */
-@Api(value = "资金中心-转账管理-用户转账")
+@Api(value = "资金中心-转账管理-用户转账",tags ="资金中心-转账管理-用户转账")
 @RestController
 @RequestMapping("/am-trade/customertransfer")
 public class CustomerTransferController extends BaseController {
@@ -62,7 +62,7 @@ public class CustomerTransferController extends BaseController {
         Integer count = customerTransferService.getUserTransferCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }

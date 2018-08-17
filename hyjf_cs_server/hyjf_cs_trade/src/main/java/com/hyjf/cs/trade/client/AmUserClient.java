@@ -1,11 +1,12 @@
 package com.hyjf.cs.trade.client;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -103,8 +104,6 @@ public interface AmUserClient {
      */
     boolean updateFirstUtmReg(Map<String,Object> params);
 
-	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
-
 	/**
 	 * 判断是否51老客户
 	 * @param userId
@@ -112,11 +111,6 @@ public interface AmUserClient {
 	 */
     boolean checkIs51UserCanInvest(Integer userId);
 
-    /**
-     * 插入VIPuser
-     * @param para
-     */
-	boolean insertVipUserTender(JSONObject para);
 
 	/**
 	 * 获取用户投资数量
@@ -185,4 +179,126 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int checkMobileCode(String mobile, String telcode, String paramTplZhuce, Integer platform, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+	/**
+	 * @Author walter.limeng
+	 * @Description  根据用户ID获取用户注册时的渠道名称
+	 * @Date 16:13 2018/7/16
+	 * @Param userId
+	 * @return
+	 */
+    String getChannelNameByUserId(int userId);
+
+    /**
+     * 插入certificateAuthorityVO数据
+     * @auth sunpeikai
+     * @param certificateAuthorityVO 参数
+     * @return
+     */
+    int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	BankCardVO selectBankCardByUserId(Integer userId);
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
+
+
+    BestCouponListVO selectBestCoupon(MyCouponListRequest request);
+
+
+    Integer countAvaliableCoupon(MyCouponListRequest request);
+
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据用户ID获取推荐人
+     * @Date 11:56 2018/7/18
+     * @Param userId
+     * @return
+     */
+    List<SpreadsUserVO> selectByUserId(Integer userId);
+	/**
+	 * 根据手机号查询User
+	 * @param mobile
+	 * @return
+	 */
+	UserVO findUserByMobile(String mobile);
+    /**
+     * 获取银行卡信息
+     * @param userId
+     * @param status
+     * @return
+     */
+    List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+
+
+	UtmPlatVO selectUtmPlatByUserId(Integer userId);
+
+	/**
+	 * 获取用户信息
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard);
+
+	/**
+	 * 获取用户的数据
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserVO selectUsersById(Integer userId);
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	UserVO selectUserInfoByUsername(String userName);
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByUserId(Integer userId);
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName);
+
+
+
+	/**
+	 * 根据用户信息获取部门信息
+	 * @param userId
+	 * @return
+	 */
+	List<UserInfoCustomizeVO> queryDepartmentInfoByUserId(Integer userId);
 }

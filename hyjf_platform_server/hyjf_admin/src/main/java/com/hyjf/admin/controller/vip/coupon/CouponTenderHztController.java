@@ -7,7 +7,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.admin.service.coupon.CouponTenderHztService;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
@@ -15,7 +15,6 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ import java.util.Map;
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/03 16:17
  */
-@Api(value = "VIP管理汇直投列表")
+@Api(value = "VIP管理汇直投列表",tags ="VIP管理汇直投列表")
 @RestController
 @RequestMapping("/hyjf-admin/coupon/tender/hzt")
 public class CouponTenderHztController extends BaseController {
@@ -79,7 +78,7 @@ public class CouponTenderHztController extends BaseController {
             CouponTenderDetailVo detail=new CouponTenderDetailVo();
             detail=couponTenderHztService.getCouponTenderDetailCustomize(paramMap);
             //回款列表
-            List<CouponRecoverVo> list=
+            List<CouponRecoverVO> list=
                     couponTenderHztService.getCouponRecoverCustomize(paramMap);
             //操作平台
             Map<String, String> map =  CacheUtil.getParamNameMap("CLIENT");

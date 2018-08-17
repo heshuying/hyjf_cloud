@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.web.password;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
@@ -19,6 +20,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
@@ -28,6 +30,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +42,11 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端密码相关服务")
+@Api(value = "web端-密码相关服务",tags = "web端-密码相关服务")
 @RestController
-@RequestMapping("/web/user/password")
-public class WebPassWordController {
+@CrossOrigin(origins = "*")
+@RequestMapping("/hyjf-web/user/password")
+public class WebPassWordController extends BaseUserController{
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
 
     @Autowired
@@ -53,12 +57,18 @@ public class WebPassWordController {
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
-    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,PasswordRequest passwordRequest){
+    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,@RequestBody PasswordRequest passwordRequest){
         UserVO userVO = passWordService.getUsersById(userId);
         WebResult<String> response = new WebResult<>();
         String oldPW = passwordRequest.getOldPassword();
         String newPW = passwordRequest.getNewPassword();
         String pwSure = passwordRequest.getPwSure();
+        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
+        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
+        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
+        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
+        newPW = RSAJSPUtil.rsaToPassword(newPW);
+        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
         int result = passWordService.updatePassword(userVO, newPW);
        if(result>0){
@@ -78,9 +88,9 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setTransaction(@RequestHeader(value = "token") String token) {
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId) {
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = this.passWordService.getUsers(token);
+        UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
         Map<String,Object> map = passWordService.setPassword(user);
         result.setData(map);
@@ -91,6 +101,7 @@ public class WebPassWordController {
      * 设置交易密码异步回调
      * @return
      */
+    @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<Object> result = new WebResult<Object>();
@@ -124,9 +135,9 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "token") String token) {
+    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId) {
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = this.passWordService.getUsers(token);
+        UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
         Map<String,Object> map = passWordService.resetPassword(user);
         result.setData(map);
@@ -138,6 +149,7 @@ public class WebPassWordController {
      *
      * @return
      */
+    @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<String> result = new WebResult<String>();
@@ -149,10 +161,10 @@ public class WebPassWordController {
     @ApiOperation(value = "修改交易密码发送短信验证码", notes = "修改交易密码发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/setPasswordSendCode", produces = "application/json; charset=utf-8")
-    public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "token") String token,@RequestBody Map<String,String> param) {
-        logger.info("Web端交易密码发送短信验证码, param :{}", param);
+    public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param) {
+        logger.info("web端-交易密码发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = passWordService.getUsers(token);
+        UserVO user = passWordService.getUsersById(userId);
         CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.ERR_PARAM_TYPE);
         String srvTxCode = BankCallConstant.TXCODE_MOBILE_MODIFY_PLUS;
@@ -185,16 +197,16 @@ public class WebPassWordController {
         UserVO userVO = passWordService.getUsersById(userId);
         String name = param.get("name");
         if (StringUtils.isNotBlank(name)) {
-            if (name.equals("oldpass")) {
+            if ("oldpass".equals(name)) {
                 String password = param.get("oldpass");
                 password = MD5Utils.MD5(MD5Utils.MD5(password) + userVO.getSalt());
                 CheckUtil.check(password.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
                 return true;
-            } else if (name.equals("password")) {
+            } else if ("password".equals(name)) {
                 String password = param.get("password");
                 passWordService.checkPassword(password);
                 return true;
-            } else if (name.equals("repassword")) {
+            } else if ("repassword".equals(name)) {
                 String passwrod = param.get("password");
                 String passwrod2 = param.get("repassword");
                 passWordService.checkPassword(passwrod2);
@@ -203,14 +215,14 @@ public class WebPassWordController {
                 } else {
                     return true;
                 }
-            } else if (name.equals("rlName")) {
+            } else if ("rlName".equals(name)) {
                 String rlName = param.get("rlName");
                 if (rlName.length() < 2 || rlName.length() > 4) {
                     return false;
                 } else {
                     return true;
                 }
-            } else if (name.equals("rlPhone")) {
+            } else if ("rlPhone".equals(name)) {
                 String rlPhone = param.get("rlPhone");
                 if (rlPhone.length() != 11 || !Validator.isMobile(rlPhone)) {
                     return false;
@@ -268,7 +280,7 @@ public class WebPassWordController {
         CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         // 改变验证码状态
-        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         // 再次验证验证码
         CheckUtil.check(checkStatus==1,MsgEnum.STATUS_ZC000015);
         UserVO user = passWordService.getUsersByMobile(mobile);
@@ -288,7 +300,7 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "验证原密码是否存在",notes = "验证原密码是否存在")
     @ApiImplicitParam(name = "param",value = "{oldPassword:String}",dataType = "Map")
-    @PostMapping(value = "checkoriginapw", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkoriginapw", produces = "application/json; charset=utf-8")
     public boolean checkPw(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
         String pw = param.get("oldPassword");
         if (pw != null && !"".equals(pw.trim())) {
@@ -303,6 +315,69 @@ public class WebPassWordController {
         else {
             return false;
         }
+    }
+
+    /**
+     * 跳转到找回密码第二步
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
+    @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
+    @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
+    public WebResult sencodPage(@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String telnum = param.get("telnum");
+        String code = param.get("code");
+        ret.put("telnum", telnum);
+        ret.put("code", code);
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
+    }
+
+    /**
+     * 修改 登录密码 页面初始化
+     *
+     * @param token
+     * @return
+     */
+    @ApiOperation(value = "修改 登录密码 页面初始化",notes = "修改 登录密码 页面初始化")
+    @PostMapping(value = "/modifyCode")
+    public WebResult modifyCode(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId) {
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        try {
+            ret.put("tokenGrant",token);
+            ret.put("pubexponent", "10001");
+            ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+            ret.put("userId",userId);
+            result.setData(ret);
+        } catch (Exception e) {
+            logger.error("修改密码时，生成密码加密密钥错误",e);
+        }
+        return result;
+    }
+
+    /**
+     * @Description 调用银行失败原因
+     * @Author
+     */
+    @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = passWordService.getFiledMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
+        return result;
     }
 
 }

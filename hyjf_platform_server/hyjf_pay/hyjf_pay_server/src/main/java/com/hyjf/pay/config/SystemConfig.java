@@ -50,6 +50,58 @@ public class SystemConfig {
     @Value("${hyjf.bank.prikey.pass}")
 	private String bankPrikeyPass;
 
+	/** 汇付天下地址 */
+	@Value("${hyjf.chinapnr.url}")
+	private String chinapnrUrl;
+
+    @Value("${hyjf.anrong.req.query.url}")
+    public String anrongqueryurl;
+    @Value("${hyjf.anrong.req.send.url}")
+    public String anrongsendurl;
+    @Value("${hyjf.anrong.member}")
+    public String anrongmembe;
+    @Value("${hyjf.anrong.sign}")
+    public String anrongsign;
+    
+    public String getAnrongmembe() {
+		return anrongmembe;
+	}
+
+	public void setAnrongmembe(String anrongmembe) {
+		this.anrongmembe = anrongmembe;
+	}
+
+	public String getAnrongsign() {
+		return anrongsign;
+	}
+
+	public void setAnrongsign(String anrongsign) {
+		this.anrongsign = anrongsign;
+	}
+
+	public String getAnrongqueryurl() {
+		return anrongqueryurl;
+	}
+
+	public void setAnrongqueryurl(String anrongqueryurl) {
+		this.anrongqueryurl = anrongqueryurl;
+	}
+
+	public String getAnrongsendurl() {
+		return anrongsendurl;
+	}
+
+	public void setAnrongsendurl(String anrongsendurl) {
+		this.anrongsendurl = anrongsendurl;
+	}
+	public String getChinapnrUrl() {
+		return chinapnrUrl;
+	}
+
+	public void setChinapnrUrl(String chinapnrUrl) {
+		this.chinapnrUrl = chinapnrUrl;
+	}
+
 	public String getReturnUrl() {
 		return returnUrl;
 	}

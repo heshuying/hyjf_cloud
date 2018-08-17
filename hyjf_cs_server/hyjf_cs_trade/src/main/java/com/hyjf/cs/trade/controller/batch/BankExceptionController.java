@@ -3,22 +3,24 @@ package com.hyjf.cs.trade.controller.batch;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.hyjf.cs.trade.service.BankCreditTenderService;
-import com.hyjf.cs.trade.service.BankTenderCancelExceptionService;
-import com.hyjf.cs.trade.service.BankWithdrawService;
-import com.hyjf.cs.trade.service.BatchBankInvestAllService;
-import com.hyjf.cs.trade.service.BatchBankInvestService;
+import com.hyjf.cs.trade.service.batch.BankCreditTenderService;
+import com.hyjf.cs.trade.service.batch.BankTenderCancelExceptionService;
+import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.batch.BatchBankInvestAllService;
+import com.hyjf.cs.trade.service.batch.BatchBankInvestService;
 
 import org.slf4j.Logger;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * 提现,债转,投资等异常定时任务controller
  * @author jijun
  * @date 20180625
  */
-@Controller
+@RestController
 @RequestMapping(value = "/cs-trade/bankException")
 public class BankExceptionController {
 
@@ -26,19 +28,19 @@ public class BankExceptionController {
 
 	@Autowired
 	private BankTenderCancelExceptionService bankTenderCancelExceptionService;
-	
+
 	@Autowired
 	private BankWithdrawService bankWithdrawService;
-	
+
 	@Autowired
 	private BankCreditTenderService bankCreditTenderExceptionService;
-	
+
 	@Autowired
 	private BatchBankInvestService batchBankInvestService;
-	
+
 	@Autowired
 	private BatchBankInvestAllService batchBankInvestAllService;
-	
+
 	/**
 	 * 处理债转投资异常
 	 * @return
@@ -57,11 +59,9 @@ public class BankExceptionController {
      * @return
      */
     @ApiOperation(value = "提现掉单异常处理", notes = "提现掉单异常处理")
-    @RequestMapping(value = "/bankWithdrawExceptionHandle")
-    public void bankWithdrawExceptionHandle(){
-        logger.info("提现掉单异常处理start...");
-        bankWithdrawService.batchWithdraw();
-        logger.info("提现掉单异常处理end...");
+    @GetMapping(value = "/bankWithdrawExceptionHandle")
+    public Boolean bankWithdrawExceptionHandle(){
+         return bankWithdrawService.batchWithdraw();
     }
 	
     
@@ -70,11 +70,12 @@ public class BankExceptionController {
      * @return
      */
     @ApiOperation(value = "债转投资掉单异常处理", notes = "债转投资掉单异常处理")
-    @RequestMapping(value = "/creditTenderExceptionHandle")
-    public void creditTenderExceptionHandle() {
+    @GetMapping(value = "/creditTenderExceptionHandle")
+    public String creditTenderExceptionHandle() {
         logger.info("债转投资掉单异常处理start...");
         bankCreditTenderExceptionService.handle();
         logger.info("债转投资掉单异常处理end...");
+        return "SUCCESS";
     }
 
     
@@ -84,10 +85,11 @@ public class BankExceptionController {
 	 */
 	@ApiOperation(value = "投资异步掉单异常处理", notes = "投资异步掉单异常处理")
 	@RequestMapping(value = "/investExceptionHandle")
-	public void investExceptionHandle() {
+	public String investExceptionHandle() {
 		logger.info("投资异步掉单异常处理start...");
 		batchBankInvestService.handle();
 		logger.info("投资异步掉单异常处理end...");
+		return "SUCCESS";
 	}
 	
 	

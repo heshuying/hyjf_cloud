@@ -17,8 +17,23 @@ public class SystemConfig {
     @Value("${hyjf.web.user.host}")
     public String webUserHost;
 
+    /**
+     * pc前端地址
+     */
     @Value("${hyjf.front.host}")
     public String frontHost;
+
+    /**
+     * app前端地址
+     */
+    @Value("${hyjf.front.app.host}")
+    public String AppFrontHost;
+
+    /**
+     * 微信前端地址
+     */
+    @Value("${hyjf.front.wei.host}")
+    public String WeiFrontHost;
 
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
@@ -32,6 +47,174 @@ public class SystemConfig {
     @Value("hyjf.notice.requesturl.ios")
     public String iosNoticeRequestUrl;
 
+    @Value("${hyjf.pay.fdd.nofify.url}")
+    private String hyjfPayFddNotifyUrl;
+
+    @Value("${hyjf.fdd.customerid}")
+    private String hyjfFddCustomerid;
+
+    @Value("${hyjf.ftp.ip}")
+    private String hyjfFtpIp;
+
+    @Value("${hyjf.ftp.port}")
+    private String hyjfFtpPort;
+
+    @Value("${hyjf.ftp.basepath.img}")
+    private String hyjfFtpBasepathImg;
+
+    @Value("${hyjf.ftp.basepath.pdf}")
+    private String hyjfFtpBasepathPdf;
+
+    @Value("${hyjf.ftp.username}")
+    private String hyjfFtpUsername;
+
+    @Value("${hyjf.ftp.password}")
+    private String hyjfFtpPassword;
+
+    @Value("${hyjf.web.bank.batch.creditend.verify.url}")
+    private String notifyUrl;
+
+    @Value("${hyjf.web.bank.batch.creditend.result.url}")
+    private String retNotifyUrl;
+    @Value("${hyjf.wdzj.username}")
+    private String userNameWDZJ;
+    @Value("${hyjf.wdzj.password}")
+    private String passwordWDZJ;
+
+    @Value("${hyjf.bank.instcode}")
+    private String bankInstcode;
+
+    @Value("${hyjf.bank.bankcode}")
+    private String bankBankcode;
+
+    @Value("${hyjf.bank.merrp.account}")
+    private String BANK_MERRP_ACCOUNT;
+
+    @Value("${aop.interface.accesskey}")
+    public String aopAccesskey;
+
+    @Value("${crm.investmentdetails.url}")
+    private String crmTenderUrl;
+
+    //私钥请求地址
+    @Value("${hyjf.req.pri.key}")
+    private String hyjfReqPrimaryKeyPath;
+
+    // 请求密码请求地址
+    @Value("${hyjf.req.password}")
+    private String hyjfReqPasswordPath;
+
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
+    
+    /*需要在cs-trade的工程配置里面添加     #ftp图片存放路径    hyjf.ftp.basepath.img=hyjfdata/upfiles/contract/img/    */
+    @Value("${hyjf.ftp.basepath.img}")
+    private String basePathImage;
+    
+    /*需要在cs-trade的工程配置里面添加     #ftp图片映射路径    hyjf.ftp.url=http://testftp.hyjf.com  */
+    @Value("${hyjf.ftp.url}")
+    private String basePathurl;
+
+    /*需要在cs-trade的工程配置里面添加 注册送券活动ID */
+    @Value("${hyjf.register.888.activity.id}")
+    private String registerActivityId;
+
+    /*需要在cs-trade的工程配置里面添加 活动ID */
+    @Value("${hyjf.register.888.coupon.code}")
+    private String registerCouponCode;
+
+    /*需要在cs-trade的工程配置里面添加 测评送加息券活动ID */
+    @Value("${hyjf.coupon.id}")
+    private String couponCodeId;
+
+    /*需要在cs-trade的工程配置里面添加 活动ID */
+    @Value("${hyjf.activity.id}")
+    private String activityId;
+
+    /*需要在cs-trade的工程配置里面添加 CouponAccesskey */
+    @Value("${release.coupon.accesskey}")
+    private String couponAccesskey;
+
+
+    public String getBankInstcode() {
+        return bankInstcode;
+    }
+
+    public void setBankInstcode(String bankInstcode) {
+        this.bankInstcode = bankInstcode;
+    }
+
+    public String getBankBankcode() {
+        return bankBankcode;
+    }
+
+    public void setBankBankcode(String bankBankcode) {
+        this.bankBankcode = bankBankcode;
+    }
+
+    public String getHyjfPayFddNotifyUrl() {
+        return hyjfPayFddNotifyUrl;
+    }
+
+    public void setHyjfPayFddNotifyUrl(String hyjfPayFddNotifyUrl) {
+        this.hyjfPayFddNotifyUrl = hyjfPayFddNotifyUrl;
+    }
+
+    public String getHyjfFddCustomerid() {
+        return hyjfFddCustomerid;
+    }
+
+    public void setHyjfFddCustomerid(String hyjfFddCustomerid) {
+        this.hyjfFddCustomerid = hyjfFddCustomerid;
+    }
+
+    public String getHyjfFtpIp() {
+        return hyjfFtpIp;
+    }
+
+    public void setHyjfFtpIp(String hyjfFtpIp) {
+        this.hyjfFtpIp = hyjfFtpIp;
+    }
+
+    public String getHyjfFtpPort() {
+        return hyjfFtpPort;
+    }
+
+    public void setHyjfFtpPort(String hyjfFtpPort) {
+        this.hyjfFtpPort = hyjfFtpPort;
+    }
+
+    public String getHyjfFtpBasepathImg() {
+        return hyjfFtpBasepathImg;
+    }
+
+    public void setHyjfFtpBasepathImg(String hyjfFtpBasepathImg) {
+        this.hyjfFtpBasepathImg = hyjfFtpBasepathImg;
+    }
+
+    public String getHyjfFtpBasepathPdf() {
+        return hyjfFtpBasepathPdf;
+    }
+
+    public void setHyjfFtpBasepathPdf(String hyjfFtpBasepathPdf) {
+        this.hyjfFtpBasepathPdf = hyjfFtpBasepathPdf;
+    }
+
+    public String getHyjfFtpUsername() {
+        return hyjfFtpUsername;
+    }
+
+    public void setHyjfFtpUsername(String hyjfFtpUsername) {
+        this.hyjfFtpUsername = hyjfFtpUsername;
+    }
+
+    public String getHyjfFtpPassword() {
+        return hyjfFtpPassword;
+    }
+
+    public void setHyjfFtpPassword(String hyjfFtpPassword) {
+        this.hyjfFtpPassword = hyjfFtpPassword;
+    }
 
     public String getWebHost() {
         return webHost;
@@ -104,4 +287,155 @@ public class SystemConfig {
     public void setIosNoticeRequestUrl(String iosNoticeRequestUrl) {
         this.iosNoticeRequestUrl = iosNoticeRequestUrl;
     }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
+
+    public String getRetNotifyUrl() {
+        return retNotifyUrl;
+    }
+
+    public void setRetNotifyUrl(String retNotifyUrl) {
+        this.retNotifyUrl = retNotifyUrl;
+    }
+
+    public String getUserNameWDZJ() {
+        return userNameWDZJ;
+    }
+
+    public void setUserNameWDZJ(String userNameWDZJ) {
+        this.userNameWDZJ = userNameWDZJ;
+    }
+
+    public String getPasswordWDZJ() {
+        return passwordWDZJ;
+    }
+
+    public void setPasswordWDZJ(String passwordWDZJ) {
+        this.passwordWDZJ = passwordWDZJ;
+    }
+
+    public String getBANK_MERRP_ACCOUNT() {
+        return BANK_MERRP_ACCOUNT;
+    }
+
+    public void setBANK_MERRP_ACCOUNT(String BANK_MERRP_ACCOUNT) {
+        this.BANK_MERRP_ACCOUNT = BANK_MERRP_ACCOUNT;
+    }
+
+    public String getCrmTenderUrl() {
+        return crmTenderUrl;
+    }
+
+    public void setCrmTenderUrl(String crmTenderUrl) {
+        this.crmTenderUrl = crmTenderUrl;
+    }
+
+    public String getHyjfReqPrimaryKeyPath() {
+        return hyjfReqPrimaryKeyPath;
+    }
+
+    public void setHyjfReqPrimaryKeyPath(String hyjfReqPrimaryKeyPath) {
+        this.hyjfReqPrimaryKeyPath = hyjfReqPrimaryKeyPath;
+    }
+
+    public String getHyjfReqPasswordPath() {
+        return hyjfReqPasswordPath;
+    }
+
+    public void setHyjfReqPasswordPath(String hyjfReqPasswordPath) {
+        this.hyjfReqPasswordPath = hyjfReqPasswordPath;
+    }
+    public String getAopAccesskey() {
+        return aopAccesskey;
+    }
+
+    public void setAopAccesskey(String aopAccesskey) {
+        this.aopAccesskey = aopAccesskey;
+    }
+    public boolean isHyjfEnvTest() {
+        return hyjfEnvTest;
+    }
+
+    public void setHyjfEnvTest(boolean hyjfEnvTest) {
+        this.hyjfEnvTest = hyjfEnvTest;
+    }
+
+    public String getAppFrontHost() {
+        return AppFrontHost;
+    }
+
+    public void setAppFrontHost(String appFrontHost) {
+        AppFrontHost = appFrontHost;
+    }
+
+    public String getWeiFrontHost() {
+        return WeiFrontHost;
+    }
+
+    public void setWeiFrontHost(String weiFrontHost) {
+        WeiFrontHost = weiFrontHost;
+    }
+
+	public String getBasePathImage() {
+		return basePathImage;
+	}
+
+	public void setBasePathImage(String basePathImage) {
+		this.basePathImage = basePathImage;
+	}
+
+	public String getBasePathurl() {
+		return basePathurl;
+	}
+
+	public void setBasePathurl(String basePathurl) {
+		this.basePathurl = basePathurl;
+	}
+
+    public String getRegisterActivityId() {
+        return registerActivityId;
+    }
+
+    public void setRegisterActivityId(String registerActivityId) {
+        this.registerActivityId = registerActivityId;
+    }
+
+    public String getCouponCodeId() {
+        return couponCodeId;
+    }
+
+    public void setCouponCodeId(String couponCodeId) {
+        this.couponCodeId = couponCodeId;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getRegisterCouponCode() {
+        return registerCouponCode;
+    }
+
+    public void setRegisterCouponCode(String registerCouponCode) {
+        this.registerCouponCode = registerCouponCode;
+    }
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
 }

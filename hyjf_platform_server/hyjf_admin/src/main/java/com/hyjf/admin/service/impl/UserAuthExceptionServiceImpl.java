@@ -4,14 +4,11 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.UserauthClient;
 import com.hyjf.admin.service.UserAuthExceptionService;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author: sunpeikai
@@ -40,6 +37,7 @@ public class UserAuthExceptionServiceImpl extends BaseAdminServiceImpl implement
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AdminUserAuthListResponse synUserAuth(Integer userId,Integer type) {
         AdminUserAuthListResponse response = new AdminUserAuthListResponse();
         JSONObject jsonObject = amUserClient.synUserAuth(userId, type);

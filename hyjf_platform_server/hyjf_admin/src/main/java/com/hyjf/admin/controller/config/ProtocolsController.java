@@ -8,9 +8,10 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.impl.ProtocolsService;
+import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -22,13 +23,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,14 +36,15 @@ import java.util.List;
  * @author fuqiang
  * @version ProtocolsController, v0.1 2018/7/10 16:03
  */
-@Api(value = "协议管理")
+@Api(tags = "协议管理")
 @RestController
 @RequestMapping("/hyjf-admin/protocols")
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
 
-	@ApiOperation(value = "协议管理", notes = "展示协议管理列表")
+	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
+	@PostMapping("/init")
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
@@ -57,9 +57,12 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "协议管理", notes = "添加协议管理")
-	@RequestMapping("/insert")
-	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean) {
+	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
+	@PostMapping("/insert")
+	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO user = getUser(request);
+		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
+		requestBean.setCreateUserName(user.getUsername());
 		FddTempletCustomizeResponse response = protocolsService.insertAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -70,9 +73,12 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "协议管理", notes = "修改协议管理")
-	@RequestMapping("/update")
-	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean) {
+	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
+	@PostMapping("/update")
+	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO user = getUser(request);
+		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
+		requestBean.setCreateUserName(user.getUsername());
 		FddTempletCustomizeResponse response = protocolsService.updateAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -92,13 +98,14 @@ public class ProtocolsController extends BaseController {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping("/exportaction")
+	@ApiOperation(value = "导出excel", notes = "导出excel")
+	@PostMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// 表格sheet名称
 		String sheetName = "协议管理";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 需要输出的结果列表
 		List<FddTempletCustomizeVO> recordList = new ArrayList<>();
 		FddTempletCustomizeResponse fddResponse = this.protocolsService.selectFddTempletList(form);

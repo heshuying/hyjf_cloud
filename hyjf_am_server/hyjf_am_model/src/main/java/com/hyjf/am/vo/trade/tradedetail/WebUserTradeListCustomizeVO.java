@@ -12,33 +12,33 @@ package com.hyjf.am.vo.trade.tradedetail;
 public class WebUserTradeListCustomizeVO {
 
 	// 主键
-	public String id;
+	private String id;
 	// 交易日期
-	public String time;
+	private String time;
 	// 交易类型
-	public String trade;
+	private String trade;
 	// 交易类型 +-
-	public String type;
+	private String type;
 	// 交易金额(交易类型名称)
-	public String typeName;
+	private String typeName;
 	// 交易金额
-	public String money;
+	private String money;
 	// 可用余额
-	public String balance;
+	private String balance;
 	// 备注
-	public String remark;
+	private String remark;
 	//收支类型：1收入2支出3冻结
-	public String revuAndExpType;
+	private String revuAndExpType;
 	//状态 :交易状态0: 失败 1：成功 2:冲正
-	public String tradeStatus;
+	private String tradeStatus;
 	//操作用户  是否是银行的交易记录(0:否,1:是)
-	public String isBank;
+	private String isBank;
 	
 	/** * new added */
 	// 用户角色:1投资人2借款人3担保机构
-	public String roleId;
+	private String roleId;
 	// 标的号
-	public String borrowNid;
+	private String borrowNid;
 	
 	/**
 	 * 构造方法

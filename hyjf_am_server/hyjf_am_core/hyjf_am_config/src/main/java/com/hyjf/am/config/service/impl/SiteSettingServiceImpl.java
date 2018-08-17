@@ -9,7 +9,7 @@ import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
 import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.resquest.admin.SitesettingRequest;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 			List<SiteSetting> SiteSettingList = siteSettingMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(SiteSettingList)) {
 				siteSetting = SiteSettingList.get(0);
-				RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
 				return siteSetting;
 			}
 		}
@@ -69,7 +69,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
             
             Thread.sleep(num*1000);
             
-            updateTest2();
+           // updateTest2();
 	    
 	    
 	}
@@ -80,11 +80,11 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 		BeanUtils.copyProperties(request, siteSetting);
 		int result = siteSettingMapper.updateByPrimaryKey(siteSetting);
 		if (result > 0) {
-			RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
+			RedisUtils.setObjEx(RedisConstants.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
 		}
 	}
 
-	public void updateTest2() {
+	/*public void updateTest2() {
         SiteSettingExample example = new SiteSettingExample();
         
 //      example.createCriteria();
@@ -109,12 +109,10 @@ public class SiteSettingServiceImpl implements SiteSettingService {
             } catch (InterruptedException e) {
                  e.printStackTrace();
             }
-            
-            if(1==1) {
+
+		*//*if (1 == 1) {
 //                throw new RuntimeException("测试异常", 12);
-                throw new RuntimeException("测试异常");
-            }
-        
-        
-    }
+			throw new RuntimeException("测试异常");
+		}*//*
+    }*/
 }

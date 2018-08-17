@@ -2,7 +2,9 @@ package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
+import com.hyjf.am.resquest.market.AdsRequest;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +18,6 @@ public interface AdsService {
 
 
     AppAdsCustomize searchBanner(Map<String, Object> ads);
+
+    List<Ads> getBannerList(AdsRequest request);
 }

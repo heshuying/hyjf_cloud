@@ -12,6 +12,7 @@
 package com.hyjf.cs.common.bean.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 
@@ -25,7 +26,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	private T object;
 	public WeChatResult() {
 	}
 
@@ -47,8 +48,16 @@ public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 
 	public  WeChatResult  buildErrorResponse(MsgEnum msgEnum){
 		WeChatResult weChatResult = new WeChatResult();
-		weChatResult.setStatusDesc(FAIL);
-		weChatResult.setStatusDesc(FAIL_DESC);
+		weChatResult.setStatus(msgEnum.getCode());
+		weChatResult.setStatusDesc(msgEnum.getMsg());
 		return weChatResult;
+	}
+
+	public T getObject() {
+		return object;
+	}
+
+	public void setObject(T object) {
+		this.object = object;
 	}
 }

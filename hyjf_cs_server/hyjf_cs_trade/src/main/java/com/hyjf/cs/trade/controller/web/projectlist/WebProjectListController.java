@@ -6,8 +6,12 @@ package com.hyjf.cs.trade.controller.web.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
+import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
+import com.hyjf.cs.trade.bean.WebCreditRequestBean;
+import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.WebProjectListService;
+import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -24,9 +28,9 @@ import java.util.Map;
  * @author liuyang
  * @version WebProjectListController, v0.1 2018/6/13 10:21
  */
-@Api(value = "Web端项目列表")
+@Api(tags = "web端-项目列表")
 @RestController
-@RequestMapping("/web/projectlist")
+@RequestMapping("/hyjf-web/projectlist")
 public class WebProjectListController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebProjectListController.class);
 
@@ -34,7 +38,7 @@ public class WebProjectListController extends BaseTradeController {
      private WebProjectListService webProjectListService;
 
     /**
-     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)
+     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)(可能没有用了 ，后期废掉)
      * @param request
      * @return
      */
@@ -47,50 +51,65 @@ public class WebProjectListController extends BaseTradeController {
     }
 
     /**
-     * 获取新手专区列表
+     * 获取新手专区列表(据说projectType = 14代表新手标)
      * @param request
      * @return
      */
     @ApiOperation(value = "获取新手专区列表", notes = "新手专区列表")
-    @PostMapping(value = "/newBorrowProjectList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getNewProjectList", produces = "application/json; charset=utf-8")
     public Object newBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
+        request.setProjectType("HZT");
+        request.setBorrowClass("NEW");
         WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }
 
     /**
-     * 获取散标投资列表
+     * 散标专区散标投资列表
      * @param request
      * @return
      */
-    @ApiOperation(value = "获取散标投资列表", notes = "散标投资列表")
+    @ApiOperation(value = "获取散标专区散标投资列表", notes = "获取散标专区散标投资列表")
     @PostMapping(value = "/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object borrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
+        request.setProjectType("HZT");
         WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }
+
 
     /**
      * web端新手标和散标标的详情
      * @author zhangyk
      * @date 2018/6/22 16:06
      */
-    @ApiOperation(value = "web端新手标和散标标的详情", notes = "web端新手标和散标标的详情")
-    @PostMapping(value = "/borrowDetail", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")
+    @PostMapping(value = "/getBorrowDetail", produces = "application/json; charset=utf-8")
     public Object webBorrowDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getBorrowDetail(map,userId);
         return result;
     }
 
+
+    @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
+    @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
+    public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
+        WebResult result = webProjectListService.getBorrowInvest(form,userId);
+        return result;
+    }
+
+
+
+
     /**
-     * 散标专区债权转让列表数据
+     * 散标专区-债权转让列表
      * @param request
      * @return
      */
     @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
-    @PostMapping(value = "/creditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@RequestBody @Valid CreditListRequest request){
         WebResult result =  webProjectListService.searchCreditList(request);
         return result;
@@ -98,15 +117,30 @@ public class WebProjectListController extends BaseTradeController {
 
 
     /**
-     * 散标专区债权转让详情
+     * 散标专区-债权转让详情
+     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchWebCreditTender()
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
-    @PostMapping(value = "/creditDetail", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getCreditDetail", produces = "application/json; charset=utf-8")
     public Object creditDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getCreditDetail(map,userId);
         return result;
     }
+
+
+    /**
+     * 散标专区-债权转让详情-承接记录
+     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchCreditTenderList()
+     * @return
+     */
+    @ApiOperation(value = "散标专区债权转让详情:承接记录", notes = "散标专区债权转让详情:承接记录")
+    @PostMapping(value = "/getCreditTenderList", produces = "application/json; charset=utf-8")
+    public Object getCreditTenderList(@RequestBody WebCreditRequestBean requestBean){
+        WebResult result =  webProjectListService.getCreditTenderList(requestBean);
+        return result;
+    }
+
 
 
 
@@ -128,7 +162,7 @@ public class WebProjectListController extends BaseTradeController {
      * @date 2018/6/21 15:18
      */
     @ApiOperation(value = "计划专区计划列表", notes = "计划专区计划列表")
-    @PostMapping(value = "/searchPlanList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getPlanList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
         WebResult result =  webProjectListService.searchPlanList(request);
         return result;
@@ -138,6 +172,7 @@ public class WebProjectListController extends BaseTradeController {
     /**
      * 计划详情
      * @author zhangyk
+     * 原接口: com.hyjf.web.hjhdetail.HjhDetailController.searchPlanDetail()
      * @date 2018/6/27 18:53
      */
     @ApiOperation(value = "计划专区计划详情", notes = "计划专区计划详情")
@@ -146,6 +181,64 @@ public class WebProjectListController extends BaseTradeController {
         WebResult result =  webProjectListService.getPlanDetail(map,userId);
         return result;
     }
+
+    /**
+     *  计划详情标的组成
+     * @author zhangyk
+     * @date 2018/8/16 11:01
+     */
+    @ApiOperation(value = "计划详情标的组成" , notes = "计划详情标的组成")
+    @PostMapping(value = "/getPlanBorrowList", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "token",required = false) String token){
+        WebResult result  = webProjectListService.getPlanBorrowList(requestBean);
+        return result;
+    }
+
+
+
+    /**
+     * 计划详情加入记录
+     * @author zhangyk
+     * @date 2018/8/16 11:01
+     */
+    @ApiOperation(value = "计划详情加入记录" , notes = "计划详情加入记录")
+    @PostMapping(value = "/getPlanAccedeList", produces = "application/json; charset=utf-8")
+    public Object getPlanAccedeList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) String userId){
+        WebResult result  = webProjectListService.getPlanAccedeList(requestBean,userId);
+        return result;
+    }
+
+
+    /**
+     * 计划详情标的组成：标的详情
+     * @author zhangyk
+     * @date 2018/8/16 11:01
+     */
+    @ApiOperation(value = "计划详情标的组成：标的详情" , notes = "计划详情标的组成：标的详情")
+    @PostMapping(value = "/hjh/getBorrowDetail", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowDetail(@RequestBody @Valid WebBorrowRequestBean requestBean, @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result  = webProjectListService.getPlanAccedeBorrowDetail(requestBean,userId);
+        return result;
+    }
+
+
+
+
+    /**
+     *  计划详情优惠券列表
+     * @author zhangyk
+     * 原接口：com.hyjf.web.plan.PlanController.getProjectAvailableUserCoupon()----post调用--->com.hyjf.api.web.plan.coupon.PlanCouponServer.getProjectAvailableUserCoupon()
+     * @date 2018/8/16 11:01
+     */
+ /*   @ApiOperation(value = "计划详情优惠券列表" , notes = "计划详情优惠券列表")
+    @PostMapping(value = "/getProjectAvailableUserCoupon", produces = "application/json; charset=utf-8")
+    public Object getProjectAvailableUserCoupon(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result  = webProjectListService.getProjectAvailableUserCoupon(requestBean,userId);
+        return result;
+    }*/
+
+
+
 
 
 

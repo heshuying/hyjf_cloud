@@ -3,11 +3,16 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.AccountWebListProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlatformTransferService;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.resquest.admin.PlatformTransferRequest;
@@ -21,6 +26,8 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,17 +35,17 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
@@ -46,7 +53,6 @@ import java.util.List;
  */
 @Service
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -54,6 +60,11 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     private AmUserClient amUserClient;
     @Autowired
     private AmConfigClient amConfigClient;
+    @Autowired
+    private SystemConfig systemConfig;
+
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
 
     @Value("${hyjf.handrecharge.password}")
     private String HYJF_HANDRECHARGE_PASSWORD;
@@ -127,9 +138,11 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             if (bankOpenAccountVO != null && !Validator.isNull(bankOpenAccountVO.getAccount())) {
                 result.put("status","0");
             } else {
+                result.put("status","99");
                 result.put("info", "用户未开户，无法转账!");
             }
         } else {
+            result.put("status","99");
             result.put("info", "未查询到正确的用户信息!");
         }
         return result;
@@ -142,6 +155,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject handRecharge(Integer loginUserId,HttpServletRequest request, PlatformTransferRequest platformTransferRequest) {
         JSONObject result = new JSONObject();
         AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
@@ -233,8 +247,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
 
             // 返现成功
             if (cnt > 0) {
-                result.put("status", "success");
-                result.put("success", "success");
+                result.put("status", "0");
                 result.put("result", "平台转账操作成功!");
             } else {
                 result.put("status", "error");
@@ -248,6 +261,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         return result;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
@@ -290,6 +304,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @param accountId 银行账户
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest, BankCallBean bankBean, UserInfoCustomizeVO userInfo, String accountId,String loginUserName) {
         int ret = 0;
 
@@ -433,7 +448,19 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountWebListVO.setCreateTime(time);
         accountWebListVO.setOperator(loginUserName);
         accountWebListVO.setFlag(1);
-        ret += amTradeClient.insertAccountWebList(accountWebListVO);
+       // ret += csMessageClient.insertAccountWebList(accountWebListVO);
+
+        try {
+            boolean b = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+            if (b) {
+                ret++;
+            }
+        } catch (MQException e) {
+            e.printStackTrace();
+            throw new RuntimeException("平台转账 发生异常，用户userId" + platformTransferRequest.getUserId() + ",accountId：" + accountId);
+        }
+
+
 
         // 添加红包账户明细
         BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(Integer.valueOf(bankBean.getAccountId()));

@@ -12,10 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 public class BaseRequest {
 
     @ApiModelProperty(value = "页数")
-    private int currPage;
+    private int currPage =1;
 
     @ApiModelProperty(value = "每页多少条")
-    private int pageSize;
+    private int pageSize =10;
 
 	public int getCurrPage() {
 		return currPage;

@@ -62,9 +62,31 @@ public class UserPortraitRequest extends BasePage {
 
     private String mobile;
 
+    private BigDecimal bankTotal;
+
+    private BigDecimal fundRetention;
+
+    private Integer lastRepayTime;
+
+    private Integer inviteRegist;
+
+    private Integer inviteRecharge;
+
+    private Integer inviteTender;
+
+    private BigDecimal yield;
+
+    private Integer attribute;
+
+    private BigDecimal bankBalance;
+
+    private BigDecimal accountAwait;
+
+    private BigDecimal bankFrost;
+
     private static final long serialVersionUID = 1L;
-    //限定标识，导出时为0
-    public int limitFlg = 1;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    public boolean limitFlg = true;
     //查询用
     public String yesterdayEndTime;
     public String yesterdayBeginTime;
@@ -302,11 +324,99 @@ public class UserPortraitRequest extends BasePage {
         this.yesterdayBeginTime = yesterdayBeginTime;
     }
 
-    public int getLimitFlg() {
+    public boolean isLimitFlg() {
         return limitFlg;
     }
 
-    public void setLimitFlg(int limitFlg) {
+    public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
+    }
+
+    public BigDecimal getBankTotal() {
+        return bankTotal;
+    }
+
+    public void setBankTotal(BigDecimal bankTotal) {
+        this.bankTotal = bankTotal;
+    }
+
+    public BigDecimal getFundRetention() {
+        return fundRetention;
+    }
+
+    public void setFundRetention(BigDecimal fundRetention) {
+        this.fundRetention = fundRetention;
+    }
+
+    public Integer getLastRepayTime() {
+        return lastRepayTime;
+    }
+
+    public void setLastRepayTime(Integer lastRepayTime) {
+        this.lastRepayTime = lastRepayTime;
+    }
+
+    public Integer getInviteRegist() {
+        return inviteRegist;
+    }
+
+    public void setInviteRegist(Integer inviteRegist) {
+        this.inviteRegist = inviteRegist;
+    }
+
+    public Integer getInviteRecharge() {
+        return inviteRecharge;
+    }
+
+    public void setInviteRecharge(Integer inviteRecharge) {
+        this.inviteRecharge = inviteRecharge;
+    }
+
+    public Integer getInviteTender() {
+        return inviteTender;
+    }
+
+    public void setInviteTender(Integer inviteTender) {
+        this.inviteTender = inviteTender;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
+
+    public BigDecimal getBankBalance() {
+        return bankBalance;
+    }
+
+    public void setBankBalance(BigDecimal bankBalance) {
+        this.bankBalance = bankBalance;
+    }
+
+    public BigDecimal getAccountAwait() {
+        return accountAwait;
+    }
+
+    public void setAccountAwait(BigDecimal accountAwait) {
+        this.accountAwait = accountAwait;
+    }
+
+    public BigDecimal getBankFrost() {
+        return bankFrost;
+    }
+
+    public void setBankFrost(BigDecimal bankFrost) {
+        this.bankFrost = bankFrost;
     }
 }

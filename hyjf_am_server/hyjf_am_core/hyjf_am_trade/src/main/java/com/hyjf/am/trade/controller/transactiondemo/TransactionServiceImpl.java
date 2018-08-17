@@ -3,7 +3,7 @@ package com.hyjf.am.trade.controller.transactiondemo;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.mq.transactionmq.AccountTProducer;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.common.exception.MQException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void commitAmount(int userId) throws MQException {
 		boolean commitFlag = accountTProducer
-				.messageSend(new AccountTProducer.MassageContent("userTransationTest1" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
+				.send(new AccountTProducer.MassageContent("userTransationTest1" , UUID.randomUUID().toString(), JSON.toJSONBytes(userId)));
 		if (!commitFlag) {
 			throw new RuntimeException("事务消息发送失败...");
 		}

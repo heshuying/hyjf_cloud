@@ -15,6 +15,8 @@ public class BorrowUserVO extends BaseVO {
 
     private String borrowNid;
 
+    private String borrowPreNid;
+
     private String username;
 
     private String area;
@@ -83,6 +85,33 @@ public class BorrowUserVO extends BaseVO {
 
     private String otherInfo;
 
+    public String getBorrowPreNid() {
+        return borrowPreNid;
+    }
+
+    public void setBorrowPreNid(String borrowPreNid) {
+        this.borrowPreNid = borrowPreNid;
+    }
+
+    private String registrationAddress;
+
+    private String corporateCode;
+
+    public String getRegistrationAddress() {
+        return registrationAddress;
+    }
+
+    public void setRegistrationAddress(String registrationAddress) {
+        this.registrationAddress = registrationAddress;
+    }
+
+    public String getCorporateCode() {
+        return corporateCode;
+    }
+
+    public void setCorporateCode(String corporateCode) {
+        this.corporateCode = corporateCode;
+    }
 
     public Integer getId() {
         return id;

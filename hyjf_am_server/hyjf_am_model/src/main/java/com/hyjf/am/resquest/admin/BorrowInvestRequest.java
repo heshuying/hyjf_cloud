@@ -93,6 +93,21 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
      */
     private String productType;
 
+    /**
+     * 用户ID
+     */
+    private Integer userId;
+
+    /**
+     * 标的编号
+     */
+    private String borrowNid;
+
+    /**
+     * 投资订单号
+     */
+    private String nid;
+
     public int getLimitStart() {
         return limitStart;
     }
@@ -235,5 +250,29 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
     }
 }

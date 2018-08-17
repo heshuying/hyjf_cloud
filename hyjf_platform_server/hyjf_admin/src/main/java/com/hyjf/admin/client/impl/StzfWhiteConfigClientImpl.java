@@ -10,6 +10,8 @@ import org.springframework.web.client.RestTemplate;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.StzfWhiteConfigClient;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 /**
  * @author fuqiang
@@ -36,5 +38,16 @@ public class StzfWhiteConfigClientImpl implements StzfWhiteConfigClient {
 	public STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-TRADE/am-trade/stzfwhiteconfig/updateSTZHWhiteList", requestBean,
 				STZHWhiteListResponse.class);
+	}
+
+	@Override
+	public HjhInstConfigVO selectHjhInstConfig(String instcode) {
+		HjhInstConfigResponse response = restTemplate.getForObject(
+				"http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode" + instcode,
+				HjhInstConfigResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

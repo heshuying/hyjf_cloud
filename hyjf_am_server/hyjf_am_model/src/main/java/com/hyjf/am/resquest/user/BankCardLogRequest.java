@@ -2,13 +2,14 @@ package com.hyjf.am.resquest.user;
 
 import java.util.Date;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
 /**
  * 用户绑卡日志request
  * @author hesy
  */
-public class BankCardLogRequest extends BaseVO{
+//public class BankCardLogRequest extends BaseVO{
+public class BankCardLogRequest extends BasePage{
 
     private Integer id;
 
@@ -35,6 +36,10 @@ public class BankCardLogRequest extends BaseVO{
     private Date createTime;
 
     private Date updateTime;
+    private String startTime;
+    private String endTime;
+    // 分页区分
+    private boolean limitFlg =false;
 
     private static final long serialVersionUID = 1L;
 
@@ -142,4 +147,27 @@ public class BankCardLogRequest extends BaseVO{
         this.updateTime = updateTime;
     }
 
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
+
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 }

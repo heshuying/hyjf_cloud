@@ -6,7 +6,7 @@ import java.util.Date;
 public class SmsNoticeConfig extends SmsNoticeConfigKey implements Serializable {
     private String title;
 
-    private String value;
+    private String configValue;
 
     private String pvalue;
 
@@ -34,12 +34,12 @@ public class SmsNoticeConfig extends SmsNoticeConfigKey implements Serializable 
         this.title = title == null ? null : title.trim();
     }
 
-    public String getValue() {
-        return value;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setValue(String value) {
-        this.value = value == null ? null : value.trim();
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue == null ? null : configValue.trim();
     }
 
     public String getPvalue() {

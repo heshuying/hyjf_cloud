@@ -29,16 +29,18 @@ import javax.servlet.http.HttpServletResponse;
  * @author yaoyong
  * @version CouponCheckController, v0.1 2018/7/3 15:57
  */
-@Api(value = "优惠券列表接口")
+@Api(tags = "VIP中心-优惠券列表")
 @RestController
-@RequestMapping("/coupon/checkList")
+@RequestMapping("/hyjf-admin/coupon/checklist")
 public class CouponCheckController extends BaseController {
-    /**权限名称 */
+    /**
+     * 权限名称
+     */
     private static final String PERMISSIONS = "couponuser";
     @Autowired
     CouponCheckService couponCheckService;
 
-    @ApiOperation(value = "优惠券列表", notes = "列表初始化页面")
+    @ApiOperation(value = "初始化页面", notes = "初始化页面")
     @PostMapping("/couponInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponCheckVO>> couponInit(@RequestBody CouponCheckRequestBean requestBean) {
@@ -56,10 +58,10 @@ public class CouponCheckController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券列表", notes = "删除信息")
-    @PostMapping("/deleteAction")
+    @ApiOperation(value = "删除信息", notes = "删除信息")
+    @GetMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteCheckList(@RequestBody String ids) {
+    public AdminResult deleteCheckList(@PathVariable String ids) {
         AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
@@ -77,21 +79,21 @@ public class CouponCheckController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券列表", notes = "上传文件")
+    @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/uploadAction")
     public AdminResult<CouponCheckVO> uploadFile(HttpServletRequest request, HttpServletResponse response) {
         CouponCheckResponse files = couponCheckService.uploadFile(request, response);
         return new AdminResult<CouponCheckVO>(files.getResult());
     }
 
-    @ApiOperation(value = "优惠券列表", notes = "下载文件")
-    @PostMapping("/downloadAction")
-    public AdminResult downloadFile(HttpServletResponse response, @RequestBody String id) {
+    @ApiOperation(value = "下载文件", notes = "下载文件")
+    @GetMapping("/downloadAction")
+    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
         couponCheckService.downloadFile(id, response);
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "优惠券列表", notes = "审核优惠券")
+    @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
     @PostMapping("/auditAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult checkCoupon(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponCheckRequestBean requestBean) {
@@ -118,14 +120,13 @@ public class CouponCheckController extends BaseController {
             results = couponCheckService.updateCoupon(checkRequest);
         } else {
             ccr.setMessage("审核不通过需要填写备注,备注20字以内");
-            return new AdminResult<>(ccr.getResult());
+            return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        if (results) {
-            ccr.setMessage("审核成功");
-        } else {
+        if (!results) {
             ccr.setMessage("审核失败");
+            return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        return new AdminResult<>(ccr.getResult());
+        return new AdminResult<>(ccr);
     }
 
 }

@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.customertransfer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
@@ -29,7 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +41,9 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/5 18:00
  */
-@Api(value = "资金中心-转账管理-用户转账")
+@Api(value = "资金中心-转账管理-用户转账",tags = "资金中心-转账管理-用户转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/customertransfer")
+@RequestMapping(value = "/hyjf-admin/finance/customertransfer")
 public class CustomerTransferController extends BaseController {
 
     @Autowired
@@ -54,14 +58,11 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-查询转账列表",notes = "用户转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public JSONObject transferList(@RequestBody CustomerTransferListRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult<ListResult<UserTransferVO>> transferList(@RequestBody CustomerTransferListRequest request){
         Integer count = customerTransferService.getTransferCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
         List<UserTransferVO> userTransferVOList = customerTransferService.searchUserTransferList(request);
-        result.put("userTransferVOList",userTransferVOList);
-        return result;
+        return new AdminResult<>(ListResult.build(userTransferVOList,count));
     }
 
     /**
@@ -72,7 +73,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-导出转账列表",notes = "用户转账-导出转账列表")
     @PostMapping(value = "/transferlistexport")
-    public void exportTransferList(HttpServletResponse response, @RequestBody CustomerTransferListRequest request){
+    public void exportTransferList(HttpServletResponse response, @RequestBody CustomerTransferListRequest request) throws UnsupportedEncodingException {
         /*
          * 原有注释
          * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
@@ -84,7 +85,7 @@ public class CustomerTransferController extends BaseController {
         // 表格sheet名称
         String sheetName = "转账记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         //设置默认查询时间
@@ -186,17 +187,20 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
-    public JSONObject searchBalanceByUsername(@RequestBody Map map){
+    public AdminResult searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
-        JSONObject result = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
-            result = customerTransferService.searchBalanceByUsername(outUserName);
+            jsonObject = customerTransferService.searchBalanceByUsername(outUserName);
         }else{
-            result.put("status","error");
-            result.put("result","用户账号不能为空");
+            return new AdminResult(FAIL,"用户账号不能为空");
         }
-        return result;
+        if("0".equals(jsonObject.get("status"))){
+            return new AdminResult(SUCCESS,jsonObject.getString("result"));
+        }else{
+            return new AdminResult(FAIL,jsonObject.getString("result"));
+        }
     }
 
     /**
@@ -207,7 +211,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
-    public JSONObject addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
+    public AdminResult addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
         JSONObject result = new JSONObject();
         result = customerTransferService.checkCustomerTransferParam(request);
         if(result != null && "0".equals(result.get("status"))){
@@ -216,14 +220,10 @@ public class CustomerTransferController extends BaseController {
             request.setCreateUserName(adminSystemVO.getUsername());
             boolean success = customerTransferService.insertTransfer(request);
             if(success){
-                result.put("status","0");
-                result.put("result","成功");
-            }else{
-                result.put("status","error");
-                result.put("result","数据插入失败");
+                return new AdminResult(SUCCESS,SUCCESS_DESC);
             }
         }
-        return result;
+        return new AdminResult(FAIL,FAIL_DESC);
     }
 
     /**
@@ -232,15 +232,13 @@ public class CustomerTransferController extends BaseController {
      * @param map 包含transferId 转账记录id
      * @return
      */
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String"),
-    })
+    @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String")
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
     public AdminResult transferSendMail(@RequestBody Map map){
         Integer transferId = (Integer) map.get("transferId");
         customerTransferService.transferSendMail(transferId);
-        return new AdminResult();
+        return new AdminResult(SUCCESS,SUCCESS_DESC);
     }
 
 

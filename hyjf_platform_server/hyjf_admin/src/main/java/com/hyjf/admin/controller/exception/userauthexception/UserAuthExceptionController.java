@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.exception.userauthexception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserAuthExceptionService;
 import com.hyjf.am.response.AdminResponse;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +28,8 @@ import java.util.List;
  * 后台管理系统，异常中心->自动投资债转授权异常
  */
 @RestController
-@RequestMapping("/hyjf-admin/user_auth_exception")
-@Api(value = "自动投资债转授权异常")
+@RequestMapping("/hyjf-admin/exception/user_auth_exception")
+@Api(value = "自动投资债转授权异常",tags = "自动投资债转授权异常")
 public class UserAuthExceptionController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,25 +40,19 @@ public class UserAuthExceptionController extends BaseController {
      * 自动投资债转授权异常list查询
      * @auth sunpeikai
      * @param request 筛选条件请求参数
-     * @return JSONObject 拼装的返回参数
+     * @return
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
-    public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<AdminUserAuthListVO>> userAuthException(@RequestBody AdminUserAuthListRequest request){
+        Integer recordTotal = 0;
+        List<AdminUserAuthListVO> resultList = new ArrayList<>();
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
-            Integer recordTotal = response.getRecordTotal();
-            List<AdminUserAuthListVO> resultList = response.getResultList();
-            jsonObject.put(STATUS, SUCCESS);
-            jsonObject.put(MSG, "成功");
-            jsonObject.put(TRCORD, recordTotal);
-            jsonObject.put(LIST, resultList);
-        }else{
-            jsonObject.put(MSG, "查询失败");
-            jsonObject.put(STATUS, FAIL);
+            recordTotal = response.getRecordTotal();
+            resultList = response.getResultList();
         }
-        return jsonObject;
+        return new AdminResult<>(ListResult.build(resultList,recordTotal));
     }
     /**
      * 同步用户授权状态
@@ -66,14 +63,14 @@ public class UserAuthExceptionController extends BaseController {
      */
     @ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
     @PostMapping(value = "/syn_user_auth")
-    public JSONObject synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
+    public AdminResult synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
         logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
         AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
 
         if(AdminResponse.isSuccess(response)){
-            return success();
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
         }else{
-            return fail("查询失败");
+            return new AdminResult(FAIL,FAIL_DESC);
         }
     }
 

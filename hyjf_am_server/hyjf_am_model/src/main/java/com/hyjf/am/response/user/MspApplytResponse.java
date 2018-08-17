@@ -211,11 +211,13 @@ public class MspApplytResponse extends AdminResponse<MspApplyVO>  {
 
 
 
-	public int getRecordTotal() {
+	@Override
+    public int getRecordTotal() {
 		return recordTotal;
 	}
 
-	public void setRecordTotal(int recordTotal) {
+	@Override
+    public void setRecordTotal(int recordTotal) {
 		this.recordTotal = recordTotal;
 	}
 }

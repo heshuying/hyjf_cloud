@@ -1,19 +1,15 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepaymentinfo;
 
-import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentInfoRequsetBean;
-import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRepaymentInfoService;
-import com.hyjf.admin.service.BorrowRepaymentService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
-import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
-import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
@@ -36,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -46,9 +43,9 @@ import java.util.List;
  * @author pangchengchao
  * @version BorrowRepaymentInfoController, v0.1 2018/7/7 14:14
  */
-@Api(value = "产品中心-汇直投-还款明细")
+@Api(value = "产品中心-汇直投-还款明细",tags ="产品中心-汇直投-还款明细" )
 @RestController
-@RequestMapping("/borrow/borrowrepaymentinfo")
+@RequestMapping("/hyjf-admin/borrow/borrowrepaymentinfo")
 public class BorrowRepaymentInfoController extends BaseController {
 
 
@@ -68,8 +65,9 @@ public class BorrowRepaymentInfoController extends BaseController {
         BorrowRepaymentInfoRequset copyForm=new BorrowRepaymentInfoRequset();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentInfoBean bean = borrowRepaymentInfoService.selectBorrowRepaymentInfoListForView(copyForm);
+        // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentInfoService.selectHjhInstConfigByInstCode("-1");
-        bean.setHjhInstConfigList(hjhInstConfigList);
+        bean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"instCode","instName"));
         AdminResult<BorrowRepaymentInfoBean> result=new AdminResult<BorrowRepaymentInfoBean> ();
         result.setData(bean);
         return result;
@@ -118,7 +116,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         // 表格sheet名称
         String sheetName = "还款明细导出数据";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
         // 列头
@@ -198,11 +196,11 @@ public class BorrowRepaymentInfoController extends BaseController {
                     // 借款金额
                     else if (celLength == 9) {
                         cell.setCellValue(
-                                record.getBorrowAccount().equals("") ? 0 : Double.valueOf(record.getBorrowAccount()));
+                                "".equals(record.getBorrowAccount()) ? 0 : Double.valueOf(record.getBorrowAccount()));
                     }
                     // 借到金额
                     else if (celLength == 10) {
-                        cell.setCellValue(record.getBorrowAccountYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getBorrowAccountYes()) ? 0
                                 : Double.valueOf(record.getBorrowAccountYes()));
                     }
                     // 还款方式
@@ -264,62 +262,62 @@ public class BorrowRepaymentInfoController extends BaseController {
                     // 投资金额
                     else if (celLength == 23) {
                         cell.setCellValue(
-                                record.getRecoverTotal().equals("") ? 0 : Double.valueOf(record.getRecoverTotal()));
+                                "".equals(record.getRecoverTotal()) ? 0 : Double.valueOf(record.getRecoverTotal()));
                     }
                     // 应还本金
                     else if (celLength == 24) {
                         cell.setCellValue(
-                                record.getRecoverCapital().equals("") ? 0 : Double.valueOf(record.getRecoverCapital()));
+                                "".equals(record.getRecoverCapital()) ? 0 : Double.valueOf(record.getRecoverCapital()));
                     }
                     // 应还利息
                     else if (celLength == 25) {
-                        cell.setCellValue(record.getRecoverInterest().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterest()) ? 0
                                 : Double.valueOf(record.getRecoverInterest()));
                     }
                     // 应还本息
                     else if (celLength == 26) {
                         cell.setCellValue(
-                                record.getRecoverAccount().equals("") ? 0 : Double.valueOf(record.getRecoverAccount()));
+                                "".equals(record.getRecoverAccount()) ? 0 : Double.valueOf(record.getRecoverAccount()));
                     }
                     // 管理费
                     else if (celLength == 27) {
                         cell.setCellValue(
-                                record.getRecoverFee().equals("") ? 0 : Double.valueOf(record.getRecoverFee()));
+                                "".equals(record.getRecoverFee()) ? 0 : Double.valueOf(record.getRecoverFee()));
                     }
                     // 已还本金
                     else if (celLength == 28) {
-                        cell.setCellValue(record.getRecoverCapitalYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverCapitalYes()) ? 0
                                 : Double.valueOf(record.getRecoverCapitalYes()));
                     }
                     // 已还利息
                     else if (celLength == 29) {
-                        cell.setCellValue(record.getRecoverInterestYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterestYes()) ? 0
                                 : Double.valueOf(record.getRecoverInterestYes()));
                     }
                     // 已还本息
                     else if (celLength == 30) {
-                        cell.setCellValue(record.getRecoverAccountYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverAccountYes()) ? 0
                                 : Double.valueOf(record.getRecoverAccountYes()));
                     }
                     // 未还本金
                     else if (celLength == 31) {
-                        cell.setCellValue(record.getRecoverCapitalWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverCapitalWait()) ? 0
                                 : Double.valueOf(record.getRecoverCapitalWait()));
                     }
                     // 未还利息
                     else if (celLength == 32) {
-                        cell.setCellValue(record.getRecoverInterestWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterestWait()) ? 0
                                 : Double.valueOf(record.getRecoverInterestWait()));
                     }
                     // 未还本息
                     else if (celLength == 33) {
-                        cell.setCellValue(record.getRecoverAccountWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverAccountWait()) ? 0
                                 : Double.valueOf(record.getRecoverAccountWait()));
                     }
                     // 还款状态
                     else if (celLength == 34) {
                         if (StringUtils.isNotEmpty(record.getStatus())) {
-                            cell.setCellValue(record.getStatus().equals("0") ? "还款中" : "已还款");
+                            cell.setCellValue("0".equals(record.getStatus()) ? "还款中" : "已还款");
                         }
                     }
                     // 最后还款日

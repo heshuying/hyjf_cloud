@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.trade.dao.mapper.customize.AutoReqRepayBorrowCustomizeMapper">
+	<resultMap id="AutoReqRepayBorrowResult" type="com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize">
+		<result column="user_id" property="userId" /> <!-- 用户id -->
+		<result column="username" property="username" /> <!-- 用户名 -->
+		<result column="repay_org_user_id" property="repayOrgUserId" /> <!-- 担保机构id -->
+		<result column="repay_org_username" property="repayOrgUsername" /> <!-- 担保机构用户名 -->
+		<result column="borrow_nid" property="borrowNid" /> <!-- 标的编号 -->
+		<result column="repayer_type" property="repayerType" /> <!-- 扣款账户：1-担保账户；2-借款人账户 -->
+	</resultMap>
+
+	<select id="getAutoReqRepayBorrow" resultMap="AutoReqRepayBorrowResult">
+		SELECT
+			r.user_id,
+			u.username,
+			bi.repay_org_user_id,
+			uo.username repay_org_username,
+			r.borrow_nid,
+			f.auto_repay,
+			f.repayer_type,
+			bi.project_type,
+			pt.borrow_class,
+			bi.inst_code,
+			bi.asset_type,
+			b.borrow_period,
+			b.borrow_style,
+			b.`status`,
+			r.repay_status,
+			r.repay_time
+		FROM
+			ht_borrow_repay r
+			JOIN ht_borrow b ON r.borrow_nid = b.borrow_nid
+			JOIN ht_borrow_info bi ON r.borrow_nid = bi.borrow_nid
+			AND b.`status` = 4
+			JOIN ht_borrow_project_type pt ON bi.project_type = pt.borrow_cd
+			JOIN ht_borrow_finman_new_charge f ON bi.inst_code = f.inst_code
+			AND f.auto_repay = 1
+			AND bi.asset_type = f.asset_type
+			AND b.borrow_period = f.man_charge_time
+			AND pt.borrow_class = f.project_type
+			AND ( CASE WHEN b.borrow_style = 'endday' THEN f.man_charge_time_type = 'endday' ELSE f.man_charge_time_type = 'month' END )
+			LEFT JOIN ht_r_user u ON u.user_id = b.user_id
+			LEFT JOIN ht_r_user uo ON uo.user_id = bi.repay_org_user_id
+		WHERE
+			r.repay_time BETWEEN UNIX_TIMESTAMP( date( sysdate( ) ) )
+			AND UNIX_TIMESTAMP( adddate( date( sysdate( ) ), 1 ) ) - 1
+			AND r.repay_status = 0
+			AND NOT EXISTS (
+			SELECT
+				1
+			FROM
+				ht_borrow_apicron a
+			WHERE
+				a.borrow_nid = r.borrow_nid
+				AND a.api_type = 1
+			AND a.period_now = b.borrow_period - r.repay_period + 1
+			)
+	</select>
+</mapper>

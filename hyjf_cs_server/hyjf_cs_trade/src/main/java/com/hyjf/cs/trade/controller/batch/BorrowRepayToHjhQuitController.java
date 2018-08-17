@@ -3,15 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -21,7 +12,15 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.HjhQuitProducer;
-import com.hyjf.cs.trade.service.BorrowRepayToHjhQuitService;
+import com.hyjf.cs.trade.service.batch.BorrowRepayToHjhQuitService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -46,15 +45,14 @@ public class BorrowRepayToHjhQuitController {
             for (int i = 0; i < accedeList.size(); i++) {
                 HjhAccedeVO accede = accedeList.get(i);
                 if(isRepeat(accede.getAccedeOrderId())){
-                    // 发送短信提示
-                    String key = "hyjf-routingkey-Repay-hjhQuit";
+                    // 发送计划锁定/退出MQ
                     JSONObject params = new JSONObject();
                     params.put("mqMsgId", GetCode.getRandomCode(10));
                     params.put("accedeOrderId", accede.getAccedeOrderId());
                     params.put("orderStatus", accede.getOrderStatus());
                     params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
                     try {
-                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }

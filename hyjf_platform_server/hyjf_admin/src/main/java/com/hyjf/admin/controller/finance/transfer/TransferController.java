@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,7 @@ import java.util.Map;
  * @version TransferController, v0.1 2018/7/6 17:51
  */
 
-@Api(value = "子账户间转账")
+@Api(value = "资金中心-平台账户-子账户间转账",tags = "资金中心-平台账户-子账户间转账")
 @RestController
 @RequestMapping("/hyjf-admin/finance/transfer")
 public class TransferController extends BaseController {
@@ -66,7 +68,7 @@ public class TransferController extends BaseController {
      * @return
      */
     @ApiOperation(value = "用户转账列表", notes = "用户转账列表")
-    @RequestMapping(value = "/transferList")
+    @PostMapping(value = "/transferList")
     public AdminResult init(@RequestBody TransferListRequest form) {
         TransferResponse response = new TransferResponse();
         Map<String, String> transferStatus = CacheUtil.getParamNameMap("TRANSFER_STATUS");
@@ -124,7 +126,8 @@ public class TransferController extends BaseController {
      * @param
      * @return 进入用户详情页面
      */
-    @RequestMapping(value = "addTransfer")
+    @ApiOperation(value = "进入用户详情页面")
+    @PostMapping(value = "/addTransfer")
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody TransferCustomizeBean form) {
         Map<String, Object> map = new HashMap<>();
         map.put("transferForm", form);
@@ -167,14 +170,15 @@ public class TransferController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/exportTransfer")
+    @ApiOperation(value = "导出")
+    @PostMapping(value = "/exportTransfer")
     public void exportExcel(@RequestBody TransferListRequest form, HttpServletRequest request,
-                            HttpServletResponse response)  {
+                            HttpServletResponse response) throws UnsupportedEncodingException {
 
         // 表格sheet名称
         String sheetName = "转账记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         //设置默认查询时间

@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.message.bean.SmsLog;
+import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.SmsLogDao;
+import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.am.vo.config.SmsNoticeConfigVO;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -113,7 +113,7 @@ public class SmsHandle {
 	 * @param sender
 	 *            发送者,默认为【汇盈金服】
 	 * @return 返回结果,0表示发送成功
-	 * @throws Exception
+	 * @throws Exception   AAAAAAAAAAAAAAA
 	 */
 	public Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType)
 			throws Exception {

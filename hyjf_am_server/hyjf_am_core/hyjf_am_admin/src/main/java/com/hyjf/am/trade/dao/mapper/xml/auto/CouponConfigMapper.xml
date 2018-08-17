@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CouponConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+    <result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+    <result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
+    <result column="coupon_quantity" property="couponQuantity" jdbcType="INTEGER" />
+    <result column="coupon_profit_time" property="couponProfitTime" jdbcType="SMALLINT" />
+    <result column="expiration_type" property="expirationType" jdbcType="TINYINT" />
+    <result column="expiration_date" property="expirationDate" jdbcType="INTEGER" />
+    <result column="expiration_length" property="expirationLength" jdbcType="TINYINT" />
+    <result column="expiration_length_day" property="expirationLengthDay" jdbcType="SMALLINT" />
+    <result column="add_flag" property="addFlag" jdbcType="TINYINT" />
+    <result column="coupon_system" property="couponSystem" jdbcType="VARCHAR" />
+    <result column="coupon_type" property="couponType" jdbcType="TINYINT" />
+    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
+    <result column="project_expiration_type" property="projectExpirationType" jdbcType="TINYINT" />
+    <result column="project_expiration_length" property="projectExpirationLength" jdbcType="TINYINT" />
+    <result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="TINYINT" />
+    <result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="TINYINT" />
+    <result column="tender_quota_type" property="tenderQuotaType" jdbcType="TINYINT" />
+    <result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />
+    <result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />
+    <result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="audit_content" property="auditContent" jdbcType="VARCHAR" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="INTEGER" />
+    <result column="repay_time_config" property="repayTimeConfig" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, coupon_code, coupon_name, coupon_quota, coupon_quantity, coupon_profit_time, 
+    expiration_type, expiration_date, expiration_length, expiration_length_day, add_flag, 
+    coupon_system, coupon_type, project_type, project_expiration_type, project_expiration_length, 
+    project_expiration_length_min, project_expiration_length_max, tender_quota_type, 
+    tender_quota, tender_quota_min, tender_quota_max, content, `status`, audit_content, 
+    audit_user, audit_time, repay_time_config, del_flag, create_user_id, update_user_id, 
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_coupon_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_coupon_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_coupon_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfigExample" >
+    delete from ht_coupon_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_config (coupon_code, coupon_name, coupon_quota, 
+      coupon_quantity, coupon_profit_time, expiration_type, 
+      expiration_date, expiration_length, expiration_length_day, 
+      add_flag, coupon_system, coupon_type, 
+      project_type, project_expiration_type, project_expiration_length, 
+      project_expiration_length_min, project_expiration_length_max, 
+      tender_quota_type, tender_quota, tender_quota_min, 
+      tender_quota_max, content, `status`, 
+      audit_content, audit_user, audit_time, 
+      repay_time_config, del_flag, create_user_id, 
+      update_user_id, create_time, update_time
+      )
+    values (#{couponCode,jdbcType=VARCHAR}, #{couponName,jdbcType=VARCHAR}, #{couponQuota,jdbcType=DECIMAL}, 
+      #{couponQuantity,jdbcType=INTEGER}, #{couponProfitTime,jdbcType=SMALLINT}, #{expirationType,jdbcType=TINYINT}, 
+      #{expirationDate,jdbcType=INTEGER}, #{expirationLength,jdbcType=TINYINT}, #{expirationLengthDay,jdbcType=SMALLINT}, 
+      #{addFlag,jdbcType=TINYINT}, #{couponSystem,jdbcType=VARCHAR}, #{couponType,jdbcType=TINYINT}, 
+      #{projectType,jdbcType=VARCHAR}, #{projectExpirationType,jdbcType=TINYINT}, #{projectExpirationLength,jdbcType=TINYINT}, 
+      #{projectExpirationLengthMin,jdbcType=TINYINT}, #{projectExpirationLengthMax,jdbcType=TINYINT}, 
+      #{tenderQuotaType,jdbcType=TINYINT}, #{tenderQuota,jdbcType=INTEGER}, #{tenderQuotaMin,jdbcType=INTEGER}, 
+      #{tenderQuotaMax,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{auditContent,jdbcType=VARCHAR}, #{auditUser,jdbcType=VARCHAR}, #{auditTime,jdbcType=INTEGER}, 
+      #{repayTimeConfig,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_coupon_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="couponCode != null" >
+        coupon_code,
+      </if>
+      <if test="couponName != null" >
+        coupon_name,
+      </if>
+      <if test="couponQuota != null" >
+        coupon_quota,
+      </if>
+      <if test="couponQuantity != null" >
+        coupon_quantity,
+      </if>
+      <if test="couponProfitTime != null" >
+        coupon_profit_time,
+      </if>
+      <if test="expirationType != null" >
+        expiration_type,
+      </if>
+      <if test="expirationDate != null" >
+        expiration_date,
+      </if>
+      <if test="expirationLength != null" >
+        expiration_length,
+      </if>
+      <if test="expirationLengthDay != null" >
+        expiration_length_day,
+      </if>
+      <if test="addFlag != null" >
+        add_flag,
+      </if>
+      <if test="couponSystem != null" >
+        coupon_system,
+      </if>
+      <if test="couponType != null" >
+        coupon_type,
+      </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
+      <if test="projectExpirationType != null" >
+        project_expiration_type,
+      </if>
+      <if test="projectExpirationLength != null" >
+        project_expiration_length,
+      </if>
+      <if test="projectExpirationLengthMin != null" >
+        project_expiration_length_min,
+      </if>
+      <if test="projectExpirationLengthMax != null" >
+        project_expiration_length_max,
+      </if>
+      <if test="tenderQuotaType != null" >
+        tender_quota_type,
+      </if>
+      <if test="tenderQuota != null" >
+        tender_quota,
+      </if>
+      <if test="tenderQuotaMin != null" >
+        tender_quota_min,
+      </if>
+      <if test="tenderQuotaMax != null" >
+        tender_quota_max,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="auditContent != null" >
+        audit_content,
+      </if>
+      <if test="auditUser != null" >
+        audit_user,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="repayTimeConfig != null" >
+        repay_time_config,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="couponCode != null" >
+        #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="couponName != null" >
+        #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponQuota != null" >
+        #{couponQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="couponQuantity != null" >
+        #{couponQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="couponProfitTime != null" >
+        #{couponProfitTime,jdbcType=SMALLINT},
+      </if>
+      <if test="expirationType != null" >
+        #{expirationType,jdbcType=TINYINT},
+      </if>
+      <if test="expirationDate != null" >
+        #{expirationDate,jdbcType=INTEGER},
+      </if>
+      <if test="expirationLength != null" >
+        #{expirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="expirationLengthDay != null" >
+        #{expirationLengthDay,jdbcType=SMALLINT},
+      </if>
+      <if test="addFlag != null" >
+        #{addFlag,jdbcType=TINYINT},
+      </if>
+      <if test="couponSystem != null" >
+        #{couponSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="couponType != null" >
+        #{couponType,jdbcType=TINYINT},
+      </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectExpirationType != null" >
+        #{projectExpirationType,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLength != null" >
+        #{projectExpirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLengthMin != null" >
+        #{projectExpirationLengthMin,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLengthMax != null" >
+        #{projectExpirationLengthMax,jdbcType=TINYINT},
+      </if>
+      <if test="tenderQuotaType != null" >
+        #{tenderQuotaType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderQuota != null" >
+        #{tenderQuota,jdbcType=INTEGER},
+      </if>
+      <if test="tenderQuotaMin != null" >
+        #{tenderQuotaMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenderQuotaMax != null" >
+        #{tenderQuotaMax,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditContent != null" >
+        #{auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null" >
+        #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayTimeConfig != null" >
+        #{repayTimeConfig,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_coupon_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_coupon_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.couponCode != null" >
+        coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couponName != null" >
+        coupon_name = #{record.couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couponQuota != null" >
+        coupon_quota = #{record.couponQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="record.couponQuantity != null" >
+        coupon_quantity = #{record.couponQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.couponProfitTime != null" >
+        coupon_profit_time = #{record.couponProfitTime,jdbcType=SMALLINT},
+      </if>
+      <if test="record.expirationType != null" >
+        expiration_type = #{record.expirationType,jdbcType=TINYINT},
+      </if>
+      <if test="record.expirationDate != null" >
+        expiration_date = #{record.expirationDate,jdbcType=INTEGER},
+      </if>
+      <if test="record.expirationLength != null" >
+        expiration_length = #{record.expirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="record.expirationLengthDay != null" >
+        expiration_length_day = #{record.expirationLengthDay,jdbcType=SMALLINT},
+      </if>
+      <if test="record.addFlag != null" >
+        add_flag = #{record.addFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.couponSystem != null" >
+        coupon_system = #{record.couponSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.couponType != null" >
+        coupon_type = #{record.couponType,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectExpirationType != null" >
+        project_expiration_type = #{record.projectExpirationType,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectExpirationLength != null" >
+        project_expiration_length = #{record.projectExpirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectExpirationLengthMin != null" >
+        project_expiration_length_min = #{record.projectExpirationLengthMin,jdbcType=TINYINT},
+      </if>
+      <if test="record.projectExpirationLengthMax != null" >
+        project_expiration_length_max = #{record.projectExpirationLengthMax,jdbcType=TINYINT},
+      </if>
+      <if test="record.tenderQuotaType != null" >
+        tender_quota_type = #{record.tenderQuotaType,jdbcType=TINYINT},
+      </if>
+      <if test="record.tenderQuota != null" >
+        tender_quota = #{record.tenderQuota,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderQuotaMin != null" >
+        tender_quota_min = #{record.tenderQuotaMin,jdbcType=INTEGER},
+      </if>
+      <if test="record.tenderQuotaMax != null" >
+        tender_quota_max = #{record.tenderQuotaMax,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.auditContent != null" >
+        audit_content = #{record.auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditUser != null" >
+        audit_user = #{record.auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditTime != null" >
+        audit_time = #{record.auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayTimeConfig != null" >
+        repay_time_config = #{record.repayTimeConfig,jdbcType=TINYINT},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_coupon_config
+    set id = #{record.id,jdbcType=INTEGER},
+      coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      coupon_name = #{record.couponName,jdbcType=VARCHAR},
+      coupon_quota = #{record.couponQuota,jdbcType=DECIMAL},
+      coupon_quantity = #{record.couponQuantity,jdbcType=INTEGER},
+      coupon_profit_time = #{record.couponProfitTime,jdbcType=SMALLINT},
+      expiration_type = #{record.expirationType,jdbcType=TINYINT},
+      expiration_date = #{record.expirationDate,jdbcType=INTEGER},
+      expiration_length = #{record.expirationLength,jdbcType=TINYINT},
+      expiration_length_day = #{record.expirationLengthDay,jdbcType=SMALLINT},
+      add_flag = #{record.addFlag,jdbcType=TINYINT},
+      coupon_system = #{record.couponSystem,jdbcType=VARCHAR},
+      coupon_type = #{record.couponType,jdbcType=TINYINT},
+      project_type = #{record.projectType,jdbcType=VARCHAR},
+      project_expiration_type = #{record.projectExpirationType,jdbcType=TINYINT},
+      project_expiration_length = #{record.projectExpirationLength,jdbcType=TINYINT},
+      project_expiration_length_min = #{record.projectExpirationLengthMin,jdbcType=TINYINT},
+      project_expiration_length_max = #{record.projectExpirationLengthMax,jdbcType=TINYINT},
+      tender_quota_type = #{record.tenderQuotaType,jdbcType=TINYINT},
+      tender_quota = #{record.tenderQuota,jdbcType=INTEGER},
+      tender_quota_min = #{record.tenderQuotaMin,jdbcType=INTEGER},
+      tender_quota_max = #{record.tenderQuotaMax,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      audit_content = #{record.auditContent,jdbcType=VARCHAR},
+      audit_user = #{record.auditUser,jdbcType=VARCHAR},
+      audit_time = #{record.auditTime,jdbcType=INTEGER},
+      repay_time_config = #{record.repayTimeConfig,jdbcType=TINYINT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfig" >
+    update ht_coupon_config
+    <set >
+      <if test="couponCode != null" >
+        coupon_code = #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="couponName != null" >
+        coupon_name = #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponQuota != null" >
+        coupon_quota = #{couponQuota,jdbcType=DECIMAL},
+      </if>
+      <if test="couponQuantity != null" >
+        coupon_quantity = #{couponQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="couponProfitTime != null" >
+        coupon_profit_time = #{couponProfitTime,jdbcType=SMALLINT},
+      </if>
+      <if test="expirationType != null" >
+        expiration_type = #{expirationType,jdbcType=TINYINT},
+      </if>
+      <if test="expirationDate != null" >
+        expiration_date = #{expirationDate,jdbcType=INTEGER},
+      </if>
+      <if test="expirationLength != null" >
+        expiration_length = #{expirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="expirationLengthDay != null" >
+        expiration_length_day = #{expirationLengthDay,jdbcType=SMALLINT},
+      </if>
+      <if test="addFlag != null" >
+        add_flag = #{addFlag,jdbcType=TINYINT},
+      </if>
+      <if test="couponSystem != null" >
+        coupon_system = #{couponSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="couponType != null" >
+        coupon_type = #{couponType,jdbcType=TINYINT},
+      </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectExpirationType != null" >
+        project_expiration_type = #{projectExpirationType,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLength != null" >
+        project_expiration_length = #{projectExpirationLength,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLengthMin != null" >
+        project_expiration_length_min = #{projectExpirationLengthMin,jdbcType=TINYINT},
+      </if>
+      <if test="projectExpirationLengthMax != null" >
+        project_expiration_length_max = #{projectExpirationLengthMax,jdbcType=TINYINT},
+      </if>
+      <if test="tenderQuotaType != null" >
+        tender_quota_type = #{tenderQuotaType,jdbcType=TINYINT},
+      </if>
+      <if test="tenderQuota != null" >
+        tender_quota = #{tenderQuota,jdbcType=INTEGER},
+      </if>
+      <if test="tenderQuotaMin != null" >
+        tender_quota_min = #{tenderQuotaMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenderQuotaMax != null" >
+        tender_quota_max = #{tenderQuotaMax,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="auditContent != null" >
+        audit_content = #{auditContent,jdbcType=VARCHAR},
+      </if>
+      <if test="auditUser != null" >
+        audit_user = #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayTimeConfig != null" >
+        repay_time_config = #{repayTimeConfig,jdbcType=TINYINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CouponConfig" >
+    update ht_coupon_config
+    set coupon_code = #{couponCode,jdbcType=VARCHAR},
+      coupon_name = #{couponName,jdbcType=VARCHAR},
+      coupon_quota = #{couponQuota,jdbcType=DECIMAL},
+      coupon_quantity = #{couponQuantity,jdbcType=INTEGER},
+      coupon_profit_time = #{couponProfitTime,jdbcType=SMALLINT},
+      expiration_type = #{expirationType,jdbcType=TINYINT},
+      expiration_date = #{expirationDate,jdbcType=INTEGER},
+      expiration_length = #{expirationLength,jdbcType=TINYINT},
+      expiration_length_day = #{expirationLengthDay,jdbcType=SMALLINT},
+      add_flag = #{addFlag,jdbcType=TINYINT},
+      coupon_system = #{couponSystem,jdbcType=VARCHAR},
+      coupon_type = #{couponType,jdbcType=TINYINT},
+      project_type = #{projectType,jdbcType=VARCHAR},
+      project_expiration_type = #{projectExpirationType,jdbcType=TINYINT},
+      project_expiration_length = #{projectExpirationLength,jdbcType=TINYINT},
+      project_expiration_length_min = #{projectExpirationLengthMin,jdbcType=TINYINT},
+      project_expiration_length_max = #{projectExpirationLengthMax,jdbcType=TINYINT},
+      tender_quota_type = #{tenderQuotaType,jdbcType=TINYINT},
+      tender_quota = #{tenderQuota,jdbcType=INTEGER},
+      tender_quota_min = #{tenderQuotaMin,jdbcType=INTEGER},
+      tender_quota_max = #{tenderQuotaMax,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      audit_content = #{auditContent,jdbcType=VARCHAR},
+      audit_user = #{auditUser,jdbcType=VARCHAR},
+      audit_time = #{auditTime,jdbcType=INTEGER},
+      repay_time_config = #{repayTimeConfig,jdbcType=TINYINT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
