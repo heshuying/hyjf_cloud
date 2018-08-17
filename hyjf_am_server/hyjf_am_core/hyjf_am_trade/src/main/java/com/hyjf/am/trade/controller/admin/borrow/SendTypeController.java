@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowSendTypeResponse;
 import com.hyjf.am.resquest.admin.BorrowSendTypeRequest;
-import com.hyjf.am.trade.controller.admin.config.InstConfigController;
 import com.hyjf.am.trade.dao.model.auto.BorrowSendType;
 import com.hyjf.am.trade.service.admin.borrow.SendTypeService;
 import com.hyjf.am.vo.admin.BorrowSendTypeVO;
@@ -31,7 +30,7 @@ public class SendTypeController {
 
     @Autowired
     private SendTypeService sendTypeService;
-    private static Logger logger = LoggerFactory.getLogger(InstConfigController.class);
+    private static Logger logger = LoggerFactory.getLogger(SendTypeController.class);
     /**
      * 分页查询配置中心发标复标
      * @return
