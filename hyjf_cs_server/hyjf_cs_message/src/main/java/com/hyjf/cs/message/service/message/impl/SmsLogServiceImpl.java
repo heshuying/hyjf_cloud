@@ -48,7 +48,9 @@ public class SmsLogServiceImpl implements SmsLogService {
 		}
 		if (StringUtils.isNotBlank(postTimeEnd)) {
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
-			criteria.and("posttime").lte(end);
+			Criteria criteria2 = new Criteria();
+			criteria2.and("posttime").lte(end);
+			query.addCriteria(criteria2);
 		}
 		if (status != null) {
 			criteria.and("status").is(status);
@@ -123,5 +125,10 @@ public class SmsLogServiceImpl implements SmsLogService {
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public List<SmsLog> findSmsLogList() {
+		return smsLogDao.findAll();
 	}
 }

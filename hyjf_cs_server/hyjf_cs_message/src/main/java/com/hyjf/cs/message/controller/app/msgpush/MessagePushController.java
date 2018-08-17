@@ -40,7 +40,7 @@ public class MessagePushController extends BaseController {
 	private MsgPushService msgPushService;
 
 	@ApiOperation(value = "获取提醒列表", notes = "获取提醒列表")
-	@GetMapping("/getTagListAction")
+	@PostMapping("/getTagListAction")
 	public JSONObject getTagListAction(@RequestHeader(value = "userId") Integer userId,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
