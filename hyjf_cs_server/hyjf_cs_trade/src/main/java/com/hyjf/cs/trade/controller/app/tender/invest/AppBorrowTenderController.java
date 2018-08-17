@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * app端散标投资
  */
-@Api(tags = "app端-散标投资")
+@Api(value = "app端-散标投资",tags = "app端-散标投资")
 @RestController
 @RequestMapping("/hyjf-app/user/invest")
 public class AppBorrowTenderController extends BaseTradeController {
@@ -66,7 +67,7 @@ public class AppBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
-    @ApiOperation(value = "APP端散标异步处理", notes = "APP端散标异步处理")
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
