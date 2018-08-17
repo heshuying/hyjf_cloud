@@ -28,7 +28,7 @@ import java.util.Map;
  * @author jun
  * @version AppTradeDetailController, v0.1 2018/7/25 14:05
  */
-@Api(value = "app端交易明细",tags = "app端交易明细")
+@Api(value = "app端-交易明细",tags = "app端-交易明细")
 @RestController
 @RequestMapping("/hyjf-app/user/trade")
 public class  AppTradeDetailController extends BaseTradeController {
