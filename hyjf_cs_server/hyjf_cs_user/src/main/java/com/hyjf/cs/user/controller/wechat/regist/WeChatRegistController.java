@@ -189,6 +189,12 @@ public class WeChatRegistController extends BaseUserController {
 
     }
 
+    /**
+     * 着陆页获取图形验证码
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     @ApiOperation(value = "获取图形验证码",notes = "获取图形验证码")
     @GetMapping(value = "/getcaptcha")
     public void randomCode(HttpServletRequest request, HttpServletResponse response) {
