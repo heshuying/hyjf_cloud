@@ -15,10 +15,7 @@ import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +28,7 @@ import java.util.List;
  */
 @Api(value = "app端-获取我的银行卡",tags = "app端-获取我的银行卡")
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/hyjf-app")
 public class UserWithdrawController extends BaseUserController {
 

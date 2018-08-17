@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -12,11 +13,10 @@ import java.util.Date;
  * @version WhereaboutsPageRequestBean, v0.1 2018/7/20 14:23
  */
 public class WhereaboutsPageRequestBean extends BaseRequest {
-
+    @ApiModelProperty(value = "渠道名称")
     private String utmName;
-    /**
-     * 检索条件 订单id
-     */
+
+    @ApiModelProperty(value = "推荐人名称")
     private String referrerName;
 
     /**

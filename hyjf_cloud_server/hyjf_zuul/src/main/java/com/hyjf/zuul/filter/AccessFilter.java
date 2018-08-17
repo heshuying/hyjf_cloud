@@ -138,7 +138,7 @@ public class AccessFilter extends ZuulFilter {
 				if (sign == null) {
 					logger.error("sign is empty");
 					// 不对其进行路由
-					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+					return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponse());
 				}
 				this.appNomalRequestProcess(request, ctx, sign, secureVisitFlag);
 
@@ -189,7 +189,7 @@ public class AccessFilter extends ZuulFilter {
 		if(signValue == null){
 			logger.error("sign is invalid");
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 400, "sign is invalid!");
+			return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponse());
 		}
 		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
 		ctx.addZuulRequestHeader(SIGN, sign);
@@ -304,6 +304,13 @@ public class AccessFilter extends ZuulFilter {
 		ctx.setResponseBody(result.toJSONString());
 		return ctx;
 	}
+
+    private String buildNoneSignResponse() {
+		JSONObject result = new JSONObject();
+		result.put("status", "707");
+		result.put("statusDesc", "sign is invalid!");
+        return result.toJSONString();
+    }
 
 	/**
 	 * token查找用户

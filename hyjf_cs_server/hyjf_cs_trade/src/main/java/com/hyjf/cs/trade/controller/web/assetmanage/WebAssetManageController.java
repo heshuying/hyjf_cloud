@@ -1,35 +1,32 @@
 package com.hyjf.cs.trade.controller.web.assetmanage;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
-import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
-
+import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author pangchengchao
  * @version WebAssetManageController, v0.1 2018/6/20 17:19
  */
-@Api(tags = "Web资产管理页面")
+@Api(tags = "web端-资产管理页面")
 @RestController
 @RequestMapping("/hyjf-web/assetmanage")
 public class WebAssetManageController extends BaseTradeController {
