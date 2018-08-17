@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade.hjh;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -100,8 +101,6 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 	 * 承接时所在期数
 	 */
 	private String assignPeriod;
-
-
 	/**
 	 * 合同状态
 	 */
