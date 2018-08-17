@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,30 +14,22 @@ import java.io.Serializable;
  * @version: OrganizationStructureVO, v0.1 2018/6/27 11:06
  * 集团组织结构
  */
+@ApiModel(value = "集团组织结构返回")
 public class OrganizationStructureVO extends BaseVO implements Serializable {
-    /**
-     * 主键ID
-     */
+
+    @ApiModelProperty(value = "主键ID")
     private Integer id;
 
-    /**
-     * 名称
-     */
+    @ApiModelProperty(value = "名称")
     private String name;
 
-    /**
-     * 父节点ID
-     */
+    @ApiModelProperty(value = "父节点ID")
     private Integer parentid;
 
-    /**
-     * 部门提成发放方式（1线上2线下）
-     */
+    @ApiModelProperty(value = "部门提成发放方式（1线上2线下）")
     private Integer cuttype;
 
-    /**
-     * 删除标记 0：已删除 1：未删除
-     */
+    @ApiModelProperty(value = "删除标记 0：已删除 1：未删除")
     private Integer flag;
 
     public Integer getId() {

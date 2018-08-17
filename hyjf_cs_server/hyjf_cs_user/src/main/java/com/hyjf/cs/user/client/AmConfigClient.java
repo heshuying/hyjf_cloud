@@ -5,6 +5,7 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 
 import java.util.List;
@@ -116,6 +117,14 @@ public interface AmConfigClient {
      * @return
      */
     BankConfigVO getBankConfigById(Integer id);
+
+    /**
+     * 根据银行id查询江西银行配置
+     * @auth sunpeikai
+     * @param id 银行id
+     * @return
+     */
+    JxBankConfigVO getJxBankConfigById(Integer id);
 
     /**
      * 银行配置信息
