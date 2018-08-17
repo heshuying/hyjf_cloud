@@ -32,20 +32,12 @@ public class FundChangeStatisticsController extends BaseController {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat month = new SimpleDateFormat("MM");
 
-    /** 今日新增注册人数  */
-    private static final String TODAY_REG = "today_reg";
-
     /** 今日新增投资人数 */
     private static final String TODAY_ACCOUNT_NUM = "today_account_num";
 
     /** 今日新增充值人数 */
     private static final String TODAY_RECHARGE_TIMES = "today_recharge_times";
 
-    /** 本月注册人数 */
-    private static final String MONTH_REG = "month_reg";
-
-    /** 总计注册人数 */
-    private static final String TOTAL_REG_NUM = "total_reg_num";
 
     /** 今日投资人数 */
     private static final String TODAY_NUMBER = "todayNumber";
@@ -110,7 +102,6 @@ public class FundChangeStatisticsController extends BaseController {
     public void countRechargeMoney(){
 
 
-
         Date dNow = new Date();
 
         //当前日期 : 2018-07-01
@@ -134,6 +125,9 @@ public class FundChangeStatisticsController extends BaseController {
         Integer todayHjhCreditAccountMoney = this.fundChangeStatisticsService.countInvestmentHjhCreditTenderMoney(params);
         //今日投资人数
         Integer todayAccountInvestmentPeople = this.fundChangeStatisticsService.getNumberOfInvestors(params);
+        //今日新增充值次数
+        Integer todayNewRechargeCount = this.fundChangeStatisticsService.countTodayNewRechargeNum(params);
+
 
         //昨日充值金额
         params.put("startTime", yesterdayDate);
@@ -233,6 +227,18 @@ public class FundChangeStatisticsController extends BaseController {
         jsonObjectPople.put("investorStatistics", investorStatisticsMap);
 
         //写入Redis
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTOR, jsonObject1.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTOR, jsonObjectPople.toString(), 3600);
+
+        //今日新增充值人数, 今日新增投资人数
+        Map<String, Object> addedTodayMap = new HashedMap();
+        addedTodayMap.put(TODAY_ACCOUNT_NUM, todayAccountInvestmentPeople == null ? 0 : todayAccountInvestmentPeople);
+        addedTodayMap.put(TODAY_RECHARGE_TIMES, todayNewRechargeCount == null ? 0 : todayNewRechargeCount);
+
+        JSONObject jsonObjectAddedToday = new JSONObject();
+        jsonObjectAddedToday.put("populationChange", addedTodayMap);
+
+        //写入Redis
+        //需和注册人数Map合并
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "1", jsonObjectAddedToday.toString(), 3600);
     }
 }
