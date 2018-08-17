@@ -37,7 +37,7 @@ import java.util.Map;
  * @author
  *
  */
-@Api(tags = "app端用户充值接口")
+@Api(tags = "app端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-app")

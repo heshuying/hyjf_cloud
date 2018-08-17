@@ -40,7 +40,7 @@ public class AppHjhPlanController extends BaseTradeController {
     @Autowired
     private HjhTenderService hjhTenderService;
 
-    @ApiOperation(value = "APP端加入计划", notes = "APP端加入计划")
+    @ApiOperation(value = "app端-加入计划", notes = "app端-加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
