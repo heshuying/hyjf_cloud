@@ -104,7 +104,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
-	@GetMapping("/getMsgListAction")
+	@PostMapping("/getMsgListAction")
 	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
