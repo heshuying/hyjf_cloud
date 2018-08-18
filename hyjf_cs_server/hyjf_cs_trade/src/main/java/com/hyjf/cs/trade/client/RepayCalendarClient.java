@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.market.client;
-
-import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+package com.hyjf.cs.trade.client;
 
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 
 /**
  * @author dangzw

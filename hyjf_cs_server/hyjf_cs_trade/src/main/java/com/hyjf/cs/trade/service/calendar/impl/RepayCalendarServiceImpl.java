@@ -1,16 +1,17 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.market.service.impl;
-
-import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
-import com.hyjf.cs.market.client.RepayCalendarClient;
-import com.hyjf.cs.market.service.RepayCalendarService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.hyjf.cs.trade.service.calendar.impl;
 
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.cs.trade.client.RepayCalendarClient;
+import com.hyjf.cs.trade.service.calendar.RepayCalendarService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 
 /**
  * @author dangzw
