@@ -16,6 +16,8 @@ import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.GetDate;
+
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -56,6 +58,11 @@ public class AdminAllocationEngineController {
 		List<HjhRegionVO> list = adminAllocationEngineService.selectHjhRegionList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list)) {
+            	for(HjhRegionVO vo :list){
+            		if(vo.getConfigAddTime() != null){
+            			vo.setAddTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getConfigAddTime()));
+            		}
+            	}
                 response.setResultList(list);
                 response.setCount(count);
                 //代表成功
