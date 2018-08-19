@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,36 +14,51 @@ import java.util.Date;
  */
 public class AppContentArticleBean extends AppBaseBean implements Serializable {
 
+    @ApiModelProperty(value = "消息id", required = true)
     private Integer messageId;
     private Integer page=1;
     private Integer size=10;
-    //代表当前网贷知识之前为0，之后为1
+
+    @ApiModelProperty(value = "代表当前网贷知识之前为0，之后为1", required = true)
     private String offset;
 
+    @ApiModelProperty(value = "文章管理主键")
     private Integer id;
 
+    @ApiModelProperty(value = "文章分类")
     private String type;
 
+    @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "状态0关闭，1启用")
     private Integer status;
 
+    @ApiModelProperty(value = "文章作者")
     private String author;
 
+    @ApiModelProperty(value = "创建人")
     private Integer createBy;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "修改人")
     private Integer updateBy;
 
+    @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "文章图片")
     private String imgurl;
 
+    @ApiModelProperty(value = "简介")
     private String summary;
 
+    @ApiModelProperty(value = "点击率")
     private Integer click;
 
+    @ApiModelProperty(value = "文章内容")
     private String content;
 
     private static final long serialVersionUID = 1L;

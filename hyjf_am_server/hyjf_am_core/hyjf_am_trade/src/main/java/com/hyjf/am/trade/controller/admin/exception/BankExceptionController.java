@@ -318,7 +318,7 @@ public class BankExceptionController extends BaseController {
 
 	/**
 	 * 获取债转承接信息AssignNid
-	 * @param nid
+	 * @param assignNid
 	 * @return
 	 */
     @GetMapping("/getCreditTenderByAssignNid/{assignNid}")
