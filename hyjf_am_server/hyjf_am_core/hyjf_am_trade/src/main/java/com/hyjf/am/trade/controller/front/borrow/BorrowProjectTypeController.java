@@ -41,10 +41,10 @@ public class BorrowProjectTypeController extends BaseController {
         BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
         List<BorrowProjectTypeVO> list = borrowProjectTypeService.selectProjectTypeList(new BorrowProjectTypeVO());
         if(!CollectionUtils.isEmpty(list)){
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), adminRequest.getPageSize());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),list.size(), adminRequest.getPageSize());
             BorrowProjectTypeVO borrowProjectTypeVO =new BorrowProjectTypeVO();
             borrowProjectTypeVO.setLimitStart(paginator.getOffset());
-            borrowProjectTypeVO.setLimitEnd(paginator.getTotalCount() == 0? paginator.getLimit():paginator.getTotalCount());
+            borrowProjectTypeVO.setLimitEnd(paginator.getLimit());
             list = borrowProjectTypeService.selectProjectTypeList(borrowProjectTypeVO);
             result.setResultList(list);
             result.setRtn(Response.SUCCESS);
