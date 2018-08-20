@@ -53,7 +53,7 @@ public class VipManagementController extends BaseController {
      * @return
      */
     @PostMapping("/getUserList")
-    public VipManageResponse getVipList(@RequestBody @Valid VipManageRequest request) {
+    public VipManageResponse getVipList(@RequestBody VipManageRequest request) {
         logger.info("---findVipList by param---  " + JSONObject.toJSON(request));
         VipManageResponse response = new VipManageResponse();
         String returnCode = Response.FAIL;
@@ -69,10 +69,11 @@ public class VipManagementController extends BaseController {
                 List<VipManageVO> vipManageVOS = CommonUtils.convertBeanList(manageList, VipManageVO.class);
                 response.setResultList(vipManageVOS);
                 response.setCount(count);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 
@@ -83,7 +84,7 @@ public class VipManagementController extends BaseController {
      * @return
      */
     @PostMapping("/vipDetailList")
-    public VipDetailListResponse getDetailList(@RequestBody @Valid VipDetailListRequest request) {
+    public VipDetailListResponse getDetailList(@RequestBody VipDetailListRequest request) {
         VipDetailListResponse response = new VipDetailListResponse();
         String returnCode = Response.FAIL;
         Map<String, Object> mapParam = new HashMap<>();
@@ -108,7 +109,7 @@ public class VipManagementController extends BaseController {
 
 
     @PostMapping("/vipUpdateGradeList")
-    public VipUpdateGradeListResponse getUpdateGradeList(@RequestBody @Valid VipUpdateGradeListRequest request) {
+    public VipUpdateGradeListResponse getUpdateGradeList(@RequestBody VipUpdateGradeListRequest request) {
         VipUpdateGradeListResponse response = new VipUpdateGradeListResponse();
         Map<String, Object> mapParam = new HashMap<>();
         mapParam.put("userId", request.getUserId());
