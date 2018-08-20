@@ -15,6 +15,8 @@ public class HjhAllocationEngineResponse extends Response<HjhAllocationEngineVO>
     private  Integer  count;
     // 特用
     private  String  planName;
+    
+    private int flag;
 
     public Integer getCount() {
         return count;
@@ -27,5 +29,11 @@ public class HjhAllocationEngineResponse extends Response<HjhAllocationEngineVO>
 	}
 	public void setPlanName(String planName) {
 		this.planName = planName;
+	}
+	public int getFlag() {
+		return flag;
+	}
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 }

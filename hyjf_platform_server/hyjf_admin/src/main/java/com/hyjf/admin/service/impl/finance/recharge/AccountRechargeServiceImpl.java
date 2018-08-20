@@ -40,4 +40,14 @@ public class AccountRechargeServiceImpl extends BaseServiceImpl implements Accou
         AccountRechargeResponse response = amTradeClient.queryRechargeList(request);
         return response;
     }
+
+    @Override
+    public boolean updateRechargeStatus(Integer userId, String nid){
+        return amTradeClient.updateRechargeStatus(userId, nid);
+    }
+
+    @Override
+    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
+        return amTradeClient.updateAccountAfterRecharge(request);
+    }
 }

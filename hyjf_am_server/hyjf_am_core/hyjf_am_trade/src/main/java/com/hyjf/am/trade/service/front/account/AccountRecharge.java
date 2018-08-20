@@ -45,4 +45,31 @@ public interface AccountRecharge {
      * @Author : huanghui
      */
     List<AccountRechargeVO> getAccountRechargeList(AccountRechargeRequest request);
+
+    /**
+     * 更新用户充值订单状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRecharge(Integer userId, String nid);
+
+    /**
+     * 充值失败后,更新用户订单状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRechargeFail(Integer userId, String nid);
 }
