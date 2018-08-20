@@ -5,6 +5,7 @@ package com.hyjf.cs.market.controller.web.aboutus;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
@@ -15,12 +16,16 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.market.service.AboutUsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -39,6 +44,9 @@ import java.util.Map;
 public class AboutUsController extends BaseController {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
+
+	@Value("hyjf.web.host")
+	private String webUrl;
 
 	@Autowired
 	private AboutUsService aboutUsService;
@@ -99,7 +107,7 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-			@ApiOperation(value = "信息披露", notes = "公司历程")
+	@ApiOperation(value = "信息披露", notes = "公司历程")
 	@GetMapping("/events")
 	public WebResult<Map<String, Object>> events() {
 		logger.info("web端获取公司历程数据开始...");
@@ -191,8 +199,12 @@ public class AboutUsController extends BaseController {
 	@GetMapping("/getKnowReportList")
 	public WebResult<List<ContentArticleVO>> getKnowReportList(ContentArticleRequest request ){
 		request.setNoticeType("3");
-		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
-		WebResult webResult = new WebResult(homeNoticeList);
+		ContentArticleResponse response = aboutUsService.getHomeNoticeList(request);
+		WebResult webResult = new WebResult(response.getResultList());
+		Page page = new Page();
+		page.setTotal(response.getRecordTotal());
+		page.setCurrPage(request.getCurrPage());
+		webResult.setPage(page);
 		return webResult;
 	}
 
@@ -205,8 +217,8 @@ public class AboutUsController extends BaseController {
 	@GetMapping("/getFXReportList")
 	public WebResult<List<ContentArticleVO>> getFXReportList(ContentArticleRequest request ){
 		request.setNoticeType("101");
-		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
-		WebResult webResult = new WebResult(homeNoticeList);
+		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
+		WebResult webResult = new WebResult(homeNoticeList.getResultList());
 		return webResult;
 	}
 
@@ -232,30 +244,27 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "新手指引(新手进阶)请求", notes = "新手指引(新手进阶)请求")
 	@GetMapping("/fresher")
-	public WebResult<TotalMessageVO> noviceGuide() {
-		WebResult webResult = new WebResult();
+	public WebResult<TotalMessageVO> noviceGuide(@RequestHeader(value = "userId" ,required = false) Integer userId ) {
 
 		TotalMessageVO totalMessageVO = new TotalMessageVO();
-		TotalInvestAndInterestVO totalInvestAndInterestVO = aboutUsService.searchData();
 		//投资总额(亿元) tenderSum
-		String tenderSum = totalInvestAndInterestVO.getTotalInvestAmount().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
+		String tenderSum = aboutUsService.selectTenderSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
 		//收益总额(亿元) interestSum
-		String interestSum = totalInvestAndInterestVO.getTotalInterestAmount().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
+		String interestSum = aboutUsService.selectInterestSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
 		//累计投资人数(万人) totalTenderSum
-		int totalTenderSum = totalInvestAndInterestVO.getTotalInvestNum() / 10000;
+		int totalTenderSum = aboutUsService.selectTotalTenderSum() / 10000;
 		//当前时间 date
 		String date = GetDate.getDataString(GetDate.date_sdf_wz);
-		// TODO 查询用户是否登录
-		/*WebViewUser wuser = WebUtils.getUser(request);
-		if (wuser == null) {
-			modelAndView.addObject("isLogin", "0");//未登陆
+		if (userId == null) {
+			totalMessageVO.setIsLogin("0");//未登陆
 		}else{
-			modelAndView.addObject("isLogin", "1");//已登陆
-		}*/
+			totalMessageVO.setIsLogin("1");//已登陆
+		}
 		totalMessageVO.setDate(date);
 		totalMessageVO.setTenderSum(tenderSum);
 		totalMessageVO.setInterestSum(interestSum);
 		totalMessageVO.setTotalTenderSum(totalTenderSum);
+		WebResult webResult = new WebResult(totalMessageVO);
 		return webResult;
 	}
 
@@ -283,6 +292,34 @@ public class AboutUsController extends BaseController {
 			}
 			webResult = new WebResult(list);
 		}
+		return webResult;
+	}
+
+	/**
+	 * 获取媒体报道（风险教育 +网贷知识）详情
+	 * @return
+	 */
+	@ApiOperation(value = "获取媒体报道（风险教育 +网贷知识）详情", notes = "获取媒体报道（风险教育 +网贷知识）详情")
+	@GetMapping("/getMediaReportInfo")
+	public WebResult<ContentArticleVO>  getMediaReportInfo(@RequestParam Integer id) {
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
+		if(!"".equals(mediaReport.getType()) && mediaReport.getType().equals("101")){
+			// 风险教育
+			//modelAndView = new ModelAndView(AboutUsDefine.FX_REPORT_INFO_PATH);
+		} else if(!"".equals(mediaReport.getType()) && mediaReport.getType().equals("3")){
+			// 网贷知识
+			//modelAndView = new ModelAndView(AboutUsDefine.MEDIA_REPORT_INFO_PATH);
+		}
+		if (mediaReport != null) {
+			if (mediaReport.getContent().contains("../../../..")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+			} else if (mediaReport.getContent().contains("src=\"/")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+			}
+		}
+		webResult = new WebResult(mediaReport);
 		return webResult;
 	}
 }

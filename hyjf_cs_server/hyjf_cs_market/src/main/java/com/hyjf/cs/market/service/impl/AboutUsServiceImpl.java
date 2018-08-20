@@ -5,6 +5,7 @@ package com.hyjf.cs.market.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +92,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     @Override
-    public List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request) {
+    public ContentArticleResponse getHomeNoticeList(ContentArticleRequest request) {
         return amConfigClient.getknowsList(request);
     }
 
@@ -119,9 +121,31 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     }
 
+    /**
+     * 累计投资总额
+     * @return
+     */
     @Override
-    public List<ContentArticleVO> getHomeNoticeList() {
-        return null;
+    public BigDecimal selectTenderSum() {
+        return amDataCollectClient.selectTenderSum();
     }
+    /**
+     * 累计收益
+     * @return
+     */
+    @Override
+    public BigDecimal selectInterestSum() {
+        return amDataCollectClient.selectInterestSum();
+    }
+    /**
+     * 累计投资笔数
+     * @return
+     */
+    @Override
+    public int selectTotalTenderSum() {
+        return amDataCollectClient.selectTotalTenderSum();
+    }
+
+
 
 }

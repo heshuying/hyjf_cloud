@@ -14,6 +14,7 @@ import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.WechatContentArticleResultVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,10 +193,10 @@ public class ContentArticleController {
     @PostMapping("/getKnowsList")
     public ContentArticleResponse getKnowReportList(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
-
         int totalPage = contentArticleService.countHomeNoticeList(request.getNoticeType());
         if (totalPage>0) {
-            List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), request.getLimitStart(), request.getLimitEnd());
+            Paginator paginator = new Paginator(request.getCurrPage(), totalPage, request.getPageSize());
+            List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), paginator.getOffset(), paginator.getLimit());
             if (recordList != null && recordList.size() != 0) {
                 for (int i = 0; i < recordList.size(); i++) {
                     recordList.get(i).setContent((recordList.get(i).getContent().replaceAll("src=\"//", "src=\"" + webHost + "//")));
@@ -203,6 +204,7 @@ public class ContentArticleController {
             }
             List<ContentArticleVO> contentArticleVOS = CommonUtils.convertBeanList(recordList, ContentArticleVO.class);
             response.setResultList(contentArticleVOS);
+            response.setRecordTotal(totalPage);
         }
         return response;
     }
