@@ -10,6 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * 借款人数据定时任务
  * @author fuqiang
  * @version BorrowUserStatisticJob, v0.1 2018/7/18 15:40
  */
@@ -19,7 +20,7 @@ public class BorrowUserStatisticJob extends BaseJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("BorrowUserStatisticJob: {} execute...",
                 jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MESSAGE/cs-market/borrowuserstatistic/insertstatistic",
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/statisticsoperationreport/insertstatistic",
                 Object.class);
         logger.info("BorrowUserStatisticJob execute end...");
     }

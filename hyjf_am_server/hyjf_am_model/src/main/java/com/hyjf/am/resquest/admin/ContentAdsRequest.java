@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.AdsVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -13,16 +14,21 @@ public class ContentAdsRequest extends BasePage implements Serializable {
 
     private static final long serialVersionUID = 3803722754627036581L;
 
+    @ApiModelProperty(value = "广告类型")
     private Integer typeid;
 
+    @ApiModelProperty(value = "广告名称")
     private String name;
 
     private Short order;
 
+    @ApiModelProperty(value = "状态")
     private Integer status;
 
+    @ApiModelProperty(value = "添加的开始时间")
     private String startCreate;
 
+    @ApiModelProperty(value = "添加的结束时间")
     private String endCreate;
 
     private AdsVO ads;

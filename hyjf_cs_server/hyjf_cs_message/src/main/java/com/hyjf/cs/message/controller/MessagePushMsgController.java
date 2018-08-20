@@ -12,7 +12,6 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
-import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.msgpush.MessagePushMsgService;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
@@ -46,12 +45,6 @@ public class MessagePushMsgController extends BaseController {
 	private MsgPushStaticsService msgPushStaticsService;
 
 	@Autowired
-	private MessagePushMsgDao messagePushMsgDao;
-
-	@Autowired
-	private MessagePushTemplateStaticsDao msgStaticsDao;
-
-	@Autowired
 	private MessagePushMsgService messagePushMsgService;
 
 	@RequestMapping("/push_all")
@@ -71,17 +64,17 @@ public class MessagePushMsgController extends BaseController {
 		startTime =  GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(curDate));
 		endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayEnd(curDate));
 		// 当天内的发送消息
-		List<MessagePush> msgList = messagePushMsgDao.getMsgStaticsListByTime(startTime, endTime);
+		List<MessagePush> msgList = msgPushService.getMsgStaticsListByTime(startTime, endTime);
 		// 插入统计数据
 		for (int i = 0; i < msgList.size(); i++) {
-			this.messagePushMsgDao.insert(msgList.get(i));
+			this.msgPushService.insertMessagePush(msgList.get(i));
 		}
 
 		// 查询7天统计数据
 		String yesDate = GetDate.getCountDate(5, -6);
 		startTime = GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(yesDate));
 		endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(curDate));
-		List<MessagePushTemplateStatics> templateStaticsList = this.msgStaticsDao.getTemplateStaticsListByTime(startTime, endTime);
+		List<MessagePushTemplateStatics> templateStaticsList = this.msgPushStaticsService.getTemplateStaticsListByTime(startTime, endTime);
 		// 更新统计数据
 		for (int i = 0; i < templateStaticsList.size(); i++) {
 			this.msgPushStaticsService.updatemsgPushStatics(templateStaticsList.get(i),startTime,endTime);

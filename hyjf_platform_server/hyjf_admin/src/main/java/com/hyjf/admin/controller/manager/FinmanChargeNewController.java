@@ -5,7 +5,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.FinmanChargeNewService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.FinmanChargeNewResponse;
 import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
@@ -19,9 +18,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,7 +136,7 @@ public class FinmanChargeNewController extends BaseController {
             List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(adminRequest.getInstCode());
             response.setAssetTypeList(assetTypeList);
             response.setRtn(Response.FAIL);
-            response.setMessage("输入内容验证失败");
+            response.setMessage(message);
             return new AdminResult<FinmanChargeNewResponse>(response);
         }
         //插入
@@ -209,27 +209,60 @@ public class FinmanChargeNewController extends BaseController {
     private String validatorFieldCheck(ModelAndView modelAndView, FinmanChargeNewRequest form) {
         String message ="";
         // 类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "chargeTimeType", form.getManChargeTimeType());
+        if(StringUtils.isBlank(form.getManChargeTimeType())){
+            message="chargeTimeType 不能为空！";
+            return message;
+        }
         // 期限
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "manChargeTime", String.valueOf(form.getManChargeTime()));
+        if(null == form.getManChargeTime()){
+            message="manChargeTime 不能为空！";
+            return message;
+        }
         //项目类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "projectType", form.getProjectType());
+        if(StringUtils.isBlank(form.getProjectType())){
+            message="projectType 不能为空！";
+            return message;
+        }
         //资产来源
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "instCode", form.getInstCode());
+        if(StringUtils.isBlank(form.getInstCode())){
+            message="instCode 不能为空！";
+            return message;
+        }
         //产品类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "assetType", String.valueOf(form.getAssetType()));
+        if(null == form.getAssetType()){
+            message="assetType 不能为空！";
+            return message;
+        }
         //服务费率
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "chargeRate", form.getChargeRate());
+        if(StringUtils.isBlank(form.getChargeRate())){
+            message="chargeRate 不能为空！";
+            return message;
+        }
         // 管理费率
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "manChargeRate", form.getManChargeRate());
+        if(StringUtils.isBlank(form.getManChargeRate())){
+            message="manChargeRate 不能为空！";
+            return message;
+        }
         // 收益差率
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "returnRate", form.getReturnRate());
+        if(StringUtils.isBlank(form.getReturnRate())){
+            message="returnRate 不能为空！";
+            return message;
+        }
         // 逾期利率
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "lateInterest", form.getLateInterest());
+        if(StringUtils.isBlank(form.getLateInterest())){
+            message="returnRate 不能为空！";
+            return message;
+        }
         // 逾期免息天数
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "lateFreeDays", String.valueOf(form.getLateFreeDays()));
+        if(null == form.getLateFreeDays()){
+            message="lateFreeDays 不能为空！";
+            return message;
+        }
         // 状态
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "status", String.valueOf(form.getStatus()));
+        if(null == form.getStatus()){
+            message="status 不能为空！";
+            return message;
+        }
         // 检查唯一性
         int cnt = this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(), form.getManChargeTime(), form.getInstCode(),form.getAssetType());
         if (cnt > 0) {

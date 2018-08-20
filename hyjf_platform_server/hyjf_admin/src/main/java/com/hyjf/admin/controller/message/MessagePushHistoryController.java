@@ -24,7 +24,7 @@ import java.util.Map;
  * @author lisheng
  * @version MessagePushHistoryController, v0.1 2018/8/14 19:58
  */
-@Api(value = "admin-消息中心-app消息推送-发送历史", tags = "admin-消息中心-app消息推送-发送历史")
+@Api(value = "消息中心-app消息推送-发送历史", tags = "消息中心-app消息推送-发送历史")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/history")
 public class MessagePushHistoryController extends BaseController {

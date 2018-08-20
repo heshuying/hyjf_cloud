@@ -57,12 +57,6 @@ public class PushMoneyManageController extends BaseController {
     /** 权限 */
     public static final String PERMISSIONS = "pushmoneymanagelist";
 
-    /**
-     * 直投提成管理列表查询
-     *
-     * @param requestBean
-     * @return 计划列表         已测试
-     */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -141,7 +135,7 @@ public class PushMoneyManageController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "直投提成管理", notes = "直投提成管理记录导出")
+    @ApiOperation(value = "直投提成管理记录导出", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
     public void exportExcel(@RequestBody @Valid PushMoneyRequestBean requestBean, HttpServletResponse response)  throws Exception {
         // 初始化原子层请求实体

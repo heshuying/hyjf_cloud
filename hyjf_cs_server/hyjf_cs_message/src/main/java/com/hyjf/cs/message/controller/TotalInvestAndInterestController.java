@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
+ * 定时更新运营数据
  * @author fq
  * @version TotalInvestAndInterestController, v0.1 2018/7/31 11:17
  */

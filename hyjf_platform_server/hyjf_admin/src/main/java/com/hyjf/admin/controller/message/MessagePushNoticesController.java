@@ -34,7 +34,7 @@ import java.util.Map;
  * @author lisheng
  * @version MessagePushNoticesController, v0.1 2018/8/14 14:34
  */
-@Api(value = "admin-消息中心-app消息推送-通知发送", tags = "admin-消息中心-app消息推送-通知发送")
+@Api(value = "消息中心-app消息推送-通知发送", tags = "消息中心-app消息推送-通知发送")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/notices")
 public class MessagePushNoticesController extends BaseController {
