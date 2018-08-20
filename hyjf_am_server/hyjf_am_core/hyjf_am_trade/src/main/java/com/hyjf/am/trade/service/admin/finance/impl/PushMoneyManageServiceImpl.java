@@ -281,8 +281,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setRegionName(userInfoCustomize.getRegionName());
                 bankMerchantAccountList.setBranchName(userInfoCustomize.getBranchName());
                 bankMerchantAccountList.setDepartmentName(userInfoCustomize.getDepartmentName());
-                bankMerchantAccountList.setCreateUserId(userId);
-                bankMerchantAccountList.setUpdateUserId(userId);
+                bankMerchantAccountList.setCreateUserId(loginUserId);
+                bankMerchantAccountList.setUpdateUserId(loginUserId);
                 bankMerchantAccountList.setCreateUserName(userInfoCustomize.getUserName());
                 bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());
                 bankMerchantAccountList.setRemark("投资推广提成");
