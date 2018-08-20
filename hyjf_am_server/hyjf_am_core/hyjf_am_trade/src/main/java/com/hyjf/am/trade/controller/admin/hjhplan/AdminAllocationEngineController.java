@@ -221,6 +221,11 @@ public class AdminAllocationEngineController {
 		List<HjhAllocationEngineVO> list1 = adminAllocationEngineService.selectHjhAllocationEngineListByPage(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list1)) {
+            	for(HjhAllocationEngineVO vo : list1){
+            		if(vo.getAddTime() !=null){
+            			vo.setAddTimeString(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getAddTime()));
+            		}
+            	}
                 response.setResultList(list1);
                 response.setCount(count);
                 //代表成功
