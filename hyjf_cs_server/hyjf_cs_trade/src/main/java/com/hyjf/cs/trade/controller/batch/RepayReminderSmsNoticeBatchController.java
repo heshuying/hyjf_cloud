@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.Map;
  * @author PC-LIUSHOUYI
  * @version RepayReminderSmsNoticeBatchController, v0.1 2018/6/22 10:30
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/repayReminder")
 public class RepayReminderSmsNoticeBatchController {

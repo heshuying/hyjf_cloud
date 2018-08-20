@@ -63,7 +63,7 @@ public interface HjhDebtCreditService {
 	/**
 	 * 获取债转承接信息 by AssignOrderId
 	 * by libin
-	 * @param nid
+	 * @param assignOrderId
 	 * @return
 	 */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);

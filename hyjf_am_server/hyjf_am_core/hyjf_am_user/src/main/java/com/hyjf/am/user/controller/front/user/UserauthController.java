@@ -140,7 +140,7 @@ public class UserauthController extends BaseController {
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
 		logger.info("自动投资解约开始，用户：{}", userId);
 		
-		BankCallBean retBean = userauthService.cancelCreditAuth(userId, "000002");
+		BankCallBean retBean = userauthService.cancelInvestAuth(userId, "000002");
 		
 		
 		if (retBean != null) {

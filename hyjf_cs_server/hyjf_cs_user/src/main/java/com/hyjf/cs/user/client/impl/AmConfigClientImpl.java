@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -12,6 +13,7 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -261,6 +263,22 @@ public class AmConfigClientImpl implements AmConfigClient {
     public BankConfigVO getBankConfigById(Integer id) {
         BankConfigResponse response = restTemplate
                 .getForEntity(configService+"/config/getBankConfigByBankId/" + id, BankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据银行id查询江西银行配置
+     * @auth sunpeikai
+     * @param id 银行id
+     * @return
+     */
+    @Override
+    public JxBankConfigVO getJxBankConfigById(Integer id) {
+        JxBankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/getJxBankConfigByBankId/" + id, JxBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

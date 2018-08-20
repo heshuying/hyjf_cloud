@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/23 15:45
  */
-@Api(value = "wechat端-首页", tags = "wechat端-首页")
+@Api(value = "weChat端-首页", tags = "weChat端-首页")
 @RestController
 @RequestMapping(HomePageDefine.WECHAT_REQUEST_MAPPING)
 public class WechatHomeController {

@@ -138,6 +138,10 @@
 
 		WHERE 1=1
 		<include refid="where-all-page-condition" />
+		ORDER BY r.id DESC
+		<if test="limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 	</select>
 
 	<select id="getAccountRechargeList" resultMap="RechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample">

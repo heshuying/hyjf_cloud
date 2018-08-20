@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.app.AppTenderToCreditListCustomizeResponse;
 import com.hyjf.am.response.trade.AssetManageResponse;
+import com.hyjf.am.response.trade.MyCreditDetailResponse;
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
 import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
@@ -399,5 +400,15 @@ public class AssetManageController extends BaseController {
     @GetMapping("/getRepayPlanInfo/{borrowNid}/{nid}/{type}")
     public RepayPlanResponse getRepayPlanInfo(@PathVariable String borrowNid, @PathVariable String nid, @PathVariable String type){
         return assetManageService.getRepayPlanInfo(borrowNid, nid, type);
+    }
+
+    /**
+     * 获取用户散标转让记录查看详情
+     * @param creditNid
+     * @return
+     */
+    @GetMapping("/getMyCreditAssignDetail/{creditNid}")
+    public MyCreditDetailResponse getMyCreditAssignDetail(@PathVariable String creditNid){
+        return assetManageService.getMyCreditAssignDetail(creditNid);
     }
 }

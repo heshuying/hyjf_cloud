@@ -71,6 +71,7 @@ public class AccountRechargeController extends BaseController {
 
         AccountRechargeResponse rechargeResponse =  new AccountRechargeResponse();
 
+
         Integer count = this.accountRecharge.getAccountRechargeListCount(request);
 
         // currPage<0 为全部,currPage>0 为具体某一页

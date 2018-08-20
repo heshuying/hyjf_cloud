@@ -35,11 +35,9 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +53,7 @@ import java.util.Map;
  * @version WithdrawController, v0.1 2018/7/19 14:01
  */
 
-@Api(value = "api端_融东风提现接口",tags = "api端_融东风提现接口")
+@Api(value = "api端-融东风提现接口",tags = "api端_融东风提现接口")
 @Controller
 @RequestMapping("/hyjf-api/surong/withdraw")
 public class WithdrawController extends BaseController {
@@ -153,8 +151,8 @@ public class WithdrawController extends BaseController {
         return ret;
     }
 
-
-    @RequestMapping(value = "/cash",method = RequestMethod.GET)
+    @ApiOperation(value = "提现", notes = "提现")
+    @PostMapping(value = "/cash")
     public ModelAndView hello(HttpServletRequest request, HttpServletResponse response){
 
         String errorPage="redirect:"+systemConfig.getFrontHost() +"/user/openSuccess";
@@ -364,7 +362,8 @@ public class WithdrawController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/return")
+    @ApiIgnore
+    @GetMapping("/return")
     public ModelAndView cashReturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         bean.convert();
         logger.info("--↓↓ 提现同步回调Start ↓↓--orderId: " + bean.getLogOrderId() + " nid=" + request.getParameter("nid")
@@ -405,6 +404,7 @@ public class WithdrawController extends BaseController {
      * @param request
      * @return
      */
+    @ApiIgnore
     @ResponseBody
     @RequestMapping("/callback")
     public Object cashCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {

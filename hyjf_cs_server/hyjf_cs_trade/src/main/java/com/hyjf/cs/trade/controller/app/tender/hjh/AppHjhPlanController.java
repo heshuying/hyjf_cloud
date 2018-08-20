@@ -31,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(tags = "APP端加入计划")
+@Api(value = "app端-加入计划",tags = "app端-加入计划")
 @RestController
 @RequestMapping("/hyjf-app/tender/hjh")
 public class AppHjhPlanController extends BaseTradeController {
@@ -40,7 +40,7 @@ public class AppHjhPlanController extends BaseTradeController {
     @Autowired
     private HjhTenderService hjhTenderService;
 
-    @ApiOperation(value = "APP端加入计划", notes = "APP端加入计划")
+    @ApiOperation(value = "app端-加入计划", notes = "app端-加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {

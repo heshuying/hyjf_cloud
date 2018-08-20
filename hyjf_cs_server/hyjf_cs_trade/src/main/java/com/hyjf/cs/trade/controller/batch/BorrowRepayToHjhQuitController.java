@@ -16,8 +16,10 @@ import com.hyjf.cs.trade.service.batch.BorrowRepayToHjhQuitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +28,7 @@ import java.util.UUID;
  * @author PC-LIUSHOUYI
  * @version BorrowRepayToHjhQuitController, v0.1 2018/6/25 9:33
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/borrowRepay")
 public class BorrowRepayToHjhQuitController {
@@ -37,7 +40,7 @@ public class BorrowRepayToHjhQuitController {
     @Autowired
     private HjhQuitProducer hjhQuitProducer;
 
-    @RequestMapping("/hjhQuit")
+    @GetMapping("/hjhQuit")
     public void entryUpdate(){
         logger.info("【汇计划计划进入锁定期/退出计划开始】开始。。。");
         List<HjhAccedeVO> accedeList = borrowRepayToHjhQuitService.selectWaitQuitHjhList();

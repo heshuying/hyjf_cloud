@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,48 +20,60 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     /**
      * 标签类型查询
      */
+    @ApiModelProperty(value = "标签类型查询")
     private String noticesTagIdSrch;
     /**
      * 标题查询
      */
+    @ApiModelProperty(value = "标题查询")
     private String noticesTitleSrch;
     /**
      * 消息编码查询
      */
+    @ApiModelProperty(value = "消息编码查询")
     private String noticesCodeSrch;
     /**
      * 作者查询
      */
+    @ApiModelProperty(value = "作者查询")
     private String noticesCreateUserNameSrch;
     /**
      * 推送平台查询
      */
+    @ApiModelProperty(value = "推送平台查询")
     private String noticesTerminalSrch;
     /**
      * 状态查询
      */
+    @ApiModelProperty(value = "状态查询")
     private Integer noticesSendStatusSrch;
     /**
      * 指定的原生界面
      */
+    @ApiModelProperty(value = "指定的原生界面")
     private String noticesActionUrl1;
     /**
      * 指定的原生界面
      */
+    @ApiModelProperty(value = "指定的原生界面")
     private String noticesActionUrl2;
 
+    @ApiModelProperty(value = "指定的原生界面")
     private String noticesActionUrl3;
     /**
      * 发送开始时间查询
      */
+    @ApiModelProperty(value = "发送开始时间查询")
     private String startSendTimeSrch;
     /**
      * 发送截止时间查询
      */
+    @ApiModelProperty(value = "发送截止时间查询")
     private String endSendTimeSrch;
     /**
      * 发送时间
      */
+    @ApiModelProperty(value = "发送时间")
     private String noticesPreSendTimeStr;
 
     private String ids;
@@ -70,16 +83,19 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     /**
      * 更新或是转发,0为更新1为转发
      */
+    @ApiModelProperty(value = "更新或是转发,0为更新1为转发")
     private String updateOrReSend;
 
     /**
      * 当前页码
      */
+    @ApiModelProperty(value = "当前页码")
     private int currPage;
 
     /**
      * 当前页条数
      */
+    @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
     public int getCurrPage() {

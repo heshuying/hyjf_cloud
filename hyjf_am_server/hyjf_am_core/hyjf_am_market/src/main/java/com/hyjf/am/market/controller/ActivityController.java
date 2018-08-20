@@ -111,19 +111,15 @@ public class ActivityController {
             BeanUtils.copyProperties(request, activityList);
             activityList.setTimeStart(request.getStartTime());
             activityList.setTimeEnd(request.getEndTime());
-            Map<String, Object> resultMap = activityService.insertRecord(activityList);
-            if ((Boolean) resultMap.get("success")) {
-                return response;
-            } else {
-                response.setRtn("failed");
-                response.setMessage((String) resultMap.get("msg"));
-                return response;
+            int result = activityService.insertRecord(activityList);
+            if (result > 0){
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-        response.setMessage("添加失败");
-        response.setRtn("1");
         return response;
     }
 
@@ -136,19 +132,15 @@ public class ActivityController {
         BeanUtils.copyProperties(request,activityList);
         activityList.setTimeStart(request.getStartTime());
         activityList.setTimeEnd(request.getEndTime());
-        Map<String, Object> resultMap = activityService.updateActivity(activityList);
-        if ((Boolean) resultMap.get("success")) {
-            return response;
-        } else {
-            response.setRtn("failed");
-            response.setMessage((String) resultMap.get("msg"));
-            return response;
+        int result = activityService.updateActivity(activityList);
+            if (result > 0){
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-    }catch (Exception e) {
-        e.printStackTrace();
-    }
-        response.setMessage("修改失败");
-        response.setRtn("1");
         return response;
     }
 
@@ -157,14 +149,13 @@ public class ActivityController {
     public ActivityListResponse deleteActivity(@RequestBody @Valid ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         int id = request.getId();
-        Map<String, Object> resultMap = activityService.deleteActivity(id);
-        if ((Boolean) resultMap.get("success")) {
-            return response;
-        } else {
-            response.setRtn("failed");
-            response.setMessage((String) resultMap.get("msg"));
-            return response;
+        int result = activityService.deleteActivity(id);
+        if (result > 0) {
+            response.setRtn(Response.SUCCESS);
+        }else {
+            response.setRtn(Response.FAIL);
         }
+        return response;
     }
 
 

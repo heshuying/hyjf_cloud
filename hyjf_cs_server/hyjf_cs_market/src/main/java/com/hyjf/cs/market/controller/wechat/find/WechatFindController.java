@@ -40,9 +40,10 @@ public class WechatFindController extends BaseMarketController {
                                                   @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         JSONObject ret = new JSONObject();
+        ret.put("currentPage", currentPage);
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
-        ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleListByType");
+        ret.put("endPage", 1);
         try {
 
             // 检查参数正确性
@@ -67,6 +68,10 @@ public class WechatFindController extends BaseMarketController {
                 if (!CollectionUtils.isEmpty(list)) {
                     ret.put("messageCount", count);
                     ret.put("messageList", list);
+                    if (list.size() == (pageSize + 1)) {
+                        // 0:是组后一页
+                        ret.put("endPage", 0);
+                    }
                 } else {
                     ret.put("messageCount", "0");
                     ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
