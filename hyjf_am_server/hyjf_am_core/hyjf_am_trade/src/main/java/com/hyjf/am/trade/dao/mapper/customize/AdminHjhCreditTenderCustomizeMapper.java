@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 
 /**
  * @author libin
@@ -28,5 +29,12 @@ public interface AdminHjhCreditTenderCustomizeMapper {
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> selectDebtCreditTenderList(Map<String, Object> param);
-
+	
+	/**
+	 * 获取总计
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(Map<String, Object> param);
 }

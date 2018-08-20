@@ -2664,5 +2664,13 @@ public interface AmTradeClient {
      * @auth nxl
      */
     NifaReportLogResponse selectNifaReportLogList(NifaReportLogRequest request);
+    
+	/**
+	 * 传参查询承接债转表列总计
+	 * @auth libin
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+    HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form);
 }
 

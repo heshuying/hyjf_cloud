@@ -23,6 +23,10 @@ public class BorrowStyleVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "名称，可改")
     private String title;
 
+    private String contents;
+
+    private String remark;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -71,5 +75,21 @@ public class BorrowStyleVO extends BaseVO implements Serializable {
 
     public void setLabel(String label) {
         this.name = label;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

@@ -19,7 +19,8 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
     private String methodName;
     @ApiModelProperty(value = "修改标志")
     private String modifyFlag;
-
+    @ApiModelProperty(value = "优惠券类型")
+    private String Coupon;
     private Integer id;
 
     private String borrowProjectType;
@@ -238,4 +239,11 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
         this.paramNameVO = paramNameVO;
     }
 
+    public String getCoupon() {
+        return Coupon;
+    }
+
+    public void setCoupon(String coupon) {
+        Coupon = coupon;
+    }
 }

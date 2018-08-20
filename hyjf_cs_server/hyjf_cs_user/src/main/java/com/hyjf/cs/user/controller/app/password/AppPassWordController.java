@@ -48,7 +48,6 @@ import java.util.regex.Pattern;
  */
 @Api(value = "app端密码相关服务",tags = "app端-密码相关服务")
 @Controller
-@RestController
 @RequestMapping("/")
 public class AppPassWordController extends BaseUserController {
 
@@ -126,7 +125,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/hyjf-app/bank/user/transpassword/setPassword")
+    @GetMapping(value = "/hyjf-app/bank/user/transpassword/setPassword")
     public ModelAndView setPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -292,7 +291,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
-    @PostMapping(value = "/hyjf-app/bank/user/transpassword/resetPassword")
+    @GetMapping(value = "/hyjf-app/bank/user/transpassword/resetPassword")
     public ModelAndView resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");

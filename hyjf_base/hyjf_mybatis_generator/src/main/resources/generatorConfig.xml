@@ -1851,5 +1851,8 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
+        <table tableName="ht_sms_count" domainObjectName="SmsCount">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
     </context>
 </generatorConfiguration>

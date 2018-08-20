@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.resquest.admin.AdminBorrowStyleRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleWithBLOBs;
 
 import java.util.List;
 
@@ -19,13 +20,13 @@ public interface BorrowStyleService {
      * 查询还款方式分页记录
      * @param limitStart,limitEnd
      */
-    public List<BorrowStyle> selectBorrowStyleListByPage(AdminBorrowStyleRequest reques,int limitStart, int limitEnd);
+    public List<BorrowStyleWithBLOBs> selectBorrowStyleListByPage(AdminBorrowStyleRequest reques, int limitStart, int limitEnd);
 
     /**
      * 根据id查询还款方式
      * @param id
      */
-    public BorrowStyle searchBorrowStyleInfoById(Integer id);
+    public BorrowStyleWithBLOBs searchBorrowStyleInfoById(Integer id);
 
     /**
      * 根据主键判断权限维护中权限是否存在
@@ -49,9 +50,4 @@ public interface BorrowStyleService {
      */
     public void deleteBorrowStyleById(Integer id);
 
-    /**
-     * 根据id修改还款方式状态
-     * @param id
-     */
-    public void modifyBorrowStyleById(Integer id);
 }

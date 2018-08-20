@@ -1,12 +1,12 @@
 package com.hyjf.am.market.service.impl;
 
+import com.hyjf.am.market.config.SystemConfig;
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.mapper.customize.market.ActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.auto.ActivityListExample;
 import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
-import com.hyjf.am.market.datasource.SystemConfig;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq

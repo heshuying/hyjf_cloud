@@ -61,7 +61,8 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private String modifyFlag;
     @ApiModelProperty(value = "还款名")
     private String repayName;
-
+    @ApiModelProperty(value = "优惠券类型")
+    private String Coupon;
     private List<BorrowProjectRepayVO> repayNames;
     // 回显checkbox标签
     private  List<BorrowStyleVO> repayStyles;
@@ -69,6 +70,14 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private  List<ParamNameVO> investUsers;
     // 获取数据字典表的下拉列表
     private List<ParamNameVO> projectTypeList;
+
+    public String getCoupon() {
+        return Coupon;
+    }
+
+    public void setCoupon(String coupon) {
+        Coupon = coupon;
+    }
 
     /**
      * 检索条件 limitStart
