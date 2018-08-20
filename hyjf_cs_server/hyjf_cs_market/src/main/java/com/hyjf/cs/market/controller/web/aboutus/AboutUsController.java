@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @Api(tags = "web端-信息披露")
 @RestController
-@RequestMapping("/web/cs-market/aboutus")
+@RequestMapping("/hyjf-web/aboutus")
 public class AboutUsController extends BaseController {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
@@ -101,7 +101,7 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "信息披露", notes = "公司历程")
+			@ApiOperation(value = "信息披露", notes = "公司历程")
 	@GetMapping("/events")
 	public WebResult<Map<String, Object>> events() {
 		logger.info("web端获取公司历程数据开始...");

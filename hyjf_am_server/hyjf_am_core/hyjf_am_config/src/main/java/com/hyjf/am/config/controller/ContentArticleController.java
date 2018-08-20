@@ -190,7 +190,7 @@ public class ContentArticleController {
      * @return
      */
     @PostMapping("/getKnowsList")
-    public ContentArticleResponse getKnowReportList(ContentArticleRequest request) {
+    public ContentArticleResponse getKnowReportList(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
 
         request.setNoticeType("3");
@@ -215,7 +215,7 @@ public class ContentArticleController {
      * @return
      */
     @PostMapping("/index")
-    private ContentArticleResponse help_index(ContentArticleRequest request) {
+    private ContentArticleResponse help_index(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
         // 查出帮助中心分类
         List<HelpCategoryCustomize> list = contentArticleService.selectCategory("help");
