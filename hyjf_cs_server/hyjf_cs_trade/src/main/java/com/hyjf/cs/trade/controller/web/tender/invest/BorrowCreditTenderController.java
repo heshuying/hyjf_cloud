@@ -27,7 +27,7 @@ import java.util.Map;
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(tags = "web端散标债转投资")
+@Api(tags = "web端-散标债转投资")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/credit")
