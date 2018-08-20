@@ -107,7 +107,7 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<AdminBorrowStyleResponse>(result) ;
     }
     @ApiOperation(value = "还款方式修改状态", notes = "还款方式修改状态")
-    @PostMapping("/statusAction/{id}")
+    @GetMapping("/statusAction/{id}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult modifyBorrowStyle(@PathVariable Integer id) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
