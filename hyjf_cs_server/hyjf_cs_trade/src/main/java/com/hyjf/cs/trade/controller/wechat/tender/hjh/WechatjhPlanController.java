@@ -31,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(tags = "wechat端-加入计划")
+@Api(tags = "weChat端-加入计划")
 @RestController
 @RequestMapping("/hyjf-wechat/tender/hjh")
 public class WechatjhPlanController extends BaseTradeController {

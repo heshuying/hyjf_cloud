@@ -35,7 +35,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "wechat端-用户提现接口")
+@Api(tags = "weChat端-用户提现接口")
 @Controller
 @RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {
@@ -56,7 +56,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdraw")
     public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
                                          HttpServletRequest request) {
-        logger.info("wechat端提现接口, userId is :{}", userId);
+        logger.info("weChat端提现接口, userId is :{}", userId);
         String transAmt = request.getParameter("transAmt");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
@@ -73,7 +73,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            logger.info("wechat端提现失败");
+            logger.info("weChat端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
@@ -92,7 +92,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                       @ModelAttribute BankCallBean bean) {
         logger.info("[wechat用户银行提现同步回调开始]");
-        logger.info("wechat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
+        logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         String isSuccess = request.getParameter("isSuccess");
         String withdrawmoney = request.getParameter("withdrawmoney");
         String wifee = request.getParameter("wifee");
@@ -112,7 +112,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
-        logger.info("wechat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
+        logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID

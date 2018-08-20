@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version WechatRechargeRuleController, v0.1 2018/7/26 9:23
  */
-@Api(tags = "wechat端-获取充值规则")
+@Api(tags = "weChat端-获取充值规则")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-wechat/wx/recharge")
