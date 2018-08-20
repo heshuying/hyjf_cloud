@@ -55,7 +55,7 @@ public class WxTransPasswordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码",notes = "设置交易密码")
-    @PostMapping(value ="/setPassword.page")
+    @GetMapping(value ="/setPassword.page")
     public ModelAndView setPassword(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -214,7 +214,7 @@ public class WxTransPasswordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
-    @PostMapping(value = "/resetPassword.page")
+    @GetMapping(value = "/resetPassword.page")
     public ModelAndView resetPassword(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
