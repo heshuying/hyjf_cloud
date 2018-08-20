@@ -295,6 +295,8 @@ public class BorrowCommonController extends BaseController {
 
 		} else {
 			this.borrowCommonService.insertRecord(form,borrowCommonRequest.getAdminUsername(),borrowCommonRequest.getAdminId());
+			// 插入borrow的标的判断是否自动备案
+            this.borrowCommonService.isAutoRecord(form.getBorrowPreNid());
 		}
 		// 列表迁移
         BorrowCommonVO vo=new BorrowCommonVO();

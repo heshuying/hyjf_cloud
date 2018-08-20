@@ -5496,9 +5496,41 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	}
 
 	/**
+	 * 根据原始标的号拉取标的信息判断是否发送自动备案MQ消息队列
+	 *
+	 * @param borrowPreNid
+	 */
+	@Override
+	public void isAutoRecord(String borrowPreNid) {
+		// 根据借款预编号获取标的编号（拆标的可获取N个borrowNid）
+		BorrowInfoExample example = new BorrowInfoExample();
+		BorrowInfoExample.Criteria criteria = example.createCriteria();
+		criteria.andBorrowPreNidEqualTo(borrowPreNid);
+
+		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
+		// 未拉取到数据返回
+		if (list.isEmpty() || null == list) {
+			logger.error("判断是否自动备案发送MQ拉取标的信息失败！");
+			return;
+		}
+
+		// 根据borrowNid判断该标的组是否需要自动备案
+		HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(list.get(0).getBorrowNid());
+		if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoRecord() && hjhAssetBorrowType.getAutoRecord() == 1) {
+			// 遍历borrowNid
+			for (int i = 0; i < list.size(); i++) {
+				// TODO 三方资产录标的有发送MQ
+//				this.sendToMQ(list.get(i).getBorrowNid(), RabbitMQConstants.ROUTINGKEY_BORROW_RECORD);
+				logger.info("标的编号：" + list.get(i).getBorrowNid()+ " 已发送到自动备案消息队列！");
+			}
+		}
+	}
+
+	/**
 	 * 校验受托用户名
 	 *
-	 * @param userId
+	 * @param instCode
+	 * @param userName
 	 * @return
 	 * @author Administrator
 	 */

@@ -387,4 +387,22 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
         return balance;
     }
+
+    /**
+     * 根据借款编号获取该机构的审核配置
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public HjhAssetBorrowtype selectAssetBorrowType(String borrowNid) {
+        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+        example.createCriteria().andInstCodeEqualTo(borrowInfo.getInstCode()).andAssetTypeEqualTo(borrowInfo.getAssetType());
+        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }
