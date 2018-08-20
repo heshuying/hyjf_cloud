@@ -106,7 +106,7 @@ public class AppDeleteCardController extends BaseUserController {
                 baseMapBean.set("sign", "");
                 Integer urlType = bindCardService.getBankInterfaceFlagByType("BIND_CARD");
                 baseMapBean.set("urlType", urlType.toString());//绑卡开关 0跳转老接口  1跳转新接口
-                baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/unbind/result/success");
+                baseMapBean.setCallBackAction(systemConfig.AppFrontHost + "/user/bankCard/unbind/result/success");
                 info.put(CustomConstants.APP_STATUS, 0);
                 //info.put(CustomConstants.APP_STATUS_DESC, "恭喜您！您的普通银行卡删除成功");
                 info.put(CustomConstants.APP_STATUS_DESC, "");
