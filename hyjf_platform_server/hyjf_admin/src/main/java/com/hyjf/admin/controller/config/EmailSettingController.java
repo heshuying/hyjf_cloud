@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version EmailSettingController, v0.1 2018/7/10 11:40
  */
-@Api(tags = "邮件设置")
+@Api(tags = "配置中心-邮件设置")
 @RestController
 @RequestMapping("/hyjf-admin/emailsetting")
 public class EmailSettingController extends BaseController {

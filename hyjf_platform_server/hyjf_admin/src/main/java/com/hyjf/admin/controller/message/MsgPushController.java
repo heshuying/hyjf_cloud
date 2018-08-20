@@ -20,7 +20,7 @@ import java.util.List;
  * @author fuqiang
  * @version MsgPushController, v0.1 2018/6/26 9:31
  */
-@Api(tags = "消息推送")
+@Api(tags = "消息中心-消息推送")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/template")
 public class MsgPushController {

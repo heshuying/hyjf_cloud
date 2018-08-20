@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version SiteSettingController, v0.1 2018/7/10 11:21
  */
-@Api(tags = "网站设置")
+@Api(tags = "配置中心-网站设置")
 @RestController
 @RequestMapping("/hyjf-admin/sitesetting")
 public class SiteSettingController extends BaseController {
