@@ -139,7 +139,7 @@ public class HjhDebtCreditController extends BaseController {
 	/**
 	 * 获取债转承接信息 by AssignOrderId
 	 * by libin
-	 * @param nid
+	 * @param assignOrderId
 	 * @return
 	 */
     @GetMapping("/getHjhDebtCreditTenderByAssignOrderId/{assignOrderId}")

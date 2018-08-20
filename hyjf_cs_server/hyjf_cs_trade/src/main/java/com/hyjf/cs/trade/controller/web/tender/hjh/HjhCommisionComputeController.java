@@ -4,6 +4,8 @@ import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.hjh.HjhCommisionComputeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import java.util.List;
  * @author hesy
  * @version HjhCommisionComputeController, v0.1 2018/8/17 12:13
  */
+@Api(value = "web端-汇计划提成计算",tags = "web端-汇计划提成计算")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/hjh/commision")
@@ -31,6 +34,7 @@ public class HjhCommisionComputeController extends BaseTradeController {
      * @return
      */
     @GetMapping("/compute")
+    @ApiOperation(value = "汇计划提成计算", notes = "汇计划提成计算")
     public Boolean commisionCompute(HttpServletRequest request){
         List<HjhAccedeVO> resultList = computeService.getAccedesWaitCompute();
         if(resultList == null){

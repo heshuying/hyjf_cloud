@@ -14,12 +14,14 @@ import com.hyjf.cs.trade.service.batch.BatchBankInvestService;
 
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 提现,债转,投资等异常定时任务controller
  * @author jijun
  * @date 20180625
  */
+@ApiIgnore
 @RestController
 @RequestMapping(value = "/cs-trade/bankException")
 public class BankExceptionController {

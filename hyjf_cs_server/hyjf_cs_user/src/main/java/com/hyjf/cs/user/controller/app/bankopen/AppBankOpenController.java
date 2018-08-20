@@ -108,6 +108,7 @@ public class AppBankOpenController extends BaseUserController {
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         logger.info("app端开户end");
+        result.setStatus("000");
         return result;
     }
 

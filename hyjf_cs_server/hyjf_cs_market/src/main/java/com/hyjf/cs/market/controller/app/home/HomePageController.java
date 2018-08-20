@@ -17,12 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +47,21 @@ public class HomePageController extends BaseMarketController {
 
     /**
      * 获取起始页banner
-     * @param request
+     * @param platform
+     * @param realPlatform
      * @return
      */
     @ResponseBody
     @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
     @PostMapping(START_PAGE_ACTION)
-    public JSONObject getStartPage(HttpServletRequest request) {
+    public JSONObject getStartPage(@RequestHeader(value = "platform", required = false) String platform,
+                                    @RequestHeader(value = "realPlatform", required = false) String realPlatform) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();
-        String platform = request.getParameter("realPlatform");
-        if (StringUtils.isBlank(platform)) {
-            platform = request.getParameter("platform");
+        String platformT = realPlatform;
+        if (StringUtils.isBlank(realPlatform)) {
+            platformT = platform;
         }
         result.put(CustomConstants.APP_REQUEST, REQUEST_HOME + REQUEST_MAPPING + START_PAGE_ACTION);
         try {
@@ -72,9 +70,9 @@ public class HomePageController extends BaseMarketController {
             ads.put("limitEnd", 1);
             ads.put("host", "http://micro.file.hyjf.com");
             ads.put("code", "startpage");
-            if ("2".equals(platform)) {
+            if ("2".equals(platformT)) {
                 ads.put("platformType","1");
-            } else if ("3".equals(platform)) {
+            } else if ("3".equals(platformT)) {
                 ads.put("platformType","2");
             }
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);

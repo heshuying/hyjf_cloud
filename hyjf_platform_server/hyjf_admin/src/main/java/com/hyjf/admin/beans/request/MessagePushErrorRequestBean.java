@@ -5,6 +5,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -22,105 +23,147 @@ public class MessagePushErrorRequestBean extends BasePage implements Serializabl
     /**
      * 标题查询
      */
+    @ApiModelProperty("标题查询")
     private String msgTitleSrch;
     /**
      * 标签查询
      */
+    @ApiModelProperty("标签查询")
     private String tagIdSrch;
     /**
      * 消息编码查询
      */
+    @ApiModelProperty("消息编码查询")
     private String msgCodeSrch;
     /**
      * 时间查询
      */
+    @ApiModelProperty("开始时间查询")
     private String startDateSrch;
     /**
      * 时间查询
      */
+    @ApiModelProperty("结束时间查询")
     private String endDateSrch;
 
-
+    @ApiModelProperty("存放多个id")
     private String ids;
 
     /**
      * 翻页机能用的隐藏变量
      */
+    @ApiModelProperty("翻页机能用的隐藏变量")
     private int paginatorPage = 1;
 
     /**
      * 列表画面自定义标签上的用翻页对象：paginator
      */
+    @ApiModelProperty("列表画面自定义标签上的用翻页对象")
     private Paginator paginator;
 
+    @ApiModelProperty("主键id")
     private Integer id;
 
+    @ApiModelProperty("消息标签,外键,消息标签表的id")
     private Integer tagId;
 
+    @ApiModelProperty("消息标签编码,消息标签表的编码")
     private String tagCode;
 
+    @ApiModelProperty("消息编码")
     private String msgCode;
 
+    @ApiModelProperty("消息标题")
     private String msgTitle;
 
+    @ApiModelProperty("图片url")
     private String msgImageUrl;
 
+    @ApiModelProperty("消息内容")
     private String msgContent;
 
+    @ApiModelProperty("推送终端")
     private String msgTerminal;
 
+    @ApiModelProperty("后续动作,0打开APP,1打开H5页面,2指定原生页面")
     private Integer msgAction;
 
+    @ApiModelProperty("后续动作url,后续动作为0时此字段无效,1时为填写的url,2时为原生页面的url")
     private String msgActionUrl;
 
+    @ApiModelProperty("推送用户类型,0为所有人,1为单个或多个用户")
     private Integer msgDestinationType;
 
+    @ApiModelProperty("推送用户,推送用户类型为0时无效")
     private String msgDestination;
 
+    @ApiModelProperty("用户user_id")
     private Integer msgUserId;
 
+    @ApiModelProperty("发送状态,0待发送,1发送成功,2发送失败")
     private Integer msgSendStatus;
 
+    @ApiModelProperty("android阅读次数,累加,android阅读次数和ios阅读次数加起来大于1代表阅读过了")
     private Integer msgReadCountAndroid;
 
+    @ApiModelProperty("ios阅读次数,累加,android阅读次数和ios阅读次数加起来大于1代表阅读过了")
     private Integer msgReadCountIos;
 
+    @ApiModelProperty("首次阅读平台,根据程序中的平台来记")
     private Integer msgFirstreadPlat;
 
+    @ApiModelProperty("极光推送返回的ID")
     private String msgJpushId;
 
+    @ApiModelProperty("极光推送PRO返回的ID")
     private String msgJpushProId;
 
+    @ApiModelProperty("极光推送专业版返回的ID")
     private String msgJpushZybId;
 
+    @ApiModelProperty("极光推送至尊版返回id")
     private String msgJpushZzbId;
 
+    @ApiModelProperty("极光推送悦享版返回id")
     private String msgJpushYxbId;
 
+    @ApiModelProperty("极光推送周年版返回id")
     private String msgJpushZnbId;
 
+    @ApiModelProperty("极光推送测试id")
     private String msgJpushTestId;
 
+    @ApiModelProperty("发送成功失败备注")
     private String msgRemark;
 
+    @ApiModelProperty("实际发送时间")
     private Integer sendTime;
 
+    @ApiModelProperty("ios目标推送数")
     private Integer msgDestinationCountIos;
 
+    @ApiModelProperty("安卓目标推送数")
     private Integer msgDestinationCountAndroid;
 
+    @ApiModelProperty("创建时间")
     private Integer createTime;
 
+    @ApiModelProperty("创建人用户id")
     private Integer createUserId;
 
+    @ApiModelProperty("标签查询")
     private String createUserName;
 
+    @ApiModelProperty("标签查询")
     private Integer lastupdateTime;
 
+    @ApiModelProperty("创建人用户id")
     private Integer lastupdateUserId;
 
+    @ApiModelProperty("创建人用户名")
     private String lastupdateUserName;
 
+    @ApiModelProperty("极光推送专业版返回的ID2")
     private String msgJpushZyb2Id;
 
     public Integer getId() {

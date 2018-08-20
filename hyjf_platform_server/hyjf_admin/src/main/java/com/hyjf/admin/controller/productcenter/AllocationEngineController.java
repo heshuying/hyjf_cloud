@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
  */
-@Api(value = "计划专区列表",tags = "计划专区列表")
+@Api(value = "产品中心-汇计划-标的分配规则引擎",tags = "产品中心-汇计划-标的分配规则引擎")
 @RestController
 @RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{
@@ -70,7 +70,7 @@ public class AllocationEngineController extends BaseController{
      * 画面初始化
      *
      * @param request
-     * @return 标的分配规则引擎列表
+     * @return 标的分配规则引擎列表       已测试
      */
     @ApiOperation(value = "计划专区列表", notes = "计划专区列表初始化")
     @PostMapping(value = "/search")
@@ -102,12 +102,12 @@ public class AllocationEngineController extends BaseController{
     }
     
 	/**
-	 * 计划专区列表 添加/修改 info画面
+	 * 计划专区列表 添加/修改 info画面   不需要
 	 *
 	 * @param request
 	 * @return 
 	 */
-	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
+/*	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
 	@PostMapping(value = "/reginfo")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -117,10 +117,10 @@ public class AllocationEngineController extends BaseController{
 		// 初始画面没有需要初期化的数据
 		// 计划编号 和 状态
 		return jsonObject;
-	}
+	}*/
 	
 	/**
-	 * 计划专区列表 info画面确认后添加计划到专区
+	 * 计划专区列表 info画面确认后添加计划到专区   已测试
 	 *
 	 * @param request
 	 * @return 
@@ -160,7 +160,8 @@ public class AllocationEngineController extends BaseController{
 		// 插表
 		int flg = this.allocationEngineService.insertRecord(VOrequest);
 		if(flg > 0){
-			success();
+			jsonObject.put("retMsg", SUCCESS_DESC);
+			jsonObject.put("retCode", SUCCESS);
 		}
 		return jsonObject;
 	}
@@ -179,7 +180,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
     /**
-     * 校验入力的计划编号相关AJAX
+     * 校验入力的计划编号相关AJAX   已测试
      *
      * @param planNid
      * @return
@@ -188,9 +189,9 @@ public class AllocationEngineController extends BaseController{
 	@PostMapping(value = "/ajaxcheck")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	@ApiImplicitParam(name = "planNameSrch", value = "计划编号查询", required = true, dataType = "String")
+	/*@ApiImplicitParam(name = "planNidSrch", value = "计划编号查询", required = true, dataType = "String")*/
 	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) {
-		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNameSrch());
+		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNidSrch());
 		if(response==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -201,7 +202,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
     /**
-     * 计划专区停用/启用状态修改
+     * 计划专区停用/启用状态修改   未测试
      *
      * @param planNid
      * @return

@@ -117,42 +117,24 @@ public class ActivityServiceImpl implements ActivityService {
      * @return
      */
     @Override
-    public Map<String, Object> insertRecord(ActivityList activityList) {
+    public int insertRecord(ActivityList activityList) {
         activityList.setCreateTime(GetDate.getTimestamp());
         activityList.setUpdateTime(GetDate.getTimestamp());
         int insert = activityListMapper.insertSelective(activityList);
-        Map<String,Object> map = new HashMap<>();
-        if (insert > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "添加失败");
-        }
-        return map;
+        return insert;
     }
 
     @Override
-    public Map<String, Object> updateActivity(ActivityList activityList) {
+    public int updateActivity(ActivityList activityList) {
         activityList.setUpdateTime(GetDate.getTimestamp());
         int update = activityListMapper.updateByPrimaryKey(activityList);
-        Map<String,Object> map = new HashMap<>();
-        if (update > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "修改失败");
-        }
-        return map;
+        return update;
     }
 
     @Override
-    public Map<String, Object> deleteActivity(int id) {
+    public int deleteActivity(int id) {
         int delete = activityListMapper.deleteByPrimaryKey(id);
-        Map<String,Object> map = new HashMap<>();
-        if (delete > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "删除失败");
-        }
-        return map;
+        return delete;
     }
 
     /**

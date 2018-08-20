@@ -76,7 +76,7 @@ import java.util.*;
  * @author libin
  * @version AccedeListController.java, v0.1 2018年7月7日 下午3:00:56
  */
-@Api(value = "汇计划加入明细列表",tags = "汇计划加入明细列表")
+@Api(value = "产品中心-汇计划-加入明细",tags = "产品中心-汇计划-加入明细")
 @RestController
 @RequestMapping("/hyjf-admin/joinplan")
 public class AccedeListController extends BaseController{

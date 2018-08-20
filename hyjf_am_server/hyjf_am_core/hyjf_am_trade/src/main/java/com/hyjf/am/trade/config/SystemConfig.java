@@ -64,6 +64,9 @@ public class SystemConfig {
     @Value("${hyjf.alerm.email}")
     private String hyjfAlertEmail;
 
+    @Value("${hyjf.3des.key}")
+    private String desKey;
+
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -199,5 +202,13 @@ public class SystemConfig {
 
     public void setHyjfAlertEmail(String hyjfAlertEmail) {
         this.hyjfAlertEmail = hyjfAlertEmail;
+    }
+
+    public String getDesKey() {
+        return desKey;
+    }
+
+    public void setDesKey(String desKey) {
+        this.desKey = desKey;
     }
 }

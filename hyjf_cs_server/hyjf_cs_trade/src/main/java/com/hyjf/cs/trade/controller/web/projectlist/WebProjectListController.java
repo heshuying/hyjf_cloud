@@ -83,6 +83,7 @@ public class WebProjectListController extends BaseTradeController {
     /**
      * web端新手标和散标标的详情
      * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectDetail()
      * @date 2018/6/22 16:06
      */
     @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")

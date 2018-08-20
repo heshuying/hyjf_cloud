@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ import java.util.Map;
 /**
  * wechat端-散标投资
  */
-@Api(value = "wechat端-散标投资")
+@Api(tags = "wechat端-散标投资")
 @RestController
 @RequestMapping("/hyjf-wechat/user/invest")
 public class WechatBorrowTenderController extends BaseTradeController {
@@ -64,6 +65,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {

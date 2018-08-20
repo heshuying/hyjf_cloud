@@ -2,10 +2,8 @@ package com.hyjf.cs.trade.controller.app.user.myplan;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.MyPlanListResultBean;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
@@ -31,7 +29,7 @@ import java.util.List;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的计划接口",tags = "app端用户我的计划接口")
+@Api(value = "app端-用户我的计划接口",tags = "app端-用户我的计划接口")
 @Controller
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {
