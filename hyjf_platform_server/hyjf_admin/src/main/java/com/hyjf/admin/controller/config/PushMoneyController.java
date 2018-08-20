@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version PushMoneyController, v0.1 2018/7/10 10:56
  */
-@Api(tags = "提成配置")
+@Api(tags = "配置中心-提成配置")
 @RestController
 @RequestMapping("/hyjf-admin/pushmoney")
 public class PushMoneyController extends BaseController {

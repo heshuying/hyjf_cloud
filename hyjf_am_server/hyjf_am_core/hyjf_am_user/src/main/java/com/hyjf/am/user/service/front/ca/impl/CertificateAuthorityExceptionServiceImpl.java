@@ -32,6 +32,9 @@ import java.util.UUID;
 public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl implements CertificateAuthorityExceptionService {
 	  private static final Logger logger = LoggerFactory.getLogger(CertificateAuthorityExceptionServiceImpl.class);
 
+    @Autowired
+    FddCertificateProducer fddProducer;
+
     /**
      * 检索CA异常件数
      *
@@ -39,7 +42,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
      * @return
      */
     @Override
-    public Integer countCAExceptionList(CertificateAuthorityExceptionRequest form) {
+    public Integer countCANOExceptionList(CertificateAuthorityExceptionRequest form) {
 
     	CertificateAuthorityExample example = new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria cra = example.createCriteria();
@@ -86,7 +89,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 
 
     /**
-     * 检索CA异常列表
+     * 检索CA认证列表
      *
      * @param form
      * @param limitStart
@@ -94,7 +97,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
      * @return
      */
     @Override
-    public List<CertificateAuthority> getCAExceptionList(CertificateAuthorityExceptionRequest form, int limitStart, int limitEnd) {
+    public List<CertificateAuthority> getCANOExceptionList(CertificateAuthorityExceptionRequest form, int limitStart, int limitEnd) {
 
         CertificateAuthorityExample example = new CertificateAuthorityExample();
         CertificateAuthorityExample.Criteria cra = example.createCriteria();
@@ -137,6 +140,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 			}
         }
         cra.andCodeEqualTo("1000");
+        //1000正常 其他的不正常
         if (limitStart >= 0) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
@@ -144,8 +148,6 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
         return this.certificateAuthorityMapper.selectByExample(example);
     }
 
-    @Autowired
-    FddCertificateProducer fddProducer;
 
 	/**
 	 * 发送CA认证MQ
@@ -171,4 +173,114 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 		String consumeTime = GetDate.countTime(GetDate.stringToDate(startTime), GetDate.stringToDate(endTime));
 		logger.info("处理用时:" + startTime + "减去" + endTime + "等于" + consumeTime);
 	}
+
+    /**
+     * 获取CA认证异常count
+     * @param form
+     * @return
+     */
+    @Override
+    public Integer countCAExceptionList(CertificateAuthorityExceptionRequest form) {
+        CertificateAuthorityExample example = new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria cra = example.createCriteria();
+        // 用户名不为空
+        if (StringUtils.isNotBlank(form.getUserNameSrch())) {
+            cra.andUserNameLike("%" + form.getUserNameSrch() + "%");
+        }
+        // 用户手机号
+        if (StringUtils.isNotBlank(form.getMobileSrch())) {
+            cra.andMobileLike("%" + form.getMobileSrch() + "%");
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
+            cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
+        }
+        // 用户类型
+        if (StringUtils.isNotBlank(form.getIdTypeSrch())) {
+            cra.andIdTypeEqualTo(Integer.valueOf(form.getIdTypeSrch()));
+        }
+        // 客户编号
+        if (StringUtils.isNotBlank(form.getCustomerIdSrch())) {
+            cra.andCustomerIdEqualTo(form.getCustomerIdSrch());
+        }
+        // 检索条件转账时间开始
+        if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
+            try {
+                cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        // 检索条件转账时间结束
+        if (StringUtils.isNotBlank(form.getEndTimeSrch())) {
+            try {
+                cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        cra.andCodeNotEqualTo("1000");
+        return this.certificateAuthorityMapper.countByExample(example);
+    }
+
+    /**
+     * 获取CA认证异常列表
+     * @param form
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<CertificateAuthority> getCAExceptionList(CertificateAuthorityExceptionRequest form, int limitStart, int limitEnd) {
+        CertificateAuthorityExample example = new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria cra = example.createCriteria();
+        // 用户名不为空
+        if (StringUtils.isNotBlank(form.getUserNameSrch())) {
+            cra.andUserNameLike("%" + form.getUserNameSrch() + "%");
+        }
+        // 用户手机号
+        if (StringUtils.isNotBlank(form.getMobileSrch())) {
+            cra.andMobileLike("%" + form.getMobileSrch() + "%");
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
+            cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
+        }
+        // 用户类型
+        if (StringUtils.isNotBlank(form.getIdTypeSrch())) {
+            cra.andIdTypeEqualTo(Integer.valueOf(form.getIdTypeSrch()));
+        }
+        // 客户编号
+        if (StringUtils.isNotBlank(form.getCustomerIdSrch())) {
+            cra.andCustomerIdEqualTo(form.getCustomerIdSrch());
+        }
+        // 检索条件转账时间开始
+        if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
+            try {
+                cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        // 检索条件转账时间结束
+        if (StringUtils.isNotBlank(form.getEndTimeSrch())) {
+            try {
+                cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
+            } catch (ParseException e) {
+
+                e.printStackTrace();
+            }
+        }
+        cra.andCodeNotEqualTo("1000");
+        //1000正常 其他的不正常
+        if (limitStart >= 0) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        return this.certificateAuthorityMapper.selectByExample(example);
+    }
+
+
 }

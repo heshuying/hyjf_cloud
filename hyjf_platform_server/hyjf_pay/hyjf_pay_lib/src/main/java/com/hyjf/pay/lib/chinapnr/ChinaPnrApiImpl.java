@@ -10,17 +10,16 @@
  */
 package com.hyjf.pay.lib.chinapnr;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.PnrApi;
 import com.hyjf.pay.lib.PnrApiBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrPropUtils;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
-
+import com.hyjf.pay.lib.config.PaySystemConfig;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 /**
  * @author GOGTZ-T
  */
+
 public class ChinaPnrApiImpl implements PnrApi {
     private static Logger log = LoggerFactory.getLogger(ChinaPnrApiImpl.class);
     /** THIS_CLASS */
@@ -52,7 +52,6 @@ public class ChinaPnrApiImpl implements PnrApi {
     /** 汇付天下地址 */
     @Value("${hyjf.chinapnr.url}")
     private String chinapnrUrl;
-
 
     /**
      * 调用汇付天下API接口

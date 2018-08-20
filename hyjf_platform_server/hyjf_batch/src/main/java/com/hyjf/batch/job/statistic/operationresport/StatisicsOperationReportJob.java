@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 import com.hyjf.batch.job.BaseJob;
 
 /**
+ * 运营数据定时任务
  * @author fuqiang
  * @version StatisicsOperationReportJob, v0.1 2018/7/18 9:40
  */

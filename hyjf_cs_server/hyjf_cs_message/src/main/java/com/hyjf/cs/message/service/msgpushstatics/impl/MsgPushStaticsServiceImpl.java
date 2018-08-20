@@ -3,12 +3,7 @@
  */
 package com.hyjf.cs.message.service.msgpushstatics.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import cn.jpush.api.report.ReceivedsResult;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
@@ -18,8 +13,11 @@ import com.hyjf.cs.message.jpush.JPushPro;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import cn.jpush.api.report.ReceivedsResult;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -33,6 +31,9 @@ public class MsgPushStaticsServiceImpl implements MsgPushStaticsService {
 
 	@Autowired
 	private MessagePushMsgHistoryDao msgHistoryDao;
+
+	@Autowired
+	private MessagePushTemplateStaticsDao staticsDao;
 
 	@Override
 	public void updatemsgPushStatics(MessagePushTemplateStatics msgTemplateStatics, Integer startTime,
@@ -132,5 +133,10 @@ public class MsgPushStaticsServiceImpl implements MsgPushStaticsService {
 		msgTemplateStatics.setSendTime(GetDate.getNowTime10());
 
 		this.templateStaticsDao.save(msgTemplateStatics);
+	}
+
+	@Override
+	public List<MessagePushTemplateStatics> getTemplateStaticsListByTime(Integer startTime, Integer endTime) {
+		return staticsDao.getTemplateStaticsListByTime(startTime, endTime);
 	}
 }

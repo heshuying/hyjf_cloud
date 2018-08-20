@@ -75,14 +75,12 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(mobile)) {
 			criteria.and("mobile").is(mobile);
 		}
-		if (StringUtils.isNotBlank(postTimeBegin)) {
+		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			criteria.and("posttime").gte(begin);
-		}
-		if (StringUtils.isNotBlank(postTimeEnd)) {
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
-			criteria.and("posttime").lte(end);
+			criteria.and("posttime").gte(begin).lte(end);
 		}
+
 		if (status != null) {
 			criteria.and("status").is(status);
 		}
@@ -91,7 +89,6 @@ public class SmsLogServiceImpl implements SmsLogService {
 		int pageSize = request.getPageSize();
 		int limitStart = (currPage - 1) * pageSize;
 		int limitEnd = limitStart + pageSize;
-		query.addCriteria(criteria);
 		query.skip(limitStart).limit(limitEnd);
 		return smsOntimeMongoDao.find(query);
 	}

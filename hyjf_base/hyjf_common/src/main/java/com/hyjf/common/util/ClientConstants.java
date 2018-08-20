@@ -259,8 +259,8 @@ public class ClientConstants implements Serializable {
 	/**
 	 * 交易密码
 	 */
-	public static final String SETPASSWORD_ACTION = "/appUser/updatePasswordAction/setTeaderPassword";
-	public static final String RESETPASSWORD_ACTION = "/appUser/updatePasswordAction/resetPassword";
+	public static final String SETPASSWORD_ACTION = "/bank/user/transpassword/setPassword";
+	public static final String RESETPASSWORD_ACTION = "/bank/user/transpassword/resetPassword";
 
 	/**
 	 * vip 初始化跳转路径

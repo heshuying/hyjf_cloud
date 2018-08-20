@@ -13,7 +13,10 @@ import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
@@ -27,10 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author yaoy
@@ -42,7 +42,9 @@ import java.util.Map;
 public class ActivityListController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityListController.class);
 
-    /** 权限关键字 */
+    /**
+     * 权限关键字
+     */
     public static final String PERMISSIONS = "activitylist";
 
     @Value("${file.domain.url}")
@@ -62,10 +64,10 @@ public class ActivityListController extends BaseController {
 //        return jsonObject;
 //    }
 
-    @ApiOperation(value = "查询列表",notes = "查询列表")
+    @ApiOperation(value = "查询列表", notes = "查询列表")
     @PostMapping("/activityRecordList")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, @RequestBody ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.getRecordList(activityListRequest);
         List<ActivityListVO> forBack = forBack(response);
         if (response == null) {
@@ -94,14 +96,11 @@ public class ActivityListController extends BaseController {
             request.setTitle(activityList.getTitle());
             request.setUrlForeground(activityList.getUrlForeground());
             String platform = activityList.getPlatform();
-            Map<String, String> map = new HashMap<>();
-            map.put("0", "PC");
-            map.put("1", "微官网");
-            map.put("2", "Android");
-            map.put("3", "iOS");
-            map.put("4", "其他");
-            map.put("5", "微可车贷");
-            request.setPlatform(map.get(platform));
+            List<ParamNameVO> paramNames = activityListService.getParamNameList("CLIENT");
+            for (ParamNameVO param : paramNames) {
+                platform = platform.replace(param.getNameCd(), param.getName());
+            }
+            request.setPlatform(platform);
             request.setTimeStart(activityList.getTimeStart());
             request.setTimeEnd(activityList.getTimeEnd());
             if (activityList.getTimeStart() >= GetDate.getNowTime10()) {
@@ -123,9 +122,9 @@ public class ActivityListController extends BaseController {
         return forBack;
     }
 
-    @ApiOperation(value = "活动列表", notes = "添加活动配置")
+    @ApiOperation(value = "添加活动配置", notes = "添加活动配置")
     @PostMapping("/insertAction")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody ActivityListRequest request) {
         //1代表插入成功， 0为失败
         ActivityListResponse response = activityListService.insertRecord(request);
@@ -139,8 +138,8 @@ public class ActivityListController extends BaseController {
     }
 
     @ApiOperation(value = "活动修改初始页面", notes = "活动修改初始页面")
-    @RequestMapping(value = "/initUpdateActivity",method = RequestMethod.GET)
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
+    @RequestMapping(value = "/initUpdateActivity", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
         ActivityListRequest activityListRequest = new ActivityListRequest();
         activityListRequest.setId(id);
@@ -157,7 +156,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "修改活动信息", notes = "修改活动信息")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.updateActivity(activityListRequest);
         if (response == null) {
@@ -171,7 +170,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/uploadFile")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
         String file = null;
@@ -186,8 +185,8 @@ public class ActivityListController extends BaseController {
     }
 
     @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
-    @RequestMapping(value = "/deleteAction",method = RequestMethod.GET)
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_DELETE)
+    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteRecordAction(@RequestParam int id) {
         ActivityListRequest request = new ActivityListRequest();
         request.setId(id);

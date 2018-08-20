@@ -40,6 +40,15 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
 
     private String bankSeqNo;
 
+    //订单编号
+    private String nid;
+
+    //用户ID
+    private Integer userId;
+
+    //订单状态
+    private String status;
+
     /**
      * 分页变量
      */
@@ -204,5 +213,29 @@ public class AccountRechargeRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

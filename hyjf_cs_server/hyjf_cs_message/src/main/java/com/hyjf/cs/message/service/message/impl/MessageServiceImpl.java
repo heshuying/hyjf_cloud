@@ -3,15 +3,6 @@
  */
 package com.hyjf.cs.message.service.message.impl;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -26,6 +17,14 @@ import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.SmsProducer;
 import com.hyjf.cs.message.service.message.MessageService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -191,7 +190,7 @@ public class MessageServiceImpl implements MessageService {
 	 * @param status
 	 * @param data
 	 */
-	private void updatetOntime(Integer id, Integer status, String data) {
+	private void updatetOntime(String id, Integer status, String data) {
 		SmsOntime record = new SmsOntime();
 		record.setId(id);
 		record.setStatus(status);

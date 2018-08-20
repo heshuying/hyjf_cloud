@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,42 +17,61 @@ public class BankEveVO extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
 
+    @ApiModelProperty(value = "发送方标识码")
     private String forcode;
 
+    @ApiModelProperty(value = "系统跟踪号")
     private Integer seqno;
 
+    @ApiModelProperty(value = "交易传输时间")
     private Integer cendt;
 
+    @ApiModelProperty(value = "主账号")
     private String cardnbr;
 
+    @ApiModelProperty(value = "交易金额")
     private BigDecimal amount;
 
+    @ApiModelProperty(value = "交易金额符号--小于零等于C；大于零等于D")
     private String crflag;
 
+    @ApiModelProperty(value = "消息类型--提现冲正交易是0420")
     private Integer msgtype;
 
+    @ApiModelProperty(value = "交易类型码")
     private Integer proccode;
 
+    @ApiModelProperty(value = "订单号")
     private String orderno;
 
+    @ApiModelProperty(value = "内部交易流水号")
     private String tranno;
 
+    @ApiModelProperty(value = "内部保留域")
     private String reserved;
 
+    @ApiModelProperty(value = "冲正、撤销标志 --1-已撤销/冲正空或0-正常交易")
     private Integer revind;
 
+    @ApiModelProperty(value = "日期，记录导入数据所属日期")
     private String createDay;
 
+    @ApiModelProperty(value = "交易类型")
     private Integer transtype;
 
+    @ApiModelProperty(value = "创建用户")
     private Integer createUserId;
 
+    @ApiModelProperty(value = "创建时间")
     private Integer createTime;
 
+    @ApiModelProperty(value = "更新用户")
     private Integer updateUserId;
 
+    @ApiModelProperty(value = "更新时间")
     private Integer updateTime;
 
+    @ApiModelProperty(value = "删除标识")
     private Integer delFlg;
 
     public static long getSerialVersionUID() {
