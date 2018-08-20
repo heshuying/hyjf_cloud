@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -229,4 +231,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
 		return response;
 	}
+
+    @Override
+    public List<JxBankConfigVO> getBankRecordList() {
+		JxBankConfigResponse response=restTemplate
+				.getForObject("http://AM-CONFIG/am-config/config/getbanklist" , JxBankConfigResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+    }
 }

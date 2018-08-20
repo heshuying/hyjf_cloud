@@ -10,6 +10,7 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -267,29 +268,20 @@ public class AboutUsController extends BaseController {
 	@GetMapping("/getSecurityPage")
 	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
-		//ModelAndView modelAndView=null;
-		//String pageType = request.getParameter("pageType");
 		if(StringUtils.isBlank(pageType)){
 			// TODO 参数为空转跳页面
 			//modelAndView = new ModelAndView("/contentarticle/bank-page");
 		}else{
-			/*if(null != pageType) {
-				pageType = pageType.replace(".", "");
-			}*/
-			//modelAndView = new ModelAndView("/contentarticle/" + pageType);
-			JSONArray data = aboutUsService.getBanksList().getJSONArray("data");
-			String str = data.toJSONString();
-			List<BanksConfigVO> list = JSONObject.parseArray(str, BanksConfigVO.class);
-			for (BanksConfigVO banksConfig : list) {
+			List<JxBankConfigVO> list = aboutUsService.getBanksList();
+			for (JxBankConfigVO banksConfig : list) {
 				BigDecimal monthCardQuota = banksConfig.getMonthCardQuota();
 				BigDecimal singleQuota = banksConfig.getSingleQuota();
 				BigDecimal singleCardQuota = banksConfig.getSingleCardQuota();
-				banksConfig.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
+
 				banksConfig.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
 				banksConfig.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
 			}
 			webResult = new WebResult(list);
-
 		}
 		return webResult;
 	}

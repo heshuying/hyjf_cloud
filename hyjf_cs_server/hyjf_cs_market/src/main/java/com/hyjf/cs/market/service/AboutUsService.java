@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 
@@ -108,7 +109,7 @@ public interface AboutUsService extends BaseMarketService {
     TotalInvestAndInterestVO searchData();
 
 
-    JSONObject getBanksList();
+	List<JxBankConfigVO> getBanksList();
 	/**
 	 * 获取网贷知识
 	 *

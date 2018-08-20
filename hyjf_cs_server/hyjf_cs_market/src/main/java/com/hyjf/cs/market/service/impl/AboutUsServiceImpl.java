@@ -8,6 +8,7 @@ import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.CsMessageClient;
@@ -113,12 +114,8 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
      * 返回快捷银行充值限额
      */
     @Override
-    public  JSONObject getBanksList() {
-        Map<String, String> params = new HashMap<String, String>();
-        String requestUrl = HYJF_API_WEB_URL + BANK_LIST;
-        String result = HttpClientUtils.post(requestUrl, params);
-        JSONObject status = JSONObject.parseObject(result);
-        return status;
+    public  List<JxBankConfigVO> getBanksList() {
+        return amConfigClient.getBankRecordList();
 
     }
 

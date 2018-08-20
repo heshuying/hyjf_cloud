@@ -3,12 +3,14 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
 import java.util.Map;
@@ -148,4 +150,6 @@ public interface AmConfigClient {
      * @return
      */
     int addSubmission(SubmissionsVO submissionsVO);
+
+    List<JxBankConfigVO> getBankRecordList();
 }
