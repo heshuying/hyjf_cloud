@@ -544,4 +544,24 @@ public class DateUtils {
 		return null;
 	}
 
+	/**
+	 * Zhadaojian
+	 * timeEnd比timeStar多的天数
+	 * @param timeStar-秒数
+	 * @param timeEnd-秒数
+	 * @return
+	 */
+	public static long differentDaysByString(String timeEnd,String timeStar) {
+		Long c = 0L;
+		if(StringUtils.isNotBlank(timeStar) && StringUtils.isNotBlank(timeEnd) ){
+			c = Long.valueOf(timeEnd)-Long.valueOf(timeStar);
+		}else if(StringUtils.isBlank(timeStar)){
+			c = Long.valueOf(timeEnd)-GetDate.getNowTime10();
+		}else if(StringUtils.isBlank(timeEnd)){
+			c = GetDate.getNowTime10()-Long.valueOf(timeStar);
+		}
+		long d = c/60/60/24;//天
+		return d;
+	}
+
 }

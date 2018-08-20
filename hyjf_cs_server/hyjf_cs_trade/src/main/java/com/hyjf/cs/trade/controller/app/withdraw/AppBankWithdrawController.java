@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "app端用户提现接口",tags = "app端用户提现接口")
+@Api(value = "app端-用户提现接口",tags = "app端-用户提现接口")
 @Controller
 @RequestMapping("/hyjf-app/bank/user/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
@@ -76,7 +77,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/getInfoAction")
+    @PostMapping(value = "/getInfoAction")
     @ApiOperation(value = "获取用户提现信息", notes = "获取用户充值信息")
     public AppWithdrawResultVO getCashInfo(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
 
@@ -264,8 +265,9 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "APP端-获取提现URL", notes = "获取提现URL")
     @ResponseBody
-    @RequestMapping("/getCashUrl")
+    @PostMapping("/getCashUrl")
     public JSONObject getCashUrl(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         // 版本号
@@ -456,7 +458,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
+    @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");

@@ -55,6 +55,7 @@ public class  AppTradeDetailController extends BaseTradeController {
      * @param trade
      * @return
      */
+    @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
     @PostMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
     public AppTradeDetailBean searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, AppTradeDetailBeanRequest trade) {

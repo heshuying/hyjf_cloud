@@ -25,7 +25,7 @@ import io.swagger.annotations.Api;
  * @author fq
  * @version MessagePushTemplateStaticsController, v0.1 2018/8/14 14:13
  */
-@Api(tags = "app消息推送-模板消息统计报表")
+@Api(tags = "消息中心-app消息推送-模板消息统计报表")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/statics/template")
 public class MessagePushTemplateStaticsController extends BaseController {

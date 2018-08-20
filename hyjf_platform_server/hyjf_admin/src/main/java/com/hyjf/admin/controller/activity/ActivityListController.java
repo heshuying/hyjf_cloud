@@ -138,7 +138,7 @@ public class ActivityListController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "活动修改初试页面", notes = "活动修改初试页面")
+    @ApiOperation(value = "活动修改初始页面", notes = "活动修改初始页面")
     @RequestMapping(value = "/initUpdateActivity",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
@@ -155,7 +155,7 @@ public class ActivityListController extends BaseController {
         return new AdminResult<ActivityListVO>(response.getResult());
     }
 
-    @ApiOperation(value = "活动列表", notes = "修改活动信息")
+    @ApiOperation(value = "修改活动信息", notes = "修改活动信息")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
@@ -169,7 +169,7 @@ public class ActivityListController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "活动列表", notes = "资料上传")
+    @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/uploadFile")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
@@ -185,7 +185,7 @@ public class ActivityListController extends BaseController {
         return jsonObject;
     }
 
-    @ApiOperation(value = "活动列表", notes = "删除配置信息")
+    @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
     @RequestMapping(value = "/deleteAction",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteRecordAction(@RequestParam int id) {

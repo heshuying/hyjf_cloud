@@ -6,6 +6,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class GetTokenDataServer extends BaseTradeController {
     @Autowired
     SystemConfig systemConfig;
 
+    @ApiOperation(value = "token值获取", notes = "token值获取")
     @PostMapping(value = "/getToken")
     public JSONObject getToken(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result;

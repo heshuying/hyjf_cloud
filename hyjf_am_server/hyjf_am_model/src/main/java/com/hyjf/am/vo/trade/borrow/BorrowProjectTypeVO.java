@@ -18,6 +18,7 @@ import java.util.List;
  */
 @ApiModel(value = "项目类型")
 public class BorrowProjectTypeVO extends BaseVO implements Serializable {
+    private String methodName;
     @ApiModelProperty(value = "主键id")
     private Integer id;
     @ApiModelProperty(value = "项目类型")
@@ -294,5 +295,13 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     public void setRepayName(String repayName) {
         this.repayName = repayName;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 }

@@ -37,21 +37,21 @@ public interface ActivityService {
      * @param activityList
      * @return
      */
-    Map<String, Object> insertRecord(ActivityList activityList);
+    int insertRecord(ActivityList activityList);
 
     /**
      * 更改活动
      * @param activityList
      * @return
      */
-    Map<String, Object> updateActivity(ActivityList activityList);
+    int updateActivity(ActivityList activityList);
 
     /**
      * 删除活动
      * @param id
      * @return
      */
-    Map<String, Object> deleteActivity(int id);
+    int deleteActivity(int id);
 
     /**
      * 获取有效活动

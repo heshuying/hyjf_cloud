@@ -39,6 +39,8 @@ public class AdminHjhRegionVO extends BaseVO implements Serializable{
     private Integer updateTime;
 	@ApiModelProperty(value = "删除标识")
     private Integer delFlg;
+	@ApiModelProperty(value = "计划专区添加时间")
+	private String addTime;
 
 	public Integer getId() {
 		return id;
@@ -120,4 +122,11 @@ public class AdminHjhRegionVO extends BaseVO implements Serializable{
 		this.delFlg = delFlg;
 	}
 
+	public String getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(String addTime) {
+		this.addTime = addTime;
+	}
 }

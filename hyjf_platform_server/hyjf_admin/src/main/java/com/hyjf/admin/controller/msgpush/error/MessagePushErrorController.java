@@ -47,7 +47,9 @@ public class MessagePushErrorController extends BaseController {
     @ApiParam(required = false, name = "requestBean", value = "查询条件")
     @ApiOperation(value = "(条件)查询 APP消息推送 异常处理 列表", httpMethod = "POST",
                                   notes = "(条件)查询 APP消息推送 异常处理 列表")
-    public AdminResult<ListResult<MessagePushErrorVO>> getListByConditions(@RequestBody MessagePushErrorRequest request) {
+    public AdminResult<ListResult<MessagePushErrorVO>> getListByConditions(@RequestBody MessagePushErrorRequestBean requestBean) {
+        MessagePushErrorRequest request = new MessagePushErrorRequest();
+        BeanUtils.copyProperties(requestBean, request);
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         Integer count = this.messagePushErrorService.getRecordCount(request);
         if(count > 0){

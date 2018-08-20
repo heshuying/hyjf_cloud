@@ -73,7 +73,7 @@ import com.alibaba.fastjson.JSONArray;
  * @author libin
  * @version HjhCommissionController.java, v0.1 2018年8月7日 下午2:38:45
  */
-@Api(value = "汇计划提成列表",tags = "汇计划提成列表")
+@Api(value = "资金中心-汇计划提成列表",tags = "资金中心-汇计划提成列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcommission")
 public class HjhCommissionController extends BaseController{

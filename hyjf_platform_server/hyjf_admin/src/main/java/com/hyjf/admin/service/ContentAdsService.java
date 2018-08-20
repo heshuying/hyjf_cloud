@@ -14,7 +14,11 @@ public interface ContentAdsService {
 
     ContentAdsResponse inserAction(ContentAdsRequest request);
 
+    ContentAdsResponse infoaction(Integer id);
+
     ContentAdsResponse updateAction(ContentAdsRequest request);
+
+    ContentAdsResponse statusaction(Integer id);
 
     ContentAdsResponse deleteById(Integer id);
 

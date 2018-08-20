@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,58 +18,85 @@ public class BankAleveVO extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
 
+    @ApiModelProperty(value = "银行号")
     private Integer bank;
 
+    @ApiModelProperty(value = "电子账号")
     private String cardnbr;
 
+    @ApiModelProperty(value = "交易金额")
     private BigDecimal amount;
 
+    @ApiModelProperty(value = "货币代码(156)")
     private Integer curNum;
 
+    @ApiModelProperty(value = "交易金额符号 --小于零等于C；大于零等于D")
     private String crflag;
 
+    @ApiModelProperty(value = "交易金额符号 --小于零等于C；大于零等于D")
     private String valdate;
 
+    @ApiModelProperty(value = "交易日期 --YYYYMMDD 卡系统日期")
     private String inpdate;
 
+    @ApiModelProperty(value = "自然日期 --YYYYMMDD 服务器日期")
     private String reldate;
 
+    @ApiModelProperty(value = "交易时间--HH24MISSTT")
     private Integer inptime;
 
+    @ApiModelProperty(value = "交易流水号")
     private String tranno;
 
+    @ApiModelProperty(value = "关联交易流水号")
     private Integer oriTranno;
 
+    @ApiModelProperty(value = "交易类型")
     private Integer transtype;
 
+    @ApiModelProperty(value = "交易描述")
     private String desline;
 
+    @ApiModelProperty(value = "交易后余额")
     private BigDecimal currBal;
 
+    @ApiModelProperty(value = "对手交易帐号")
     private String forcardnbr;
 
+    @ApiModelProperty(value = "冲正、撤销标志 --1-已撤销/冲正空或0-正常交易")
     private Integer revind;
 
+    @ApiModelProperty(value = "交易标识 --1-调账该字段为1时，标识该笔流水为行内调账交易")
     private String accchg;
 
+    @ApiModelProperty(value = "系统跟踪号")
     private Integer seqno;
 
+    @ApiModelProperty(value = "原交易流水号")
     private Integer oriNum;
 
+    @ApiModelProperty(value = "保留域")
     private String resv;
 
+    @ApiModelProperty(value = "日期，记录导入数据所属日期")
     private String createDay;
 
+    @ApiModelProperty(value = "创建用户")
     private Integer createUserId;
 
+    @ApiModelProperty(value = "创建时间")
     private Integer createTime;
 
+    @ApiModelProperty(value = "更新用户")
     private Integer updateUserId;
 
+    @ApiModelProperty(value = "更新时间")
     private Integer updateTime;
 
+    @ApiModelProperty(value = "删除标识")
     private Integer delFlg;
 
+    @ApiModelProperty(value = "是否处理 0未处理 1 已处理")
     private Integer updFlg;
 
 

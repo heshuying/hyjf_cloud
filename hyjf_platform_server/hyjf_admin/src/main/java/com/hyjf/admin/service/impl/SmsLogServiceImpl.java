@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.SmsLogService;
+import com.hyjf.am.response.admin.SmsLogResponse;
 import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ public class SmsLogServiceImpl implements SmsLogService {
     private CsMessageClient csMessageClient;
 
     @Override
-    public JSONObject smsLogList() {
+    public SmsLogResponse smsLogList() {
         return csMessageClient.smsLogList();
     }
 
     @Override
-    public JSONObject findSmsLog(SmsLogRequest request) {
+    public SmsLogResponse findSmsLog(SmsLogRequest request) {
         return csMessageClient.findSmsLog(request);
     }
 
