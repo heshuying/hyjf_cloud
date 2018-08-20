@@ -34,7 +34,7 @@ import java.util.List;
  * 资金中心->银行账务明细
  */
 
-@Api(value = "资金中心->银行账务明细",tags = "资金中心->银行账务明细")
+@Api(value = "资金中心-银行账务明细",tags = "资金中心-银行账务明细")
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {

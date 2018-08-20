@@ -6,10 +6,12 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.ActivityListClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author yaoy
@@ -33,6 +36,9 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Autowired
     private AmMarketClient amMarketClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
+
     @Value("${file.domain.url}")
     private String FILEDOMAILURL;
     @Value("${file.physical.path}")
@@ -114,5 +120,10 @@ public class ActivityListServiceImpl implements ActivityListService {
     @Override
     public ActivityListResponse deleteActivity(ActivityListRequest request) {
         return amMarketClient.deleteActivity(request);
+    }
+
+    @Override
+    public List<ParamNameVO> getParamNameList(String client) {
+        return amConfigClient.getParamNameList(client);
     }
 }

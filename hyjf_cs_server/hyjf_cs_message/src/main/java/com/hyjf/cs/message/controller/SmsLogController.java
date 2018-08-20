@@ -73,7 +73,7 @@ public class SmsLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/query_time")
-	public SmsOntimeResponse queryTime(SmsLogRequest request) {
+	public SmsOntimeResponse queryTime(@RequestBody SmsLogRequest request) {
 		SmsOntimeResponse response = new SmsOntimeResponse();
 		List<SmsOntime> list = smsLogService.queryTime(request);
 		if (!CollectionUtils.isEmpty(list)) {
@@ -90,7 +90,7 @@ public class SmsLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/query_log_count")
-	public SmsLogResponse queryLogCount(SmsLogRequest request) {
+	public SmsLogResponse queryLogCount(@RequestBody SmsLogRequest request) {
 		SmsLogResponse response = new SmsLogResponse();
 		Integer logCount = smsLogService.queryLogCount(request);
 		if (logCount != null) {
