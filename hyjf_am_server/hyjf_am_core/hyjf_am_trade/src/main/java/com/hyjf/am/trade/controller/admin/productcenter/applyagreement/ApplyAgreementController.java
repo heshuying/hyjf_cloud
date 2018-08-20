@@ -1,26 +1,27 @@
 package com.hyjf.am.trade.controller.admin.productcenter.applyagreement;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.ApplyAgreementResponse;
-import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.ApplyAgreement;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.trade.service.admin.productcenter.applyagreement.ApplyAgreementService;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
+import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -159,5 +160,77 @@ public class ApplyAgreementController extends BaseController {
         Map map = ConvertUtils.convertObjectToMap(request);
         Integer count = applyAgreementService.getListTotal(map);
         return count;
+    }
+
+    /**
+     * 获取用户投资协议列表，垫付协议用
+     *
+     * @param nid
+     * @return
+     */
+    @RequestMapping("/select_borrow_recover_list/{userId}/{borrowNid}/{nid}")
+    public BorrowRecoverResponse selectBorrowRecoverList(@PathVariable(value = "userId") Integer userId, @PathVariable(value = "borrowNid") String borrowNid, @PathVariable(value = "nid") String nid){
+        BorrowRecoverResponse response = new BorrowRecoverResponse();
+        List<BorrowRecover> list = applyAgreementService.selectBorrowRecoverList(borrowNid);
+        List<BorrowRecoverVO> voList = null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList = CommonUtils.convertBeanList(list, BorrowRecoverVO.class);
+        }
+        response.setResultList(voList);
+        return response;
+    }
+
+    /**
+     * 获取用户投资协议列表-分期，垫付协议用
+     *
+     * @param borrowNid
+     * @return
+     */
+    @RequestMapping("/select_borrow_recover_plan_list/{borrowNid}/{repayPeriod}")
+    public BorrowRecoverPlanResponse selectBorrowRecoverPlanList(@PathVariable(value = "borrowNid") String borrowNid, @PathVariable(value = "repayPeriod") int repayPeriod){
+        BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+        List<BorrowRecoverPlan> list = applyAgreementService.selectBorrowRecoverPlanList(borrowNid,repayPeriod);
+        List<BorrowRecoverPlanVO> voList = null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList = CommonUtils.convertBeanList(list, BorrowRecoverPlanVO.class);
+        }
+        response.setResultList(voList);
+        return response;
+    }
+
+    /**
+     * 获取用户债转还款列表，垫付协议用
+     *
+     * @param nid
+     * @return
+     */
+    @RequestMapping("/select_creditrepay_list/{nid}/{repayPeriod}")
+    public CreditRepayResponse selectCreditRepayList(@PathVariable(value = "nid") String nid, @PathVariable(value = "repayPeriod") int repayPeriod){
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> list = applyAgreementService.selectCreditRepayList(nid,repayPeriod);
+        List<CreditRepayVO> voList = null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList = CommonUtils.convertBeanList(list, CreditRepayVO.class);
+        }
+        response.setResultList(voList);
+        return response;
+    }
+
+    /**
+     * 获取用户汇计划债转还款表，垫付协议用
+     *
+     * @param nid
+     * @return
+     */
+    @RequestMapping("/select_hjh_creditrepay_list/{nid}/{repayPeriod}")
+    public HjhDebtCreditRepayResponse selectHjhDebtCreditRepayList(@PathVariable(value = "nid") String nid, @PathVariable(value = "repayPeriod") int repayPeriod){
+        HjhDebtCreditRepayResponse response = new HjhDebtCreditRepayResponse();
+        List<HjhDebtCreditRepay> list = applyAgreementService.selectHjhDebtCreditRepayList(nid,repayPeriod);
+        List<HjhDebtCreditRepayVO> voList = null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList = CommonUtils.convertBeanList(list, HjhDebtCreditRepayVO.class);
+        }
+        response.setResultList(voList);
+        return response;
     }
 }

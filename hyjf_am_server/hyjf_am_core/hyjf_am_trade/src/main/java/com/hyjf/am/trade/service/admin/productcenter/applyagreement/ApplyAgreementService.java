@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.admin.productcenter.applyagreement;
 
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
-import com.hyjf.am.trade.dao.model.auto.ApplyAgreement;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
@@ -68,4 +68,42 @@ public interface ApplyAgreementService extends BaseService {
      * @date 2018/7/12 10:52
      */
     Integer generateContract(BorrowRepayAgreementRequest request);
+
+
+
+    /**
+     * 获取用户投资协议
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecover> selectBorrowRecoverList(String borrowNid);
+
+    /**
+     * 获取用户债转还款列表
+    * @author Zha Daojian
+    * @date 2018/8/17 16:28
+    * @param      * @param nid
+    * @return java.util.List<com.hyjf.am.trade.dao.model.auto.CreditRepay>
+    **/
+    List<CreditRepay> selectCreditRepayList(String nid, int period);
+
+    /**
+     * 获取用户汇计划债转还款表
+     * @author Zha Daojian
+     * @date 2018/8/17 16:28
+     * @param nid
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.CreditRepay>
+     **/
+    List<HjhDebtCreditRepay> selectHjhDebtCreditRepayList(String nid, int period);
+
+    /**
+     * 获取用户投资协议
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, int period);
+
+
 }
