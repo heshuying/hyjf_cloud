@@ -45,7 +45,6 @@ public class ContentAdsServiceImpl implements ContentAdsService {
      */
     @Override
     public ContentAdsResponse searchActionPage(ContentAdsRequest request) {
-        List<ContentAdsBeanVO> contentAdsBeanVOList = new ArrayList<>();
         ContentAdsBeanVO contentAdsBeanVO = new ContentAdsBeanVO();
         ContentAdsResponse response = new ContentAdsResponse();
         int count = countRecordList(request);
@@ -61,7 +60,6 @@ public class ContentAdsServiceImpl implements ContentAdsService {
 //            contentAdsBeanVOList.add(contentAdsBeanVO);
 
             response.setResult(contentAdsBeanVO);
-            response.setResultList(contentAdsBeanVOList);
         }
 
         return response;

@@ -1,24 +1,24 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.market.controller.app.user;
+package com.hyjf.cs.trade.controller.app.user.calendar;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.cs.market.controller.BaseMarketController;
-import com.hyjf.cs.market.service.RepayCalendarService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.*;
+
+import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.calendar.RepayCalendarService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.common.util.CustomConstants;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author dangzw
@@ -27,7 +27,7 @@ import java.util.*;
 @Api(tags = "app端-app日历")
 @RestController
 @RequestMapping(value = "/hyjf-app/user")
-public class RepayCalendarController extends BaseMarketController {
+public class RepayCalendarController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(RepayCalendarController.class);
     @Autowired
     private RepayCalendarService repayCalendarService;
@@ -36,44 +36,21 @@ public class RepayCalendarController extends BaseMarketController {
     @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
     @PostMapping(value = "/repayCalendar/getRepayCalendar")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
-                                       @RequestParam(required = false) String month, HttpServletRequest request) {
+                                       @RequestParam(required = false) String month,
+                                       //请求头消息获取
+                                       @RequestHeader(value = "page") String page,
+                                       @RequestHeader(value = "sign") String sign,
+                                       @RequestHeader(value = "userId") Integer userId,
+                                       @RequestHeader(value = "pageSize") String pageSize) {
         logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
         logger.info("getRepayCalendar start, year is :{}, month is :{}", year, month);
         JSONObject info = new JSONObject();
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
-
-        String page = request.getParameter("page");
-        String pageSize = request.getParameter("pageSize");
         logger.info("page is :{}, pageSize is :{}", page, pageSize);
-        if (StringUtils.isBlank(page) || StringUtils.isBlank(pageSize)) {
-            info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
-            info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_FAIL);
-            return info;
-        }
-
         // 唯一标识
-        String sign = request.getParameter("sign");
         logger.info("sign is :{}", sign);
-        if (StringUtils.isBlank(sign)) {
-            info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
-            info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_FAIL);
-            return info;
-        }
-        // 用户id
-        Integer userId = null;
-        try{
-            userId = SecretUtil.getUserId(sign);
-        }catch (Exception e){
-            logger.error("解析sign错误...", e);
-            info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
-            info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_FAIL);
-            return info;
-        }
-
-        //userId = Integer.parseInt(request.getParameter("userId"));
         logger.debug("userId is :{}", userId);
-
         // 构造查询参数列表
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);

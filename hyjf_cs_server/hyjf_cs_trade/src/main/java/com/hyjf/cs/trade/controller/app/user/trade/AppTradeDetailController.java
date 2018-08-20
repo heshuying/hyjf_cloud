@@ -28,7 +28,7 @@ import java.util.Map;
  * @author jun
  * @version AppTradeDetailController, v0.1 2018/7/25 14:05
  */
-@Api(value = "app端交易明细",tags = "app端交易明细")
+@Api(value = "app端-交易明细",tags = "app端-交易明细")
 @RestController
 @RequestMapping("/hyjf-app/user/trade")
 public class  AppTradeDetailController extends BaseTradeController {
@@ -55,6 +55,7 @@ public class  AppTradeDetailController extends BaseTradeController {
      * @param trade
      * @return
      */
+    @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
     @PostMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
     public AppTradeDetailBean searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, AppTradeDetailBeanRequest trade) {

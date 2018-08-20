@@ -3,6 +3,7 @@ package com.hyjf.admin.controller.finance.recharge;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
@@ -177,14 +178,16 @@ public class AccountRechargeController extends BaseController {
         allMap.put("userRoleList", userRoleList);
 
         //初始化List 将所有Map放入此List 以达到返回指定格式数据的方式
-        List<Object> allList = new ArrayList<>();
-        allList.add(allMap);
+//        List<Object> allList = new ArrayList<>();
+//        allList.add(allMap);
 
         if (paramList != null && banks != null && bankType != null){
-            jsonObject.put("status", Response.SUCCESS);
-            jsonObject.put("data", allList);
+            jsonObject.put("status", BaseResult.SUCCESS);
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+            jsonObject.put("data", allMap);
         }else {
             jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
             jsonObject.put("data", "");
         }
         return jsonObject;

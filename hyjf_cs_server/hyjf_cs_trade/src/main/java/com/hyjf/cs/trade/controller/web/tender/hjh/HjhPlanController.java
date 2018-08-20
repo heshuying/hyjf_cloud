@@ -31,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(tags = "Web端-加入计划")
+@Api(tags = "web端-加入计划")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/hjh")

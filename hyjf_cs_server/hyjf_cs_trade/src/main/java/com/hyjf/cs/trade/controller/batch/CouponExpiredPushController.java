@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author yaoy
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 优惠券过期发送push消息定时任务
  */
 @RestController
+@ApiIgnore
 @RequestMapping("/cs-trade/batch/couponExpiredPush")
 public class CouponExpiredPushController {
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredPushController.class);

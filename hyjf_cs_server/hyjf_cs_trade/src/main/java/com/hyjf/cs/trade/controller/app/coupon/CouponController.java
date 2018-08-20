@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.controller.app.coupon;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.AppCouponRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -28,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "app端用户优惠券接口")
+@Api(tags = "app端-用户优惠券接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-app/coupon")

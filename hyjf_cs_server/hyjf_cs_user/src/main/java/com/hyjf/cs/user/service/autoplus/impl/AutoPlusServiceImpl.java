@@ -20,12 +20,11 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
-import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -58,9 +57,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     private AmUserClient amUserClient;
 
     @Autowired
-    private AmConfigClient amConfigClient;
-
-    @Autowired
     AmDataCollectClient amDataCollectClient;
 
     @Autowired
@@ -80,8 +76,10 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
         if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_2)) {
+            //用户已授权自动债转
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }else if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_1)) {
+            //用户已授权自动投资
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
