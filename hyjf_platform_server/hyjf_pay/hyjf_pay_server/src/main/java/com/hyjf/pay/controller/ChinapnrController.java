@@ -1,7 +1,9 @@
 package com.hyjf.pay.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
@@ -30,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Date;
 
 @Controller
@@ -69,8 +72,8 @@ public class ChinapnrController extends BaseController {
                 cmdId = StringUtils.lowerCase(cmdId.substring(0, 1)).concat(cmdId.substring(1));
             }
             // 插入用户请求发送日志
-            long id = this.chinapnrService.insertChinapnrExclusiveLog(bean, methodName);
-            if (id != 0) {
+            String id = this.chinapnrService.insertChinapnrExclusiveLog(bean, methodName);
+            if (id != null) {
                 // 设置返回URL
                 if (Validator.isNotNull(bean.getRetUrl())) {
                     if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
@@ -185,7 +188,7 @@ public class ChinapnrController extends BaseController {
         // 返回参数中含有uuid时, 更新状态记录
         if (Validator.isNotNull(uuid)) {
             // 取得检证数据
-            record = chinapnrService.selectChinapnrExclusiveLog(Long.parseLong(uuid));
+            record = chinapnrService.selectChinapnrExclusiveLog(uuid);
         } else {
             record = chinapnrService.selectChinapnrExclusiveLogByOrderId(bean.getOrdId());
         }
@@ -299,7 +302,7 @@ public class ChinapnrController extends BaseController {
         // 返回参数中含有uuid时, 更新状态记录
         if (Validator.isNotNull(uuid)) {
             // 取得检证数据
-            record = chinapnrService.selectChinapnrExclusiveLog(Long.parseLong(uuid));
+            record = chinapnrService.selectChinapnrExclusiveLog(uuid);
         } else {
             record = chinapnrService.selectChinapnrExclusiveLogByOrderId(bean.getOrdId());
         }
@@ -446,7 +449,7 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callapibg")
-    public String callApiBg(HttpServletRequest request, ChinapnrBean bean) throws Exception {
+    public String callApiBg(@RequestBody ChinapnrBean bean)  {
         String methodName = "callApiBg";
         logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         String ret = "";
@@ -465,10 +468,23 @@ public class ChinapnrController extends BaseController {
             String merPriv = bean.getMerPriv();
             // 保存本地日志Key
             // 发送前插入状态记录
-            long id = this.chinapnrService.insertChinapnrExclusiveLog(bean, methodName);
-            if (id != 0) {
-                bean.setUuid(String.valueOf(id));
-                ChinapnrUtil.setUUID(bean, id);
+            String id = this.chinapnrService.insertChinapnrExclusiveLog(bean, methodName);
+            if (id != null) {
+                bean.setUuid(id);
+              //  ChinapnrUtil.setUUID(bean, id);
+                MerPriv merPrivPo = bean.getMerPrivPo();
+                if (null == merPrivPo) {
+                    merPrivPo = new MerPriv();
+                }
+                merPrivPo.setUuid(String.valueOf(id));
+                try {
+                    merPriv = URLEncoder.encode(JSON.toJSONString(merPrivPo), CustomConstants.UTF8);
+                    bean.setMerPriv(merPriv);
+                    bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                 merPriv = bean.getMerPriv();
                 // 得到接口API对象
                 PnrApi api = new ChinaPnrApiImpl();
                 Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;

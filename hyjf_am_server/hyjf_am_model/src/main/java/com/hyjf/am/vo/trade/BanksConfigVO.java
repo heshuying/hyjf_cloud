@@ -36,11 +36,11 @@ public class BanksConfigVO extends BaseVO implements Serializable {
 
     private Integer createUser;
 
-    private Integer createTime;
+    private String createTime;
 
     private Integer updateUser;
 
-    private Integer updateTime;
+    private String updateTime;
 
     private Integer delFlg;
 
@@ -160,11 +160,11 @@ public class BanksConfigVO extends BaseVO implements Serializable {
         this.createUser = createUser;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -176,11 +176,11 @@ public class BanksConfigVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 

@@ -1,7 +1,9 @@
 package com.hyjf.cs.trade.service.assetmanage;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
@@ -65,4 +67,11 @@ public interface AssetManageService extends BaseTradeService {
      * @return
      */
     MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
+
+    /**
+     * 获取我加入的计划详情信息
+     * @author zhangyk
+     * @date 2018/8/18 16:06
+     */
+    WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
 }

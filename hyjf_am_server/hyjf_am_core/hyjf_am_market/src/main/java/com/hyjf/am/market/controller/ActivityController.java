@@ -54,13 +54,15 @@ public class ActivityController {
 
 
     @PostMapping("/selectActivityList")
-    public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
+    public ActivityListResponse selectActivityList(@RequestBody ActivityListRequest activityListRequest){
         ActivityListResponse response = new ActivityListResponse();
         ActivityList activityList = activityService.selectActivityList(activityListRequest.getId());
         if(activityList != null){
             ActivityListVO activityListVO = new ActivityListVO();
             BeanUtils.copyProperties(activityList,activityListVO);
             response.setResult(activityListVO);
+        }else {
+            response.setRtn(Response.FAIL);
         }
         return response;
     }
@@ -78,7 +80,7 @@ public class ActivityController {
     }
 
     @PostMapping("/getRecordList")
-    public ActivityListResponse getRecordList(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse getRecordList(@RequestBody ActivityListRequest request) {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));
         ActivityListResponse response = new ActivityListResponse();
         String returnCode = Response.FAIL;
@@ -94,77 +96,70 @@ public class ActivityController {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
                 response.setCount(recordCount);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 
 
 
     @PostMapping("/insertRecord")
-    public ActivityListResponse insertRecord(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse insertRecord(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         try {
             ActivityList activityList = new ActivityList();
             BeanUtils.copyProperties(request, activityList);
             activityList.setTimeStart(request.getStartTime());
             activityList.setTimeEnd(request.getEndTime());
-            Map<String, Object> resultMap = activityService.insertRecord(activityList);
-            if ((Boolean) resultMap.get("success")) {
-                return response;
-            } else {
-                response.setRtn("failed");
-                response.setMessage((String) resultMap.get("msg"));
-                return response;
+            int result = activityService.insertRecord(activityList);
+            if (result > 0){
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-        response.setMessage("添加失败");
-        response.setRtn("1");
         return response;
     }
 
 
     @PostMapping("/updateActivity")
-    public ActivityListResponse updateActivity(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse updateActivity(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         try {
         ActivityList activityList = new ActivityList();
         BeanUtils.copyProperties(request,activityList);
         activityList.setTimeStart(request.getStartTime());
         activityList.setTimeEnd(request.getEndTime());
-        Map<String, Object> resultMap = activityService.updateActivity(activityList);
-        if ((Boolean) resultMap.get("success")) {
-            return response;
-        } else {
-            response.setRtn("failed");
-            response.setMessage((String) resultMap.get("msg"));
-            return response;
+        int result = activityService.updateActivity(activityList);
+            if (result > 0){
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
+            }
+        }catch (Exception e) {
+            response.setRtn(Response.FAIL);
+            e.printStackTrace();
         }
-    }catch (Exception e) {
-        e.printStackTrace();
-    }
-        response.setMessage("修改失败");
-        response.setRtn("1");
         return response;
     }
 
 
     @PostMapping("/deleteActivity")
-    public ActivityListResponse deleteActivity(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse deleteActivity(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         int id = request.getId();
-        Map<String, Object> resultMap = activityService.deleteActivity(id);
-        if ((Boolean) resultMap.get("success")) {
-            return response;
-        } else {
-            response.setRtn("failed");
-            response.setMessage((String) resultMap.get("msg"));
-            return response;
+        int result = activityService.deleteActivity(id);
+        if (result > 0) {
+            response.setRtn(Response.SUCCESS);
+        }else {
+            response.setRtn(Response.FAIL);
         }
+        return response;
     }
 
 

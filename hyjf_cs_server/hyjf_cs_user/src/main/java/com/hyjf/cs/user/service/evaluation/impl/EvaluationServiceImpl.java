@@ -233,7 +233,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             }
         }
         // 1_1,2_8
-        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, new Integer(userId),behaviorId);
+        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;
         // 发放优惠券 end

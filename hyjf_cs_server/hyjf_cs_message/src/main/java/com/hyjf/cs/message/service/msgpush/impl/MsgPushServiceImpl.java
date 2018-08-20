@@ -104,6 +104,16 @@ public class MsgPushServiceImpl implements MsgPushService {
 		logger.info("全部已读什么都不做，等二期处理....");
 	}
 
+	@Override
+	public List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
+		return messagePushMsgDao.getMsgStaticsListByTime(startTime, endTime);
+	}
+
+	@Override
+	public void insertMessagePush(MessagePush messagePush) {
+		messagePushMsgDao.insert(messagePush);
+	}
+
 	private void insertTemplateStatics(MessagePushTemplateVO template) {
 		// 判断是否添加过
 		List<MessagePushTemplateStatics> list = msgStaticsDao

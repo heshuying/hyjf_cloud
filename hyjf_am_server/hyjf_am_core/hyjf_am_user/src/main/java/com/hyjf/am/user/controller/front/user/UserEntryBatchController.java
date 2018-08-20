@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.front.user.UserEntryBatchService;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author wangjun
@@ -13,6 +14,7 @@ import com.hyjf.am.user.service.front.user.UserEntryBatchService;
  */
 
 @RestController
+@ApiIgnore
 @RequestMapping("/am-user/batch")
 public class UserEntryBatchController extends BaseController {
 

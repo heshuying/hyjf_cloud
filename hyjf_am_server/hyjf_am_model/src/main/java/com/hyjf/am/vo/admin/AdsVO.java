@@ -1,8 +1,11 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -58,7 +61,7 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private Integer updateUserId;
 
-    private Date createTime;
+    private String createTime;
 
     private Date updateTime;
 
@@ -256,14 +259,25 @@ public class AdsVO extends BaseVO implements Serializable {
         this.updateUserId = updateUserId;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    //
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public void setCreateTime(Object createTime) {
+        String dateString = null;
+        if(createTime instanceof java.util.Date){
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateString = formatter.format(createTime);
+        }else{
+            dateString =(String) createTime;
+        }
+        this.createTime = dateString;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

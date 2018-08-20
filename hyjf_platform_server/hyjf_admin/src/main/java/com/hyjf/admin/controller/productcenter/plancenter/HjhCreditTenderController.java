@@ -63,7 +63,7 @@ import java.util.UUID;
  * @author libin
  * @version HjhCreditTenderController.java, v0.1 2018年7月11日 下午2:18:37
  */
-@Api(value = "汇计划承接记录列表",tags = "汇计划承接记录列表")
+@Api(value = "产品中心-汇计划-承接记录",tags = "产品中心-汇计划-承接记录")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcredittender")
 public class HjhCreditTenderController extends BaseController{

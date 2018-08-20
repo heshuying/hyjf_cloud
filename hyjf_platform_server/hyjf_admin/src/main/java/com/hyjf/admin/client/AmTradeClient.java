@@ -19,15 +19,13 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.PushMoneyVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -857,6 +855,38 @@ public interface AmTradeClient {
     BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
 
     /**
+     * 标的放款记录列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverVO> selectBorrowRecoverList(String borrowNid);
+
+    /**
+     * 标的放款记录列表,分期
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String borrowNid,int repayPeriod);
+
+    /**
+     * 获取用户债转还款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<CreditRepayVO> selectCreditRepayList(String borrowNid,int repayPeriod);
+
+    /**
+     * 获取用户汇计划债转还款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepayList(String borrowNid,int repayPeriod);
+
+    /**
      * 获取借款列表
      *
      * @param borrowNid
@@ -1312,7 +1342,7 @@ public interface AmTradeClient {
      * 验证重复
      * @param planNid
      */
-    boolean checkRepeat(String labelName,String planNid);
+    int checkRepeat(AllocationEngineRuquest form);
     
     /** 获取还款方式
      * @param planNid
@@ -1794,6 +1824,23 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
      *

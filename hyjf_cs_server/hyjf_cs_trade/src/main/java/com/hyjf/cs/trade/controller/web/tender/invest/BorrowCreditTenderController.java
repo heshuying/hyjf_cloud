@@ -28,7 +28,7 @@ import java.util.Map;
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(tags = "web端散标债转投资")
+@Api(tags = "web端-散标债转投资")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/credit")
@@ -37,7 +37,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
 
-    @ApiOperation(value = "web端散标债转投资", notes = "web端散标债转投资")
+    @ApiOperation(value = "web端-散标债转投资", notes = "web端-散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求债转投资接口");

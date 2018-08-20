@@ -937,10 +937,7 @@ ORDER BY
 		dpa.user_name
 		END user_name,
 		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accede_account,
-		FROM_UNIXTIME(
-		dpa.create_time,
-		'%Y-%m-%d %H:%i:%s'
-		) AS create_time,
+		dpa.create_time AS create_time,
 		dpa.client
 		FROM
 		ht_hjh_accede dpa

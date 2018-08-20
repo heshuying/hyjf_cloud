@@ -183,7 +183,7 @@ public interface BankCreditTenderService {
     
 	/**
 	 * 获取债转承接信息AssignNid
-	 * @param nid
+	 * @param assignNid
 	 * @return
 	 */
     CreditTenderVO getCreditTenderByAssignNid(String assignNid);

@@ -5,9 +5,6 @@ import com.google.common.base.Strings;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WeChatResult;
@@ -29,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "wechat端用户资产管理接口",tags = "wechat端用户资产管理接口")
+@Api(value = "weChat端-用户资产管理接口",tags = "weChat端-用户资产管理接口")
 @Controller
 @RequestMapping("/hyjf-wechat/wx/myproject")
 public class WechatMyProjectController extends BaseTradeController {

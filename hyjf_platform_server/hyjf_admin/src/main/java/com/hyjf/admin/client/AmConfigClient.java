@@ -953,7 +953,7 @@ public interface AmConfigClient {
 	 *
 	 * @return
 	 */
-	List<MessagePushTemplateVO> findAll();
+	MessagePushTemplateResponse findAll();
 
 	/**
 	 * 根据条件查询消息推送模板
@@ -961,7 +961,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request);
+	MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request);
 
 	/**
 	 * 新增消息推送模板

@@ -37,6 +37,8 @@ public class HjhRegionVO extends BaseVO implements Serializable{
     private Integer updateTime;
 
     private Integer delFlg;
+    
+    private String addTime;
 
 	public Integer getId() {
 		return id;
@@ -116,5 +118,13 @@ public class HjhRegionVO extends BaseVO implements Serializable{
 
 	public void setDelFlg(Integer delFlg) {
 		this.delFlg = delFlg;
+	}
+
+	public String getAddTime() {
+		return addTime;
+	}
+
+	public void setAddTime(String addTime) {
+		this.addTime = addTime;
 	}
 }

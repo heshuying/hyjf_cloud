@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.web.assetmanage;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
@@ -182,4 +183,18 @@ public class WebAssetManageController extends BaseTradeController {
         result.setData(myCreditDetailBean);
         return result;
     }
+
+
+    /**
+     * 获取我加入的计划详情信息
+     * @author zhangyk
+     * @date 2018/8/18 15:59
+     */
+    @ApiOperation(value = "获取我加入的计划详情信息" , notes = "获取我加入的计划详情信息")
+    @PostMapping(value = "/getMyPlanInfoDetail")
+    public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId") Integer userId , @RequestBody AssetManagePlanRequest request){
+        WebResult result = assetManageService.getMyPlanInfoDetail(request,userId);
+        return result;
+    }
+
 }

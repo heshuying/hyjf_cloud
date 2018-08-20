@@ -79,6 +79,8 @@ public interface AmMarketClient {
 
     ContentAdsResponse inserAction(ContentAdsRequest request);
 
+    ContentAdsResponse infoaction(Integer id);
+
     ContentAdsResponse updateAction(ContentAdsRequest request);
 
     ContentAdsResponse deleteById(Integer id);
