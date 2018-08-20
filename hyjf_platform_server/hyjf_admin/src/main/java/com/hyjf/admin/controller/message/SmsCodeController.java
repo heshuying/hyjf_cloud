@@ -42,7 +42,7 @@ import java.util.UUID;
  * @author fq
  * @version SmsCodeController, v0.1 2018/8/14 19:49
  */
-@Api(tags = "发送短信")
+@Api(tags = "消息中心-发送短信")
 @RestController
 @RequestMapping("/hyjf-admin/message/message")
 public class SmsCodeController extends BaseController {

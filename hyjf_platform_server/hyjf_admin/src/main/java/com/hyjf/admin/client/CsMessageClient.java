@@ -13,9 +13,6 @@ import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.am.response.message.OperationReportResponse;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
@@ -140,7 +137,7 @@ public interface CsMessageClient {
      *
      * @return
      */
-    JSONObject smsLogList();
+    SmsLogResponse smsLogList();
 
     /**
      * 根据条件查询消息中心短信发送记录
@@ -148,7 +145,7 @@ public interface CsMessageClient {
      * @param request
      * @return
      */
-    JSONObject findSmsLog(SmsLogRequest request);
+    SmsLogResponse findSmsLog(SmsLogRequest request);
 
     /**
      * 获取汇计划 - 资金计划 条数

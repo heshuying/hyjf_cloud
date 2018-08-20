@@ -10,6 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
+ * 定时更新运营数据
  * @author fq
  * @version TotalInvestAndInterestJob, v0.1 2018/7/31 10:51
  */
