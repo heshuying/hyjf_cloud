@@ -30,7 +30,7 @@
         </if>
         </trim>
         ORDER BY s.posttime desc
-        <if test="limitStart >= 0">
+        <if test="limitStart >=0 and limitEnd > 0">
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>

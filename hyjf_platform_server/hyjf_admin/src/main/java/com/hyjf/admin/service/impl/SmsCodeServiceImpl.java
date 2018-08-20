@@ -41,7 +41,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 
 	@Override
 	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		return null;// todo
+		return amUserClient.queryUser(requestBean);
 	}
 
 	@Override

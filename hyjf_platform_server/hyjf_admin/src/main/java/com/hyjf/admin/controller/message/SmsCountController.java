@@ -68,6 +68,11 @@ public class SmsCountController extends BaseController {
             smsCountCustomize.setPost_time_end(request.getPost_time_end());
         }
 
+        if (request.getCurrPage() >0 && request.getPageSize() >0) {
+            smsCountCustomize.setLimitStart((request.getCurrPage() - 1) * (request.getPageSize()));
+            smsCountCustomize.setLimitEnd(request.getPageSize());
+        }
+
         // 部门
         String[] combotreeListSrchStr = new String[]{};
         if (Validator.isNotNull(request.getCombotreeSrch())) {

@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
@@ -1031,4 +1032,11 @@ public interface AmUserClient {
      * @return
      */
     List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o);
+
+    /**
+     * 在筛选条件下查询出用户
+     * @param requestBean
+     * @return
+     */
+    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
 }

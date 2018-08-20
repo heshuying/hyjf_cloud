@@ -1,17 +1,7 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
@@ -27,6 +17,16 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1969,6 +1969,16 @@ public class AmUserClientImpl implements AmUserClient {
 				Integer.class);
 		if (response != null) {
 			return response.getList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
+		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/sms_code/query_user",
+				requestBean, SmsCodeCustomizeResponse.class);
+		if (response != null) {
+			return response.getResultList();
 		}
 		return null;
 	}
