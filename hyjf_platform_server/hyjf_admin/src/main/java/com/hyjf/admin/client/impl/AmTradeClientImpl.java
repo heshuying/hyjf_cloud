@@ -2733,10 +2733,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public boolean checkRepeat(String labelName, String planNid) {
-        String url = "http://AM-TRADE/am-trade/allocation/checkRepeat/" + labelName + "/" + planNid;
-        boolean Flag = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return Flag;
+    public int checkRepeat(AllocationEngineRuquest form) {
+        int flg = 0;
+        HjhAllocationEngineResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/allocation/checkRepeat", form, HjhAllocationEngineResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getFlag();
+        }
+        return flg;
     }
 
     @Override

@@ -1342,7 +1342,7 @@ public interface AmTradeClient {
      * 验证重复
      * @param planNid
      */
-    boolean checkRepeat(String labelName,String planNid);
+    int checkRepeat(AllocationEngineRuquest form);
     
     /** 获取还款方式
      * @param planNid
