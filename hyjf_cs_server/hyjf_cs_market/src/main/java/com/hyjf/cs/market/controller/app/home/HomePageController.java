@@ -35,7 +35,7 @@ public class HomePageController extends BaseMarketController {
     @Autowired
     private HomePageService homePageService;
 
-    //TODO @Value("${file.domain.head.url}")
+    // @Value("${file.domain.head.url}")
     private String HOST_URL;
 
     /** @RequestMapping值 */
