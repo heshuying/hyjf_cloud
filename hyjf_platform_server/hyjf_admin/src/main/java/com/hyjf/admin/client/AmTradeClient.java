@@ -1342,7 +1342,7 @@ public interface AmTradeClient {
      * 验证重复
      * @param planNid
      */
-    boolean checkRepeat(String labelName,String planNid);
+    int checkRepeat(AllocationEngineRuquest form);
     
     /** 获取还款方式
      * @param planNid
@@ -1824,6 +1824,23 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
      *

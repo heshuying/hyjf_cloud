@@ -1,4 +1,4 @@
-package com.hyjf.am.market.datasource;
+package com.hyjf.am.market.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

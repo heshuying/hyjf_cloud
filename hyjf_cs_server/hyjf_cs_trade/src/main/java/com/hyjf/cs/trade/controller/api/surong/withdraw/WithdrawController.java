@@ -53,7 +53,7 @@ import java.util.Map;
  * @version WithdrawController, v0.1 2018/7/19 14:01
  */
 
-@Api(value = "api端-融东风提现接口",tags = "api端_融东风提现接口")
+@Api(value = "api端-融东风提现接口",tags = "api端-融东风提现接口")
 @Controller
 @RequestMapping("/hyjf-api/surong/withdraw")
 public class WithdrawController extends BaseController {
@@ -68,7 +68,7 @@ public class WithdrawController extends BaseController {
 
 
     @ApiOperation(value = "获取提现信息", notes = "获取提现信息")
-    @RequestMapping("/getInfoAction")
+    @PostMapping("/getInfoAction")
     @ResponseBody
     public JSONObject getCashInfo(HttpServletRequest request, HttpServletResponse response) {
         // ---传入参数---
