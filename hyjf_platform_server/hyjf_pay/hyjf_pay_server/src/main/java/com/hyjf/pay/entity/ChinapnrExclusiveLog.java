@@ -14,7 +14,7 @@ public class ChinapnrExclusiveLog implements Serializable {
 
     private String result;
 
-    private Long id;
+    private String id;
 
     private String uuid;
 
@@ -70,11 +70,11 @@ public class ChinapnrExclusiveLog implements Serializable {
         this.result = result;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

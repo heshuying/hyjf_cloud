@@ -10,15 +10,16 @@
  */
 package com.hyjf.pay.lib.chinapnr.util;
 
-import java.io.Serializable;
-
+import chinapnr.SecureLink;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinaPnrApiImpl;
-
-import chinapnr.SecureLink;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 public class ChinaPnrSignUtils implements Serializable {
     private static Logger log = LoggerFactory.getLogger(ChinaPnrSignUtils.class);
@@ -37,27 +38,14 @@ public class ChinaPnrSignUtils implements Serializable {
     /** RSA验证签名成功结果 **/
     public static final int RAS_VERIFY_SIGN_SUCCESS = 0;
 
-    /** 商户客户号 **/
-    //   todo xiashuqing 20180615
-    //public static final String RECV_MER_ID = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MERID);
-    public static final String RECV_MER_ID = "";
-
-    /** 商户公钥文件地址 **/
-    //   todo xiashuqing 20180615
-    //public static final String MER_PUB_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PUB_KEY_PATH);
-    public static final String MER_PUB_KEY_PATH = "";
-
-    /** 商户私钥文件地址 **/
-    //   todo xiashuqing 20180615
-    //public static final String MER_PRI_KEY_PATH = ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_MER_PRI_KEY_PATH);
-    public static final String MER_PRI_KEY_PATH = "";
+    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 
     /**
      * RSA方式加签
      *
-     * @param custId
+     * @param
      * @param forEncryptionStr
-     * @param charset
+     * @param
      * @return
      * @throws Exception
      */
@@ -69,7 +57,7 @@ public class ChinaPnrSignUtils implements Serializable {
         }
         SecureLink sl = new SecureLink();
         log.debug("加签内容:" + forEncryptionStr);
-        int result = sl.SignMsg(RECV_MER_ID, MER_PRI_KEY_PATH, forEncryptionStr.getBytes(StringPool.UTF8));
+        int result = sl.SignMsg(paySystemConfig.getChinapnrMerId(), paySystemConfig.getChinapnrPrikey(), forEncryptionStr.getBytes(StringPool.UTF8));
         if (result < 0) {
             // 打印日志
             throw new Exception("加签处理失败![result:" +result+"]");
@@ -94,7 +82,7 @@ public class ChinaPnrSignUtils implements Serializable {
         int verifySignResult = -1;
         SecureLink sl = new SecureLink();
         try {
-            verifySignResult = sl.VeriSignMsg(MER_PUB_KEY_PATH, forEncryptionStr, chkValue);
+            verifySignResult = sl.VeriSignMsg(paySystemConfig.getChinapnrPubkey(), forEncryptionStr, chkValue);
         } catch (Exception e) {
             log.error(String.valueOf(e));
             // 打印日志
