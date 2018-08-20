@@ -81,6 +81,28 @@ public class CertificateAuthorityExceptionController extends BaseController {
 		return new AdminResult<ListResult<CertificateAuthorityVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
     }
 
+    /**
+     * 获取CA认证异常列表
+     * jijun 20180820
+     * @param request
+     * @return
+     */
+    @PostMapping("/searchExceptionList")
+    @ApiOperation(value = "异常中心-CA认证异常记录列表", notes = "异常中心-CA认证异常记录列表")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<CertificateAuthorityVO>> searchExceptionList(CertificateAuthorityExceptionRequest request) {
+        CertificateAuthorityResponse response = certificateAuthorityExceptionService.getExceptionRecordList(request);
+
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!AdminResponse.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+
+        }
+        return new AdminResult<ListResult<CertificateAuthorityVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+    }
+
 
     /**
      * 异常处理更新Action

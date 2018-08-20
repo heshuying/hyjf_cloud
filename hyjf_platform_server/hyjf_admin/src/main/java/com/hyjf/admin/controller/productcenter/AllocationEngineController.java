@@ -202,7 +202,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
     /**
-     * 计划专区停用/启用状态修改   未测试
+     * 计划专区停用/启用状态修改   已测试
      *
      * @param planNid
      * @return
@@ -212,7 +212,7 @@ public class AllocationEngineController extends BaseController{
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	// 注意 ：此 id 并非画面序号，而是画面上未显示的 计划专区表主键
-	@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")
+	/*@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")*/
 	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) { // 注意 ：这里的传值可以改为 form 形式
 		HjhRegionResponse response = new HjhRegionResponse();
 		// 修改状态
@@ -242,7 +242,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划专区带条件导出
+	 * 计划专区带条件导出      已测试
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
@@ -321,7 +321,7 @@ public class AllocationEngineController extends BaseController{
 	
 	                                     /*--------以下为计划专区下属 引擎配置画面各项机能----------*/
     /**
-     * 计划专区-计划引擎配置画面初始化
+     * 计划专区-计划引擎配置画面初始化     已测试
      *
      * @param request
      * @return 计划引擎配置列表
@@ -354,7 +354,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
 	/**
-	 * 计划配置画面带条件导出
+	 * 计划配置画面带条件导出      已测试
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
@@ -440,7 +440,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
     /**
-     * 计划配置画面 停用/启用状态修改
+     * 计划配置画面 停用/启用状态修改    已测试
      *
      * @param planNid
      * @return
@@ -473,7 +473,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划配置画面 添加/修改 初始化info画面
+	 * 计划配置画面 添加/修改 初始化info画面   未测试
 	 *
 	 * @param request
 	 * @return 

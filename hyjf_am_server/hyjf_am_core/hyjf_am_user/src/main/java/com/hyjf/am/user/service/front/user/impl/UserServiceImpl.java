@@ -361,7 +361,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		// 默认为无主单
 		// 根据ip获取注册地址
 		if (StringUtils.isNotEmpty(loginIp)) {
-			getAddress(loginIp, userInfo);
+			//getAddress(loginIp, userInfo);
 		}
 		userInfo.setUserId(userId);
 		// 默认投资人角色

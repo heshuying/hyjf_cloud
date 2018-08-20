@@ -47,7 +47,7 @@ public class AppDeleteCardController extends BaseUserController {
     @ApiOperation(value = "解绑银行卡", notes = "解绑银行卡")
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         JSONObject info = new JSONObject();
-        info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard.do");
+        info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard");
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         String cardNo = request.getParameter("bankNumber");// 银行卡号
 

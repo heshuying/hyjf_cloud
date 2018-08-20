@@ -9,4 +9,5 @@ public interface CertificateAuthorityExceptionService {
 
 	CertificateAuthorityResponse updateUserCAMQ(String userId);
 
+	CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest aprlr);
 }
