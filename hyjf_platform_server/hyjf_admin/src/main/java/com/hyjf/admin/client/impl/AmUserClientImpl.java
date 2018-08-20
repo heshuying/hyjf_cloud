@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -1934,6 +1935,22 @@ public class AmUserClientImpl implements AmUserClient {
 		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
 		if (response != null) {
 			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取CA认证异常列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
+		String url = "http://AM-USER/am-user/certificate/getExceptionRecordList";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
 		}
 		return null;
 	}

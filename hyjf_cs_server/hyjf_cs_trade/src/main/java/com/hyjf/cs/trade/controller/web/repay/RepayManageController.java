@@ -452,13 +452,13 @@ public class RepayManageController extends BaseTradeController {
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
-        if(StringUtils.isBlank(requestBean.getUserId())){
+        if(userVO == null){
             webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc("请求参数不全");
+            webResult.setStatusDesc("未登录");
             return webResult;
         }
 
-        resultMap.put("orgUserId", requestBean.getUserId());
+        resultMap.put("orgUserId", userVO.getUserId());
         if (StringUtils.isNotBlank(requestBean.getStartDate()) && StringUtils.isNotBlank(requestBean.getEndDate())) {
             resultMap.put("startDate",requestBean.getStartDate());
             resultMap.put("endDate",requestBean.getEndDate());
@@ -485,7 +485,7 @@ public class RepayManageController extends BaseTradeController {
         }
 
         // 获取批量还款数据信息
-        ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(),requestBean.getStartDate(),requestBean.getEndDate());
+        ProjectBean projectBean = repayManageService.getOrgBatchRepayData(String.valueOf(userVO.getUserId()),requestBean.getStartDate(),requestBean.getEndDate());
         resultMap.put("repayInfo", projectBean);
 
         // 缴费授权
