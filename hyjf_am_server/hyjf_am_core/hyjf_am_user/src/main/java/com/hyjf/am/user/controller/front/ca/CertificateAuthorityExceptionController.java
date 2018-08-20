@@ -7,10 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.hyjf.am.user.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.user.CertificateAuthorityResponse;
@@ -37,7 +34,6 @@ public class CertificateAuthorityExceptionController extends BaseController {
     private CertificateAuthorityExceptionService certificateAuthorityExceptionService;
 
 
-
     /**
      * 画面检索
      *
@@ -45,13 +41,43 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @param form
      * @return
      */
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
-    public CertificateAuthorityResponse search(HttpServletRequest request,@RequestBody CertificateAuthorityExceptionRequest form) {
-		CertificateAuthorityResponse cfar=new CertificateAuthorityResponse();
+    @PostMapping("/search")
+    public CertificateAuthorityResponse search(HttpServletRequest request, @RequestBody CertificateAuthorityExceptionRequest form) {
+        CertificateAuthorityResponse cfar = new CertificateAuthorityResponse();
         // 创建分页
-       
-        return  this.createPage(form,cfar);
+
+        return this.createNoExceptionPage(form, cfar);
     }
+
+
+    /**
+     * 获取CA认证异常列表
+     */
+    @PostMapping("/getExceptionRecordList")
+    public CertificateAuthorityResponse getExceptionRecordList(HttpServletRequest request, @RequestBody CertificateAuthorityExceptionRequest form) {
+        CertificateAuthorityResponse cfar = new CertificateAuthorityResponse();
+        // 创建分页
+        return this.createExceptionPage(form, cfar);
+    }
+
+    /**
+     * 创建CA认证异常分页机能
+     * @param form
+     * @param cfar
+     * @return
+     */
+    private CertificateAuthorityResponse createExceptionPage(CertificateAuthorityExceptionRequest form, CertificateAuthorityResponse cfar) {
+        Integer counts = this.certificateAuthorityExceptionService.countCAExceptionList(form);
+        if (counts > 0) {
+            Paginator paginator = new Paginator(form.getCurrPage(), counts, form.getPageSize());
+            List<CertificateAuthority> recordList = this.certificateAuthorityExceptionService.getCAExceptionList(form, paginator.getOffset(), paginator.getLimit());
+            cfar.setResultList(CommonUtils.convertBeanList(recordList, CertificateAuthorityVO.class));
+        }
+
+        cfar.setRecordTotal(counts);
+        return cfar;
+    }
+
 
     /**
      * 异常处理更新Action
@@ -59,20 +85,20 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @param request
      * @param form
      * @return
-     * @throws MQException 
-     * @throws ParseException 
-     * @throws NumberFormatException 
+     * @throws MQException
+     * @throws ParseException
+     * @throws NumberFormatException
      */
-	@RequestMapping(value = "/modifyAction", method = RequestMethod.POST)
+    @PostMapping("/modifyAction")
     public CertificateAuthorityResponse modifyAction(@RequestBody CertificateAuthorityExceptionRequest form) throws NumberFormatException, ParseException, MQException {
-		CertificateAuthorityResponse cr=new CertificateAuthorityResponse();
+        CertificateAuthorityResponse cr = new CertificateAuthorityResponse();
         // 用户ID
         if (Validator.isNull(form.getUserId())) {
-        	cr.setRtn(AdminResponse.FAIL);
-        	cr.setMessage("用户ID为空");
+            cr.setRtn(AdminResponse.FAIL);
+            cr.setMessage("用户ID为空");
             return cr;
         }
-       // 发送CA认证MQ
+        // 发送CA认证MQ
         this.certificateAuthorityExceptionService.updateUserCAMQ(Integer.valueOf(form.getUserId()));
         return cr;
     }
@@ -84,14 +110,14 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @param modelAndView
      * @param form
      */
-    private CertificateAuthorityResponse createPage( CertificateAuthorityExceptionRequest form,CertificateAuthorityResponse cfar) {
-        Integer counts = this.certificateAuthorityExceptionService.countCAExceptionList(form);
+    private CertificateAuthorityResponse createNoExceptionPage(CertificateAuthorityExceptionRequest form, CertificateAuthorityResponse cfar) {
+        Integer counts = this.certificateAuthorityExceptionService.countCANOExceptionList(form);
         if (counts > 0) {
-            Paginator paginator = new Paginator(form.getCurrPage(),counts,form.getPageSize());
-            List<CertificateAuthority> recordList = this.certificateAuthorityExceptionService.getCAExceptionList(form, paginator.getOffset(), paginator.getLimit());
+            Paginator paginator = new Paginator(form.getCurrPage(), counts, form.getPageSize());
+            List<CertificateAuthority> recordList = this.certificateAuthorityExceptionService.getCANOExceptionList(form, paginator.getOffset(), paginator.getLimit());
             cfar.setResultList(CommonUtils.convertBeanList(recordList, CertificateAuthorityVO.class));
         }
-      
+
         cfar.setRecordTotal(counts);
         return cfar;
     }

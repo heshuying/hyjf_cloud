@@ -163,6 +163,12 @@ public class AmMarketClientImpl implements AmMarketClient {
 	}
 
 	@Override
+	public ContentAdsResponse infoaction(Integer id) {
+		return restTemplate.getForObject("http://AM-MARKET/am-market/content/contentads/infoaction/"+
+				id, ContentAdsResponse.class);
+	}
+
+	@Override
 	public ContentAdsResponse updateAction(ContentAdsRequest request) {
 		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/updateaction",
 				request, ContentAdsResponse.class);
