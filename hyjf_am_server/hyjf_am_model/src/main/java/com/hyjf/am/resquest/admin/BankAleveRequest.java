@@ -5,31 +5,35 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author zdj
- * @version PushMoneyRequest, v0.1 2018/7/10 19:26
+ * @version BankAleveRequest, v0.1 2018/7/10 19:26
  */
 public class BankAleveRequest extends Request implements Serializable {
 
-
-	//自动同步用生成订单id
+	@ApiModelProperty(value = "自动同步用生成订单id")
 	private String orderId;
-	//userid
+	@ApiModelProperty(value = "用户")
 	private Integer userId;
-	//入账日期起止
+
+	@ApiModelProperty(value = "入账日期开始")
 	private String startValdate;
+	@ApiModelProperty(value = "入账日期结束")
 	private String endValdate;
 
-	//交易日期起止
+	@ApiModelProperty(value = "交易日期开始")
 	private String startInpdate;
+	@ApiModelProperty(value = "交易日期结束")
 	private String endInpdate;
 
-	//自然日期起止
+	@ApiModelProperty(value = "自然日期开始")
 	private String startReldate;
+	@ApiModelProperty(value = "自然日期结束")
 	private String endReldate;
 
 	public String getOrderId() {

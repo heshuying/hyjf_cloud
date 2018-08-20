@@ -205,4 +205,7 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected FundChangeStatisticsCustomizeMapper fundChangeStatisticsCustomizeMapper;
 
+	@Autowired
+	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;
+
 }
