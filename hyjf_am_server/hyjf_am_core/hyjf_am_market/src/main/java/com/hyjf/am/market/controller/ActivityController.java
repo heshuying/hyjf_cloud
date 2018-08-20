@@ -54,13 +54,15 @@ public class ActivityController {
 
 
     @PostMapping("/selectActivityList")
-    public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
+    public ActivityListResponse selectActivityList(@RequestBody ActivityListRequest activityListRequest){
         ActivityListResponse response = new ActivityListResponse();
         ActivityList activityList = activityService.selectActivityList(activityListRequest.getId());
         if(activityList != null){
             ActivityListVO activityListVO = new ActivityListVO();
             BeanUtils.copyProperties(activityList,activityListVO);
             response.setResult(activityListVO);
+        }else {
+            response.setRtn(Response.FAIL);
         }
         return response;
     }
@@ -78,7 +80,7 @@ public class ActivityController {
     }
 
     @PostMapping("/getRecordList")
-    public ActivityListResponse getRecordList(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse getRecordList(@RequestBody ActivityListRequest request) {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));
         ActivityListResponse response = new ActivityListResponse();
         String returnCode = Response.FAIL;
@@ -94,17 +96,18 @@ public class ActivityController {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
                 response.setCount(recordCount);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 
 
 
     @PostMapping("/insertRecord")
-    public ActivityListResponse insertRecord(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse insertRecord(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         try {
             ActivityList activityList = new ActivityList();
@@ -125,7 +128,7 @@ public class ActivityController {
 
 
     @PostMapping("/updateActivity")
-    public ActivityListResponse updateActivity(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse updateActivity(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         try {
         ActivityList activityList = new ActivityList();
@@ -139,6 +142,7 @@ public class ActivityController {
                 response.setRtn(Response.FAIL);
             }
         }catch (Exception e) {
+            response.setRtn(Response.FAIL);
             e.printStackTrace();
         }
         return response;
@@ -146,7 +150,7 @@ public class ActivityController {
 
 
     @PostMapping("/deleteActivity")
-    public ActivityListResponse deleteActivity(@RequestBody @Valid ActivityListRequest request) {
+    public ActivityListResponse deleteActivity(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         int id = request.getId();
         int result = activityService.deleteActivity(id);
