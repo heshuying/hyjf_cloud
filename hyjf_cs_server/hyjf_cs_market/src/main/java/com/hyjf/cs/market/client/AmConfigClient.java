@@ -6,6 +6,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
@@ -72,7 +73,7 @@ public interface AmConfigClient {
      * 获取网贷知识
      * @return
      */
-    public List<ContentArticleVO> getknowsList(ContentArticleRequest request);
+    ContentArticleResponse getknowsList(ContentArticleRequest request);
 
     /**
      * 获取合作伙伴列表

@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
  * @author xiehuili on 2018/8/13.
  * @Version 1.0
  */
+@ApiModel(value="费率配置",description="费率配置")
 public class FinmanChargeNewRequest extends BasePage {
 
     /**

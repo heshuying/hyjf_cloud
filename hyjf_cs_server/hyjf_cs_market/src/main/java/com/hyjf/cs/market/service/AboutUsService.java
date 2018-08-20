@@ -5,6 +5,7 @@ package com.hyjf.cs.market.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.*;
@@ -13,6 +14,7 @@ import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +94,7 @@ public interface AboutUsService extends BaseMarketService {
      * 获取网贷知识
      * @return
      */
-    List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request);
+	ContentArticleResponse getHomeNoticeList(ContentArticleRequest request);
 
 
     /**
@@ -110,10 +112,24 @@ public interface AboutUsService extends BaseMarketService {
 
 
 	List<JxBankConfigVO> getBanksList();
+
+
 	/**
-	 * 获取网贷知识
-	 *
+	 * 累计投资总额
 	 * @return
 	 */
-	List<ContentArticleVO> getHomeNoticeList();
+	BigDecimal selectTenderSum();
+
+	/**
+	 * 累计收益
+	 * @return
+	 */
+	BigDecimal selectInterestSum();
+
+	/**
+	 * 累计投资笔数
+	 * @return
+	 */
+	int selectTotalTenderSum();
+
 }

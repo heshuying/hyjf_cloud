@@ -102,12 +102,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<ContentArticleVO> getknowsList(ContentArticleRequest request) {
+    public ContentArticleResponse getknowsList(ContentArticleRequest request) {
         ContentArticleResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/article/getKnowsList",request ,ContentArticleResponse.class);
-            if (response != null){
-            return response.getResultList();
-        }
-        return null;
+        return response;
 
     }
 

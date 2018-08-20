@@ -2,6 +2,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,21 +11,21 @@ import java.util.Date;
  * @author by xiehuili on 2018/7/17.
  */
 public class BankRetcodeConfigRequestBean extends BasePage implements Serializable {
-
+    @ApiModelProperty(value = "id ")
     private Integer id;
-
+    @ApiModelProperty(value = "接口代码 ")
     private String txCode;
-
+    @ApiModelProperty(value = "接口方法名 ")
     private String methodName;
-
+    @ApiModelProperty(value = "银行返回码")
     private String retCode;
-
+    @ApiModelProperty(value = "银行返回描述")
     private String retMsg;
-
+    @ApiModelProperty(value = "平台错误描述")
     private String errorMsg;
-
+    @ApiModelProperty(value = "保留字段：page标记 ")
     private String pageKey;
-
+    @ApiModelProperty(value = "状态：0 禁用；1 启用")
     private Integer status;
 
     private Integer createUserId;
