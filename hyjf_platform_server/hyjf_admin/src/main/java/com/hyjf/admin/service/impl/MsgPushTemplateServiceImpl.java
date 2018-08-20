@@ -4,8 +4,8 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.MsgPushTemplateClient;
 import com.hyjf.admin.service.MsgPushTemplateService;
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
@@ -25,12 +25,12 @@ public class MsgPushTemplateServiceImpl implements MsgPushTemplateService {
 	private AmConfigClient amConfigClient;
 
 	@Override
-	public List<MessagePushTemplateVO> findAll() {
+	public MessagePushTemplateResponse findAll() {
 		return amConfigClient.findAll();
 	}
 
 	@Override
-	public List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request) {
+	public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
 	    if (request != null) {
             String tagName = request.getTagName();
 			MessagePushTagVO tag = amConfigClient.findMsgTagByTagName(tagName);
