@@ -17,7 +17,7 @@ public class ChinapnrSendlog implements Serializable {
 
     private String content;
 
-    private Integer id;
+    private String id;
 
     private String ordid;
 
@@ -69,11 +69,11 @@ public class ChinapnrSendlog implements Serializable {
         this.content = content;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

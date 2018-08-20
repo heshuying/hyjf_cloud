@@ -3798,7 +3798,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBeanResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
+        RepayBeanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-tradet/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
         if (Response.isSuccess(response)){
             return JSON.parseObject(response.getResult(), RepayBean.class);
         }
@@ -3810,7 +3810,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_batch_reapydata",requestBean,Response.class).getBody();
+        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,Response.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
