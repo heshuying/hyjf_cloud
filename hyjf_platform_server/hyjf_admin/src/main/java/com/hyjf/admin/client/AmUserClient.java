@@ -1006,4 +1006,11 @@ public interface AmUserClient {
      */
     UserVO getUserByMobile(String mobile);
 
+    /**
+     * 获取CA认证异常列表
+     * @param aprlr
+     * @return
+     */
+    CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest aprlr);
+
 }

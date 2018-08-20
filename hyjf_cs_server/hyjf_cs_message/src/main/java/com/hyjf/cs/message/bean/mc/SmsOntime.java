@@ -3,11 +3,10 @@
  */
 package com.hyjf.cs.message.bean.mc;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * 短信发送记录表
@@ -17,8 +16,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "ht_sms_ontime")
 public class SmsOntime implements Serializable {
-	@Id
-	private Integer id;
+
+	private String id;
 
 	private String channelType;
 
@@ -56,11 +55,11 @@ public class SmsOntime implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -4,6 +4,7 @@ import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
+import com.hyjf.am.vo.admin.AdsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,28 @@ public class ContentAdsServiceImpl implements ContentAdsService {
     }
 
     @Override
+    public ContentAdsResponse infoaction(Integer id) {
+        return amMarketClient.infoaction(id);
+    }
+
+    @Override
     public ContentAdsResponse updateAction(ContentAdsRequest request) {
         return amMarketClient.updateAction(request);
+    }
+
+    @Override
+    public ContentAdsResponse statusaction(Integer id) {
+        ContentAdsResponse adsresponse = amMarketClient.infoaction(id);
+        AdsVO adsVO = adsresponse.getResult().getRecordList().get(0);
+        if (adsVO.getStatus() == 1) {
+            adsVO.setStatus(0);
+        } else {
+            adsVO.setStatus(1);
+        }
+        ContentAdsRequest request = new ContentAdsRequest();
+        request.setAds(adsVO);
+        ContentAdsResponse response = amMarketClient.updateAction(request);
+        return response;
     }
 
     @Override

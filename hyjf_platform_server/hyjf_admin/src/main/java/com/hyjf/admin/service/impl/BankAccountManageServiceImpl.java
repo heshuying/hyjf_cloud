@@ -8,9 +8,12 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.BankAccountManageClient;
 import com.hyjf.admin.controller.LoginController;
 import com.hyjf.admin.service.BankAccountManageService;
+import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -83,4 +86,24 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
         return this.amTradeClient.updateAccountCheck(userId,startTime,endTime);
     }
 
+    @Override
+    public Integer selectAccountInfoCount(BankAccountManageRequest request) {
+        return this.amUserClient.queryAccountCount(request);
+    }
+
+    /**
+     * 获取部门列表
+     *
+     * @return
+     */
+    @Override
+    public List<OADepartmentCustomizeVO> queryDepartmentInfo() {
+        // 实际未传任何参数
+        HjhCommissionRequest form = new HjhCommissionRequest();
+        OADepartmentResponse response = amTradeClient.getCrmDepartmentList(form);
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

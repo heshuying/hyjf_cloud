@@ -51,7 +51,7 @@ public class ContentAdsController {
      * @param request
      * @return
      */
-    @RequestMapping("/insertaction")
+    @RequestMapping("/inseraction")
     public ContentAdsResponse insertAction(@RequestBody ContentAdsRequest request) {
         ContentAdsResponse response = new ContentAdsResponse();
         boolean result = contentAdsService.insertAction(request);
@@ -62,6 +62,17 @@ public class ContentAdsController {
             response.setRtn(Response.FAIL);
             response.setMessage(Response.FAIL_MSG);
         }
+        return response;
+    }
+
+    /**
+     * 修改广告管理
+     *
+     * @return
+     */
+    @RequestMapping("/infoaction/{id}")
+    public ContentAdsResponse infoaction(@PathVariable Integer id) {
+        ContentAdsResponse response = contentAdsService.infoaction(id);
         return response;
     }
 
