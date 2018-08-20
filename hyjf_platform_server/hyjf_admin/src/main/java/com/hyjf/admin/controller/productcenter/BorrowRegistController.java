@@ -33,7 +33,7 @@ import java.util.List;
  * @version BorrowRegistController, v0.1 2018/6/29 11:18
  */
 
-@Api(value = "汇直投-标的备案接口", tags = "汇直投-标的备案接口")
+@Api(value = "产品中心-汇直投-标的备案", tags = "产品中心-汇直投-标的备案")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist")
 public class BorrowRegistController extends BaseController {
@@ -46,6 +46,12 @@ public class BorrowRegistController extends BaseController {
     /** 权限 */
     public static final String PERMISSIONS = "borrowregist";
 
+    /**
+     * 标的备案初始化
+     *
+     * @param borrowRegistRequestBean
+     * @return
+     */
     @ApiOperation(value = "标的备案初始化", notes = "标的备案初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -66,6 +72,12 @@ public class BorrowRegistController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 获取标的备案列表
+     *
+     * @param borrowRegistRequestBean
+     * @return
+     */
     @ApiOperation(value = "获取标的备案列表", notes = "获取标的备案列表")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -76,6 +88,13 @@ public class BorrowRegistController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 标的备案
+     *
+     * @param request
+     * @param borrowNid
+     * @return
+     */
     @ApiOperation(value = "标的备案", notes = "标的备案")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/debt_regist/{borrowNid}")
