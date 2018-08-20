@@ -1826,6 +1826,23 @@ public interface AmTradeClient {
     AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37

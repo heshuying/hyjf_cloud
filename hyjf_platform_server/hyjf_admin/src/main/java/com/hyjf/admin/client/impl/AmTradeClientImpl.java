@@ -3636,6 +3636,29 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateRechargeStatus(Integer userId, String nid) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
+    }
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge/", boolean.class).getBody();
+    }
+
+    /**
      * 汇计划 -> 资金计划 -> 复投原始标的 总数
      * @param data
      * @param planNid
