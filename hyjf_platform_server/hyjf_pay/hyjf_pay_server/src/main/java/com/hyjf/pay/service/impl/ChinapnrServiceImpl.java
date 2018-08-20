@@ -34,7 +34,7 @@ public class ChinapnrServiceImpl  implements ChinapnrService {
 	ChinapnrLogDao chinapnrLogDao;
 
 	@Override
-	public Long insertChinapnrExclusiveLog(ChinapnrBean bean, String methodName) {
+	public String insertChinapnrExclusiveLog(ChinapnrBean bean, String methodName) {
 		// 发送前插入状态记录
 		String nowTime = GetDate.getServerDateTime(9, new Date());
 		ChinapnrExclusiveLog exclusiveLog = new ChinapnrExclusiveLog();
@@ -74,7 +74,7 @@ public class ChinapnrServiceImpl  implements ChinapnrService {
 	}
 
 	@Override
-	public ChinapnrExclusiveLog selectChinapnrExclusiveLog(long id) {
+	public ChinapnrExclusiveLog selectChinapnrExclusiveLog(String id) {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("id").is(id);
 		query.addCriteria(criteria);

@@ -111,7 +111,7 @@ public class SmsCodeController extends BaseController {
     }
 
     @PostMapping("/send_message_action")
-    public JSONObject send(HttpServletRequest request, SmsCodeRequestBean form) throws ParseException {
+    public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
         logger.info("后台发送短信开始...");

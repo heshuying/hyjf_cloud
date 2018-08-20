@@ -2733,10 +2733,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public boolean checkRepeat(String labelName, String planNid) {
-        String url = "http://AM-TRADE/am-trade/allocation/checkRepeat/" + labelName + "/" + planNid;
-        boolean Flag = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return Flag;
+    public int checkRepeat(AllocationEngineRuquest form) {
+        int flg = 0;
+        HjhAllocationEngineResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/allocation/checkRepeat", form, HjhAllocationEngineResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getFlag();
+        }
+        return flg;
     }
 
     @Override
@@ -3629,6 +3633,29 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateRechargeStatus(Integer userId, String nid) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
+    }
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge/", boolean.class).getBody();
     }
 
     /**
@@ -5526,4 +5553,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         NifaReportLogResponse response = restTemplate.postForEntity(url,request,NifaReportLogResponse.class).getBody();
         return response;
     }
+    
+	/**
+	 * 传参查询承接债转表列总计
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	@Override
+	public HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form) {
+	    HjhCreditTenderSumResponse response = restTemplate
+	            .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderCalcSumByParam", form, HjhCreditTenderSumResponse.class).getBody();
+	    if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+	        return response.getResult();
+	    }
+	    return null;
+	}
 }

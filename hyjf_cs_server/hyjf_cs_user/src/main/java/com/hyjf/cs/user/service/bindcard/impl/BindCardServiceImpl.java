@@ -601,7 +601,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 
 		// 开户校验
-		if (!webViewUserVO.isOpenAccount()) {
+		if (!webViewUserVO.isBankOpenAccount()) {
 			return "用户未开户";
 		}
 
