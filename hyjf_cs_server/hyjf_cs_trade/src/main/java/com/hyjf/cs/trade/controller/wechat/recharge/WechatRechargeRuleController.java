@@ -25,7 +25,7 @@ public class WechatRechargeRuleController {
     @Autowired
     WechatRechargeRuleService wechatRechargeRuleService;
 
-    @ApiOperation(value = "wechat端获取充值规则", notes = "wechat端获取充值规则")
+    @ApiOperation(value = "获取充值规则", notes = "获取充值规则")
     @PostMapping(value = "/rechargeRule")
     public WxRechargeDescResultBean rechargeRule() {
         return wechatRechargeRuleService.getRechargeRule();

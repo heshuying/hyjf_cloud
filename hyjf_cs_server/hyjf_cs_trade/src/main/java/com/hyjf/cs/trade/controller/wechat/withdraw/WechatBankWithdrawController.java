@@ -35,7 +35,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "wechat端用户提现接口")
+@Api(tags = "wechat端-用户提现接口")
 @Controller
 @RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {

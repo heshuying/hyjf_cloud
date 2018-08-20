@@ -26,7 +26,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version TradeDetail, v0.1 2018/6/27 10:10
  */
-@Api(tags = "Web交易明细页面")
+@Api(tags = "web端-交易明细页面")
 @RestController
 @RequestMapping("/hyjf-web/tradedetail")
 public class TradeDetailController  extends BaseTradeController {
