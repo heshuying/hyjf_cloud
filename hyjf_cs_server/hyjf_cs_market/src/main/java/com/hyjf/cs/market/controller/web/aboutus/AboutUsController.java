@@ -19,10 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -221,7 +218,7 @@ public class AboutUsController extends BaseController {
 	@ApiOperation(value = "帮助中心：注册登录", notes = "帮助中心：注册登录")
 	@GetMapping("/index")
 	public WebResult<List<ContentArticleVO>> help_index(ContentArticleRequest request ){
-		List<ContentArticleVO> homeNoticeList = aboutUsService.getIndex(request);
+		List<Map<String, Object>> homeNoticeList = aboutUsService.getIndex(request);
 		WebResult webResult = new WebResult(homeNoticeList);
 		return webResult;
 	}
@@ -264,15 +261,14 @@ public class AboutUsController extends BaseController {
 
 	/**
 	 * 服务中心
-	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
 	@GetMapping("/getSecurityPage")
-	public WebResult<BanksConfigVO>  getSecurityPage(HttpServletRequest request) {
+	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		//ModelAndView modelAndView=null;
-		String pageType = request.getParameter("pageType");
+		//String pageType = request.getParameter("pageType");
 		if(StringUtils.isBlank(pageType)){
 			// TODO 参数为空转跳页面
 			//modelAndView = new ModelAndView("/contentarticle/bank-page");

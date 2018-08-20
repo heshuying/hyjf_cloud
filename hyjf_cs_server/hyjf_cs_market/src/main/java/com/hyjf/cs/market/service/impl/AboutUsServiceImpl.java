@@ -95,7 +95,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
 
     @Override
-    public List<ContentArticleVO> getIndex(ContentArticleRequest request) {
+    public List<Map<String, Object>> getIndex(ContentArticleRequest request) {
         return amConfigClient.getIndexList(request);
     }
 

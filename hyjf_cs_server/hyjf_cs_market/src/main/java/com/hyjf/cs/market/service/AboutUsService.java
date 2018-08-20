@@ -99,7 +99,7 @@ public interface AboutUsService extends BaseMarketService {
      * @param request
      * @return
      */
-    public List<ContentArticleVO> getIndex(ContentArticleRequest request);
+	List<Map<String, Object>> getIndex(ContentArticleRequest request);
 
 
     /**

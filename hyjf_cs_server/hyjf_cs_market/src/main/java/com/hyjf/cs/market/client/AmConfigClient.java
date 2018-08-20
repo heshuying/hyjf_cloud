@@ -85,7 +85,7 @@ public interface AmConfigClient {
      * @param request
      * @return
      */
-    public List<ContentArticleVO> getIndexList(ContentArticleRequest request);
+    List<Map<String, Object>> getIndexList(ContentArticleRequest request);
 
 
     TotalInvestAndInterestResponse searchData();

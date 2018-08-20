@@ -193,7 +193,6 @@ public class ContentArticleController {
     public ContentArticleResponse getKnowReportList(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
 
-        request.setNoticeType("3");
         int totalPage = contentArticleService.countHomeNoticeList(request.getNoticeType());
         if (totalPage>0) {
             List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), request.getLimitStart(), request.getLimitEnd());
@@ -236,7 +235,7 @@ public class ContentArticleController {
             }
             AllList.add(tmpmap);
         }
-
+        response.setResponseList(AllList);
         return response;
     }
 

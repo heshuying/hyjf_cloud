@@ -121,10 +121,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public List<ContentArticleVO> getIndexList(ContentArticleRequest request) {
+	public List<Map<String, Object>> getIndexList(ContentArticleRequest request) {
 		ContentArticleResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/article/index",request ,ContentArticleResponse.class);
 		if (response != null){
-			return response.getResultList();
+			return response.getResponseList();
 		}
 		return null;
 
