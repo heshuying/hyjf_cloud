@@ -43,6 +43,7 @@ public class SmsLogController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsLog> list = smsLogService.findSmsLogList();
 		jsonObject.put("smsLogList", list);
+		jsonObject.put("count", list.size());
 		return jsonObject;
 	}
 
@@ -56,6 +57,7 @@ public class SmsLogController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsLog> list = smsLogService.findSmsLog(request);
 		jsonObject.put("smsLogList", list);
+		jsonObject.put("count", list.size());
 		return jsonObject;
 	}
 
@@ -71,6 +73,7 @@ public class SmsLogController extends BaseController {
 		if (!CollectionUtils.isEmpty(list)) {
 			List<SmsOntimeVO> voList = CommonUtils.convertBeanList(list, SmsOntimeVO.class);
 			response.setResultList(voList);
+			response.setCount(voList.size());
 		}
 		return response;
 	}
