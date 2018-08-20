@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowCommonFile;
 import com.hyjf.am.trade.bean.BorrowCommonFileData;
@@ -4027,28 +4028,32 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String isChaibiao = form.getIsChaibiao();
 		// 借款标题 & 借款金额
 		if (!isExistsRecord && "yes".equals(isChaibiao)) {
-			borrowCommonNameAccountList = JSONArray.parseArray(form.getBorrowNameJson(), BorrowCommonNameAccountVO.class);
+			borrowCommonNameAccountList = form.getBorrowCommonNameAccountList();
+					//JSONArray.parseArray(form.getBorrowNameJson(), BorrowCommonNameAccountVO.class);
 		}
 		form.setBorrowCommonNameAccountList(borrowCommonNameAccountList);
 		// 车辆信息
 		if (StringUtils.equals("2", form.getTypeCar())) {
-			List<BorrowCommonCarVO> borrowCarinfoList = JSONArray.parseArray(form.getBorrowCarJson(), BorrowCommonCarVO.class);
-			form.setBorrowCarinfoList(borrowCarinfoList);
+			//List<BorrowCommonCarVO> borrowCarinfoList = JSONArray.parseArray(form.getBorrowCarJson(), BorrowCommonCarVO.class);
+			form.setBorrowCarinfoList(form.getBorrowCarinfoList());
 		}
 		// 房产信息
 		if (StringUtils.equals("1", form.getTypeHouse())) {
-			List<BorrowHousesVO> borrowHousesList = JSONArray.parseArray(form.getBorrowHousesJson(), BorrowHousesVO.class);
-			form.setBorrowHousesList(borrowHousesList);
+			//List<BorrowHousesVO> borrowHousesList = JSONArray.parseArray(form.getBorrowHousesJson(), BorrowHousesVO.class);
+			form.setBorrowHousesList(form.getBorrowHousesList());
 		}
 		// 认证信息
 		List<BorrowCommonCompanyAuthenVO> borrowCommonCompanyAuthenList = JSONArray.parseArray(form.getBorrowAuthenJson(), BorrowCommonCompanyAuthenVO.class);
 		form.setBorrowCommonCompanyAuthenList(borrowCommonCompanyAuthenList);
 		// 项目资料
-		List<BorrowCommonImageVO> borrowCommonImageList = JSONArray.parseArray(form.getBorrowImageJson(), BorrowCommonImageVO.class);
+		List<BorrowCommonImageVO> borrowCommonImageList =form.getBorrowCommonImageList();
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
-		for (BorrowCommonImageVO borrowCommonImage : borrowCommonImageList) {
-			borrowCommonImage.setImageSrc(fileDomainUrl + borrowCommonImage.getImagePath());
+		if(borrowCommonImageList!=null) {
+			for (BorrowCommonImageVO borrowCommonImage : borrowCommonImageList) {
+				borrowCommonImage.setImageSrc(fileDomainUrl + borrowCommonImage.getImagePath());
+			}
 		}
+
 		form.setBorrowCommonImageList(borrowCommonImageList);
 	}
 
@@ -4059,9 +4064,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @return
 	 */
 	@Override
-	public BorrowCommonVO getBorrowServiceScale(String borrowPeriod,String borrowStyle,Integer projectType,String instCode) {
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
 
-
+		Integer projectType=borrowCommonRequest.getProjectType();
+		String borrowStyle=borrowCommonRequest.getBorrowStyle();
+		String instCode=borrowCommonRequest.getInstCode();
+		String borrowPeriod=borrowCommonRequest.getBorrowPeriod();
 		BorrowCommonVO bean=new BorrowCommonVO();
         // 获取融资服务费率
         String borrowServiceScale = this.getBorrowServiceScale(projectType, borrowStyle, instCode, Integer.valueOf(borrowPeriod));

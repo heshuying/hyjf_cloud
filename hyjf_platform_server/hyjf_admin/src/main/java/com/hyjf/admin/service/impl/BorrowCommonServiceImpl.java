@@ -85,13 +85,8 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	}
 
 	@Override
-	public String getBorrowServiceScale(String borrowPeriod, String borrowStyle, Integer projectType,
-			String instCode) {
-		BorrowCommonRequest borrowCommonRequest=new BorrowCommonRequest();
-		borrowCommonRequest.setBorrowPeriod(borrowPeriod);
-		borrowCommonRequest.setBorrowStyle(borrowStyle);
-		borrowCommonRequest.setProjectType(projectType);
-		borrowCommonRequest.setInstCode(instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
+
 		return amTradeClient.getBorrowServiceScale(borrowCommonRequest);
 	}
 

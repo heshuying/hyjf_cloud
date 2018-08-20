@@ -53,6 +53,7 @@ import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -281,9 +282,9 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
 	@PostMapping("/getBorrowServiceScale")
-	public AdminResult<String> getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
-		String ncv = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest.getBorrowPeriod(), borrowCommonRequest.getBorrowStyle(), borrowCommonRequest.getProjectType(), borrowCommonRequest.getInstCode());
-		return new AdminResult<String>(ncv);
+	public AdminResult<BorrowCommonVO> getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
+		BorrowCommonVO ncv = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
+		return new AdminResult<BorrowCommonVO>(ncv);
 	}
 	@Value("${file.domain.url}")
     private String url; 

@@ -3461,9 +3461,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
-        String response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord", borrowCommonRequest, String.class)
+    public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
+    	BorrowCommonVO response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
                 .getBody();
         return response;
     }
