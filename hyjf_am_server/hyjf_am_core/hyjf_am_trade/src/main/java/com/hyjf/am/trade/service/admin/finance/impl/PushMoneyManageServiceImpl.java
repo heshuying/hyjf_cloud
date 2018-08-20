@@ -326,7 +326,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
 
             try {
                 appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                        JSON.toJSONBytes(smsMessage)));
+                        JSON.toJSONBytes(appMsMessage)));
             } catch (MQException e) {
                 logger.error("发送app消息失败..", e);
             }
