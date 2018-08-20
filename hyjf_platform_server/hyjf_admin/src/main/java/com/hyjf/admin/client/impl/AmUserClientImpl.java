@@ -1940,6 +1940,22 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 获取CA认证异常列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
+		String url = "http://AM-USER/am-user/certificate/getExceptionRecordList";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
 	 * 线下修改信息同步查询列表count
 	 * @auth sunpeikai
 	 * @param
