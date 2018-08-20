@@ -90,4 +90,42 @@ public class AccountRechargeController extends BaseController {
         }
         return  rechargeResponse;
     }
+
+    /**
+     * 更新用户充值订单状态
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/modifyRechargeStatus", method = RequestMethod.POST)
+    public boolean modifyRechargeStatus(@RequestBody AccountRechargeRequest request){
+
+        Integer userId = request.getUserId();
+        String nid = request.getNid();
+        return this.accountRecharge.updateRechargeStatus(userId, nid);
+    }
+
+    /**
+     * 确认充值(FIX) 操作
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/updateAccountAfterRecharge", method = RequestMethod.POST)
+    public boolean updateAccountAfterRecharge(@RequestBody AccountRechargeRequest request){
+
+        String status = request.getStatus();
+        Integer userId = request.getUserId();
+        String nid = request.getNid();
+
+        // 确认充值 ; 0表示充值失败
+        boolean isAccountUpdate = false;
+        if ("1".equals(status)){
+            isAccountUpdate = this.accountRecharge.updateAccountAfterRecharge(userId, nid);
+        }else {
+            isAccountUpdate = this.accountRecharge.updateAccountAfterRechargeFail(userId, nid);
+        }
+
+        return isAccountUpdate;
+    }
 }

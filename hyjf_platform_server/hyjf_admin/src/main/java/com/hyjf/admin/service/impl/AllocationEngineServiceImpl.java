@@ -106,8 +106,8 @@ public class AllocationEngineServiceImpl implements  AllocationEngineService{
 	}
 
 	@Override
-	public boolean checkRepeat(String labelName, String planNid) {
-		boolean flg = amTradeClient.checkRepeat(labelName,planNid);
+	public int checkRepeat(AllocationEngineRuquest form) {
+		int flg = amTradeClient.checkRepeat(form);
 		return flg;
 	}
 

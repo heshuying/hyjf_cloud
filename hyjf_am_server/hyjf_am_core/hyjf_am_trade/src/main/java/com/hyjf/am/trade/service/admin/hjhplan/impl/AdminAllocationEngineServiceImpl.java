@@ -301,11 +301,12 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 	}
 
 	@Override
-	public boolean checkRepeat(String labelName, String planNid) {
+	public int checkRepeat(AllocationEngineRuquest form) {
+		int flg = 0;
 		Integer labelId = 0;
 		HjhLabelExample example1 = new HjhLabelExample(); 
 		HjhLabelExample.Criteria cra = example1.createCriteria();
-		cra.andLabelNameEqualTo(labelName.trim());
+		cra.andLabelNameEqualTo(form.getLabelName());
 		List<HjhLabel> result1 = this.hjhLabelMapper.selectByExample(example1);
 		if (result1 != null && result1.size() > 0) {
 			 labelId = result1.get(0).getId();
@@ -313,15 +314,17 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		//这个标签一旦存在引擎，那么新入力标签不只是在本计划添加不了，在其他计划也不能添加
 		HjhAllocationEngineExample example = new HjhAllocationEngineExample(); 
 		HjhAllocationEngineExample.Criteria criteria = example.createCriteria();
-		criteria.andLabelNameEqualTo(labelName.trim());
+		criteria.andLabelNameEqualTo(form.getLabelName());
 		/*criteria.andPlanNidEqualTo(planNid);*/
 		/*criteria.andLabelStatusEqualTo(1);*///标签状态 0：停用 1：启用
 		criteria.andLabelIdEqualTo(labelId);
+		criteria.andPlanNidEqualTo(form.getPlanNid());
 		List<HjhAllocationEngine> result = this.hjhAllocationEngineMapper.selectByExample(example);
-		if (result != null && result.size() >= 1) {
-			return false;
+		if (result != null) {
+			flg = result.size();
+			return flg;
 		}
-		return true;
+		return flg;
 	}
 
 	@Override
