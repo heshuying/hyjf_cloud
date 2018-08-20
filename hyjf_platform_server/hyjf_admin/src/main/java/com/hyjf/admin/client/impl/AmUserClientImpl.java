@@ -1,5 +1,16 @@
 package com.hyjf.admin.client.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
@@ -9,27 +20,13 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
-import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1951,6 +1948,27 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
 			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
+	}
+
+	@Override
+	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
+	}
+
+	@Override
+	public List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o) {
+		SmsCountCustomizeResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/sms_count/query_department_info", SmsCountCustomizeResponse.class,
+				Integer.class);
+		if (response != null) {
+			return response.getList();
 		}
 		return null;
 	}
