@@ -2,6 +2,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -9,18 +10,19 @@ import java.io.Serializable;
  * @author by xiehuili on 2018/7/12.
  */
 public class BorrowStyleRequestBean  extends BaseRequest implements Serializable {
+    @ApiModelProperty(value = "算法公式")
     private String contents;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "nid")
     private String nid;
-
+    @ApiModelProperty(value = "是否启用")
     private Integer status;
-
+    @ApiModelProperty(value = "名称")
     private String name;
-
+    @ApiModelProperty(value = "名称，可改")
     private String title;
 
     private static final long serialVersionUID = 1L;

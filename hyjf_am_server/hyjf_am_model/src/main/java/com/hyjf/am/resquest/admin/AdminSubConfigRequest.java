@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/9.
  */
+@ApiModel(value="分账名单配置",description="分账名单配置")
 public class AdminSubConfigRequest extends BasePage {
     /**
      * 此处为属性说明
