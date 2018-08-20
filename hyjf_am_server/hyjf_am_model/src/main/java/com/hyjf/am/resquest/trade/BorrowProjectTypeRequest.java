@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/27.
  */
+@ApiModel(value="项目类型",description="项目类型")
 public class BorrowProjectTypeRequest  extends BasePage implements Serializable {
     /**
      * 接收还款方式
