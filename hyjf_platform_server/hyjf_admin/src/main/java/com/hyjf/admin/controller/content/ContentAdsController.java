@@ -68,6 +68,25 @@ public class ContentAdsController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
+    @ApiOperation(value = "广告管理-修改根据id查找所需要数据", notes = "广告管理-修改根据id查找所需要数据")
+    @PostMapping("/infoaction")
+    public AdminResult infoaction(@RequestBody ContentAdsRequest request){
+        logger.info("修改内容中心-广告管理开始......");
+
+        Integer ids = request.getAds().getId();
+        if(ids == null || ids < 0){
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        ContentAdsResponse response = contentAdsService.infoaction(ids);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response.getResult().getRecordList().get(0));
+    }
+
     @ApiOperation(value = "广告管理-修改", notes = "广告管理-修改")
     @PostMapping("/update")
     public AdminResult update(@RequestBody ContentAdsRequest request){
@@ -82,10 +101,29 @@ public class ContentAdsController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "广告管理-修改", notes = "广告管理-修改")
+    @ApiOperation(value = "广告管理-修改状态", notes = "广告管理-修改状态")
+    @PostMapping("/statusaction")
+    public AdminResult statusaction(@RequestBody ContentAdsRequest request){
+        logger.info("修改广告管理状态开始......");
+        Integer ids = request.getAds().getId();
+        if(ids == null || ids < 0){
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+
+        ContentAdsResponse response = contentAdsService.statusaction(ids);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+    }
+
+    @ApiOperation(value = "广告管理-删除", notes = "广告管理-删除")
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public AdminResult delete(@PathVariable Integer id){
-        logger.info("修改内容中心-广告管理开始......");
+        logger.info("删除内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.deleteById(id);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

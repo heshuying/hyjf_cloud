@@ -19,15 +19,13 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.PushMoneyVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -855,6 +853,38 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
+
+    /**
+     * 标的放款记录列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverVO> selectBorrowRecoverList(String borrowNid);
+
+    /**
+     * 标的放款记录列表,分期
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String borrowNid,int repayPeriod);
+
+    /**
+     * 获取用户债转还款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<CreditRepayVO> selectCreditRepayList(String borrowNid,int repayPeriod);
+
+    /**
+     * 获取用户汇计划债转还款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepayList(String borrowNid,int repayPeriod);
 
     /**
      * 获取借款列表

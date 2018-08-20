@@ -16,7 +16,6 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-
     /**
      * 借款标题
      */
