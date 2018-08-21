@@ -123,6 +123,10 @@ public class AppInvestInfoResultVO implements Serializable {
 
     /**产品加息利息*/
     private String borrowExtraYield = "";
+    // 前端要求的格式
+    private String status = "";
+    // 前端要求的格式
+    private String statusDesc = "";
     
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
@@ -479,5 +483,21 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setBorrowExtraYield(String borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
     }
 }
