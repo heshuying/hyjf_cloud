@@ -198,6 +198,7 @@ public class AboutUsController extends BaseController {
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
 		page.setCurrPage(request.getCurrPage());
+        page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 		return webResult;
 	}
@@ -268,7 +269,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
-	@PostMapping("/getSecurityPage")
+	@GetMapping("/getSecurityPage")
 	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
