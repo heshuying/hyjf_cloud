@@ -93,7 +93,7 @@ public class VipManageController extends BaseController {
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
     @RequestMapping (value = "/vipdetailInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(@RequestParam String userId) {
+    public AdminResult vipDetailInit(@RequestParam String userId) {
         VipDetailListRequest vdr = new VipDetailListRequest();
         vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
@@ -112,13 +112,13 @@ public class VipManageController extends BaseController {
             return new AdminResult<>(FAIL, vdl.getMessage());
 
         }
-        return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
+        return new AdminResult<>(vdl);
     }
 
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
     @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(@RequestParam String userId) {
+    public AdminResult vipUpdateGradeInit(@RequestParam String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -127,9 +127,8 @@ public class VipManageController extends BaseController {
         }
         if (!Response.isSuccess(vgr)) {
             return new AdminResult<>(FAIL, vgr.getMessage());
-
         }
-        return new AdminResult<ListResult<VipUpdateGradeListVO>>(ListResult.build(vgr.getResultList(), vgr.getCount()));
+        return new AdminResult<>(vgr);
     }
 
 
@@ -160,7 +159,6 @@ public class VipManageController extends BaseController {
         } else {
             fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
         }
-        ;
         // 需要输出的结果列表
 //        //封装查询条件
 //        Map<String, Object> userMap = new HashMap<String, Object>();

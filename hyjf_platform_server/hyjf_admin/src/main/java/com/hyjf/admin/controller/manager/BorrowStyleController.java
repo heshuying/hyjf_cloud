@@ -107,12 +107,12 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<AdminBorrowStyleResponse>(result) ;
     }
     @ApiOperation(value = "还款方式修改状态", notes = "还款方式修改状态")
-    @GetMapping("/statusAction/{id}")
+    @PostMapping("/statusAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult modifyBorrowStyle(@PathVariable Integer id) {
+    public AdminResult modifyBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
-        if(id != null){
-            prs = borrowStyleService.modifyBorrowStyle(id);
+        if(from.getId() != null){
+            prs = borrowStyleService.modifyBorrowStyle(from.getId());
         }
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -125,12 +125,12 @@ public class BorrowStyleController extends BaseController {
     }
 
     @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
-    @GetMapping("/deleteAction/{id}")
+    @PostMapping("/deleteAction}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteBorrowStyle(@PathVariable Integer id) {
+    public AdminResult deleteBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
-        if(null != id){
-            prs = borrowStyleService.deleteBorrowStyle(id);
+        if(null != from.getId()){
+            prs = borrowStyleService.deleteBorrowStyle(from.getId());
         }
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
