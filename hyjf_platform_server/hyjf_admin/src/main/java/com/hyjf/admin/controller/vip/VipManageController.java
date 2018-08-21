@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -18,14 +17,18 @@ import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
 import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
 import com.hyjf.am.vo.admin.VipUpdateGradeListVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -54,36 +57,54 @@ public class VipManageController extends BaseController {
     @Autowired
     private VipManageService vipManageService;
 
-//    @ApiOperation(value = "页面初始化", notes = "页面初始化")
-//    @PostMapping("/init")
-//    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-//    public JSONObject vipManageInit() {
-//        JSONObject jsonObject = vipManageService.initVipManage();
-//        return jsonObject;
-//    }
-
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/vipManageList")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
-        VipManageResponse vmr = vipManageService.searchList(vipManageRequest);
-        if (vmr == null) {
+    public AdminResult searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
+        VipManageResponse response = vipManageService.searchList(vipManageRequest);
+        // 用户角色
+        List<ParamNameVO> userRoles = this.vipManageService.getParamNameList("USER_ROLE");
+        // 用户属性
+        List<ParamNameVO> userPropertys = this.vipManageService.getParamNameList("USER_PROPERTY");
+        // 开户状态
+        List<ParamNameVO> accountStatus = this.vipManageService.getParamNameList("ACCOUNT_STATUS");
+        // 用户状态
+        List<ParamNameVO> userStatus = this.vipManageService.getParamNameList("USER_STATUS");
+        // 注册平台
+        List<ParamNameVO> registPlat = this.vipManageService.getParamNameList("CLIENT");
+        // 部门
+        List<OADepartmentCustomizeVO> departmentList = vipManageService.getCrmDepartmentList();
+
+        response.setUserRoles(userRoles);
+        response.setUserPropertys(userPropertys);
+        response.setAccountStatus(accountStatus);
+        response.setUserStatus(userStatus);
+        response.setRegistPlat(registPlat);
+        response.setDepartmentList(departmentList);
+        if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(vmr)) {
-            return new AdminResult<>(FAIL, vmr.getMessage());
-
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount()));
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
     @RequestMapping (value = "/vipdetailInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(HttpServletRequest request, HttpServletResponse response, @PathVariable String userId) {
+    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(@RequestParam String userId) {
         VipDetailListRequest vdr = new VipDetailListRequest();
         vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
+        if (!CollectionUtils.isEmpty(vdl.getResultList())) {
+            List<VipDetailListVO> vipDetailListVOS = vdl.getResultList();
+            for (VipDetailListVO vipDetailList : vipDetailListVOS) {
+                String nid = vipDetailList.getTenderNid();
+                BorrowTenderVO borrowTenderVO = vipManageService.getBorrowTenderList(nid);
+                vipDetailList.setAccount(borrowTenderVO.getAccount().toPlainString());
+            }
+        }
         if (vdl == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -97,7 +118,7 @@ public class VipManageController extends BaseController {
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
     @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @PathVariable String userId) {
+    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(@RequestParam String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -300,9 +321,6 @@ public class VipManageController extends BaseController {
             }
             if (map.containsKey("userStatus")) {
                 request.setUserStatus(map.get("userStatus").toString());
-            }
-            if (map.containsKey("is51")) {
-                request.setIs51(map.get("is51").toString());
             }
             if (map.containsKey("limit") && StringUtils.isNotBlank(map.get("limit").toString())) {
                 request.setLimit((Integer) map.get("limit"));
