@@ -113,6 +113,7 @@ public class SmsCodeController extends BaseController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "发送短信", notes = "发送短信")
     @PostMapping("/send_message_action")
     public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();

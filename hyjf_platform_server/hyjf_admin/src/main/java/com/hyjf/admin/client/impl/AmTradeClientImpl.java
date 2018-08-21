@@ -3644,7 +3644,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateRechargeStatus(Integer userId, String nid) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
     }
 
     /**
@@ -3655,7 +3655,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge/", boolean.class).getBody();
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, boolean.class).getBody();
     }
 
     /**

@@ -10,7 +10,7 @@ import com.hyjf.am.vo.BaseVO;
  * @version SmsLogVO, v0.1 2018/8/15 14:15
  */
 public class SmsLogVO extends BaseVO {
-    private Integer id;
+    private String id;
 
     private String type;
 
@@ -38,11 +38,11 @@ public class SmsLogVO extends BaseVO {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

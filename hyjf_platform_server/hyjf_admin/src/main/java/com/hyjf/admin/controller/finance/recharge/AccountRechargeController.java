@@ -56,7 +56,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理检索下拉框", notes = "充值管理检索下拉框")
     @RequestMapping(value = "/dropDownBox", method = RequestMethod.GET)
-    @ResponseBody
     public JSONObject dropDownBox(){
         JSONObject jsonObject = new JSONObject();
 
@@ -212,7 +211,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    @ResponseBody
     public AdminResult<ListResult<AccountRechargeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -246,7 +244,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理", notes = "资金中心->更新充值状态")
     @PostMapping(value = "/modifyRechargeStatus")
-    @ResponseBody
     public JSONObject modifyRechargeStatus(@RequestBody AccountRechargeRequestBean requestBean){
 
         JSONObject jsonObject = new JSONObject();
@@ -264,14 +261,15 @@ public class AccountRechargeController extends BaseController {
 
         //更新充值状态
         boolean isAccountUpdate = this.rechargeService.updateRechargeStatus(userId, nid);
+        String status= BaseResult.SUCCESS;
         if (isAccountUpdate){
-            jsonObject.put("status", BaseResult.SUCCESS);
+            status = BaseResult.SUCCESS;
             jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
         }else {
-            jsonObject.put("status", Response.FAIL);
+            status = Response.FAIL;
             jsonObject.put("statusDesc", Response.FAIL_MSG);
         }
-
+        jsonObject.put("status", status);
         return jsonObject;
     }
 
@@ -282,7 +280,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理", notes = "资金中心->确认充值(FIX) 操作")
     @PostMapping(value = "/rechargeFix")
-    @ResponseBody
     public JSONObject rechargeFix(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -290,7 +287,6 @@ public class AccountRechargeController extends BaseController {
 
         JSONObject jsonObject = new JSONObject();
 
-        Map<String, Object> params = new HashedMap();
         //用户ID
         Integer userId = requestBean.getUserId();
         //订单编号
