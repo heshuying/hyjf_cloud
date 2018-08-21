@@ -90,18 +90,16 @@ public class AccountRechargeController extends BaseController {
         }
         return  rechargeResponse;
     }
-
+    
     /**
      * 更新用户充值订单状态
-     * @param request
+     * @param userId
+     * @param nid
      * @return
      * @Author : huanghui
      */
-    @RequestMapping(value = "/modifyRechargeStatus", method = RequestMethod.POST)
-    public boolean modifyRechargeStatus(@RequestBody AccountRechargeRequest request){
-
-        Integer userId = request.getUserId();
-        String nid = request.getNid();
+    @RequestMapping(value = "/modifyRechargeStatus/{userId}/{nid}", method = RequestMethod.GET)
+    public boolean modifyRechargeStatus(@PathVariable Integer userId, @PathVariable String nid){
         return this.accountRecharge.updateRechargeStatus(userId, nid);
     }
 

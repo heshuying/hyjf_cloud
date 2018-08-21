@@ -40,7 +40,7 @@ public class BankEveController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/selectBankEeveInfoList")
+	@RequestMapping(value = "/selectBankEveInfoList")
 	public BankEveResponse selectBankEeveInfoList(@RequestBody @Valid BankEveRequest request){
 		logger.info("request:" +JSONObject.toJSON(request));
 		BankEveResponse response = new BankEveResponse();

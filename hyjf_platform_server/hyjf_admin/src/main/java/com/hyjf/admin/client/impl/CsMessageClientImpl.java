@@ -348,7 +348,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      */
     @Override
     public MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/selectmessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/selectmessagepushmsg",
                 request,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
