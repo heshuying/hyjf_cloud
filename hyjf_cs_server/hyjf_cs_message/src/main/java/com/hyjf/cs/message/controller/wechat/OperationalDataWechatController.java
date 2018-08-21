@@ -52,40 +52,25 @@ public class OperationalDataWechatController {
 	@GetMapping("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
-		Calendar cal = Calendar.getInstance();
 		JSONObject result = new JSONObject();
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
 
 			JSONObject info = new JSONObject();
 
-//			info.put("CumulativeTransactionTotal", oe.getTotalCount());
-//			info.put("CumulativeUserIncome", oe.getTotalInterest());
 			info.put("CumulativeTransactionNum", platDataStatisticsService.selectTotalTradeSum());
 
 			info.put("CumulativeTransactionTotal", platDataStatisticsService.selectTotalInvest());
 			info.put("CumulativeUserIncome", platDataStatisticsService.selectTotalInterest());
-//			info.put("CumulativeTransactionNum", operationReportCustomizeMapper.getTradeCount(getLastDay(cal)));
 
 			//加上统计月份
 			int staticMonth=oe.getStatisticsMonth();
 			info.put("CutOffDate", transferIntToDate(staticMonth));
 			
 			// 获取12个月的数据
-			Document dbObject = new Document();
-			Document fieldsObject = new Document();
-			// 指定返回的字段
-			fieldsObject.put("statisticsMonth", true);
-			fieldsObject.put("accountMonth", true);
-			fieldsObject.put("tradeCountMonth", true);
-			query = new BasicQuery(dbObject, fieldsObject);			query.limit(12);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList(query);
+			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList();
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -130,13 +115,9 @@ public class OperationalDataWechatController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
 			JSONObject detail = new JSONObject();
-			
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
 				detail.put("LoanNum", oe.getLoanNum());
@@ -156,11 +137,7 @@ public class OperationalDataWechatController {
 			detail.put("overdueNum", 0);
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
-
-
 			//借款人相关数据统计：
-
-
 			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
 			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
 			detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
@@ -191,26 +168,18 @@ public class OperationalDataWechatController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(Validator.isNull(oe)) {
 				result.put("status", "99");
 				result.put("statusDesc", "投资人地域分布数据为空");
 				return result;
 			}
-
 			// 获取投资人区域信息
 			Map<Integer, String> cityMap = oe.getInvestorRegionMap();
 			List<SubEntity> list = oe.orgnizeData(cityMap);
 			List<SubEntity> sublist=oe.formatList(list);
-//			Gson gson = new Gson();
-			
 			ObjectMapper mapper = new ObjectMapper();
-			
 			result.put("InvestorRegionList", mapper.writeValueAsString(sublist));
-//			result.put("InvestorRegionList", gson.toJson(sublist));
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "99");
@@ -234,11 +203,7 @@ public class OperationalDataWechatController {
 		result.put("statusDesc", "成功");
 		try {
 			JSONObject info = new JSONObject();
-
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			// 投资人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
             int maleCount = 0;
@@ -281,32 +246,7 @@ public class OperationalDataWechatController {
 
 		return result;
 	}
-	// public InvestorSexAgeDataResponse getInvestorSexAgeData() {
-	// InvestorSexAgeDataResponse response = new InvestorSexAgeDataResponse();
-	// InvestorSexAgeDataVO vo = new InvestorSexAgeDataVO();
-	// vo.setInvestorRegionMenRate("10.00%");
-	// vo.setInvestorRegionWoMenRate("90.00%");
-	// List<InvestorSexAgeDataVO.InvestorAgeDistribution> list =
-	// this.buildInvestorAgeList();
-	// vo.setInvestorAgeList(list);
-	// response.setInfo(vo);
-	// return response;
-	// }
 
-
-
-	/**
-	 * 查询投资人年龄分布
-	 * 
-	 * @param startAge
-	 * @param endAge
-	 * @return
-	 */
-	private String getAgeRate(int startAge, int endAge) {
-		String rate = "";
-		rate = "25.00";
-		return rate;
-	}
 
 	/**
 	 * 转化数字格式的日期
