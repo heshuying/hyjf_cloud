@@ -25,6 +25,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.CouponRepayProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
@@ -77,6 +78,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     private BorrowClient borrowClient;
     @Autowired
     private CouponRepayProducer couponRepayProducer;
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
 
     /** 用户ID */
     private static final String USERID = "userId";
@@ -809,82 +812,16 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      * @param accountWebList
      * @return
      */
-    private int insertAccountWebList(AccountWebListVO accountWebList) {
-        if (countAccountWebList(accountWebList.getOrdid(), accountWebList.getTrade()) == 0) {
-            // 设置部门信息
-            setDepartments(accountWebList);
-            // 插入
-            return this.accountClient.insertAccountWebList(accountWebList);
-        }
-        return 0;
-    }
-
-    /**
-     * 设置部门名称
-     *
-     * @param accountWebList
-     */
-    private void setDepartments(AccountWebListVO accountWebList) {
-        if (accountWebList != null) {
-            Integer userId = accountWebList.getUserId();
-            UserInfoVO usersInfo = amUserClient.findUsersInfoById(userId);
-            if (usersInfo != null) {
-                Integer attribute = usersInfo.getAttribute();
-                if (attribute != null) {
-                    // 查找用户的的推荐人
-                    UserVO users = amUserClient.getSpreadsUsersByUserId(userId);
-                    Integer refUserId = null;
-                    List<SpreadsUserVO> sList = amUserClient.selectByUserId(userId);
-                    if (sList != null && !sList.isEmpty()) {
-                        refUserId = sList.get(0).getSpreadsUserId();
-                    }
-                    // 如果是线上员工或线下员工，推荐人的userId和username不插
-                    if (users != null && (attribute == 2 || attribute == 3)) {
-                        // 查找用户信息
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(userId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                    // 如果是无主单，全插
-                    else if (users != null && (attribute == 1)) {
-                        // 查找用户推荐人
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                    // 如果是有主单
-                    else if (users != null && (attribute == 0)) {
-                        // 查找用户推荐人
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                }
-                accountWebList.setTruename(usersInfo.getTruename());
-                accountWebList.setFlag(1);
-            }
-        }
-    }
-
-    /**
-     * 判断网站收支是否存在
-     *
-     * @param nid
-     * @return
-     */
-    private int countAccountWebList(String nid, String trade) {
-        return this.accountClient.countAccountWebList(nid,trade);
-    }
-
+	private int insertAccountWebList(AccountWebListVO accountWebList) {
+		try {
+			accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
+					UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+		} catch (MQException e) {
+			logger.error("更新网站收支明细失败！");
+		}
+		return 0;
+	}
+    
     /**
      * 写入收支明细
      *

@@ -65,8 +65,6 @@ public class MessagePushController extends BaseController {
 		page = Integer.valueOf(page);
 		pageSize = Integer.valueOf(pageSize);
 		int count = msgPushService.countMsgHistoryRecord(1, userId, null);
-		// int count = this.msgPushService.countMsgPushTagRecord(userId);
-		// ret.put("title", "消息盒子");
 		ret.put("count", count);
 		int limitStart = pageSize * (page - 1);
 
@@ -79,7 +77,8 @@ public class MessagePushController extends BaseController {
 				tagbean.setId(msg.getId());
 				tagbean.setTime(GetDate.timestamptoStrYYYYMMDDHHMM(msg.getSendTime().toString()));
 				int versionInt = 0;
-				String vers[] = version.split("\\."); // 取前三位版本号
+				// 取前三位版本号
+				String vers[] = version.split("\\.");
 				if (vers != null && vers.length > 0) {
 					versionInt = Integer.parseInt(vers[0] + vers[1] + vers[2]);
 				}
@@ -152,7 +151,7 @@ public class MessagePushController extends BaseController {
 				if (firstFlag) {
 					String webhost = UploadFileUtils.getDoPath(webHost) + "/hyjf-app".substring(1, "/hyjf-app".length())
 							+ "/";
-					webhost = webhost.substring(0, webhost.length() - 1);// http://new.hyjf.com/hyjf-app/
+					webhost = webhost.substring(0, webhost.length() - 1);
 					msgbean.setImgUrl(webhost + msg.getMsgImageUrl());
 					firstFlag = false;
 				}

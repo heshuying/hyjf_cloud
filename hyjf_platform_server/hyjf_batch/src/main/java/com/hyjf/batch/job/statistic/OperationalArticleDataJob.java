@@ -7,7 +7,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 上海大屏幕运营数据 公司动态
+ * 上海大屏幕运营数据 公司动态 (废弃)
  * @Author : huanghui
  * 禁止并发
  */

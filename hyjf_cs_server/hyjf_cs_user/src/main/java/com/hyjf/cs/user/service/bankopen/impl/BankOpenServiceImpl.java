@@ -23,7 +23,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
