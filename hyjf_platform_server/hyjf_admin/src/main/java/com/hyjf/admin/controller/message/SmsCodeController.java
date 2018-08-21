@@ -56,8 +56,11 @@ public class SmsCodeController extends BaseController {
     @PostMapping("/query_user")
     public JSONObject queryUser(@RequestBody SmsCodeRequestBean requestBean) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(STATUS, SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         // 在筛选条件下查询出用户
         List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
+        jsonObject.put("user_number", 0);
 		if (!CollectionUtils.isEmpty(msgs)) {
 			jsonObject.put("user_number", msgs.size());
 		}
@@ -78,7 +81,7 @@ public class SmsCodeController extends BaseController {
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            logger.error("在筛选条件下查询出用户出错...", e1);
         }
         // 短信余额
         jsonObject.put("remain_money", remain_money.toPlainString());
@@ -118,6 +121,8 @@ public class SmsCodeController extends BaseController {
     public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
+        jsonObject.put("status", FAIL);
+        jsonObject.put("statusDesc", FAIL_DESC);
         logger.info("后台发送短信开始...");
         // 获取用户输入的手机号码
         String mobile = form.getUser_phones();
@@ -262,6 +267,8 @@ public class SmsCodeController extends BaseController {
             jsonObject.put("success", true);
             jsonObject.put("msg", "发送成功");
         }
+        jsonObject.put("status", SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         return jsonObject;
     }
 }

@@ -29,7 +29,7 @@ import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
