@@ -18,7 +18,7 @@ import org.quartz.JobExecutionException;
 public class UserPortraitJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        // 0 0 0 * * ? 每天凌晨0点执行一次
+        // 0 0 0 * * ? * 每天凌晨0点执行一次
         logger.info("UserPortraitJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-USER/cs-user/batch/user_portrait_batch", String.class);
         logger.info("UserPortraitJob execute end...");

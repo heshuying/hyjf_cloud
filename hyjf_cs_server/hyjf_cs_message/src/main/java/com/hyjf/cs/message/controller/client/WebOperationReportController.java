@@ -6,6 +6,7 @@ package com.hyjf.cs.message.controller.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.service.report.OperationReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,4 +49,18 @@ public class WebOperationReportController extends BaseController {
 		return response;
 	}
 
+	@ApiOperation(value = "进入页面预览初始化", notes = "进入页面预览初始化")
+	@GetMapping("/initMonthReport/{id}")
+	public JSONObject initMonthReport(@PathVariable String id) {
+		JSONObject jsonObject = new JSONObject();
+		OperationReportColumnEntity report = operationReportService.selectByPrimaryKey(id);
+		if(report!=null){
+			jsonObject.put("success", "success");
+			jsonObject.put("reportType",report.getOperationReportType());
+		}else {
+			jsonObject.put("success", "success");
+			jsonObject.put("countIsZero", "暂无任何数据");
+		}
+		return jsonObject;
+	}
 }
