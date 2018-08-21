@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.*;
+import com.hyjf.am.config.dao.mapper.customize.JXBankConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
@@ -34,6 +35,8 @@ public class BankConfigServiceImpl implements BankConfigService {
 	private JxBankConfigMapper jxBankConfigMapper;
 
 
+	@Autowired
+	private JXBankConfigCustomizeMapper bankConfigCustomizeMapper;
 	/**
 	 * 获取银行卡配置信息
 	 */
@@ -325,6 +328,16 @@ public class BankConfigServiceImpl implements BankConfigService {
 		ParamNameExample.Criteria cra = example.createCriteria();
 		cra.andOther1EqualTo(other1);
 		return this.paramNameMapper.selectByExample(example);
+	}
+
+	/**
+	 * 获取银行列表（快捷卡）
+	 * @param quickPayment
+	 * @return
+	 */
+	@Override
+	public List<JxBankConfig> getBankRecordList(Integer quickPayment) {
+		return  bankConfigCustomizeMapper.selectByQuickPayment(quickPayment);
 	}
 
 }

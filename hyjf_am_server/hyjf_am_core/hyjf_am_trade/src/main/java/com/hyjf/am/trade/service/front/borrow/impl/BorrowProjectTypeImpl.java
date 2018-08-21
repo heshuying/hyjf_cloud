@@ -200,24 +200,18 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
      */
     public void insertAsset(BorrowProjectTypeRequest form) {
         HjhAssetType record = new HjhAssetType();
-        //BeanUtils.copyProperties(form, record);
-
-        //userid为int型CreateUser是Integer类型、用户id为字符串类型
-//        String userId = ShiroUtil.getLoginUserId();
-//        record.setCreateUser(Integer.parseInt(userId));
+        record.setCreateUser(Integer.parseInt(form.getCreateUserId()));
         //汇赢金服的类型
         record.setInstCode(CustomConstants.INST_CODE_HYJF);
         //项目类型里编号存放string类型、tinyint类型最大值存放127
         record.setAssetType(Integer.parseInt(form.getBorrowCd()));
-
         //名称
         record.setAssetTypeName(form.getBorrowName());
         //状态
         record.setStatus(CustomConstants.FLAG_STATUS_ENABLE);
         //时间戳是integer类型
-//        int nowTime = GetDate.getNowTime10();
         record.setCreateTime(new Date());
-//        record.setDelFlg(0);
+        record.setDelFlag(CustomConstants.FLAG_STATUS_ENABLE);
 
         hjhAssetTypeMapper.insertSelective(record);
     }

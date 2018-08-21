@@ -31,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(tags = "wechat端-加入计划")
+@Api(tags = "weChat端-加入计划")
 @RestController
 @RequestMapping("/hyjf-wechat/tender/hjh")
 public class WechatjhPlanController extends BaseTradeController {
@@ -40,7 +40,7 @@ public class WechatjhPlanController extends BaseTradeController {
     @Autowired
     private HjhTenderService hjhTenderService;
 
-    @ApiOperation(value = "wechat端-加入计划", notes = "wechat端-加入计划")
+    @ApiOperation(value = "加入计划", notes = "加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
@@ -59,7 +59,7 @@ public class WechatjhPlanController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "wechat端-获取计划投资信息", notes = "wechat端-获取计划投资信息")
+    @ApiOperation(value = "获取计划投资信息", notes = "获取计划投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender) {
         tender.setUserId(userId);

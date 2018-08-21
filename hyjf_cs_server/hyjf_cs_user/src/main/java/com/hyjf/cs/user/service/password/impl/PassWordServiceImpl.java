@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -25,7 +26,6 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -37,12 +37,14 @@ import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -557,47 +559,28 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public Map<String,Object> checkStatus(String token, String sign){
-        Map<String,Object> result = new HashMap<>();
-        BaseMapBean baseMapBean=new BaseMapBean();
+    public UserVO checkStatus(String token, String sign){
         if(token==null){
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_FAILED_PATH);
-            result.put("baseMapBean",baseMapBean);
-            return result;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未登录！");
         }
         //判断用户是否登录
         Integer userId = SecretUtil.getUserId(sign);
         if(userId==null||userId<=0){
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
-            result.put("baseMapBean",baseMapBean);
-            return result;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未登录！");
         }
         //判断用户是否开户
         UserVO user= this.getUsersById(userId);
         if (user.getBankOpenAccount().intValue() != 1) {
             //未开户
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未开户！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
-            result.put("baseMapBean",baseMapBean);
-            return result;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未开户！");
         }
         //判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
         if (passwordFlag == 1) {
             //已设置交易密码
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "已设置交易密码！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
-            result.put("baseMapBean",baseMapBean);
-            return result;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"已设置交易密码！");
         }
-        result.put("user",user);
-        return result;
+        return user;
     }
 
     @Override
@@ -636,5 +619,172 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retMsg = this.getBankRetMsg(retCode);
         return retMsg;
 
+    }
+
+    @Override
+    public Map<String, Object> setAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setChannel(BankCallConstant.CHANNEL_APP);
+        if(user.getUserType() == 1){
+            //企业用户 传组织机构代码
+            CorpOpenAccountRecordVO record= this.getCorpOpenAccountRecord(user.getUserId());
+            // 证件类型 20：其他证件（组织机构代码）25：社会信用号
+            bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);
+            bean.setIdNo(record.getBusiCode());
+            bean.setName(record.getBusiName());
+        }else{
+            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+            bean.setIdNo(usersInfo.getIdcard());
+            bean.setName(usersInfo.getTruename());
+        }
+        bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
+        bean.setMobile(user.getMobile());
+
+        // 商户私有域，存放开户平台,用户userId
+        LogAcqResBean acqRes = new LogAcqResBean();
+        acqRes.setUserId(user.getUserId());
+        bean.setLogAcqResBean(acqRes);
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(user.getUserId()));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+             resultMap = BankCallUtils.callApiMap(bean);
+        } catch (Exception e) {
+            logger.error("调用银行接口失败",e);
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> resetAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setChannel(BankCallConstant.CHANNEL_APP);
+        if(user.getUserType() == 1){
+            CorpOpenAccountRecordVO record= this.getCorpOpenAccountRecord(user.getUserId());
+            // 证件类型 20：其他证件（组织机构代码）25：社会信用号
+            bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);
+            bean.setIdNo(record.getBusiCode());
+            bean.setName(record.getBusiName());
+        }else{
+            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+            bean.setIdNo(usersInfo.getIdcard());
+            bean.setName(usersInfo.getTruename());
+        }
+        bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
+        bean.setMobile(user.getMobile());
+        // 商户私有域，存放开户平台,用户userId
+        LogAcqResBean acqRes = new LogAcqResBean();
+        acqRes.setUserId(user.getUserId());
+        bean.setLogAcqResBean(acqRes);
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(user.getUserId()));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            resultMap = BankCallUtils.callApiMap(bean);
+        } catch (Exception e) {
+            logger.error("调用银行接口失败!",e);
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
+        }
+        return  resultMap;
+    }
+
+    @Override
+    public Map<String, Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+        // 消息类型(用户开户)
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
+        bean.setChannel(BankCallConstant.CHANNEL_WEI);
+        if(user.getUserType() == 1){
+            //企业用户 传组织机构代码
+            CorpOpenAccountRecordVO record = this.getCorpOpenAccountRecord(user.getUserId());
+            // 证件类型 20：其他证件（组织机构代码）25：社会信用号
+            bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);
+            bean.setIdNo(record.getBusiCode());
+            bean.setName(record.getBusiName());
+        }else{
+            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+            bean.setIdNo(usersInfo.getIdcard());
+            bean.setName(usersInfo.getTruename());
+        }
+        //电子账号
+        bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
+        bean.setMobile(user.getMobile());
+
+        // 商户私有域，存放开户平台,用户userId
+        LogAcqResBean acqRes = new LogAcqResBean();
+        acqRes.setUserId(user.getUserId());
+        bean.setLogAcqResBean(acqRes);
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(user.getUserId()));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        // 跳转到汇付天下画面
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            resultMap = BankCallUtils.callApiMap(bean);
+        } catch (Exception e) {
+            throw new CheckException(ResultEnum.USER_ERROR_208.getStatus(),ResultEnum.USER_ERROR_208.getStatusDesc());
+        }
+        return resultMap;
+    }
+
+    @Override
+    public UserVO weChatCheck(Integer userId) {
+        //判断用户是否登录
+        if(StringUtil.isBlank(userId.toString())){
+            throw new CheckException(ResultEnum.ERROR_004.getStatus(),ResultEnum.ERROR_004.getStatusDesc());
+        }
+        //判断用户是否开户
+        UserVO user= this.getUsersById(userId);
+        if (user.getBankOpenAccount().intValue() != 1) {
+            //未开户
+            throw new CheckException(ResultEnum.USER_ERROR_200.getStatus(),ResultEnum.USER_ERROR_200.getStatusDesc());
+        }
+        return user;
+    }
+
+    @Override
+    public Map<String, Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
+        // 消息类型
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setChannel(BankCallConstant.CHANNEL_APP);
+        if(user.getUserType() == 1){
+            //企业用户 传组织机构代码
+            CorpOpenAccountRecordVO record = this.getCorpOpenAccountRecord(user.getUserId());
+            // 证件类型 20：其他证件（组织机构代码）25：社会信用号
+            bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);
+            bean.setIdNo(record.getBusiCode());
+            bean.setName(record.getBusiName());
+        }else{
+            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+            bean.setIdNo(usersInfo.getIdcard());
+            bean.setName(usersInfo.getTruename());
+        }
+        //电子账号
+        bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
+        bean.setMobile(user.getMobile());
+        // 商户私有域，存放开户平台,用户userId
+        LogAcqResBean acqRes = new LogAcqResBean();
+        acqRes.setUserId(user.getUserId());
+        bean.setLogAcqResBean(acqRes);
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(user.getUserId()));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        // 跳转到汇付天下画面
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            resultMap = BankCallUtils.callApiMap(bean);
+        } catch (Exception e) {
+            throw new CheckException(ResultEnum.USER_ERROR_208.getStatus(),ResultEnum.USER_ERROR_208.getStatusDesc());
+        }
+        return resultMap;
     }
 }

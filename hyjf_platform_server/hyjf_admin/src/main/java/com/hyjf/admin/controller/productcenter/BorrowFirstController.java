@@ -33,7 +33,7 @@ import java.util.List;
  * @author wangjun
  * @version borrowFirstController, v0.1 2018/7/3 9:48
  */
-@Api(value = "汇直投-借款初审接口", tags = "汇直投-借款初审接口")
+@Api(value = "产品中心-汇直投-借款初审", tags = "产品中心-汇直投-借款初审")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_first")
 public class BorrowFirstController extends BaseController {
@@ -46,7 +46,13 @@ public class BorrowFirstController extends BaseController {
     /** 权限 */
     public static final String PERMISSIONS = "borrowfirst";
 
-    @ApiOperation(value = "借款初审初始化", notes = "标的备案初始化")
+    /**
+     * 借款初审初始化
+     *
+     * @param borrowFirstRequestBean
+     * @return
+     */
+    @ApiOperation(value = "借款初审初始化", notes = "借款初审初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowFirstResponseBean> init(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
@@ -62,6 +68,12 @@ public class BorrowFirstController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 获取借款初审列表
+     *
+     * @param borrowFirstRequestBean
+     * @return
+     */
     @ApiOperation(value = "获取借款初审列表", notes = "获取借款初审列表")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -72,6 +84,12 @@ public class BorrowFirstController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 已交保证金详细画面
+     *
+     * @param borrowNid
+     * @return
+     */
     @ApiOperation(value = "已交保证金详细画面", notes = "已交保证金详细画面")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/get_bail_info/{borrowNid}")
@@ -80,6 +98,13 @@ public class BorrowFirstController extends BaseController {
         return borrowFirstService.getBailInfo(borrowNid);
     }
 
+    /**
+     * 交保证金
+     *
+     * @param request
+     * @param borrowNid
+     * @return
+     */
     @ApiOperation(value = "交保证金", notes = "交保证金")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/insert_borrow_bail/{borrowNid}")
@@ -92,6 +117,12 @@ public class BorrowFirstController extends BaseController {
         return borrowFirstService.insertBorrowBail(borrowNid, currUser.getId());
     }
 
+    /**
+     * 获取发标信息
+     *
+     * @param borrowNid
+     * @return
+     */
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
@@ -100,6 +131,12 @@ public class BorrowFirstController extends BaseController {
         return borrowFirstService.getFireInfo(borrowNid);
     }
 
+    /**
+     * 发标
+     *
+     * @param requestBean
+     * @return
+     */
     @ApiOperation(value = "发标", notes = "发标")
     @PostMapping("/update_borrow_fire_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)

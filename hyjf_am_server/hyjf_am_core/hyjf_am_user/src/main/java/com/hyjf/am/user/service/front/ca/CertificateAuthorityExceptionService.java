@@ -19,7 +19,7 @@ public interface CertificateAuthorityExceptionService extends BaseService {
      * @param form
      * @return
      */
-    Integer countCAExceptionList(CertificateAuthorityExceptionRequest form);
+    Integer countCANOExceptionList(CertificateAuthorityExceptionRequest form);
 
     /**
      * 检索CA异常列表
@@ -28,11 +28,28 @@ public interface CertificateAuthorityExceptionService extends BaseService {
      * @param limitEnd
      * @return
      */
-    List<CertificateAuthority> getCAExceptionList(CertificateAuthorityExceptionRequest form,int limitStart,int limitEnd);
+    List<CertificateAuthority> getCANOExceptionList(CertificateAuthorityExceptionRequest form,int limitStart,int limitEnd);
 
     /**
      * 发送CA认证MQ
      * @param userId
      */
     void updateUserCAMQ(int userId) throws ParseException, MQException;;
+
+    /**
+     * 获取CA认证异常总数
+     * @param form
+     * @return
+     */
+    Integer countCAExceptionList(CertificateAuthorityExceptionRequest form);
+
+
+    /**
+     * 获取CA认证异常list
+     * @param form
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    List<CertificateAuthority> getCAExceptionList(CertificateAuthorityExceptionRequest form, int limitStart, int limitEnd);
 }

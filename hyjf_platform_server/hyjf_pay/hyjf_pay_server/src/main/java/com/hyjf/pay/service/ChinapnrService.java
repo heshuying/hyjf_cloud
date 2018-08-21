@@ -22,11 +22,11 @@ public interface ChinapnrService {
 	 * @param methodName
 	 * @return
 	 */
-	 Long insertChinapnrExclusiveLog(ChinapnrBean bean, String methodName);
+	 String insertChinapnrExclusiveLog(ChinapnrBean bean, String methodName);
 
      void insertChinapnrSendLog(ChinapnrBean bean, PnrApiBean pnrApiBean);
 
-	ChinapnrExclusiveLog selectChinapnrExclusiveLog(long l);
+	ChinapnrExclusiveLog selectChinapnrExclusiveLog(String l);
 
 	void insertChinapnrLog(ChinapnrLog chinapnrLog);
 

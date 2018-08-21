@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.finance.recharge;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.am.response.Response;
@@ -13,15 +15,28 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +58,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理检索下拉框", notes = "充值管理检索下拉框")
     @RequestMapping(value = "/dropDownBox", method = RequestMethod.GET)
-    @ResponseBody
     public JSONObject dropDownBox(){
         JSONObject jsonObject = new JSONObject();
 
@@ -177,14 +191,16 @@ public class AccountRechargeController extends BaseController {
         allMap.put("userRoleList", userRoleList);
 
         //初始化List 将所有Map放入此List 以达到返回指定格式数据的方式
-        List<Object> allList = new ArrayList<>();
-        allList.add(allMap);
+//        List<Object> allList = new ArrayList<>();
+//        allList.add(allMap);
 
         if (paramList != null && banks != null && bankType != null){
-            jsonObject.put("status", Response.SUCCESS);
-            jsonObject.put("data", allList);
+            jsonObject.put("status", BaseResult.SUCCESS);
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+            jsonObject.put("data", allMap);
         }else {
             jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
             jsonObject.put("data", "");
         }
         return jsonObject;
@@ -195,9 +211,8 @@ public class AccountRechargeController extends BaseController {
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "充值管理", notes = "资金中心->充值管理")
+    @ApiOperation(value = "充值管理列表", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    @ResponseBody
     public AdminResult<ListResult<AccountRechargeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -222,6 +237,261 @@ public class AccountRechargeController extends BaseController {
         }else {
             return new AdminResult<ListResult<AccountRechargeVO>>(ListResult.build(returnList, 0));
         }
+    }
+
+    /**
+     * 资金中心 - 充值管理列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "更新充值状态", notes = "资金中心->更新充值状态")
+    @PostMapping(value = "/modifyRechargeStatus")
+    public JSONObject modifyRechargeStatus(@RequestBody AccountRechargeRequestBean requestBean){
+
+        JSONObject jsonObject = new JSONObject();
+
+        //用户ID
+        Integer userId = requestBean.getUserId();
+        //订单ID
+        String nid = requestBean.getNidSearch();
+
+        if (Validator.isNull(userId) || Validator.isNull(nid)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单编号或用户ID为空!");
+            return jsonObject;
+        }
+
+        //更新充值状态
+        boolean isAccountUpdate = this.rechargeService.updateRechargeStatus(userId, nid);
+        String status= BaseResult.SUCCESS;
+        if (isAccountUpdate){
+            status = BaseResult.SUCCESS;
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+        }else {
+            status = Response.FAIL;
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
+        }
+        jsonObject.put("status", status);
+        return jsonObject;
+    }
+
+    /**
+     * 资金中心 - 充值管理列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "确认充值(FIX) 操作", notes = "资金中心->确认充值(FIX) 操作")
+    @PostMapping(value = "/rechargeFix")
+    public JSONObject rechargeFix(@RequestBody AccountRechargeRequestBean requestBean){
+
+        AccountRechargeRequest copyRequest = new AccountRechargeRequest();
+        BeanUtils.copyProperties(requestBean, copyRequest);
+
+        JSONObject jsonObject = new JSONObject();
+
+        //用户ID
+        Integer userId = requestBean.getUserId();
+        //订单编号
+        String nid = requestBean.getNidSearch();
+        //订单状态
+        String status = requestBean.getStatusSearch();
+
+        if (Validator.isNull(userId)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":用户ID不能为空!");
+            return jsonObject;
+        }else if (Validator.isNull(nid)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单编号不能为空!");
+            return jsonObject;
+        }else if (Validator.isNull(status)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单状态为空!");
+            return jsonObject;
+        }
+
+        boolean isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
+
+        if (isAccountUpdate){
+            jsonObject.put("status", BaseResult.SUCCESS);
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+        }else {
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
+        }
+        return jsonObject;
+    }
+
+    @ApiOperation(value = "充值管理数据导出",notes = "资金中心->充值管理数据导出")
+    @PostMapping(value = "/exportAction")
+    public void exportAction(HttpServletResponse response, @RequestBody AccountRechargeRequestBean request) throws UnsupportedEncodingException {
+
+        AccountRechargeRequest accountRechargeRequest = new AccountRechargeRequest();
+        BeanUtils.copyProperties(request, accountRechargeRequest);
+
+        // currPage<0 为全部,currPage>0 为具体某一页
+        accountRechargeRequest.setCurrPage(-1);
+
+        // 表格sheet名称
+        String sheetName = "充值管理详情数据";
+        // 设置默认查询时间
+        if (StringUtils.isEmpty(accountRechargeRequest.getStartDate())) {
+            accountRechargeRequest.setStartDate(GetDate.getDate("yyyy-MM-dd"));
+        }
+        if (StringUtils.isEmpty(accountRechargeRequest.getEndDate())) {
+            accountRechargeRequest.setEndDate(GetDate.getDate("yyyy-MM-dd"));
+        }
+
+        List<AccountRechargeVO> returnList = null;
+        AccountRechargeResponse rechargeResponse = this.rechargeService.queryRechargeList(accountRechargeRequest);
+
+        if (rechargeResponse.getCount() > 0) {
+            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeVO.class);
+        }
+        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+
+        // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
+        // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };
+        String[] titles = new String[] { "序号", "订单号", "用户名", "电子账号", "手机号", "流水号", "资金托管平台", "用户角色", "用户属性（当前）", "用户所属一级分部（当前）", "用户所属二级分部（当前）", "用户所属团队（当前）", "推荐人用户名（当前）", "推荐人姓名（当前）",
+                "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "充值渠道", "充值类型", "充值银行", "银行卡号", "充值金额", "手续费", "垫付手续费", "到账金额", "充值状态", "充值平台", "充值时间" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        // 生成一个表格
+        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+
+        if (returnList != null && returnList.size() > 0) {
+
+            int sheetCount = 1;
+            int rowNum = 0;
+
+            for (int i = 0; i < returnList.size(); i++) {
+                rowNum++;
+                if (i != 0 && i % 60000 == 0) {
+                    sheetCount++;
+                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                    rowNum = 1;
+                }
+
+                // 新建一行
+                Row row = sheet.createRow(rowNum);
+                // 循环数据
+                for (int celLength = 0; celLength < titles.length; celLength++) {
+                    AccountRechargeVO record = returnList.get(i);
+                    // 创建相应的单元格
+                    Cell cell = row.createCell(celLength);
+                    if (celLength == 0) {
+                        cell.setCellValue(i + 1);
+                    } else if (celLength == 1) {
+                        cell.setCellValue(record.getNid());
+                    } else if (celLength == 2) {
+                        cell.setCellValue(record.getUsername());
+                    } else if (celLength == 3) {
+                        cell.setCellValue(record.getAccountId());
+                    }
+                    // 手机号
+                    else if (celLength == 4) {
+                        cell.setCellValue(record.getMobile());
+                    }
+                    // 流水号
+                    else if (celLength == 5) {
+                        cell.setCellValue(record.getSeqNo());
+                    }
+                    // 资金托管平台
+                    else if (celLength == 6) {
+                        cell.setCellValue(record.getIsBank());
+                    }
+                    // 用户角色
+                    else if (celLength == 7) {
+                        cell.setCellValue(record.getRoleId());
+                    }
+                    // 用户属性（当前）
+                    else if (celLength == 8) {
+                        if ("0".equals(record.getUserAttribute())) {
+                            cell.setCellValue("无主单");
+                        } else if ("1".equals(record.getUserAttribute())) {
+                            cell.setCellValue("有主单");
+                        } else if ("2".equals(record.getUserAttribute())) {
+                            cell.setCellValue("线下员工");
+                        } else if ("3".equals(record.getUserAttribute())) {
+                            cell.setCellValue("线上员工");
+                        }
+                    }
+                    // 用户所属一级分部（当前）
+                    else if (celLength == 9) {
+                        cell.setCellValue(record.getUserRegionName());
+                    }
+                    // 用户所属二级分部（当前）
+                    else if (celLength == 10) {
+                        cell.setCellValue(record.getUserBranchName());
+                    }
+                    // 用户所属团队（当前）
+                    else if (celLength == 11) {
+                        cell.setCellValue(record.getUserDepartmentName());
+                    }
+                    // 推荐人用户名（当前）
+                    else if (celLength == 12) {
+                        cell.setCellValue(record.getReferrerName());
+                    }
+                    // 推荐人姓名（当前）
+                    else if (celLength == 13) {
+                        cell.setCellValue(record.getReferrerTrueName());
+                    }
+                    // 推荐人所属一级分部（当前）
+                    else if (celLength == 14) {
+                        cell.setCellValue(record.getReferrerRegionName());
+                    }
+                    // 推荐人所属二级分部（当前）
+                    else if (celLength == 15) {
+                        cell.setCellValue(record.getReferrerBranchName());
+                    }
+                    // 推荐人所属团队（当前）
+                    else if (celLength == 16) {
+                        cell.setCellValue(record.getReferrerDepartmentName());
+                    } else if (celLength == 17) {
+                        cell.setCellValue(record.getType());// 充值渠道
+                    } else if (celLength == 18) {
+                        if (record.getGateType() != null && "B2C".equals(record.getGateType())) {
+                            cell.setCellValue("个人网银充值"); // 充值类型
+                        } else if (record.getGateType() != null && "B2B".equals(record.getGateType())) {
+                            cell.setCellValue("企业网银充值"); // 充值类型
+                        } else if (record.getGateType() != null && "QP".equals(record.getGateType())) {
+                            cell.setCellValue("快捷充值"); // 充值类型
+                        } else {
+                            cell.setCellValue(record.getGateType()); // 充值类型
+                        }
+                    } else if (celLength == 19) {
+                        cell.setCellValue(record.getBankName());
+                    } else if (celLength == 20) {
+                        cell.setCellValue(record.getCardid());
+                    } else if (celLength == 21) {
+                        cell.setCellValue(record.getMoney() + "");
+                    } else if (celLength == 22) {
+                        cell.setCellValue(record.getFee() != null ? (record.getFee() + "") : (0 + ""));
+                    } else if (celLength == 23) {
+                        cell.setCellValue(record.getDianfuFee() != null ? (record.getDianfuFee() + "") : (0 + ""));
+                    } else if (celLength == 24) {
+                        cell.setCellValue(record.getBalance() + "");
+                    } else if (celLength == 25) {
+                        cell.setCellValue(record.getStatus());
+                    } else if (celLength == 26) {
+                        cell.setCellValue(record.getClient());
+                    } else if (celLength == 27) {
+                        cell.setCellValue(record.getCreateTime());
+                    } else if (celLength == 28) {
+                        cell.setCellValue(record.getTxDate());
+                    } else if (celLength == 29) {
+                        cell.setCellValue(record.getTxTime());
+                    } else if (celLength == 30) {
+                        cell.setCellValue(record.getBankSeqNo());
+                    }
+                    // 以下都是空
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+
     }
 
 }

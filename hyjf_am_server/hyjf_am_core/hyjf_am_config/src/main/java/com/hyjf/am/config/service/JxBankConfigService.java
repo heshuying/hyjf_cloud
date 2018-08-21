@@ -16,4 +16,12 @@ public interface JxBankConfigService {
      * 获取江西银行配置（快捷支付）
      */
     List<JxBankConfig> getQuickPaymentJxBankConfig();
+
+    /**
+     * 根据bankId获取江西银行配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<JxBankConfig> getJxBankConfigByBankId(Integer bankId);
 }

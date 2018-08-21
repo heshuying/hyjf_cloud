@@ -26,6 +26,16 @@ public class CertificateAuthorityExceptionServiceImpl implements CertificateAuth
 		return certificateAuthorityExceptionClient.updateUserCAMQ(Integer.valueOf(userId));
 	}
 
+	/**
+	 * 获取CA认证异常的列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
+		return certificateAuthorityExceptionClient.getExceptionRecordList(request);
+	}
+
 	
 
 }

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author fuqiang
  * @version StzfWhiteConfigController, v0.1 2018/7/9 17:54
  */
-@Api(tags = "受托支付白名单")
+@Api(tags = "配置中心-受托支付白名单")
 @RestController
 @RequestMapping("/hyjf-admin/stzfwhiteconfig")
 public class StzfWhiteConfigController extends BaseController {

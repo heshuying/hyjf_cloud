@@ -353,4 +353,13 @@
       update_user_id = #{updateUserId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getdisplayNameDynamic" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    protocol_type,display_name
+    FROM
+    ht_protocol_template
+    WHERE
+    status = "1"
+  </select>
 </mapper>

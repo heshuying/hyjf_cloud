@@ -1,8 +1,12 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,8 +16,10 @@ import java.util.Date;
 public class AdsVO extends BaseVO implements Serializable {
     private Integer id;
 
+    @ApiModelProperty(value = "广告名称")
     private String name;
 
+    @ApiModelProperty(value = "广告类型")
     private Integer typeId;
 
     private String url;
@@ -22,24 +28,30 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private String content;
 
+    @ApiModelProperty(value = "广告图片")
     private String image;
 
+    @ApiModelProperty(value = "排序")
     private Integer order;
 
     private Integer hits;
 
+    @ApiModelProperty(value = "广告状态")
     private Integer status;
 
     private String shareUrl;
 
+    @ApiModelProperty(value = "分享图片")
     private String shareImage;
 
+    @ApiModelProperty(value = "是否在首页特色banner位置显示，0为不显示，1显示")
     private Integer isIndex;
 
     private String startTime;
 
     private String endTime;
 
+    @ApiModelProperty(value = "是否已结束(只针对活动banner有效0:否,1:是)")
     private Integer isEnd;
 
     private String shareTitle;
@@ -58,7 +70,7 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private Integer updateUserId;
 
-    private Date createTime;
+    private String createTime;
 
     private Date updateTime;
 
@@ -256,14 +268,25 @@ public class AdsVO extends BaseVO implements Serializable {
         this.updateUserId = updateUserId;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    //
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public void setCreateTime(Object createTime) {
+        String dateString = null;
+        if(createTime instanceof java.util.Date){
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateString = formatter.format(createTime);
+        }else{
+            dateString =(String) createTime;
+        }
+        this.createTime = dateString;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

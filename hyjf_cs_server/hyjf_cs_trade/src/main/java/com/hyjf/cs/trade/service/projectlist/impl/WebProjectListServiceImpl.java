@@ -258,7 +258,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /*用户基本信息 开始*/
             other.put("loginFlag", "1");//登录状态 0未登陆 1已登录
             //用户信息
-            if (userVO.getOpenAccount() == 1) {
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
                 other.put("openFlag", "1");
             } else {
                 other.put("openFlag", "0");
@@ -1049,7 +1049,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }
                 result.put("investFlag", investFlag);
                 // 用户是否开户
-                if (userVO.getBankOpenAccount() != null) {
+                if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1 ) {
                     result.put("openFlag", 1);
                 } else {
                     result.put("openFlag", 0);
@@ -1118,8 +1118,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         int dayEnd10 = GetDate.getDayEnd10(date);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", planNid);
-        params.put("startTime", dayStart10);
-        params.put("endTime", dayEnd10);
+        // TODO: 2018/8/21 临时注释掉  zyk
+        //params.put("startTime", dayStart10);
+        //params.put("endTime", dayEnd10);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_BORROW_LIST_COUNT_URL, params, HjhAccedeResponse.class);
         int count = response.getAccedeCount();
@@ -1130,7 +1131,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL, params, BorrowResponse.class);
             List<BorrowVO> list = res.getResultList();
             formatUserName(list);
-            result.setData(list);
+            List<WebPlanBorrowBean> resultList = CommonUtils.convertBeanList(list,WebPlanBorrowBean.class);
+            result.setData(resultList);
         }
         page.setTotal(count);
         result.setPage(page);

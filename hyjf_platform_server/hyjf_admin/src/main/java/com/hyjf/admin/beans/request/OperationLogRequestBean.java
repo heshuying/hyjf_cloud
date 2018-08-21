@@ -2,6 +2,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 /**
  * @author by xiehuili on 2018/7/17.
  */
+@ApiModel(value="操作日志配置",description="操作日志配置")
 public class OperationLogRequestBean extends BasePage implements Serializable {
 
     @ApiModelProperty(value = " 资产来源")

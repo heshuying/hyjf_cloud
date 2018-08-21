@@ -159,7 +159,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         //获取累计投资金额
         TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
-        info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
+        if (null != totalInvestAndInterestVO){
+            info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
+        }else{
+            info.put("totalInvestmentAmount", DF_FOR_VIEW.format(new BigDecimal("0")));
+        }
         info.put("moduleTotal", "4");
         List<AppModuleBean> moduleList = new ArrayList<>();
 

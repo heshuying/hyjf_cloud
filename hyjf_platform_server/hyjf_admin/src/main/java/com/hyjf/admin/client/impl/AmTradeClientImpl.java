@@ -29,16 +29,14 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.PushMoneyVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -566,6 +564,11 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 查询红包明细分页
+     * @param request
+     * @return
+     */
     @Override
     public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request) {
         BankMerchantAccountListCustomizeResponse response = restTemplate
@@ -1957,6 +1960,72 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 标的放款记录列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverVO> selectBorrowRecoverList(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/applyAgreement/select_borrow_recover_list/" + borrowNid;
+        BorrowRecoverResponse response = restTemplate.getForEntity(url, BorrowRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 标的放款记录列表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String borrowNid, int repayPeriod) {
+        String url = "http://AM-TRADE/am-trade/applyAgreement/select_borrow_recover_plan_list/" + borrowNid + "/" + repayPeriod;
+        BorrowRecoverPlanResponse response = restTemplate.getForEntity(url, BorrowRecoverPlanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户债转还款列表
+     *
+     * @param nid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<CreditRepayVO> selectCreditRepayList(String nid, int repayPeriod) {
+        String url = "http://AM-TRADE/am-trade/applyAgreement/select_creditrepay_list/" + nid + "/" + repayPeriod;
+        CreditRepayResponse response = restTemplate.getForEntity(url, CreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户汇计划债转还款列表
+     *
+     * @param nid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepayList(String nid, int repayPeriod) {
+        String url = "http://AM-TRADE/am-trade/applyAgreement/select_hjh_creditrepay_list/" + nid + "/" + repayPeriod;
+        HjhDebtCreditRepayResponse response = restTemplate.getForEntity(url, HjhDebtCreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
      * 获取借款列表
      *
      * @param borrowNid
@@ -2669,10 +2738,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public boolean checkRepeat(String labelName, String planNid) {
-        String url = "http://AM-TRADE/am-trade/allocation/checkRepeat/" + labelName + "/" + planNid;
-        boolean Flag = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return Flag;
+    public int checkRepeat(AllocationEngineRuquest form) {
+        int flg = 0;
+        HjhAllocationEngineResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/allocation/checkRepeat", form, HjhAllocationEngineResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getFlag();
+        }
+        return flg;
     }
 
     @Override
@@ -3320,7 +3393,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BankEveVO> queryBankEveList(BankEveRequest request) {
         BankEveResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/bankaleve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
+                .postForEntity("http://AM-TRADE/am-trade/bankeve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -3393,9 +3466,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
-        String response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord", borrowCommonRequest, String.class)
+    public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
+    	BorrowCommonVO response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowServiceScale", borrowCommonRequest, BorrowCommonVO.class)
                 .getBody();
         return response;
     }
@@ -3565,6 +3638,29 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateRechargeStatus(Integer userId, String nid) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/accountrecharge/modifyRechargeStatus/" + userId + "/" + nid, boolean.class).getBody();
+    }
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/updateAccountAfterRecharge", request, boolean.class).getBody();
     }
 
     /**
@@ -5462,4 +5558,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         NifaReportLogResponse response = restTemplate.postForEntity(url,request,NifaReportLogResponse.class).getBody();
         return response;
     }
+    
+	/**
+	 * 传参查询承接债转表列总计
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	@Override
+	public HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form) {
+	    HjhCreditTenderSumResponse response = restTemplate
+	            .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderCalcSumByParam", form, HjhCreditTenderSumResponse.class).getBody();
+	    if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+	        return response.getResult();
+	    }
+	    return null;
+	}
 }

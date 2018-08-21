@@ -1610,28 +1610,18 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<MessagePushTemplateVO> findAll() {
-        MessagePushTemplateResponse response = restTemplate
+    public MessagePushTemplateResponse findAll() {
+        return restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates",
                         MessagePushTemplateResponse.class)
                 .getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
     }
 
     @Override
-    public List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request) {
-        MessagePushTemplateResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplate", request,
-                        MessagePushTemplateResponse.class)
-                .getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
+	public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgPushTemplate", request,
+				MessagePushTemplateResponse.class).getBody();
+	}
 
     @Override
     public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
@@ -2090,7 +2080,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/serachList";
+        String url = "http://AM-CONFIG/am-config/messagePushTemplate/searchList";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, request, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;

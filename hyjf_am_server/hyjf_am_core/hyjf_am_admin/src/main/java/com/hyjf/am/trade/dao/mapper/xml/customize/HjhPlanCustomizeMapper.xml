@@ -370,7 +370,7 @@
 			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 			left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
 			WHERE
-				hb.plan_nid = #{planNId}
+				hb.plan_nid = #{planNid}
 			AND hb.STATUS = 2
 			AND hb.borrow_full_status = 0
 			ORDER BY
@@ -937,10 +937,7 @@ ORDER BY
 		dpa.user_name
 		END user_name,
 		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accede_account,
-		FROM_UNIXTIME(
-		dpa.create_time,
-		'%Y-%m-%d %H:%i:%s'
-		) AS create_time,
+		dpa.create_time AS create_time,
 		dpa.client
 		FROM
 		ht_hjh_accede dpa

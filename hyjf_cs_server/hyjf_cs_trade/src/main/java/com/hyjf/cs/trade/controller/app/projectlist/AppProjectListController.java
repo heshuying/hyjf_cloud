@@ -29,7 +29,7 @@ import javax.validation.Valid;
  *
  * @author zhangyk
  */
-@Api(tags = "APP端-项目列表")
+@Api(tags = "app端-项目列表")
 @RestController
 @RequestMapping(ProjectConstant.REQUEST_HOME )
 public class AppProjectListController extends BaseTradeController {

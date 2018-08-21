@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
@@ -244,8 +245,8 @@ public interface BorrowCommonService extends BaseService {
 	/**
 	 * 画面的值放到Bean中
 	 * 
-	 * @param modelAndView
 	 * @param form
+	 * @param isExistsRecord
 	 */
 	public void setPageListInfo(BorrowCommonBean form, boolean isExistsRecord);
 
@@ -281,11 +282,14 @@ public interface BorrowCommonService extends BaseService {
 
 	/**
 	 * 获取融资服务费率 & 账户管理费率 & 收益差率
-	 * 
-	 * @param request
+	 *
+	 * @param borrowPeriod
+	 * @param borrowStyle
+	 * @param projectType
+	 * @param instCode
 	 * @return
 	 */
-	public BorrowCommonVO getBorrowServiceScale(String borrowPeriod,String borrowStyle,Integer projectType,String instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 账户管理费率(最低，最高)
@@ -343,7 +347,7 @@ public interface BorrowCommonService extends BaseService {
 
 	/**
 	 * 资料上传
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws Exception
@@ -361,7 +365,7 @@ public interface BorrowCommonService extends BaseService {
 
 	/**
 	 * 资料上传
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws Exception
@@ -439,7 +443,7 @@ public interface BorrowCommonService extends BaseService {
 	
 	/**
 	 * 资金来源
-	 * @param string
+	 * @param instCode
 	 * @return
 	 */
 	public List<HjhInstConfig> hjhInstConfigList(String instCode);
@@ -452,10 +456,16 @@ public interface BorrowCommonService extends BaseService {
     public String getBorrowConfig(String configCd);
 	/**
 	 * 根据资金来源查询产品类型
-	 * @param string
+	 * @param instCode
 	 * @return
 	 */
 	public List<HjhAssetType> hjhAssetTypeList(String instCode);
 	public int isEntrustedExistsUser(String userName);
-	
+
+	/**
+	 * 根据原始标的号拉取标的信息判断是否发送自动备案MQ消息队列
+	 *
+	 * @param borrowPreNid
+	 */
+	void isAutoRecord(String borrowPreNid);
 }

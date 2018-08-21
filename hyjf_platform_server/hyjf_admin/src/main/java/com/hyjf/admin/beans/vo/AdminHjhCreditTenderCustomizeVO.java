@@ -87,6 +87,15 @@ public class AdminHjhCreditTenderCustomizeVO extends BaseVO implements Serializa
 	@ApiModelProperty(value = "脱敏合同地址")
 	private String imgUrl;
 	
+	@ApiModelProperty(value = "是否复投承接")
+	private String tenderType;
+
+	@ApiModelProperty(value = "债转服务费")
+	private String assignServiceFee;
+
+	@ApiModelProperty(value = "债转服务费率")
+	private String assignServiceApr;
+	
 	/**
 	 * 构造方法
 	 */

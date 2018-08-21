@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
@@ -174,13 +173,13 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     @Override
-    public JSONObject smsLogList() {
-        return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_log/list", JSONObject.class).getBody();
+    public SmsLogResponse smsLogList() {
+        return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_log/list", SmsLogResponse.class).getBody();
     }
 
     @Override
-    public JSONObject findSmsLog(SmsLogRequest request) {
-        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, JSONObject.class)
+    public SmsLogResponse findSmsLog(SmsLogRequest request) {
+        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, SmsLogResponse.class)
                 .getBody();
     }
 
@@ -349,7 +348,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      */
     @Override
     public MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/selectmessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/selectmessagepushmsg",
                 request,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -359,7 +358,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse getMessagePushMsgById(Integer id) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -368,7 +367,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/insertmessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/insertmessagepushmsg",
                 templateVO,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -378,7 +377,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/updatemessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/updatemessagepushmsg",
                 templateRequest,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -388,7 +387,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/deletemessagepushmsg/" + recordList,
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg/" + recordList,
                 MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;

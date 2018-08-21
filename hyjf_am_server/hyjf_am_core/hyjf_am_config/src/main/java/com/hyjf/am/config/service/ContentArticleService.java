@@ -75,7 +75,7 @@ public interface ContentArticleService {
      * 取首页公告(风险教育..)列表
      * @return
      */
-    List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit);
+    List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit);
 
 
     /**

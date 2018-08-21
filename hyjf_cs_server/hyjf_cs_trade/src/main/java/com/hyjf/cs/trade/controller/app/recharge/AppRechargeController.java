@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @author
  *
  */
-@Api(tags = "app端用户充值接口")
+@Api(tags = "app端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-app")
@@ -60,7 +61,7 @@ public class AppRechargeController extends BaseTradeController{
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/user/bank/recharge/getRechargeUrl")
+	@PostMapping(value = "/user/bank/recharge/getRechargeUrl")
 	@ApiOperation(value = "获取用户充值信息", notes = "获取用户充值信息")
 	public JSONObject getRechargeUrl(AppRechargeVO vo) {
 		JSONObject object=new JSONObject();
@@ -125,7 +126,7 @@ public class AppRechargeController extends BaseTradeController{
 	 * @param bean
 	 * @return
 	 */
-	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
+	@ApiIgnore
 	@ResponseBody
 	@PostMapping("/bank/user/userDirectRecharge/bgreturn")
 	public BankCallResult bgreturn(HttpServletRequest request,BankCallBean bean) {

@@ -13,7 +13,6 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
@@ -25,16 +24,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
+import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
  * app端散标投资
  */
-@Api(value = "APP端散标投资")
+@Api(value = "app端-散标投资",tags = "app端-散标投资")
 @RestController
 @RequestMapping("/hyjf-app/user/invest")
 public class AppBorrowTenderController extends BaseTradeController {
@@ -44,7 +43,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     private BorrowTenderService borrowTenderService;
 
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
-    @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求投资接口");
@@ -69,6 +68,7 @@ public class AppBorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
@@ -108,11 +108,20 @@ public class AppBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+    public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
-        AppResult<AppInvestInfoResultVO> result = borrowTenderService.getInvestInfoApp(tender);
+        // 前端要求改成bean，不要封装
+        AppInvestInfoResultVO result = borrowTenderService.getInvestInfoApp(tender);
         return result;
     }
 
+    @ApiOperation(value = "APP端获取投资URL", notes = "APP端获取投资URL")
+    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
+    public ModelAndView getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+        logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
+        tender.setUserId(userId);
+        ModelAndView mv = borrowTenderService.getAppTenderUrl(tender);
+        return mv;
+    }
 }

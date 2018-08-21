@@ -23,6 +23,6 @@ public interface AutoReqRepayService extends BaseService {
     /**
      * 取得本日应还款标的列表
      */
-    public boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow)  throws ParseException;
+    public boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow)  throws Exception;
 
 }

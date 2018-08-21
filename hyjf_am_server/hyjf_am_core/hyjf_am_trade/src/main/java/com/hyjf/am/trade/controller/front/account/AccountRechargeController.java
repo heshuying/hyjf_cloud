@@ -71,6 +71,7 @@ public class AccountRechargeController extends BaseController {
 
         AccountRechargeResponse rechargeResponse =  new AccountRechargeResponse();
 
+
         Integer count = this.accountRecharge.getAccountRechargeListCount(request);
 
         // currPage<0 为全部,currPage>0 为具体某一页
@@ -88,5 +89,41 @@ public class AccountRechargeController extends BaseController {
             rechargeResponse.setRtn(Response.SUCCESS);
         }
         return  rechargeResponse;
+    }
+    
+    /**
+     * 更新用户充值订单状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/modifyRechargeStatus/{userId}/{nid}", method = RequestMethod.GET)
+    public boolean modifyRechargeStatus(@PathVariable Integer userId, @PathVariable String nid){
+        return this.accountRecharge.updateRechargeStatus(userId, nid);
+    }
+
+    /**
+     * 确认充值(FIX) 操作
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/updateAccountAfterRecharge", method = RequestMethod.POST)
+    public boolean updateAccountAfterRecharge(@RequestBody AccountRechargeRequest request){
+
+        String status = request.getStatus();
+        Integer userId = request.getUserId();
+        String nid = request.getNid();
+
+        // 确认充值 ; 0表示充值失败
+        boolean isAccountUpdate = false;
+        if ("1".equals(status)){
+            isAccountUpdate = this.accountRecharge.updateAccountAfterRecharge(userId, nid);
+        }else {
+            isAccountUpdate = this.accountRecharge.updateAccountAfterRechargeFail(userId, nid);
+        }
+
+        return isAccountUpdate;
     }
 }

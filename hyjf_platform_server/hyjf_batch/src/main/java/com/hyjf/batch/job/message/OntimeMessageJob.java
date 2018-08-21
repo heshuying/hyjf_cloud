@@ -10,6 +10,7 @@ import org.quartz.JobExecutionException;
 import com.hyjf.batch.job.BaseJob;
 
 /**
+ * 定时发短信定时任务
  * @author fuqiang
  * @version OntimeMessageJob, v0.1 2018/6/22 10:27
  */

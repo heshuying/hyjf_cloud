@@ -2,6 +2,11 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author：yinhui
@@ -38,6 +43,13 @@ public interface ProtocolService {
     void insertProtocolTemplate(AdminProtocolRequest request,String userId);
 
     /**
+     * 获得最新协议模版 前台展示信息
+     *
+     * @return
+     */
+    List<ProtocolTemplateVO> getNewInfo();
+
+    /**
      * 修改协议模板
      *
      * @return
@@ -49,4 +61,6 @@ public interface ProtocolService {
      *
      */
     void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
+
+    String uploadFile(HttpServletRequest request, HttpServletResponse response);
 }

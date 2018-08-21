@@ -1,24 +1,29 @@
 package com.hyjf.am.trade.service.front.asset.impl;
 
+import com.hyjf.am.response.trade.MyCreditDetailResponse;
 import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
+import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.service.front.asset.AssetManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldRepayMentPlanDetailsCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldRepayMentPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.ThreeDESUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +34,8 @@ import java.util.Map;
  */
 @Service
 public class AssetManageServiceImpl extends BaseServiceImpl implements AssetManageService {
+    @Autowired
+    SystemConfig systemConfig;
 
     @Override
     public List<CurrentHoldObligatoryRightListCustomize> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request) {
@@ -290,7 +297,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
     @Override
     public RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type){
         //type 投资记录类型  0现金投资，1部分债转，2债权承接，3优惠券投资，4 融通宝产品加息
-        RepayPlanResponse response = null;
+        RepayPlanResponse response = new RepayPlanResponse();
         Borrow borrow = null;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("borrowNid", borrowNid);
@@ -298,6 +305,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         switch (type) {
             case "0":
                 borrow= this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //真实投资不分期还款计划查询
                     response = this.realInvestmentRepaymentPlanNoStages(params);
@@ -308,6 +319,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 break;
             case "1":
                 borrow = this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //部分债转不分期还款计划查询
                     response = this.assignRepaymentPlanNoStages(params);
@@ -327,6 +342,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 break;
             case "4":
                 borrow=this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //融通宝不分期还款计划查询
                     response = this.rtbRepaymentPlanNoStages(params);
@@ -463,5 +482,109 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
             response.setCurrentHoldRepayMentPlanDetails(vo);
         }
         return response;
+    }
+
+    /**
+     * 获取用户散标转让记录查看详情
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public MyCreditDetailResponse getMyCreditAssignDetail(String creditNid){
+        MyCreditDetailResponse response = new MyCreditDetailResponse();
+        Map<String, Object> params = new HashMap<String, Object>();
+        try {
+            params.put("creditNid", creditNid);
+            int recordTotal = tenderCreditCustomizeMapper.countCreditTenderAssigned(params);
+            if (recordTotal > 0) {
+                // 查询汇消费列表数据
+                long timestamp = System.currentTimeMillis() / 1000;
+                params.put("timestamp", String.valueOf(timestamp));
+                List<TenderCreditAssignedCustomize> recordList = this.selectCreditAssigned(params);
+                List<TenderCreditAssignedCustomizeVO> voList = CommonUtils.convertBeanList(recordList, TenderCreditAssignedCustomizeVO.class);
+                response.setRecordList(voList);
+            } else {
+                response.setRecordList(new ArrayList<TenderCreditAssignedCustomizeVO>());
+            }
+
+            // 债转承接记录统计
+            List<TenderCreditAssignedStatisticCustomize> statisticList = tenderCreditCustomizeMapper.selectCreditTenderAssignedStatistic(params);
+            if (!CollectionUtils.isEmpty(statisticList)) {
+                TenderCreditAssignedStatisticCustomizeVO vo = new TenderCreditAssignedStatisticCustomizeVO();
+                BeanUtils.copyProperties(statisticList.get(0), vo);
+                response.setAssignedStatistic(vo);
+            }
+
+            //转让标的信息
+            BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
+            BorrowCreditVO borrowCreditVO = new BorrowCreditVO();
+            BeanUtils.copyProperties(borrowCredit, borrowCreditVO);
+            response.setBorrowCredit(borrowCreditVO);
+
+            return response;
+        } catch (Exception e){
+            logger.error("获取用户散标转让记录查看详情异常:", e);
+            return new MyCreditDetailResponse();
+        }
+    }
+
+    /**
+     * 已承接或购买债转详情查询
+     * @param params
+     * @return
+     */
+    private List<TenderCreditAssignedCustomize> selectCreditAssigned(Map<String, Object> params){
+        List<TenderCreditAssignedCustomize> list = tenderCreditCustomizeMapper.selectCreditTenderAssigned(params);
+        try {
+            if (list != null && list.size() > 0) {
+                // 对重要参数进行MD5加密
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setUserId(this.getEncrypt(String.valueOf(params.get("timestamp")), String.valueOf(list.get(i).getUserId())));
+                    list.get(i).setAssignNidMD5(this.getEncrypt(String.valueOf(params.get("timestamp")), String.valueOf(list.get(i).getAssignNid())));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 数据加密 原代码在TreeDESUtils工具类中
+     * @param timestamp
+     * @param data
+     * @return
+     */
+    private String getEncrypt(String timestamp, String data){
+        String key = systemConfig.getDesKey();
+        String timeKey = key + timestamp;
+        String encodeData = "";
+        try {
+            encodeData = ThreeDESUtils.Encrypt3DES(timeKey, data);
+            encodeData = URLEncoder.encode(encodeData, "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return encodeData;
+    }
+
+    /**
+     * 获取转让标的信息
+     * @param creditNid
+     * @return
+     */
+    private BorrowCredit getBorrowCredit(String creditNid) {
+        BorrowCredit borrowCredit = null;
+        BorrowCreditExample example = new BorrowCreditExample();
+        BorrowCreditExample.Criteria cra = example.createCriteria();
+        cra.andCreditNidEqualTo(Integer.valueOf(creditNid));
+        List<BorrowCredit> list = this.borrowCreditMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            borrowCredit = list.get(0);
+        }else {
+            borrowCredit = new BorrowCredit();
+        }
+        return borrowCredit;
     }
 }

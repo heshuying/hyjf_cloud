@@ -1,29 +1,42 @@
 package com.hyjf.cs.trade.service.assetmanage.impl;
 
+import com.hyjf.am.response.trade.HjhUserInvestListResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.vo.WebGetRepayMentRequestVO;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author pangchengchao
@@ -36,6 +49,9 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
 
     @Autowired
     BindCardClient bindCardClient;
+
+    @Autowired
+    private BaseClient baseClient;
 
 
     @Override
@@ -250,7 +266,177 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
      * @return
      */
     @Override
-    public RepaymentPlanAjaxBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
+    public RepayPlanInfoBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
+        if(StringUtils.isBlank(request.getBorrowNid()) || StringUtils.isBlank(request.getNid()) || StringUtils.isBlank(request.getTypeStr())){
+            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
+        }
         return amTradeClient.getRepayPlanInfo(request.getBorrowNid(), request.getNid(), request.getTypeStr());
+    }
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public MyCreditDetailBean getMyCreditAssignDetail(String creditNid){
+        return amTradeClient.getMyCreditAssignDetail(creditNid);
+    }
+
+
+    /**
+     * 获取我加入的计划详情信息
+     * @author zhangyk
+     * @date 2018/8/18 16:07
+     */
+    @Override
+    public WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
+        WebResult result = new WebResult();
+        Map<String,Object> info = new HashMap<>();
+        if (null == userId){
+            throw new CheckException("用户信息失效，请重新登录");
+        }
+
+        String accedeOrderId = request.getAccedeOrderId();
+        // 页面固定传值0是投资中 1是锁定中 2是已回款
+        String type = request.getType();
+        CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
+
+        // 1基本信息
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("accedeOrderId", accedeOrderId);
+        params.put("userId", userId);
+        UserHjhInvistDetailCustomizeVO hjhInvistDetailVO = amTradeClient.selectUserHjhInvistDetail(params);
+        if (null != hjhInvistDetailVO){
+            //计算实际收益
+            if(type != null && "2".equals(type)){
+                if(hjhInvistDetailVO.getAccedeAccount()!=null&&hjhInvistDetailVO.getReceivedTotal()!=null){
+                    BigDecimal receivedTotal=new BigDecimal(hjhInvistDetailVO.getReceivedTotal().replaceAll(",", "").trim());
+                    BigDecimal accedeAccount=new BigDecimal(hjhInvistDetailVO.getAccedeAccount().replaceAll(",", "").trim());
+                    BigDecimal userHjhInvistDetail=receivedTotal.subtract(accedeAccount);
+                    int i=userHjhInvistDetail.compareTo(BigDecimal.ZERO);
+                    if(i == -1){
+                        hjhInvistDetailVO.setReceivedInterest(BigDecimal.ZERO.toString());
+                        logger.info("实际收益userHjhInvistDetail为负数");
+                    }else{
+                        hjhInvistDetailVO.setReceivedInterest(userHjhInvistDetail.toString());
+                    }
+                }
+            }
+            List<TenderAgreementVO> tenderAgreementVOList = amTradeClient.selectTenderAgreementByNid(accedeOrderId);
+            if(CollectionUtils.isNotEmpty(tenderAgreementVOList)){
+                TenderAgreementVO tenderAgreement = tenderAgreementVOList.get(0);
+                Integer fddStatus = tenderAgreement.getStatus();
+                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                if(null !=fddStatus && fddStatus.equals(3)){
+                    hjhInvistDetailVO.setFddStatus(1);
+                }else {
+                    //隐藏下载按钮
+                    //System.out.println("******************2法大大协议状态：0");
+                    hjhInvistDetailVO.setFddStatus(0);
+                }
+            }else {
+                //下载老版本协议
+                //System.out.println("******************3法大大协议状态：2");
+                hjhInvistDetailVO.setFddStatus(1);
+            }
+
+            // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 start
+            SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+            Date datePeriod = null;
+            if (StringUtils.isNotEmpty(hjhInvistDetailVO.getCountInterestTime())&&!hjhInvistDetailVO.getCountInterestTime().equals("待确认")) {
+                try {
+                    Date dateAddTime = smp.parse(hjhInvistDetailVO.getCountInterestTime());
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(dateAddTime);
+                    if (hjhInvistDetailVO.getPlanPeriod().contains("天")) {
+                        String days = hjhInvistDetailVO.getPlanPeriod().split("天")[0];
+                        int intD = Integer.parseInt(days);
+                        calendar.add(Calendar.DAY_OF_MONTH, +intD);
+                        datePeriod = calendar.getTime();
+                    }
+                    if (hjhInvistDetailVO.getPlanPeriod().contains("个月")) {
+                        String days = hjhInvistDetailVO.getPlanPeriod().split("个月")[0];
+                        int intD = Integer.parseInt(days);
+                        calendar.add(Calendar.MONTH, +intD);
+                        datePeriod = calendar.getTime();
+                    }
+                    if (datePeriod != null) {
+                        String endStrDate = smp.format(datePeriod);
+                        String startStrDate = hjhInvistDetailVO.getAddTime().substring(0, 10);
+                        hjhInvistDetailVO.setPlanPeriod(startStrDate + "~" + endStrDate);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                hjhInvistDetailVO.setPlanPeriod("— —");
+            }
+
+            // 实际退出时间
+            if(StringUtils.isEmpty(hjhInvistDetailVO.getRepayActualTime())) {
+                hjhInvistDetailVO.setRepayActualTime("— —");
+            }
+            // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 end
+            info.put("userHjhInvistDetail", hjhInvistDetailVO);
+            info.put("type", type);
+
+            // 3持有项目列表
+            String url = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestList";
+            if (type != null && "1".equals(type)) {
+                // 锁定中
+                HjhUserInvestListResponse response = baseClient.postExe(url,params,HjhUserInvestListResponse.class);
+                List<UserHjhInvistListCustomizeVO> userHjhInvistBorrowList = response.getResultList();
+                List<UserHjhInvistListCustomizeVO> tmpList = new ArrayList<UserHjhInvistListCustomizeVO>();
+                if (userHjhInvistBorrowList != null) {
+                    // add by cwyang 2018-3-27 计划持有项目显示协议下载按钮
+                    for (int i = 0; i < userHjhInvistBorrowList.size(); i++) {
+                        UserHjhInvistListCustomizeVO userHjhInvistListCustomize = userHjhInvistBorrowList.get(i);
+                        String nid = userHjhInvistListCustomize.getNid();
+                        List<TenderAgreementVO> tenderAgreements= amTradeClient.selectTenderAgreementByNid(nid);
+                        if(CollectionUtils.isNotEmpty(tenderAgreements)){
+                            TenderAgreementVO tenderAgreement = tenderAgreements.get(0);
+                            Integer fddStatus = tenderAgreement.getStatus();
+                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                            if(fddStatus.equals(3)){
+                                userHjhInvistListCustomize.setFddStatus(1);
+                            }else {
+                                //隐藏下载按钮
+                                //System.out.println("******************2法大大协议状态：0");
+                                userHjhInvistListCustomize.setFddStatus(0);
+                            }
+                        }else {
+                            //下载老版本协议
+                            //System.out.println("******************3法大大协议状态：2");
+                            userHjhInvistListCustomize.setFddStatus(1);
+                        }
+                    }
+                    tmpList.addAll(userHjhInvistBorrowList);
+                }
+                info.put("investList", tmpList);
+                // modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
+
+            } else if (type != null && "2".equals(type)) {
+                // 已退出
+                //modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
+                HjhUserInvestListResponse response = baseClient.postExe(url,params,HjhUserInvestListResponse.class);
+                List<UserHjhInvistListCustomizeVO> debtInvestList = response.getResultList();
+                List<UserHjhInvistListCustomizeVO> tmpList = new ArrayList<UserHjhInvistListCustomizeVO>();
+                if (debtInvestList != null) {
+                    tmpList.addAll(debtInvestList);
+                }
+                info.put("investList", tmpList);
+            } else {
+                // 申购中
+                //modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
+            }
+
+        }else{
+            throw new CheckException("加入信息不存在,请确认后重试");
+        }
+        result.setData(info);
+        return result;
     }
 }

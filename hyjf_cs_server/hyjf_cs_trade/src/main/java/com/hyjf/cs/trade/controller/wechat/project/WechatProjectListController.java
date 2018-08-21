@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/2 11:15
  */
-@Api(tags = "wechat端-项目详情")
+@Api(tags = "weChat端-项目详情")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/bank/wechat")
 public class WechatProjectListController extends BaseTradeController {

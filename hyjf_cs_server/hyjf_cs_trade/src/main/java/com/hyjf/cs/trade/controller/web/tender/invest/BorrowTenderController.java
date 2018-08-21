@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class BorrowTenderController extends BaseTradeController {
     @Autowired
     private BorrowTenderService borrowTenderService;
 
-    @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
+    @ApiOperation(value = "散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId", required = false) Integer userId,
@@ -72,6 +73,7 @@ public class BorrowTenderController extends BaseTradeController {
      * @param couponGrantId
      * @return
      */
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {

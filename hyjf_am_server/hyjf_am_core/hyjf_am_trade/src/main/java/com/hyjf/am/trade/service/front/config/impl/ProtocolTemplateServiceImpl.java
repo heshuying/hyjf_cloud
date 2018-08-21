@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
+import com.hyjf.am.vo.admin.AdsTypeVO;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
@@ -247,6 +248,13 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		ProtocolTemplate protocolTemplate = new ProtocolTemplate();
 		BeanUtils.copyProperties(request.getRecordList().get(0).getProtocolTemplateVO(),protocolTemplate);
 		return protocolTemplateMapper.updateByPrimaryKeySelective(protocolTemplate);
+	}
+
+	@Override
+	public List<ProtocolTemplateVO> getnewinfo() {
+		List<ProtocolTemplate> list = protocolTemplateMapper.getdisplayNameDynamic();
+		List<ProtocolTemplateVO> ListVO = CommonUtils.convertBeanList(list, ProtocolTemplateVO.class);
+		return ListVO;
 	}
 
 	/**

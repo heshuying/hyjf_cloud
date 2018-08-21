@@ -1,12 +1,13 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 充值管理
  * @Author : huanghui
  */
-public class AccountRechargeRequestBean {
+public class AccountRechargeRequestBean extends BasePage {
 
     @ApiModelProperty(value = "充值起始时间")
     private String startDate;
@@ -49,6 +50,17 @@ public class AccountRechargeRequestBean {
 
     @ApiModelProperty(value = "用户角色:1,投资人.2,借款人.3,垫付机构.")
     private String roleIdSearch;
+
+//    @ApiModelProperty(value = "订单号")
+//    private String nid;
+
+    @ApiModelProperty(value = "被操作用户ID")
+    private Integer userId;
+
+//    @ApiModelProperty(value = "充值状态:0:充值中,1:充值失败,2:充值成功")
+//    private String status;
+
+
 
     public String getStartDate() {
         return startDate;
@@ -160,6 +172,14 @@ public class AccountRechargeRequestBean {
 
     public void setRoleIdSearch(String roleIdSearch) {
         this.roleIdSearch = roleIdSearch;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
 }
