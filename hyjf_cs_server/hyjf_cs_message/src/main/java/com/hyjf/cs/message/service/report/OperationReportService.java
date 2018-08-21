@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
+import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,7 +107,7 @@ public interface OperationReportService {
 	 * @param id
 	 * @return
 	 */
-	public OperationReportResponse reportInfo(String id);
+	public JSONObject reportInfo(String id);
 
 
 	/**季度运营报告插入
@@ -200,5 +201,11 @@ public interface OperationReportService {
 	 * @return
 	 */
 	public OperationReportResponse updateYearOperationReportPreview(OperationReportRequest form);
-
+    /**
+     * 获取运营报告主表
+     *
+     * @param id
+     * @return OperationReportColumnEntity
+     */
+    OperationReportColumnEntity selectByPrimaryKey(String id);
 }

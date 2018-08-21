@@ -22,6 +22,7 @@
 	   <result column="project_expiration_length_min" property="projectExpirationLengthMin" />
 	   <result column="project_expiration_length_max" property="projectExpirationLengthMax" />
 	   <result column="add_flag" property="addFlag" />
+	   <result column="tender_quota_amount" property="tenderQuotaAmount" />
     </resultMap>
 
     <select id="selectMyCouponList" resultMap="MyCouponListResultMap" parameterType="java.util.Map">
@@ -157,7 +158,8 @@
 		cc.project_expiration_type expiration_type,
 		cc.project_expiration_length,
 		cc.project_expiration_length_min,
-		cc.project_expiration_length_max
+		cc.project_expiration_length_max,
+		cc.tender_quota tender_quota_amount
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code

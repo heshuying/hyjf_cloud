@@ -14,6 +14,15 @@ eureka:
 server:
   port: 8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 zuul:
   host:
     connect-timeout-millis: 10000

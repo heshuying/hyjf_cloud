@@ -20,6 +20,11 @@ public class BankPoundageAccountImpl implements BankPoundageAccountService {
     @Autowired
     AmTradeClient amTradeClient;
 
+    /**
+     * 查询手续费账户明细
+     * @param request
+     * @return
+     */
     @Override
     public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request) {
         return amTradeClient.selectBankMerchantAccountList(request);

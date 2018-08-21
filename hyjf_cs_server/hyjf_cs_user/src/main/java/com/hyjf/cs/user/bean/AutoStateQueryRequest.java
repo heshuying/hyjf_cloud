@@ -2,7 +2,7 @@ package com.hyjf.cs.user.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,12 +3,11 @@
  */
 package com.hyjf.cs.market.controller.web.aboutus;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
-import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -17,19 +16,20 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
+import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,14 +196,15 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
-	@GetMapping("/getKnowReportList")
-	public WebResult<List<ContentArticleVO>> getKnowReportList(ContentArticleRequest request ){
+	@PostMapping("/getKnowReportList")
+	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleRequest request ){
 		request.setNoticeType("3");
 		ContentArticleResponse response = aboutUsService.getHomeNoticeList(request);
 		WebResult webResult = new WebResult(response.getResultList());
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
 		page.setCurrPage(request.getCurrPage());
+        page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 		return webResult;
 	}
@@ -214,8 +215,8 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
-	@GetMapping("/getFXReportList")
-	public WebResult<List<ContentArticleVO>> getFXReportList(ContentArticleRequest request ){
+	@PostMapping("/getFXReportList")
+	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleRequest request ){
 		request.setNoticeType("101");
 		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
@@ -229,8 +230,8 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "帮助中心：注册登录", notes = "帮助中心：注册登录")
-	@GetMapping("/index")
-	public WebResult<List<ContentArticleVO>> help_index(ContentArticleRequest request ){
+	@PostMapping("/index")
+	public WebResult<List<ContentArticleVO>> help_index(@RequestBody ContentArticleRequest request ){
 		List<Map<String, Object>> homeNoticeList = aboutUsService.getIndex(request);
 		WebResult webResult = new WebResult(homeNoticeList);
 		return webResult;
@@ -274,8 +275,8 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
-	@GetMapping("/getSecurityPage")
-	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
+	@PostMapping("/getSecurityPage")
+	public WebResult<JxBankConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
 			// TODO 参数为空转跳页面
@@ -294,13 +295,26 @@ public class AboutUsController extends BaseController {
 		}
 		return webResult;
 	}
+	@ApiOperation(value = "充值限额", notes = "充值限额")
+	@ResponseBody
+	@GetMapping("/rechargeRule")
+	public WebResult<RechargeDescResultBean> rechargeRule() {
+		WebResult webResult=null;
+		List<JxBankConfigVO> list = aboutUsService.getBanksList();
+		List<RechargeDescResultBean> result = new ArrayList<RechargeDescResultBean>();
+		if (list != null) {
+			result = this.conventBanksConfigToResult(list);
+		}
+		webResult = new WebResult(result);
+		return webResult;
+	}
 
 	/**
 	 * 获取媒体报道（风险教育 +网贷知识）详情
 	 * @return
 	 */
 	@ApiOperation(value = "获取媒体报道（风险教育 +网贷知识）详情", notes = "获取媒体报道（风险教育 +网贷知识）详情")
-	@GetMapping("/getMediaReportInfo")
+	@PostMapping("/getMediaReportInfo")
 	public WebResult<ContentArticleVO>  getMediaReportInfo(@RequestParam Integer id) {
 		WebResult webResult=null;
 		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
@@ -321,5 +335,37 @@ public class AboutUsController extends BaseController {
 		}
 		webResult = new WebResult(mediaReport);
 		return webResult;
+	}
+
+
+	private List<RechargeDescResultBean> conventBanksConfigToResult( List<JxBankConfigVO> configs) {
+		List<RechargeDescResultBean> list = new ArrayList<RechargeDescResultBean>();
+		if (!CollectionUtils.isEmpty(configs)) {
+			//RechargeDescResultBean bean = null;
+			for (JxBankConfigVO config : configs) {
+				RechargeDescResultBean bean = new RechargeDescResultBean();
+				bean.setBankName(config.getBankName());
+				//单卡单日限额
+				if(config.getSingleCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setDay("不限");
+				}else{
+					bean.setDay(String.valueOf(config.getSingleCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单笔限额
+				if(config.getSingleQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setOnce("不限");
+				}else{
+					bean.setOnce(String.valueOf(config.getSingleQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单月单卡限额
+				if(config.getMonthCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setMonth("不限");
+				}else{
+					bean.setMonth(String.valueOf(config.getMonthCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				list.add(bean);
+			}
+		}
+		return list;
 	}
 }

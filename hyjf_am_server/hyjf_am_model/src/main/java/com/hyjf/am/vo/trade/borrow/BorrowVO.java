@@ -86,6 +86,8 @@ public class BorrowVO extends BaseVO implements Serializable {
 
     private Integer borrowPeriod;
 
+    private String borrowPeriodStr;
+
     private Integer borrowPeriodRoam;
 
     private Integer borrowDay;
@@ -2304,5 +2306,13 @@ public class BorrowVO extends BaseVO implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getBorrowPeriodStr() {
+        return borrowPeriodStr;
+    }
+
+    public void setBorrowPeriodStr(String borrowPeriodStr) {
+        this.borrowPeriodStr = borrowPeriodStr;
     }
 }

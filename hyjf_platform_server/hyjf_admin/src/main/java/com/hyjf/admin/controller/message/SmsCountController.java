@@ -7,11 +7,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SmsCountService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -51,13 +49,14 @@ public class SmsCountController extends BaseController {
 
     @ApiOperation(value = "根据条件查询短信统计", notes = "根据条件查询短信统计")
     @PostMapping("/sms_count_list")
-    public AdminResult<ListResult<SmsCountCustomizeVO>> smsCountList(@RequestBody SmsCountRequestBean request) {
+    public AdminResult smsCountList(@RequestBody SmsCountRequestBean request) {
         SmsCountCustomizeVO smsCountCustomize = new SmsCountCustomizeVO();
         //查询短信单价配置
         String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
         if (StringUtils.isEmpty(configMoney)) {
             configMoney = "0.042";//短信单价（0.042元/条）
         }
+
         DecimalFormat decimalFormat = new DecimalFormat("0.000");
         if (StringUtils.isNotEmpty(request.getPost_time_begin())) {
             //int begin = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(form.getPost_time_begin()));
@@ -97,13 +96,8 @@ public class SmsCountController extends BaseController {
             smsCountCustomize.setCombotreeListSrch(combotreeListSrchStr);
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+
+        return new AdminResult(response);
     }
 
     /**
@@ -115,8 +109,7 @@ public class SmsCountController extends BaseController {
      */
     @ApiOperation(value = "取得部门信息", notes = "取得部门信息")
     @PostMapping(value = "/get_crm_department_list")
-    @ResponseBody
-    public String getCrmDepartmentListAction(@RequestBody SmsCountRequestBean form) {
+    public JSONObject getCrmDepartmentListAction(@RequestBody SmsCountRequestBean form) {
         // 部门
         String[] list = new String[]{};
         if (Validator.isNotNull(form.getIds())) {
@@ -133,13 +126,13 @@ public class SmsCountController extends BaseController {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
             JSONObject jo = new JSONObject();
 
-            jo.put("id", -10086);
+            jo.put("value", -10086);
             jo.put("text", "其他");
             JSONObject joAttr = new JSONObject();
-            joAttr.put("id", -10086);
+            joAttr.put("value", -10086);
             joAttr.put("parentid", 0);
             joAttr.put("parentname", "");
-            joAttr.put("name", "其他");
+            joAttr.put("title", "其他");
             joAttr.put("listorder", 0);
             jo.put("li_attr", joAttr);
             JSONArray array = new JSONArray();
@@ -152,11 +145,12 @@ public class SmsCountController extends BaseController {
             }
 
             ja.add(jo);
-
-            return ja.toString();
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            return ret;
         }
 
-        return StringUtils.EMPTY;
+        return new JSONObject();
     }
 
     /**
@@ -170,7 +164,7 @@ public class SmsCountController extends BaseController {
      */
     @ApiOperation(value = "导出功能", notes = "导出功能")
     @PostMapping(value = "/export")
-    public void exportExcel(@ModelAttribute SmsCountRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void exportExcel(@RequestBody SmsCountRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //查询短信单价配置
         String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
         DecimalFormat decimalFormat = new DecimalFormat("0.000");

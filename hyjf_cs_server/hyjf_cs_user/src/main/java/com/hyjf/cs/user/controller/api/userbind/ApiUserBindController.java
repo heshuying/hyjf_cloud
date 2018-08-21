@@ -33,7 +33,7 @@ import java.net.URLEncoder;
 /**
  * @author dongzeshan
  */
-@Api(value = "汇晶社查询用户信息",tags = "api端-汇晶社查询用户信息")
+@Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserBindController extends BaseUserController {
@@ -52,7 +52,7 @@ public class ApiUserBindController extends BaseUserController {
 	 * @return
 	 * @throws Exception 
 	 */
-    @ApiOperation(value = "授权按钮", notes = "授权按钮")
+    @ApiOperation(value = "风车理财第三方登录", notes = "风车理财第三方登录")
     @PostMapping(value = "/bind", produces = "application/json; charset=utf-8")
     public JSONObject bind(HttpServletRequest request, HttpServletResponse response, 
     		@RequestBody ApiUserPostBean apiUserPostBean) throws Exception{
