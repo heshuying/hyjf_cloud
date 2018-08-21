@@ -290,7 +290,6 @@ public class AccountRechargeController extends BaseController {
 
         JSONObject jsonObject = new JSONObject();
 
-        Map<String, Object> params = new HashedMap();
         //用户ID
         Integer userId = requestBean.getUserId();
         //订单编号
