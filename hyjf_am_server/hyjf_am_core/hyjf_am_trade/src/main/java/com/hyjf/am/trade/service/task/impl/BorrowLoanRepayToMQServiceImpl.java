@@ -171,7 +171,6 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 			apicron.setFailTimes(failTimes + 1);
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
 			logger.info("放款失败处理异常:" + borrowNid + e.getMessage());
-			//TODO 发送放款失败的短信
 			sendSmsForManager(borrowNid);
 		}
 		return false;
