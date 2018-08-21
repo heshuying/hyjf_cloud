@@ -25,7 +25,7 @@ public class HjhPlanCapitalClientImpl implements HjhPlanCapitalClient {
      */
     @Override
     public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
-        HjhPlanCapitalResponse response = restTemplate.postForEntity("http://AM-DATA-COLLECT/am-statistics/search/getPlanCapitalList",
+        HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/am-statistics/search/getPlanCapitalList",
                 hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
         if (response != null){
             return response;

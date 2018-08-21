@@ -2,6 +2,7 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
@@ -160,5 +161,20 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer countAllUser(){
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/countAll",UserResponse.class).getBody();
+		if (!Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getCount();
 	}
 }

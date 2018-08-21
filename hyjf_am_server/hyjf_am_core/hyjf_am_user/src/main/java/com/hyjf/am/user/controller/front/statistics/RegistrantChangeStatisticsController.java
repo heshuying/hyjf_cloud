@@ -105,6 +105,6 @@ public class RegistrantChangeStatisticsController extends BaseController {
 
         //写入Redis
         //需和今日新增充值和投资人合并
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "2", jsonObject.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "2", jsonObject.toString(), 7200);
     }
 }

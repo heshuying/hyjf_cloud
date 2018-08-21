@@ -31,7 +31,7 @@ import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;

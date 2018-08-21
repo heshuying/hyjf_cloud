@@ -152,4 +152,16 @@ public class CommonConstant {
     public static final String JSON_USER_LOGIN_ERROR_KEY = "userError";
     /** ValidateForm请求返回值*/
     public static final String JSON_USER_LOGIN_ERROR_VLUES = "userError";
+
+    /**
+     * ----------------------------------APP端银行页面调用请求类型---------------------------------------
+     */
+    /**
+     * 开户
+     */
+    public static final String APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT = "1";
+    /**
+     * 散标投资
+     */
+    public static final String APP_BANK_REQUEST_TYPE_TENDER = "2";
 }

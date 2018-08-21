@@ -18,7 +18,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.utils.ProtocolEnum;
+import com.hyjf.cs.common.util.ProtocolEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
