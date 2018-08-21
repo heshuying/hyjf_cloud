@@ -182,9 +182,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected EveLogCustomizeMapper eveLogCustomizeMapper;
 
 	@Autowired
-	protected AleveLogCustomizeMapper aleveLogCustomizeMapper;
-
-	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 
 	@Autowired

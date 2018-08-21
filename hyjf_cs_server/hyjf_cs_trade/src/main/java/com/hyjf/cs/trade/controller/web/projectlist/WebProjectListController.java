@@ -192,6 +192,7 @@ public class WebProjectListController extends BaseTradeController {
     /**
      *  计划详情标的组成
      * @author zhangyk
+     * 原接口： com.hyjf.web.hjhdetail.HjhDetailController.searchPlanBorrow()
      * @date 2018/8/16 11:01
      */
     @ApiOperation(value = "计划详情标的组成" , notes = "计划详情标的组成")

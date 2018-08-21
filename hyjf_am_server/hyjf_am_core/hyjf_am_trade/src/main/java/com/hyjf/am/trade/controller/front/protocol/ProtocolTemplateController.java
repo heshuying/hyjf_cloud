@@ -123,6 +123,17 @@ public class ProtocolTemplateController extends BaseController {
     }
 
     /**
+     * 获得最新协议模板数据
+     *
+     * @return
+     */
+    @RequestMapping("/getnewinfo")
+    public List<ProtocolTemplateVO> getnewinfo() {
+        List<ProtocolTemplateVO> list = protocolTemplateService.getnewinfo();
+        return list;
+    }
+
+    /**
      * 修改 协议模板
      *
      * @return

@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -1978,7 +1979,16 @@ public class AmUserClientImpl implements AmUserClient {
 		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/sms_code/query_user",
 				requestBean, SmsCodeCustomizeResponse.class);
 		if (response != null) {
-			return response.getResultList();
+			List<SmsCodeCustomizeVO> list = response.getResultList();
+			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-USER/am-user/sms_code/query_user",
+					requestBean, SmsCodeCustomizeResponse.class);
+			if (response1 != null) {
+				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
+				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
+					list.retainAll(list1);
+					return list;
+				}
+			}
 		}
 		return null;
 	}

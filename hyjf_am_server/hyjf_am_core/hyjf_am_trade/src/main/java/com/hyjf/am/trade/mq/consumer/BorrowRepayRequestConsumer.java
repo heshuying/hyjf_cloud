@@ -122,12 +122,12 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        if(result){
 	            
 	            logger.error("本金还款请求中....");
-	            //TODO 还款请求重复,需要判断是否为银行请求成功,平台处理失败的情况,分情况处理
+	            // 还款请求重复,需要判断是否为银行请求成功,平台处理失败的情况,分情况处理
 	            boolean flag = checkLoanRequestException(borrowApicron, redisKey);
 	            if (flag) {//存在请求异常情况,进行后续处理
 					boolean updateResult = updateLoanRequestException(borrowApicron);
 					if (updateResult) {//异常情况修复完成
-						//TODO 去除防重标示
+						// 去除防重标示
 						delRedisKey(borrowApicron);
 					}else{
 						logger.error("------------------标的号:" + borrowNid + ",还款请求异常修复失败,请人为处理!-----------");
@@ -218,7 +218,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	     * @return
 	     */
 	    private boolean updateLoanRequestException(BorrowApicron borrowApicron) {
-			// TODO 处理还款请求异常的问题
+			//  处理还款请求异常的问题
 	    	String borrowNid = borrowApicron.getBorrowNid();
 	    	logger.info("------------------------标的号:" + borrowNid + "开始处理还款请求异常-------------");
 	    	try {
@@ -240,7 +240,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	     * @param borrowApicron
 	     */
 		private boolean checkLoanRequestException(BorrowApicron borrowApicron,String redisKey) {
-			// TODO 校验是否存在还款请求异常的问题
+			//  校验是否存在还款请求异常的问题
 			//判断批次号是否为空
 			String batchNo = borrowApicron.getBatchNo();
 			String borrowNid = borrowApicron.getBorrowNid();
@@ -257,7 +257,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 					String retCode = StringUtils.isNotBlank(batchResult.getRetCode()) ? batchResult.getRetCode() : "";
 					if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
 						String retMsg = batchResult.getRetMsg();
-						//TODO 批次号不存在则删除标示,重新发起申请
+						// 批次号不存在则删除标示,重新发起申请
 						if (BankCallConstant.RESPCODE_BATCHNO_NOTEXIST.equals(retCode)) {
 							delRedisKey(borrowApicron);
 						}

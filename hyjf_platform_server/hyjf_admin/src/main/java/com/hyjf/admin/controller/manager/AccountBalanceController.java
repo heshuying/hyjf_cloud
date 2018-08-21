@@ -20,12 +20,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,8 +41,8 @@ public class AccountBalanceController extends BaseController {
 
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 查询")
     @PostMapping("/search")
-    public AdminResult<ListResult<HjhAccountBalanceVO>> search(@RequestBody HttpServletRequest httpServletRequest, HjhAccountBalanceRequest request) {
-        String time = httpServletRequest.getParameter("time");
+    public AdminResult<ListResult<HjhAccountBalanceVO>> search(@RequestBody HjhAccountBalanceRequest request) {
+        String time = request.getTime();
         HjhInfoAccountBalanceResponse response = null;
         if (("month").equals(time)) {
             response = accountBalanceService.getSearchListByMonth(request);
@@ -73,12 +69,11 @@ public class AccountBalanceController extends BaseController {
     /**
      * 导出日报功能
      *
-     * @param request
      * @param form
      */
-    @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日")
-    @PostMapping("/exportActionByDay")
-    public void exportActionByDay(@RequestBody HttpServletRequest request, HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
+    @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
+    @GetMapping("/exportActionByDay")
+    public void exportActionByDay(HttpServletResponse response,@RequestBody  HjhAccountBalanceRequest form) throws Exception {
         // 表格sheet名称
         String sheetName = "每日交易量";
         List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceList(form);
@@ -150,12 +145,11 @@ public class AccountBalanceController extends BaseController {
     /**
      * 按月导出功能
      *
-     * @param request
      * @param form
      */
-    @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月")
+    @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
-    public void exportActionMonth(@RequestBody HttpServletRequest request, HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionMonth( HttpServletResponse response,@RequestBody HjhAccountBalanceRequest form) throws Exception {
         // 表格sheet名称
         String sheetName = "每月交易量";
         List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceMonthList(form);

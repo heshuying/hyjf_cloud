@@ -47,16 +47,16 @@ public interface PlatDataStatisticsService extends BaseService {
      * mogo查询单个OperationReportEntity
      * @return
      */
-    OperationReportEntity findOneOperationReportEntity(Query query);
+    OperationReportEntity findOneOperationReportEntity();
     /**
      * mogo查询单个OperationMongoGroupEntity
      * @return
      */
-    OperationMongoGroupEntity findOneOperationMongoGroupEntity(Query query);
+    OperationMongoGroupEntity findOneOperationMongoGroupEntity();
     /**
      * mogo查询多个OperationReportEntity
      * @return
      */
-    List<OperationReportEntity> findOperationReportEntityList(Query query);
+    List<OperationReportEntity> findOperationReportEntityList();
 
 }

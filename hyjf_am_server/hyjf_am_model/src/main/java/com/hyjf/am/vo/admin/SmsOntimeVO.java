@@ -17,7 +17,7 @@ public class SmsOntimeVO extends BaseVO {
      */
 
     private static final long serialVersionUID = 1L;
-    private Integer id;
+    private String id;
 
     private String channelType;
 
@@ -59,11 +59,11 @@ public class SmsOntimeVO extends BaseVO {
 
     private String postString;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
