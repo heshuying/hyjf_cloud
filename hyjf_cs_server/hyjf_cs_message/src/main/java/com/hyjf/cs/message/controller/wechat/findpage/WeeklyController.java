@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.controller.wechat;
+package com.hyjf.cs.message.controller.wechat.findpage;
 
 import com.hyjf.am.response.trade.WeeklyResponse;
 import com.hyjf.am.vo.config.EventVO;

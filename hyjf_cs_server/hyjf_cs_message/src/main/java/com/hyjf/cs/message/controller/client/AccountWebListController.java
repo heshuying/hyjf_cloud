@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.controller;
+package com.hyjf.cs.message.controller.client;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;

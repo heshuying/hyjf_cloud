@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.controller.wechat;
+package com.hyjf.cs.message.controller.wechat.operationaldata;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -280,32 +280,6 @@ public class OperationalDataWechatController {
 		}
 
 		return result;
-	}
-	// public InvestorSexAgeDataResponse getInvestorSexAgeData() {
-	// InvestorSexAgeDataResponse response = new InvestorSexAgeDataResponse();
-	// InvestorSexAgeDataVO vo = new InvestorSexAgeDataVO();
-	// vo.setInvestorRegionMenRate("10.00%");
-	// vo.setInvestorRegionWoMenRate("90.00%");
-	// List<InvestorSexAgeDataVO.InvestorAgeDistribution> list =
-	// this.buildInvestorAgeList();
-	// vo.setInvestorAgeList(list);
-	// response.setInfo(vo);
-	// return response;
-	// }
-
-
-
-	/**
-	 * 查询投资人年龄分布
-	 * 
-	 * @param startAge
-	 * @param endAge
-	 * @return
-	 */
-	private String getAgeRate(int startAge, int endAge) {
-		String rate = "";
-		rate = "25.00";
-		return rate;
 	}
 
 	/**

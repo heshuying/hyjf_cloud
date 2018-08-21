@@ -1,6 +1,4 @@
-package com.hyjf.cs.user.result;
-
-import com.hyjf.cs.user.constants.ResultEnum;
+package com.hyjf.cs.message.result;
 
 import java.io.Serializable;
 

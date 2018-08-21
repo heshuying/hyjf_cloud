@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.util;
+package com.hyjf.cs.user.constants;
 
 import com.hyjf.common.util.MessageConstants;
 import com.hyjf.common.util.PropertiesConstants;

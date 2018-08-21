@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.util;
+package com.hyjf.cs.message.result;
 
 public enum ResultEnum {
     //通用错误码

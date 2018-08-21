@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.controller;
+package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.Response;
