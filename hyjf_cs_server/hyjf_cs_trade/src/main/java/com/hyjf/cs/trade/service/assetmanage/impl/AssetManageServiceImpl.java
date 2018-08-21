@@ -267,6 +267,9 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
      */
     @Override
     public RepayPlanInfoBean getRepayPlanInfo(WebGetRepayMentRequestVO request){
+        if(StringUtils.isBlank(request.getBorrowNid()) || StringUtils.isBlank(request.getNid()) || StringUtils.isBlank(request.getTypeStr())){
+            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
+        }
         return amTradeClient.getRepayPlanInfo(request.getBorrowNid(), request.getNid(), request.getTypeStr());
     }
 

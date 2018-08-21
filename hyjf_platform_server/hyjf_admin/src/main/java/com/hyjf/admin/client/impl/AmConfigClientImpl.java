@@ -2080,7 +2080,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request) {
-        String url = "http://AM-CONFIG/am-config/messagePushTemplate/serachList";
+        String url = "http://AM-CONFIG/am-config/messagePushTemplate/searchList";
         MessagePushTemplateResponse response = restTemplate.postForEntity(url, request, MessagePushTemplateResponse.class).getBody();
         if (response != null) {
             return response;

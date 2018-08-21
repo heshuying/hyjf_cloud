@@ -9,8 +9,6 @@ import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.service.front.asset.AssetManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -25,7 +23,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -296,7 +297,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
     @Override
     public RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type){
         //type 投资记录类型  0现金投资，1部分债转，2债权承接，3优惠券投资，4 融通宝产品加息
-        RepayPlanResponse response = null;
+        RepayPlanResponse response = new RepayPlanResponse();
         Borrow borrow = null;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("borrowNid", borrowNid);
@@ -304,6 +305,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         switch (type) {
             case "0":
                 borrow= this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //真实投资不分期还款计划查询
                     response = this.realInvestmentRepaymentPlanNoStages(params);
@@ -314,6 +319,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 break;
             case "1":
                 borrow = this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //部分债转不分期还款计划查询
                     response = this.assignRepaymentPlanNoStages(params);
@@ -333,6 +342,10 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 break;
             case "4":
                 borrow=this.getBorrow(borrowNid);
+                if(borrow == null){
+                    logger.error("未查询到标的信息，标的编号:{}", borrowNid);
+                    break;
+                }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
                     //融通宝不分期还款计划查询
                     response = this.rtbRepaymentPlanNoStages(params);

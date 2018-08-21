@@ -370,7 +370,7 @@
 			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 			left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
 			WHERE
-				hb.plan_nid = #{planNId}
+				hb.plan_nid = #{planNid}
 			AND hb.STATUS = 2
 			AND hb.borrow_full_status = 0
 			ORDER BY

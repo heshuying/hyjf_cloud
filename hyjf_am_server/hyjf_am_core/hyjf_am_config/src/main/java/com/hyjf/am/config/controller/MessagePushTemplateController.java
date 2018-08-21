@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -81,7 +82,7 @@ public class MessagePushTemplateController {
      * @return
      */
     @RequestMapping("/findMsgPushTemplate")
-    public MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request) {
+    public MessagePushTemplateResponse findMsgPushTemplate(@RequestBody MsgPushTemplateRequest request) {
         logger.info("根据条件查询消息推送模板开始...");
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         List<MessagePushTemplate> list = templateServcie.findMsgPushTemplate(request);
@@ -104,7 +105,7 @@ public class MessagePushTemplateController {
      * @return
      */
     @RequestMapping("/searchList")
-    public MessagePushTemplateResponse searchList(MsgPushTemplateRequest request) {
+    public MessagePushTemplateResponse searchList(@RequestBody MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         Integer count = templateServcie.countRecord(request);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
@@ -149,7 +150,7 @@ public class MessagePushTemplateController {
      * @return
      */
     @RequestMapping("/insertMessageTemplate")
-    public MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO) {
+    public MessagePushTemplateResponse insertMessageTemplate(@RequestBody MessagePushTemplateVO templateVO) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
@@ -165,7 +166,7 @@ public class MessagePushTemplateController {
      * @return
      */
     @RequestMapping("/updateAction")
-    public MessagePushTemplateResponse updateAction(MsgPushTemplateRequest request) {
+    public MessagePushTemplateResponse updateAction(@RequestBody MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(request, messagePushTemplate);

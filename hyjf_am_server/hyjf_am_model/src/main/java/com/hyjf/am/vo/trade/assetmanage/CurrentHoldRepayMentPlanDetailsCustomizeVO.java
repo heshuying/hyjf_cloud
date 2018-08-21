@@ -42,7 +42,7 @@ public class CurrentHoldRepayMentPlanDetailsCustomizeVO extends BaseVO implement
     private String borrowNid;
 
     public String getRecoverAccountWait() {
-        return df.format(new BigDecimal(recoverAccountWait));
+        return recoverAccountWait;
     }
 
     public void setRecoverAccountWait(String recoverAccountWait) {
@@ -50,7 +50,7 @@ public class CurrentHoldRepayMentPlanDetailsCustomizeVO extends BaseVO implement
     }
 
     public String getRecoverCapitalWait() {
-        return df.format(new BigDecimal(recoverCapitalWait));
+        return recoverCapitalWait;
     }
 
     public void setRecoverCapitalWait(String recoverCapitalWait) {
@@ -58,7 +58,7 @@ public class CurrentHoldRepayMentPlanDetailsCustomizeVO extends BaseVO implement
     }
 
     public String getRecoverInterestWait() {
-        return df.format(new BigDecimal(recoverInterestWait));
+        return recoverInterestWait;
     }
 
     public void setRecoverInterestWait(String recoverInterestWait) {
@@ -66,7 +66,7 @@ public class CurrentHoldRepayMentPlanDetailsCustomizeVO extends BaseVO implement
     }
 
     public String getRecoverAccountYes() {
-        return df.format(new BigDecimal(recoverAccountYes));
+        return recoverAccountYes;
     }
 
     public void setRecoverAccountYes(String recoverAccountYes) {

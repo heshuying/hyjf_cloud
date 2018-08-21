@@ -680,7 +680,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender) {
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
 
         AppInvestInfoResultVO investInfo = new AppInvestInfoResultVO();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
@@ -867,6 +867,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
 
+        investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
         investInfo.setBalance(CommonUtils.formatAmount(null, balance));
@@ -882,7 +885,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = investInfo.getBorrowAccountWait().replace(",", "");
-            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+            logger.info("borrow.getTenderAccountMax()=[{}],borrowAccountWaitStr=[{}]",borrowInfo.getTenderAccountMax(),borrowAccountWaitStr);
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 investInfo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
@@ -908,9 +912,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
         investInfo.setStandardValues("");
-        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);
-        return result;
+        // 前端要求改成bean，不要封装
+/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
+        result.setData(investInfo);*/
+        return investInfo;
     }
 
     /**
