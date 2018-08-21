@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -916,6 +918,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 /*        AppResult<AppInvestInfoResultVO> result = new AppResult();
         result.setData(investInfo);*/
         return investInfo;
+    }
+
+    /**
+     * app端获取投资url
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public ModelAndView getAppTenderUrl(TenderRequest tender) {
+        String url = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+        ModelAndView mv = new ModelAndView("redirect:"+url);
+        return mv;
     }
 
     /**

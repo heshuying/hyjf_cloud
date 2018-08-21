@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     private BorrowTenderService borrowTenderService;
 
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
-    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求投资接口");
@@ -115,4 +116,12 @@ public class AppBorrowTenderController extends BaseTradeController {
         return result;
     }
 
+    @ApiOperation(value = "APP端获取投资URL", notes = "APP端获取投资URL")
+    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
+    public ModelAndView getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+        logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
+        tender.setUserId(userId);
+        ModelAndView mv = borrowTenderService.getAppTenderUrl(tender);
+        return mv;
+    }
 }

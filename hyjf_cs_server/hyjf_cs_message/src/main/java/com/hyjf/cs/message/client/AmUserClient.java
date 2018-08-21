@@ -76,4 +76,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	MessagePushErrorVO getMobileCodeByNumber(String mobile);
+
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	Integer countAllUser();
 }
