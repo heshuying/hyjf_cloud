@@ -15,10 +15,7 @@ import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +32,7 @@ public class WhereaboutsPageController extends BaseController {
 	private WhereaboutsPageService whereaboutsPageService;
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "移动端着陆页管理列表查询")
-	@RequestMapping("/searchaction")
+	@PostMapping("/searchaction")
 	public AdminResult<ListResult<WhereaboutsPageVo>> searchAction(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.searchAction(requestBean);
 		if (response == null) {
@@ -48,7 +45,7 @@ public class WhereaboutsPageController extends BaseController {
 	}
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "添加移动端着陆页管理")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.insertAction(requestBean);
 		if (response == null) {
@@ -61,7 +58,7 @@ public class WhereaboutsPageController extends BaseController {
 	}
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.updateAction(requestBean);
 		if (response == null) {
@@ -73,7 +70,7 @@ public class WhereaboutsPageController extends BaseController {
 		return new AdminResult<>();
 	}
 	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理状态")
-	@RequestMapping("/updatestatus")
+	@PostMapping("/updatestatus")
 	public AdminResult updateStatus(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.updateStatus(requestBean);
 		if (response == null) {
@@ -85,7 +82,7 @@ public class WhereaboutsPageController extends BaseController {
 		return new AdminResult<>();
 	}
 	@ApiOperation(value = "移动端着陆页管理", notes = "删除着路页管理")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		WhereaboutsPageResponse response = whereaboutsPageService.deleteById(id);
 		if (response == null) {
@@ -105,7 +102,7 @@ public class WhereaboutsPageController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
-	@RequestMapping("/uploadFile")
+	@GetMapping("/uploadFile")
 	public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		WhereaboutsPictureResponse files = this.whereaboutsPageService.uploadFile(request, response);
 		return files;

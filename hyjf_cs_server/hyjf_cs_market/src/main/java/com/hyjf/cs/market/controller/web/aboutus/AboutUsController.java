@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.controller.web.aboutus;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
@@ -14,16 +16,20 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
+import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -270,7 +276,7 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
 	@PostMapping("/getSecurityPage")
-	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
+	public WebResult<JxBankConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
 			// TODO 参数为空转跳页面
@@ -287,6 +293,19 @@ public class AboutUsController extends BaseController {
 			}
 			webResult = new WebResult(list);
 		}
+		return webResult;
+	}
+	@ApiOperation(value = "充值限额", notes = "充值限额")
+	@ResponseBody
+	@GetMapping("/rechargeRule")
+	public WebResult<RechargeDescResultBean> rechargeRule() {
+		WebResult webResult=null;
+		List<JxBankConfigVO> list = aboutUsService.getBanksList();
+		List<RechargeDescResultBean> result = new ArrayList<RechargeDescResultBean>();
+		if (list != null) {
+			result = this.conventBanksConfigToResult(list);
+		}
+		webResult = new WebResult(result);
 		return webResult;
 	}
 
@@ -316,5 +335,37 @@ public class AboutUsController extends BaseController {
 		}
 		webResult = new WebResult(mediaReport);
 		return webResult;
+	}
+
+
+	private List<RechargeDescResultBean> conventBanksConfigToResult( List<JxBankConfigVO> configs) {
+		List<RechargeDescResultBean> list = new ArrayList<RechargeDescResultBean>();
+		if (!CollectionUtils.isEmpty(configs)) {
+			//RechargeDescResultBean bean = null;
+			for (JxBankConfigVO config : configs) {
+				RechargeDescResultBean bean = new RechargeDescResultBean();
+				bean.setBankName(config.getBankName());
+				//单卡单日限额
+				if(config.getSingleCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setDay("不限");
+				}else{
+					bean.setDay(String.valueOf(config.getSingleCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单笔限额
+				if(config.getSingleQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setOnce("不限");
+				}else{
+					bean.setOnce(String.valueOf(config.getSingleQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单月单卡限额
+				if(config.getMonthCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setMonth("不限");
+				}else{
+					bean.setMonth(String.valueOf(config.getMonthCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				list.add(bean);
+			}
+		}
+		return list;
 	}
 }

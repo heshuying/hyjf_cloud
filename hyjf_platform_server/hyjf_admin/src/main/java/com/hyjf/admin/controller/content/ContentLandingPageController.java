@@ -14,10 +14,7 @@ import com.hyjf.am.vo.config.LandingPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tanyy
@@ -31,7 +28,7 @@ public class ContentLandingPageController extends BaseController {
 	private ContentLandingPageService contentLandingPageService;
 
 	@ApiOperation(value = "着路页管理列表查询", notes = "着路页管理列表查询")
-	@RequestMapping("/searchaction")
+	@PostMapping("/searchaction")
 	public AdminResult<ListResult<LandingPageVo>> searchAction(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.searchAction(requestBean);
 		if (response == null) {
@@ -44,7 +41,7 @@ public class ContentLandingPageController extends BaseController {
 	}
 
 	@ApiOperation(value = "添加着路页管理", notes = "添加着路页管理")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.insertAction(requestBean);
 		if (response == null) {
@@ -57,7 +54,7 @@ public class ContentLandingPageController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改着路页管理", notes = "修改着路页管理")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.updateAction(requestBean);
 		if (response == null) {
@@ -70,7 +67,7 @@ public class ContentLandingPageController extends BaseController {
 	}
 
 	@ApiOperation(value = "删除着路页管理", notes = "删除着路页管理")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		LandingPageResponse response = contentLandingPageService.deleteById(id);
 		if (response == null) {
