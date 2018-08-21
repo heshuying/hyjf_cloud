@@ -36,22 +36,25 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectAccountBalanceMonitoringByPage")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控列表..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response =new AdminAccountBalanceMonitoringResponse();
         //查询平台账户配置 余额监控条数
         int recordTotal = this.accountBalanceMonitoringService.getAccountBalanceMonitoringCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize() ==0?10:adminRequest.getPageSize());
             //查询平台账户配置 余额监控记录
             List<MerchantAccount> recordList =accountBalanceMonitoringService.getAccountBalanceMonitoringByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<MerchantAccountVO> merchantAccountVOList = CommonUtils.convertBeanList(recordList, MerchantAccountVO.class);
                 merchantAccountVOList=this.forback(merchantAccountVOList);
                 response.setResultList(merchantAccountVOList);
-                response.setRecordTotal(recordTotal);
+                response.setRecordTotal(recordList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
             return response;
         }
         return null;
@@ -62,7 +65,7 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectaccountBalanceMonitoringById")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控详情页面..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response = new AdminAccountBalanceMonitoringResponse();
         try{
@@ -73,7 +76,11 @@ public class AccountBalanceMonitoringController {
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(merchantAccountVOList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
+            return response;
         }catch (Exception e){
             e.printStackTrace();
         }

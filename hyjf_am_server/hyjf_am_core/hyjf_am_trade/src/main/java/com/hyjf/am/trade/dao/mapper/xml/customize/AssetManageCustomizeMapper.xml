@@ -203,7 +203,7 @@
 		1 AS creditUserId,
 
 		borrow.borrow_nid,
-		IFNULL(borrow.project_name, borrow.`name`) AS project_name,
+		IFNULL(borrowInfo.project_name, borrowInfo.`name`) AS project_name,
 		CASE
 		WHEN borrow.borrow_style = 'endday' THEN
 		CONCAT(borrow.borrow_period, '天')
@@ -216,8 +216,8 @@
 		CONCAT(borrow.borrow_apr, '%') borrow_apr,
 		ten.user_id AS ten_user_id,
 		ten.nid nid,
-		FROM_UNIXTIME( ten.addtime, '%Y-%m-%d' ) AS addtime,
-		ten.addtime as orderby_addtime,
+		FROM_UNIXTIME( ten.create_time, '%Y-%m-%d' ) AS addtime,
+		ten.create_time as orderby_addtime,
 		IFNULL(FROM_UNIXTIME( IF(borrow.repay_last_time='',NULL,borrow.repay_last_time), '%Y-%m-%d' ),'--') AS invest_date,
 		borrow.repay_last_time as orderby_invest_date,
 		(ten.account-(
@@ -265,6 +265,7 @@
 		AND rec.recover_capital <![CDATA[>]]> rec.credit_amount
 		AND rec.recover_account_wait> 0
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN (SELECT hbc.tender_nid,
 		SUM(hbc.credit_capital_assigned) credit_capital_assigned,
@@ -288,7 +289,7 @@
 		ten.credit_user_id AS creditUserId,
 
 		borrow.borrow_nid,
-		IFNULL(borrow.project_name, borrow.`name`) AS project_name,
+		IFNULL(borrowInfo.project_name, borrowInfo.`name`) AS project_name,
 		CASE
 		WHEN borrow.borrow_style = 'endday' THEN CONCAT(borrow.borrow_period, '天')
 		ELSE CONCAT(borrow.borrow_period,'个月')
@@ -323,6 +324,7 @@
 		FROM
 		ht_credit_tender ten
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		WHERE ten.user_id= #{userId}
 		AND borrow.`status` = 4
@@ -336,7 +338,7 @@
 		1 AS creditUserId,
 
 		hb.borrow_nid,
-		IFNULL(hb.project_name, hb.`name`) AS project_name,
+		IFNULL(borrowInfo.project_name, borrowInfo.`name`) AS project_name,
 		CASE
 		WHEN hb.borrow_style = 'endday' THEN
 		CONCAT(hb.borrow_period, '天')
@@ -358,8 +360,8 @@
 		borrow_apr,
 		hbtc.user_id AS ten_user_id,
 		hbtc.nid nid,
-		FROM_UNIXTIME( hbtc.addtime, '%Y-%m-%d' ) AS addtime,
-		hbtc.addtime,
+		FROM_UNIXTIME( hbtc.create_time, '%Y-%m-%d' ) AS addtime,
+		hbtc.create_time,
 		IFNULL(FROM_UNIXTIME( IF(MAX(hcr.recover_time)='',NULL,MAX(hcr.recover_time)), '%Y-%m-%d' ),'--') AS recover_time,
 		MAX(hcr.recover_time),
 		CASE
@@ -381,6 +383,7 @@
 		FROM
 		ht_borrow_tender_cpn hbtc
 		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hb.borrow_nid
 		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -401,7 +404,7 @@
 		1 AS creditUserId,
 
 		borrow.borrow_nid,
-		IFNULL(borrow.project_name, borrow.`name`) AS project_name,
+		IFNULL(borrowInfo.project_name, borrowInfo.`name`) AS project_name,
 		CASE
 		WHEN borrow.borrow_style = 'endday' THEN
 		CONCAT(borrow.borrow_period, '天')
@@ -428,6 +431,7 @@
 		FROM
 		ht_increase_interest_invest hiii
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id=hiii.order_id
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid

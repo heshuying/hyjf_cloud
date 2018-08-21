@@ -40,9 +40,9 @@ public class AccessFilter extends ZuulFilter {
 	 * 不同客户端的请求包含不同的关键字（域名）
 	 */
 	private static final String APP_CHANNEL = "app";
-	private static final String WEB_CHANNEL = "web";
+	private static final String WEB_CHANNEL = "localhost";
 	private static final String API_CHANNEL = "api";
-	private static final String WECHAT_CHANNEL = "wechat";
+	private static final String WECHAT_CHANNEL = "localhost";
 
 	/**
 	 * 各客户端增加的前缀 微信和app自带hyjf-xx请求，不用处理
