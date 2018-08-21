@@ -61,7 +61,7 @@ public class WeChatBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.put("phone",mobile);
+            result.put("mobile",mobile);
             result.put("status","000");
             result.put("statusDesc","操作成功");
         } else {
