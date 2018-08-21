@@ -1039,4 +1039,13 @@ public interface AmUserClient {
      * @return
      */
     List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+    
+	/**
+     * 获取用户账户信息byaccountId
+     * @auth libin
+     * @param accountId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccountByAccountId(String accountId);
+    
 }

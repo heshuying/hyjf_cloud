@@ -559,8 +559,8 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return response;
 	}
 	@Override
-	public OperationReportResponse reportInfo(String id){
-		OperationReportResponse response = new OperationReportResponse();
+	public JSONObject reportInfo(String id){
+		JSONObject response = new JSONObject();
 		Map<String, Object> paraMap = new HashMap<String ,Object>();
 		paraMap.put("id", id);
 		//获取运营报告对象
@@ -575,14 +575,14 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (report != null) {
 			Integer reportType = report.getOperationReportType();
 			BeanUtils.copyProperties(report, operationReport);
-			response.setOperationReport(operationReport);
+			response.put("report", report);
 			if (reportType == 1) {
 				//查询月度报告明细
 				MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query2);
 				MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
 				if (monthlyOperationReportEntity != null) {
 					BeanUtils.copyProperties(monthlyOperationReportEntity, monthlyOperationReport);
-					response.setMonthlyOperationReport(monthlyOperationReport);
+					response.put("monthlyOperationReport", monthlyOperationReportEntity);
 				}
 
 			} else if (reportType == 2) {
@@ -591,7 +591,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				QuarterOperationReportVO quarterOperationReport = new QuarterOperationReportVO();
 				if (quarterOperationReportEntity != null) {
 					BeanUtils.copyProperties(quarterOperationReportEntity, quarterOperationReport);
-					response.setQuarterOperationReport(quarterOperationReport);
+					response.put("quarterOperationReport", quarterOperationReportEntity);
 				}
 
 			} else if (reportType == 3) {
@@ -600,7 +600,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				HalfYearOperationReportVO halfYearOperationReport = new HalfYearOperationReportVO();
 				if (halfYearOperationReportEntity != null) {
 					BeanUtils.copyProperties(halfYearOperationReportEntity, halfYearOperationReport);
-					response.setHalfYearOperationReport(halfYearOperationReport);
+					response.put("halfYearOperationReport", halfYearOperationReportEntity);
 				}
 			} else if (reportType == 4) {
 				//查询全年报告明细
@@ -608,26 +608,25 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				YearOperationReportVO yearOperationReport = new YearOperationReportVO();
 				if (yearOperationReportEntity != null) {
 					BeanUtils.copyProperties(yearOperationReportEntity, yearOperationReport);
-					response.setYearOperationReport(yearOperationReport);
+					response.put("yearOperationReport", yearOperationReportEntity);
 				}
 			}
 
 			List<UserOperationReportEntity> userOperationReportList = getUserOperationReport(id, query2);
 			if (userOperationReportList != null && userOperationReportList.size() > 0) {
-				UserOperationReportVO userOperationReport = new UserOperationReportVO();
-				BeanUtils.copyProperties(userOperationReportList.get(0), userOperationReport);
-				response.setUserOperationReport(userOperationReport);
+				response.put("userOperationReport", userOperationReportList.get(0));
 			}
 			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
 			List<OperationReportActivityEntity> operationReportActiveList = getOperationReportActive(id, query2);
 			if(operationReportActiveList!=null){
-				List<OperationReportActivityVO> vos = new ArrayList<>();
+				response.put("operationReportActiveList", operationReportActiveList);
+				/*List<OperationReportActivityVO> vos = new ArrayList<>();
 				for(OperationReportActivityEntity operationReportActivityEntity:operationReportActiveList){
 					OperationReportActivityVO operationReportActivity = new OperationReportActivityVO();
 					BeanUtils.copyProperties(operationReportActivityEntity,operationReportActivity);
 					vos.add(operationReportActivity);
 				}
-				response.setOperationReportActiveList(vos);
+				response.setOperationReportActiveList(vos);*/
 			}
 			List<TenthOperationReportEntity> tenthOperationReportList = getTenthOperationReport(id, query2);
 			if (tenthOperationReportList != null && tenthOperationReportList.size() > 0) {
@@ -685,12 +684,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					String activeTenderUsername = tenthOperationReport.getActiveTenderUsername().substring(0, 1);
 					tenthOperationReport.setActiveTenderUsername(activeTenderUsername + "**");
 				}
-				BeanUtils.copyProperties(tenthOperationReport, tenthOperationReportVO);
-				response.setTenthOperationReport(tenthOperationReportVO);
+				response.put("tenthOperationReport", tenthOperationReportList.get(0));
 			}
+			response.put("success", "success");
 		} else {
-			response.setRtn("0");
-			response.setMessage("数据为空");
+			response.put("success", "success");
+			response.put("resultIsNull", "数据为空");
 		}
 		return  response;
 	}
@@ -1941,7 +1940,16 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return response;
 
 	}
-
+	@Override
+	public OperationReportColumnEntity selectByPrimaryKey(String id){
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("id", id);
+		Query query = new Query();
+		Criteria criteria = getCriteria(paraMap, query);
+		query.addCriteria(criteria);
+		OperationReportColumnEntity listMongodb = operationReportColumnMongDao.findOne(query);
+		return listMongodb;
+	}
 	/**
 	 * 修改用户运营报告
 	 *
@@ -2018,4 +2026,5 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		int maxDate = a.get(Calendar.DATE);
 		return maxDate;
 	}
+
 }

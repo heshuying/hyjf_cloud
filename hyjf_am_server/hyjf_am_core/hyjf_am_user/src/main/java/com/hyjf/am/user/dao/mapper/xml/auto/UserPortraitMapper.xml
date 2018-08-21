@@ -1,65 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper">
-  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
-    <id column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="age" jdbcType="INTEGER" property="age" />
-    <result column="sex" jdbcType="VARCHAR" property="sex" />
-    <result column="education" jdbcType="VARCHAR" property="education" />
-    <result column="occupation" jdbcType="VARCHAR" property="occupation" />
-    <result column="city" jdbcType="VARCHAR" property="city" />
-    <result column="interest" jdbcType="VARCHAR" property="interest" />
-    <result column="interest_sum" jdbcType="DECIMAL" property="interestSum" />
-    <result column="invest_sum" jdbcType="DECIMAL" property="investSum" />
-    <result column="recharge_sum" jdbcType="DECIMAL" property="rechargeSum" />
-    <result column="withdraw_sum" jdbcType="DECIMAL" property="withdrawSum" />
-    <result column="login_active" jdbcType="VARCHAR" property="loginActive" />
-    <result column="customer_source" jdbcType="VARCHAR" property="customerSource" />
-    <result column="last_login_time" jdbcType="INTEGER" property="lastLoginTime" />
-    <result column="last_recharge_time" jdbcType="INTEGER" property="lastRechargeTime" />
-    <result column="last_withdraw_time" jdbcType="INTEGER" property="lastWithdrawTime" />
-    <result column="invest_platform" jdbcType="INTEGER" property="investPlatform" />
-    <result column="invest_age" jdbcType="TINYINT" property="investAge" />
-    <result column="trade_number" jdbcType="INTEGER" property="tradeNumber" />
-    <result column="current_owner" jdbcType="VARCHAR" property="currentOwner" />
-    <result column="add_wechat" jdbcType="VARCHAR" property="addWechat" />
-    <result column="invest_process" jdbcType="VARCHAR" property="investProcess" />
-    <result column="customer_complaint" jdbcType="VARCHAR" property="customerComplaint" />
-    <result column="invite_customer" jdbcType="INTEGER" property="inviteCustomer" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="mobile" jdbcType="CHAR" property="mobile" />
-    <result column="bank_total" jdbcType="DECIMAL" property="bankTotal" />
-    <result column="fund_retention" jdbcType="DECIMAL" property="fundRetention" />
-    <result column="last_repay_time" jdbcType="INTEGER" property="lastRepayTime" />
-    <result column="invite_regist" jdbcType="INTEGER" property="inviteRegist" />
-    <result column="invite_recharge" jdbcType="INTEGER" property="inviteRecharge" />
-    <result column="invite_tender" jdbcType="INTEGER" property="inviteTender" />
-    <result column="yield" jdbcType="DECIMAL" property="yield" />
-    <result column="attribute" jdbcType="TINYINT" property="attribute" />
-    <result column="bank_balance" jdbcType="DECIMAL" property="bankBalance" />
-    <result column="account_await" jdbcType="DECIMAL" property="accountAwait" />
-    <result column="bank_frost" jdbcType="DECIMAL" property="bankFrost" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="occupation" property="occupation" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="interest" property="interest" jdbcType="VARCHAR" />
+    <result column="interest_sum" property="interestSum" jdbcType="DECIMAL" />
+    <result column="invest_sum" property="investSum" jdbcType="DECIMAL" />
+    <result column="recharge_sum" property="rechargeSum" jdbcType="DECIMAL" />
+    <result column="withdraw_sum" property="withdrawSum" jdbcType="DECIMAL" />
+    <result column="login_active" property="loginActive" jdbcType="VARCHAR" />
+    <result column="customer_source" property="customerSource" jdbcType="VARCHAR" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="INTEGER" />
+    <result column="last_recharge_time" property="lastRechargeTime" jdbcType="INTEGER" />
+    <result column="last_withdraw_time" property="lastWithdrawTime" jdbcType="INTEGER" />
+    <result column="invest_platform" property="investPlatform" jdbcType="INTEGER" />
+    <result column="invest_age" property="investAge" jdbcType="TINYINT" />
+    <result column="trade_number" property="tradeNumber" jdbcType="INTEGER" />
+    <result column="current_owner" property="currentOwner" jdbcType="VARCHAR" />
+    <result column="add_wechat" property="addWechat" jdbcType="VARCHAR" />
+    <result column="invest_process" property="investProcess" jdbcType="VARCHAR" />
+    <result column="customer_complaint" property="customerComplaint" jdbcType="VARCHAR" />
+    <result column="invite_customer" property="inviteCustomer" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="bank_total" property="bankTotal" jdbcType="DECIMAL" />
+    <result column="fund_retention" property="fundRetention" jdbcType="DECIMAL" />
+    <result column="last_repay_time" property="lastRepayTime" jdbcType="INTEGER" />
+    <result column="invite_regist" property="inviteRegist" jdbcType="INTEGER" />
+    <result column="invite_recharge" property="inviteRecharge" jdbcType="INTEGER" />
+    <result column="invite_tender" property="inviteTender" jdbcType="INTEGER" />
+    <result column="yield" property="yield" jdbcType="DECIMAL" />
+    <result column="attribute" property="attribute" jdbcType="BIT" />
+    <result column="bank_balance" property="bankBalance" jdbcType="DECIMAL" />
+    <result column="account_await" property="accountAwait" jdbcType="DECIMAL" />
+    <result column="bank_frost" property="bankFrost" jdbcType="DECIMAL" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -70,25 +70,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -99,7 +99,7 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     user_id, user_name, age, sex, education, occupation, city, interest, interest_sum, 
     invest_sum, recharge_sum, withdraw_sum, login_active, customer_source, last_login_time, 
     last_recharge_time, last_withdraw_time, invest_platform, invest_age, trade_number, 
@@ -107,431 +107,431 @@
     mobile, bank_total, fund_retention, last_repay_time, invite_regist, invite_recharge, 
     invite_tender, yield, `attribute`, bank_balance, account_await, bank_frost
   </sql>
-  <select id="selectByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
     from ht_user_portrait
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="limitStart &gt;= 0">
+    <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from ht_user_portrait
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_user_portrait
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample">
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" >
     delete from ht_user_portrait
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
-    <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_user_portrait (user_name, age, sex, 
-      education, occupation, city, 
-      interest, interest_sum, invest_sum, 
-      recharge_sum, withdraw_sum, login_active, 
-      customer_source, last_login_time, last_recharge_time, 
-      last_withdraw_time, invest_platform, invest_age, 
-      trade_number, current_owner, add_wechat, 
-      invest_process, customer_complaint, invite_customer, 
-      remark, mobile, bank_total, 
-      fund_retention, last_repay_time, invite_regist, 
-      invite_recharge, invite_tender, yield, 
-      `attribute`, bank_balance, account_await, 
-      bank_frost)
-    values (#{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
-      #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, #{investSum,jdbcType=DECIMAL}, 
-      #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, #{loginActive,jdbcType=VARCHAR}, 
-      #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, #{lastRechargeTime,jdbcType=INTEGER}, 
-      #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, #{investAge,jdbcType=TINYINT}, 
-      #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, #{addWechat,jdbcType=VARCHAR}, 
-      #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, #{inviteCustomer,jdbcType=INTEGER}, 
-      #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankTotal,jdbcType=DECIMAL}, 
-      #{fundRetention,jdbcType=DECIMAL}, #{lastRepayTime,jdbcType=INTEGER}, #{inviteRegist,jdbcType=INTEGER}, 
-      #{inviteRecharge,jdbcType=INTEGER}, #{inviteTender,jdbcType=INTEGER}, #{yield,jdbcType=DECIMAL}, 
-      #{attribute,jdbcType=TINYINT}, #{bankBalance,jdbcType=DECIMAL}, #{accountAwait,jdbcType=DECIMAL}, 
-      #{bankFrost,jdbcType=DECIMAL})
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
+    insert into ht_user_portrait (user_id, user_name, age, 
+      sex, education, occupation, 
+      city, interest, interest_sum, 
+      invest_sum, recharge_sum, withdraw_sum, 
+      login_active, customer_source, last_login_time, 
+      last_recharge_time, last_withdraw_time, invest_platform, 
+      invest_age, trade_number, current_owner, 
+      add_wechat, invest_process, customer_complaint, 
+      invite_customer, remark, mobile, 
+      bank_total, fund_retention, last_repay_time, 
+      invite_regist, invite_recharge, invite_tender, 
+      yield, `attribute`, bank_balance, 
+      account_await, bank_frost)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{sex,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, 
+      #{investSum,jdbcType=DECIMAL}, #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, 
+      #{loginActive,jdbcType=VARCHAR}, #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, 
+      #{lastRechargeTime,jdbcType=INTEGER}, #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, 
+      #{investAge,jdbcType=TINYINT}, #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, 
+      #{addWechat,jdbcType=VARCHAR}, #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, 
+      #{inviteCustomer,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, 
+      #{bankTotal,jdbcType=DECIMAL}, #{fundRetention,jdbcType=DECIMAL}, #{lastRepayTime,jdbcType=INTEGER}, 
+      #{inviteRegist,jdbcType=INTEGER}, #{inviteRecharge,jdbcType=INTEGER}, #{inviteTender,jdbcType=INTEGER}, 
+      #{yield,jdbcType=DECIMAL}, #{attribute,jdbcType=BIT}, #{bankBalance,jdbcType=DECIMAL}, 
+      #{accountAwait,jdbcType=DECIMAL}, #{bankFrost,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
-    <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
     insert into ht_user_portrait
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userName != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
         user_name,
       </if>
-      <if test="age != null">
+      <if test="age != null" >
         age,
       </if>
-      <if test="sex != null">
+      <if test="sex != null" >
         sex,
       </if>
-      <if test="education != null">
+      <if test="education != null" >
         education,
       </if>
-      <if test="occupation != null">
+      <if test="occupation != null" >
         occupation,
       </if>
-      <if test="city != null">
+      <if test="city != null" >
         city,
       </if>
-      <if test="interest != null">
+      <if test="interest != null" >
         interest,
       </if>
-      <if test="interestSum != null">
+      <if test="interestSum != null" >
         interest_sum,
       </if>
-      <if test="investSum != null">
+      <if test="investSum != null" >
         invest_sum,
       </if>
-      <if test="rechargeSum != null">
+      <if test="rechargeSum != null" >
         recharge_sum,
       </if>
-      <if test="withdrawSum != null">
+      <if test="withdrawSum != null" >
         withdraw_sum,
       </if>
-      <if test="loginActive != null">
+      <if test="loginActive != null" >
         login_active,
       </if>
-      <if test="customerSource != null">
+      <if test="customerSource != null" >
         customer_source,
       </if>
-      <if test="lastLoginTime != null">
+      <if test="lastLoginTime != null" >
         last_login_time,
       </if>
-      <if test="lastRechargeTime != null">
+      <if test="lastRechargeTime != null" >
         last_recharge_time,
       </if>
-      <if test="lastWithdrawTime != null">
+      <if test="lastWithdrawTime != null" >
         last_withdraw_time,
       </if>
-      <if test="investPlatform != null">
+      <if test="investPlatform != null" >
         invest_platform,
       </if>
-      <if test="investAge != null">
+      <if test="investAge != null" >
         invest_age,
       </if>
-      <if test="tradeNumber != null">
+      <if test="tradeNumber != null" >
         trade_number,
       </if>
-      <if test="currentOwner != null">
+      <if test="currentOwner != null" >
         current_owner,
       </if>
-      <if test="addWechat != null">
+      <if test="addWechat != null" >
         add_wechat,
       </if>
-      <if test="investProcess != null">
+      <if test="investProcess != null" >
         invest_process,
       </if>
-      <if test="customerComplaint != null">
+      <if test="customerComplaint != null" >
         customer_complaint,
       </if>
-      <if test="inviteCustomer != null">
+      <if test="inviteCustomer != null" >
         invite_customer,
       </if>
-      <if test="remark != null">
+      <if test="remark != null" >
         remark,
       </if>
-      <if test="mobile != null">
+      <if test="mobile != null" >
         mobile,
       </if>
-      <if test="bankTotal != null">
+      <if test="bankTotal != null" >
         bank_total,
       </if>
-      <if test="fundRetention != null">
+      <if test="fundRetention != null" >
         fund_retention,
       </if>
-      <if test="lastRepayTime != null">
+      <if test="lastRepayTime != null" >
         last_repay_time,
       </if>
-      <if test="inviteRegist != null">
+      <if test="inviteRegist != null" >
         invite_regist,
       </if>
-      <if test="inviteRecharge != null">
+      <if test="inviteRecharge != null" >
         invite_recharge,
       </if>
-      <if test="inviteTender != null">
+      <if test="inviteTender != null" >
         invite_tender,
       </if>
-      <if test="yield != null">
+      <if test="yield != null" >
         yield,
       </if>
-      <if test="attribute != null">
+      <if test="attribute != null" >
         `attribute`,
       </if>
-      <if test="bankBalance != null">
+      <if test="bankBalance != null" >
         bank_balance,
       </if>
-      <if test="accountAwait != null">
+      <if test="accountAwait != null" >
         account_await,
       </if>
-      <if test="bankFrost != null">
+      <if test="bankFrost != null" >
         bank_frost,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userName != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="age != null">
+      <if test="age != null" >
         #{age,jdbcType=INTEGER},
       </if>
-      <if test="sex != null">
+      <if test="sex != null" >
         #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="education != null">
+      <if test="education != null" >
         #{education,jdbcType=VARCHAR},
       </if>
-      <if test="occupation != null">
+      <if test="occupation != null" >
         #{occupation,jdbcType=VARCHAR},
       </if>
-      <if test="city != null">
+      <if test="city != null" >
         #{city,jdbcType=VARCHAR},
       </if>
-      <if test="interest != null">
+      <if test="interest != null" >
         #{interest,jdbcType=VARCHAR},
       </if>
-      <if test="interestSum != null">
+      <if test="interestSum != null" >
         #{interestSum,jdbcType=DECIMAL},
       </if>
-      <if test="investSum != null">
+      <if test="investSum != null" >
         #{investSum,jdbcType=DECIMAL},
       </if>
-      <if test="rechargeSum != null">
+      <if test="rechargeSum != null" >
         #{rechargeSum,jdbcType=DECIMAL},
       </if>
-      <if test="withdrawSum != null">
+      <if test="withdrawSum != null" >
         #{withdrawSum,jdbcType=DECIMAL},
       </if>
-      <if test="loginActive != null">
+      <if test="loginActive != null" >
         #{loginActive,jdbcType=VARCHAR},
       </if>
-      <if test="customerSource != null">
+      <if test="customerSource != null" >
         #{customerSource,jdbcType=VARCHAR},
       </if>
-      <if test="lastLoginTime != null">
+      <if test="lastLoginTime != null" >
         #{lastLoginTime,jdbcType=INTEGER},
       </if>
-      <if test="lastRechargeTime != null">
+      <if test="lastRechargeTime != null" >
         #{lastRechargeTime,jdbcType=INTEGER},
       </if>
-      <if test="lastWithdrawTime != null">
+      <if test="lastWithdrawTime != null" >
         #{lastWithdrawTime,jdbcType=INTEGER},
       </if>
-      <if test="investPlatform != null">
+      <if test="investPlatform != null" >
         #{investPlatform,jdbcType=INTEGER},
       </if>
-      <if test="investAge != null">
+      <if test="investAge != null" >
         #{investAge,jdbcType=TINYINT},
       </if>
-      <if test="tradeNumber != null">
+      <if test="tradeNumber != null" >
         #{tradeNumber,jdbcType=INTEGER},
       </if>
-      <if test="currentOwner != null">
+      <if test="currentOwner != null" >
         #{currentOwner,jdbcType=VARCHAR},
       </if>
-      <if test="addWechat != null">
+      <if test="addWechat != null" >
         #{addWechat,jdbcType=VARCHAR},
       </if>
-      <if test="investProcess != null">
+      <if test="investProcess != null" >
         #{investProcess,jdbcType=VARCHAR},
       </if>
-      <if test="customerComplaint != null">
+      <if test="customerComplaint != null" >
         #{customerComplaint,jdbcType=VARCHAR},
       </if>
-      <if test="inviteCustomer != null">
+      <if test="inviteCustomer != null" >
         #{inviteCustomer,jdbcType=INTEGER},
       </if>
-      <if test="remark != null">
+      <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="mobile != null">
+      <if test="mobile != null" >
         #{mobile,jdbcType=CHAR},
       </if>
-      <if test="bankTotal != null">
+      <if test="bankTotal != null" >
         #{bankTotal,jdbcType=DECIMAL},
       </if>
-      <if test="fundRetention != null">
+      <if test="fundRetention != null" >
         #{fundRetention,jdbcType=DECIMAL},
       </if>
-      <if test="lastRepayTime != null">
+      <if test="lastRepayTime != null" >
         #{lastRepayTime,jdbcType=INTEGER},
       </if>
-      <if test="inviteRegist != null">
+      <if test="inviteRegist != null" >
         #{inviteRegist,jdbcType=INTEGER},
       </if>
-      <if test="inviteRecharge != null">
+      <if test="inviteRecharge != null" >
         #{inviteRecharge,jdbcType=INTEGER},
       </if>
-      <if test="inviteTender != null">
+      <if test="inviteTender != null" >
         #{inviteTender,jdbcType=INTEGER},
       </if>
-      <if test="yield != null">
+      <if test="yield != null" >
         #{yield,jdbcType=DECIMAL},
       </if>
-      <if test="attribute != null">
-        #{attribute,jdbcType=TINYINT},
+      <if test="attribute != null" >
+        #{attribute,jdbcType=BIT},
       </if>
-      <if test="bankBalance != null">
+      <if test="bankBalance != null" >
         #{bankBalance,jdbcType=DECIMAL},
       </if>
-      <if test="accountAwait != null">
+      <if test="accountAwait != null" >
         #{accountAwait,jdbcType=DECIMAL},
       </if>
-      <if test="bankFrost != null">
+      <if test="bankFrost != null" >
         #{bankFrost,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" resultType="java.lang.Integer" >
     select count(*) from ht_user_portrait
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update ht_user_portrait
-    <set>
-      <if test="record.userId != null">
+    <set >
+      <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
-      <if test="record.userName != null">
+      <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
-      <if test="record.age != null">
+      <if test="record.age != null" >
         age = #{record.age,jdbcType=INTEGER},
       </if>
-      <if test="record.sex != null">
+      <if test="record.sex != null" >
         sex = #{record.sex,jdbcType=VARCHAR},
       </if>
-      <if test="record.education != null">
+      <if test="record.education != null" >
         education = #{record.education,jdbcType=VARCHAR},
       </if>
-      <if test="record.occupation != null">
+      <if test="record.occupation != null" >
         occupation = #{record.occupation,jdbcType=VARCHAR},
       </if>
-      <if test="record.city != null">
+      <if test="record.city != null" >
         city = #{record.city,jdbcType=VARCHAR},
       </if>
-      <if test="record.interest != null">
+      <if test="record.interest != null" >
         interest = #{record.interest,jdbcType=VARCHAR},
       </if>
-      <if test="record.interestSum != null">
+      <if test="record.interestSum != null" >
         interest_sum = #{record.interestSum,jdbcType=DECIMAL},
       </if>
-      <if test="record.investSum != null">
+      <if test="record.investSum != null" >
         invest_sum = #{record.investSum,jdbcType=DECIMAL},
       </if>
-      <if test="record.rechargeSum != null">
+      <if test="record.rechargeSum != null" >
         recharge_sum = #{record.rechargeSum,jdbcType=DECIMAL},
       </if>
-      <if test="record.withdrawSum != null">
+      <if test="record.withdrawSum != null" >
         withdraw_sum = #{record.withdrawSum,jdbcType=DECIMAL},
       </if>
-      <if test="record.loginActive != null">
+      <if test="record.loginActive != null" >
         login_active = #{record.loginActive,jdbcType=VARCHAR},
       </if>
-      <if test="record.customerSource != null">
+      <if test="record.customerSource != null" >
         customer_source = #{record.customerSource,jdbcType=VARCHAR},
       </if>
-      <if test="record.lastLoginTime != null">
+      <if test="record.lastLoginTime != null" >
         last_login_time = #{record.lastLoginTime,jdbcType=INTEGER},
       </if>
-      <if test="record.lastRechargeTime != null">
+      <if test="record.lastRechargeTime != null" >
         last_recharge_time = #{record.lastRechargeTime,jdbcType=INTEGER},
       </if>
-      <if test="record.lastWithdrawTime != null">
+      <if test="record.lastWithdrawTime != null" >
         last_withdraw_time = #{record.lastWithdrawTime,jdbcType=INTEGER},
       </if>
-      <if test="record.investPlatform != null">
+      <if test="record.investPlatform != null" >
         invest_platform = #{record.investPlatform,jdbcType=INTEGER},
       </if>
-      <if test="record.investAge != null">
+      <if test="record.investAge != null" >
         invest_age = #{record.investAge,jdbcType=TINYINT},
       </if>
-      <if test="record.tradeNumber != null">
+      <if test="record.tradeNumber != null" >
         trade_number = #{record.tradeNumber,jdbcType=INTEGER},
       </if>
-      <if test="record.currentOwner != null">
+      <if test="record.currentOwner != null" >
         current_owner = #{record.currentOwner,jdbcType=VARCHAR},
       </if>
-      <if test="record.addWechat != null">
+      <if test="record.addWechat != null" >
         add_wechat = #{record.addWechat,jdbcType=VARCHAR},
       </if>
-      <if test="record.investProcess != null">
+      <if test="record.investProcess != null" >
         invest_process = #{record.investProcess,jdbcType=VARCHAR},
       </if>
-      <if test="record.customerComplaint != null">
+      <if test="record.customerComplaint != null" >
         customer_complaint = #{record.customerComplaint,jdbcType=VARCHAR},
       </if>
-      <if test="record.inviteCustomer != null">
+      <if test="record.inviteCustomer != null" >
         invite_customer = #{record.inviteCustomer,jdbcType=INTEGER},
       </if>
-      <if test="record.remark != null">
+      <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.mobile != null">
+      <if test="record.mobile != null" >
         mobile = #{record.mobile,jdbcType=CHAR},
       </if>
-      <if test="record.bankTotal != null">
+      <if test="record.bankTotal != null" >
         bank_total = #{record.bankTotal,jdbcType=DECIMAL},
       </if>
-      <if test="record.fundRetention != null">
+      <if test="record.fundRetention != null" >
         fund_retention = #{record.fundRetention,jdbcType=DECIMAL},
       </if>
-      <if test="record.lastRepayTime != null">
+      <if test="record.lastRepayTime != null" >
         last_repay_time = #{record.lastRepayTime,jdbcType=INTEGER},
       </if>
-      <if test="record.inviteRegist != null">
+      <if test="record.inviteRegist != null" >
         invite_regist = #{record.inviteRegist,jdbcType=INTEGER},
       </if>
-      <if test="record.inviteRecharge != null">
+      <if test="record.inviteRecharge != null" >
         invite_recharge = #{record.inviteRecharge,jdbcType=INTEGER},
       </if>
-      <if test="record.inviteTender != null">
+      <if test="record.inviteTender != null" >
         invite_tender = #{record.inviteTender,jdbcType=INTEGER},
       </if>
-      <if test="record.yield != null">
+      <if test="record.yield != null" >
         yield = #{record.yield,jdbcType=DECIMAL},
       </if>
-      <if test="record.attribute != null">
-        `attribute` = #{record.attribute,jdbcType=TINYINT},
+      <if test="record.attribute != null" >
+        `attribute` = #{record.attribute,jdbcType=BIT},
       </if>
-      <if test="record.bankBalance != null">
+      <if test="record.bankBalance != null" >
         bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
       </if>
-      <if test="record.accountAwait != null">
+      <if test="record.accountAwait != null" >
         account_await = #{record.accountAwait,jdbcType=DECIMAL},
       </if>
-      <if test="record.bankFrost != null">
+      <if test="record.bankFrost != null" >
         bank_frost = #{record.bankFrost,jdbcType=DECIMAL},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update ht_user_portrait
     set user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
@@ -567,132 +567,132 @@
       invite_recharge = #{record.inviteRecharge,jdbcType=INTEGER},
       invite_tender = #{record.inviteTender,jdbcType=INTEGER},
       yield = #{record.yield,jdbcType=DECIMAL},
-      `attribute` = #{record.attribute,jdbcType=TINYINT},
+      `attribute` = #{record.attribute,jdbcType=BIT},
       bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
       account_await = #{record.accountAwait,jdbcType=DECIMAL},
       bank_frost = #{record.bankFrost,jdbcType=DECIMAL}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
     update ht_user_portrait
-    <set>
-      <if test="userName != null">
+    <set >
+      <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="age != null">
+      <if test="age != null" >
         age = #{age,jdbcType=INTEGER},
       </if>
-      <if test="sex != null">
+      <if test="sex != null" >
         sex = #{sex,jdbcType=VARCHAR},
       </if>
-      <if test="education != null">
+      <if test="education != null" >
         education = #{education,jdbcType=VARCHAR},
       </if>
-      <if test="occupation != null">
+      <if test="occupation != null" >
         occupation = #{occupation,jdbcType=VARCHAR},
       </if>
-      <if test="city != null">
+      <if test="city != null" >
         city = #{city,jdbcType=VARCHAR},
       </if>
-      <if test="interest != null">
+      <if test="interest != null" >
         interest = #{interest,jdbcType=VARCHAR},
       </if>
-      <if test="interestSum != null">
+      <if test="interestSum != null" >
         interest_sum = #{interestSum,jdbcType=DECIMAL},
       </if>
-      <if test="investSum != null">
+      <if test="investSum != null" >
         invest_sum = #{investSum,jdbcType=DECIMAL},
       </if>
-      <if test="rechargeSum != null">
+      <if test="rechargeSum != null" >
         recharge_sum = #{rechargeSum,jdbcType=DECIMAL},
       </if>
-      <if test="withdrawSum != null">
+      <if test="withdrawSum != null" >
         withdraw_sum = #{withdrawSum,jdbcType=DECIMAL},
       </if>
-      <if test="loginActive != null">
+      <if test="loginActive != null" >
         login_active = #{loginActive,jdbcType=VARCHAR},
       </if>
-      <if test="customerSource != null">
+      <if test="customerSource != null" >
         customer_source = #{customerSource,jdbcType=VARCHAR},
       </if>
-      <if test="lastLoginTime != null">
+      <if test="lastLoginTime != null" >
         last_login_time = #{lastLoginTime,jdbcType=INTEGER},
       </if>
-      <if test="lastRechargeTime != null">
+      <if test="lastRechargeTime != null" >
         last_recharge_time = #{lastRechargeTime,jdbcType=INTEGER},
       </if>
-      <if test="lastWithdrawTime != null">
+      <if test="lastWithdrawTime != null" >
         last_withdraw_time = #{lastWithdrawTime,jdbcType=INTEGER},
       </if>
-      <if test="investPlatform != null">
+      <if test="investPlatform != null" >
         invest_platform = #{investPlatform,jdbcType=INTEGER},
       </if>
-      <if test="investAge != null">
+      <if test="investAge != null" >
         invest_age = #{investAge,jdbcType=TINYINT},
       </if>
-      <if test="tradeNumber != null">
+      <if test="tradeNumber != null" >
         trade_number = #{tradeNumber,jdbcType=INTEGER},
       </if>
-      <if test="currentOwner != null">
+      <if test="currentOwner != null" >
         current_owner = #{currentOwner,jdbcType=VARCHAR},
       </if>
-      <if test="addWechat != null">
+      <if test="addWechat != null" >
         add_wechat = #{addWechat,jdbcType=VARCHAR},
       </if>
-      <if test="investProcess != null">
+      <if test="investProcess != null" >
         invest_process = #{investProcess,jdbcType=VARCHAR},
       </if>
-      <if test="customerComplaint != null">
+      <if test="customerComplaint != null" >
         customer_complaint = #{customerComplaint,jdbcType=VARCHAR},
       </if>
-      <if test="inviteCustomer != null">
+      <if test="inviteCustomer != null" >
         invite_customer = #{inviteCustomer,jdbcType=INTEGER},
       </if>
-      <if test="remark != null">
+      <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="mobile != null">
+      <if test="mobile != null" >
         mobile = #{mobile,jdbcType=CHAR},
       </if>
-      <if test="bankTotal != null">
+      <if test="bankTotal != null" >
         bank_total = #{bankTotal,jdbcType=DECIMAL},
       </if>
-      <if test="fundRetention != null">
+      <if test="fundRetention != null" >
         fund_retention = #{fundRetention,jdbcType=DECIMAL},
       </if>
-      <if test="lastRepayTime != null">
+      <if test="lastRepayTime != null" >
         last_repay_time = #{lastRepayTime,jdbcType=INTEGER},
       </if>
-      <if test="inviteRegist != null">
+      <if test="inviteRegist != null" >
         invite_regist = #{inviteRegist,jdbcType=INTEGER},
       </if>
-      <if test="inviteRecharge != null">
+      <if test="inviteRecharge != null" >
         invite_recharge = #{inviteRecharge,jdbcType=INTEGER},
       </if>
-      <if test="inviteTender != null">
+      <if test="inviteTender != null" >
         invite_tender = #{inviteTender,jdbcType=INTEGER},
       </if>
-      <if test="yield != null">
+      <if test="yield != null" >
         yield = #{yield,jdbcType=DECIMAL},
       </if>
-      <if test="attribute != null">
-        `attribute` = #{attribute,jdbcType=TINYINT},
+      <if test="attribute != null" >
+        `attribute` = #{attribute,jdbcType=BIT},
       </if>
-      <if test="bankBalance != null">
+      <if test="bankBalance != null" >
         bank_balance = #{bankBalance,jdbcType=DECIMAL},
       </if>
-      <if test="accountAwait != null">
+      <if test="accountAwait != null" >
         account_await = #{accountAwait,jdbcType=DECIMAL},
       </if>
-      <if test="bankFrost != null">
+      <if test="bankFrost != null" >
         bank_frost = #{bankFrost,jdbcType=DECIMAL},
       </if>
     </set>
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
     update ht_user_portrait
     set user_name = #{userName,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},
@@ -727,11 +727,10 @@
       invite_recharge = #{inviteRecharge,jdbcType=INTEGER},
       invite_tender = #{inviteTender,jdbcType=INTEGER},
       yield = #{yield,jdbcType=DECIMAL},
-      `attribute` = #{attribute,jdbcType=TINYINT},
+      `attribute` = #{attribute,jdbcType=BIT},
       bank_balance = #{bankBalance,jdbcType=DECIMAL},
       account_await = #{accountAwait,jdbcType=DECIMAL},
       bank_frost = #{bankFrost,jdbcType=DECIMAL}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-
 </mapper>

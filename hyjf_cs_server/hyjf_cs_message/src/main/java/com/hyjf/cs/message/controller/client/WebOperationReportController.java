@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.controller.app.report;
+package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.service.report.OperationReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,10 +22,10 @@ import javax.servlet.http.HttpServletRequest;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/8/3 14:10
  */
-@Api(tags = "app端-运营报告配置接口")
+@Api(tags = "web端-运营报告配置接口")
 @RestController
-@RequestMapping("/hyjf-app/report")
-public class AppOperationReportController extends BaseController {
+@RequestMapping("/hyjf-web/report")
+public class WebOperationReportController extends BaseController {
 
 	@Autowired
 	private OperationReportService operationReportService;
@@ -49,4 +49,18 @@ public class AppOperationReportController extends BaseController {
 		return response;
 	}
 
+	@ApiOperation(value = "进入页面预览初始化", notes = "进入页面预览初始化")
+	@GetMapping("/initMonthReport/{id}")
+	public JSONObject initMonthReport(@PathVariable String id) {
+		JSONObject jsonObject = new JSONObject();
+		OperationReportColumnEntity report = operationReportService.selectByPrimaryKey(id);
+		if(report!=null){
+			jsonObject.put("success", "success");
+			jsonObject.put("reportType",report.getOperationReportType());
+		}else {
+			jsonObject.put("success", "success");
+			jsonObject.put("countIsZero", "暂无任何数据");
+		}
+		return jsonObject;
+	}
 }
