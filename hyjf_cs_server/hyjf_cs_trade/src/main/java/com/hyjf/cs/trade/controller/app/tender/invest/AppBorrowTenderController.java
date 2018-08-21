@@ -43,7 +43,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     private BorrowTenderService borrowTenderService;
 
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
-    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求投资接口");
