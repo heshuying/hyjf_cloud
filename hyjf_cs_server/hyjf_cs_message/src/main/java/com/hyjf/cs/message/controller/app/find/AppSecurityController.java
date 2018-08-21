@@ -44,16 +44,22 @@ public class AppSecurityController extends BaseController {
             String IotalInterest = bigDecimal1.divide(new BigDecimal(100000000), 0, BigDecimal.ROUND_DOWN).toString();
 
             String yearFromDate = String.valueOf(GetDate.getYearFromDate(PUT_ONLINE_TIME));
-            int tenderCount = securityService.selectTotalTradeSum();//平台累计投资笔数
+            //平台累计投资笔数
+            int tenderCount = securityService.selectTotalTradeSum();
             BigDecimal total = new BigDecimal(tenderCount);
             String totalTradeVolume = total.divide(new BigDecimal(10000)).setScale(0, BigDecimal.ROUND_DOWN).toString();
-
-            appFindSecurityCustomize.setTotalInvester(totalTradeVolume + "万"); // 平台累计投资者
-            appFindSecurityCustomize.setTotalUserIncome(IotalInterest + "亿");// 累计收益
-            appFindSecurityCustomize.setStartYear("2013");//成立年份
-            appFindSecurityCustomize.setOperateYear(yearFromDate);//运营多少年
-            appFindSecurityCustomize.setCompanyGrade("AAA");//企业评级
-            appFindSecurityCustomize.setTotalTradeVolume(TotalCount + "亿");//平台累计投资
+            // 平台累计投资者
+            appFindSecurityCustomize.setTotalInvester(totalTradeVolume + "万");
+            // 累计收益
+            appFindSecurityCustomize.setTotalUserIncome(IotalInterest + "亿");
+            // 成立年份
+            appFindSecurityCustomize.setStartYear("2013");
+            // 运营多少年
+            appFindSecurityCustomize.setOperateYear(yearFromDate);
+            // 企业评级
+            appFindSecurityCustomize.setCompanyGrade("AAA");
+            // 平台累计投资
+            appFindSecurityCustomize.setTotalTradeVolume(TotalCount + "亿");
             ret.put("info", appFindSecurityCustomize);
         } catch (Exception e) {
             ret.put("status", "999");

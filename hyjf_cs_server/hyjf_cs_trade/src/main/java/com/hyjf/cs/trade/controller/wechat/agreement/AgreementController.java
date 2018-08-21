@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.utils.ProtocolEnum;
+import com.hyjf.cs.common.util.ProtocolEnum;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;

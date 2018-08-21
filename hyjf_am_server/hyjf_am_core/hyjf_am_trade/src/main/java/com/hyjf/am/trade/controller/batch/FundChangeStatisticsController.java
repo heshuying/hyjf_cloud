@@ -197,7 +197,7 @@ public class FundChangeStatisticsController extends BaseController {
         jsonObject.put("investmentStatistics", investmentFundStatisticsMap);
 
         //写入Redis
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTMENT, jsonObject.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTMENT, jsonObject.toString(), 7200);
 
         //充值投资统计
         Map<String, Object> fundChangeMap = new HashedMap();
@@ -212,7 +212,7 @@ public class FundChangeStatisticsController extends BaseController {
         jsonObject1.put("fundChange", fundChangeMap);
 
         //写入Redis
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_RECHARGE, jsonObject1.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_RECHARGE, jsonObject1.toString(), 7200);
 
         //投资人统计
         Map<String, Object> investorStatisticsMap = new HashedMap();
@@ -227,7 +227,7 @@ public class FundChangeStatisticsController extends BaseController {
         jsonObjectPople.put("investorStatistics", investorStatisticsMap);
 
         //写入Redis
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTOR, jsonObjectPople.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTOR, jsonObjectPople.toString(), 7200);
 
         //今日新增充值人数, 今日新增投资人数
         Map<String, Object> addedTodayMap = new HashedMap();
@@ -239,6 +239,6 @@ public class FundChangeStatisticsController extends BaseController {
 
         //写入Redis
         //需和注册人数Map合并
-        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "1", jsonObjectAddedToday.toString(), 3600);
+        RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "1", jsonObjectAddedToday.toString(), 7200);
     }
 }

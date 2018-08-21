@@ -198,6 +198,7 @@ public class AboutUsController extends BaseController {
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
 		page.setCurrPage(request.getCurrPage());
+        page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 		return webResult;
 	}

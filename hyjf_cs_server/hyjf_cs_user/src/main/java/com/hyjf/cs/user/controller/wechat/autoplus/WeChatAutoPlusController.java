@@ -16,7 +16,7 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
