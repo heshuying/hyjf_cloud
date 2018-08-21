@@ -34,7 +34,7 @@ public class BankPoundageAccountController extends BaseController {
     @Autowired
     BankPoundageAccountService bankPoundageAccountService;
     /**
-     * 红包账户明细
+     * 手续费账户明细
      * @param form
      * @return
      */

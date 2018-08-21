@@ -166,9 +166,9 @@ public class WebRechargeController extends BaseTradeController{
 		WebResult<Object> result = new WebResult<Object>();
 		List<BanksConfigVO> list = userRechargeService.getRechargeQuotaLimit();
 		for (BanksConfigVO banksConfig : list) {
-			BigDecimal monthCardQuota = banksConfig.getMonthCardQuota();
-			BigDecimal singleQuota = banksConfig.getSingleQuota();
-			BigDecimal singleCardQuota = banksConfig.getSingleCardQuota();
+			BigDecimal monthCardQuota = banksConfig.getMonthCardQuota()==null?new BigDecimal(0):banksConfig.getMonthCardQuota();
+			BigDecimal singleQuota = banksConfig.getSingleQuota()==null?new BigDecimal(0):banksConfig.getSingleQuota();
+			BigDecimal singleCardQuota = banksConfig.getSingleCardQuota()==null?new BigDecimal(0):banksConfig.getSingleCardQuota();
 			banksConfig.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
 			banksConfig.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
 			banksConfig.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
