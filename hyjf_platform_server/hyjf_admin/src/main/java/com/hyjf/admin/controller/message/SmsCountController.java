@@ -109,8 +109,7 @@ public class SmsCountController extends BaseController {
      */
     @ApiOperation(value = "取得部门信息", notes = "取得部门信息")
     @PostMapping(value = "/get_crm_department_list")
-    @ResponseBody
-    public String getCrmDepartmentListAction(@RequestBody SmsCountRequestBean form) {
+    public JSONObject getCrmDepartmentListAction(@RequestBody SmsCountRequestBean form) {
         // 部门
         String[] list = new String[]{};
         if (Validator.isNotNull(form.getIds())) {
@@ -127,13 +126,13 @@ public class SmsCountController extends BaseController {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
             JSONObject jo = new JSONObject();
 
-            jo.put("id", -10086);
+            jo.put("value", -10086);
             jo.put("text", "其他");
             JSONObject joAttr = new JSONObject();
-            joAttr.put("id", -10086);
+            joAttr.put("value", -10086);
             joAttr.put("parentid", 0);
             joAttr.put("parentname", "");
-            joAttr.put("name", "其他");
+            joAttr.put("title", "其他");
             joAttr.put("listorder", 0);
             jo.put("li_attr", joAttr);
             JSONArray array = new JSONArray();
@@ -146,11 +145,12 @@ public class SmsCountController extends BaseController {
             }
 
             ja.add(jo);
-
-            return ja.toString();
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            return ret;
         }
 
-        return StringUtils.EMPTY;
+        return new JSONObject();
     }
 
     /**
