@@ -193,7 +193,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 成功页面
         String successPath = "/user/openSuccess";
         // 如果是移动端  返回别的url
-        if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())){
+        if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.CLIENT_HEADER_WX+"").equals(openBean.getPlatform())){
             errorPath = "/user/open/result/fail";
             successPath = "/user/open/result/success";
         }
