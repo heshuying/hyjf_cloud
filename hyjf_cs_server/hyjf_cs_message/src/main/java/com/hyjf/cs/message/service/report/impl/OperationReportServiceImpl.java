@@ -1940,7 +1940,16 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return response;
 
 	}
-
+	@Override
+	public OperationReportColumnEntity selectByPrimaryKey(String id){
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("id", id);
+		Query query = new Query();
+		Criteria criteria = getCriteria(paraMap, query);
+		query.addCriteria(criteria);
+		OperationReportColumnEntity listMongodb = operationReportColumnMongDao.findOne(query);
+		return listMongodb;
+	}
 	/**
 	 * 修改用户运营报告
 	 *
@@ -2017,4 +2026,5 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		int maxDate = a.get(Calendar.DATE);
 		return maxDate;
 	}
+
 }
