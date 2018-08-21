@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.admin.BankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -102,7 +101,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BanksConfigVO> getRechargeQuotaLimit() {
 		BanksConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getRechargeQuotaLimit" , BanksConfigResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/config/getbanklist" , BanksConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

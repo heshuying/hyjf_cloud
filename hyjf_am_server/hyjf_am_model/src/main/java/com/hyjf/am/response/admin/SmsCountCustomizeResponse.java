@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.response.admin;
 
-import java.util.List;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -15,6 +15,10 @@ import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
  */
 public class SmsCountCustomizeResponse extends Response<SmsCountCustomizeVO> {
     private int count;
+
+    private String sumMoney;
+
+    private int sumCount;
 
     List<OADepartmentCustomizeVO> list;
 
@@ -32,5 +36,21 @@ public class SmsCountCustomizeResponse extends Response<SmsCountCustomizeVO> {
 
     public void setList(List<OADepartmentCustomizeVO> list) {
         this.list = list;
+    }
+
+    public String getSumMoney() {
+        return sumMoney;
+    }
+
+    public void setSumMoney(String sumMoney) {
+        this.sumMoney = sumMoney;
+    }
+
+    public int getSumCount() {
+        return sumCount;
+    }
+
+    public void setSumCount(int sumCount) {
+        this.sumCount = sumCount;
     }
 }

@@ -24,6 +24,8 @@ import io.swagger.annotations.ApiOperation;
 /**
  * @author libin
  * @version BidApplyQueryController.java, v0.1 2018年8月21日 上午9:13:52
+ * test: borrow tender 的 nid and bankopenaccount 的 account
+ * start:pay server
  */
 @Api(value = "异常中心-投资人投标申请查询",tags = "异常中心-投资人投标申请查询")
 @RestController
@@ -48,17 +50,15 @@ public class BidApplyQueryController extends BaseController{
     }
     
 	/**
-	 * 投资人投标申请查询
+	 * 投资人投标申请查询      已测试
 	 * @param request
-	 * @param modelAndView
 	 * @param form
 	 * @author libin
 	 * @date 2018年8月16日 上午10:04:35
 	 */
 	private void bidApplyQuerySearch(HttpServletRequest request, JSONObject json, BidApplyQueryBean form) {
-		/*JSONObject result = this.bidApplyQueryService.bidApplyQuerySearch(form);*/
-		//TODO
-		/*form.setResult(result);*/
+		JSONObject result = this.bidApplyQueryService.bidApplyQuerySearch(form);
+		form.setResult(result);
 		json.put("bidApplyQueryForm", form);
 	}
 }
