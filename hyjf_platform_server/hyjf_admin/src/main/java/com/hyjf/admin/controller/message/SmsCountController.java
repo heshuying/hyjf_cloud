@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -126,7 +127,7 @@ public class SmsCountController extends BaseController {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
             JSONObject jo = new JSONObject();
 
-            jo.put("value", -10086);
+            jo.put("value", "-10086");
           /*  jo.put("text", "其他");
             jo.put("value", -10086);*/
           /*  jo.put("parentid", 0);
@@ -146,6 +147,8 @@ public class SmsCountController extends BaseController {
             ja.add(jo);
             JSONObject ret= new JSONObject();
             ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
             return ret;
         }
 
@@ -170,7 +173,7 @@ public class SmsCountController extends BaseController {
         // 表格sheet名称
         String sheetName = "短信统计列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         SmsCountCustomizeVO smsCountCustomize = new SmsCountCustomizeVO();
         if (StringUtils.isNotEmpty(form.getPost_time_begin())) {

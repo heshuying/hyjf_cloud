@@ -83,6 +83,9 @@ public class SmsTemplateController extends BaseConfigController{
 			List<SmsTemplateVO> voList = CommonUtils.convertBeanList(smsTemplateList, SmsTemplateVO.class);
 			response.setResultList(voList);
 		}
+		// 查询总条数
+        int count = smsTemplateService.selectCount();
+		response.setCount(count);
 		return response;
 	}
 

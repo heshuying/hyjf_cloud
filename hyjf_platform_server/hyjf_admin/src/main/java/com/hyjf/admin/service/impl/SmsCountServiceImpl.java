@@ -69,7 +69,7 @@ public class SmsCountServiceImpl implements SmsCountService {
 
               /*  jo.put("value", departmentTreeRecord.getId());
                 jo.put("text", departmentTreeRecord.getName());*/
-                jo.put("value", departmentTreeRecord.getId());
+                jo.put("value", departmentTreeRecord.getId().toString());
 //                jo.put("parentid", departmentTreeRecord.getParentid());
 //                jo.put("parentname", Validator.isNull(topParentDepartmentName) ? "" : topParentDepartmentName);
                 jo.put("title", departmentTreeRecord.getName());
