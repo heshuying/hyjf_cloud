@@ -473,7 +473,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划配置画面 添加/修改 初始化info画面   未测试
+	 * 计划配置画面 添加/修改 初始化info画面   已测试
 	 *
 	 * @param request
 	 * @return 
@@ -487,24 +487,29 @@ public class AllocationEngineController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		//1.添加计划配置时，往画面放一个隐藏域 planNid
-		if(form.getPlanNidSrch()!= null){
-			jsonObject.put("planNid", form.getPlanNidSrch());
-		}
-		//2.修改计划配置时
-		String planNid = form.getPlanNidSrch();
-		String labelId = form.getLabelId();
-		if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
-			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
-			jsonObject.put("hjhAllocationEngine", vo);
-		} else {
-			jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+		// 添加或修改 0：添加 1：修改
+		if(viewRequest.getAddOrModify().equals("0")){
+			if(form.getPlanNidSrch()!= null){
+				jsonObject.put("planNid", form.getPlanNidSrch());
+			}
+			return jsonObject;
+		} else if(viewRequest.getAddOrModify().equals("1")){
+			//2.修改计划配置时
+			String planNid = form.getPlanNidSrch();
+			String labelId = form.getLabelId();
+			if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
+				HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
+				jsonObject.put("hjhAllocationEngine", vo);
+			} else {
+				jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+			}
+			return jsonObject;
 		}
 		return jsonObject;
 	}
-	
-	
+
 	/**
-	 * 计划配置info画面入力校验
+	 * 计划配置info画面入力校验   已测试
 	 *
 	 * @param labelName
 	 * @return 
@@ -531,9 +536,10 @@ public class AllocationEngineController extends BaseController{
 			jsonObject.put("status", "n");
 			return jsonObject;
 		}
-		// 校验一个计划下不能用重复的标签名称
-		boolean existflg = this.allocationEngineService.checkRepeat(labelName,planNid);
-		if(!existflg){
+		// 校验一个计划下不能用重复的标签名称 参数 labelName 和 planNid 放在
+		/*boolean existflg = this.allocationEngineService.checkRepeat(form);*/
+		int existflg = this.allocationEngineService.checkRepeat(form);
+		if(existflg>0){
 			jsonObject.put("info", "该标签已经被使用，无法再次添加");
 			jsonObject.put("status", "n");
 			return jsonObject;
@@ -576,7 +582,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划配置info画面标签排序入力校验
+	 * 计划配置info画面标签排序入力校验   未测试
 	 *
 	 * @param labelName
 	 * @return 

@@ -13,8 +13,10 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
+import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -50,6 +52,8 @@ public class HjhAlarmController extends BaseController {
     private HjhAccedeService hjhAccedeService;
     @Autowired
     private HjhRepayService hjhRepayService;
+    @Autowired
+    private BorrowService borrowService;
     @Autowired
     private MailProducer mailProducer;
     @Autowired
@@ -252,6 +256,46 @@ public class HjhAlarmController extends BaseController {
             }
         }else {
             logger.info("计划订单投资异常size为空, 不发送预警");
+        }
+        return true;
+    }
+
+    /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @author zhangyk
+     * @date 2018/8/20 15:53
+     */
+    @GetMapping("/batch/alermBeforeLiquidateCheck")
+    private Boolean AlermBeforeLiquidateCheck() {
+        List<BorrowCustomizeVO> list = borrowService.selectUnDealBorrowBeforeLiquidate();
+        if (CollectionUtils.isNotEmpty(list)){
+            try {
+                Boolean env_test = systemConfig.isEnvTest();
+                String emailList= "";
+                if (env_test){
+                    emailList = systemConfig.getHyjfAlertEmailTest();
+                }else{
+                    emailList = systemConfig.getHyjfAlertEmail();
+                }
+                String [] toMail = emailList.split(",");
+                String title = "原始标的风险状态消息通知";
+                StringBuffer msg = new StringBuffer();
+                StringBuffer targetId = new StringBuffer();
+                msg.append("明天即将进入清算日，部分原始标的仍然处于投资或复审中，请相关人员至后台查看并及时处理，谢谢 \n");
+                for (BorrowCustomizeVO borrow : list){
+                    targetId.append(" " +borrow.getBorrowNid());
+                }
+                msg.append("目标id如下：" + targetId);
+                MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
+                        null,
+                        MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
+                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+            }catch (Exception e){
+                logger.error("扫描处于复审中或者投资中的原始标的进行预警发送异常 ");
+                return  false;
+            }
+        }else{
+            logger.info(">>>>清算前扫描原始标的查询目标数目为零，不发送邮件预警<<<<");
         }
         return true;
     }

@@ -46,7 +46,7 @@ import java.util.List;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "api端同步余额信息接口",tags = "api端同步余额信息接口")
+@Api(value = "api端-同步余额信息接口",tags = "api端-同步余额信息接口")
 @Controller
 @RequestMapping("/hyjf-api/synbalance")
 public class SynBalanceController extends BaseTradeController {

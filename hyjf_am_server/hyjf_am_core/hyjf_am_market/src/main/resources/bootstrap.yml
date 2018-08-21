@@ -19,5 +19,14 @@ spring:
 server:
   port: 8094
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: am-market.log

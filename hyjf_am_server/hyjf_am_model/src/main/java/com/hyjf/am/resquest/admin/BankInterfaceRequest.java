@@ -1,19 +1,23 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
 /**
  * @author by xiehuili on 2018/7/19.
  */
+@ApiModel(value="接口切换",description="接口切换")
 public class BankInterfaceRequest extends BasePage {
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "银行接口类型")
     private String interfaceType;
-
+    @ApiModelProperty(value = "银行接口类型名称")
     private String interfaceName;
-
+    @ApiModelProperty(value = "银行接口类型使用状态")
     private Integer interfaceStatus;
 
     private Date createTime;
@@ -27,9 +31,9 @@ public class BankInterfaceRequest extends BasePage {
     private Integer updateUserId;
 
     private String updateUserName;
-
+    @ApiModelProperty(value = "是否可用")
     private Integer isUsable;
-
+    @ApiModelProperty(value = "是否删除")
     private Integer isDelete;
 
     public Integer getId() {

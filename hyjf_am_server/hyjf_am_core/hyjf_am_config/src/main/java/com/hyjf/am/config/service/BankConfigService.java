@@ -75,4 +75,11 @@ public interface BankConfigService {
     List<JxBankConfig> getRechargeQuotaLimit(Integer quickPayment);
 
     List<ParamName> getParamName(String other1);
+
+    /**
+     * 获取银行列表（快捷卡）
+     * @param quickPayment
+     * @return
+     */
+    List<JxBankConfig> getBankRecordList(Integer quickPayment);
 }

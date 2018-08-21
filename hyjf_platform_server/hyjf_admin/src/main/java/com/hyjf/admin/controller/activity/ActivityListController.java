@@ -13,11 +13,8 @@ import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -126,8 +123,16 @@ public class ActivityListController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody ActivityListRequest request) {
+        ActivityListResponse response = new ActivityListResponse();
+        String message = validatorFieldCheck(request);
+        if (message != null) {
+            response.setRtn(Response.FAIL);
+            response.setMessage(message);
+            return new AdminResult<>(FAIL,response.getMessage());
+        }
         //1代表插入成功， 0为失败
-        ActivityListResponse response = activityListService.insertRecord(request);
+        response = activityListService.insertRecord(request);
+
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -136,6 +141,7 @@ public class ActivityListController extends BaseController {
         }
         return new AdminResult<>();
     }
+
 
     @ApiOperation(value = "活动修改初始页面", notes = "活动修改初始页面")
     @RequestMapping(value = "/initUpdateActivity", method = RequestMethod.GET)
@@ -158,7 +164,13 @@ public class ActivityListController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
-        ActivityListResponse response = activityListService.updateActivity(activityListRequest);
+        ActivityListResponse response = new ActivityListResponse();
+        String message = validatorFieldCheck(activityListRequest);
+        if (message != null) {
+            response.setMessage(message);
+            return new AdminResult<>(FAIL,response.getMessage());
+        }
+        response = activityListService.updateActivity(activityListRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -198,6 +210,47 @@ public class ActivityListController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<>();
+    }
+
+
+    /**
+     * 表单校验
+     * @param request
+     * @return
+     */
+    private String validatorFieldCheck(ActivityListRequest request) {
+        String message = null;
+        if (request.getTitle() == null) {
+            message = "活动名称不能为空";
+            return message;
+        }
+        if (request.getQr() == null) {
+            message = "主图不能为空";
+            return message;
+        }
+        if (request.getStartTime() == null) {
+            message = "活动起始时间不能为空";
+            return message;
+        }
+        if (request.getEndTime() == null) {
+            message = "活动结束时间不能为空";
+            return message;
+        }
+        if (request.getPlatform() == null) {
+            message = "平台不能为空";
+            return message;
+        }
+        if (request.getTitle().length() > 30) {
+            message = "活动名称过长";
+            return message;
+        }
+        if (request.getDescription() != null) {
+            if (request.getDescription().length() > 200) {
+                message = "描述过长";
+                return message;
+            }
+        }
+        return message;
     }
 
 }

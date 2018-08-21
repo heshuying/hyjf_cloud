@@ -523,7 +523,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         String msg = "";
-        if (!userVO.isOpenAccount()) {
+        if (!userVO.isBankOpenAccount()) {
             msg = "998";
             logger.info("==============垫付机构:" + userVO.getUserId() + "批量还款失败,用户未开户!");
             webResult.setData(msg);

@@ -8,6 +8,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
 import com.hyjf.am.trade.service.front.borrow.FinmanChargeNewService;
 import com.hyjf.am.vo.trade.borrow.BorrowFinmanNewChargeVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +39,9 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse response =new FinmanChargeNewResponse();
         int total = this.finmanChargeNewService.countRecordTotal(adminRequest);
         if(total > 0){
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),total, adminRequest.getPageSize());
             List<BorrowFinmanNewChargeVO> recordList =
-                    this.finmanChargeNewService.getRecordList(adminRequest,adminRequest.getCurrPage(), adminRequest.getPageSize() == 0?10: adminRequest.getPageSize());
+                    this.finmanChargeNewService.getRecordList(adminRequest,paginator.getOffset(),paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 response=new FinmanChargeNewResponse();
                 response.setResultList(recordList);

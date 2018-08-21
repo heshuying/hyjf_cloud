@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.math.BigDecimal;
+
 /**
  * 定时更新运营数据
  * @author fq
@@ -26,4 +28,33 @@ public class TotalInvestAndInterestController extends BaseController {
     public void excute() {
         service.updateData();
     }
+
+
+    /**
+     * 累计投资总额
+     * @return
+     */
+    @RequestMapping("/selectTenderSum")
+    BigDecimal selectTenderSum(){
+        return service.selectTenderSum();
+    }
+
+    /**
+     * 累计收益
+     * @return
+     */
+    @RequestMapping("/selectInterestSum")
+    BigDecimal selectInterestSum(){
+        return service.selectInterestSum();
+    }
+
+    /**
+     * 累计投资笔数
+     * @return
+     */
+    @RequestMapping("/selectTotalTenderSum")
+    int selectTotalTenderSum(){
+        return service.selectTotalTenderSum();
+    }
+
 }

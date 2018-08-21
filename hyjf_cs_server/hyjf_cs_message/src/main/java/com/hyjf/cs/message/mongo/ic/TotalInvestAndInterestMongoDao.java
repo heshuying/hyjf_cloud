@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TotalInvestAndInterestMongoDao extends BaseMongoDao<TotalInvestAndInterestEntity> {
 
+
 	@Override
 	protected Class<TotalInvestAndInterestEntity> getEntityClass() {
 		return TotalInvestAndInterestEntity.class;

@@ -73,6 +73,16 @@ public class BorrowProjectTypeController extends BaseController {
         if (isExists) {
             // 根据主键检索数据
             record = this.borrowProjectTypeService.getRecord(record);
+            //优惠券类型转换
+            if(record.getInterestCoupon() == 1&&record.getTasteMoney() != 1){
+                record.setCoupon("0");
+            }
+            if(record.getInterestCoupon() == 0&&record.getTasteMoney() == 1){
+                record.setCoupon("1");
+            }
+            if(record.getInterestCoupon() == 1&&record.getTasteMoney() == 1){
+                record.setCoupon("0,1");
+            }
             record.setModifyFlag("E");
             // 根据项目编号查询
             selectRepay = this.borrowProjectTypeService.selectRepay(record.getBorrowClass());
@@ -100,6 +110,19 @@ public class BorrowProjectTypeController extends BaseController {
         //todo fangkai
 //        AdminSystemVO user = getUser(request);
 //        adminRequest.setCreateUserId(user.getId());
+        //优惠券类型转换
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(0);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("1")){
+            adminRequest.setInterestCoupon(0);
+            adminRequest.setTasteMoney(1);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0,1")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(1);
+        }
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
@@ -146,6 +169,19 @@ public class BorrowProjectTypeController extends BaseController {
         //todo fangkai
 //        AdminSystemVO user = getUser(request);
 //        adminRequest.setUpdateUserId(user.getId());
+        //优惠券类型转换
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(0);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("1")){
+            adminRequest.setInterestCoupon(0);
+            adminRequest.setTasteMoney(1);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0,1")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(1);
+        }
         BorrowProjectTypeResponse response =  new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)

@@ -10,7 +10,10 @@ import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
 import com.hyjf.cs.message.service.totalinterest.TotalInvestAndInterestService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 /**
  * @author fq
@@ -32,4 +35,34 @@ public class TotalInvestAndInterestServiceImpl implements TotalInvestAndInterest
             mongoDao.save(entity);
         }
     }
+
+
+    @Override
+    public BigDecimal selectTenderSum() {
+        TotalInvestAndInterestEntity entity = mongoDao.findOne(new Query());
+        if (entity != null) {
+            return entity.getTotalInvestAmount();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public BigDecimal selectInterestSum() {
+        TotalInvestAndInterestEntity entity = mongoDao.findOne(new Query());
+        if (entity != null) {
+            return entity.getTotalInterestAmount();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public int selectTotalTenderSum() {
+        TotalInvestAndInterestEntity entity = mongoDao.findOne(new Query());
+        if (entity != null) {
+            return entity.getTotalInvestNum();
+        }
+        return 0;
+    }
+
+
 }

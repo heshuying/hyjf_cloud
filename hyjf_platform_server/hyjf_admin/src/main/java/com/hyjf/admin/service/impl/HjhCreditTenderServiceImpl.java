@@ -21,6 +21,7 @@ import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.fdd.FddDessenesitizationBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -93,6 +94,18 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 			e.printStackTrace();
 			_log.error("法大大发送下载脱敏消息失败...", e);	
 		}
+	}
+
+	/**
+	 * 传参查询承接债转表列总计
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	@Override
+	public HjhCreditTenderSumVO getCalcSumByParam(HjhCreditTenderRequest form) {
+		HjhCreditTenderSumVO vo = amTradeClient.getHjhCreditTenderCalcSumByParam(form);
+		return vo;
 	}
 
 }
