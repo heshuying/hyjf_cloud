@@ -9,6 +9,7 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
@@ -66,4 +67,11 @@ public interface BorrowTenderService extends BaseTradeService {
      * @return
      */
     AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
+
+    /**
+     * app端获取投资url
+     * @param tender
+     * @return
+     */
+    ModelAndView getAppTenderUrl(TenderRequest tender);
 }
