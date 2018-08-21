@@ -11,6 +11,7 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -27,10 +28,12 @@ import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
+import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -70,6 +73,9 @@ public class WeChatRegistController extends BaseUserController {
 
     @Autowired
     private CouponProducer couponProducer;
+
+    @Autowired
+    LoginService loginService;
 
     /** 短信验证码状态,新验证码 */
     private static final Integer CKCODE_NEW = 0;
@@ -120,11 +126,21 @@ public class WeChatRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-       ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
+        ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
         if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
         }
-        registService.register(register, GetCilentIP.getIpAddr(request));
+        WebViewUserVO webViewUserVO =  registService.register(register, GetCilentIP.getIpAddr(request));
+        //注册成功重新登录
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+         if(null!=userVO){
+             ret.setSign(userVO.getToken());
+         }else {
+             ret.setStatus("99");
+             ret.setStatusDesc("登陆失败");
+             ret.setSuccessUrl("");
+             return ret;
+         }
         String statusDesc = "注册成功";
         if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
             BaseMapBean baseMapBean=new BaseMapBean();
