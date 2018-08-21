@@ -56,8 +56,11 @@ public class SmsCodeController extends BaseController {
     @PostMapping("/query_user")
     public JSONObject queryUser(@RequestBody SmsCodeRequestBean requestBean) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(STATUS, SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         // 在筛选条件下查询出用户
         List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
+        jsonObject.put("user_number", 0);
 		if (!CollectionUtils.isEmpty(msgs)) {
 			jsonObject.put("user_number", msgs.size());
 		}
@@ -78,7 +81,7 @@ public class SmsCodeController extends BaseController {
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            logger.error("在筛选条件下查询出用户出错...", e1);
         }
         // 短信余额
         jsonObject.put("remain_money", remain_money.toPlainString());

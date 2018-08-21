@@ -1675,7 +1675,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public void insertSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-conf/smsTemplate/insertTemplate", request, Object.class);
+        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Object.class);
     }
 
     /**
