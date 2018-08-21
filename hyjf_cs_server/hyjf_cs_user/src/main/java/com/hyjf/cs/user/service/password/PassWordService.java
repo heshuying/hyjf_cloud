@@ -4,10 +4,13 @@
 package com.hyjf.cs.user.service.password;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.SendSmsVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.Map;
 
@@ -109,7 +112,13 @@ public interface PassWordService extends BaseUserService {
      */
     void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword);
 
-    Map<String,Object> checkStatus(String token, String sign);
+    /**
+     * app设置交易密码参数检查
+     * @param token
+     * @param sign
+     * @return
+     */
+    UserVO checkStatus(String token, String sign);
 
     /**
      * 微信验证短信验证码
@@ -125,4 +134,51 @@ public interface PassWordService extends BaseUserService {
      * @return
      */
     String getFiledMess(String logOrdId);
+
+    /**
+     * 组装参数调用银行
+     * @param bean
+     * @param user
+     * @param usersInfo
+     * @param bankOpenAccount
+     * @return
+     */
+    Map<String,Object> setAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+
+    /**
+     * app重置交易密码
+     * @param bean
+     * @param user
+     * @param usersInfo
+     * @param bankOpenAccount
+     * @return
+     */
+    Map<String,Object> resetAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+
+    /**
+     * 微信设置交易密码
+     * @param bean
+     * @param user
+     * @param usersInfo
+     * @param bankOpenAccount
+     * @return
+     */
+    Map<String,Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+
+    /**
+     * 微信设置交易密码检查参数
+     * @param userId
+     * @return
+     */
+    UserVO weChatCheck(Integer userId);
+
+    /**
+     * 微信重置交易密码
+     * @param bean
+     * @param user
+     * @param usersInfo
+     * @param bankOpenAccount
+     * @return
+     */
+    Map<String,Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
 }
