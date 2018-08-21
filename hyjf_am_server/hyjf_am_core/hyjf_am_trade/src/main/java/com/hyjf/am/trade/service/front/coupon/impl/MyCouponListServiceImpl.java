@@ -788,6 +788,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
         couponBean.setProjectType(projectString);
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
+        couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
         //处理优惠券使用平台
         String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
         couponBean.setOperationPlatform(clientString);
