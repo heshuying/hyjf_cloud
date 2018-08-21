@@ -472,6 +472,12 @@ public class AutoMapper {
     
     @Resource
     protected CommissionLogMapper commissionLogMapper;
-    
+
+    @Resource
+    protected ApplyAgreementMapper applyAgreementMapper;
+
+    @Resource
+    protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
+
 }
 

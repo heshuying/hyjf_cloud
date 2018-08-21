@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.front.asset;
 
+import com.hyjf.am.response.trade.MyCreditDetailResponse;
 import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
@@ -70,4 +71,11 @@ public interface AssetManageService  extends BaseService {
      * @return
      */
     RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type);
+
+    /**
+     * 获取用户散标转让记录查看详情
+     * @param creditNid
+     * @return
+     */
+    MyCreditDetailResponse getMyCreditAssignDetail(String creditNid);
 }

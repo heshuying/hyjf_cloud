@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowProjectTypeService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
@@ -74,12 +73,23 @@ public class BorrowProjectTypeController extends BaseController {
         if (isExists) {
             // 根据主键检索数据
             record = this.borrowProjectTypeService.getRecord(record);
+            //优惠券类型转换
+            if(record.getInterestCoupon() == 1&&record.getTasteMoney() != 1){
+                record.setCoupon("0");
+            }
+            if(record.getInterestCoupon() == 0&&record.getTasteMoney() == 1){
+                record.setCoupon("1");
+            }
+            if(record.getInterestCoupon() == 1&&record.getTasteMoney() == 1){
+                record.setCoupon("0,1");
+            }
             record.setModifyFlag("E");
             // 根据项目编号查询
             selectRepay = this.borrowProjectTypeService.selectRepay(record.getBorrowClass());
         } else {
             record.setModifyFlag("N");
         }
+        record.setMethodName(adminRequest.getMethodName());
         record.setRepayNames(selectRepay);
         // 回显checkbox标签
         List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
@@ -96,7 +106,23 @@ public class BorrowProjectTypeController extends BaseController {
     @ApiOperation(value = "项目类型添加", notes = "项目类型添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public BorrowProjectTypeResponse insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
+    public AdminResult insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
+        //todo fangkai
+//        AdminSystemVO user = getUser(request);
+//        adminRequest.setCreateUserId(user.getId());
+        //优惠券类型转换
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(0);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("1")){
+            adminRequest.setInterestCoupon(0);
+            adminRequest.setTasteMoney(1);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0,1")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(1);
+        }
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
@@ -125,18 +151,37 @@ public class BorrowProjectTypeController extends BaseController {
             response.setResult(borrowProjectTypeVO);
             BeanUtils.copyProperties(adminRequest,borrowProjectTypeVO);
             response.setRtn(Response.FAIL);
-            response.setMessage("输入内容验证失败");
-            return response;
+            response.setMessage(message);
+            return new AdminResult<BorrowProjectTypeResponse>(response);
         }
         if (StringUtils.equals("N", adminRequest.getModifyFlag())) {
             response = this.borrowProjectTypeService.insertRecord(adminRequest);
+            return new AdminResult<BorrowProjectTypeResponse>(response);
         }
-        return response;
+        response.setRtn(Response.FAIL);
+        response.setMessage("modifyFlag 等于N，才能添加！");
+        return new AdminResult<BorrowProjectTypeResponse>(response);
     }
     @ApiOperation(value = "项目类型修改", notes = "项目类型修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public BorrowProjectTypeResponse updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
+    public AdminResult updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
+        //todo fangkai
+//        AdminSystemVO user = getUser(request);
+//        adminRequest.setUpdateUserId(user.getId());
+        //优惠券类型转换
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(0);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("1")){
+            adminRequest.setInterestCoupon(0);
+            adminRequest.setTasteMoney(1);
+        }
+        if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0,1")){
+            adminRequest.setInterestCoupon(1);
+            adminRequest.setTasteMoney(1);
+        }
         BorrowProjectTypeResponse response =  new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
@@ -164,15 +209,15 @@ public class BorrowProjectTypeController extends BaseController {
             borrowProjectTypeVO.setRepayStyles(selectStyles);
             BeanUtils.copyProperties(adminRequest,borrowProjectTypeVO);
             response.setRtn(Response.FAIL);
-            response.setMessage("输入内容验证失败");
+            response.setMessage(message);
             response.setResult(borrowProjectTypeVO);
-            return response;
+            return new AdminResult<BorrowProjectTypeResponse>(response);
         }
         if (StringUtils.isNotEmpty(adminRequest.getBorrowCd())) {
             this.borrowProjectTypeService.updateRecord(adminRequest);
         }
          response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
-        return response;
+        return new AdminResult<BorrowProjectTypeResponse>(response);
     }
     @ApiOperation(value = "项目类型删除", notes = "项目类型删除")
     @PostMapping("/deleteAction")
@@ -226,23 +271,46 @@ public class BorrowProjectTypeController extends BaseController {
     private String validatorFieldCheck(ModelAndView modelAndView, BorrowProjectTypeRequest form) {
         String message="";
         // 项目类型
-        boolean borrowCdFlag = ValidatorFieldCheckUtil.validateRequired(modelAndView, "borrowCd", form.getBorrowCd());
+        if(StringUtils.isBlank(form.getBorrowCd())){
+            message="borrowCd 不能为空！";
+            return message;
+        }
         // 项目编号
-        ValidatorFieldCheckUtil.validateAlphaAndMaxLength(modelAndView, "borrowClass", form.getBorrowClass(), 20, true);
+        if(StringUtils.isBlank(form.getBorrowClass())|| (StringUtils.isNotBlank(form.getBorrowClass())&&form.getBorrowClass().length()>20)){
+            message="borrowClass不为空，且最大长度小于20！";
+            return message;
+        }
         // 权限名字
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "borrowName", form.getBorrowName(), 20, true);
+        if(StringUtils.isBlank(form.getBorrowName())|| (StringUtils.isNotBlank(form.getBorrowName())&&form.getBorrowName().length()>20)){
+            message="borrowName不为空， 最大长度小于20！";
+            return message;
+        }
         // 用户类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "investUserType", form.getInvestUserType());
+        if(StringUtils.isBlank(form.getInvestUserType())){
+            message="investUserType 不能为空！";
+            return message;
+        }
         // 状态
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "status", form.getStatus());
+        if(StringUtils.isBlank(form.getStatus())){
+            message="status 不能为空！";
+            return message;
+        }
         // 还款方式
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "methodName", form.getMethodName());
+        if(StringUtils.isBlank(form.getMethodName())){
+            message="methodName 不能为空！";
+            return message;
+        }
         // 投资最小范围
-        ValidatorFieldCheckUtil.validateSignlessNum(modelAndView, "investStart", form.getInvestStart(), 10, true);
+        if(StringUtils.isBlank(form.getInvestStart())|| (StringUtils.isNotBlank(form.getBorrowName())&&form.getInvestStart().length()>10)){
+            message="investStart不能为空且最大长度为10位！";
+            return message;
+        }
         // 投资最大范围
-        ValidatorFieldCheckUtil.validateSignlessNum(modelAndView, "investEnd", form.getInvestEnd(), 10, true);
-
-        if ("N".equals(form.getModifyFlag()) && borrowCdFlag) {
+        if(StringUtils.isBlank(form.getInvestEnd())|| (StringUtils.isNotBlank(form.getBorrowName())&&form.getInvestEnd().length()>10)){
+            message="investEnd 最大长度为10位！";
+            return message;
+        }
+        if ("N".equals(form.getModifyFlag())) {
             // 检查唯一性
             int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
             if (cnt > 0) {

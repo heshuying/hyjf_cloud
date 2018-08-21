@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version BankRedPacketAccountService, v0.1 2018/7/10 9:55
  */
-public interface BankRedPacketAccountService {
+public interface BankRedPacketAccountService extends BaseService {
 
     List<BankMerchantAccountListCustomize> selectRecordList(BankRedPacketAccountListRequest form, int offset, int limit);
 

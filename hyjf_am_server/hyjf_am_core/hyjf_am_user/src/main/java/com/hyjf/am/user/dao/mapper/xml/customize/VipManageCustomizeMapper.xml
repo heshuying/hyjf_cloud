@@ -4,7 +4,7 @@
 
 	<sql id="Where_Clause">
 		<where>
--- 		    t.vip_id IS NOT NULL
+		    t.vip_id IS NOT NULL
 			<if test="userName != null and userName !=''">
 				AND t.user_name LIKE CONCAT('%', #{userName}, '%')
 			</if>
@@ -56,14 +56,14 @@
 		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
 		<result column="vip_name" property="vipName" jdbcType="VARCHAR" />
 		<result column="vip_value" property="vipValue" jdbcType="VARCHAR" />
-		<result column="vip_platform" property="vipPlatform" jdbcType="VARCHAR" />
-		<result column="user_role" property="userRole" jdbcType="VARCHAR" />
-		<result column="user_property" property="userProperty" jdbcType="VARCHAR" />
-		<result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
-		<result column="is51" property="is51" jdbcType="INTEGER" />
-		<result column="user_status" property="userStatus" jdbcType="VARCHAR" />
-		<result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
-		<result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
+		<!--<result column="vip_platform" property="vipPlatform" jdbcType="VARCHAR" />-->
+		<result column="role_id" property="userRole" jdbcType="VARCHAR" />
+		<result column="attribute" property="userProperty" jdbcType="VARCHAR" />
+		<result column="open_account" property="accountStatus" jdbcType="VARCHAR" />
+		<!--<result column="is51" property="is51" jdbcType="INTEGER" />-->
+		<result column="status" property="userStatus" jdbcType="VARCHAR" />
+		<result column="spreads_user_id" property="recommendName" jdbcType="VARCHAR" />
+		<result column="reg_esb" property="registPlat" jdbcType="VARCHAR" />
 		<result column="reg_time" property="regTime" jdbcType="VARCHAR" />
 		<result column="vip_add_time" property="vipAddTime" jdbcType="VARCHAR" />
 		
@@ -84,38 +84,40 @@
 					hydu.username AS user_name,
 					hydui.truename AS real_name,
 					hydu.mobile,
-					hydui.vip_id,
+					ut.vip_id,
 					IFNULL(hvi.vip_name,"") AS vip_name,
-					IFNULL(hydui.vip_value,"0") AS vip_value,
-					CASE hydui.vip_platform
-			            WHEN 0 THEN 'PC'
-			            WHEN 1 THEN '微官网 '
-			            WHEN 2 THEN 'Android'
-			            WHEN 3 THEN 'iOS'
-			            WHEN 4 THEN '其他'
-			            ELSE IFNULL(hydui.vip_platform,'')
-					END vip_platform,
+					IFNULL(ut.tender_vip_value,"0") AS vip_value,
+-- 					CASE hydui.vip_platform
+-- 			            WHEN 0 THEN 'PC'
+-- 			            WHEN 1 THEN '微官网 '
+-- 			            WHEN 2 THEN 'Android'
+-- 			            WHEN 3 THEN 'iOS'
+-- 			            WHEN 4 THEN '其他'
+-- 			            ELSE IFNULL(hydui.vip_platform,'')
+-- 					END vip_platform,
 					hydui.role_id,
 					hydui.attribute,
 					hydu.open_account,
+					hydsu.spreads_user_id,
 					hydu.`status`,
 					hydu.reg_esb,
-					hydui.is51 as is51_cd,
-					hydu.reg_time as regTime,
-					pnr.`name` AS user_role,
-					pna.`name` AS user_property,
-					pnac.`name` AS account_status,
-					pnu.`name` AS user_status,
-					hydur.username AS recommend_name,
-					pnrp.`name` AS regist_plat,
-					pnis51.`name` AS is51,
+-- 					hydui.is51 as is51_cd,
+-- 					hydu.reg_time as regTime,
+-- 					pnr.`name` AS user_role,
+-- 					pna.`name` AS user_property,
+-- 					pnac.`name` AS account_status,
+-- 					pnu.`name` AS user_status,
+-- 					hydur.username AS recommend_name,
+-- 					pnrp.`name` AS regist_plat,
+-- 					pnis51.`name` AS is51,
 					FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d %H:%i:%s' ) AS reg_time,
 					CASE WHEN hydui.attribute = 2 OR hydui.attribute = 3 THEN hydu.user_id ELSE hydsu.spreads_user_id END AS hyd_id,
-					FROM_UNIXTIME( hvuu.add_time, '%Y-%m-%d %H:%i:%s' ) AS vip_add_time
+					FROM_UNIXTIME( hvuu.create_time, '%Y-%m-%d %H:%i:%s' ) AS vip_add_time
 				FROM
 					ht_user hydu
 				LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-				LEFT JOIN ht_vip_info hvi ON hvi.id = hydui.vip_id
+				LEFT JOIN ht_vip_user_tender ut ON ut.user_id = hydu.user_id
+				LEFT JOIN ht_vip_info hvi ON hvi.id = ut.vip_id
 				LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
 				LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
 				LEFT JOIN ht_vip_user_upgrade hvuu ON hvuu.user_id=hydu.user_id AND hvuu.upgrade_vip_type=1
@@ -140,7 +142,7 @@
 					hydu.username AS user_name,
 					hydui.truename AS real_name,
 					hydu.mobile,
--- 					hydui.vip_id,
+					ut.vip_id,
 					IFNULL(hvi.vip_name,"") AS vip_name,
 -- 					IFNULL(hydui.vip_value,"0") AS vip_value,
 -- 					CASE hydui.vip_platform
@@ -163,7 +165,8 @@
 				FROM
 					ht_user hydu
 				LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-				LEFT JOIN ht_vip_info hvi ON hvi.id = hydui.user_id
+				LEFT JOIN ht_vip_user_tender ut ON ut.user_id = hydu.user_id
+				LEFT JOIN ht_vip_info hvi ON hvi.id = ut.vip_id
 				LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
 				LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
 				) t

@@ -3,12 +3,15 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +73,7 @@ public interface AmConfigClient {
      * 获取网贷知识
      * @return
      */
-    public List<ContentArticleVO> getknowsList(ContentArticleRequest request);
+    ContentArticleResponse getknowsList(ContentArticleRequest request);
 
     /**
      * 获取合作伙伴列表
@@ -85,7 +88,7 @@ public interface AmConfigClient {
      * @param request
      * @return
      */
-    public List<ContentArticleVO> getIndexList(ContentArticleRequest request);
+    List<Map<String, Object>> getIndexList(ContentArticleRequest request);
 
 
     TotalInvestAndInterestResponse searchData();
@@ -148,4 +151,6 @@ public interface AmConfigClient {
      * @return
      */
     int addSubmission(SubmissionsVO submissionsVO);
+
+    List<JxBankConfigVO> getBankRecordList();
 }

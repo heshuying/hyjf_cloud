@@ -163,6 +163,13 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	//公司名称
 	private String businame;
 	//ADD BY LIUSHOUYI 合规检查 END
+
+	// ADD BY ZHANGYK START
+	/**
+	 * 初审时间
+	 */
+	private String verifyTime;
+	// ADD BY ZHANGYK END
 	
 	/**
 	 * recoverLastTime
@@ -732,5 +739,11 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 			
 	}
 
-	
+	public String getVerifyTime() {
+		return verifyTime;
+	}
+
+	public void setVerifyTime(String verifyTime) {
+		this.verifyTime = verifyTime;
+	}
 }

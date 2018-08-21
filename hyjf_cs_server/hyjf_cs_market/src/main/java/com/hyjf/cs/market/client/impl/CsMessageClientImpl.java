@@ -43,4 +43,39 @@ public class CsMessageClientImpl implements CsMessageClient {
         return null;
     }
 
+        /**
+         * 累计投资总额
+         * @return
+         */
+        @Override
+        public BigDecimal selectTenderSum() {
+            BigDecimal TenderSum = restTemplate.getForObject(
+                    "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTenderSum",
+                    BigDecimal.class);
+            return TenderSum;
+        }
+        /**
+         * 累计收益
+         * @return
+         */
+        @Override
+        public BigDecimal selectInterestSum() {
+            BigDecimal InterestSum = restTemplate.getForObject(
+                    "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectInterestSum",
+                    BigDecimal.class);
+            return InterestSum;
+        }
+        /**
+         * 累计投资笔数
+         * @return
+         */
+        @Override
+        public int selectTotalTenderSum() {
+            Integer TotalTenderSum = restTemplate.getForObject(
+                    "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTotalTenderSum",
+                    Integer.class);
+            return TotalTenderSum;
+        }
+
+
 }

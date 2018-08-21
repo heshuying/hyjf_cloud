@@ -63,6 +63,8 @@ public class HjhAllocationEngineVO extends BaseVO implements Serializable{
     private Integer updateTime;
 
     private Integer delFlg;
+    
+    private String addTimeString;
 
 	public Integer getId() {
 		return id;
@@ -246,5 +248,13 @@ public class HjhAllocationEngineVO extends BaseVO implements Serializable{
 
 	public void setDelFlg(Integer delFlg) {
 		this.delFlg = delFlg;
+	}
+
+	public String getAddTimeString() {
+		return addTimeString;
+	}
+
+	public void setAddTimeString(String addTimeString) {
+		this.addTimeString = addTimeString;
 	}
 }

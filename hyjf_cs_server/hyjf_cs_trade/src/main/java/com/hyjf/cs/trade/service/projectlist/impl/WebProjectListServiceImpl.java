@@ -258,7 +258,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /*用户基本信息 开始*/
             other.put("loginFlag", "1");//登录状态 0未登陆 1已登录
             //用户信息
-            if (userVO.getOpenAccount() == 1) {
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
                 other.put("openFlag", "1");
             } else {
                 other.put("openFlag", "0");
@@ -1049,7 +1049,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }
                 result.put("investFlag", investFlag);
                 // 用户是否开户
-                if (userVO.getBankOpenAccount() != null) {
+                if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1 ) {
                     result.put("openFlag", 1);
                 } else {
                     result.put("openFlag", 0);

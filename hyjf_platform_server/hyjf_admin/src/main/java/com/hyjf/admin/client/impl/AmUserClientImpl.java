@@ -1,6 +1,7 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
@@ -9,12 +10,9 @@ import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -25,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -1934,6 +1933,62 @@ public class AmUserClientImpl implements AmUserClient {
 		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
 		if (response != null) {
 			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取CA认证异常列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
+		String url = "http://AM-USER/am-user/certificate/getExceptionRecordList";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
+	}
+
+	@Override
+	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
+	}
+
+	@Override
+	public List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o) {
+		SmsCountCustomizeResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/sms_count/query_department_info", SmsCountCustomizeResponse.class,
+				Integer.class);
+		if (response != null) {
+			return response.getList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
+		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/sms_code/query_user",
+				requestBean, SmsCodeCustomizeResponse.class);
+		if (response != null) {
+			List<SmsCodeCustomizeVO> list = response.getResultList();
+			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-USER/am-user/sms_code/query_user",
+					requestBean, SmsCodeCustomizeResponse.class);
+			if (response1 != null) {
+				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
+				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
+					list.retainAll(list1);
+					return list;
+				}
+			}
 		}
 		return null;
 	}

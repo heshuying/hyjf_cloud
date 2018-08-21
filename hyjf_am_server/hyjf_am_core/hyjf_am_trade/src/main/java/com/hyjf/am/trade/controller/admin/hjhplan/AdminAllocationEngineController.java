@@ -16,6 +16,8 @@ import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.GetDate;
+
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -56,6 +58,11 @@ public class AdminAllocationEngineController {
 		List<HjhRegionVO> list = adminAllocationEngineService.selectHjhRegionList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list)) {
+            	for(HjhRegionVO vo :list){
+            		if(vo.getConfigAddTime() != null){
+            			vo.setAddTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getConfigAddTime()));
+            		}
+            	}
                 response.setResultList(list);
                 response.setCount(count);
                 //代表成功
@@ -214,6 +221,11 @@ public class AdminAllocationEngineController {
 		List<HjhAllocationEngineVO> list1 = adminAllocationEngineService.selectHjhAllocationEngineListByPage(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
             if (!CollectionUtils.isEmpty(list1)) {
+            	for(HjhAllocationEngineVO vo : list1){
+            		if(vo.getAddTime() !=null){
+            			vo.setAddTimeString(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getAddTime()));
+            		}
+            	}
                 response.setResultList(list1);
                 response.setCount(count);
                 //代表成功
@@ -288,10 +300,14 @@ public class AdminAllocationEngineController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/checkRepeat/{labelName}/{planNid}", method = RequestMethod.POST)
-    public boolean checkRepeat(@PathVariable String labelName, @PathVariable String planNid) {
-    	boolean Flag = adminAllocationEngineService.checkRepeat(labelName,planNid);
-    	return Flag;
+    @RequestMapping(value = "/checkRepeat", method = RequestMethod.POST)
+    public HjhAllocationEngineResponse checkRepeat(@RequestBody @Valid AllocationEngineRuquest form) {
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+    	int Flag = adminAllocationEngineService.checkRepeat(form);
+        response.setFlag(Flag);
+        //代表成功
+        response.setRtn(Response.SUCCESS);
+    	return response;
     }
     
 	/**

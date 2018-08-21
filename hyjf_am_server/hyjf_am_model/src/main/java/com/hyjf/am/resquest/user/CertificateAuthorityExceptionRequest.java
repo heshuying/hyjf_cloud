@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * CA认证异常Bean
@@ -16,23 +17,32 @@ public class CertificateAuthorityExceptionRequest  extends BasePage implements S
 
     private static final long serialVersionUID = 661775352441250125L;
     // 用户名(检索用)
+    @ApiModelProperty(value = "用户名")
     private String userNameSrch;
     // 手机号(检索用)
+    @ApiModelProperty(value = "手机号")
     private String mobileSrch;
     // 姓名(检索用)
+    @ApiModelProperty(value = "姓名")
     private String trueNameSrch;
     // 状态(检索用)
+    @ApiModelProperty(value = "状态")
     private String statusSrch;
     //用户类型
+    @ApiModelProperty(value = "用户类型")
     private String idTypeSrch;
     // 客户编号
+    @ApiModelProperty(value = "客户编号")
     private String customerIdSrch;
     // 检索开始时间
+    @ApiModelProperty(value = "检索开始时间")
     private String startTimeSrch;
     // 检索结束时间
+    @ApiModelProperty(value = "检索结束时间")
     private String endTimeSrch;
 
     // 用户ID
+    @ApiModelProperty(value = "用户ID")
     private String userId;
 
     public String getIdTypeSrch() {

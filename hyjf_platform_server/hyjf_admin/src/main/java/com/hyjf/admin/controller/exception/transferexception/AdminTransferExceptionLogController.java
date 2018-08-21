@@ -48,7 +48,7 @@ import java.util.*;
 /**
  * 转账异常
  */
-@Api(value = "admin异常中心-银行转账异常",tags = "admin异常中心-银行转账异常")
+@Api(value = "异常中心-银行转账异常",tags = "异常中心-银行转账异常")
 @RestController
 @RequestMapping("/exception/transferexception")
 public class AdminTransferExceptionLogController extends BaseController {

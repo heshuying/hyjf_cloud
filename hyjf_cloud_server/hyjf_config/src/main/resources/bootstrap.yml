@@ -24,5 +24,14 @@ eureka:
 server:
   port: 2222
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: config.log

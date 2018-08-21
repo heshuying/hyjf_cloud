@@ -28,6 +28,7 @@ import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
@@ -63,7 +64,7 @@ import java.util.UUID;
  * @author libin
  * @version HjhCreditTenderController.java, v0.1 2018年7月11日 下午2:18:37
  */
-@Api(value = "汇计划承接记录列表",tags = "汇计划承接记录列表")
+@Api(value = "产品中心-汇计划-承接记录",tags = "产品中心-汇计划-承接记录")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcredittender")
 public class HjhCreditTenderController extends BaseController{
@@ -151,6 +152,40 @@ public class HjhCreditTenderController extends BaseController{
 		}
     }
     
+    
+	/**
+	 * 汇计划承接记录列表 承接本金 垫付利息 实际支付金额 债转服务费 总计   已测试
+	 *
+	 * @param request
+	 * @return 汇计划承接记录列表   
+	 */
+	@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表 承接本金 垫付利息 实际支付金额 债转服务费 总计")
+	@PostMapping(value = "/sum")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)   
+	public JSONObject getSumTotal(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		// 初始化原子层请求实体
+    	HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
+    	HjhCreditTenderSumVO sumVO = this.hjhCreditTenderService.getCalcSumByParam(form);
+    	if(sumVO != null){
+    		// 承接本金总计
+    		jsonObject.put("sumAssignCapital", sumVO.getSumAssignCapital());
+    		// 承接利息总计
+    		jsonObject.put("sumAssignInterestAdvance", sumVO.getSumAssignInterestAdvance());
+    		// 支付金额总计
+    		jsonObject.put("sumAssignPay", sumVO.getSumAssignPay());
+    		// 服务费总计
+    		jsonObject.put("sumAssignServiceFee", sumVO.getSumAssignServiceFee());
+    	} else {
+			jsonObject.put("msg", "查询为空");
+			jsonObject.put("status", FAIL);
+		}
+    	return jsonObject;
+	}
+    
     /**
      * 导出功能
      *
@@ -199,7 +234,7 @@ public class HjhCreditTenderController extends BaseController{
 					}
 					// 承接人
 					else if (celLength == 1) {
-						cell.setCellValue(debtCreditTender.getAssignOrderId());
+						cell.setCellValue(debtCreditTender.getAssignUserName());
 					}
 
 					// 承接计划编号
@@ -242,18 +277,33 @@ public class HjhCreditTenderController extends BaseController{
 					else if (celLength == 11) {
 						cell.setCellValue(debtCreditTender.getAssignTime());
 					}
+					// 债转服务费率
+					else if (celLength == 12){
+						cell.setCellValue(debtCreditTender.getAssignServiceApr());
+					}
+					// 债转服务费
+					else if (celLength == 13){
+						cell.setCellValue(debtCreditTender.getAssignServiceFee());
+					}
+					/*updte  by  zhangyk 修改导出数据表格 start*/
+					// 是否复投承接
+					/*else if (celLength == 14){
+						cell.setCellValue(debtCreditTender.getTenderType());
+					}*/
+
 					// 承接方式
-					else if (celLength == 12) {
-						cell.setCellValue(debtCreditTender.getAssignTypeName());
+					else if (celLength == 14) {
+						cell.setCellValue(debtCreditTender.getTenderType());
 					}
 					// 项目总期数
-					else if (celLength == 13) {
+					else if (celLength == 15) {
 						cell.setCellValue(debtCreditTender.getBorrowPeriod());
 					}
 					// 承接时所在期数
-					else if (celLength == 14) {
+					else if (celLength == 16) {
 						cell.setCellValue(debtCreditTender.getAssignPeriod());
 					}
+					/*updte  by  zhangyk 修改导出数据表格 end*/
 				}
 			}
 		}

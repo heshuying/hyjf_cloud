@@ -48,7 +48,6 @@ import java.util.regex.Pattern;
  */
 @Api(value = "app端密码相关服务",tags = "app端-密码相关服务")
 @Controller
-@RestController
 @RequestMapping("/")
 public class AppPassWordController extends BaseUserController {
 
@@ -126,7 +125,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/bank/user/transpassword/setPassword.do")
+    @GetMapping(value = "/hyjf-app/bank/user/transpassword/setPassword")
     public ModelAndView setPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -142,10 +141,10 @@ public class AppPassWordController extends BaseUserController {
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 同步调用路径
         String retUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURL_SYN_PASSWORD_ACTION+ ".do" ;
+                + CommonConstant.RETURL_SYN_PASSWORD_ACTION ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_PASSWORD_ACTION+ ".do" ;
+                + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
@@ -193,7 +192,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码同步回调", notes = "设置交易密码同步回调")
-    @GetMapping("/bank/user/transpassword/passwordReturn.do")
+    @GetMapping("/bank/user/transpassword/passwordReturn")
     public ModelAndView passwordReturn(@ModelAttribute BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -261,7 +260,7 @@ public class AppPassWordController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "设置交易密码异步回调")
-    @PostMapping(value = "/bank/user/transpassword/passwordBgreturn.do")
+    @PostMapping(value = "/bank/user/transpassword/passwordBgreturn")
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
@@ -292,7 +291,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
-    @PostMapping(value = "/bank/user/transpassword/resetPassword.do")
+    @GetMapping(value = "/hyjf-app/bank/user/transpassword/resetPassword")
     public ModelAndView resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -308,10 +307,10 @@ public class AppPassWordController extends BaseUserController {
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 同步调用路径
         String retUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURL_SYN_RESETPASSWORD_ACTION + ".do";
+                + CommonConstant.RETURL_SYN_RESETPASSWORD_ACTION;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+ ".do" ;
+                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION;
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
@@ -356,14 +355,13 @@ public class AppPassWordController extends BaseUserController {
     /**
      * 重置交易密码同步回调
      *
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ApiOperation(value = "重置交易密码同步回调")
-    @GetMapping(value = "/bank/user/transpassword/resetPasswordReturn.do")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request, HttpServletResponse response,
-                                            @ModelAttribute BankCallBean bean) {
+    @GetMapping(value = "/bank/user/transpassword/resetPasswordReturn")
+    public ModelAndView resetPasswordReturn(@ModelAttribute BankCallBean bean) {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -388,15 +386,14 @@ public class AppPassWordController extends BaseUserController {
     /**
      * 重置交易密码异步回调
      *
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ResponseBody
     @ApiOperation(value = "重置交易密码异步回调")
-    @PostMapping(value = "/bank/user/transpassword/resetPasswordBgreturn.do")
-    public String resetPasswordBgreturn(HttpServletRequest request, HttpServletResponse response,
-                                        @ModelAttribute BankCallBean bean) {
+    @PostMapping(value = "/bank/user/transpassword/resetPasswordBgreturn")
+    public String resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
         result.setStatus(true);

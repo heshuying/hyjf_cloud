@@ -99,7 +99,7 @@ public interface AllocationEngineService {
      * 
      * @param planName
      */
-    boolean checkRepeat(String labelName,String planNid);
+	int checkRepeat(AllocationEngineRuquest form);
     
     /**
      * 先查询汇计划表获取该计划的还款方式

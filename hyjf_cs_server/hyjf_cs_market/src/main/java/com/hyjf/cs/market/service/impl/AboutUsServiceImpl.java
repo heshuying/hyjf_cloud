@@ -5,9 +5,11 @@ package com.hyjf.cs.market.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.CsMessageClient;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,13 +92,13 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     @Override
-    public List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request) {
+    public ContentArticleResponse getHomeNoticeList(ContentArticleRequest request) {
         return amConfigClient.getknowsList(request);
     }
 
 
     @Override
-    public List<ContentArticleVO> getIndex(ContentArticleRequest request) {
+    public List<Map<String, Object>> getIndex(ContentArticleRequest request) {
         return amConfigClient.getIndexList(request);
     }
 
@@ -113,18 +116,36 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
      * 返回快捷银行充值限额
      */
     @Override
-    public  JSONObject getBanksList() {
-        Map<String, String> params = new HashMap<String, String>();
-        String requestUrl = HYJF_API_WEB_URL + BANK_LIST;
-        String result = HttpClientUtils.post(requestUrl, params);
-        JSONObject status = JSONObject.parseObject(result);
-        return status;
+    public  List<JxBankConfigVO> getBanksList() {
+        return amConfigClient.getBankRecordList();
 
     }
 
+    /**
+     * 累计投资总额
+     * @return
+     */
     @Override
-    public List<ContentArticleVO> getHomeNoticeList() {
-        return null;
+    public BigDecimal selectTenderSum() {
+        return amDataCollectClient.selectTenderSum();
     }
+    /**
+     * 累计收益
+     * @return
+     */
+    @Override
+    public BigDecimal selectInterestSum() {
+        return amDataCollectClient.selectInterestSum();
+    }
+    /**
+     * 累计投资笔数
+     * @return
+     */
+    @Override
+    public int selectTotalTenderSum() {
+        return amDataCollectClient.selectTotalTenderSum();
+    }
+
+
 
 }

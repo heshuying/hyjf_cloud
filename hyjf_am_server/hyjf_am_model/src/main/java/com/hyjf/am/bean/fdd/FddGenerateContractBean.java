@@ -1,5 +1,7 @@
 package com.hyjf.am.bean.fdd;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -58,6 +60,10 @@ public class FddGenerateContractBean implements Serializable{
     private Integer creditUserID;
     /**合同名称*/
     private String contractName;
+    /**垫付债转协议参数集合*/
+    private JSONObject paramter;
+    /**垫付协议 -期数*/
+    private Integer repayPeriod;
 
     public String getTenderAccountFMT() {
         return tenderAccountFMT;
@@ -294,5 +300,21 @@ public class FddGenerateContractBean implements Serializable{
 
     public void setAssignNid(String assignNid) {
         this.assignNid = assignNid;
+    }
+
+    public JSONObject getParamter() {
+        return paramter;
+    }
+
+    public void setParamter(JSONObject paramter) {
+        this.paramter = paramter;
+    }
+
+    public Integer getRepayPeriod() {
+        return repayPeriod;
+    }
+
+    public void setRepayPeriod(Integer repayPeriod) {
+        this.repayPeriod = repayPeriod;
     }
 }

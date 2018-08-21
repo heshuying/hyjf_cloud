@@ -55,8 +55,8 @@ public class WxTransPasswordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码",notes = "设置交易密码")
-    @PostMapping(value ="/setPassword.page")
-    public ModelAndView setPassword(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping(value ="/setPassword.page")
+    public ModelAndView setPassword(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
         String sign = request.getParameter("sign");
@@ -128,13 +128,12 @@ public class WxTransPasswordController extends BaseUserController {
      * 设置交易密码同步回调
      *
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ApiOperation(value = "设置交易密码同步回调")
     @GetMapping(value = "/passwordReturn")
-    public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
-                                       @ModelAttribute BankCallBean bean) {
+    public ModelAndView passwordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
 
         bean.convert();
         String sign = request.getParameter("sign");
@@ -215,7 +214,7 @@ public class WxTransPasswordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
-    @PostMapping(value = "/resetPassword.page")
+    @GetMapping(value = "/resetPassword.page")
     public ModelAndView resetPassword(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -322,7 +321,7 @@ public class WxTransPasswordController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "重置交易密码异步回调")
-    @RequestMapping(value = "/resetPasswordBgreturn")
+    @PostMapping(value = "/resetPasswordBgreturn")
     public BankCallResult resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");

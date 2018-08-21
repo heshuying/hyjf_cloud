@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/30.
  */
+@ApiModel(value="流程配置",description="流程配置")
 public class AdminBorrowFlowRequest extends BasePage implements Serializable{
 
     /**

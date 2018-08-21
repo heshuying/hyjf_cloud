@@ -1,5 +1,7 @@
 package com.hyjf.cs.market.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * <p>
  * AppBaseBean
@@ -13,6 +15,7 @@ public class AppBaseBean {
     /**
      * 版本号
      */
+    @ApiModelProperty(value = "版本号", required = true)
     private String version;
     /**
      * 网络状态
@@ -21,6 +24,7 @@ public class AppBaseBean {
     /**
      * 平台
      */
+    @ApiModelProperty(value = "平台", required = true)
     private String platform;
     /**
      * 随机字符串

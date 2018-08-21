@@ -35,20 +35,20 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      * @param limitStart,limitEnd
      */
     @Override
-    public List<BorrowStyle> selectBorrowStyleListByPage(AdminBorrowStyleRequest request,int limitStart, int limitEnd){
+    public List<BorrowStyleWithBLOBs> selectBorrowStyleListByPage(AdminBorrowStyleRequest request,int limitStart, int limitEnd){
         BorrowStyleExample example = new BorrowStyleExample();
         if (limitStart != -1) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
         }
-        return borrowStyleMapper.selectByExample(example);
+        return borrowStyleMapper.selectByExampleWithBLOBs(example);
     }
     /**
      * 根据id查询还款方式
      * @param id
      */
     @Override
-    public BorrowStyle searchBorrowStyleInfoById(Integer id){
+    public BorrowStyleWithBLOBs searchBorrowStyleInfoById(Integer id){
         return borrowStyleMapper.selectByPrimaryKey(id);
     }
 
@@ -102,12 +102,5 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
         record.setStatus(CustomConstants.FLAG_STATUS_ENABLE);
         borrowStyleMapper.updateByPrimaryKeySelective(record);
     }
-    /**
-     * 根据id修改还款方式状态
-     * @param id
-     */
-    @Override
-    public void modifyBorrowStyleById(Integer id){
 
-    }
 }

@@ -98,6 +98,9 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "投资进度排序 0：从小到大 1：从大到小")
 	private String investProgressSortPriority;
 	
+	@ApiModelProperty(value = "添加或修改 0：添加 1：修改")
+	private String addOrModify;
+	
 	public int limit;
 	
 	public int getPaginatorPage() {
@@ -250,5 +253,10 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-
+	public String getAddOrModify() {
+		return addOrModify;
+	}
+	public void setAddOrModify(String addOrModify) {
+		this.addOrModify = addOrModify;
+	}
 }

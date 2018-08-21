@@ -191,7 +191,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit) {
+    public List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit) {
         ContentArticleExample example = new ContentArticleExample();
         if (offset != -1) {
             example.setLimitStart(offset);

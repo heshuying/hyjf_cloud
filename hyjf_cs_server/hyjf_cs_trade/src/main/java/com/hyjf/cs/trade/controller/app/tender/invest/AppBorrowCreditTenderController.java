@@ -17,6 +17,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(tags = "APP端散标债转投资")
+@Api(value = "app端-散标债转投资",tags = "app端-散标债转投资")
 @RestController
 @RequestMapping("/hyjf-app/tender/credit")
 public class AppBorrowCreditTenderController extends BaseTradeController {
@@ -58,6 +59,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
      * @param bean
      * @return
      */
+    @ApiIgnore
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowCreditTenderBgReturn(BankCallBean bean ) {

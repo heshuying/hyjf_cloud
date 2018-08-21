@@ -39,9 +39,9 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse response =new FinmanChargeNewResponse();
         int total = this.finmanChargeNewService.countRecordTotal(adminRequest);
         if(total > 0){
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), total);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),total, adminRequest.getPageSize());
             List<BorrowFinmanNewChargeVO> recordList =
-                    this.finmanChargeNewService.getRecordList(adminRequest, paginator.getOffset(), paginator.getLimit());
+                    this.finmanChargeNewService.getRecordList(adminRequest,paginator.getOffset(),paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 response=new FinmanChargeNewResponse();
                 response.setResultList(recordList);
