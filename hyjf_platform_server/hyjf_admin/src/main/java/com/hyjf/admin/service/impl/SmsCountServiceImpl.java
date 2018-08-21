@@ -68,13 +68,13 @@ public class SmsCountServiceImpl implements SmsCountService {
             for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
                 jo = new JSONObject();
 
-                jo.put("id", departmentTreeRecord.getId());
+                jo.put("value", departmentTreeRecord.getId());
                 jo.put("text", departmentTreeRecord.getName());
                 joAttr = new JSONObject();
-                joAttr.put("id", departmentTreeRecord.getId());
+                joAttr.put("value", departmentTreeRecord.getId());
                 joAttr.put("parentid", departmentTreeRecord.getParentid());
                 joAttr.put("parentname", Validator.isNull(topParentDepartmentName) ? "" : topParentDepartmentName);
-                joAttr.put("name", departmentTreeRecord.getName());
+                joAttr.put("title", departmentTreeRecord.getName());
                 joAttr.put("listorder", departmentTreeRecord.getListorder());
                 jo.put("li_attr", joAttr);
                 if (Validator.isNotNull(selectedNode) && ArrayUtils.contains(selectedNode, String.valueOf(departmentTreeRecord.getId()))) {

@@ -121,23 +121,29 @@ public class SmsCodeController extends BaseController {
     public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
-        jsonObject.put("status", FAIL);
-        jsonObject.put("statusDesc", FAIL_DESC);
+        jsonObject.put("status", SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         logger.info("后台发送短信开始...");
         // 获取用户输入的手机号码
         String mobile = form.getUser_phones();
         if (form.getMessage() == null) {
             jsonObject.put("msg", "发送消息不能为空");
+            jsonObject.put("status", FAIL);
+            jsonObject.put("statusDesc", FAIL_DESC);
             return jsonObject;
         }
         if (request.getHeader("Referer").contains("timeinit")) {
             if (mobile.contains(",")) {
                 jsonObject.put("msg", "单发只能发送一条");
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;
             }
             boolean flag = smsCodeService.getUserByMobile(mobile);
             if (!flag) {
                 jsonObject.put("msg", "单发不能发送平台外的用户手机号");
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;
             }
         }
@@ -147,14 +153,20 @@ public class SmsCodeController extends BaseController {
         form.setIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
         if (sendType == null) {
             jsonObject.put("msg", "请选择发送类型");
+            jsonObject.put("status", FAIL);
+            jsonObject.put("statusDesc", FAIL_DESC);
             return jsonObject;
         } else if (sendType.equals("ontime")) {
             if (form.getOn_time() == null || form.getOn_time().equals("")) {
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 jsonObject.put("msg", "请选择发送时间");
                 return jsonObject;
             }
             if (StringUtils.isEmpty(mobile)) {
                 if (form.getOpen_account() == null) {
+                    jsonObject.put("status", FAIL);
+                    jsonObject.put("statusDesc", FAIL_DESC);
                     jsonObject.put("msg", "请选择发送条件或者填写手机号");
                     return jsonObject;
                 }
@@ -165,6 +177,8 @@ public class SmsCodeController extends BaseController {
                 jsonObject.put("msg", "定时发送任务创建成功");
                 return jsonObject;
             } else {
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 jsonObject.put("msg", "定时发送任务创建失败");
                 return jsonObject;
             }
@@ -172,6 +186,8 @@ public class SmsCodeController extends BaseController {
         } else {
             if (StringUtils.isEmpty(mobile)) {
                 if (form.getOpen_account() == null) {
+                    jsonObject.put("status", FAIL);
+                    jsonObject.put("statusDesc", FAIL_DESC);
                     jsonObject.put("msg", "请选择发送条件或者填写手机号");
                     return jsonObject;
                 }
