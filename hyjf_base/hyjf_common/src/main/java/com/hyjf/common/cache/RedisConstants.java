@@ -315,4 +315,9 @@ public class RedisConstants {
      * 上海大屏幕运营数据 : 公司动态列表
      */
     public static final String ARTICLE_LIST = "ARTICLE_LIST";
+
+    /**
+     * 协议模板二期---动态展示协议前台展示名称
+     */
+    public static final String PROTOCOL_PARAMS = "params";
 }

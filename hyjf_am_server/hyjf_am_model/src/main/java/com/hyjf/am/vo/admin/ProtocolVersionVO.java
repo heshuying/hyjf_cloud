@@ -1,6 +1,8 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -14,14 +16,22 @@ public class ProtocolVersionVO  extends BaseVO {
 
     private Integer id;
 
+    @ApiModelProperty(value = "协议id")
     private String protocolId;
 
+    @ApiModelProperty(value = "协议版本号")
     private String versionNumber;
 
+    @ApiModelProperty(value = "协议文件名称")
     private String protocolName;
 
+    @ApiModelProperty(value = "协议路径")
     private String protocolUrl;
 
+    @ApiModelProperty(value = "前台展示名称")
+    private String displayName;
+
+    @ApiModelProperty(value = "是否启用(0.版本不启用1.版本启用)")
     private Integer displayFlag;
 
     private Integer createUser;
@@ -32,6 +42,7 @@ public class ProtocolVersionVO  extends BaseVO {
 
     private Date updateTime;
 
+    @ApiModelProperty(value = "备注")
     private String remarks;
 
     //修改人
@@ -112,6 +123,7 @@ public class ProtocolVersionVO  extends BaseVO {
         this.updateUser = updateUser;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -142,5 +154,13 @@ public class ProtocolVersionVO  extends BaseVO {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

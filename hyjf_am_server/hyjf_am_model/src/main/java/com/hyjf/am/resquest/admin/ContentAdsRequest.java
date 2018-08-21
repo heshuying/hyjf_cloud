@@ -31,6 +31,7 @@ public class ContentAdsRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "添加的结束时间")
     private String endCreate;
 
+    @ApiModelProperty(value = "广告管理实体类VO")
     private AdsVO ads;
 
     /**

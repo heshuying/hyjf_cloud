@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +16,10 @@ public class AdminProtocolRequest  implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //协议模板
+    @ApiModelProperty(value = "协议模板VO")
     private ProtocolTemplateVO protocolTemplateVO;
 
+    @ApiModelProperty(value = "修改查询主键id")
     private String ids;
 
     public String getIds() {

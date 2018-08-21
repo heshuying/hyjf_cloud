@@ -18,6 +18,9 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     private int pageSize = 10;
 
+    @ApiModelProperty(value = "请求时间，month=每月交易，其他=每日交易")
+    private String time;
+
     @ApiModelProperty(value = "添加时间开始")
     private String addTimeStart;
 
@@ -199,5 +202,13 @@ public class HjhAccountBalanceRequest  implements Serializable {
 
     public void setDelFlgSer(Boolean delFlgSer) {
         this.delFlgSer = delFlgSer;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
