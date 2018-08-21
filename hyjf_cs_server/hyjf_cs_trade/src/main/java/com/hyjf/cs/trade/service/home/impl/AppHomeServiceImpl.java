@@ -2,9 +2,11 @@ package com.hyjf.cs.trade.service.home.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.message.UserDeviceUniqueCodeResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
+import com.hyjf.am.vo.UserDeviceUniqueCodeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
@@ -14,6 +16,7 @@ import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.app.AppModuleBean;
@@ -521,11 +524,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             AppAdsCustomizeVO appads = picList.get(0);
             info.put("imageUrl", appads.getImage());
             info.put("imageUrlOperation", appads.getUrl());
-
-            // TODO: 2018/7/6 查询mongo 获取用户请求次数 zyk int requestTimes = homePageService.updateCurrentDayRequestTimes(uniqueIdentifier, userId);
+            uniqueIdentifier = "this is test uniqueidellll";
+            int requestTimes = updateCurrentDayRequestTimes(uniqueIdentifier,userId);
             if("2".equals(appads.getNewUserShow()) || ("1".equals(appads.getNewUserShow()) && userId == null)){
-                //if(requestTimes <= 1){
-                if (true){
+                if(requestTimes <= 1){
+               // if (true){
                     // 如果是今天第一次请求则显示
                     info.put("imageUrlExist", "1");
                 }else{
@@ -542,6 +545,54 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("imageUrl", "");
             info.put("imageUrlOperation", "");
         }
+    }
+
+    private int updateCurrentDayRequestTimes(String uniqueIdentifier,Integer userId){
+        // 如果没有收到设备唯一码在返回0次
+        if(StringUtils.isEmpty(uniqueIdentifier)){
+            return 0;
+        }
+        String baseUrl= "http://CS-MESSAGE/cs-message/userdeviceuniquecode/";
+        String url = baseUrl + uniqueIdentifier;
+        UserDeviceUniqueCodeResponse response = baseClient.getExe(url,UserDeviceUniqueCodeResponse.class);
+        List<UserDeviceUniqueCodeVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)){
+            UserDeviceUniqueCodeVO vo = new UserDeviceUniqueCodeVO();
+            vo.setCurrentDay(GetDate.formatDate());
+            vo.setRequestTimesDay(1);
+            vo.setUpdateTime(GetDate.getNowTime10());
+            if (null != userId){
+                vo.setUserId(userId);
+            }
+            String insertUrl = baseUrl + "insert";
+            baseClient.postExe(insertUrl,vo, UserDeviceUniqueCodeResponse.class);
+            return 0;
+        }else{
+            UserDeviceUniqueCodeVO vo = list.get(0);
+            String updateUrl = baseUrl + "update";
+            // 有记录但不是今天
+            if (!GetDate.formatDate().equals(vo.getCurrentDay())){
+                vo.setCurrentDay(GetDate.formatDate());
+                vo.setRequestTimesDay(1);
+                vo.setUpdateTime(GetDate.getNowTime10());
+                if (null != userId){
+                    vo.setUserId(userId);
+                }
+                baseClient.postExe(updateUrl,vo,UserDeviceUniqueCodeResponse.class);
+                return 0;
+            }else{
+                int times = vo.getRequestTimesDay() +1;
+                vo.setRequestTimesDay(times);
+                vo.setUpdateTime(GetDate.getNowTime10());
+                if (null != userId){
+                    vo.setUserId(userId);
+                }
+                baseClient.postExe(updateUrl,vo,UserDeviceUniqueCodeResponse.class);
+                return times;
+
+            }
+        }
+
     }
 
     /**

@@ -3,6 +3,10 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+
+import java.util.List;
+
 /**
  * @author yaoyong
  * @version VipDetailListRequest, v0.1 2018/7/3 11:54
@@ -12,6 +16,8 @@ public class VipDetailListRequest {
      public String userId;
     /** 投资标的号 */
     public String tenderNid;
+
+    public List<BorrowTenderVO> borrowTenderList;
 
     public int limit;
 
@@ -45,5 +51,13 @@ public class VipDetailListRequest {
 
     public void setTenderNid(String tenderNid) {
         this.tenderNid = tenderNid;
+    }
+
+    public List<BorrowTenderVO> getBorrowTenderList() {
+        return borrowTenderList;
+    }
+
+    public void setBorrowTenderList(List<BorrowTenderVO> borrowTenderList) {
+        this.borrowTenderList = borrowTenderList;
     }
 }
