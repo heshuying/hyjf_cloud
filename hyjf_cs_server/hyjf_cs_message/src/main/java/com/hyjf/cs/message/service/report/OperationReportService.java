@@ -106,7 +106,7 @@ public interface OperationReportService {
 	 * @param id
 	 * @return
 	 */
-	public OperationReportResponse reportInfo(String id);
+	public JSONObject reportInfo(String id);
 
 
 	/**季度运营报告插入
