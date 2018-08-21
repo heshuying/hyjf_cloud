@@ -45,7 +45,7 @@
 	</sql>
 
 	<select id="queryAleveLogCount" resultType="java.lang.Integer"
-		parameterType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize">
+			parameterType="Map">
 		SELECT COUNT(1)
 		FROM ht_aleve_log
 		WHERE 1=1
@@ -53,7 +53,7 @@
 	</select>
 
 	<select id="queryAleveLogList" resultType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize"
-		parameterType="com.hyjf.am.trade.dao.model.customize.AleveLogCustomize">
+			parameterType="Map">
 		SELECT
 			bank,
 			cardnbr,
