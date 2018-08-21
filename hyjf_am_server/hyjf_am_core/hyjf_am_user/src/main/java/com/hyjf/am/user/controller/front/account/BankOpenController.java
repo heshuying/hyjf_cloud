@@ -229,4 +229,25 @@ public class BankOpenController extends BaseController {
 		}
 		return response;
 	}
+	
+	/**
+     * 获取用户账户信息byaccountId
+     * @auth libin
+     * @param accountId
+     * @return
+     */
+	@RequestMapping("/getBankOpenAccountByAccountId/{accountId}")
+	public BankOpenAccountResponse getBankOpenAccountByAccountId(@PathVariable String accountId) {
+		BankOpenAccountExample accountExample = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+		crt.andAccountEqualTo(accountId);
+		BankOpenAccountResponse response = new BankOpenAccountResponse();
+		BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
+		if(bankOpenAccount != null){
+			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+			response.setResult(bankOpenAccountVO);
+		}
+		return response;
+	}
 }
