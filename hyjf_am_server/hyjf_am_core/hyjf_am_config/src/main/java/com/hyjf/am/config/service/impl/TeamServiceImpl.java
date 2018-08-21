@@ -31,7 +31,7 @@ public class TeamServiceImpl implements TeamService {
 		TeamExample example = new TeamExample();
 		TeamExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(1);// 开启状态
-		example.setOrderByClause("`order` asc");
+		example.setOrderByClause("`order_id` asc");
 		List<Team> teamList = teamMapper.selectByExample(example);
 		return teamList.size() == 0 ? new Team() : teamList.get(0);
 	}
