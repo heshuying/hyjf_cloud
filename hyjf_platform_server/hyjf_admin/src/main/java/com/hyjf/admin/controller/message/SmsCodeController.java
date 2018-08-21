@@ -121,6 +121,8 @@ public class SmsCodeController extends BaseController {
     public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
+        jsonObject.put("status", FAIL);
+        jsonObject.put("statusDesc", FAIL_DESC);
         logger.info("后台发送短信开始...");
         // 获取用户输入的手机号码
         String mobile = form.getUser_phones();
@@ -265,6 +267,8 @@ public class SmsCodeController extends BaseController {
             jsonObject.put("success", true);
             jsonObject.put("msg", "发送成功");
         }
+        jsonObject.put("status", SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         return jsonObject;
     }
 }
