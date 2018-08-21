@@ -1118,7 +1118,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         int dayEnd10 = GetDate.getDayEnd10(date);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", planNid);
-        // TODO: 2018/8/21 临时注释掉  zyk 
+        // TODO: 2018/8/21 临时注释掉  zyk
         //params.put("startTime", dayStart10);
         //params.put("endTime", dayEnd10);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
@@ -1131,7 +1131,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL, params, BorrowResponse.class);
             List<BorrowVO> list = res.getResultList();
             formatUserName(list);
-            result.setData(list);
+            List<WebPlanBorrowBean> resultList = CommonUtils.convertBeanList(list,WebPlanBorrowBean.class);
+            result.setData(resultList);
         }
         page.setTotal(count);
         result.setPage(page);

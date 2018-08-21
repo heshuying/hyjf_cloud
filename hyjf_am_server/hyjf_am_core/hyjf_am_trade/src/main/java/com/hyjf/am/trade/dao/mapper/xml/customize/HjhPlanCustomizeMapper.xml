@@ -460,6 +460,7 @@ ORDER BY
 		<result column="company_or_personal" property="companyOrPersonal" jdbcType="VARCHAR" />
 		<result column="financePurpose" property="financePurpose" jdbcType="VARCHAR" />
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="borrow_period_str" property="borrowPeriodStr" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 	</resultMap>
 
@@ -484,6 +485,12 @@ ORDER BY
 				ELSE
 				CONCAT(hb.borrow_period, '个月')
 				END borrow_period,
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+				ELSE
+				CONCAT(hb.borrow_period, '个月')
+				END borrow_period_str,
 				IFNULL(hbs.NAME, '') NAME,
 				hb.create_time
 
@@ -517,6 +524,12 @@ ORDER BY
 				ELSE
 				CONCAT(hb.borrow_period, '个月')
 				END borrow_period,
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+				ELSE
+				CONCAT(hb.borrow_period, '个月')
+				END borrow_period_str,
 				IFNULL(hbs.NAME, '') NAME,
 				hb.create_time
 			FROM
@@ -548,6 +561,12 @@ ORDER BY
 			ELSE
 			CONCAT(hb.borrow_period, '个月')
 			END borrow_period,
+			CASE
+			WHEN hb.borrow_style = 'endday' THEN
+			CONCAT(hb.borrow_period, '天')
+			ELSE
+			CONCAT(hb.borrow_period, '个月')
+			END borrow_period_str,
 			IFNULL(hbs.NAME, '') NAME,
 			hb.create_time
 		  FROM
@@ -585,6 +604,12 @@ ORDER BY
 			ELSE
 			CONCAT(hb.borrow_period, '个月')
 			END borrow_period,
+			CASE
+			WHEN hb.borrow_style = 'endday' THEN
+			CONCAT(hb.borrow_period, '天')
+			ELSE
+			CONCAT(hb.borrow_period, '个月')
+			END borrow_period_str,
 			IFNULL(hbs.NAME, '') NAME,
 			hb.create_time
 		FROM
