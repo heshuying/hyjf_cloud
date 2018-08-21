@@ -30,6 +30,7 @@ public class AppHomeController {
     /**
      * 获取首页数据接口
      * 沿用原来的接口路径
+     * 原接口：
      * @return
      */
     @ApiOperation(value = "获取首页各项数据", notes = "获取首页各项数据")
