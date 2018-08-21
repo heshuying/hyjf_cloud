@@ -164,6 +164,11 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 获取用户还款计划页面数据
+     * @author wangjun
+     * @return
+     */
     @ApiOperation(value = "获取用户还款计划页面数据", notes = "获取用户还款计划页面数据")
     @PostMapping(value = "/getRepayPlanInfo", produces = "application/json;charset=utf-8")
     public WebResult<Object> getRepayPlanInfo(@RequestBody @Valid WebGetRepayMentRequestVO requestVO){
@@ -174,6 +179,11 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 获取用户散标转让记录详情
+     * @author wangjun
+     * @return
+     */
     @ApiOperation(value = "获取用户散标转让记录详情", notes = "获取用户散标转让记录详情")
     @GetMapping(value = "/getMyCreditAssignDetail/{creditNid}")
     public WebResult<Object> getMyCreditAssignDetail(@RequestHeader(value = "userId") Integer userId, @PathVariable String creditNid){

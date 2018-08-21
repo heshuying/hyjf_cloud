@@ -27,4 +27,6 @@ public interface ProtocolTemplateMapper {
     int updateByPrimaryKeySelective(ProtocolTemplate record);
 
     int updateByPrimaryKey(ProtocolTemplate record);
+
+    List<ProtocolTemplate> getdisplayNameDynamic();
 }

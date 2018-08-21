@@ -146,7 +146,7 @@ public class WebHomeServiceImpl implements WebHomeService {
 
         TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
-        BigDecimal interestSum = totalInvestAndInterestVO.getTotalInterestAmount() == null ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
+        BigDecimal interestSum = (totalInvestAndInterestVO == null ||totalInvestAndInterestVO.getTotalInterestAmount() == null) ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
         result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());
         //累计上线年数
         Integer yearSum = GetDate.getYearFromDate(PUT_ONLINE_TIME);

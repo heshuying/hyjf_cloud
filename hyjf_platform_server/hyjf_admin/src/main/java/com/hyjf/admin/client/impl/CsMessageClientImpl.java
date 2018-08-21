@@ -358,7 +358,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse getMessagePushMsgById(Integer id) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -367,7 +367,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/insertmessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/insertmessagepushmsg",
                 templateVO,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -377,7 +377,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest) {
-        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app-message/updatemessagepushmsg",
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/updatemessagepushmsg",
                 templateRequest,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -387,7 +387,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
 
     @Override
     public MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app-message/deletemessagepushmsg/" + recordList,
+        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg/" + recordList,
                 MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;

@@ -70,4 +70,6 @@ public interface ProtocolClient {
      * @return
      */
     AdminProtocolResponse deleteProtocolTemplate(AdminProtocolRequest request);
+
+    List<ProtocolTemplateVO> getNewInfo();
 }

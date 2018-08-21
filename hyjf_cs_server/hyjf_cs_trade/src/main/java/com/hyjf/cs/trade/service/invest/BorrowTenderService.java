@@ -65,5 +65,5 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param tender
      * @return
      */
-    AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender);
+    AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
 }

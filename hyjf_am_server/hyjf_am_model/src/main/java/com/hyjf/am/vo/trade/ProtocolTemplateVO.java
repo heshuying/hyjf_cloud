@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.vo.trade;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author libin
@@ -21,20 +23,31 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
 	
 	private Integer id;
 
+    @ApiModelProperty(value = "前台展示的协议id")
     private String protocolId;
 
+    @ApiModelProperty(value = "协议模板名称")
     private String protocolName;
 
+    @ApiModelProperty(value = "协议类型")
+    private String protocolType;
+
+    @ApiModelProperty(value = "前台显示名称")
     private String displayName;
 
+    @ApiModelProperty(value = "协议版本号(当前协议使用的版本号)")
     private String versionNumber;
 
+    @ApiModelProperty(value = "状态(0.协议不显示1.协议显示)")
     private Integer status;
 
+    @ApiModelProperty(value = "协议路径(当前协议显示路径)")
     private String protocolUrl;
 
+    @ApiModelProperty(value = "pdf图片路径地址")
     private String imgUrl;
 
+    @ApiModelProperty(value = "备注(当前协议)")
     private String remarks;
 
     private Date createTime;
@@ -132,6 +145,7 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
         return createTime;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
@@ -144,6 +158,7 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
         this.createUserId = createUserId;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -160,4 +175,11 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
         this.updateUserId = updateUserId;
     }
 
+    public String getProtocolType() {
+        return protocolType;
+    }
+
+    public void setProtocolType(String protocolType) {
+        this.protocolType = protocolType;
+    }
 }

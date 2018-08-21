@@ -14,5 +14,5 @@ public interface RegistrantChangeStatisticsService {
      * @param endTime
      * @return
      */
-    Integer registrantChangeStatisticsCount(Date startTime, Date endTime);
+    Integer queryRegistrantChangeStatisticsCount(Date startTime, Date endTime);
 }

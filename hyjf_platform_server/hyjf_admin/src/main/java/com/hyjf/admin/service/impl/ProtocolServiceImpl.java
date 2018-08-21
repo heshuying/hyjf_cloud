@@ -1,5 +1,7 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.ProtocolClient;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
@@ -11,17 +13,22 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.ProtocolEnum;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.pdf.PdfToHtml;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author：yinhui
@@ -32,6 +39,13 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Autowired
     private ProtocolClient client;
+
+    @Value("${file.domain.url}")
+    private String FILEDOMAINURL;
+    @Value("${file.physical.path}")
+    private String FILEPHYSICALPATH;
+    @Value("${file.upload.temp.path}")
+    private String FILEUPLOADTEMPPATH;
 
     @Override
     public AdminProtocolResponse searchPage(AdminProtocolRequest request) {
@@ -144,6 +158,16 @@ public class ProtocolServiceImpl implements ProtocolService {
         }
     }
 
+    /**
+     * 获得最新协议模版 前台展示信息
+     *
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getNewInfo() {
+        return client.getNewInfo();
+    }
+
     //添加协议版本
     public void insertProtocolVersion(ProtocolTemplateVO protocolTemplate,Integer createUserId,ProtocolTemplateCommonVO protocolTemplateCommonVO){
         //新增协议版本
@@ -153,6 +177,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         int randomUrl = (int)(Math.random()*9000)+1000;
         protocolVersion.setProtocolId(protocolId);
         protocolVersion.setProtocolName(protocolId.substring(0,protocolId.length()-3)+randomUrl+".pdf");
+        protocolVersion.setDisplayName(protocolTemplate.getDisplayName());
         protocolVersion.setVersionNumber(protocolTemplate.getVersionNumber());
         protocolVersion.setProtocolUrl(protocolTemplate.getProtocolUrl());
         protocolVersion.setRemarks(protocolTemplate.getRemarks());
@@ -281,5 +306,82 @@ public class ProtocolServiceImpl implements ProtocolService {
             }
         }
 
+    }
+
+    /**
+     * 图片上传
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+        String fileDomainUrl = FILEDOMAINURL;
+        String filePhysicalPath = FILEPHYSICALPATH;
+        String fileUploadTempPath = FILEUPLOADTEMPPATH;
+        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+        File logoSaveFile = new File(logoRealPathDir);
+        if (!logoSaveFile.exists()) {
+            logoSaveFile.mkdirs();
+        }
+        BorrowCommonImage fileMeta = null;
+        LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+
+        Iterator<String> itr = multipartRequest.getFileNames();
+        MultipartFile multipartFile = null;
+
+        boolean flag =true;
+        while (itr.hasNext()) {
+            // 文件错误信息
+            String errorMessage = null;
+            multipartFile = multipartRequest.getFile(itr.next());
+            String fileRealName = String.valueOf(new Date().getTime());
+            String originalFilename = multipartFile.getOriginalFilename();
+            String  suf = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+            fileRealName = fileRealName + suf;
+            if(StringUtils.isEmpty(suf) ) {
+                errorMessage="上传的文件不能是空";
+            }
+            try {
+                //判断上传文件是否是Pdf格式的
+                if(!suf.equalsIgnoreCase(".pdf")){
+                    errorMessage="上传的文件必须是pdf格式";
+                    flag = false;
+                }else{
+                    Long size=multipartFile.getSize();
+                    if(multipartFile.getSize() > 5000000L){
+                        errorMessage="上传的文件过大";
+                        flag = false;
+                    }else if(multipartFile.getSize() < 0L){
+                        errorMessage="上传的文件为空";
+                        flag = false;
+                    }else{
+                        errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 50000000L);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            fileMeta = new BorrowCommonImage();
+            int index = originalFilename.lastIndexOf(".");
+            if (index != -1) {
+                fileMeta.setImageName(originalFilename.substring(0, index));
+            } else {
+                fileMeta.setImageName(originalFilename);
+            }
+
+            fileMeta.setImageRealName(fileRealName);
+            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+            fileMeta.setImageType(multipartFile.getContentType());
+            fileMeta.setErrorMessage(errorMessage);
+            // 获取文件路径
+            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+            files.add(fileMeta);
+
+        }
+        return JSONObject.toJSONString(files, flag);
     }
 }
