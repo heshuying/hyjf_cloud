@@ -51,14 +51,14 @@ public class AccountRechargeRequestBean extends BasePage {
     @ApiModelProperty(value = "用户角色:1,投资人.2,借款人.3,垫付机构.")
     private String roleIdSearch;
 
-    @ApiModelProperty(value = "订单号")
-    private String nid;
+//    @ApiModelProperty(value = "订单号")
+//    private String nid;
 
     @ApiModelProperty(value = "被操作用户ID")
     private Integer userId;
 
-    @ApiModelProperty(value = "充值状态:0:充值中,1:充值失败,2:充值成功")
-    private String status;
+//    @ApiModelProperty(value = "充值状态:0:充值中,1:充值失败,2:充值成功")
+//    private String status;
 
 
 
@@ -174,14 +174,6 @@ public class AccountRechargeRequestBean extends BasePage {
         this.roleIdSearch = roleIdSearch;
     }
 
-    public String getNid() {
-        return nid;
-    }
-
-    public void setNid(String nid) {
-        this.nid = nid;
-    }
-
     public Integer getUserId() {
         return userId;
     }
@@ -190,11 +182,4 @@ public class AccountRechargeRequestBean extends BasePage {
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }

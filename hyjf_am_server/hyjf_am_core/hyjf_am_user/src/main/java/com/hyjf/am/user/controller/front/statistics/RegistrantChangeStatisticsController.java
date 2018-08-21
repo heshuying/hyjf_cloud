@@ -70,7 +70,7 @@ public class RegistrantChangeStatisticsController extends BaseController {
             e.printStackTrace();
         }
 
-        Integer todayRegNum = this.registrantChangeStatisticsService.registrantChangeStatisticsCount(todayStartTimeDate, todayEndTimeDate);
+        Integer todayRegNum = this.registrantChangeStatisticsService.queryRegistrantChangeStatisticsCount(todayStartTimeDate, todayEndTimeDate);
 
         //本月注册人数
         //当前月起始时间 2018-08-01 00:00:00  ~ 2018-08-31 23:59:59
@@ -87,12 +87,12 @@ public class RegistrantChangeStatisticsController extends BaseController {
             e.printStackTrace();
         }
 
-        Integer monthRegNum = this.registrantChangeStatisticsService.registrantChangeStatisticsCount(monthStartTimeDate, monthEndTimeDate);
+        Integer monthRegNum = this.registrantChangeStatisticsService.queryRegistrantChangeStatisticsCount(monthStartTimeDate, monthEndTimeDate);
 
         //总计注册人数
         Date allStartTimeDate = null;
         Date allEndTimeDate = null;
-        Integer allRegNum = this.registrantChangeStatisticsService.registrantChangeStatisticsCount(allStartTimeDate, allEndTimeDate);
+        Integer allRegNum = this.registrantChangeStatisticsService.queryRegistrantChangeStatisticsCount(allStartTimeDate, allEndTimeDate);
 
         //今日新增充值人数, 今日新增投资人数
         Map<String, Object> regNumMap = new HashedMap();
