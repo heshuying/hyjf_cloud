@@ -867,6 +867,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
 
+        investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
         investInfo.setBalance(CommonUtils.formatAmount(null, balance));
