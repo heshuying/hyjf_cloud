@@ -3384,7 +3384,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<BankEveVO> queryBankEveList(BankEveRequest request) {
         BankEveResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/bankaleve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
+                .postForEntity("http://AM-TRADE/am-trade/bankeve/selectBankEveInfoList/", request, BankEveResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

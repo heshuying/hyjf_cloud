@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.AleveLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AleveCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankAleveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by cuigq on 2018/1/22.
+ * Created by zdj on 2018/1/22.
  */
 @Service
 public class BankAleveServiceImpl implements BankAleveService {
 
     @Autowired
-    private AleveLogCustomizeMapper aleveLogMapper;
+    private AleveCustomizeMapper aleveLogMapper;
 
     /**
      * 根据条件查询列表总数
@@ -26,7 +26,7 @@ public class BankAleveServiceImpl implements BankAleveService {
      */
     @Override
     public int countRecord(Map<String, Object> mapParam) {
-        Integer count = aleveLogMapper.countRecord(mapParam);
+        Integer count = aleveLogMapper.queryAleveLogCount(mapParam);
         int vipcount = count.intValue();
         return vipcount;
     }
@@ -48,7 +48,7 @@ public class BankAleveServiceImpl implements BankAleveService {
         if (limitEnd > 0) {
             mapParam.put("limitEnd", limitEnd);
         }
-        List<AleveLogCustomize> manageList = aleveLogMapper.selectBankAleveInfoList(mapParam);
+        List<AleveLogCustomize> manageList = aleveLogMapper.queryAleveLogList(mapParam);
         return manageList;
     }
 
