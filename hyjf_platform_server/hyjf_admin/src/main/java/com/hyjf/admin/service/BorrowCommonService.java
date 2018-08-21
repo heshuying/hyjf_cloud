@@ -100,8 +100,7 @@ public interface BorrowCommonService {
 	 * @param request
 	 * @return
 	 */
-	public String getBorrowServiceScale(String borrowPeriod, String borrowStyle, Integer projectType,
-			String instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 根据资产编号查询该资产下面的产品类型

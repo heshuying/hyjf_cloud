@@ -26,6 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +58,9 @@ public class SmsCodeController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         // 在筛选条件下查询出用户
         List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
-        jsonObject.put("user_number", msgs.size());
+		if (!CollectionUtils.isEmpty(msgs)) {
+			jsonObject.put("user_number", msgs.size());
+		}
         jsonObject.put("smsCode", requestBean);
         BigDecimal remain_money = BigDecimal.ZERO;
         int remain_number = 0;
@@ -110,8 +113,9 @@ public class SmsCodeController extends BaseController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "发送短信", notes = "发送短信")
     @PostMapping("/send_message_action")
-    public JSONObject send(HttpServletRequest request, SmsCodeRequestBean form) throws ParseException {
+    public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
         logger.info("后台发送短信开始...");

@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * wechat端-散标投资
  */
-@Api(tags = "wechat端-散标投资")
+@Api(tags = "weChat端-散标投资")
 @RestController
 @RequestMapping("/hyjf-wechat/user/invest")
 public class WechatBorrowTenderController extends BaseTradeController {
@@ -81,7 +81,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "wechat端-散标投资获取投资结果", notes = "wechat端-散标投资获取投资结果")
+    @ApiOperation(value = "散标投资获取投资结果", notes = "散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
@@ -91,7 +91,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
-    @ApiOperation(value = "wechat端-散标投资获取投资成功结果", notes = "wechat端-散标投资获取投资成功结果")
+    @ApiOperation(value = "散标投资获取投资成功结果", notes = "散标投资获取投资成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
@@ -102,7 +102,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
     }
 
-    @ApiOperation(value = "wechat端-获取投资信息", notes = "wechat端-获取投资信息")
+    @ApiOperation(value = "获取投资信息", notes = "获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息");

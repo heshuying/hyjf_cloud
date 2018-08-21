@@ -40,7 +40,7 @@ import java.util.Map;
  * @Date:2018/7/3
  * @Description: 汇计划-转让记录
  */
-@Api(value = "Admin端产品中心-汇计划-转让记录",tags="Admin端产品中心-汇计划-转让记录")
+@Api(value = "产品中心-汇计划-转让记录",tags="产品中心-汇计划-转让记录")
 @RestController
 @RequestMapping("/hyjf-admin/hjhDebtCredit")
 public class HjhDebtCreditController extends BaseController{

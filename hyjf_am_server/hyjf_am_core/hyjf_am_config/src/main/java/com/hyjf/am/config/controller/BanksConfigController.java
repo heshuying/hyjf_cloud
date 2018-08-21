@@ -8,6 +8,7 @@ import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -19,6 +20,7 @@ import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -391,4 +393,23 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+    /**
+     *获取银行列表（快捷卡）
+     * @return
+     */
+    @GetMapping("/getbanklist")
+    public JxBankConfigResponse getInviteList() {
+        JxBankConfigResponse jxBankConfigResponse = new JxBankConfigResponse();
+        String methodName = "BanksListServer";
+        List<JxBankConfig> bankList = bankConfigService.getBankRecordList(1);
+        if(null != bankList){
+            List<JxBankConfigVO> jxBankConfigVOS = CommonUtils.convertBeanList(bankList, JxBankConfigVO.class);
+            jxBankConfigResponse.setResultList(jxBankConfigVOS);
+            jxBankConfigResponse.setRtn(Response.SUCCESS);
+        }
+        return jxBankConfigResponse;
+    }
+
+
 }

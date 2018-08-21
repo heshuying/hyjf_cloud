@@ -54,15 +54,15 @@ public class VipManageController extends BaseController {
     @Autowired
     private VipManageService vipManageService;
 
-    @ApiOperation(value = "页面初始化", notes = "页面初始化")
-    @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject vipManageInit() {
-        JSONObject jsonObject = vipManageService.initVipManage();
-        return jsonObject;
-    }
+//    @ApiOperation(value = "页面初始化", notes = "页面初始化")
+//    @PostMapping("/init")
+//    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
+//    public JSONObject vipManageInit() {
+//        JSONObject jsonObject = vipManageService.initVipManage();
+//        return jsonObject;
+//    }
 
-    @ApiOperation(value = "VIP管理列表查询", notes = "VIP管理列表查询")
+    @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/vipManageList")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {

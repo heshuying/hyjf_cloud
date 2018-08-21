@@ -8,9 +8,8 @@ import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoReqRepayService;
-import com.hyjf.am.trade.service.front.repay.RepayManageOldService;
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -35,7 +34,7 @@ import java.util.List;
 @Service
 public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqRepayService {
     @Autowired
-    private RepayManageOldService repayManageService;
+    private RepayManageService repayManageService;
 
     /** 还款时的校验信息 */
     public static final String REPAY_ERROR = "WEBPAY0001";
@@ -58,7 +57,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
      * @throws ParseException
      */
     @Override
-    public boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow) throws ParseException {
+    public boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow) throws Exception {
         JSONObject info = new JSONObject();
 
         // 还款用参数设定
@@ -187,7 +186,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                         logger.info("------------------cwyang 变更自动还款成功!----------------------");
                     }
                 }
-                boolean flag = this.repayManageService.updateRepayMoney(repay, callBackBean);
+                boolean flag = this.repayManageService.updateRepayMoney(repay, callBackBean, false);
                 if (flag) {
                     String planNid = borrow.getPlanNid();
                     if(StringUtils.isNotBlank(planNid)){//计划编号
@@ -224,7 +223,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
      * @param flag
      * @throws ParseException
      */
-    private RepayBean validatorFieldCheckRepay_org(JSONObject info, int userId, String password, Borrow borrow, Integer repayUserId, int flag) throws ParseException {
+    private RepayBean validatorFieldCheckRepay_org(JSONObject info, int userId, String password, Borrow borrow, Integer repayUserId, int flag) throws Exception {
         // 获取当前垫付机构
         RUser user = this.getRUser(userId);
         // 检查垫付机构是否存在
@@ -336,7 +335,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
      * @param borrow
      * @throws ParseException
      */
-    private RepayBean validatorFieldCheckRepay(JSONObject info, int userId, String password, Borrow borrow) throws ParseException {
+    private RepayBean validatorFieldCheckRepay(JSONObject info, int userId, String password, Borrow borrow) throws Exception {
         // 获取当前用户
         RUser user = this.getRUser(userId);
         // 检查用户是否存在

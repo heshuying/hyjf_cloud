@@ -182,9 +182,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected EveLogCustomizeMapper eveLogCustomizeMapper;
 
 	@Autowired
-	protected AleveLogCustomizeMapper aleveLogCustomizeMapper;
-
-	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 
 	@Autowired
@@ -204,6 +201,9 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected FundChangeStatisticsCustomizeMapper fundChangeStatisticsCustomizeMapper;
+
+	@Autowired
+	protected BankMerchantAccountListCustomizeMapper bankMerchantAccountListCustomizeMapper;
 
 	@Autowired
 	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;

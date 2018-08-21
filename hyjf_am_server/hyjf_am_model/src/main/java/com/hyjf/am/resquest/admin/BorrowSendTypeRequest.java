@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.io.Serializable;
 /**
  * @author by xiehuili on 2018/8/1.
  */
+@ApiModel(value="发标/复审",description="发标/复审")
 public class BorrowSendTypeRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID

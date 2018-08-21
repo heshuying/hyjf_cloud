@@ -14,15 +14,27 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +56,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理检索下拉框", notes = "充值管理检索下拉框")
     @RequestMapping(value = "/dropDownBox", method = RequestMethod.GET)
-    @ResponseBody
     public JSONObject dropDownBox(){
         JSONObject jsonObject = new JSONObject();
 
@@ -200,7 +211,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    @ResponseBody
     public AdminResult<ListResult<AccountRechargeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -225,6 +235,89 @@ public class AccountRechargeController extends BaseController {
         }else {
             return new AdminResult<ListResult<AccountRechargeVO>>(ListResult.build(returnList, 0));
         }
+    }
+
+    /**
+     * 资金中心 - 充值管理列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "充值管理", notes = "资金中心->更新充值状态")
+    @PostMapping(value = "/modifyRechargeStatus")
+    public JSONObject modifyRechargeStatus(@RequestBody AccountRechargeRequestBean requestBean){
+
+        JSONObject jsonObject = new JSONObject();
+
+        //用户ID
+        Integer userId = requestBean.getUserId();
+        //订单ID
+        String nid = requestBean.getNid();
+
+        if (Validator.isNull(userId) || Validator.isNull(nid)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单编号或用户ID为空!");
+            return jsonObject;
+        }
+
+        //更新充值状态
+        boolean isAccountUpdate = this.rechargeService.updateRechargeStatus(userId, nid);
+        String status= BaseResult.SUCCESS;
+        if (isAccountUpdate){
+            status = BaseResult.SUCCESS;
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+        }else {
+            status = Response.FAIL;
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
+        }
+        jsonObject.put("status", status);
+        return jsonObject;
+    }
+
+    /**
+     * 资金中心 - 充值管理列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "充值管理", notes = "资金中心->确认充值(FIX) 操作")
+    @PostMapping(value = "/rechargeFix")
+    public JSONObject rechargeFix(@RequestBody AccountRechargeRequestBean requestBean){
+
+        AccountRechargeRequest copyRequest = new AccountRechargeRequest();
+        BeanUtils.copyProperties(requestBean, copyRequest);
+
+        JSONObject jsonObject = new JSONObject();
+
+        //用户ID
+        Integer userId = requestBean.getUserId();
+        //订单编号
+        String nid = requestBean.getNid();
+        //订单状态
+        String status = requestBean.getStatus();
+
+        if (Validator.isNull(userId)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":用户ID不能为空!");
+            return jsonObject;
+        }else if (Validator.isNull(nid)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单编号不能为空!");
+            return jsonObject;
+        }else if (Validator.isNull(status)){
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG + ":订单状态为空!");
+            return jsonObject;
+        }
+
+        boolean isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
+
+        if (isAccountUpdate){
+            jsonObject.put("status", BaseResult.SUCCESS);
+            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+        }else {
+            jsonObject.put("status", Response.FAIL);
+            jsonObject.put("statusDesc", Response.FAIL_MSG);
+        }
+        return jsonObject;
     }
 
 }

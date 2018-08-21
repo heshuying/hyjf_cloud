@@ -126,8 +126,8 @@ public class SmsNoticeConfigController extends BaseController {
         JSONObject ret = new JSONObject();
         // 检查月数唯一性
 //        if ("configName".equals(name)) {
-        if (StringUtils.isNotBlank(adminRequest.getConfigName())) {
-            int cnt = smsNoticeConfigService.onlyName(adminRequest.getConfigName());
+        if (StringUtils.isNotBlank(adminRequest.getName())) {
+            int cnt = smsNoticeConfigService.onlyName(adminRequest.getName());
             if (cnt > 0) {
                 ret.put("info", "标识已存在，请勿重复输入");
             }

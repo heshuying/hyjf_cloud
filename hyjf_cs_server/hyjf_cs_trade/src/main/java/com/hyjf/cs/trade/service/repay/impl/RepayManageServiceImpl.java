@@ -3249,7 +3249,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
 
         // 开户校验
-        if(!user.isOpenAccount()){
+        if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
@@ -3300,7 +3300,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
 
         // 开户校验
-        if(!user.isOpenAccount()){
+        if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);

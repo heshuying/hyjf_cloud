@@ -32,7 +32,7 @@ import java.util.List;
  * @Date:2018/7/12
  * @Description:
  */
-@Api(value = "Admin端产品中心-批次中心-批次还款",tags ="Admin端产品中心-批次中心-批次还款")
+@Api(value = "产品中心-批次中心-批次还款",tags ="产品中心-批次中心-批次还款")
 @RestController
 @RequestMapping("/hyjf-admin/batchBorrowRepay")
 public class BatchBorrowRepayController extends BaseController{

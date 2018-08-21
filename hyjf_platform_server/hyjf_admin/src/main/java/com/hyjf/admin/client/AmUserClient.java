@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
@@ -9,9 +10,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -1013,4 +1012,31 @@ public interface AmUserClient {
      */
     CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest aprlr);
 
+    /**
+     * 查询短信统计，通过分公司显示
+     * @param request
+     * @return
+     */
+    SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request);
+
+    /**
+     * 查询短信总条数+总费用
+     * @param request
+     * @return
+     */
+    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
+
+    /**
+     * 获取部门列表
+     * @param o
+     * @return
+     */
+    List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o);
+
+    /**
+     * 在筛选条件下查询出用户
+     * @param requestBean
+     * @return
+     */
+    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
 }

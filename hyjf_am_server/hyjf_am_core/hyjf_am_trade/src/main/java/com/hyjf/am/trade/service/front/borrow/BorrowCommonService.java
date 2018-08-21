@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
@@ -288,7 +289,7 @@ public interface BorrowCommonService extends BaseService {
 	 * @param instCode
 	 * @return
 	 */
-	public BorrowCommonVO getBorrowServiceScale(String borrowPeriod,String borrowStyle,Integer projectType,String instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 账户管理费率(最低，最高)
