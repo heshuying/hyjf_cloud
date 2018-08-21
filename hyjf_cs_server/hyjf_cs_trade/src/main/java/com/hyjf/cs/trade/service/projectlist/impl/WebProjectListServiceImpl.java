@@ -1444,7 +1444,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
            List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
            // add by nxl 是否发生过债转
            Boolean isDebt = false;
-           if(CollectionUtils.isEmpty(listHjhDebtCredit)) {
+           if(!CollectionUtils.isEmpty(listHjhDebtCredit)) {
                // 部分承接
                request.setCreditStatus(Arrays.asList(0, 1));
                List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
