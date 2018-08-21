@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.bean.mc;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +13,6 @@ import java.io.Serializable;
 @Document(collection = "ht_sms_log")
 public class SmsLog implements Serializable {
 
-    @Id
     private String id;
 
     private String type;
