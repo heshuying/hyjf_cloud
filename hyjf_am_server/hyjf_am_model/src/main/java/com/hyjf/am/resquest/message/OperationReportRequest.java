@@ -5,6 +5,7 @@ package com.hyjf.am.resquest.message;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.datacollect.*;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,14 +19,17 @@ public class OperationReportRequest extends BasePage implements Serializable{
 	/**
 	 * 前台开始时间接收
 	 */
+	@ApiModelProperty(value = "前台开始时间接收")
 	private String startCreate;
 	/**
 	 * 前台结束时间接收
 	 */
+	@ApiModelProperty(value = "前台结束时间接收")
 	private String endCreate;
 	/**
 	 * 运营报告类型
 	 */
+	@ApiModelProperty(value = "运营报告类型")
 	private String typeSearch;
 
 	protected int limitStart = -1;
@@ -74,8 +78,9 @@ public class OperationReportRequest extends BasePage implements Serializable{
 	}
 
 	//运营报告的id
+	@ApiModelProperty(value = "运营报告的id")
 	private String operationReportId;
-
+	@ApiModelProperty(value = "是否发布")
 	private Integer isRelease;
 	//运营报告
 	private OperationReportVO operationReport;
