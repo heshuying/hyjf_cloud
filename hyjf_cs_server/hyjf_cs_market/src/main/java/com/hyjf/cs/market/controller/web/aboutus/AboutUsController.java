@@ -269,7 +269,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
-	@GetMapping("/getSecurityPage")
+	@PostMapping("/getSecurityPage")
 	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
