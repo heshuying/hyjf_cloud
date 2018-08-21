@@ -871,6 +871,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
         investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
         investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
+        investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
 
         investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);

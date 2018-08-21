@@ -33,6 +33,8 @@ public class VipManageRequest {
     @ApiModelProperty(value = "是否51用户")
     public String is51;
 
+    public String ids;
+
     public int limit;
 
     private int paginatorPage = 1;
@@ -137,5 +139,13 @@ public class VipManageRequest {
 
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 }

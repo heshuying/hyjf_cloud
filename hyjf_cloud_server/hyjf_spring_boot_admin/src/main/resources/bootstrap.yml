@@ -2,7 +2,7 @@ spring:
   application:
     name: SPRING-BOOT-ADMIN
   profiles:
-    active: insecure
+    active: secure
 
 eureka:
   instance:
