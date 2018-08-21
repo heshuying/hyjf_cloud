@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.datacollect;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,40 +13,43 @@ import java.math.BigDecimal;
 public class OperationReportVO extends BaseVO implements Serializable {
 
     //运营报告id
+    @ApiModelProperty(value = "运营报告id页面以前用ids")
     private String ids;
+    @ApiModelProperty(value = "发布时间时分秒格式")
     private String releaseTimeStr;
-
+    @ApiModelProperty(value = "报告类型名")
     private String typeRealName;
-
+    @ApiModelProperty(value = "排序用的月份")
     private int sortMonth;
+    @ApiModelProperty(value = "排序用的天")
     private int sortDay;
-
+    @ApiModelProperty(value = "运营报告id")
     private String id;
-
+    @ApiModelProperty(value = "中文名")
     private String cnName;
-
+    @ApiModelProperty(value = "英文名")
     private String enName;
-
+    @ApiModelProperty(value = "排序用的年")
     private String year;
-
+    @ApiModelProperty(value = "报告类型")
     private Integer operationReportType;
-
+    @ApiModelProperty(value = "累计交易额")
     private BigDecimal allAmount;
-
+    @ApiModelProperty(value = "累计赚取收益")
     private BigDecimal allProfit;
-
+    @ApiModelProperty(value = "平台注册人数")
     private BigDecimal registNum;
-
+    @ApiModelProperty(value = "本月成交笔数")
     private Integer successDealNum;
-
+    @ApiModelProperty(value = "本月成交金额")
     private BigDecimal operationAmount;
-
+    @ApiModelProperty(value = "本月赚取收益")
     private BigDecimal operationProfit;
-
+    @ApiModelProperty(value = "是否发布")
     private Integer isRelease;
-
+    @ApiModelProperty(value = "是否删除")
     private Integer isDelete;
-
+    @ApiModelProperty(value = "发布时间毫秒")
     private Integer releaseTime;
 
     private Integer updateTime;

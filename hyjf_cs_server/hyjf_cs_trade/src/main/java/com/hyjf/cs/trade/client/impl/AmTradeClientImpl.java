@@ -57,7 +57,8 @@ import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
-import com.hyjf.cs.trade.bean.RepaymentPlanAjaxBean;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -3797,7 +3798,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBeanResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
+        RepayBeanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-tradet/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
         if (Response.isSuccess(response)){
             return JSON.parseObject(response.getResult(), RepayBean.class);
         }
@@ -3809,7 +3810,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_batch_reapydata",requestBean,Response.class).getBody();
+        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,Response.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
@@ -3897,15 +3898,61 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public RepaymentPlanAjaxBean getRepayPlanInfo(String borrowNid, String nid, String type){
-        RepaymentPlanAjaxBean repaymentPlanAjaxBean = new RepaymentPlanAjaxBean();
+    public RepayPlanInfoBean getRepayPlanInfo(String borrowNid, String nid, String type){
+        RepayPlanInfoBean repayPlanInfoBean = new RepayPlanInfoBean();
         String url = "http://AM-TRADE/am-trade/assetmanage/getRepayPlanInfo/" + borrowNid + "/" + nid + "/" + type;
         RepayPlanResponse response = restTemplate.getForEntity(url,RepayPlanResponse.class).getBody();
         if(Response.isSuccess(response)){
-            repaymentPlanAjaxBean.setCurrentHoldRepayMentPlanList(response.getCurrentHoldRepayMentPlanList());
-            repaymentPlanAjaxBean.setCurrentHoldRepayMentPlanDetails(response.getCurrentHoldRepayMentPlanDetails());
+            repayPlanInfoBean.setCurrentHoldRepayMentPlanList(response.getCurrentHoldRepayMentPlanList());
+            repayPlanInfoBean.setCurrentHoldRepayMentPlanDetails(response.getCurrentHoldRepayMentPlanDetails());
         }
-        return repaymentPlanAjaxBean;
+        return repayPlanInfoBean;
+    }
+
+    /**
+     * 待计算提成加入列表
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> getAccedesWaitCompute() {
+        Response<HjhAccedeVO> response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", Response.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 提成计算
+     * @param hjhLockVo
+     * @return
+     */
+    @Override
+    public Boolean commisionCompute(HjhLockVo hjhLockVo){
+        Response response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhcommision/compute",hjhLockVo,Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public MyCreditDetailBean getMyCreditAssignDetail(String creditNid){
+        MyCreditDetailBean myCreditDetailBean = new MyCreditDetailBean();
+        String url = "http://AM-TRADE/am-trade/assetmanage/getMyCreditAssignDetail/" + creditNid;
+        MyCreditDetailResponse response = restTemplate.getForEntity(url, MyCreditDetailResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            myCreditDetailBean.setRecordList(response.getRecordList());
+            myCreditDetailBean.setAssignedStatistic(response.getAssignedStatistic());
+            myCreditDetailBean.setBorrowCredit(response.getBorrowCredit());
+        }
+        return myCreditDetailBean;
     }
 
 }

@@ -14,12 +14,14 @@ import com.hyjf.cs.trade.service.batch.BatchBankInvestService;
 
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 提现,债转,投资等异常定时任务controller
  * @author jijun
  * @date 20180625
  */
+@ApiIgnore
 @RestController
 @RequestMapping(value = "/cs-trade/bankException")
 public class BankExceptionController {
@@ -46,7 +48,7 @@ public class BankExceptionController {
 	 * @return
 	 */
 	@ApiOperation(value = "投资撤销掉单异常处理", notes = "投资撤销掉单异常处理")
-	@RequestMapping(value = "/bankTenderCancelExceptionHandle")
+	@GetMapping(value = "/bankTenderCancelExceptionHandle")
 	public void bankTenderCancelExceptionHandle() {
 		logger.info("投资撤销掉单异常处理start...");
 		bankTenderCancelExceptionService.handle();
@@ -84,7 +86,7 @@ public class BankExceptionController {
 	 * @return
 	 */
 	@ApiOperation(value = "投资异步掉单异常处理", notes = "投资异步掉单异常处理")
-	@RequestMapping(value = "/investExceptionHandle")
+	@GetMapping(value = "/investExceptionHandle")
 	public String investExceptionHandle() {
 		logger.info("投资异步掉单异常处理start...");
 		batchBankInvestService.handle();
@@ -97,7 +99,7 @@ public class BankExceptionController {
 	 * 投资全部掉单异常处理
 	 */
 	@ApiOperation(value = "投资异常全部掉单异常处理", notes = "投资异常全部掉单异常处理")
-	@RequestMapping(value = "/investAllExceptionHandle")
+	@GetMapping(value = "/investAllExceptionHandle")
 	public void investAllExceptionHandle() {
 		logger.info("投资异常全部掉单跑批任务开始start...");
 		batchBankInvestAllService.updateTender();

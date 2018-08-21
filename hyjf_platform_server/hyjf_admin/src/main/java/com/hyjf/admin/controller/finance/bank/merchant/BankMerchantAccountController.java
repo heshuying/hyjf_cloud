@@ -79,7 +79,7 @@ public class BankMerchantAccountController extends BaseController {
     @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
         AdminSystemVO adminSystem = getUser(request);
-      //  CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计

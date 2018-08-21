@@ -32,7 +32,7 @@ public class SubConfigController {
 
     @Autowired
     private SubConfigService subConfigService;
-    private static Logger logger = LoggerFactory.getLogger(InstConfigController.class);
+    private static Logger logger = LoggerFactory.getLogger(SubConfigController.class);
     /**
      * 分页查询配置中心分账名单列表
      * @return
@@ -46,7 +46,7 @@ public class SubConfigController {
         //查询配置中心条数
         int recordTotal = this.subConfigService.getSubConfigListCountByPage(conditionMap);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize());
             //查询记录
             List<SubCommissionListConfig> recordList =subConfigService.getSubConfigListByPage(conditionMap,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){

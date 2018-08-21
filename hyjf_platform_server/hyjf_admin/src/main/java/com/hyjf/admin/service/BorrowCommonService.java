@@ -100,8 +100,7 @@ public interface BorrowCommonService {
 	 * @param request
 	 * @return
 	 */
-	public String getBorrowServiceScale(String borrowPeriod, String borrowStyle, Integer projectType,
-			String instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 根据资产编号查询该资产下面的产品类型
@@ -126,7 +125,7 @@ public interface BorrowCommonService {
 
 	public UserInfoVO findUserInfoById(@PathVariable int userId);
 
-	public boolean isBorrowUserCACheck(String param, String name);
+	public boolean isBorrowUserCACheck(String name);
 
 	public boolean isCAIdNoCheck(String param, String name);
 	public BorrowCustomizeResponse init(BorrowBeanRequest form);

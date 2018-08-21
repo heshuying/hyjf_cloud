@@ -29,7 +29,6 @@ import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +53,7 @@ import java.util.Map;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "APP端协议接口", tags = "APP端协议接口")
+@Api(description = "app端-协议接口", tags = "app端-协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
@@ -80,44 +79,31 @@ public class NewAgreementController extends BaseTradeController{
      * 
      * （一）居间服务借款协议
      * @author libin
-     * @param request
+     * @param sign
+     * @param tenderNid
+     * @param borrowNid
+     * @param userIdStr
      * @return
      */
-    @ApiOperation(value = "居间服务借款协议", httpMethod = "POST", notes = "居间服务借款协议")
+    @ApiOperation(value = "居间服务借款协议内容的获取", httpMethod = "POST", notes = "居间服务借款协议内容的获取")
     @ResponseBody
     @PostMapping("/interServiceLoanAgreement")
-    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request) {
+    public NewAgreementResultBean interServiceLoanAgreement(@RequestHeader("sign") String sign,
+                                                            @RequestHeader("tenderNid") String tenderNid,
+                                                            @RequestHeader("borrowNid") String borrowNid,
+                                                            @RequestHeader("userId") String userIdStr) {
     	logger.info("*******************************居间服务借款协议************************************");
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
         JSONObject jsonObject = new JSONObject();
-        String sign = request.getParameter("sign");
-        String tenderNid = request.getParameter("tenderNid");
-        String borrowNid = request.getParameter("borrowNid");
-        String userIdStr = request.getParameter("userId");
         logger.info("get sign is: {}",sign);
         logger.info("get tenderNid is: {}",tenderNid);
         logger.info("get borrowNid is: {}",borrowNid);
         Integer userId = null;
         try {
-            if(userIdStr!= null && StringUtils.isNumeric(userIdStr)){
-                if (StringUtils.isEmpty(tenderNid)
-                        || StringUtils.isEmpty(borrowNid)) {
-                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-                    newAgreementResultBean.setInfo(jsonObject);
-                    return newAgreementResultBean;
-                }
+            if(StringUtils.isNumeric(userIdStr)){
                 userId=Integer.parseInt(userIdStr);
             }else{
-                if (StringUtils.isEmpty(sign)
-                        || StringUtils.isEmpty(tenderNid)
-                        || StringUtils.isEmpty(borrowNid)) {
-                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-                    newAgreementResultBean.setInfo(jsonObject);
-                    return newAgreementResultBean;
-                }
                 userId = SecretUtil.getUserId(sign);
             }
             /*userId = WebUtils.getUserId(request); */// 用户ID
@@ -548,31 +534,25 @@ public class NewAgreementController extends BaseTradeController{
     
     /**
      * app 我的计划-计划详情-资产列表-协议（转让）列表
-     * @param request
+     * @param nid
+     * @param sign
+     * @param userId
+     * @param version
+     * @param borrowType
      * @return
      */
-    @ApiOperation(value = "我的计划-计划详情-资产列表-协议（转让）列表", httpMethod = "POST", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
+    @ApiOperation(value = "协议列表内容的获取", httpMethod = "POST", notes = "协议列表内容的获取")
     @ResponseBody
     @PostMapping("/userCreditContractList")
-    public NewAgreementResultBean userCreditContractList(HttpServletRequest request) {
+    public NewAgreementResultBean userCreditContractList(@RequestHeader("nid") String nid,
+                                                         @RequestHeader("sign") String sign,
+                                                         @RequestHeader("userId") Integer userId,
+                                                         @RequestHeader("version") String version,
+                                                         @RequestHeader("borrowType") String borrowType) {
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
-        String sign = request.getParameter("sign"); // 随机字符串
-        String version = request.getParameter("version");
-        String nid = request.getParameter("nid");
-        String borrowType=request.getParameter("borrowType");
         logger.info("get sign is: {}",sign);
         logger.info("get version is: {}",version);
         logger.info("我的计划-计划详情-资产列表-协议，债转id :{}", nid);
-        Integer userId=null;
-        try {
-            // 用户id
-           userId = SecretUtil.getUserId(sign);
-       } catch (Exception e) {
-    	   logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-           newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
-           newAgreementResultBean.setStatusDesc("系统异常");
-           return newAgreementResultBean;
-       }
         if("HJH".equals(borrowType)){
             List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
             String investOrderId=null;
@@ -1019,7 +999,7 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "获得 协议模板pdf显示地址", httpMethod = "POST", notes = "获得 协议模板pdf显示地址")
     @ResponseBody
     @PostMapping("/gotAgreementPdfOrImg")
-    public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam String aliasName) {
+    public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam(required = true) String aliasName) {
         return setProtocolImg(aliasName);
     }
     
@@ -1030,12 +1010,6 @@ public class NewAgreementController extends BaseTradeController{
      */
     public NewAgreementResultBean setProtocolImg(String aliasName){
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
-        if (StringUtils.isEmpty(aliasName)) {
-            newAgreementResultBean.setStatus("99");
-            newAgreementResultBean.setStatusDesc("请求参数非法");
-            return newAgreementResultBean;
-        }
-
         //是否在枚举中有定义
         String displayName = ProtocolEnum.getDisplayName(aliasName);
         if (StringUtils.isEmpty(displayName)) {

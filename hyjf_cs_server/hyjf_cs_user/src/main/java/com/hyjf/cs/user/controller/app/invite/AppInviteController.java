@@ -30,7 +30,7 @@ public class AppInviteController {
     /**
      * 邀请记录
      */
-    @PostMapping("/hyjf-app/user/reward/inviteRecord")
+    @GetMapping("/hyjf-app/user/reward/inviteRecord")
     @ApiOperation(value = "邀请记录", notes = "邀请记录")
     public JSONObject inviteList(@RequestParam(value = "currentPage", defaultValue = "1") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {

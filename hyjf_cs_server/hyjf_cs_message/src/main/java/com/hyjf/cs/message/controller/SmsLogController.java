@@ -3,16 +3,15 @@
  */
 package com.hyjf.cs.message.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.SmsLogResponse;
 import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.message.SmsLogRequest;
+import com.hyjf.am.vo.admin.SmsLogVO;
 import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
-import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -35,19 +34,20 @@ public class SmsLogController extends BaseController {
 	@Autowired
 	private SmsLogService smsLogService;
 
-	@Autowired
-	private SmsLogDao smsLogDao;
-
 	/**
 	 * 查询消息中心短信发送记录
 	 * @return
 	 */
 	@RequestMapping("/list")
-	public JSONObject smsLogList() {
-		JSONObject jsonObject = new JSONObject();
-		List<SmsLog> list = smsLogDao.findAll();
-		jsonObject.put("smsLogList", list);
-		return jsonObject;
+	public SmsLogResponse smsLogList() {
+        SmsLogResponse response = new SmsLogResponse();
+		List<SmsLog> list = smsLogService.findSmsLogList();
+		if (!CollectionUtils.isEmpty(list)) {
+            List<SmsLogVO> voList = CommonUtils.convertBeanList(list, SmsLogVO.class);
+            response.setLogCount(voList.size());
+            response.setResultList(voList);
+        }
+		return response;
 	}
 
 	/**
@@ -56,11 +56,15 @@ public class SmsLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/find")
-	public JSONObject findSmsLog(@RequestBody SmsLogRequest request) {
-		JSONObject jsonObject = new JSONObject();
+	public SmsLogResponse findSmsLog(@RequestBody SmsLogRequest request) {
+        SmsLogResponse response = new SmsLogResponse();
 		List<SmsLog> list = smsLogService.findSmsLog(request);
-		jsonObject.put("smsLogList", list);
-		return jsonObject;
+        if (!CollectionUtils.isEmpty(list)) {
+            List<SmsLogVO> voList = CommonUtils.convertBeanList(list, SmsLogVO.class);
+            response.setLogCount(voList.size());
+            response.setResultList(voList);
+        }
+        return response;
 	}
 
 	/**
@@ -69,12 +73,13 @@ public class SmsLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/query_time")
-	public SmsOntimeResponse queryTime(SmsLogRequest request) {
+	public SmsOntimeResponse queryTime(@RequestBody SmsLogRequest request) {
 		SmsOntimeResponse response = new SmsOntimeResponse();
 		List<SmsOntime> list = smsLogService.queryTime(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<SmsOntimeVO> voList = CommonUtils.convertBeanList(list, SmsOntimeVO.class);
 			response.setResultList(voList);
+			response.setCount(voList.size());
 		}
 		return response;
 	}
@@ -85,7 +90,7 @@ public class SmsLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/query_log_count")
-	public SmsLogResponse queryLogCount(SmsLogRequest request) {
+	public SmsLogResponse queryLogCount(@RequestBody SmsLogRequest request) {
 		SmsLogResponse response = new SmsLogResponse();
 		Integer logCount = smsLogService.queryLogCount(request);
 		if (logCount != null) {

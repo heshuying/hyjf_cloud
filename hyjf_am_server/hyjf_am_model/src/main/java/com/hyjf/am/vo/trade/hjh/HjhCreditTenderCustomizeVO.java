@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade.hjh;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -100,8 +101,6 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 	 * 承接时所在期数
 	 */
 	private String assignPeriod;
-
-
 	/**
 	 * 合同状态
 	 */
@@ -126,6 +125,19 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 	 * 脱敏合同地址
 	 */
 	private String imgUrl;
+	
+	/**
+	 * 是否复投承接
+	 */
+	private String tenderType;
+	/**
+	 * 债转服务费
+	 */
+	private String assignServiceFee;
+	/**
+	 * 债转服务费率
+	 */
+	private String assignServiceApr;
 	
 	/**
 	 * 构造方法
@@ -312,4 +324,27 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 		this.imgUrl = imgUrl;
 	}
 
+	public String getTenderType() {
+		return tenderType;
+	}
+
+	public void setTenderType(String tenderType) {
+		this.tenderType = tenderType;
+	}
+
+	public String getAssignServiceFee() {
+		return assignServiceFee;
+	}
+
+	public void setAssignServiceFee(String assignServiceFee) {
+		this.assignServiceFee = assignServiceFee;
+	}
+
+	public String getAssignServiceApr() {
+		return assignServiceApr;
+	}
+
+	public void setAssignServiceApr(String assignServiceApr) {
+		this.assignServiceApr = assignServiceApr;
+	}
 }

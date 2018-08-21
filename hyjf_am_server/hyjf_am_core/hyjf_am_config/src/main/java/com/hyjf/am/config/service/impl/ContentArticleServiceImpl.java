@@ -13,7 +13,6 @@ import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -192,7 +191,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit) {
+    public List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit) {
         ContentArticleExample example = new ContentArticleExample();
         if (offset != -1) {
             example.setLimitStart(offset);
@@ -348,5 +347,23 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             return customize;
         }
         return null;
+    }
+
+    /**
+     * 获取指定Type的文章
+     * @param type
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<ContentArticle> getContentArticListByType(String type) {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria criteria = example.createCriteria();
+        criteria.andTypeEqualTo(type);
+        example.setLimitStart(0);
+        example.setLimitStart(5);
+        example.setOrderByClause("id DESC");
+        List<ContentArticle> list = contentArticleMapper.selectByExample(example);
+        return list;
     }
 }

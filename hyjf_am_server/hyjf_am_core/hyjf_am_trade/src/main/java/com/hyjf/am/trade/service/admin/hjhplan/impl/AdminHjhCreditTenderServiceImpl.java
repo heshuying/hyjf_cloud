@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -62,6 +63,12 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
 		}
+		
+		if (StringUtils.isNotEmpty(request.getTenderType())) {
+			param.put("tenderType", request.getTenderType());
+		}
+		
+		
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		int count = adminHjhCreditTenderCustomizeMapper.countDebtCreditTender(param);
@@ -98,6 +105,11 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
 		}
+		
+		if (StringUtils.isNotEmpty(request.getTenderType())) {
+			param.put("tenderType", request.getTenderType());
+		}
+		
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		param.put("limitStart", limitStart);
@@ -141,6 +153,11 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
 		}
+		
+		if (StringUtils.isNotEmpty(request.getTenderType())) {
+			param.put("tenderType", request.getTenderType());
+		}
+		
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);
@@ -155,7 +172,7 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 
 	@Override
 	public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest request) {
-		HjhDebtCreditTenderVO vo = null;
+		HjhDebtCreditTenderVO vo = new HjhDebtCreditTenderVO();
 		HjhDebtCreditTender tender;
 		HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
 		HjhDebtCreditTenderExample.Criteria cra = example.createCriteria();
@@ -170,5 +187,44 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 			return vo;
 		}
 		return null;
+	}
+
+	@Override
+	public HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest request) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		// 是否从加入明细表来
+		param.put("isAccedelist", request.getIsAccedelist());
+		if (StringUtils.isNotEmpty(request.getAssignPlanNid())) {
+			param.put("assignPlanNid", request.getAssignPlanNid());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignPlanOrderId())) {
+			param.put("assignPlanOrderId", request.getAssignPlanOrderId());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignUserName())) {
+			param.put("assignUserName", request.getAssignUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditUserName())) {
+			param.put("creditUserName", request.getCreditUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditNid())) {
+			param.put("creditNid", request.getCreditNid());
+		}
+		if (StringUtils.isNotEmpty(request.getBorrowNid())) {
+			param.put("borrowNid", request.getBorrowNid());
+		}
+		if (StringUtils.isNotEmpty(request.getRepayStyle())) {
+			param.put("repayStyle", request.getRepayStyle());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignType())) {
+			param.put("assignType", request.getAssignType());
+		}
+		
+		if (StringUtils.isNotEmpty(request.getTenderType())) {
+			param.put("tenderType", request.getTenderType());
+		}
+		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
+		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
+		HjhCreditTenderSumVO vo = adminHjhCreditTenderCustomizeMapper.getHjhCreditTenderCalcSumByParam(param);
+		return vo;
 	}
 }

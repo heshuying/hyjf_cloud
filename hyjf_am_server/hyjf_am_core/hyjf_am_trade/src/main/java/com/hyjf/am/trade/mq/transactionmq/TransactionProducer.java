@@ -84,7 +84,7 @@ public abstract class TransactionProducer {
 	 * @return
 	 * @throws MQException
 	 */
-	protected LocalTransactionState messageSend(MassageContent messageContent) throws MQException {
+	public LocalTransactionState messageSend(MassageContent messageContent) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);

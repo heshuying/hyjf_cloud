@@ -13,13 +13,9 @@ import com.hyjf.am.resquest.admin.AdminBorrowStyleRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(tags ="配置中心还款方式")
+@Api(tags ="配置中心-还款方式")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowstyle")
 public class BorrowStyleController extends BaseController {
@@ -89,7 +85,7 @@ public class BorrowStyleController extends BaseController {
             return new AdminResult<>(FAIL, result.getMessage());
 
         }
-        return new AdminResult<>();
+        return new AdminResult<AdminBorrowStyleResponse>(result) ;
     }
     @ApiOperation(value = "还款方式修改", notes = "还款方式修改")
     @PostMapping("/updateAction")
@@ -108,15 +104,14 @@ public class BorrowStyleController extends BaseController {
             return new AdminResult<>(FAIL, result.getMessage());
 
         }
-        return new AdminResult<>();
+        return new AdminResult<AdminBorrowStyleResponse>(result) ;
     }
     @ApiOperation(value = "还款方式修改状态", notes = "还款方式修改状态")
-    @PostMapping("/statusAction")
+    @GetMapping("/statusAction/{id}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult modifyBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
+    public AdminResult modifyBorrowStyle(@PathVariable Integer id) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
-        if(from.getId() != null){
-            Integer id = from.getId() ;
+        if(id != null){
             prs = borrowStyleService.modifyBorrowStyle(id);
         }
         if(prs==null) {
@@ -130,13 +125,12 @@ public class BorrowStyleController extends BaseController {
     }
 
     @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
-    @PostMapping("/deleteAction")
+    @GetMapping("/deleteAction/{id}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteBorrowStyle(@RequestBody String id) {
+    public AdminResult deleteBorrowStyle(@PathVariable Integer id) {
         AdminBorrowStyleResponse prs =new AdminBorrowStyleResponse();
-        if(StringUtils.isNotBlank(id)){
-            Integer id2 = Integer.valueOf(id);
-            prs = borrowStyleService.deleteBorrowStyle(id2);
+        if(null != id){
+            prs = borrowStyleService.deleteBorrowStyle(id);
         }
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

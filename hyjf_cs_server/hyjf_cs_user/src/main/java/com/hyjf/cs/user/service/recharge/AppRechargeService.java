@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.recharge;
 
 import com.hyjf.am.vo.config.BankRechargeConfigVo;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
@@ -28,14 +29,5 @@ public interface AppRechargeService extends BaseUserService {
      * @param bankId 主键id
      * @return
      */
-    BankConfigVO getBankConfigByBankId(Integer bankId);
-
-    /**
-     * 根据bankId查询BankRechargeConfig
-     * @auth sunpeikai
-     * @param bankId
-     * @return
-     */
-    BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId);
-
+    JxBankConfigVO getJxBankConfigByBankId(Integer bankId);
 }

@@ -33,4 +33,19 @@ public interface AccountRechargeService extends BaseService {
      */
      AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
 
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @throws Exception
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     */
+    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 }

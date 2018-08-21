@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
+import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
 import com.hyjf.cs.trade.bean.WebCreditRequestBean;
 import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -82,6 +83,7 @@ public class WebProjectListController extends BaseTradeController {
     /**
      * web端新手标和散标标的详情
      * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectDetail()
      * @date 2018/6/22 16:06
      */
     @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")
@@ -92,6 +94,12 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
+    /**
+     * 散标投资记录
+     * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectInvestList()
+     * @date 2018/8/20 14:06
+     */
     @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
     @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
     public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
@@ -209,17 +217,32 @@ public class WebProjectListController extends BaseTradeController {
 
 
     /**
+     * 计划详情标的组成：标的详情
+     * @author zhangyk
+     * @date 2018/8/16 11:01
+     */
+    @ApiOperation(value = "计划详情标的组成：标的详情" , notes = "计划详情标的组成：标的详情")
+    @PostMapping(value = "/hjh/getBorrowDetail", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowDetail(@RequestBody @Valid WebBorrowRequestBean requestBean, @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result  = webProjectListService.getPlanAccedeBorrowDetail(requestBean,userId);
+        return result;
+    }
+
+
+
+
+    /**
      *  计划详情优惠券列表
      * @author zhangyk
      * 原接口：com.hyjf.web.plan.PlanController.getProjectAvailableUserCoupon()----post调用--->com.hyjf.api.web.plan.coupon.PlanCouponServer.getProjectAvailableUserCoupon()
      * @date 2018/8/16 11:01
      */
-    @ApiOperation(value = "计划详情优惠券列表" , notes = "计划详情优惠券列表")
+ /*   @ApiOperation(value = "计划详情优惠券列表" , notes = "计划详情优惠券列表")
     @PostMapping(value = "/getProjectAvailableUserCoupon", produces = "application/json; charset=utf-8")
     public Object getProjectAvailableUserCoupon(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result  = webProjectListService.getProjectAvailableUserCoupon(requestBean,userId);
         return result;
-    }
+    }*/
 
 
 

@@ -112,7 +112,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // ①查询count
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
-        AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
             logger.error("app端查询散标投资列表原子层count异常");
@@ -129,7 +128,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
-                //result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);

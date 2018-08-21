@@ -23,6 +23,8 @@ public interface ContentAdsService {
      */
     boolean insertAction(ContentAdsRequest request);
 
+    ContentAdsResponse infoaction (Integer id);
+
     /**
      * 修改广告管理
      *

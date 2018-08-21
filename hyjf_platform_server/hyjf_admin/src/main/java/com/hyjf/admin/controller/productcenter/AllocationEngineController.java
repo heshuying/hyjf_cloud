@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
  */
-@Api(value = "计划专区列表",tags = "计划专区列表")
+@Api(value = "产品中心-汇计划-标的分配规则引擎",tags = "产品中心-汇计划-标的分配规则引擎")
 @RestController
 @RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{
@@ -70,7 +70,7 @@ public class AllocationEngineController extends BaseController{
      * 画面初始化
      *
      * @param request
-     * @return 标的分配规则引擎列表
+     * @return 标的分配规则引擎列表       已测试
      */
     @ApiOperation(value = "计划专区列表", notes = "计划专区列表初始化")
     @PostMapping(value = "/search")
@@ -102,12 +102,12 @@ public class AllocationEngineController extends BaseController{
     }
     
 	/**
-	 * 计划专区列表 添加/修改 info画面
+	 * 计划专区列表 添加/修改 info画面   不需要
 	 *
 	 * @param request
 	 * @return 
 	 */
-	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
+/*	@ApiOperation(value = "计划专区列表", notes = "生成添加/修改画面")
 	@PostMapping(value = "/reginfo")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -117,10 +117,10 @@ public class AllocationEngineController extends BaseController{
 		// 初始画面没有需要初期化的数据
 		// 计划编号 和 状态
 		return jsonObject;
-	}
+	}*/
 	
 	/**
-	 * 计划专区列表 info画面确认后添加计划到专区
+	 * 计划专区列表 info画面确认后添加计划到专区   已测试
 	 *
 	 * @param request
 	 * @return 
@@ -160,7 +160,8 @@ public class AllocationEngineController extends BaseController{
 		// 插表
 		int flg = this.allocationEngineService.insertRecord(VOrequest);
 		if(flg > 0){
-			success();
+			jsonObject.put("retMsg", SUCCESS_DESC);
+			jsonObject.put("retCode", SUCCESS);
 		}
 		return jsonObject;
 	}
@@ -179,7 +180,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
     /**
-     * 校验入力的计划编号相关AJAX
+     * 校验入力的计划编号相关AJAX   已测试
      *
      * @param planNid
      * @return
@@ -188,9 +189,9 @@ public class AllocationEngineController extends BaseController{
 	@PostMapping(value = "/ajaxcheck")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	@ApiImplicitParam(name = "planNameSrch", value = "计划编号查询", required = true, dataType = "String")
+	/*@ApiImplicitParam(name = "planNidSrch", value = "计划编号查询", required = true, dataType = "String")*/
 	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) {
-		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNameSrch());
+		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNidSrch());
 		if(response==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -201,7 +202,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
     /**
-     * 计划专区停用/启用状态修改
+     * 计划专区停用/启用状态修改   已测试
      *
      * @param planNid
      * @return
@@ -211,7 +212,7 @@ public class AllocationEngineController extends BaseController{
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	// 注意 ：此 id 并非画面序号，而是画面上未显示的 计划专区表主键
-	@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")
+	/*@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")*/
 	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) { // 注意 ：这里的传值可以改为 form 形式
 		HjhRegionResponse response = new HjhRegionResponse();
 		// 修改状态
@@ -241,7 +242,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划专区带条件导出
+	 * 计划专区带条件导出      已测试
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
@@ -320,7 +321,7 @@ public class AllocationEngineController extends BaseController{
 	
 	                                     /*--------以下为计划专区下属 引擎配置画面各项机能----------*/
     /**
-     * 计划专区-计划引擎配置画面初始化
+     * 计划专区-计划引擎配置画面初始化     已测试
      *
      * @param request
      * @return 计划引擎配置列表
@@ -353,7 +354,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
 	/**
-	 * 计划配置画面带条件导出
+	 * 计划配置画面带条件导出      已测试
 	 * @param request
 	 * @return 计划专区带条件导出
 	 */
@@ -439,7 +440,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
     /**
-     * 计划配置画面 停用/启用状态修改
+     * 计划配置画面 停用/启用状态修改    已测试
      *
      * @param planNid
      * @return
@@ -472,7 +473,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划配置画面 添加/修改 初始化info画面
+	 * 计划配置画面 添加/修改 初始化info画面   已测试
 	 *
 	 * @param request
 	 * @return 
@@ -486,24 +487,29 @@ public class AllocationEngineController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		//1.添加计划配置时，往画面放一个隐藏域 planNid
-		if(form.getPlanNidSrch()!= null){
-			jsonObject.put("planNid", form.getPlanNidSrch());
-		}
-		//2.修改计划配置时
-		String planNid = form.getPlanNidSrch();
-		String labelId = form.getLabelId();
-		if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
-			HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
-			jsonObject.put("hjhAllocationEngine", vo);
-		} else {
-			jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+		// 添加或修改 0：添加 1：修改
+		if(viewRequest.getAddOrModify().equals("0")){
+			if(form.getPlanNidSrch()!= null){
+				jsonObject.put("planNid", form.getPlanNidSrch());
+			}
+			return jsonObject;
+		} else if(viewRequest.getAddOrModify().equals("1")){
+			//2.修改计划配置时
+			String planNid = form.getPlanNidSrch();
+			String labelId = form.getLabelId();
+			if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
+				HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
+				jsonObject.put("hjhAllocationEngine", vo);
+			} else {
+				jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+			}
+			return jsonObject;
 		}
 		return jsonObject;
 	}
-	
-	
+
 	/**
-	 * 计划配置info画面入力校验
+	 * 计划配置info画面入力校验   已测试
 	 *
 	 * @param labelName
 	 * @return 
@@ -530,9 +536,10 @@ public class AllocationEngineController extends BaseController{
 			jsonObject.put("status", "n");
 			return jsonObject;
 		}
-		// 校验一个计划下不能用重复的标签名称
-		boolean existflg = this.allocationEngineService.checkRepeat(labelName,planNid);
-		if(!existflg){
+		// 校验一个计划下不能用重复的标签名称 参数 labelName 和 planNid 放在
+		/*boolean existflg = this.allocationEngineService.checkRepeat(form);*/
+		int existflg = this.allocationEngineService.checkRepeat(form);
+		if(existflg>0){
 			jsonObject.put("info", "该标签已经被使用，无法再次添加");
 			jsonObject.put("status", "n");
 			return jsonObject;
@@ -575,7 +582,7 @@ public class AllocationEngineController extends BaseController{
 	}
 	
 	/**
-	 * 计划配置info画面标签排序入力校验
+	 * 计划配置info画面标签排序入力校验   未测试
 	 *
 	 * @param labelName
 	 * @return 

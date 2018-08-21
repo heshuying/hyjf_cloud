@@ -6,9 +6,10 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
-import com.hyjf.cs.trade.bean.BorrowMsgBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -25,6 +26,8 @@ import java.util.Map;
  * @date 2018/7/2 16:37
  */
 public class ProjectConstant {
+
+    private static Logger logger = LoggerFactory.getLogger(ProjectConstant.class);
 
 
      public static final String REQUEST_HOME = "/hyjf-app";
@@ -654,6 +657,7 @@ public class ProjectConstant {
                 }
 
             } catch (Exception e) {
+                logger.error("数据转换异常[{}]",e);
                 continue;
             }
         }

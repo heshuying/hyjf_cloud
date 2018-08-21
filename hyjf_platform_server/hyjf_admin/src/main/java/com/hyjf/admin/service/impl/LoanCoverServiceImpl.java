@@ -205,7 +205,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      */
     @Override
     public CertificateAuthorityVO selectCertificateAuthorityByIdNoName(String strIdNo, String tureName){
-        CertificateAuthorityResponse response = loanCoverClient.selectCertificateAuthorityByIdNoName(strIdNo,tureName);
+        CertificateAuthorityResponse response = loanCoverClient.selectCertificateAuthorityByIdNoName(tureName);
         if(null!=response){
             return  response.getResult();
         }

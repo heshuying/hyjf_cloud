@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
@@ -174,13 +173,13 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     @Override
-    public JSONObject smsLogList() {
-        return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_log/list", JSONObject.class).getBody();
+    public SmsLogResponse smsLogList() {
+        return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_log/list", SmsLogResponse.class).getBody();
     }
 
     @Override
-    public JSONObject findSmsLog(SmsLogRequest request) {
-        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, JSONObject.class)
+    public SmsLogResponse findSmsLog(SmsLogRequest request) {
+        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, SmsLogResponse.class)
                 .getBody();
     }
 

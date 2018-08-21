@@ -75,7 +75,7 @@ public interface ContentArticleService {
      * 取首页公告(风险教育..)列表
      * @return
      */
-    List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit);
+    List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit);
 
 
     /**
@@ -139,4 +139,12 @@ public interface ContentArticleService {
      * @return
      */
     ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset);
+
+    /**
+     * 获取指定Type的文章列表
+     * @param type
+     * @return
+     * @Author : huanghui
+     */
+    List<ContentArticle> getContentArticListByType(String type);
 }

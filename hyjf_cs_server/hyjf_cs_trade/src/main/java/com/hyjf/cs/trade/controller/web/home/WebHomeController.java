@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
  * @author zhangyk
  * @date 2018/7/4 13:47
  */
-@Api(value = "Web端首页",tags = "Web端首页")
+@Api(value = "web端-首页",tags = "web端-首页")
 @RestController
 @RequestMapping("/hyjf-web/home")
 public class WebHomeController {

@@ -295,6 +295,8 @@ public class BorrowCommonController extends BaseController {
 
 		} else {
 			this.borrowCommonService.insertRecord(form,borrowCommonRequest.getAdminUsername(),borrowCommonRequest.getAdminId());
+			// 插入borrow的标的判断是否自动备案
+            this.borrowCommonService.isAutoRecord(form.getBorrowPreNid());
 		}
 		// 列表迁移
         BorrowCommonVO vo=new BorrowCommonVO();
@@ -498,8 +500,8 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
 	@RequestMapping("/getBorrowServiceScale")
-	public String getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
-		String scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest.getProjectType(),borrowCommonRequest.getChargeTimeType(),borrowCommonRequest.getInstCode(),borrowCommonRequest.getChargeTime());
+	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
+		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
 		return scale;
 	}
 

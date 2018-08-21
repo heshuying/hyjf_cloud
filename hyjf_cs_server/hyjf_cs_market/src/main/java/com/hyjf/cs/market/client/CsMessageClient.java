@@ -5,6 +5,8 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 
+import java.math.BigDecimal;
+
 /**
  * @author fuqiang
  * @version CsMessageClient, v0.1 2018/7/18 13:56
@@ -22,4 +24,22 @@ public interface CsMessageClient {
      * @return
      */
     String getTotalInvestmentAmount();
+    /**
+     * 累计投资总额
+     * @return
+     */
+    BigDecimal selectTenderSum();
+
+    /**
+     * 累计收益
+     * @return
+     */
+    BigDecimal selectInterestSum();
+
+    /**
+     * 累计投资笔数
+     * @return
+     */
+    int selectTotalTenderSum();
+
 }
