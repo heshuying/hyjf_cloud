@@ -489,13 +489,6 @@ public interface AmUserClient {
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
-	 * 获取用户表总记录数
-	 *
-	 * @return
-	 */
-	Integer countAllUser();
-
-	/**
 	 * 插入各种信息
 	 * @param userActionUtmRequest
 	 * @return

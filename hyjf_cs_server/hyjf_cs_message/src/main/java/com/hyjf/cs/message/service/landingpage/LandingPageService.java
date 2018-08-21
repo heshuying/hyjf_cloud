@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.message.service.landingpage;
 
+import com.hyjf.cs.message.result.LandingPageResulltVO;
+
 import java.math.BigDecimal;
 
 /**
@@ -16,4 +18,6 @@ public interface LandingPageService {
      * @return
      */
     BigDecimal selectInterestSum();
+
+    LandingPageResulltVO getUserData();
 }
