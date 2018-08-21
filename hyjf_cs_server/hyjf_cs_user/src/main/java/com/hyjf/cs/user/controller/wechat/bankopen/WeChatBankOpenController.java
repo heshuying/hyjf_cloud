@@ -18,6 +18,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,21 +51,23 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @GetMapping(value = "/initopen")
     @ResponseBody
-    public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId) {
+    public Map userInfo(@RequestHeader(value = "userId") int userId) {
         logger.info("openAccount userInfo start, userId is :{}", userId);
-        WeChatResult<String> result = new WeChatResult<String>();
+        Map<String,String> result = new HashedMap();
         UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
-            logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
+            logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setData(mobile);
+            result.put("phone",mobile);
+            result.put("status","000");
+            result.put("statusDesc","操作成功");
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
+            result.put("status","99");
+            result.put("statusDesc","操作失败");
         }
         return result;
     }
