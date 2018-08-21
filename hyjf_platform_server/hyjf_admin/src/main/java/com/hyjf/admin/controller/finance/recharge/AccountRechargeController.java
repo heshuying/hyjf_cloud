@@ -246,7 +246,6 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理", notes = "资金中心->更新充值状态")
     @PostMapping(value = "/modifyRechargeStatus")
-    @ResponseBody
     public JSONObject modifyRechargeStatus(@RequestBody AccountRechargeRequestBean requestBean){
 
         JSONObject jsonObject = new JSONObject();
@@ -264,14 +263,15 @@ public class AccountRechargeController extends BaseController {
 
         //更新充值状态
         boolean isAccountUpdate = this.rechargeService.updateRechargeStatus(userId, nid);
+        String status= BaseResult.SUCCESS;
         if (isAccountUpdate){
-            jsonObject.put("status", BaseResult.SUCCESS);
+            status = BaseResult.SUCCESS;
             jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
         }else {
-            jsonObject.put("status", Response.FAIL);
+            status = Response.FAIL;
             jsonObject.put("statusDesc", Response.FAIL_MSG);
         }
-
+        jsonObject.put("status", status);
         return jsonObject;
     }
 
