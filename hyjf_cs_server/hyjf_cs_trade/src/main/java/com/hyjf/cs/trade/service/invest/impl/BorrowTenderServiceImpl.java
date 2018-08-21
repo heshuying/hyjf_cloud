@@ -31,6 +31,7 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -689,6 +690,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         df.setRoundingMode(RoundingMode.FLOOR);
         BigDecimal couponInterest = BigDecimal.ZERO;
         BigDecimal borrowInterest = new BigDecimal(0);
+
+        String investType = tender.getBorrowNid().substring(0, 3);
+
         // 查询项目信息
         String money = tender.getAccount();
         // 优惠券总张数
@@ -914,10 +918,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
         investInfo.setStandardValues("");
+
+        // 投资协议
+        this.setProtocolsToResultVO(investInfo,investType);
+
         // 前端要求改成bean，不要封装
 /*        AppResult<AppInvestInfoResultVO> result = new AppResult();
         result.setData(investInfo);*/
         return investInfo;
+    }
+    /**
+     * 投资协议列表
+     * @param investInfo
+     * @param investType
+     */
+    private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
+        List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"agreement/AgreementViewList?borrowType="+investType);
+        list.add(newAgreementBean);
+        investInfo.setProtocols(list);
+        investInfo.setProtocolUrlDesc("协议列表");
     }
 
     /**
