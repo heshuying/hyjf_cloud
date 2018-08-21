@@ -5,6 +5,8 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,4 +35,19 @@ public interface AppMyProjectService extends BaseTradeService {
     Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
 
     JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) ;
+    
+    /**
+     * @author libin
+     * App端:发送短信验证码(ajax请求)短信验证码数据保存(取自web)
+     */
+    AppResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId);
+    
+	/**
+     * 债转提交保存
+     * @author libin
+     * @param request
+     * @param userId
+     * @return
+     */
+    AppResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
 }

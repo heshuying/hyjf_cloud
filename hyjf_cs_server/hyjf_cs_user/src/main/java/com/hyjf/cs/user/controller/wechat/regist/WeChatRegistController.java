@@ -95,13 +95,13 @@ public class WeChatRegistController extends BaseUserController {
     /**
      * 注册
      * @param request
-     * @param response
+     * @param
      * @return
      * @throws UnsupportedEncodingException
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/registAction.do")
-    public UserRegistResult registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    public UserRegistResult registAction(HttpServletRequest request) throws UnsupportedEncodingException {
         UserRegistResult ret = new UserRegistResult();
         ret.setRequest("/registAction");
         // 手机号
@@ -121,7 +121,7 @@ public class WeChatRegistController extends BaseUserController {
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
        ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
-        if(null!=ret.getStatus()){
+        if(null!=ret.getStatus()&&!ret.getStatus().equals("000")){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));

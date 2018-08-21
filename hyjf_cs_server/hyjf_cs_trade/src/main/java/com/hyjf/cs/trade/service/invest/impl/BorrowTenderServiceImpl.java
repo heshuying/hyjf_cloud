@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -680,7 +682,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender) {
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
 
         AppInvestInfoResultVO investInfo = new AppInvestInfoResultVO();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
@@ -867,6 +869,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
 
+        investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
         investInfo.setBalance(CommonUtils.formatAmount(null, balance));
@@ -882,7 +887,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = investInfo.getBorrowAccountWait().replace(",", "");
-            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+            logger.info("borrow.getTenderAccountMax()=[{}],borrowAccountWaitStr=[{}]",borrowInfo.getTenderAccountMax(),borrowAccountWaitStr);
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 investInfo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
@@ -908,9 +914,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
         investInfo.setStandardValues("");
-        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);
-        return result;
+        // 前端要求改成bean，不要封装
+/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
+        result.setData(investInfo);*/
+        return investInfo;
+    }
+
+    /**
+     * app端获取投资url
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public ModelAndView getAppTenderUrl(TenderRequest tender) {
+        String url = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+        ModelAndView mv = new ModelAndView("redirect:"+url);
+        return mv;
     }
 
     /**

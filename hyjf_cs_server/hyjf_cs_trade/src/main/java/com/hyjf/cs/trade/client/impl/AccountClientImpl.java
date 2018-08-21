@@ -53,28 +53,6 @@ public class AccountClientImpl implements AccountClient {
     }
 
     @Override
-    public int countAccountWebList(String nid, String trade) {
-        AccountWebListResponse result = restTemplate.getForEntity(
-                "http://CS-MESSAGE/cs-message/accountweblist/countaccountweblist/"+ nid + "/" + trade,
-                AccountWebListResponse.class).getBody();
-        if (result == null) {
-            return result.getRecordTotal();
-        }
-        return 0;
-    }
-
-    @Override
-    public int insertAccountWebList(AccountWebListVO accountWebList) {
-        AccountWebListResponse result = restTemplate.postForEntity(
-                "http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist",accountWebList,
-                AccountWebListResponse.class).getBody();
-        if (result == null) {
-            return result.getRecordTotal();
-        }
-        return 0;
-    }
-
-    @Override
     public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
         BankMerchantAccountResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,

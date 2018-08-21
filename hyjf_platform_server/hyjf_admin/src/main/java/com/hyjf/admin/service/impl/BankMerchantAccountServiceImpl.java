@@ -22,7 +22,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.*;
