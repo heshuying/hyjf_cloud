@@ -680,7 +680,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender) {
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
 
         AppInvestInfoResultVO investInfo = new AppInvestInfoResultVO();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
@@ -909,9 +909,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
         investInfo.setStandardValues("");
-        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);
-        return result;
+        // 前端要求改成bean，不要封装
+/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
+        result.setData(investInfo);*/
+        return investInfo;
     }
 
     /**
