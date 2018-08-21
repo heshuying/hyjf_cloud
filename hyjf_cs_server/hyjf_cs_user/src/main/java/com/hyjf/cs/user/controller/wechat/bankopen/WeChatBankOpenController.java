@@ -46,7 +46,7 @@ public class WeChatBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
-    @PostMapping(value = "/initopen")
+    @GetMapping(value = "/initopen")
     @ResponseBody
     public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId) {
         logger.info("openAccount userInfo start, userId is :{}", userId);
