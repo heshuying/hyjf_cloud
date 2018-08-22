@@ -49,7 +49,7 @@ public class AccountBalanceMonitoringController {
                 List<MerchantAccountVO> merchantAccountVOList = CommonUtils.convertBeanList(recordList, MerchantAccountVO.class);
                 merchantAccountVOList=this.forback(merchantAccountVOList);
                 response.setResultList(merchantAccountVOList);
-                response.setRecordTotal(recordList.size());
+                response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
                 return response;
             }
