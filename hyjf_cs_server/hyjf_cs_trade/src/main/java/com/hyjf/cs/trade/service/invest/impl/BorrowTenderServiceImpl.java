@@ -873,7 +873,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
         investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
-
+        // 安卓的历史回报使用这个字段
+        investInfo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)));
         investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
@@ -914,7 +915,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setAnnotation("");
 
         // 设置无用的东西 不给app返回null
-        investInfo.setProspectiveEarnings("");
+
         investInfo.setEndTime("");
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
