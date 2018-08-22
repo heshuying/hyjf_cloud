@@ -659,7 +659,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if (userEvalationResult != null && userEvalationResult.size() > 0) {
 			return userEvalationResult.get(0);
 		} else {
-			return null;
+			return new UserEvalationResult();
 		}
 	}
 
@@ -847,10 +847,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
 		deleteUserEvalationResultByUserId(userId);
-		String[] answer = userAnswer.split(",");
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
 		if (!Strings.isNullOrEmpty(userAnswer)) {
+			String[] answer = userAnswer.split(",");
 			for (String string : answer) {
 				if (string.split("_").length == 2) {
 					questionList.add(string.split("_")[0]);
