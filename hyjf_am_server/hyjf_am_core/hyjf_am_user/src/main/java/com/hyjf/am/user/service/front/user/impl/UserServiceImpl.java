@@ -663,7 +663,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if (userEvalationResult != null && userEvalationResult.size() > 0) {
 			return userEvalationResult.get(0);
 		} else {
-			return new UserEvalationResult();
+			return null;
 		}
 	}
 
