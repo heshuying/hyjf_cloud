@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
@@ -22,6 +23,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,8 @@ public class MessagePushTemplateController extends BaseController {
     private MessagePushTemplateService messagePushTemplateService;
     @Autowired
     private MessagePushTagService messagePushTagService;
+    @Autowired
+    private ActivityListService activityListService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -269,53 +273,19 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        String fileDomainUrl = FILEDOMAINURL;
-        String filePhysicalPath = FILEPHYSICALPATH;
-        String fileUploadTempPath = FILEUPLOADTEMPPATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
-        }
-
-        BorrowCommonImageVO fileMeta = null;
-        LinkedList<BorrowCommonImageVO> files = new LinkedList<BorrowCommonImageVO>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            // 图片上传
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImageVO();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            String s = activityListService.uploadFile(request, response);
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(s)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
-                fileMeta.setImageName(originalFilename);
+                return new AdminResult<>(FAIL, FAIL_DESC);
             }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return JSONObject.toJSONString(files, true);
     }
+
 
     /**
      * @param request

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.CallcenterConfigCustomizeMapper">
+
+	<resultMap id="ConfigMap" type="com.hyjf.am.config.dao.model.customize.CallcenterBankConfigCustomize">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="bankName" property="bankName" jdbcType="VARCHAR" />
+		<result column="bankCode" property="bankCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getBankConfigList" resultMap="ConfigMap" parameterType="com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest">
+		SELECT
+			config.id,
+			config.name AS bankName,
+			config.code AS bankCode
+		FROM
+			ht_bank_config config
+		ORDER BY config.id DESC
+	</select>
+</mapper>

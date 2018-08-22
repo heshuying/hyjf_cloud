@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper">
+	<resultMap id="selectLeftMenuTreeMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		<result column="menu_puuid" property="menuPuuid" jdbcType="VARCHAR" />
+		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="menu_url" property="menuUrl" jdbcType="VARCHAR" />
+		<result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
+		<result column="menu_sort" property="menuSort" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectLeftMenuTree" resultMap="selectLeftMenuTreeMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		SELECT DISTINCT
+			m.menu_puuid AS menu_puuid,
+			m.menu_uuid AS menu_uuid,
+			m.menu_name AS menu_name,
+			m.menu_url AS menu_url,
+			m.menu_icon AS menu_icon,
+			m.menu_sort AS menu_sort
+		FROM
+			ht_admin a
+			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
+			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id 
+			AND ar.del_flag = '0'
+			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
+			AND mp.del_flag = '0'
+			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			AND m.del_flag = '0'
+			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
+			AND p.del_flag = '0'
+			AND m.menu_hide = '0'
+		WHERE
+		  a.id = #{id, jdbcType=VARCHAR}
+	    AND p.permission = #{permission, jdbcType=VARCHAR}
+		AND m.menu_hide = '0'
+		AND a.state = '0'
+		AND a.del_flag = '0'
+		ORDER BY
+			m.menu_sort ASC
+	</select>
+
+	<resultMap id="getUserPermissionResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		<result column="menu_ctrl" property="menuCtrl" jdbcType="VARCHAR" />
+		<result column="permission" property="permission" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getUserPermission" resultMap="getUserPermissionResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		SELECT DISTINCT
+		  CASE WHEN m.menu_ctrl IS NULL OR m.menu_ctrl = '' THEN m.menu_uuid ELSE m.menu_ctrl END AS menu_ctrl,
+	      p.permission
+		FROM
+			ht_admin a
+			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
+			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id and ar.status = '1'
+			AND ar.del_flag = '0'
+			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
+			AND mp.del_flag = '0'
+			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			AND m.del_flag = '0'
+			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
+			AND p.del_flag = '0'
+		WHERE
+		    a.id = #{id, jdbcType=VARCHAR}
+		    AND a.state = '0'
+		    AND a.del_flag = '0'
+	</select>
+
+	<resultMap id="UserInfoResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="truename" property="truename" jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getUserInfo" resultMap="UserInfoResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		SELECT DISTINCT
+		  a.id,
+		  a.username,
+		  a.truename,
+		  anr.role_id,
+		  a.state
+		FROM
+		  ht_admin a
+		  LEFT JOIN ht_admin_and_role anr ON a.id = anr.user_id
+		WHERE
+		  a.username = #{username, jdbcType=VARCHAR}
+		<if test="password != null and password != ''">
+			AND a.password = #{password, jdbcType=VARCHAR}
+		</if>
+		<if test="state != 'NOT CHECK'">
+			AND a.state = '0'
+		</if>
+	    AND a.del_flag = '0'
+	</select>
+	<select id="getUserInfoById" resultMap="UserInfoResultMap" parameterType="Integer">
+		SELECT DISTINCT
+		a.id,
+		a.username,
+		a.truename,
+		anr.role_id,
+		a.state
+		FROM
+		ht_admin a
+		LEFT JOIN ht_admin_and_role anr ON a.id = anr.user_id
+		WHERE
+		a.id = #{id}
+		AND a.del_flag = '0'
+	</select>
+	<select id="updatePassword" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		update 
+		  ht_admin a
+		  set a.password=#{password, jdbcType=VARCHAR}
+		WHERE
+		  a.id = #{id, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectByUsername" parameterType="string" resultType="com.hyjf.am.config.dao.model.auto.Admin">
+		SELECT
+			*
+		FROM
+			ht_admin a
+		WHERE
+			username = #{username} 
+	</select>
+</mapper>

@@ -952,6 +952,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     public ModelAndView getAppTenderUrl(TenderRequest tender) {
         String url = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+        logger.info("url:[{}]",url);
         ModelAndView mv = new ModelAndView("redirect:"+url);
         return mv;
     }

@@ -561,4 +561,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<BorrowCustomizeVO> list = borrowCustomizeMapper.selectUnDealBorrowBeforeLiquidate();
         return list;
     }
+
+	@Override
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.exportBorrowList(BorrowCommonCustomizeVO);
+	}
 }
