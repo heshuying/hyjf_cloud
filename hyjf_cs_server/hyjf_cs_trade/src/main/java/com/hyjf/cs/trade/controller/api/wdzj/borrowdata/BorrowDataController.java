@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +34,7 @@ import java.util.Map;
  * @version BorrowDataController, v0.1 2018/7/16 15:04
  */
 @Api(tags = "api端-网贷之家标的列表接口")
-@Controller
+@RestController
 @RequestMapping("/hyjf-api/wdzj/borrowdata")
 public class BorrowDataController extends BaseController {
     @Autowired
