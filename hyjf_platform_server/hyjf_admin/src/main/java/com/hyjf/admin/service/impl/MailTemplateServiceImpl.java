@@ -48,7 +48,7 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     }
 
     @Override
-    public int openAction(MailTemplateRequest request) {
+    public int updateStatus(MailTemplateRequest request) {
         return amConfigClient.openAction(request);
     }
 
