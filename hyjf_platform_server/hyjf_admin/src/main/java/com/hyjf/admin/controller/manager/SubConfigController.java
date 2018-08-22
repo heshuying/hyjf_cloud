@@ -7,13 +7,13 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SubConfigService;
-import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import com.hyjf.am.vo.trade.SubCommissionListConfigVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author by xiehuili on 2018/7/9.
  * @version SubConfigController, v0.1 2018/7/9.
  */
-@Api(tags ="配置中心分账-名单配置")
+@Api(tags ="配置中心-分账名单配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/subconfig")
 public class SubConfigController extends BaseController {
@@ -86,8 +86,8 @@ public class SubConfigController extends BaseController {
         JSONObject json =new JSONObject();
         //表单字段校验
         json = this.validatorFieldCheck(json, adminRequest);
-        if (AdminValidatorFieldCheckUtil.hasValidateError(json)) {
-            return new AdminResult<>(FAIL, "校验失败");
+        if (json.size() > 0) {
+            return new AdminResult<>(FAIL, json.toString());
         }
         AdminSubConfigResponse result= subConfigService.insertSubConfig(adminRequest);
         if (result == null) {
@@ -139,21 +139,41 @@ public class SubConfigController extends BaseController {
      */
     private JSONObject validatorFieldCheck(JSONObject jsonObject, AdminSubConfigRequest form) {
         // 用户名
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "username", form.getUsername());
+        if(StringUtils.isBlank(form.getUsername())){
+            jsonObject.put("userName","userName不能为空！");
+            return jsonObject;
+        }
         //姓名
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "truename", String.valueOf(form.getTruename()));
+        if(StringUtils.isBlank(form.getTruename())){
+            jsonObject.put("truename","truename不能为空！");
+            return jsonObject;
+        }
         //用户角色
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "roleName", form.getRoleName());
+        if(StringUtils.isBlank(form.getRoleName())){
+            jsonObject.put("roleName","roleName不能为空！");
+            return jsonObject;
+        }
         //用户类型
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "userType", form.getUserType());
+        if(StringUtils.isBlank(form.getUserType())){
+            jsonObject.put("userType","userType不能为空");
+            return jsonObject;
+        }
         //银行开户状态
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "bankOpenAccount", form.getBankOpenAccount());
+        if(StringUtils.isBlank(form.getBankOpenAccount())){
+            jsonObject.put("bankOpenAccount","bankOpenAccount不能为空");
+            return jsonObject;
+        }
         //江西银行电子账号
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "account", form.getAccount());
+        if(StringUtils.isBlank(form.getAccount())){
+            jsonObject.put("account","account不能为空");
+            return jsonObject;
+        }
         // 用户状态
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "status", String.valueOf(form.getStatus()));
+        if(StringUtils.isBlank(String.valueOf(form.getStatus()))){
+            jsonObject.put("status","status不能为空");
+            return jsonObject;
+        }
         return jsonObject;
-
     }
 
 }

@@ -1662,15 +1662,11 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request) {
-        SmsTemplateResponse response = restTemplate
+    public SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request) {
+        return restTemplate
                 .postForEntity("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplate", request,
                         SmsTemplateResponse.class)
                 .getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
     }
 
     @Override

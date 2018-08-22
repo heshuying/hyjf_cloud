@@ -146,6 +146,36 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@ApiOperation(value = "根据ID获取公司历程详情", notes = "信息披露 - 公司历程")
+	@GetMapping(value = "getEventDetailById/{id}")
+	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable Integer id){
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// ID不 能为空
+		if (id <= 0 || id == null){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+			return result;
+		}
+
+		try {
+			EventVO eventVO = this.aboutUsService.getEventDetailById(id);
+			resultMap.put("eventNotice", eventVO);
+			result.setData(resultMap);
+		}catch (Exception e){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+		}
+		return result;
+	}
+
 	@ApiOperation(value = "信息披露", notes = "根据id获取网站公告")
 	@GetMapping("/events/{id}")
 	public WebResult<Map<String, Object>> getCompanyNoticeDetail(@PathVariable Integer id) {

@@ -1006,7 +1006,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request);
+	SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 新增短信模版
