@@ -336,4 +336,9 @@ public class RedisConstants {
      * 担保机构批量还款防并发key
      */
     public static final String CONCURRENCE_BATCH_ORGREPAY_USERID = "batchOrgRepayUserid:";
+
+    /**
+     * 线下充值类型
+     */
+    public static final String UNDER_LINE_RECHARGE_TYPE = "UNDER_LINE_RECHARGE_TYPE";
 }
