@@ -2,11 +2,10 @@ package com.hyjf.am.trade.controller.admin.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
-import com.hyjf.am.response.admin.AdminInstConfigListResponse;
-import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
+import com.hyjf.am.response.admin.AdminPartnerConfigDetailResponse;
+import com.hyjf.am.resquest.admin.AdminPartnerConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.front.config.InstConfigService;
+import com.hyjf.am.trade.service.front.config.PartnerConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -34,29 +33,29 @@ import java.util.List;
  * @version InstConfigController, v0.1 2018/7/5.
  */
 @RestController
-@RequestMapping("/am-trade/config/instconfig")
-public class InstConfigController {
+@RequestMapping("/am-trade/config/partnerconfig")
+public class PartnerConfigController {
 
     @Autowired
-    private InstConfigService instConfigService;
-    private static Logger logger = LoggerFactory.getLogger(InstConfigController.class);
+    private PartnerConfigService partnerConfigService;
+    private static Logger logger = LoggerFactory.getLogger(PartnerConfigController.class);
 
     /**
      * 分页查询配置中心保证金配置列表
      * @return
      */
     @RequestMapping("/list")
-    public AdminInstConfigDetailResponse instConfigInitByPage( @RequestBody AdminInstConfigListRequest adminRequest) {
-        logger.info("保证金配置列表..." + JSONObject.toJSON(adminRequest));
-        AdminInstConfigDetailResponse  response =new AdminInstConfigDetailResponse();
+    public AdminPartnerConfigDetailResponse instConfigInitByPage(@RequestBody AdminPartnerConfigListRequest adminRequest) {
+        logger.info("合作机构配置列表..." + JSONObject.toJSON(adminRequest));
+        AdminPartnerConfigDetailResponse  response =new AdminPartnerConfigDetailResponse();
         List<HjhInstConfigWrapVo> resList = new ArrayList<>();
-        //查询保证金配置条数
-        List<HjhInstConfig> recordList = this.instConfigService.instConfigInitByPage(-1,-1);
+        //查询合作机构配置条数
+        List<HjhInstConfig> recordList = this.partnerConfigService.instConfigInitByPage(-1,-1);
         if (!CollectionUtils.isEmpty(recordList)) {
             response.setRecordTotal(recordList.size());
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize() == 0? 10 :adminRequest.getPageSize());
             //查询记录
-            recordList =instConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
+            recordList =partnerConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
             for(HjhInstConfig instConfigVO:recordList){
                 HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
                 BeanUtils.copyProperties(instConfigVO, recordWrap);
@@ -70,7 +69,6 @@ public class InstConfigController {
                 }
                 resList.add(recordWrap);
             }
-
             response.setResultList(resList);
             response.setRtn(Response.SUCCESS);
             return response;
@@ -83,10 +81,10 @@ public class InstConfigController {
      * @return
      */
     @RequestMapping("/info")
-    public AdminInstConfigDetailResponse instConfigInfoById(@RequestBody @Valid AdminInstConfigListRequest adminRequest) {
-        AdminInstConfigDetailResponse response = new AdminInstConfigDetailResponse();
+    public AdminPartnerConfigDetailResponse instConfigInfoById(@RequestBody @Valid AdminPartnerConfigListRequest adminRequest) {
+        AdminPartnerConfigDetailResponse response = new AdminPartnerConfigDetailResponse();
         if (StringUtils.isNotEmpty(adminRequest.getIds())) {
-            HjhInstConfig record = this.instConfigService.getInstConfigRecordById(adminRequest.getIds());
+            HjhInstConfig record = this.partnerConfigService.getInstConfigRecordById(adminRequest.getIds());
             HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
             if(null != record){
                 BeanUtils.copyProperties(record, recordWrap);
@@ -110,14 +108,14 @@ public class InstConfigController {
     }
 
     /**
-     * 添加保证金配置
+     * 添加合作机构配置
      * @param req
      */
     @RequestMapping("/insert")
-    public AdminInstConfigListResponse insertInstConfig(@RequestBody AdminInstConfigListRequest req) {
-        AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
+    public AdminPartnerConfigDetailResponse insertInstConfig(@RequestBody AdminPartnerConfigListRequest req) {
+        AdminPartnerConfigDetailResponse resp = new AdminPartnerConfigDetailResponse();
         String instCode = GetCode.generateInstCode(8);
-        int result =this.instConfigService.insertInstConfig(req,instCode);
+        int result =this.partnerConfigService.insertInstConfig(req,instCode);
         if(result > 0 && req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)){
             RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instCode, req.getCapitalToplimit().toString());
             resp.setRtn(Response.SUCCESS);
@@ -129,17 +127,17 @@ public class InstConfigController {
     }
 
     /**
-     * 修改保证金配置
+     * 修改合作机构配置
      * @param req
      */
     @RequestMapping("/update")
-    public AdminInstConfigListResponse updateInstConfig(@RequestBody AdminInstConfigListRequest req) {
-        AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
+    public AdminPartnerConfigDetailResponse updateInstConfig(@RequestBody AdminPartnerConfigListRequest req) {
+        AdminPartnerConfigDetailResponse resp = new AdminPartnerConfigDetailResponse();
         HjhInstConfig instConfig = null;
         if(req.getId() != null ){
-            instConfig = this.instConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
+            instConfig = this.partnerConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
         }
-        int result = instConfigService.updateInstConfigRecordById(req);
+        int result = partnerConfigService.updateInstConfigRecordById(req);
         // 更新redis中的可用余额
         if(result > 0 && !req.getCapitalToplimit(). equals(instConfig.getCapitalToplimit())){
             if(!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instConfig.getInstCode())){
@@ -160,13 +158,13 @@ public class InstConfigController {
         return  resp;
     }
     /**
-     * 删除保证金配置
+     * 删除合作机构配置
      * @param req
      */
     @RequestMapping("/delete")
-    public AdminInstConfigListResponse deleteInstConfigById(@RequestBody AdminInstConfigListRequest req) {
-        AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
-        this.instConfigService.deleteInstConfig(req);
+    public AdminPartnerConfigDetailResponse deleteInstConfigById(@RequestBody AdminPartnerConfigListRequest req) {
+        AdminPartnerConfigDetailResponse resp = new AdminPartnerConfigDetailResponse();
+        this.partnerConfigService.deleteInstConfig(req);
         resp.setRtn(Response.SUCCESS);
         return resp;
     }

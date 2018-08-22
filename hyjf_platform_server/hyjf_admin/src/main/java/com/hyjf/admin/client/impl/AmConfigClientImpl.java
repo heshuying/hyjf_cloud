@@ -1670,8 +1670,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void insertSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Object.class);
+    public int insertSmsTemplate(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Integer.class);
     }
 
     /**
@@ -2291,8 +2291,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void openSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, SmsTemplateResponse.class);
+    public int updateStatus(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, Integer.class);
     }
 
     @Override
@@ -2301,8 +2301,17 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void updateSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, SmsTemplateResponse.class);
+    public int updateSmsTemplate(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, Integer.class);
+    }
+
+    @Override
+    public SmsTemplateVO selectSmsTemByTplCode(String tplCode) {
+        SmsTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode, SmsTemplateResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override

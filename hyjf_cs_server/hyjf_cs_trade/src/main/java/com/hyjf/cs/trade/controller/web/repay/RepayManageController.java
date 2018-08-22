@@ -5,15 +5,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.TradeConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
@@ -24,6 +28,8 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
 import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
@@ -49,6 +55,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 还款管理相关页面接口
@@ -59,8 +66,20 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-web/repay")
 public class RepayManageController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(RepayManageController.class);
+    /** 用户ID */
+    private static final String VAL_USERID = "userId";
+    /**总还款数量*/
+    private static final String VAL_ALLCOUNT = "allCount";
+    /**成功数量*/
+    private static final String VAL_SUCCESSCOUNT = "successCount";
+    /**失败数量*/
+    private static final String VAL_FAILCOUNT = "failCount";
 
+    // 根据用户ID和模版号给某用户发短信
+    public static final String SMSSENDFORUSER = "smsSendForUser";
+
+    @Autowired
+    SmsProducer smsProducer;
     @Autowired
     RepayManageService repayManageService;
 
@@ -715,27 +734,33 @@ public class RepayManageController extends BaseTradeController {
      * @param allRepaySize
      */
     private void sendMessage(int allRepaySize, int successRepaySize,int userid) {
-//        Map<String, String> msg = new HashMap<String, String>();
-//        msg.put(VAL_ALLCOUNT, allRepaySize + "");// 所有还款项目
-//        msg.put(VAL_SUCCESSCOUNT, successRepaySize + "");//成功还款项目
-//        msg.put(VAL_FAILCOUNT, (allRepaySize - successRepaySize) + "");//成功还款项目
-//        msg.put(VAL_USERID, String.valueOf(userid));
-//        if (Validator.isNotNull(msg.get(VAL_USERID))) {
-//            Users users = repayService.getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//            if (users == null) {
-//                return;
-//            } else {
-//                if (allRepaySize == successRepaySize) {//全部成功
-//                    SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYALL_SUCCESS,
-//                            CustomConstants.CHANNEL_TYPE_NORMAL);
-//                    smsProcesser.gather(smsMessage);
-//                }else{
-//                    SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
-//                            CustomConstants.CHANNEL_TYPE_NORMAL);
-//                    smsProcesser.gather(smsMessage);
-//                }
-//            }
-//        }
+        Map<String, String> msg = new HashMap<String, String>();
+        msg.put(VAL_ALLCOUNT, allRepaySize + "");// 所有还款项目
+        msg.put(VAL_SUCCESSCOUNT, successRepaySize + "");//成功还款项目
+        msg.put(VAL_FAILCOUNT, (allRepaySize - successRepaySize) + "");//成功还款项目
+        msg.put(VAL_USERID, String.valueOf(userid));
+        if (Validator.isNotNull(msg.get(VAL_USERID))) {
+            try {
+                UserVO users = repayManageService.getUserByUserId(Integer.valueOf(msg.get(VAL_USERID)));
+                if (users == null) {
+                    return;
+                } else {
+                    if (allRepaySize == successRepaySize) {//全部成功
+                        SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYALL_SUCCESS,
+                                CustomConstants.CHANNEL_TYPE_NORMAL);
+                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                                UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    }else{
+                        SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
+                                CustomConstants.CHANNEL_TYPE_NORMAL);
+                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                                UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    }
+                }
+            } catch (MQException e) {
+                logger.error("垫付机构还款申请完成，发送短信异常", e);
+            }
+        }
     }
 
     private boolean comperToOrgUserBalance(Integer userId, String accountId,  BigDecimal repayTotal) {

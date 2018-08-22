@@ -43,7 +43,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
      * 查询交易明细最小的id
      */
     @Override
-    public AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId) {
+    public AdminAccountDetailDataRepairResponse getdetailDataRepair(int userId) {
         AdminAccountDetailDataRepairResponse accountResponse = accountDetailClient.accountdetailDataRepair(userId);
         return accountResponse;
     }

@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -126,7 +127,7 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
     public void setUpdateUser(Integer updateUser) {
         this.updateUser = updateUser;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -134,7 +135,7 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
