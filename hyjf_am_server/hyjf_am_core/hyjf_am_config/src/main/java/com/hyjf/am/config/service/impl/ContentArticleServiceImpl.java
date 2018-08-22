@@ -57,6 +57,46 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         return list;
     }
 
+
+    /**
+     *
+     * 获取公司公告件数
+     * @author liuyang
+     * @param noticeType
+     * @return
+     */
+    @Override
+    public int getNoticeListCount(String noticeType) {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        return contentArticleMapper.countByExample(example);
+    }
+
+    /**
+     *
+     * 获取公司公告列表
+     * @author liuyang
+     * @param noticeType
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Override
+    public List<ContentArticle> searchNoticeList(String noticeType, int offset, int limit) {
+        ContentArticleExample example = new ContentArticleExample();
+        if (offset != -1) {
+            example.setLimitStart(offset);
+            example.setLimitEnd(limit);
+        }
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        example.setOrderByClause("create_time Desc");
+        List<ContentArticle> contentArticles = contentArticleMapper.selectByExample(example);
+        return contentArticles;
+    }
     /**
      * 分页查询
      *

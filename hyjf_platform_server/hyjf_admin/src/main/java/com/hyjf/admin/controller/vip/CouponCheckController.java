@@ -61,7 +61,7 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @GetMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteCheckList(@PathVariable String ids) {
+    public AdminResult deleteCheckList(@RequestParam String ids) {
         AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
@@ -88,7 +88,7 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction")
-    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
+    public AdminResult downloadFile(HttpServletResponse response, @RequestParam String id) {
         couponCheckService.downloadFile(id, response);
         return new AdminResult<>();
     }

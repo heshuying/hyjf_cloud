@@ -609,19 +609,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public String getFiledMess(String logOrdId) {
-        //根据ordid获取retcode
-        String retCode = amDataCollectClient.getRetCode(logOrdId);
-        if (retCode==null){
-            return "未知错误";
-        }
-        //根据retCode获取retMsg
-        String retMsg = this.getBankRetMsg(retCode);
-        return retMsg;
-
-    }
-
-    @Override
     public Map<String, Object> setAppPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
         bean.setChannel(BankCallConstant.CHANNEL_APP);

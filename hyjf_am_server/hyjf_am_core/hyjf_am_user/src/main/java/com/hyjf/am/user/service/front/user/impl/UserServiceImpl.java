@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -20,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
+	@Autowired
+	QianleUserCustomizeMapper qianleUserCustomizeMapper;
 
 	/**
 	 * 注册
@@ -659,7 +663,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if (userEvalationResult != null && userEvalationResult.size() > 0) {
 			return userEvalationResult.get(0);
 		} else {
-			return null;
+			return new UserEvalationResult();
 		}
 	}
 
@@ -847,10 +851,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
 		deleteUserEvalationResultByUserId(userId);
-		String[] answer = userAnswer.split(",");
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
 		if (!Strings.isNullOrEmpty(userAnswer)) {
+			String[] answer = userAnswer.split(",");
 			for (String string : answer) {
 				if (string.split("_").length == 2) {
 					questionList.add(string.split("_")[0]);
@@ -1499,4 +1503,13 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return usersMapper.updateByPrimaryKeySelective(user);
 	}
+
+	/**
+	 * 查询千乐渠道的用户
+	 * @return
+	 */
+    @Override
+    public List<Integer> getQianleUser() {
+		return qianleUserCustomizeMapper.queryQianleUser();
+    }
 }
