@@ -3,13 +3,9 @@ package com.hyjf.cs.trade.service.repay.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.*;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -19,24 +15,22 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
-import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
-import com.hyjf.common.util.calculate.UnnormalRepayUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5;
+import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.repay.*;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,20 +44,6 @@ import java.util.Map;
  */
 @Service
 public class RepayManageServiceImpl extends BaseTradeServiceImpl implements RepayManageService {
-    @Autowired
-    AmBorrowClient amBorrowClient;
-    @Autowired
-    BorrowApicronClient borrowApicronClient;
-    @Autowired
-    private AmTradeClient amTradeClient;
-    @Autowired
-    AmBorrowRepayClient borrowRepayClient;
-    @Autowired
-    CreditClient creditClient;
-    @Autowired
-    AmBorrowRepayPlanClient borrowRepayPlanClient;
-    @Autowired
-    HjhDebtCreditClient hjhDebtCreditClient;
 
     /**
      * 普通用户管理费总待还
@@ -230,7 +210,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
@@ -281,7 +261,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
