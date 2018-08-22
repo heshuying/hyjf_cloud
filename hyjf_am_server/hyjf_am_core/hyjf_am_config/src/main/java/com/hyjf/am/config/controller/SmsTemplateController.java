@@ -84,7 +84,7 @@ public class SmsTemplateController extends BaseConfigController{
 			response.setResultList(voList);
 		}
 		// 查询总条数
-        int count = smsTemplateService.selectCount();
+        int count = smsTemplateService.selectCount(request);
 		response.setCount(count);
 		return response;
 	}

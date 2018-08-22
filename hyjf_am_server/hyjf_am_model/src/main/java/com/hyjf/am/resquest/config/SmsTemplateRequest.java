@@ -17,6 +17,7 @@ public class SmsTemplateRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 7879503023321881843L;
     private Integer id;
 
+    @ApiModelProperty(value = "模板标识")
     private String tplCode;
     @ApiModelProperty(value = "模板名称")
     private String tplName;

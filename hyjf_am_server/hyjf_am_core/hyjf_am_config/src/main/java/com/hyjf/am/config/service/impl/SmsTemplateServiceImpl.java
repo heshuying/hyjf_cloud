@@ -110,7 +110,24 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public int selectCount() {
-		return smsTemplateMapper.countByExample(new SmsTemplateExample());
+	public int selectCount(SmsTemplateRequest request) {
+		SmsTemplateExample example = new SmsTemplateExample();
+		SmsTemplateExample.Criteria criteria = example.createCriteria();
+		if (request != null) {
+			if (request.getStatus() != null) {
+				criteria.andStatusEqualTo(request.getStatus());
+			}
+			if (StringUtils.isNotBlank(request.getTplName())) {
+				criteria.andTplNameEqualTo(request.getTplName());
+			}
+
+			List<SmsTemplate> list = smsTemplateMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(list)) {
+				return list.size();
+			} else {
+				return 0;
+			}
+		}
+		return smsTemplateMapper.countByExample(example);
 	}
 }
