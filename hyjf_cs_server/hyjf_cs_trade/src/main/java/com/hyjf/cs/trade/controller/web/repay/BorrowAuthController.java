@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
@@ -155,7 +156,7 @@ public class BorrowAuthController extends BaseTradeController {
 
         // 绑卡后处理
         try {
-            boolean checkResult = RedisUtils.tranactionSet("trusteePay" + bean.getLogOrderId(), 600);
+            boolean checkResult = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_TRUSTEEPAY + bean.getLogOrderId(), 600);
             if(checkResult){
                 if (bean!=null&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) && "1".equals(bean.getState())) {
                     Integer rtn = borrowAuthService.updateTrusteePaySuccess(bean.getProductId());

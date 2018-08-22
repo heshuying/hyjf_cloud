@@ -23,7 +23,6 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.trade.bean.repay.*;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
