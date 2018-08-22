@@ -22,13 +22,23 @@ import java.util.List;
 public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     @Autowired
     private AmTradeClient amTradeClient;
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 获取资金来源列表
+     */
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
         List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 获取放款明细列表信息
+     */
     @Override
     public BorrowRecoverBean searchBorrowRecover(BorrowRecoverRequest request) {
         BorrowRecoverBean bean=new BorrowRecoverBean();
@@ -49,7 +59,12 @@ public class BorrowRecoverServiceImpl implements BorrowRecoverService {
         bean.setTotal(count);
         return bean;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 放款明细导出列表
+     */
     @Override
     public List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest request) {
         List<BorrowRecoverCustomizeVO> recordList = this.amTradeClient.selectBorrowRecoverList(request);

@@ -41,7 +41,7 @@ public interface NewAgreementService extends BaseTradeService{
 	 * @param assignNid
 	 * @return
 	 */
-	List<TenderAgreementVO> getTenderAgreementByTenderNid(String assignNid);
+	List<TenderAgreementVO> getTenderAgreementByTenderNid(String accedeOrderId);
 	
 	/**
 	 * 查询用户详情

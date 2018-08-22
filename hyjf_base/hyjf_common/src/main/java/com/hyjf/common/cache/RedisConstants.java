@@ -322,6 +322,12 @@ public class RedisConstants {
     public static final String PROTOCOL_PARAMS = "params";
 
     /**
+     * 同步余额rediskey
+     */
+    public static final String SYNBALANCE = "synBalance";
+
+
+    /**
      * 受托支付申请防并发key
      */
     public static final String CONCURRENCE_TRUSTEEPAY = "trusteePay:";

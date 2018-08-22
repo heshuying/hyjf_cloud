@@ -59,7 +59,6 @@ public class DeleteCardController extends BaseUserController {
         String sign = request.getParameter("sign");
         String mobile = request.getParameter("mobile"); // 用户ID
         String cardNo = request.getParameter("cardNo");
-        String from = request.getParameter("from");  //来自于哪个客户端
         ModelAndView modelAndView = new ModelAndView();
         // 唯一标识
         if(StringUtils.isEmpty(sign)){

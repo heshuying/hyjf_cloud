@@ -19,7 +19,12 @@ import java.util.List;
  */
 @Service
 public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoListService {
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 获取资产来源配置列表
+     */
     @Autowired
     private AmTradeClient amTradeClient;
     @Override
@@ -27,7 +32,12 @@ public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoLi
         List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询还款明细列表
+     */
     @Override
     public BorrowRepaymentInfoListBean selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request) {
         BorrowRepaymentInfoListBean bean=new BorrowRepaymentInfoListBean();
@@ -46,7 +56,12 @@ public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoLi
         }
         return bean;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询还款详情导出数据
+     */
     @Override
     public List<BorrowRepaymentInfoListCustomizeVO> selectExportBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request) {
         List<BorrowRepaymentInfoListCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentInfoListList(request);

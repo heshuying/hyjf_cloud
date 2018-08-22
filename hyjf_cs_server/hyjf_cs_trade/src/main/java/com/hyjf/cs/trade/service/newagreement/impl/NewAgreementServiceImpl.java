@@ -62,8 +62,8 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 * @return
 	 */
 	@Override
-	public List<TenderAgreementVO> getTenderAgreementByTenderNid(String assignNid) {
-		List<TenderAgreementVO> list = this.amTradeClient.selectTenderAgreementByNid(assignNid);
+	public List<TenderAgreementVO> getTenderAgreementByTenderNid(String accedeOrderId) {
+		List<TenderAgreementVO> list = this.amTradeClient.selectTenderAgreementByTenderNid(accedeOrderId);
 		return list;
 	}
 
