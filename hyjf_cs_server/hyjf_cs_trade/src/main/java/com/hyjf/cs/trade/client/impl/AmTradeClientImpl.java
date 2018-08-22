@@ -3954,5 +3954,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return myCreditDetailBean;
     }
+    
+    /**
+     *  获取协议内容bytenderNid
+     * @return
+     */
+    @Override
+    public List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/"+tenderNid;
+        TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
 
 }
