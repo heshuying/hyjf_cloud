@@ -166,7 +166,7 @@ public class SmsCountController extends BaseController {
         // 表格sheet名称
         String sheetName = "短信统计列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         SmsCountCustomizeVO smsCountCustomize = new SmsCountCustomizeVO();
         if (StringUtils.isNotEmpty(form.getPost_time_begin())) {
@@ -179,26 +179,20 @@ public class SmsCountController extends BaseController {
         }
 
         // 部门
-        String[] combotreeListSrchStr = new String[]{};
-        if (Validator.isNotNull(form.getCombotreeSrch())) {
-            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-                combotreeListSrchStr = form.getCombotreeSrch().split(StringPool.COMMA);
-            } else {
-                combotreeListSrchStr = new String[]{form.getCombotreeSrch()};
-            }
+        if (Validator.isNotNull(form.getCombotreeListSrch())) {
 
-            if (Arrays.asList(combotreeListSrchStr).contains("-10086")) {
+            String[] combotreeListSrch = form.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
-                for (int i = 0; i < combotreeListSrchStr.length; i++) {
-                    String st = combotreeListSrchStr[i];
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
                     if (("-10086").equals(st)) {
-                        combotreeListSrchStr[i] = "0";
+                        combotreeListSrch[i] = "0";
                     }
                 }
             }
-            smsCountCustomize.setCombotreeListSrch(combotreeListSrchStr);
-
+            smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         List<SmsCountCustomizeVO> listSms = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
         //短信总条数+总费用

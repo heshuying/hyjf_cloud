@@ -35,13 +35,13 @@ public interface SmsTemplateService {
 	 * @param request
 	 * @return
 	 */
-    void insertSmsTemplate(SmsTemplateRequest request);
+    int insertSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 开启短信模板
 	 * @param request
 	 */
-	void openAction(SmsTemplateRequest request);
+	int updateStatus(SmsTemplateRequest request);
 
 	/**
 	 * 关闭短信模板
@@ -53,5 +53,12 @@ public interface SmsTemplateService {
 	 * 修改短信模版
 	 * @param request
 	 */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param request
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(SmsTemplateRequest request);
 }

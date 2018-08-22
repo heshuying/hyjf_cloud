@@ -74,7 +74,7 @@ public class UserPortrait implements Serializable {
 
     private BigDecimal yield;
 
-    private Boolean attribute;
+    private Integer attribute;
 
     private BigDecimal bankBalance;
 
@@ -364,11 +364,11 @@ public class UserPortrait implements Serializable {
         this.yield = yield;
     }
 
-    public Boolean getAttribute() {
+    public Integer getAttribute() {
         return attribute;
     }
 
-    public void setAttribute(Boolean attribute) {
+    public void setAttribute(Integer attribute) {
         this.attribute = attribute;
     }
 

@@ -343,6 +343,7 @@
         <table tableName="ht_user_portrait" domainObjectName="UserPortrait">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="invest_age" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="attribute" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_utm" domainObjectName="Utm">
