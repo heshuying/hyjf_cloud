@@ -1843,6 +1843,46 @@ public interface AmTradeClient {
     boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
+     * 获取线下充值类型列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse selectUnderLineList(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 添加线下充值类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse insterUnderRechargeCode(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 获取当前code 是否存在
+     * @param code
+     * @return
+     * @Author : huanghui
+     */
+    boolean getUnderLineRecharge(String code);
+
+    /**
+     * 更新指定线下数据类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateUnderLineRecharge(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 删除指定充值类型数据
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean deleteUnderLineRecharge(Integer id);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
