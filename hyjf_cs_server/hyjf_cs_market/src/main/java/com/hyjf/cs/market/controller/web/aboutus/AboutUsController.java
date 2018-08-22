@@ -11,11 +11,13 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
@@ -145,6 +147,36 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@ApiOperation(value = "根据ID获取公司历程详情", notes = "信息披露 - 公司历程")
+	@GetMapping(value = "getEventDetailById/{id}")
+	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable Integer id){
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// ID不 能为空
+		if (id <= 0 || id == null){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+			return result;
+		}
+
+		try {
+			EventVO eventVO = this.aboutUsService.getEventDetailById(id);
+			resultMap.put("eventNotice", eventVO);
+			result.setData(resultMap);
+		}catch (Exception e){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+		}
+		return result;
+	}
+
 	@ApiOperation(value = "信息披露", notes = "根据id获取网站公告")
 	@GetMapping("/events/{id}")
 	public WebResult<Map<String, Object>> getCompanyNoticeDetail(@PathVariable Integer id) {
@@ -216,10 +248,16 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
 	@PostMapping("/getFXReportList")
-	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("101");
-		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleBean request ){
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		contentArticleRequest.setNoticeType("101");
+		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
+		Page page = new Page();
+		page.setTotal(homeNoticeList.getRecordTotal());
+		page.setCurrPage(request.getPaginatorPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
 		return webResult;
 	}
 
@@ -334,6 +372,61 @@ public class AboutUsController extends BaseController {
 			}
 		}
 		webResult = new WebResult(mediaReport);
+		return webResult;
+	}
+
+	/**
+	 * 获取公司动态详情
+	 * @return
+	 */
+	@ApiOperation(value = "获取公司动态详情", notes = "获取公司动态详情")
+	@GetMapping("/getCompanyDynamicsDetail")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsDetail(@RequestParam Integer id) {
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
+		if (mediaReport != null) {
+			if (mediaReport.getContent().contains("../../../..")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+			} else if (mediaReport.getContent().contains("src=\"/")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+			}
+		}
+		webResult = new WebResult(mediaReport);
+		return webResult;
+	}
+
+	/**
+	 * 查询公司动态列表
+	 * @return
+	 */
+	@ApiOperation(value = "查询公司动态列表", notes = "查询公司动态列表")
+	@PostMapping("/getCompanyDynamicsListPage")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleBean request) {
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		contentArticleRequest.setNoticeType("20");
+		ContentArticleResponse response = aboutUsService.getCompanyDynamicsListPage(contentArticleRequest);
+		List<ContentArticleVO> companyDynamicsList = response.getResultList();
+		for (ContentArticleVO companyDynamics : companyDynamicsList) {
+			if (companyDynamics.getContent().contains("../../../..")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", webUrl));
+			} else if (companyDynamics.getContent().contains("src=\"/")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
+						"src=\"" + webUrl)
+						+ "//");
+			}
+		}
+		webResult = new WebResult(companyDynamicsList);
+		Page page = new Page();
+		page.setTotal(response.getRecordTotal());
+		page.setCurrPage(request.getPaginatorPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
+
+
 		return webResult;
 	}
 

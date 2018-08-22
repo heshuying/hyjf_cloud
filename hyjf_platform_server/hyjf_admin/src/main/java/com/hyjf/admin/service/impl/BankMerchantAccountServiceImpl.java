@@ -43,9 +43,6 @@ import java.util.Map;
 @Service
 public class BankMerchantAccountServiceImpl implements BankMerchantAccountService {
 
-    /** 必须Key */
-    private static final String REQUIRED = "required";
-
     @Autowired
     AmTradeClient amTradeClient;
 
