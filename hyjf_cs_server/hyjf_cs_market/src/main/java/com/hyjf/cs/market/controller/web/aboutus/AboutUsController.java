@@ -229,9 +229,10 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
 	@PostMapping("/getKnowReportList")
-	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("3");
-		ContentArticleResponse response = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleBean request ){
+        ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+        contentArticleRequest.setNoticeType("3");
+		ContentArticleResponse response = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(response.getResultList());
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
@@ -255,7 +256,7 @@ public class AboutUsController extends BaseController {
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
 		Page page = new Page();
 		page.setTotal(homeNoticeList.getRecordTotal());
-		page.setCurrPage(request.getPaginatorPage());
+		page.setCurrPage(request.getCurrPage());
 		page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 		return webResult;
@@ -404,7 +405,6 @@ public class AboutUsController extends BaseController {
 	@PostMapping("/getCompanyDynamicsListPage")
 	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleBean request) {
 		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
-
 		WebResult webResult=null;
 		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
 		contentArticleRequest.setNoticeType("20");
@@ -422,7 +422,7 @@ public class AboutUsController extends BaseController {
 		webResult = new WebResult(companyDynamicsList);
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
-		page.setCurrPage(request.getPaginatorPage());
+		page.setCurrPage(request.getCurrPage());
 		page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 

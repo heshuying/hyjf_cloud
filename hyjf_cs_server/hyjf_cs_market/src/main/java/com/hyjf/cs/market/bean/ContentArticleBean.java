@@ -14,19 +14,19 @@ public class ContentArticleBean implements Serializable {
      * 当前页码
      */
     @ApiModelProperty(value = "当前页")
-    private Integer paginatorPage;
+    private Integer currPage;
     /**
      * 当前页条数
      */
     @ApiModelProperty(value = "当前页条数")
     private Integer pageSize;
 
-    public Integer getPaginatorPage() {
-        return paginatorPage;
+    public Integer getCurrPage() {
+        return currPage;
     }
 
-    public void setPaginatorPage(Integer paginatorPage) {
-        this.paginatorPage = paginatorPage;
+    public void setCurrPage(Integer currPage) {
+        this.currPage = currPage;
     }
 
     public Integer getPageSize() {
