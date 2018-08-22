@@ -62,7 +62,7 @@ public class AdminCouponCheckController extends BaseConfigController {
     public CouponCheckResponse deleteCheckList(@RequestBody @Valid AdminCouponCheckRequest request) {
         logger.info("删除优惠券信息..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
-        int id = request.getId();
+        int id = Integer.parseInt(request.getId());
         this.checkService.deleteCheckList(id);
         response.setMessage(Response.SUCCESS_MSG);
         return response;
@@ -90,13 +90,17 @@ public class AdminCouponCheckController extends BaseConfigController {
 
 
     @GetMapping("/selectCoupon/{id}")
-    public CouponCheckVO selectCoupon(@PathVariable String id) {
-        CouponCheckVO couponCheckVO = new CouponCheckVO();
+    public CouponCheckResponse selectCoupon(@PathVariable String id) {
+        CouponCheckResponse response = new CouponCheckResponse();
         CouponCheck couponCheck = checkService.selectCoupon(id);
         if (couponCheck != null) {
-            BeanUtils.copyProperties(couponCheck, couponCheckVO);
+            CouponCheckVO checkVO = new CouponCheckVO();
+            BeanUtils.copyProperties(couponCheck,checkVO);
+            response.setResult(checkVO);
+        }else {
+            response.setMessage("数据为空");
         }
-        return couponCheckVO;
+        return response;
     }
 
 
