@@ -74,27 +74,20 @@ public class SmsCountController extends BaseController {
         }
 
         // 部门
-        String[] combotreeListSrchStr = new String[]{};
-        if (Validator.isNotNull(request.getCombotreeSrch())) {
-            if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
-                combotreeListSrchStr = request.getCombotreeSrch().split(StringPool.COMMA);
+        if (Validator.isNotNull(request.getCombotreeListSrch())) {
 
-            } else {
-                combotreeListSrchStr = new String[]{request.getCombotreeSrch()};
-
-            }
-
-            if (Arrays.asList(combotreeListSrchStr).contains("-10086")) {
+            String[] combotreeListSrch = request.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
-                for (int i = 0; i < combotreeListSrchStr.length; i++) {
-                    String st = combotreeListSrchStr[i];
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
                     if (("-10086").equals(st)) {
-                        combotreeListSrchStr[i] = "0";
+                        combotreeListSrch[i] = "0";
                     }
                 }
             }
-            smsCountCustomize.setCombotreeListSrch(combotreeListSrchStr);
+            smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
 
