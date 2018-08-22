@@ -56,7 +56,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	@Override
 	public SmsTemplateVO selectSmsTemByTplCode(SmsTemplateRequest request) {
 		if (request != null) {
-			return amConfigClient.selectSmsTemByTplCode(request.getTplCode());
+			return amConfigClient.findSmsTemById(request.getId());
 		}
         return null;
 	}

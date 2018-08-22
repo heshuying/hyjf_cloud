@@ -12,12 +12,8 @@ import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.VersionVO;
@@ -1394,27 +1390,21 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<SmsMailTemplateVO> findMailTemplate(MailTemplateRequest request) {
-        SmsMailTemplateResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
-                        SmsMailTemplateResponse.class)
-                .getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
+	public SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request) {
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/findMailTemplate", request,
+				SmsMailTemplateResponse.class);
+	}
+
+    @Override
+    public int insertMailTemplate(MailTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
+                Integer.class);
     }
 
     @Override
-    public void insertMailTemplate(MailTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
-                Object.class);
-    }
-
-    @Override
-    public void updateMailTemplate(MailTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
-                Object.class);
+    public int updateMailTemplate(MailTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
+                Integer.class);
     }
 
     @Override
@@ -2048,9 +2038,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void openAction(MailTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsMailTemplate/open_action", request,
-                Object.class);
+    public int openAction(MailTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_status", request,
+                Integer.class);
     }
 
     /**
@@ -2116,6 +2106,27 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public SmsTemplateVO selectSmsTemByTplCode(String tplCode) {
         SmsTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode, SmsTemplateResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public SmsMailTemplateVO infoAction(MailTemplateRequest request) {
+        SmsMailTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsMailTemplate/find_by_id/" + request.getId(),
+                SmsMailTemplateResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public SmsTemplateVO findSmsTemById(Integer id) {
+        SmsTemplateResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/smsTemplate/find_by_id/" + id, SmsTemplateResponse.class)
+                .getBody();
         if (response != null) {
             return response.getResult();
         }

@@ -137,4 +137,12 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 		}
 		return smsTemplateMapper.countByExample(example);
 	}
+
+	@Override
+	public SmsTemplate findById(Integer id) {
+		if (id != null) {
+			return smsTemplateMapper.selectByPrimaryKey(id);
+		}
+		return null;
+	}
 }
