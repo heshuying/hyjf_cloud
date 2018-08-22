@@ -2672,5 +2672,44 @@ public interface AmTradeClient {
 	 * @return
 	 */
     HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form);
+
+    /**
+     * 查询合作机构配置列表
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest);
+    /**
+     * 查询合作机构配置详情页面
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest);
+
+    /**
+     * 编辑保存合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 修改合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 删除合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
 }
 

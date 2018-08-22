@@ -10,7 +10,7 @@ public interface UserPortraitMapper {
 
     int deleteByExample(UserPortraitExample example);
 
-    int deleteByPrimaryKey(Integer userId);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(UserPortrait record);
 
@@ -18,7 +18,7 @@ public interface UserPortraitMapper {
 
     List<UserPortrait> selectByExample(UserPortraitExample example);
 
-    UserPortrait selectByPrimaryKey(Integer userId);
+    UserPortrait selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") UserPortrait record, @Param("example") UserPortraitExample example);
 

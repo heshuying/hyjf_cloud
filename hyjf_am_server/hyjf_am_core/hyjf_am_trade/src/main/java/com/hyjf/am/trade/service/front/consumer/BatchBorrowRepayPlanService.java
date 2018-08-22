@@ -63,7 +63,7 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 	public Map requestRepay(BorrowApicron apicron);
 
 	/**
-	 * 查询还款请求明细
+	 * 查询还款请求明细，并且进行更新操作
 	 * 
 	 * @param apicron
 	 * @return

@@ -161,4 +161,11 @@ public interface AmConfigClient {
     int addSubmission(SubmissionsVO submissionsVO);
 
     List<JxBankConfigVO> getBankRecordList();
+
+    /**
+     *获取公司公告列表
+     * @param request
+     * @return
+     */
+    ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request);
 }

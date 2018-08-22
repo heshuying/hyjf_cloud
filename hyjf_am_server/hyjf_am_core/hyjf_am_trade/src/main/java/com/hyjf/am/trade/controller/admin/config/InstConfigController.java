@@ -53,7 +53,8 @@ public class InstConfigController {
         //查询保证金配置条数
         List<HjhInstConfig> recordList = this.instConfigService.instConfigInitByPage(-1,-1);
         if (!CollectionUtils.isEmpty(recordList)) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize());
+            response.setRecordTotal(recordList.size());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             recordList =instConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
             for(HjhInstConfig instConfigVO:recordList){
@@ -71,7 +72,6 @@ public class InstConfigController {
             }
 
             response.setResultList(resList);
-            response.setRecordTotal(recordList.size());
             response.setRtn(Response.SUCCESS);
             return response;
         }

@@ -147,4 +147,20 @@ public interface ContentArticleService {
      * @Author : huanghui
      */
     List<ContentArticle> getContentArticListByType(String type);
+
+    /**
+     * 获取公司公告件数
+     * @param noticeType
+     * @return
+     */
+    int getNoticeListCount(String noticeType);
+
+    /**
+     * 分页查询公司公告
+     * @param noticeType
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<ContentArticle> searchNoticeList(String noticeType, int offset, int limit);
 }

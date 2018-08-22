@@ -113,22 +113,7 @@ public interface AmConfigClient {
 	ParamNameResponse getNameCd(String code);
 
    	AdminSystemResponse isExistsApplicant(String applicant);
-   	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse infoAction();
-	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse download(MspApplytRequest mspApplytRequest);
-	public MspResponse searchAction(MspRequest mspRequest);
-	public MspResponse infoAction(MspRequest mspRequest);
-	public MspResponse insertAction(MspRequest mspRequest);
-	public MspResponse updateAction(MspRequest mspRequest);
-	public MspResponse configureNameError(MspRequest mspRequest);
-	public MspResponse deleteAction(MspRequest mspRequest);
-	public MspResponse checkAction(MspRequest mspRequest);
+
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 	/**
@@ -1014,7 +999,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertSmsTemplate(SmsTemplateRequest request);
+	int insertSmsTemplate(SmsTemplateRequest request);
 
 	public SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
 
@@ -1407,7 +1392,7 @@ public interface AmConfigClient {
 	 * 开启短信配置模板
 	 * @param request
 	 */
-    void openSmsTemplate(SmsTemplateRequest request);
+    int updateStatus(SmsTemplateRequest request);
 
 	/**
 	 * 关闭短信配置模板
@@ -1419,5 +1404,12 @@ public interface AmConfigClient {
 	 * 修改短信模版
 	 * @param request
 	 */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param tplCode
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(String tplCode);
 }

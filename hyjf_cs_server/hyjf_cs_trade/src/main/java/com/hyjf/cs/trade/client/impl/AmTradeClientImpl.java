@@ -318,9 +318,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "autoTenderController/selectPlanJoinList";
         HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            return response.getResultList();
+            return null;
         }
-        return null;
+        return response.getResultList();
     }
 
     /**
@@ -335,9 +335,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
         MapResponse response = restTemplate.postForEntity(url, request, MapResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            return response.getResultMap();
+            return null;
         }
-        return null;
+        return response.getResultMap();
     }
 
     /**
@@ -350,9 +350,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "autoTenderController/getPreCreditCapital";
         BigDecimalResponse response = restTemplate.postForEntity(url, hjhDebtCreditVO, BigDecimalResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)){
-            return response.getResultDec();
+            return null;
         }
-        return null;
+        return response.getResultDec();
     }
 
     /**
@@ -455,9 +455,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "hjhPlan/getHjhPlanByPlanNid/" + borrowNid;
         HjhPlanResponse response = restTemplate.getForEntity(url, HjhPlanResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            return response.getResult();
+            return null;
         }
-        return null;
+        return response.getResult();
     }
 
     /**
@@ -469,9 +469,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "hjhDebtCredit/selectHjhDebtCreditByCreditNid/" + creditNid;
         HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            return response.getResult();
+            return null;
         }
-        return null;
+        return response.getResult();
     }
 
     /**
@@ -484,9 +484,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "hjhAccede/getHjhAccedeListByAccedeOrderId/" + accedeOrderId;
         HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            return response.getResult();
+            return null;
         }
-        return null;
+        return response.getResult();
     }
 
     /**
@@ -3953,6 +3953,20 @@ public class AmTradeClientImpl implements AmTradeClient {
             myCreditDetailBean.setBorrowCredit(response.getBorrowCredit());
         }
         return myCreditDetailBean;
+    }
+    
+    /**
+     *  获取协议内容bytenderNid
+     * @return
+     */
+    @Override
+    public List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/"+tenderNid;
+        TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+        return null;
     }
 
 }

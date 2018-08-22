@@ -11,11 +11,13 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
@@ -227,9 +229,10 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
 	@PostMapping("/getKnowReportList")
-	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("3");
-		ContentArticleResponse response = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleBean request ){
+        ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+        contentArticleRequest.setNoticeType("3");
+		ContentArticleResponse response = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(response.getResultList());
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
@@ -246,10 +249,16 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
 	@PostMapping("/getFXReportList")
-	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("101");
-		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleBean request ){
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		contentArticleRequest.setNoticeType("101");
+		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
+		Page page = new Page();
+		page.setTotal(homeNoticeList.getRecordTotal());
+		page.setCurrPage(request.getCurrPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
 		return webResult;
 	}
 
@@ -364,6 +373,60 @@ public class AboutUsController extends BaseController {
 			}
 		}
 		webResult = new WebResult(mediaReport);
+		return webResult;
+	}
+
+	/**
+	 * 获取公司动态详情
+	 * @return
+	 */
+	@ApiOperation(value = "获取公司动态详情", notes = "获取公司动态详情")
+	@GetMapping("/getCompanyDynamicsDetail")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsDetail(@RequestParam Integer id) {
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
+		if (mediaReport != null) {
+			if (mediaReport.getContent().contains("../../../..")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+			} else if (mediaReport.getContent().contains("src=\"/")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+			}
+		}
+		webResult = new WebResult(mediaReport);
+		return webResult;
+	}
+
+	/**
+	 * 查询公司动态列表
+	 * @return
+	 */
+	@ApiOperation(value = "查询公司动态列表", notes = "查询公司动态列表")
+	@PostMapping("/getCompanyDynamicsListPage")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleBean request) {
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		contentArticleRequest.setNoticeType("20");
+		ContentArticleResponse response = aboutUsService.getCompanyDynamicsListPage(contentArticleRequest);
+		List<ContentArticleVO> companyDynamicsList = response.getResultList();
+		for (ContentArticleVO companyDynamics : companyDynamicsList) {
+			if (companyDynamics.getContent().contains("../../../..")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", webUrl));
+			} else if (companyDynamics.getContent().contains("src=\"/")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
+						"src=\"" + webUrl)
+						+ "//");
+			}
+		}
+		webResult = new WebResult(companyDynamicsList);
+		Page page = new Page();
+		page.setTotal(response.getRecordTotal());
+		page.setCurrPage(request.getCurrPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
+
+
 		return webResult;
 	}
 

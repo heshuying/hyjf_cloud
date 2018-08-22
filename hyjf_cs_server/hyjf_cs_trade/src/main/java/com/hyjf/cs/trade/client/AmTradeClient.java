@@ -1686,4 +1686,11 @@ public interface AmTradeClient {
      * @return
      */
     MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
+    
+    /**
+     * 获取投资协议集合BYtenderNid
+     * @param tenderNid
+     * @return
+     */
+    List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid);
 }

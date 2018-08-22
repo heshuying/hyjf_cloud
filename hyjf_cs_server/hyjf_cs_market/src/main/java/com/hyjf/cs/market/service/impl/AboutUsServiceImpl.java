@@ -146,6 +146,15 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         return amDataCollectClient.selectTotalTenderSum();
     }
 
+    /**
+     *获取公司公告列表
+     * @param request
+     * @return
+     */
+    @Override
+    public ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request) {
+        return amConfigClient.getCompanyDynamicsListPage(request);
+    }
 
 
 }

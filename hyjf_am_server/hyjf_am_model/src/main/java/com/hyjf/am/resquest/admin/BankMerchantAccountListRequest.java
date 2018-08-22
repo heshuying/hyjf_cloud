@@ -12,6 +12,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,25 +25,28 @@ public class BankMerchantAccountListRequest implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;
-	
+
+	@ApiModelProperty(value = "金额总和")
 	private String accountBalanceSum;
-	
+
+	@ApiModelProperty(value = "可用余额总和")
 	private String availableBalanceSum;
 	
 	private String frostSum;
 
+	@ApiModelProperty(value = "用户id")
 	private Integer userId;
-	
+
+	@ApiModelProperty(value = "列表")
 	private List<BankMerchantAccountVO> recordList;
 
-	/**
-	 * 翻页机能用的隐藏变量
-	 */
+	@ApiModelProperty(value = "翻页机能用的隐藏变量")
 	private int paginatorPage = 1;
 
 	/**
 	 * 列表画面自定义标签上的用翻页对象：paginator
 	 */
+	@ApiModelProperty(value = "列表画面自定义标签上的用翻页对象")
 	private Paginator paginator;
 
 	public int getPaginatorPage() {

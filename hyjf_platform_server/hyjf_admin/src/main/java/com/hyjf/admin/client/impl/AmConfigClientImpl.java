@@ -258,198 +258,6 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/init", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse infoAction() {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/infoAction", null,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/deleteRecordAction", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/validateBeforeAction", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/applyInfo", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/shareUser", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
-        MspApplytResponse mspApplytResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapply/download", mspApplytRequest,
-                        MspApplytResponse.class)
-                .getBody();
-        if (mspApplytResponse != null) {
-            return mspApplytResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse searchAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse infoAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/infoAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse insertAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse updateAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/insertAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse configureNameError(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/configureNameError", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse deleteAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/deleteAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
-    public MspResponse checkAction(MspRequest mspRequest) {
-        MspResponse mspResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/checkAction", mspRequest,
-                        MspResponse.class)
-                .getBody();
-        if (mspResponse != null) {
-            return mspResponse;
-        }
-        return null;
-    }
-
-    @Override
     public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request) {
         AdminUtmReadPermissionsResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/searchaction",
                 request, AdminUtmReadPermissionsResponse.class);
@@ -1554,7 +1362,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminSystemResponse getUserInfo(AdminSystemRequest adminSystemRequest) {
         AdminSystemResponse adminSystemResponse = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser", adminSystemRequest,
+                .postForEntity("http://AM-ADMIN/am-config/adminSystem/getuser", adminSystemRequest,
                         AdminSystemResponse.class)
                 .getBody();
         if (adminSystemResponse != null) {
@@ -1670,8 +1478,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void insertSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Object.class);
+    public int insertSmsTemplate(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Integer.class);
     }
 
     /**
@@ -2291,8 +2099,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void openSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, SmsTemplateResponse.class);
+    public int updateStatus(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, Integer.class);
     }
 
     @Override
@@ -2301,8 +2109,17 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public void updateSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, SmsTemplateResponse.class);
+    public int updateSmsTemplate(SmsTemplateRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, Integer.class);
+    }
+
+    @Override
+    public SmsTemplateVO selectSmsTemByTplCode(String tplCode) {
+        SmsTemplateResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplateByCode/" + tplCode, SmsTemplateResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 
     @Override

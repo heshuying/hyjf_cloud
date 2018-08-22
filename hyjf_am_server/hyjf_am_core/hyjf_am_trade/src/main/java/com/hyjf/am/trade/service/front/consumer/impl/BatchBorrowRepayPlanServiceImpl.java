@@ -515,6 +515,12 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return false;
 	}
 
+	/**
+	 * 查询还款请求明细，并且进行更新操作
+	 * 
+	 * @param apicron
+	 * @return
+	 */
 	@Override
 	public boolean reapyBatchDetailsUpdate(BorrowApicron apicron) {
 
