@@ -10,7 +10,7 @@ public interface UserAliasMapper {
 
     int deleteByExample(UserAliasExample example);
 
-    int deleteByPrimaryKey(Integer userId);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(UserAlias record);
 
@@ -18,7 +18,7 @@ public interface UserAliasMapper {
 
     List<UserAlias> selectByExample(UserAliasExample example);
 
-    UserAlias selectByPrimaryKey(Integer userId);
+    UserAlias selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") UserAlias record, @Param("example") UserAliasExample example);
 
