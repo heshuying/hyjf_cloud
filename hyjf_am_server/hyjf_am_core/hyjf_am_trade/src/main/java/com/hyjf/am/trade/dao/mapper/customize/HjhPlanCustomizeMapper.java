@@ -8,14 +8,10 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
-import com.hyjf.am.trade.dao.model.customize.DebtPlanAccedeCustomize;
-import com.hyjf.am.trade.dao.model.customize.DebtPlanBorrowCustomize;
-import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.UserHjhInvistDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
-import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 
 /**
  * @Description 计划类
@@ -149,7 +145,7 @@ public interface HjhPlanCustomizeMapper {
      * 查询用户的汇计划加入记录
      * @date 2018/8/1 14:03
      */
-    List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+    List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String,Object> params);
 
     /**
      * 汇计划数据统计查询

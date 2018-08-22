@@ -201,8 +201,8 @@ public class WebAssetManageController extends BaseTradeController {
      * @date 2018/8/18 15:59
      */
     @ApiOperation(value = "获取我加入的计划详情信息" , notes = "获取我加入的计划详情信息")
-    @PostMapping(value = "/getMyPlanInfoDetail")
-    public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId") Integer userId , @RequestBody AssetManagePlanRequest request){
+    @PostMapping(value = "/getMyPlanInfoDetail",produces = "application/json;charset=utf-8")
+    public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId" ,required = true) Integer userId , @RequestBody AssetManagePlanRequest request){
         WebResult result = assetManageService.getMyPlanInfoDetail(request,userId);
         return result;
     }

@@ -78,9 +78,8 @@
 		END AS lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
-	    <!-- hha.add_time AS add_time, -->
 	    DATE_FORMAT(hha.create_time, '%Y-%m-%d %H:%i:%s' ) AS add_time,
-	    
+
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'待确认') AS quit_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'待确认') AS last_payment_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.acctual_payment_time=0,NULL,hha.acctual_payment_time), '%Y-%m-%d' ),'待确认') AS acctual_payment_time,
