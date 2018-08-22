@@ -52,7 +52,7 @@ public class SubConfigController {
             if(!CollectionUtils.isEmpty(recordList)){
                 List<SubCommissionListConfigVo> configList = CommonUtils.convertBeanList(recordList, SubCommissionListConfigVo.class);
                 result.setResultList(configList);
-                result.setRecordTotal(recordList.size());
+                result.setRecordTotal(recordTotal);
                 result.setRtn(Response.SUCCESS);
                 return result;
             }
