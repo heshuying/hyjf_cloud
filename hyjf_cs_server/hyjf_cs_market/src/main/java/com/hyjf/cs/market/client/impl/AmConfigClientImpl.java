@@ -79,6 +79,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public EventVO getEventDetailById(Integer id) {
+		EventResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
+		if (response != null){
+			return response.getResult();
+		}
+		return null;
+	}
+
     /**
      * 获取招贤纳士列表
      * @return
