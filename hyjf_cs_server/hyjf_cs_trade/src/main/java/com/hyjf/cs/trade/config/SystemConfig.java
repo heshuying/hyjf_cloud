@@ -103,7 +103,7 @@ public class SystemConfig {
     // 请求密码请求地址
     @Value("${hyjf.req.password}")
     private String hyjfReqPasswordPath;
-
+    //是否是测试环境 true为测试环境  false为正式环境
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
     

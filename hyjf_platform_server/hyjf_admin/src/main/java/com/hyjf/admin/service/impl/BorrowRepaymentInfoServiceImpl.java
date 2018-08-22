@@ -28,12 +28,23 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
     @Autowired
     private AmTradeClient amTradeClient;
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 获取资产来源配置列表
+     */
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
         List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询页面列表数据
+     */
     @Override
     public BorrowRepaymentInfoBean selectBorrowRepaymentInfoListForView(BorrowRepaymentInfoRequset request) {
         // 默认当天
@@ -89,7 +100,12 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
         return bean;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询导出列表数据
+     */
     @Override
     public List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentInfoRequset copyForm) {
         return this.amTradeClient.selectBorrowRepaymentInfoList(copyForm);

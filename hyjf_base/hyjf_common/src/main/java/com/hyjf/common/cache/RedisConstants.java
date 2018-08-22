@@ -320,4 +320,10 @@ public class RedisConstants {
      * 协议模板二期---动态展示协议前台展示名称
      */
     public static final String PROTOCOL_PARAMS = "params";
+
+    /**
+     * 同步余额rediskey
+     */
+    public static final String SYNBALANCE = "synBalance";
+
 }
