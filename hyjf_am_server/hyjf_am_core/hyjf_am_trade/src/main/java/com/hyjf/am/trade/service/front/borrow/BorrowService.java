@@ -156,4 +156,11 @@ public interface BorrowService extends BaseService {
 	 * @date 2018/8/20 16:25
 	 */
     List<BorrowCustomizeVO> selectUnDealBorrowBeforeLiquidate();
+	/**
+	 * 列表导出
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 }

@@ -1,7 +1,8 @@
 package com.hyjf.am.admin.config.ds;
 
 import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
-import com.hyjf.am.trade.interceptor.SyncAccountInterceptor;
+import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
+
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Configuration
-@MapperScan("com.hyjf.am.trade.dao.mapper")
+@MapperScan("com.hyjf.am.*.dao.mapper")
 @AutoConfigureAfter({ DataSourceAutoConfiguration.class})
 public class MybatisConfig {
 	// private static Logger logger = Logger.getLogger(MybatisConfig.class);
