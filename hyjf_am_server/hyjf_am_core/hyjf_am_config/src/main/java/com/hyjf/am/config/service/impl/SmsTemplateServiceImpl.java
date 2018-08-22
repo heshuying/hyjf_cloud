@@ -63,6 +63,12 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			if (StringUtils.isNotBlank(request.getTplName())) {
 				criteria.andTplNameEqualTo(request.getTplName());
 			}
+			if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+				int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+				int limitEnd = request.getPageSize();
+				example.setLimitStart(limitStart);
+				example.setLimitEnd(limitEnd);
+			}
 			return smsTemplateMapper.selectByExample(example);
 		} else {
 			return findAll();
@@ -101,5 +107,10 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 		SmsTemplate smsTemplate = new SmsTemplate();
 		BeanUtils.copyProperties(request, smsTemplate);
 		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	}
+
+	@Override
+	public int selectCount() {
+		return smsTemplateMapper.countByExample(new SmsTemplateExample());
 	}
 }

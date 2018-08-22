@@ -8,6 +8,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SmsTemplateService;
+import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 import io.swagger.annotations.Api;
@@ -58,11 +59,11 @@ public class SmsTemplateController extends BaseController {
 	@ApiOperation(value = "根据条件查询所有短信模版", notes = "根据条件查询所有短信模版")
 	@PostMapping("/findSmsTemplate")
 	public AdminResult<ListResult<SmsTemplateVO>> findSmsTemplate(@RequestBody SmsTemplateRequest request) {
-		List<SmsTemplateVO> voList = smsTemplateService.findSmsTemplate(request);
-		if (CollectionUtils.isEmpty(voList)) {
+		SmsTemplateResponse response = smsTemplateService.findSmsTemplate(request);
+		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		return new AdminResult<>(ListResult.build(voList, voList.size()));
+		return new AdminResult(response);
 	}
 
 	/**

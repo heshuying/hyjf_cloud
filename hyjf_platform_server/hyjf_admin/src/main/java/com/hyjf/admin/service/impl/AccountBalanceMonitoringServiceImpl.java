@@ -1,11 +1,12 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.request.AccountBalanceMonitoringRequestBean;
-import com.hyjf.admin.client.AccountBalanceMonitoringClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AccountBalanceMonitoringService;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
 import com.hyjf.am.resquest.admin.AdminAccountBalanceMonitoringRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,13 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
      */
     @Override
    public AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest){
-        return amTradeClient.selectAccountBalanceMonitoringByPage(adminRequest);
+        AdminAccountBalanceMonitoringResponse response = amTradeClient.selectAccountBalanceMonitoringByPage(adminRequest);
+        //子账户查询
+        List<ParamNameVO>  paramNameVOS= amTradeClient.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
+        if(response != null){
+            response.setParamNameList(paramNameVOS);
+        }
+        return response;
     }
 
     /**
