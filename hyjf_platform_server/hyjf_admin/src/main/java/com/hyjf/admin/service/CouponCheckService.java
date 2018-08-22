@@ -5,10 +5,12 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.user.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -58,4 +60,11 @@ public interface CouponCheckService {
      * @return
      */
     boolean updateCoupon(AdminCouponCheckRequest request);
+
+    /**
+     * 查询优惠券类型
+     * @param nameClass
+     * @return
+     */
+    List<ParamNameVO> getParamNameList(String nameClass);
 }

@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiOperation;
  * @author DongZeShan
  * @version LoginController.java, v0.1 2018年6月15日 上午9:32:30
  */
-@Api(value = "预注册用户",tags ="预注册用户")
+@Api(value = "会员中心-预注册用户",tags ="会员中心-预注册用户")
 @RestController
 @RequestMapping("/hyjf-admin/preregist")
 public class PreregistController extends BaseController {

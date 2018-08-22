@@ -117,6 +117,57 @@ public class BorrowAdminController  {
 		return mcr;
 	}
 
-	
+	/**
+	 * 画面初始化
+	 * 
+	 * @param request
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "导出借款列表")
+	@RequestMapping("/exportBorrowList")
+	public List<BorrowCommonCustomizeVO> exportBorrowList(@RequestBody @Valid BorrowBeanRequest form) {
+		
+
+		BorrowCommonCustomizeVO corrowCommonCustomize = new BorrowCommonCustomizeVO();
+		// 借款编码
+		corrowCommonCustomize.setBorrowNidSrch(form.getBorrowNidSrch());
+		// 借款标题
+		/* DEL BY LIUSHOUYI 合规检查 START
+		corrowCommonCustomize.setBorrowNameSrch(form.getBorrowNameSrch());
+		DEL BY LIUSHOUYI 合规检查 END*/
+		// 借 款 人
+		corrowCommonCustomize.setUsernameSrch(form.getUsernameSrch());
+		// 项目状态
+		corrowCommonCustomize.setStatusSrch(form.getStatusSrch());
+		// 项目类型
+		corrowCommonCustomize.setProjectTypeSrch(form.getProjectTypeSrch());
+		// 还款方式
+		corrowCommonCustomize.setBorrowStyleSrch(form.getBorrowStyleSrch());
+		// 放款时间
+		corrowCommonCustomize.setRecoverTimeStartSrch(form.getRecoverTimeStartSrch());
+		// 放款时间
+		corrowCommonCustomize.setRecoverTimeEndSrch(form.getRecoverTimeEndSrch());
+		// 添加时间
+		corrowCommonCustomize.setTimeStartSrch(form.getTimeStartSrch());
+		// 添加时间
+		corrowCommonCustomize.setTimeEndSrch(form.getTimeEndSrch());
+		// 标签名称 new added
+		corrowCommonCustomize.setLabelNameSrch(form.getLabelNameSrch());
+		corrowCommonCustomize.setSort(form.getSort());
+		corrowCommonCustomize.setCol(form.getCol());
+		corrowCommonCustomize.setBorrowPeriod(form.getBorrowPeriod());
+		// 计划编号
+		corrowCommonCustomize.setPlanNidSrch(form.getPlanNidSrch());
+		// 资金来源编号
+		corrowCommonCustomize.setInstCodeSrch(form.getInstCodeSrch());
+		// ADD BY zhangyunkai 增加初审时间查询条件 start
+		corrowCommonCustomize.setVerifyTimeStartSrch(form.getVerifyTimeStartSrch());
+		corrowCommonCustomize.setVerifyTimeEndSrch(form.getVerifyTimeEndSrch());
+		// ADD BY zhangyunkai 增加初审时间查询条件 end
+		List<BorrowCommonCustomizeVO> recordList = this.borrowService.exportBorrowList(corrowCommonCustomize);	
+		return recordList;
+	}
+
 
 }

@@ -196,10 +196,20 @@ public class BorrowCommonCustomizeVO implements Serializable {
      */
     private String verifyTimeEndSrch;
     //ADD BY ZHANGYK  增加查询条件 end
+	// 产品加息收益率
+	private String borrowExtraYield;
 
     // EXCEL 导出用
 
-    public String getCreateUserName() {
+    public String getBorrowExtraYield() {
+		return borrowExtraYield;
+	}
+
+	public void setBorrowExtraYield(String borrowExtraYield) {
+		this.borrowExtraYield = borrowExtraYield;
+	}
+
+	public String getCreateUserName() {
         return createUserName;
     }
 

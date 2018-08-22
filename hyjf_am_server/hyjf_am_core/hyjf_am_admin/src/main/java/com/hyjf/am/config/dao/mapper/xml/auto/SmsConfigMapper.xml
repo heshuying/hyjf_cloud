@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.SmsConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="max_ip_count" property="maxIpCount" jdbcType="INTEGER" />
+    <result column="max_machine_count" property="maxMachineCount" jdbcType="INTEGER" />
+    <result column="max_browser_count" property="maxBrowserCount" jdbcType="INTEGER" />
+    <result column="max_phone_count" property="maxPhoneCount" jdbcType="INTEGER" />
+    <result column="max_interval_time" property="maxIntervalTime" jdbcType="INTEGER" />
+    <result column="max_valid_time" property="maxValidTime" jdbcType="INTEGER" />
+    <result column="notice_to_phone" property="noticeToPhone" jdbcType="VARCHAR" />
+    <result column="notice_to_email" property="noticeToEmail" jdbcType="VARCHAR" />
+    <result column="notice_to_time" property="noticeToTime" jdbcType="INTEGER" />
+    <result column="repay_mobiles" property="repayMobiles" jdbcType="VARCHAR" />
+    <result column="full_mobiles" property="fullMobiles" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, max_ip_count, max_machine_count, max_browser_count, max_phone_count, max_interval_time, 
+    max_valid_time, notice_to_phone, notice_to_email, notice_to_time, repay_mobiles, 
+    full_mobiles, create_user_id, update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_sms_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_sms_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_sms_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" >
+    delete from ht_sms_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_sms_config (max_ip_count, max_machine_count, max_browser_count, 
+      max_phone_count, max_interval_time, max_valid_time, 
+      notice_to_phone, notice_to_email, notice_to_time, 
+      repay_mobiles, full_mobiles, create_user_id, 
+      update_user_id, create_time, update_time
+      )
+    values (#{maxIpCount,jdbcType=INTEGER}, #{maxMachineCount,jdbcType=INTEGER}, #{maxBrowserCount,jdbcType=INTEGER}, 
+      #{maxPhoneCount,jdbcType=INTEGER}, #{maxIntervalTime,jdbcType=INTEGER}, #{maxValidTime,jdbcType=INTEGER}, 
+      #{noticeToPhone,jdbcType=VARCHAR}, #{noticeToEmail,jdbcType=VARCHAR}, #{noticeToTime,jdbcType=INTEGER}, 
+      #{repayMobiles,jdbcType=VARCHAR}, #{fullMobiles,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_sms_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="maxIpCount != null" >
+        max_ip_count,
+      </if>
+      <if test="maxMachineCount != null" >
+        max_machine_count,
+      </if>
+      <if test="maxBrowserCount != null" >
+        max_browser_count,
+      </if>
+      <if test="maxPhoneCount != null" >
+        max_phone_count,
+      </if>
+      <if test="maxIntervalTime != null" >
+        max_interval_time,
+      </if>
+      <if test="maxValidTime != null" >
+        max_valid_time,
+      </if>
+      <if test="noticeToPhone != null" >
+        notice_to_phone,
+      </if>
+      <if test="noticeToEmail != null" >
+        notice_to_email,
+      </if>
+      <if test="noticeToTime != null" >
+        notice_to_time,
+      </if>
+      <if test="repayMobiles != null" >
+        repay_mobiles,
+      </if>
+      <if test="fullMobiles != null" >
+        full_mobiles,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="maxIpCount != null" >
+        #{maxIpCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxMachineCount != null" >
+        #{maxMachineCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxBrowserCount != null" >
+        #{maxBrowserCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxPhoneCount != null" >
+        #{maxPhoneCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxIntervalTime != null" >
+        #{maxIntervalTime,jdbcType=INTEGER},
+      </if>
+      <if test="maxValidTime != null" >
+        #{maxValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="noticeToPhone != null" >
+        #{noticeToPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeToEmail != null" >
+        #{noticeToEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeToTime != null" >
+        #{noticeToTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayMobiles != null" >
+        #{repayMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="fullMobiles != null" >
+        #{fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_sms_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_sms_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxIpCount != null" >
+        max_ip_count = #{record.maxIpCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxMachineCount != null" >
+        max_machine_count = #{record.maxMachineCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxBrowserCount != null" >
+        max_browser_count = #{record.maxBrowserCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxPhoneCount != null" >
+        max_phone_count = #{record.maxPhoneCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxIntervalTime != null" >
+        max_interval_time = #{record.maxIntervalTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.maxValidTime != null" >
+        max_valid_time = #{record.maxValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.noticeToPhone != null" >
+        notice_to_phone = #{record.noticeToPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.noticeToEmail != null" >
+        notice_to_email = #{record.noticeToEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.noticeToTime != null" >
+        notice_to_time = #{record.noticeToTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayMobiles != null" >
+        repay_mobiles = #{record.repayMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fullMobiles != null" >
+        full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_sms_config
+    set id = #{record.id,jdbcType=INTEGER},
+      max_ip_count = #{record.maxIpCount,jdbcType=INTEGER},
+      max_machine_count = #{record.maxMachineCount,jdbcType=INTEGER},
+      max_browser_count = #{record.maxBrowserCount,jdbcType=INTEGER},
+      max_phone_count = #{record.maxPhoneCount,jdbcType=INTEGER},
+      max_interval_time = #{record.maxIntervalTime,jdbcType=INTEGER},
+      max_valid_time = #{record.maxValidTime,jdbcType=INTEGER},
+      notice_to_phone = #{record.noticeToPhone,jdbcType=VARCHAR},
+      notice_to_email = #{record.noticeToEmail,jdbcType=VARCHAR},
+      notice_to_time = #{record.noticeToTime,jdbcType=INTEGER},
+      repay_mobiles = #{record.repayMobiles,jdbcType=VARCHAR},
+      full_mobiles = #{record.fullMobiles,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    update ht_sms_config
+    <set >
+      <if test="maxIpCount != null" >
+        max_ip_count = #{maxIpCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxMachineCount != null" >
+        max_machine_count = #{maxMachineCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxBrowserCount != null" >
+        max_browser_count = #{maxBrowserCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxPhoneCount != null" >
+        max_phone_count = #{maxPhoneCount,jdbcType=INTEGER},
+      </if>
+      <if test="maxIntervalTime != null" >
+        max_interval_time = #{maxIntervalTime,jdbcType=INTEGER},
+      </if>
+      <if test="maxValidTime != null" >
+        max_valid_time = #{maxValidTime,jdbcType=INTEGER},
+      </if>
+      <if test="noticeToPhone != null" >
+        notice_to_phone = #{noticeToPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeToEmail != null" >
+        notice_to_email = #{noticeToEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeToTime != null" >
+        notice_to_time = #{noticeToTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayMobiles != null" >
+        repay_mobiles = #{repayMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="fullMobiles != null" >
+        full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.SmsConfig" >
+    update ht_sms_config
+    set max_ip_count = #{maxIpCount,jdbcType=INTEGER},
+      max_machine_count = #{maxMachineCount,jdbcType=INTEGER},
+      max_browser_count = #{maxBrowserCount,jdbcType=INTEGER},
+      max_phone_count = #{maxPhoneCount,jdbcType=INTEGER},
+      max_interval_time = #{maxIntervalTime,jdbcType=INTEGER},
+      max_valid_time = #{maxValidTime,jdbcType=INTEGER},
+      notice_to_phone = #{noticeToPhone,jdbcType=VARCHAR},
+      notice_to_email = #{noticeToEmail,jdbcType=VARCHAR},
+      notice_to_time = #{noticeToTime,jdbcType=INTEGER},
+      repay_mobiles = #{repayMobiles,jdbcType=VARCHAR},
+      full_mobiles = #{fullMobiles,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
