@@ -5574,4 +5574,63 @@ public class AmTradeClientImpl implements AmTradeClient {
 	    }
 	    return null;
 	}
+
+    /**
+     * 查询合作机构配置列表
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/list", adminRequest, AdminPartnerConfigDetailResponse.class)
+                .getBody();
+    }
+    /**
+     * 查询合作机构配置详情页面
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/info", adminRequest, AdminPartnerConfigDetailResponse.class)
+                .getBody();
+    }
+
+    /**
+     * 编辑保存合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/insert", req, AdminPartnerConfigDetailResponse.class)
+                .getBody();
+    }
+
+    /**
+     * 修改合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/update", req, AdminPartnerConfigDetailResponse.class)
+                .getBody();
+    }
+
+    /**
+     * 删除合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
+                .getBody();
+    }
 }
