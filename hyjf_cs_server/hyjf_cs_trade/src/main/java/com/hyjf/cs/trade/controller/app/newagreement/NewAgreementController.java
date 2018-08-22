@@ -151,7 +151,7 @@ public class NewAgreementController extends BaseTradeController{
 	
     /**
      * 
-     *（二）汇计划投资服务协议
+     *（二）汇计划投资服务协议    已测试
      * @author libin
      * @param request
      * @return
@@ -159,16 +159,16 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "APP端协议接口", notes = "汇计划投资服务协议")
     @ResponseBody
     @PostMapping("/hjhInfo")
-    public NewAgreementResultBean hjhInfo(HttpServletRequest request) {
+    public NewAgreementResultBean hjhInfo(@RequestHeader(value = "userId") Integer userId, 
+    									  @RequestHeader("accedeOrderId") String accedeOrderId) {
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
-		String accedeOrderId = request.getParameter("accedeOrderId");
-		String sign = request.getParameter("sign");
-		logger.info("get sign is: {}",sign);
+		/*String accedeOrderId = request.getParameter("accedeOrderId");*/
+		logger.info("get sign is: {}",userId);
 		logger.info("get accedeOrderId is: {}",accedeOrderId);
 		JSONObject jsonObject = new JSONObject();
 		try {
-		    if (StringUtils.isEmpty(sign)
+		    if (userId == null
 	                || StringUtils.isEmpty(accedeOrderId)) {
 	            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
 	            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
@@ -196,7 +196,7 @@ public class NewAgreementController extends BaseTradeController{
                     agreementImages = imgUrl;
                 }
                 newAgreementResultBean.setAgreementImages(agreementImages);
-	            Integer userId = SecretUtil.getUserId(sign);
+	            /*Integer userId = SecretUtil.getUserId(sign);*/
 	            logger.info("get userId is: {}",userId);
 	            // 1基本信息
 	            Map<String, Object> params = new HashMap<String, Object>();
@@ -251,7 +251,9 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
     @ResponseBody
     @PostMapping("/userCreditContract")
-    public NewAgreementResultBean userCreditContract(HttpServletRequest request, HttpServletResponse response ) {
+    public NewAgreementResultBean userCreditContract(@RequestHeader(value = "userId") Integer userId,
+    												HttpServletRequest request, 
+    												HttpServletResponse response ) {
     	logger.info("*******************************债权转让协议************************************");
     	NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
@@ -259,11 +261,14 @@ public class NewAgreementController extends BaseTradeController{
         String borrowType = request.getParameter("borrowType");
         try {
             if(borrowType!=null&&"HJH".equals(borrowType)){
-                String userId = request.getParameter("userId"); // 随机字符串
+                /*String userId = request.getParameter("userId");*/ // 随机字符串
                 // 注意：nid只是跟移动端约定这么定义，实际上这个nid是 ht_hjh_debt_credit_tender 的 id 主键
                 String nid = request.getParameter("nid");
-                if (StringUtils.isEmpty(userId)) {
+/*                if (StringUtils.isEmpty(userId)) {
                     userId="0";
+                }*/
+                if(userId == null){
+                	userId= 0;
                 }
                 logger.info("get userId is: {}",userId);
                 logger.info("我的计划-计划详情-资产列表-协议，债转id :{}", nid);
@@ -431,7 +436,7 @@ public class NewAgreementController extends BaseTradeController{
                         newAgreementResultBean.setInfo(jsonObject);
                         return newAgreementResultBean;
                     }
-                    Integer userId = SecretUtil.getUserId(sign);
+                    /*Integer userId = SecretUtil.getUserId(sign);*/
                     //获取承接订单;
                     /*List<TenderAgreement> tenderAgreements= fddGenerateContractService.selectByExample(assignNid);*/
                     List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(assignNid);

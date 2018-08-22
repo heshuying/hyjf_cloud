@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.TradeConstant;
 import com.hyjf.common.util.CustomConstants;
@@ -539,7 +540,7 @@ public class RepayManageController extends BaseTradeController {
             webResult.setData(msg);
             return webResult;
         }
-        boolean reslut = RedisUtils.exists("batchOrgRepayUserid_" + userVO.getUserId());
+        boolean reslut = RedisUtils.exists(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
         if(reslut){
             msg = "999";
             logger.info("==============垫付机构:" + userVO.getUserId() + "校验处->批量还款失败,项目正在还款中!");
@@ -570,12 +571,11 @@ public class RepayManageController extends BaseTradeController {
 
         String startDate = requestBean.getStartDate();
         String endDate = requestBean.getEndDate();
-        String password = requestBean.getPassword();
         String msg = "";
 
         //查询该时间段的所有担保户的待还款记录并进行还款
         // 还款方法10分钟只能一次
-        boolean reslut = RedisUtils.tranactionSet("batchOrgRepayUserid_" + userId, 600);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId, 600);
         if(!reslut){
             msg = "999";
             logger.info("==============垫付机构:" + userId + "批量还款失败,项目正在还款中!");
@@ -909,32 +909,7 @@ public class RepayManageController extends BaseTradeController {
                                         throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
                                     }
                                 }
-//								else {
-//									// 查询批次交易明细，进行后续操作
-//									boolean batchDetailFlag = this.repayManageService.batchDetailsQuery(apicron);
-//									// 进行后续失败的放款的放款请求
-//									if (batchDetailFlag) {
-//										result.setStatus(true);
-//										return JSONObject.toJSONString(result, true);
-//									} else {
-//										throw new Exception("放款失败后，查询放款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-//									}
-//								}
                             }
-//							// 如果是批次处理成功
-//							else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
-//								// 查询批次交易明细，进行后续操作
-//								boolean batchDetailFlag = this.repayManageService.batchDetailsQuery(apicron);
-//								if (batchDetailFlag) {
-//									result.setStatus(true);
-//									return JSONObject.toJSONString(result, true);
-//								} else {
-//									throw new Exception("放款成功后，查询放款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-//								}
-//							} else {
-//								result.setStatus(true);
-//								return JSONObject.toJSONString(result, true);
-//							}
                         } else {
                             throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
                         }

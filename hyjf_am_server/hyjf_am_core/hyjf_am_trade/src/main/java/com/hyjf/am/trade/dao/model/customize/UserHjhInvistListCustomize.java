@@ -1,6 +1,6 @@
 
 
-package com.hyjf.am.vo.trade.hjh;
+package com.hyjf.am.trade.dao.model.customize;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.common.util.CustomConstants;
 
@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
  * 
  * 资产管理用户投资计划包含项目
  */
-public class UserHjhInvistListCustomizeVO extends BaseVO {
+public class UserHjhInvistListCustomize implements Serializable {
 
 	/**
 	 * 序列化id
@@ -69,7 +69,9 @@ public class UserHjhInvistListCustomizeVO extends BaseVO {
         this.borrowNid = borrowNid;
     }
     public String getAccount() {
-        return account;
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        return df.format(new BigDecimal(account));
     }
     public void setAccount(String account) {
         this.account = account;

@@ -156,7 +156,7 @@ public interface AutoPlusService extends BaseUserService {
      * @param userId
      * @return
      */
-    BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId);
+    void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId);
 
     /**
      * 插入用户签约授权log

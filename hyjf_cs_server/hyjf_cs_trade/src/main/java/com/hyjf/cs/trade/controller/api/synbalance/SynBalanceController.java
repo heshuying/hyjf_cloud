@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DateDistance;
@@ -16,6 +17,7 @@ import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.ResultBean;
 import com.hyjf.cs.trade.bean.SynBalanceResultBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -52,6 +54,8 @@ import java.util.List;
 public class SynBalanceController extends BaseTradeController {
     @Autowired
     private SynBalanceService synBalanceService;
+    @Autowired
+    SystemConfig systemConfig;
     @ApiOperation(value = "第三方同步余额", notes = "同步余额")
     @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
     @ResponseBody
@@ -97,8 +101,7 @@ public class SynBalanceController extends BaseTradeController {
         AccountVO accountUser = synBalanceService.getAccount(user.getUserId());
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
-        // TODO 从配置文件获取
-        if("true".equals("true")){
+        if(systemConfig.isHyjfEnvTest()){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));
@@ -205,7 +208,7 @@ public class SynBalanceController extends BaseTradeController {
         logger.info("-------------------"+recordList.size()+"同步余额总条数--------------------");
         logger.info("-------------------"+pageNum+"同步余额请求次数userid:"+user.getUserId()+"--------------------");
         /**redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet("synBalance:"+user.getUserId(),30);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.SYNBALANCE+user.getUserId(),30);
         // 如果没有设置成功，说明有请求来设置过
         if(!reslut){
             //成功???

@@ -20,6 +20,12 @@ public class BorrowLogServiceImpl implements BorrowLogService {
 
     @Autowired
     private AmTradeClient amTradeClient;
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询借款列表操作日志
+     */
     @Override
     public BorrowLogBean selectBorrowLogList(BorrowLogRequset request) {
         BorrowLogBean bean=new BorrowLogBean();
@@ -35,7 +41,12 @@ public class BorrowLogServiceImpl implements BorrowLogService {
         }
         return bean;
     }
-
+    /**
+     * @Description
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询借款操作日志列表导出
+     */
     @Override
     public List<BorrowLogCustomizeVO> exportBorrowLogList(BorrowLogRequset request) {
         List<BorrowLogCustomizeVO> recordList = this.amTradeClient.exportBorrowLogList(request);
