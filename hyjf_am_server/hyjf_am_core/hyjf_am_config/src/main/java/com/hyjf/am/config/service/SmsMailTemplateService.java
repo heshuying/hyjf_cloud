@@ -40,23 +40,37 @@ public interface SmsMailTemplateService {
      *
      * @param request
      */
-    void insertMailTemplate(MailTemplateRequest request);
+    int insertMailTemplate(MailTemplateRequest request);
 
     /**
      * 修改短信模板
      * @param request
      */
-    void updateMailTemplate(MailTemplateRequest request);
+    int updateMailTemplate(MailTemplateRequest request);
 
     /**
      * 关闭短信模板
      * @param request
      */
-    void closeMailTemplate(MailTemplateRequest request);
+    int updateStatus(MailTemplateRequest request);
 
     /**
      * 开启短信模板
      * @param request
      */
     void openMailTemplate(MailTemplateRequest request);
+
+    /**
+     * 查询符合条件的条数
+     * @param request
+     * @return
+     */
+    int selectCount(MailTemplateRequest request);
+
+    /**
+     * 根據id查询模板
+     * @param id
+     * @return
+     */
+    SmsMailTemplate findByid(Integer id);
 }

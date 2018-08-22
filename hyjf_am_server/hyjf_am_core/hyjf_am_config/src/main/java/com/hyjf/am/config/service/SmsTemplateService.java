@@ -66,4 +66,11 @@ public interface SmsTemplateService {
      * @return
      */
     int selectCount(SmsTemplateRequest request);
+
+    /**
+     * 根据id查询模板
+     * @param id
+     * @return
+     */
+    SmsTemplate findById(Integer id);
 }

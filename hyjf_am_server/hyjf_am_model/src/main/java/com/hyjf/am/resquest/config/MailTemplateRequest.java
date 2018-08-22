@@ -17,11 +17,11 @@ public class MailTemplateRequest extends BasePage implements Serializable {
     private Integer id;
     @ApiModelProperty(value = "模板名称")
     private String mailName;
-
+    @ApiModelProperty("模板标识")
     private String mailValue;
     @ApiModelProperty(value = "状态")
     private Integer mailStatus;
-
+    @ApiModelProperty("模板内容")
     private String mailContent;
 
     private Integer createUserId;
