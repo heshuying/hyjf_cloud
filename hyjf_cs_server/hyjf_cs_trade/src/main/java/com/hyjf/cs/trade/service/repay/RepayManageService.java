@@ -93,12 +93,6 @@ public interface RepayManageService extends BaseTradeService {
     boolean checkPassword(Integer userId, String password);
 
     JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
-    /**
-     * 还款详情数据获取
-     * @auther: hesy
-     * @date: 2018/7/9
-     */
-    ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException;
 
     void checkForRepayRequest(String borrowNid, String password,  WebViewUserVO user, RepayBean repayBean);
 
