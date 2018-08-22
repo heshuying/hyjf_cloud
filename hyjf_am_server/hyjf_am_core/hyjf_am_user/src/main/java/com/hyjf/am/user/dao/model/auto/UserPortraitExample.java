@@ -125,6 +125,66 @@ public class UserPortraitExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andIdIsNull() {
+            addCriterion("id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIsNotNull() {
+            addCriterion("id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdEqualTo(Integer value) {
+            addCriterion("id =", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotEqualTo(Integer value) {
+            addCriterion("id <>", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThan(Integer value) {
+            addCriterion("id >", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("id >=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThan(Integer value) {
+            addCriterion("id <", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLessThanOrEqualTo(Integer value) {
+            addCriterion("id <=", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<Integer> values) {
+            addCriterion("id in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotIn(List<Integer> values) {
+            addCriterion("id not in", values, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdBetween(Integer value1, Integer value2) {
+            addCriterion("id between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("id not between", value1, value2, "id");
+            return (Criteria) this;
+        }
+
         public Criteria andUserIdIsNull() {
             addCriterion("user_id is null");
             return (Criteria) this;
@@ -2315,52 +2375,52 @@ public class UserPortraitExample {
             return (Criteria) this;
         }
 
-        public Criteria andAttributeEqualTo(Integer value) {
+        public Criteria andAttributeEqualTo(Boolean value) {
             addCriterion("`attribute` =", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeNotEqualTo(Integer value) {
+        public Criteria andAttributeNotEqualTo(Boolean value) {
             addCriterion("`attribute` <>", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeGreaterThan(Integer value) {
+        public Criteria andAttributeGreaterThan(Boolean value) {
             addCriterion("`attribute` >", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andAttributeGreaterThanOrEqualTo(Boolean value) {
             addCriterion("`attribute` >=", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeLessThan(Integer value) {
+        public Criteria andAttributeLessThan(Boolean value) {
             addCriterion("`attribute` <", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeLessThanOrEqualTo(Integer value) {
+        public Criteria andAttributeLessThanOrEqualTo(Boolean value) {
             addCriterion("`attribute` <=", value, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeIn(List<Integer> values) {
+        public Criteria andAttributeIn(List<Boolean> values) {
             addCriterion("`attribute` in", values, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeNotIn(List<Integer> values) {
+        public Criteria andAttributeNotIn(List<Boolean> values) {
             addCriterion("`attribute` not in", values, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeBetween(Integer value1, Integer value2) {
+        public Criteria andAttributeBetween(Boolean value1, Boolean value2) {
             addCriterion("`attribute` between", value1, value2, "attribute");
             return (Criteria) this;
         }
 
-        public Criteria andAttributeNotBetween(Integer value1, Integer value2) {
+        public Criteria andAttributeNotBetween(Boolean value1, Boolean value2) {
             addCriterion("`attribute` not between", value1, value2, "attribute");
             return (Criteria) this;
         }
