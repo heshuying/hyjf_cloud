@@ -132,4 +132,11 @@ public interface AboutUsService extends BaseMarketService {
 	 */
 	int selectTotalTenderSum();
 
+	/**
+	 *获取公司公告列表
+	 * @param request
+	 * @return
+	 */
+	ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request);
+
 }
