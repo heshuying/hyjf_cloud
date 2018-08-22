@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -74,6 +75,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ContentArticleResponse response = restTemplate
 				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + id, ContentArticleResponse.class);
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public EventVO getEventDetailById(Integer id) {
+		EventResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
+		if (response != null){
 			return response.getResult();
 		}
 		return null;
@@ -238,4 +254,18 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
     }
+
+	/**
+	 *获取公司公告列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request) {
+		ContentArticleResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/article/getCompanyDynamicsListPage",request,ContentArticleResponse.class).getBody();
+		return response;
+
+	}
+
+
 }

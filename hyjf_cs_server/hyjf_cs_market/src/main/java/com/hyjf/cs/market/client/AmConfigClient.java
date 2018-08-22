@@ -58,6 +58,14 @@ public interface AmConfigClient {
     ContentArticleVO getNoticeInfo(Integer id);
 
     /**
+     * 根据ID获取公司历程详情
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    EventVO getEventDetailById(Integer id);
+
+    /**
      * 获取招贤纳士列表
      * @return
      */
@@ -153,4 +161,11 @@ public interface AmConfigClient {
     int addSubmission(SubmissionsVO submissionsVO);
 
     List<JxBankConfigVO> getBankRecordList();
+
+    /**
+     *获取公司公告列表
+     * @param request
+     * @return
+     */
+    ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request);
 }

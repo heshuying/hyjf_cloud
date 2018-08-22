@@ -101,6 +101,9 @@ public class VipManagementController extends BaseController {
             }else {
                 response.setRtn(Response.FAIL);
             }
+        }else {
+            response.setCount(0);
+            response.setMessage("查询数据为空");
         }
         return response;
     }
@@ -124,6 +127,9 @@ public class VipManagementController extends BaseController {
                 response.setCount(count);
                 response.setMessage(Response.SUCCESS_MSG);
             }
+        }else {
+            response.setCount(0);
+            response.setMessage("查询数据为空");
         }
         return response;
     }

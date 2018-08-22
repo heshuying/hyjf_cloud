@@ -11,4 +11,13 @@ import com.hyjf.am.vo.config.SmsTemplateVO;
  * @version SmsTemplateResponse, v0.1 2018/5/8 10:19
  */
 public class SmsTemplateResponse extends Response<SmsTemplateVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

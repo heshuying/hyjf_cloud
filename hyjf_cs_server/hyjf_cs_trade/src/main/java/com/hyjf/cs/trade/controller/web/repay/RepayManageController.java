@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.web.repay;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
@@ -292,6 +293,7 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "还款详情页面数据", notes = "还款详情页面数据")
     @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
     public WebResult repayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayDetailRequestVO requestBean, HttpServletRequest request){
+        logger.info("还款详情页面数据接口开始:requestBean:" + JSON.toJSONString(requestBean));
         WebResult result = new WebResult();
         JSONObject detaiResult;
         RepayRequestDetailRequest detailRequestBean = new RepayRequestDetailRequest();
@@ -306,6 +308,7 @@ public class RepayManageController extends BaseTradeController {
 
         // 是否一次性还款
         boolean isAllRepay = false;
+        detailRequestBean.setAllRepay(false);
         if(requestBean.getIsAllRepay() != null && "1".equals(requestBean.getIsAllRepay())) {
             isAllRepay = true;
             detailRequestBean.setAllRepay(true);

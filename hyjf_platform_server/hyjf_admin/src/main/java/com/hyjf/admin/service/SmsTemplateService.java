@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 
@@ -26,7 +27,7 @@ public interface SmsTemplateService {
 	 * @param request
 	 * @return
 	 */
-	List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request);
+	SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 新增短信模版

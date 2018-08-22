@@ -60,4 +60,10 @@ public interface SmsTemplateService {
      * @param request
      */
     void updateSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 查询总条数
+     * @return
+     */
+    int selectCount();
 }

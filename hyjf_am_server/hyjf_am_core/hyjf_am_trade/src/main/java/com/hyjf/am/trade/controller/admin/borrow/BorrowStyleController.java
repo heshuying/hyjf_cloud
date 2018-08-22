@@ -43,7 +43,7 @@ public class BorrowStyleController {
         //查询保证金配置条数
         int recordTotal = this.borrowStyleService.getBorrowStyleCount();
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(),recordTotal, adminRequest.getPageSize());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),recordTotal, adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
             //查询记录
             List<BorrowStyleWithBLOBs> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
