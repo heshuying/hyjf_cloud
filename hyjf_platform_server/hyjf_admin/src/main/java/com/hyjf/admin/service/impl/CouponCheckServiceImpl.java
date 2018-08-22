@@ -18,6 +18,7 @@ import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -33,9 +34,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,8 +100,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     public CouponCheckResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
@@ -363,6 +365,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         return result;
     }
 
+    @Override
+    public List<ParamNameVO> getParamNameList(String nameClass) {
+        return amConfigClient.getParamNameList(nameClass);
+    }
+
 
     /**
      * 根据用户名获取用户
@@ -439,5 +446,16 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 //        JSONObject status = JSONObject.parseObject(result);
 //        return status;
 //    }
+
+    @Bean(name = "multipartResolver")
+
+    public MultipartResolver multipartResolver(){
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setDefaultEncoding("UTF-8");
+        resolver.setResolveLazily(true);//resolveLazily属性启用是为了推迟文件解析，以在在UploadAction中捕获文件大小异常
+        resolver.setMaxInMemorySize(40960);
+        resolver.setMaxUploadSize(50*1024*1024);//上传文件大小 50M 50*1024*1024
+        return resolver;
+    }
 
 }
