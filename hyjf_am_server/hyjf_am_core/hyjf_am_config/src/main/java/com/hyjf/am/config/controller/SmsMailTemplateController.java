@@ -73,7 +73,10 @@ public class SmsMailTemplateController extends BaseConfigController{
         List<SmsMailTemplate> list = smsMailTemplateService.findSmsTemplate(request);
         if (!CollectionUtils.isEmpty(list)) {
             List<SmsMailTemplateVO> voList = CommonUtils.convertBeanList(list, SmsMailTemplateVO.class);
+            // 查询总条数
+            int count = smsMailTemplateService.selectCount(request);
             response.setResultList(voList);
+            response.setCount(count);
         }
         return response;
     }
@@ -84,8 +87,8 @@ public class SmsMailTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/insertMailTemplate")
-    public void insertMailTemplate(@RequestBody MailTemplateRequest request) {
-        smsMailTemplateService.insertMailTemplate(request);
+    public int insertMailTemplate(@RequestBody MailTemplateRequest request) {
+        return smsMailTemplateService.insertMailTemplate(request);
     }
 
     /**
@@ -94,8 +97,8 @@ public class SmsMailTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/update_mail_template")
-    public void updateMailTemplate(@RequestBody MailTemplateRequest request) {
-        smsMailTemplateService.updateMailTemplate(request);
+    public int updateMailTemplate(@RequestBody MailTemplateRequest request) {
+        return smsMailTemplateService.updateMailTemplate(request);
     }
 
     /**
@@ -103,9 +106,9 @@ public class SmsMailTemplateController extends BaseConfigController{
      *
      * @param request
      */
-    @RequestMapping("/close_action")
-    public void closeMailTemplate(@RequestBody MailTemplateRequest request) {
-        smsMailTemplateService.closeMailTemplate(request);
+    @RequestMapping("/update_status")
+    public int updateStatus(@RequestBody MailTemplateRequest request) {
+        return smsMailTemplateService.updateStatus(request);
     }
 
     /**
@@ -117,4 +120,15 @@ public class SmsMailTemplateController extends BaseConfigController{
         smsMailTemplateService.openMailTemplate(request);
     }
 
+    @RequestMapping("/find_by_id/{id}")
+    public SmsMailTemplateResponse findById(@PathVariable Integer id) {
+        SmsMailTemplateResponse response = new SmsMailTemplateResponse();
+        SmsMailTemplate smsMailTemplate = smsMailTemplateService.findByid(id);
+        if (smsMailTemplate != null) {
+            SmsMailTemplateVO vo = new SmsMailTemplateVO();
+            BeanUtils.copyProperties(smsMailTemplate, vo);
+            response.setResult(vo);
+        }
+        return response;
+    }
 }

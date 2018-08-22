@@ -128,4 +128,16 @@ public class SmsTemplateController extends BaseConfigController{
     public int updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
         return smsTemplateService.updateSmsTemplate(request);
     }
+
+    @RequestMapping("/find_by_id/{id}")
+    public SmsTemplateResponse findById(@PathVariable Integer id) {
+        SmsTemplateResponse response = new SmsTemplateResponse();
+        SmsTemplate smsTemplate = smsTemplateService.findById(id);
+        if (smsTemplate != null) {
+            SmsTemplateVO vo = new SmsTemplateVO();
+            BeanUtils.copyProperties(smsTemplate, vo);
+            response.setResult(vo);
+        }
+        return response;
+    }
 }
