@@ -10,6 +10,7 @@ import com.hyjf.am.config.service.SmsMailTemplateService;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,11 +54,17 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
         SmsMailTemplateExample example = new SmsMailTemplateExample();
         SmsMailTemplateExample.Criteria criteria = example.createCriteria();
         if (request != null) {
-            if (request.getMailName() != null) {
+            if (StringUtils.isNotBlank(request.getMailName())) {
                 criteria.andMailNameEqualTo(request.getMailName());
             }
             if (request.getMailStatus() != null) {
                 criteria.andMailStatusEqualTo(request.getMailStatus());
+            }
+            if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+                int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+                int limitEnd = request.getPageSize();
+                example.setLimitStart(limitStart);
+                example.setLimitEnd(limitEnd);
             }
             return smsMailTemplateMapper.selectByExample(example);
         }
@@ -65,30 +72,33 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
     }
 
 	@Override
-	public void insertMailTemplate(MailTemplateRequest request) {
+	public int insertMailTemplate(MailTemplateRequest request) {
 		if (request != null) {
 			SmsMailTemplate smsMailTemplate = new SmsMailTemplate();
 			BeanUtils.copyProperties(request, smsMailTemplate);
-			smsMailTemplateMapper.insertSelective(smsMailTemplate);
+			return smsMailTemplateMapper.insertSelective(smsMailTemplate);
 		}
+		return 0;
 	}
 
     @Override
-    public void updateMailTemplate(MailTemplateRequest request) {
+    public int updateMailTemplate(MailTemplateRequest request) {
         if (request != null) {
             SmsMailTemplate smsMailTemplate = new SmsMailTemplate();
             BeanUtils.copyProperties(request, smsMailTemplate);
-            smsMailTemplateMapper.updateByPrimaryKey(smsMailTemplate);
+            return smsMailTemplateMapper.updateByPrimaryKeySelective(smsMailTemplate);
         }
+        return 0;
     }
 
     @Override
-    public void closeMailTemplate(MailTemplateRequest request) {
-        SmsMailTemplate smt = new SmsMailTemplate();
-        smt.setMailValue(request.getMailValue());
-        smt.setId(request.getId());
-        smt.setMailStatus(0);
-        smsMailTemplateMapper.updateByPrimaryKey(smt);
+    public int updateStatus(MailTemplateRequest request) {
+        if (request.getId() != null && request.getMailStatus() != null) {
+            SmsMailTemplate smsMailTemplate = smsMailTemplateMapper.selectByPrimaryKey(request.getId());
+            smsMailTemplate.setMailStatus(request.getMailStatus());
+            return smsMailTemplateMapper.updateByPrimaryKeySelective(smsMailTemplate);
+        }
+       return 0;
     }
 
     @Override
@@ -98,5 +108,29 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
         smt.setId(request.getId());
         smt.setMailStatus(1);
         smsMailTemplateMapper.updateByPrimaryKey(smt);
+    }
+
+    @Override
+    public int selectCount(MailTemplateRequest request) {
+        SmsMailTemplateExample example = new SmsMailTemplateExample();
+        SmsMailTemplateExample.Criteria criteria = example.createCriteria();
+        if (request != null) {
+            if (StringUtils.isNotBlank(request.getMailName())) {
+                criteria.andMailNameEqualTo(request.getMailName());
+            }
+            if (request.getMailStatus() != null) {
+                criteria.andMailStatusEqualTo(request.getMailStatus());
+            }
+            return smsMailTemplateMapper.countByExample(example);
+        }
+        return 0;
+    }
+
+    @Override
+    public SmsMailTemplate findByid(Integer id) {
+        if (id != null) {
+            return smsMailTemplateMapper.selectByPrimaryKey(id);
+        }
+        return null;
     }
 }

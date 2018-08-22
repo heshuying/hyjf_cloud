@@ -69,7 +69,7 @@ public class UserLeaveBatchServiceImpl extends BaseServiceImpl implements UserLe
         uCriteria.andUserIdEqualTo(userId);
         boolean usersInfoFlag = userInfoMapper.updateByExampleSelective(userInfo, usersInfoExample) > 0 ? true : false;
         if (!usersInfoFlag) {
-            logger.error("usersInfo更新用户的属性错误错误！userId:" + userId);
+            logger.error("更新用户属性失败！userId:" + userId);
         }
     }
 

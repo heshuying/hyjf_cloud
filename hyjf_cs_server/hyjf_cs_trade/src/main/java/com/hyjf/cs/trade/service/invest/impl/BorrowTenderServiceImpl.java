@@ -949,12 +949,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public ModelAndView getAppTenderUrl(TenderRequest tender) {
-        String url = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+    public String getAppTenderUrl(TenderRequest tender) {
+        tender.setPlatform((tender.getPlatform() == null || "".equals(tender.getPlatform()))?"2":tender.getPlatform());
+        String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
         logger.info("url:[{}]",url);
-        ModelAndView mv = new ModelAndView("redirect:"+url);
-        return mv;
+        //ModelAndView mv = new ModelAndView("redirect:"+url);
+        return url;
     }
 
     /**

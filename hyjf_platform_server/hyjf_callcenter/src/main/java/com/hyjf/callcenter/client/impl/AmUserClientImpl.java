@@ -141,7 +141,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public String getCouponContent(String couponCode){
 		return restTemplate
-				.getForEntity("http://AM-USER/am-user/callcenter/getVipLevel/"+ couponCode,
+				.getForEntity("http://AM-USER/am-user/callcenter/getCouponContent/"+ couponCode,
 						String.class).getBody();
 	}
 }

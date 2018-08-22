@@ -34,14 +34,12 @@ public class SrchCapitalInfoServer extends CallcenterBaseController {
 	
 	/**
 	 * 呼叫中心查询资金明细
-	 * @param request
-	 * @param response
 	 * @param bean
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/srchCapitalInfo", method = RequestMethod.POST)
-	public ResultListBean getContentOfCapitalInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserBean bean) {
+	public ResultListBean getContentOfCapitalInfo(@RequestBody UserBean bean) {
 		//初始化结果bean
 		ResultListBean result = new ResultListBean();
 		//初始化查询bean
