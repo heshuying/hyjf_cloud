@@ -6,10 +6,22 @@ spring:
       uri: http://micoserver:2222/
       profile: test
       name: admin
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
 server:
   port: 9093
-  session:
-     timeout: 36000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: admin.log
 file:
