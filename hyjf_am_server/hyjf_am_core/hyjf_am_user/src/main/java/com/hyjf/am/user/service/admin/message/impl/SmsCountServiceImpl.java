@@ -33,6 +33,10 @@ public class SmsCountServiceImpl implements SmsCountService {
 
     @Override
     public List<SmsCountCustomize> querySmsCountLlist(SmsCountRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         List<SmsCountCustomize> list = smsCountCustomizeMapper.querySmsCountLlist(request);
         String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
         if (StringUtils.isEmpty(configMoney)) {
