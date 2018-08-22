@@ -5,20 +5,21 @@
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.springboot.sample" level="TRACE"/>
     <logger name="springfox.documentation" level="ERROR"/>
+    <logger name="com.hyjf.am.trade.dao" level="DEBUG"/>
 
     <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
     <springProfile name="test,dev">
-        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.springframework.web" level="DEBUG"/>
         <logger name="org.springboot.sample" level="INFO"/>
-        <logger name="com.hyjf" level="INFO"/>
+        <logger name="com.hyjf" level="DEBUG"/>
         <logger name="com.hyjf.am.trade.dao" level="DEBUG"/>
     </springProfile>
 
     <!-- 生产环境. -->
     <springProfile name="prod">
-        <logger name="org.springframework.web" level="ERROR"/>
-        <logger name="org.springboot.sample" level="ERROR"/>
-        <logger name="com.hyjf" level="ERROR"/>
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springboot.sample" level="INFO"/>
+        <logger name="com.hyjf" level="DEBUG"/>
     </springProfile>
 
 </configuration>
