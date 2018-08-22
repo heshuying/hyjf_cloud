@@ -162,6 +162,7 @@ public class RepayManageController extends BaseController {
         projectBean.setUserId(String.valueOf(requestBean.getUserId()));
         projectBean.setUsername(requestBean.getUserName());
         projectBean.setRoleId(requestBean.getRoleId());
+        projectBean.setBorrowNid(requestBean.getBorrowNid());
 
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
