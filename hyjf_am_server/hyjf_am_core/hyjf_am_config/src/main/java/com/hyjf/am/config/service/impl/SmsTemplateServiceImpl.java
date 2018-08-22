@@ -79,7 +79,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 		if (request != null) {
 			SmsTemplate smsTemplate = new SmsTemplate();
 			BeanUtils.copyProperties(request, smsTemplate);
-			return smsTemplateMapper.insert(smsTemplate);
+			return smsTemplateMapper.insertSelective(smsTemplate);
 		}
 		return 0;
 	}
@@ -94,7 +94,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			if (!CollectionUtils.isEmpty(smsTemplateList)) {
 				SmsTemplate smsTemplate = smsTemplateList.get(0);
 				smsTemplate.setStatus(request.getStatus());
-				return smsTemplateMapper.updateByPrimaryKey(smsTemplate);
+				return smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
 			}
 		}
 		return 0;
@@ -119,7 +119,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			if (!CollectionUtils.isEmpty(smsTemplateList)) {
 				SmsTemplate smsTemplate = smsTemplateList.get(0);
 				BeanUtils.copyProperties(request, smsTemplate);
-				return smsTemplateMapper.updateByPrimaryKey(smsTemplate);
+				return smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
 			}
 		}
 		return 0;
