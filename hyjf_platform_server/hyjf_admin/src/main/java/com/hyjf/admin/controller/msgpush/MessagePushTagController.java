@@ -21,16 +21,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -74,7 +72,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "详情页", notes = "详情页")
     @RequestMapping(value = "/infoAction",method = RequestMethod.GET)
-    public AdminResult infoAction(Integer id) {
+    public AdminResult infoAction(@RequestParam Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -92,9 +90,8 @@ public class MessagePushTagController extends BaseController {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
         tagRequest.setCreateUserName(userName);
-        JSONObject json = new JSONObject();
-        json = this.validatorFieldCheckAudit(json, tagRequest);
-        if (AdminValidatorFieldCheckUtil.hasValidateError(json)) {
+        String message = validatorFieldCheckAudit(tagRequest);
+        if (message != null) {
             return new AdminResult<>(FAIL, "校验失败");
         }
         MessagePushTagResponse response = messagePushTagService.insertMessagePushTag(tagRequest);
@@ -113,6 +110,10 @@ public class MessagePushTagController extends BaseController {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
         tagRequest.setCreateUserName(userName);
+        String message = validatorFieldCheckAudit(tagRequest);
+        if (message != null) {
+            return new AdminResult<>(FAIL, "校验失败");
+        }
         MessagePushTagResponse response = messagePushTagService.updateMessagePushTag(tagRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -236,15 +237,23 @@ public class MessagePushTagController extends BaseController {
     /**
      * 参数校验
      *
-     * @param json
      * @param tagRequest
      * @return
      */
-    private JSONObject validatorFieldCheckAudit(JSONObject json, MessagePushTagRequest tagRequest) {
-        AdminValidatorFieldCheckUtil.validateRequired(json, "tagName", tagRequest.getTagName());
-        AdminValidatorFieldCheckUtil.validateRequired(json, "tagCode", tagRequest.getTagCode());
-        AdminValidatorFieldCheckUtil.validateRequired(json, "introduction", tagRequest.getIntroduction());
-        AdminValidatorFieldCheckUtil.validateRequired(json, "iconUrl", tagRequest.getIconUrl());
-        return json;
+    private String validatorFieldCheckAudit(MessagePushTagRequest tagRequest) {
+        String message = null;
+        if (tagRequest.getTagName() == null) {
+            message = "标签名不能为空";
+        }
+        if (tagRequest.getTagCode() == null) {
+            message = "标签编号不能为空";
+        }
+        if (tagRequest.getIntroduction() == null) {
+            message = "描述不能为空";
+        }
+        if (tagRequest.getIconUrl() == null) {
+            message = "icon图标不能为空";
+        }
+        return message;
     }
 }
