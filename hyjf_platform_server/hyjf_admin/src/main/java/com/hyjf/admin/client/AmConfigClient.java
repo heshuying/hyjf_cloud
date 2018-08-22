@@ -1014,7 +1014,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertSmsTemplate(SmsTemplateRequest request);
+	int insertSmsTemplate(SmsTemplateRequest request);
 
 	public SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
 
@@ -1407,7 +1407,7 @@ public interface AmConfigClient {
 	 * 开启短信配置模板
 	 * @param request
 	 */
-    void openSmsTemplate(SmsTemplateRequest request);
+    int updateStatus(SmsTemplateRequest request);
 
 	/**
 	 * 关闭短信配置模板
@@ -1419,5 +1419,12 @@ public interface AmConfigClient {
 	 * 修改短信模版
 	 * @param request
 	 */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param tplCode
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(String tplCode);
 }
