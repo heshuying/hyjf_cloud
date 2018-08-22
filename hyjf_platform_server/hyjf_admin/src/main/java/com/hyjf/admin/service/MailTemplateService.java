@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 
@@ -26,7 +27,7 @@ public interface MailTemplateService {
      * @param request
      * @return
      */
-    List<SmsMailTemplateVO> findMailTemplate(MailTemplateRequest request);
+    SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request);
 
     /**
      * 新增邮件模板
@@ -34,13 +35,13 @@ public interface MailTemplateService {
      * @param request
      * @return
      */
-    void insertMailTemplate(MailTemplateRequest request);
+    int insertMailTemplate(MailTemplateRequest request);
 
     /**
      * 修改邮件模板
      * @param request
      */
-    void updateMailTemplate(MailTemplateRequest request);
+    int updateMailTemplate(MailTemplateRequest request);
 
     /**
      * 关闭模板
@@ -52,5 +53,12 @@ public interface MailTemplateService {
      * 开启模板
      * @param request
      */
-    void openAction(MailTemplateRequest request);
+    int updateStatus(MailTemplateRequest request);
+
+    /**
+     * 模板详情
+     * @param request
+     * @return
+     */
+    SmsMailTemplateVO infoAction(MailTemplateRequest request);
 }

@@ -868,12 +868,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setRealAmount("");
         investInfo.setCouponType("");
 
-        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
+        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
         investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
-        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
-        investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
-        investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
-
+        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setBorrowInterest(CommonUtils.formatAmount(borrowInterest) + "元");
+        // 安卓的历史回报使用这个字段
+        investInfo.setProspectiveEarnings(CommonUtils.formatAmount(borrowInterest.add(couponInterest)));
         investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
@@ -914,7 +915,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setAnnotation("");
 
         // 设置无用的东西 不给app返回null
-        investInfo.setProspectiveEarnings("");
+
         investInfo.setEndTime("");
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
@@ -948,11 +949,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public ModelAndView getAppTenderUrl(TenderRequest tender) {
-        String url = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+    public String getAppTenderUrl(TenderRequest tender) {
+        tender.setPlatform((tender.getPlatform() == null || "".equals(tender.getPlatform()))?"2":tender.getPlatform());
+        String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
-        ModelAndView mv = new ModelAndView("redirect:"+url);
-        return mv;
+        logger.info("url:[{}]",url);
+        //ModelAndView mv = new ModelAndView("redirect:"+url);
+        return url;
     }
 
     /**

@@ -1,0 +1,36 @@
+package com.hyjf.am.config.service;
+
+import java.util.List;
+
+import com.hyjf.am.config.dao.model.customize.AdminSystem;
+import com.hyjf.am.config.dao.model.customize.Tree;
+
+
+
+public interface AdminSystemService {
+	/**
+	 *获取菜单
+	 */
+	public List<AdminSystem> selectLeftMenuTree(AdminSystem adminSystem);
+
+	/**
+	 * 获取权限
+	 */
+	public List<AdminSystem> getUserPermission(AdminSystem adminSystem);
+	/**
+	 * 获取用户信息
+	 */
+	public AdminSystem getUserInfo(AdminSystem adminSystem);
+	/**
+	 * 获取菜单2
+	 */
+	public List<Tree> selectLeftMenuTree2(String id);
+	/**
+	 * 获取用户信息by userid
+	 */
+	public AdminSystem getUserInfoByUserId(Integer userId);
+	/**
+	 * 验证项目申请人是否存在
+	 */
+	public int isExistsApplicant(String applicant);
+}

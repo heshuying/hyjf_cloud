@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminUtmReadPermissionsCustomMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="adminUserName != null and adminUserName !=''">
+				AND a.admin_user_name LIKE #{adminUserName,jdbcType=VARCHAR}
+			</if>
+			<if test="adminTrueName != null and adminTrueName != ''">
+				AND b.truename LIKE  #{adminTrueName,jdbcType=VARCHAR}
+			</if>
+			<if test="keyCode != null and keyCode !=''">
+				AND a.key_code = #{keyCode,jdbcType=VARCHAR}
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND a.create_time <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch !=''">
+				AND a.create_time <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="AdminUtmReadPermissionsCustomizeMap" type="com.hyjf.am.vo.config.AdminUtmReadPermissionsVO">
+		<result column="id" 					property="id" 				jdbcType="VARCHAR" />
+		<result column="admin_user_id" 			property="adminUserId" 		jdbcType="INTEGER" />
+		<result column="admin_user_name"		property="adminUserName" 	jdbcType="VARCHAR" />
+		<result column="admin_true_name"		property="adminTrueName" 	jdbcType="VARCHAR" />
+		<result column="utm_ids" 				property="utmIds" 			jdbcType="VARCHAR" />
+		<result column="role_name" 				property="roleName" 		jdbcType="VARCHAR" />
+		<result column="key_code" 			    property="keyCode" 			jdbcType="VARCHAR" />
+		<result column="create_time" 			property="createTime" 		jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectAdminUtmReadPermissionsRecord" resultMap="AdminUtmReadPermissionsCustomizeMap" parameterType="com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest" >
+		SELECT
+		a.id,
+		a.admin_user_id,
+		a.admin_user_name,
+		b.truename AS admin_true_name,
+		d.role_name,
+		a.utm_ids,
+		a.key_code,
+		a.create_time
+		FROM
+		ht_admin_utm_read_permissions a
+		LEFT JOIN ht_admin b ON a.admin_user_id = b.id
+		LEFT JOIN ht_admin_and_role c ON a.admin_user_id = c.user_id
+		LEFT JOIN ht_admin_role d ON c.role_id = d.id
+		AND d.status = '0'
+		AND d.del_flag = '0'
+		<include refid="Where_Clause" />
+		ORDER BY
+		a.create_time DESC
+		<if test=" limitStart > 0 " >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="countAdminUtmReadPermissionsRecord" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest" >
+		SELECT
+		count(1)
+		FROM
+		ht_admin_utm_read_permissions a
+		LEFT JOIN ht_admin b ON a.admin_user_id = b.id
+		LEFT JOIN ht_admin_and_role c ON a.admin_user_id = c.user_id
+		LEFT JOIN ht_admin_role d ON c.role_id = d.id
+		AND d.status = '0'
+		AND d.del_flag = '0'
+		<include refid="Where_Clause" />
+	</select>
+</mapper>

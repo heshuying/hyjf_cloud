@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.AdminUtmReadPermissionsMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="admin_user_id" property="adminUserId" jdbcType="INTEGER" />
+    <result column="admin_user_name" property="adminUserName" jdbcType="VARCHAR" />
+    <result column="utm_ids" property="utmIds" jdbcType="VARCHAR" />
+    <result column="key_code" property="keyCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, admin_user_id, admin_user_name, utm_ids, key_code, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_admin_utm_read_permissions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_admin_utm_read_permissions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_admin_utm_read_permissions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissionsExample" >
+    delete from ht_admin_utm_read_permissions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_admin_utm_read_permissions (admin_user_id, admin_user_name, utm_ids, 
+      key_code, create_time, update_time
+      )
+    values (#{adminUserId,jdbcType=INTEGER}, #{adminUserName,jdbcType=VARCHAR}, #{utmIds,jdbcType=VARCHAR}, 
+      #{keyCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_admin_utm_read_permissions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adminUserId != null" >
+        admin_user_id,
+      </if>
+      <if test="adminUserName != null" >
+        admin_user_name,
+      </if>
+      <if test="utmIds != null" >
+        utm_ids,
+      </if>
+      <if test="keyCode != null" >
+        key_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adminUserId != null" >
+        #{adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="adminUserName != null" >
+        #{adminUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="utmIds != null" >
+        #{utmIds,jdbcType=VARCHAR},
+      </if>
+      <if test="keyCode != null" >
+        #{keyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissionsExample" resultType="java.lang.Integer" >
+    select count(*) from ht_admin_utm_read_permissions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_admin_utm_read_permissions
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.adminUserId != null" >
+        admin_user_id = #{record.adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.adminUserName != null" >
+        admin_user_name = #{record.adminUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.utmIds != null" >
+        utm_ids = #{record.utmIds,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keyCode != null" >
+        key_code = #{record.keyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_admin_utm_read_permissions
+    set id = #{record.id,jdbcType=INTEGER},
+      admin_user_id = #{record.adminUserId,jdbcType=INTEGER},
+      admin_user_name = #{record.adminUserName,jdbcType=VARCHAR},
+      utm_ids = #{record.utmIds,jdbcType=VARCHAR},
+      key_code = #{record.keyCode,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions" >
+    update ht_admin_utm_read_permissions
+    <set >
+      <if test="adminUserId != null" >
+        admin_user_id = #{adminUserId,jdbcType=INTEGER},
+      </if>
+      <if test="adminUserName != null" >
+        admin_user_name = #{adminUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="utmIds != null" >
+        utm_ids = #{utmIds,jdbcType=VARCHAR},
+      </if>
+      <if test="keyCode != null" >
+        key_code = #{keyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.AdminUtmReadPermissions" >
+    update ht_admin_utm_read_permissions
+    set admin_user_id = #{adminUserId,jdbcType=INTEGER},
+      admin_user_name = #{adminUserName,jdbcType=VARCHAR},
+      utm_ids = #{utmIds,jdbcType=VARCHAR},
+      key_code = #{keyCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

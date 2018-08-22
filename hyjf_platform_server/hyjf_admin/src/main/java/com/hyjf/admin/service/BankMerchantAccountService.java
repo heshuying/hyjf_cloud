@@ -19,6 +19,11 @@ import java.util.Map;
  */
 public interface BankMerchantAccountService {
 
+    /**
+     * 查询银行账户信息
+     * @param form
+     * @return
+     */
     BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form);
 
     /**
@@ -28,6 +33,11 @@ public interface BankMerchantAccountService {
      */
     BankMerchantAccountVO getBankMerchantAccount(String accountCode);
 
+    /**
+     * 更具账号查询信息
+     * @param accountCode
+     * @return
+     */
     BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode);
 
     /**
@@ -99,6 +109,12 @@ public interface BankMerchantAccountService {
      */
     int updateBankMerchantAccount(String accountCode, BigDecimal currBalance, BigDecimal balance, BigDecimal frost);
 
+    /**
+     * 根据电子账号查询用户在江西银行的可用余额
+     * @param userId
+     * @param accountId
+     * @return
+     */
     BigDecimal getBankBalance(Integer userId, String accountId);
 
     /**

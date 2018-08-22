@@ -15,6 +15,7 @@ import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -43,10 +46,13 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "初始化页面", notes = "初始化页面")
     @PostMapping("/couponInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CouponCheckVO>> couponInit(@RequestBody CouponCheckRequestBean requestBean) {
-        AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
-        BeanUtils.copyProperties(requestBean, acr);
-        CouponCheckResponse ccr = couponCheckService.serchCouponList(acr);
+    public AdminResult<ListResult<CouponCheckVO>> couponInit(@RequestBody AdminCouponCheckRequest request) {
+        CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
+        List<String> couponStatus = new ArrayList<>();
+        couponStatus.add("待审核");
+        couponStatus.add("已发行");
+        couponStatus.add("审核不通过");
+        List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -61,7 +67,7 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @GetMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteCheckList(@PathVariable String ids) {
+    public AdminResult deleteCheckList(@RequestParam String ids) {
         AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
@@ -81,14 +87,14 @@ public class CouponCheckController extends BaseController {
 
     @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/uploadAction")
-    public AdminResult<CouponCheckVO> uploadFile(HttpServletRequest request, HttpServletResponse response) {
+    public AdminResult<CouponCheckVO> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         CouponCheckResponse files = couponCheckService.uploadFile(request, response);
         return new AdminResult<CouponCheckVO>(files.getResult());
     }
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
     @GetMapping("/downloadAction")
-    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
+    public AdminResult downloadFile(HttpServletResponse response, @RequestParam String id) {
         couponCheckService.downloadFile(id, response);
         return new AdminResult<>();
     }

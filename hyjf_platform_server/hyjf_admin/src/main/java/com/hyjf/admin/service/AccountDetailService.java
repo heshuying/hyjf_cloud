@@ -29,7 +29,7 @@ public interface AccountDetailService {
     /**
      * 查询交易明细最小的id
      */
-    AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId);
+    AdminAccountDetailDataRepairResponse getdetailDataRepair(int userId);
 
     /**
      * 查询出20170120还款后,交易明细有问题的用户ID

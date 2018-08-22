@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -73,27 +74,20 @@ public class SmsCountController extends BaseController {
         }
 
         // 部门
-        String[] combotreeListSrchStr = new String[]{};
-        if (Validator.isNotNull(request.getCombotreeSrch())) {
-            if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
-                combotreeListSrchStr = request.getCombotreeSrch().split(StringPool.COMMA);
+        if (Validator.isNotNull(request.getCombotreeListSrch())) {
 
-            } else {
-                combotreeListSrchStr = new String[]{request.getCombotreeSrch()};
-
-            }
-
-            if (Arrays.asList(combotreeListSrchStr).contains("-10086")) {
+            String[] combotreeListSrch = request.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
-                for (int i = 0; i < combotreeListSrchStr.length; i++) {
-                    String st = combotreeListSrchStr[i];
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
                     if (("-10086").equals(st)) {
-                        combotreeListSrchStr[i] = "0";
+                        combotreeListSrch[i] = "0";
                     }
                 }
             }
-            smsCountCustomize.setCombotreeListSrch(combotreeListSrchStr);
+            smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         SmsCountCustomizeResponse response = smsCountService.querySmsCountList(smsCountCustomize);
 
@@ -126,7 +120,7 @@ public class SmsCountController extends BaseController {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
             JSONObject jo = new JSONObject();
 
-            jo.put("value", -10086);
+            jo.put("value", "-10086");
           /*  jo.put("text", "其他");
             jo.put("value", -10086);*/
           /*  jo.put("parentid", 0);
@@ -146,6 +140,8 @@ public class SmsCountController extends BaseController {
             ja.add(jo);
             JSONObject ret= new JSONObject();
             ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
             return ret;
         }
 
@@ -170,7 +166,7 @@ public class SmsCountController extends BaseController {
         // 表格sheet名称
         String sheetName = "短信统计列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         SmsCountCustomizeVO smsCountCustomize = new SmsCountCustomizeVO();
         if (StringUtils.isNotEmpty(form.getPost_time_begin())) {
@@ -183,26 +179,20 @@ public class SmsCountController extends BaseController {
         }
 
         // 部门
-        String[] combotreeListSrchStr = new String[]{};
-        if (Validator.isNotNull(form.getCombotreeSrch())) {
-            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-                combotreeListSrchStr = form.getCombotreeSrch().split(StringPool.COMMA);
-            } else {
-                combotreeListSrchStr = new String[]{form.getCombotreeSrch()};
-            }
+        if (Validator.isNotNull(form.getCombotreeListSrch())) {
 
-            if (Arrays.asList(combotreeListSrchStr).contains("-10086")) {
+            String[] combotreeListSrch = form.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
 
                 //将-10086转换为 0 , 0=部门为 ‘其他’
-                for (int i = 0; i < combotreeListSrchStr.length; i++) {
-                    String st = combotreeListSrchStr[i];
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
                     if (("-10086").equals(st)) {
-                        combotreeListSrchStr[i] = "0";
+                        combotreeListSrch[i] = "0";
                     }
                 }
             }
-            smsCountCustomize.setCombotreeListSrch(combotreeListSrchStr);
-
+            smsCountCustomize.setCombotreeListSrch(combotreeListSrch);
         }
         List<SmsCountCustomizeVO> listSms = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
         //短信总条数+总费用

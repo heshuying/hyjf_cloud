@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-public class AccountBalanceMonitoringRequestBean {
+public class AccountBalanceMonitoringRequestBean extends BaseRequest {
     /**
      * 此处为属性说明
      */

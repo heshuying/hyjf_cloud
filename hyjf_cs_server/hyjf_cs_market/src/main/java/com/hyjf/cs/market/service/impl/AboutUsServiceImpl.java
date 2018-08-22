@@ -70,6 +70,17 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         return amConfigClient.getNoticeInfo(id);
     }
 
+    /**
+     * 根据ID获取公司历程详情
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public EventVO getEventDetailById(Integer id) {
+        return amConfigClient.getEventDetailById(id);
+    }
+
     @Override
     public List<JobsVo> getJobsList() {
         return amConfigClient.getJobsList();
@@ -135,6 +146,15 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         return amDataCollectClient.selectTotalTenderSum();
     }
 
+    /**
+     *获取公司公告列表
+     * @param request
+     * @return
+     */
+    @Override
+    public ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request) {
+        return amConfigClient.getCompanyDynamicsListPage(request);
+    }
 
 
 }

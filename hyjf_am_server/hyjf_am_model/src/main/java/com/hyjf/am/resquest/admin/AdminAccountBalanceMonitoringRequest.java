@@ -1,12 +1,14 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author by xiehuili on 2018/7/13.
  */
-public class AdminAccountBalanceMonitoringRequest  implements Serializable {
+public class AdminAccountBalanceMonitoringRequest  extends BasePage implements Serializable {
 
     /**
      * 此处为属性说明

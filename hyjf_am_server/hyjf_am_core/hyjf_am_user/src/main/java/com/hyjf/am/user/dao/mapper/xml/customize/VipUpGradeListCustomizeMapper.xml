@@ -4,7 +4,7 @@
 
 	<sql id="Where_Clause">
 		<where>
-		    hvu.del_flg = 0
+		    hvu.del_flag = 0
 			<if test="userName != null and userName !=''">
 				AND hydu.username LIKE CONCAT('%', #{userName}, '%')
 			</if>
@@ -29,14 +29,14 @@
 			hydu.username,
 			hvi.vip_name,
 		    CASE WHEN hvu.upgrade_vip_type = 1 THEN '购买' WHEN hvu.upgrade_vip_type = 2 THEN 'V值升级' ELSE '' END upgrade_vip_type,
-			FROM_UNIXTIME(hvu.add_time, '%Y-%m-%d %H:%i:%s' ) upgrade_time,
+			FROM_UNIXTIME(hvu.create_time, '%Y-%m-%d %H:%i:%s' ) upgrade_time,
 			IFNULL(hvu.upgrade_vip_value,0) upgrade_vip_value,
 			CASE WHEN hvu.gift_flg = 0 THEN '未发放' WHEN hvu.gift_flg = 1 THEN '已发放' ELSE '' END gift_flg,
 			hvu.remark
 		FROM
 			ht_vip_user_upgrade hvu
 		LEFT JOIN ht_vip_info hvi ON hvu.vip_id = hvi.id
-		LEFT JOIN ht_users hydu ON hvu.user_id = hydu.user_id
+		LEFT JOIN ht_user hydu ON hvu.user_id = hydu.user_id
 		<include refid="Where_Clause" />
 		ORDER BY hvi.vip_level ASC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -49,7 +49,7 @@
 		FROM
 			ht_vip_user_upgrade hvu
 		LEFT JOIN ht_vip_info hvi ON hvu.vip_id = hvi.id
-		LEFT JOIN ht_users hydu ON hvu.user_id = hydu.user_id
+		LEFT JOIN ht_user hydu ON hvu.user_id = hydu.user_id
 		<include refid="Where_Clause" />
 	</select>
 </mapper>

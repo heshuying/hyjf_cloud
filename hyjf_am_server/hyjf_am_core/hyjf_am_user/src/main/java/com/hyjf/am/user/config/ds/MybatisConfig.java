@@ -2,6 +2,7 @@ package com.hyjf.am.user.config.ds;
 
 import com.hyjf.am.user.config.ds.DynamicDataSourceContextHolder.DbType;
 import com.hyjf.am.user.interceptor.SyncRuserInterceptor;
+import com.hyjf.common.constants.CommonConstant;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -66,9 +67,9 @@ public class MybatisConfig {
 			@Qualifier("readDataSource2") DataSource readDataSource2) {
 		
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
-		targetDataSources.put(DbType.WRITE, writeDataSource);
-		targetDataSources.put(DbType.READ1, readDataSource1);
-		targetDataSources.put(DbType.READ2, readDataSource2);
+		targetDataSources.put(DbType.WRITE.name(), writeDataSource);
+		targetDataSources.put(DbType.READ1.name(), readDataSource1);
+		targetDataSources.put(DbType.READ2.name(), readDataSource2);
 		
 		// 将数据源的 key 放到数据源上下文的 key 集合中，用于切换时判断数据源是否有效
         DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITE.name());
@@ -124,6 +125,7 @@ public class MybatisConfig {
         pointcut.setExpression(transactionExecution);
         DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
         advisor.setPointcut(pointcut);
+        advisor.setOrder(CommonConstant.DATASOURCE_AOP_TRANSACTION);
         
         Properties attributes = new Properties();
         attributes.setProperty("insert*", "PROPAGATION_REQUIRED,-Exception");

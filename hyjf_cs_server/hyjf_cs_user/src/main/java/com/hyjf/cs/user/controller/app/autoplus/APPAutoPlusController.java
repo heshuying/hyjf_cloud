@@ -15,6 +15,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -25,7 +26,9 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -155,16 +159,12 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转")
     @PostMapping(value = "/userAuthCredit")
-    public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
+    public AppResult userAuthCredit(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
+        AppResult<Object> result = new AppResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean = autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
-        if (null!=baseMapBean){
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
+        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
         UserVO user = autoPlusService.getUsersById(userId);
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.appGetCommonBankCallBean(user,2,srvAuthCode,code,sign,token);
@@ -172,16 +172,13 @@ public class APPAutoPlusController extends BaseUserController {
         this.autoPlusService.insertUserAuthLog(user, bean,2,BankCallConstant.QUERY_TYPE_2);
         // 跳转到江西银行画面
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            Map<String, Object> map = BankCallUtils.callApiMap(bean);
+            result.setData(map);
         } catch (Exception e) {
             e.printStackTrace();
-            modelAndView = new ModelAndView("/jumpHTML");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
-            modelAndView.addObject("callBackForm", baseMapBean);
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
         }
-        return modelAndView;
+        return result;
     }
 
     /**
@@ -280,16 +277,12 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping(value = "/userAuthInves")
-    public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
+    public AppResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
+        AppResult<Object> result = new AppResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean = autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
-        if (null!=baseMapBean){
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
+        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
         UserVO user = autoPlusService.getUsersById(userId);
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.appGetCommonBankCallBean(user, 1, srvAuthCode, code, sign, token);
@@ -297,15 +290,12 @@ public class APPAutoPlusController extends BaseUserController {
         this.autoPlusService.insertUserAuthLog(user, bean, 2, BankCallConstant.QUERY_TYPE_1);
         // 跳转到汇付天下画面
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            Map<String, Object> map = BankCallUtils.callApiMap(bean);
+            result.setData(map);
         } catch (Exception e) {
-            modelAndView = new ModelAndView("/jumpHTML");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
-            modelAndView.addObject("callBackForm", baseMapBean);
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
         }
-        return modelAndView;
+        return result;
     }
 
     /**
@@ -431,6 +421,24 @@ public class APPAutoPlusController extends BaseUserController {
             return jsonMessage("用户信息不存在", "1");
         }
         return null;
+    }
+
+    /**
+     * @Description 调用银行失败原因
+     * @Author
+     */
+    @ApiOperation(value = "调用银行失败原因", notes = "查询调用银行失败原因")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public AppResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        AppResult<Object> result = new AppResult<Object>();
+        String retMsg = autoPlusService.getFailedMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
+        return result;
     }
 
 }

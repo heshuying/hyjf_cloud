@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.ContentEventsCustomizeMapper">
+
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.Event" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="event_time" property="eventTime" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="event_year" property="eventYear" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="add_admin" property="addAdmin" jdbcType="VARCHAR" />
+    <result column="act_time" property="actTime" jdbcType="INTEGER" />
+  </resultMap>
+	<select id="selectContentEvents" resultMap="BaseResultMap"
+		parameterType="com.hyjf.am.config.dao.model.customize.ContentEventsCustomize">
+		SELECT * FROM ht_event
+		<include refid="Where_Clause" />
+	</select>	
+	<sql id="Where_Clause">
+		<where>
+				AND 1=1
+			<if test="eventYear != null">
+				AND event_year = #{eventYear}
+			</if>
+			<if test="startCreate != null">
+				AND act_time <![CDATA[>=]]> #{startCreate}
+			</if>
+			<if test="endCreate != null">
+				AND act_time <![CDATA[<=]]> #{endCreate}
+			</if>
+				ORDER BY act_time DESC, create_time DESC
+			<if test="limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</sql>
+
+</mapper>

@@ -49,16 +49,16 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     @Override
     public List<BorrowInvestCustomize> selectBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
         List<BorrowInvestCustomize> list = borrowInvestCustomizeMapper.selectBorrowInvestList(borrowInvestRequest);
-//        if (!CollectionUtils.isEmpty(list)) {
-//            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
-//            Map<String, String> propertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
-//            Map<String, String> investMap = CacheUtil.getParamNameMap("INVEST_TYPE");
-//            for (BorrowInvestCustomize borrowInvestCustomize : list) {
-//                borrowInvestCustomize.setOperatingDeck(clientMap.getOrDefault(borrowInvestCustomize.getOperatingDeck(), null));
-//                borrowInvestCustomize.setTenderUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getTenderUserAttribute(), null));
-//                borrowInvestCustomize.setInvestType(investMap.getOrDefault(borrowInvestCustomize.getInvestType(), null));
-//            }
-//        }
+        if (!CollectionUtils.isEmpty(list)) {
+            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> propertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> investMap = CacheUtil.getParamNameMap("INVEST_TYPE");
+            for (BorrowInvestCustomize borrowInvestCustomize : list) {
+                borrowInvestCustomize.setOperatingDeck(clientMap.getOrDefault(borrowInvestCustomize.getOperatingDeck(), null));
+                borrowInvestCustomize.setTenderUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getTenderUserAttribute(), null));
+                borrowInvestCustomize.setInvestType(investMap.getOrDefault(borrowInvestCustomize.getInvestType(), null));
+            }
+        }
         return list;
     }
 
