@@ -231,7 +231,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException {
 
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
+//        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String borrowNid = StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
 
         BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
@@ -239,7 +239,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return null;
         }
         // userId 改成借款人的userid！！！
-        userId = borrow.getUserId().toString();
+        String userId = borrow.getUserId().toString();
         form.settType("0");// 设置为非汇添金专属项目
         // 设置相应的项目名称
         // 之前取borrow表的Name，现在取borrow表的projectName
@@ -3554,7 +3554,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         String batchNo = apicron.getBatchNo();// 还款请求批次号
         String batchTxDate = String.valueOf(apicron.getTxDate());// 还款请求日期
         int userId = apicron.getUserId();
-        String channel = BankCallConstant.CHANNEL_PC;
         for (int i = 0; i < 3; i++) {
             String logOrderId = GetOrderIdUtils.getOrderId2(userId);
             String orderDate = GetOrderIdUtils.getOrderDate();

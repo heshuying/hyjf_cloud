@@ -570,7 +570,6 @@ public class RepayManageController extends BaseTradeController {
 
         String startDate = requestBean.getStartDate();
         String endDate = requestBean.getEndDate();
-        String password = requestBean.getPassword();
         String msg = "";
 
         //查询该时间段的所有担保户的待还款记录并进行还款
