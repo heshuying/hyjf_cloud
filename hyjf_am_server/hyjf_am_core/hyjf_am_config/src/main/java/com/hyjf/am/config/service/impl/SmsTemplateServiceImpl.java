@@ -48,7 +48,6 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	@Override
 	public List<SmsTemplate> findAll() {
 		SmsTemplateExample example = new SmsTemplateExample();
-		SmsTemplateExample.Criteria criteria = example.createCriteria();
 		return smsTemplateMapper.selectByExample(example);
 	}
 
@@ -76,21 +75,29 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public void insertSmsTemplate(SmsTemplateRequest request) {
+	public int insertSmsTemplate(SmsTemplateRequest request) {
 		if (request != null) {
 			SmsTemplate smsTemplate = new SmsTemplate();
 			BeanUtils.copyProperties(request, smsTemplate);
-			smsTemplateMapper.insert(smsTemplate);
+			return smsTemplateMapper.insert(smsTemplate);
 		}
+		return 0;
 	}
 
 	@Override
-	public void openSmsTemplate(SmsTemplateRequest request) {
-		SmsTemplate smsTemplate = new SmsTemplate();
-		BeanUtils.copyProperties(request, smsTemplate);
-		// 开启
-		smsTemplate.setStatus(1);
-		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	public Integer updateSmsTemplateStatus(SmsTemplateRequest request) {
+		if (StringUtils.isNotEmpty(request.getTplCode()) && request.getStatus() != null) {
+			SmsTemplateExample example = new SmsTemplateExample();
+			SmsTemplateExample.Criteria criteria = example.createCriteria();
+			criteria.andTplCodeEqualTo(request.getTplCode());
+			List<SmsTemplate> smsTemplateList = smsTemplateMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(smsTemplateList)) {
+				SmsTemplate smsTemplate = smsTemplateList.get(0);
+				smsTemplate.setStatus(request.getStatus());
+				return smsTemplateMapper.updateByPrimaryKey(smsTemplate);
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -103,10 +110,19 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public void updateSmsTemplate(SmsTemplateRequest request) {
-		SmsTemplate smsTemplate = new SmsTemplate();
-		BeanUtils.copyProperties(request, smsTemplate);
-		smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
+	public int updateSmsTemplate(SmsTemplateRequest request) {
+		if (StringUtils.isNotEmpty(request.getTplCode()) && request.getStatus() != null) {
+			SmsTemplateExample example = new SmsTemplateExample();
+			SmsTemplateExample.Criteria criteria = example.createCriteria();
+			criteria.andTplCodeEqualTo(request.getTplCode());
+			List<SmsTemplate> smsTemplateList = smsTemplateMapper.selectByExample(example);
+			if (!CollectionUtils.isEmpty(smsTemplateList)) {
+				SmsTemplate smsTemplate = smsTemplateList.get(0);
+				BeanUtils.copyProperties(request, smsTemplate);
+				return smsTemplateMapper.updateByPrimaryKey(smsTemplate);
+			}
+		}
+		return 0;
 	}
 
 	@Override

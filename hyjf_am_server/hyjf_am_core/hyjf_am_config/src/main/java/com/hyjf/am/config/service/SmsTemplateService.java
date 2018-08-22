@@ -41,13 +41,13 @@ public interface SmsTemplateService {
      *
      * @param request
      */
-    void insertSmsTemplate(SmsTemplateRequest request);
+    int insertSmsTemplate(SmsTemplateRequest request);
 
     /**
      * 开启短信模板
      * @param request
      */
-    void openSmsTemplate(SmsTemplateRequest request);
+    Integer updateSmsTemplateStatus(SmsTemplateRequest request);
 
     /**
      * 关闭短信模板
@@ -59,7 +59,7 @@ public interface SmsTemplateService {
      * 修改短信模版
      * @param request
      */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
 
     /**
      * 查询总条数
