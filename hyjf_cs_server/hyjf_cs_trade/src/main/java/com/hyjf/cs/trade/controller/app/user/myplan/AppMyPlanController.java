@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 @Api(value = "app端-用户我的计划接口",tags = "app端-用户我的计划接口")
-@Controller
+@RestController
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {
     private final String ILLEGAL_PARAMETER_STATUS_DESC = "请求参数非法";
