@@ -17,6 +17,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
@@ -247,10 +248,16 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
 	@PostMapping("/getFXReportList")
-	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("101");
-		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleBean request ){
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		contentArticleRequest.setNoticeType("101");
+		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
+		Page page = new Page();
+		page.setTotal(homeNoticeList.getRecordTotal());
+		page.setCurrPage(request.getPaginatorPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
 		return webResult;
 	}
 
@@ -395,11 +402,13 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "查询公司动态列表", notes = "查询公司动态列表")
 	@PostMapping("/getCompanyDynamicsListPage")
-	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleRequest request) {
+	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleBean request) {
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+
 		WebResult webResult=null;
 		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
-		request.setNoticeType("20");
-		ContentArticleResponse response = aboutUsService.getCompanyDynamicsListPage(request);
+		contentArticleRequest.setNoticeType("20");
+		ContentArticleResponse response = aboutUsService.getCompanyDynamicsListPage(contentArticleRequest);
 		List<ContentArticleVO> companyDynamicsList = response.getResultList();
 		for (ContentArticleVO companyDynamics : companyDynamicsList) {
 			if (companyDynamics.getContent().contains("../../../..")) {
@@ -413,7 +422,7 @@ public class AboutUsController extends BaseController {
 		webResult = new WebResult(companyDynamicsList);
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
-		page.setCurrPage(request.getCurrPage());
+		page.setCurrPage(request.getPaginatorPage());
 		page.setPageSize(request.getPageSize());
 		webResult.setPage(page);
 
