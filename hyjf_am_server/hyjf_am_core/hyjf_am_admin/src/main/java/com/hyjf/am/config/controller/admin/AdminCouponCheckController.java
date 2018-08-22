@@ -14,6 +14,7 @@ import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -62,7 +63,7 @@ public class AdminCouponCheckController extends BaseConfigController {
     public CouponCheckResponse deleteCheckList(@RequestBody @Valid AdminCouponCheckRequest request) {
         logger.info("删除优惠券信息..." + JSONObject.toJSON(request));
         CouponCheckResponse response = new CouponCheckResponse();
-        int id = request.getId();
+        int id = Integer.parseInt(request.getId());
         this.checkService.deleteCheckList(id);
         response.setMessage(Response.SUCCESS_MSG);
         return response;
