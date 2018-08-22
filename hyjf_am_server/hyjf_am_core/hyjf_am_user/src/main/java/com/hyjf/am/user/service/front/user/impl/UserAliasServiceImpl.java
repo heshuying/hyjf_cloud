@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
-import java.util.List;
-
 import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.dao.model.auto.UserAliasExample;
 import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.user.service.front.user.UserAliasService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.UserAliasVO;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -31,7 +30,13 @@ public class UserAliasServiceImpl extends BaseServiceImpl implements UserAliasSe
 		if (CollectionUtils.isEmpty(users)) {
 			return null;
 		}
-		return userAliasMapper.selectByPrimaryKey(users.get(0).getUserId());
+		UserAliasExample userAliasExample = new UserAliasExample();
+		userAliasExample.createCriteria().andUserIdEqualTo(users.get(0).getUserId());
+		List<UserAlias> list = userAliasMapper.selectByExample(userAliasExample);
+		if (null!=list&&list.size()>0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	@Override
@@ -61,7 +66,13 @@ public class UserAliasServiceImpl extends BaseServiceImpl implements UserAliasSe
 
 	@Override
 	public UserAlias findAliasesByUserId(Integer userId) {
-		return userAliasMapper.selectByPrimaryKey(userId);
+		UserAliasExample userAliasExample = new UserAliasExample();
+		userAliasExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserAlias> list = userAliasMapper.selectByExample(userAliasExample);
+		if (null!=list&&list.size()>0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	@Override
