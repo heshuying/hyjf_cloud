@@ -38,5 +38,5 @@ public interface SmsCountService {
      * 查询总条数
      * @return
      */
-    int selectCount();
+    int selectCount(SmsCountRequest request);
 }

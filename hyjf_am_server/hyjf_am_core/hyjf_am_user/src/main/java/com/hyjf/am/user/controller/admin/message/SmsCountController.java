@@ -48,7 +48,7 @@ public class SmsCountController extends BaseController {
             response.setResultList(voList);
         }
         // 查询总条数
-        int count = smsCountService.selectCount();
+        int count = smsCountService.selectCount(request);
         DecimalFormat decimalFormat = new DecimalFormat("0.000");
         String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
         if (StringUtils.isEmpty(configMoney)) {
