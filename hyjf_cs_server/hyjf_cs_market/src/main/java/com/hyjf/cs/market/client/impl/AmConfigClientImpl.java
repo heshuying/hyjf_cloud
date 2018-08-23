@@ -3,13 +3,13 @@
  */
 package com.hyjf.cs.market.client.impl;
 
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -61,9 +61,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public List<ContentArticleVO> aboutUsClient() {
+	public List<ContentArticleVO> aboutUsClient(BasePage request) {
 		ContentArticleResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/article/contentArticleList", null, ContentArticleResponse.class);
+				"http://AM-CONFIG/am-config/article/contentArticleList", request, ContentArticleResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}

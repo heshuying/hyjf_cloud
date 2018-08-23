@@ -11,7 +11,6 @@ import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -1280,68 +1279,6 @@ public class AmConfigClientImpl implements AmConfigClient {
                 req, AdminFeeConfigResponse.class);
     }
 
-    /**
-     * 查询列表
-     *
-     * @param adminRequest
-     * @return
-     */
-    @Override
-    public HolidaysConfigResponse initHolidaysConfig(AdminHolidaysConfigRequest adminRequest) {
-        String url = "http://AM-CONFIG/am-config/holidaysConfig/list";
-        HolidaysConfigResponse response = restTemplate.postForEntity(url, adminRequest, HolidaysConfigResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 查询节假日配置详情页面
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public HolidaysConfigResponse getHolidaysConfigById(Integer id) {
-        String url = "http://AM-CONFIG/am-config/holidaysConfig/info/" + id;
-        HolidaysConfigResponse response = restTemplate.getForEntity(url, HolidaysConfigResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 编辑保存节假日配置
-     *
-     * @return
-     */
-    @Override
-    public HolidaysConfigResponse saveHolidaysConfig(AdminHolidaysConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/holidaysConfig/insert";
-        HolidaysConfigResponse response = restTemplate.postForEntity(url, req, HolidaysConfigResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 修改节假日配置
-     *
-     * @return
-     */
-    @Override
-    public HolidaysConfigResponse updateHolidaysConfig(AdminHolidaysConfigRequest req) {
-        String url = "http://AM-CONFIG/am-config/holidaysConfig/update";
-        HolidaysConfigResponse response = restTemplate.postForEntity(url, req, HolidaysConfigResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
     @Override
     public List<AdminSystemVO> getUserPermission(String userName) {
         AdminSystemResponse adminSystemResponse = restTemplate
@@ -1358,7 +1295,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminSystemResponse getUserInfo(AdminSystemRequest adminSystemRequest) {
         AdminSystemResponse adminSystemResponse = restTemplate
-                .postForEntity("http://AM-ADMIN/am-config/adminSystem/getuser", adminSystemRequest,
+                .postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser", adminSystemRequest,
                         AdminSystemResponse.class)
                 .getBody();
         if (adminSystemResponse != null) {
@@ -1763,6 +1700,12 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
+                LinkResponse.class);
+    }
+
+    @Override
+    public LinkResponse infoInfoAction(Integer id) {
+        return restTemplate.getForObject("http://AM-CONFIG//am-config/content/contentlinks/getrecord/" + id,
                 LinkResponse.class);
     }
 

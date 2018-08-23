@@ -7,6 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -14,11 +15,9 @@ import com.hyjf.cs.trade.vo.AppRechargeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +64,7 @@ public class AppRechargeController extends BaseTradeController{
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
-		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/bank/user/userDirectRecharge/recharge?";
+		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/hyjf-app/bank/user/userDirectRecharge/recharge?";
 		String mobile = "";
 		String token = "";
 		String order = "";
@@ -108,7 +105,15 @@ public class AppRechargeController extends BaseTradeController{
 	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("app充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getAppFrontHost()+"/user/rechargeError";
+		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn" + "?phone="+mobile;
+		String successfulUrl = systemConfig.getAppFrontHost()+"/user/rechargeSuccess?money="+money;
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			modelAndView = BankCallUtils.callApi(bean);

@@ -94,7 +94,9 @@ public class AutoCorrectionConsumer extends Consumer{
                 aleveLogFileService.updateAutoCorretion(aleveLogCustomizes);
 
             } catch (Exception e) {
+                //异常时重发
                 logger.error("【自动冲正异常】处理失败！", e);
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }

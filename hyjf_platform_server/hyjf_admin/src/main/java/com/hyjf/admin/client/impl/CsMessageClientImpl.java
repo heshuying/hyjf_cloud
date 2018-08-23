@@ -224,7 +224,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     @Override
     public MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request) {
         MessagePushPlatStaticsResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+                .postForEntity("http://CS-MESSAGE/cs-message/messageplat_statics/select_plat_statics",
                         request, MessagePushPlatStaticsResponse.class)
                 .getBody();
         if (response != null) {

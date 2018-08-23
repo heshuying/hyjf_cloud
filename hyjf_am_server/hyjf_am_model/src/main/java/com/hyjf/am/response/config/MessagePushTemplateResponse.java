@@ -28,6 +28,8 @@ public class MessagePushTemplateResponse extends Response<MessagePushTemplateVO>
 
     private List<ParamNameVO> plats;
 
+    private String uploadFileImagePath;
+
     public int getCount() {
         return count;
     }
@@ -74,5 +76,13 @@ public class MessagePushTemplateResponse extends Response<MessagePushTemplateVO>
 
     public void setPlats(List<ParamNameVO> plats) {
         this.plats = plats;
+    }
+
+    public String getUploadFileImagePath() {
+        return uploadFileImagePath;
+    }
+
+    public void setUploadFileImagePath(String uploadFileImagePath) {
+        this.uploadFileImagePath = uploadFileImagePath;
     }
 }

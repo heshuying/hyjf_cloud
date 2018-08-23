@@ -11,7 +11,7 @@ import java.util.List;
  * @author wangjun
  * @version WxRechargeDescResultBean, v0.1 2018/7/26 9:13
  */
-public class WxRechargeDescResultBean implements Serializable {
+public class WxRechargeDescResultBean extends BaseResultBeanFrontEnd implements Serializable {
     // 充值限额说明
     private List<RechargeLimitAmountDesc> list;
 

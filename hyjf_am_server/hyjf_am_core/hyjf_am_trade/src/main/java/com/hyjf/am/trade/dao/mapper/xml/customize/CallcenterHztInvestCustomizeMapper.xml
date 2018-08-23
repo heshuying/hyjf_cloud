@@ -18,7 +18,11 @@
 		<result column="user_property" property="tenderUserAttribute" jdbcType="VARCHAR" />
 		<result column="resendMessage" property="resendMessage" jdbcType="VARCHAR" />
 		<result column="investType" property="investType" jdbcType="VARCHAR" />
-		<result column="borrowExtraYield" property="borrowExtraYield" jdbcType="DECIMAL" />
+		
+		
+		<result column="borrowExtraYield" property="borrowExtraYield" />
+		
+		
 	</resultMap>
 	<select id="getBorrowInvestList" resultMap="selectBorrowInvestListMap" parameterType="com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest">
 		SELECT
@@ -40,8 +44,13 @@
 		  bt.client AS operating_deck,
 		  bt.tender_user_attribute AS user_property,
 		  bt.invest_type AS investType,
+		  
 		  iii.borrow_extra_yield AS borrowExtraYield,
-		  FROM_UNIXTIME( bt.add_time, '%Y-%m-%d %H:%i:%s' ) AS addtime
+		  
+		  
+		  
+		  <!-- FROM_UNIXTIME( bt.add_time, '%Y-%m-%d %H:%i:%s' ) AS addtime -->
+		  DATE_FORMAT(bt.create_time,'%Y-%m-%d %H:%i:%S') AS addtime
 		FROM
 			ht_borrow_tender bt
 		  INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
@@ -50,7 +59,7 @@
 		  LEFT JOIN ht_increase_interest_invest iii ON iii.tender_id = bt.id
 	    <include refid="Where_Clause" />
 		  ORDER BY
-		    bt.add_time DESC, bt.id DESC
+		    bt.create_time DESC, bt.id DESC
 		<if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitSize}
 	    </if>
@@ -113,7 +122,9 @@
 			ELSE
 				'现金'
 			END AS tender_type,
-			FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time,
+			<!-- FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time, -->
+			DATE_FORMAT(hdpa.create_time,'%Y-%m-%d %H:%i:%S') AS create_time,
+			
 			hdpa.create_time AS add_time_long
 		FROM
 			ht_debt_plan_accede hdpa

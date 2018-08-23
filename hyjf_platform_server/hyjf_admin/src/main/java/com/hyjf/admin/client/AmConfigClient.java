@@ -852,31 +852,6 @@ public interface AmConfigClient {
 	 */
 	public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req);
 
-	/**
-	 * 查询列表
-	 * @param adminRequest
-	 * @return
-	 */
-	public HolidaysConfigResponse initHolidaysConfig(AdminHolidaysConfigRequest adminRequest);
-	/**
-	 * 查询节假日配置详情页面
-	 * @param id
-	 * @return
-	 */
-	public HolidaysConfigResponse getHolidaysConfigById(Integer id);
-
-	/**
-	 * 编辑保存节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse saveHolidaysConfig(AdminHolidaysConfigRequest req);
-
-	/**
-	 * 修改节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse updateHolidaysConfig(AdminHolidaysConfigRequest req);
-
 	/**查询用户权限
 	 *
 	 * @param userName
@@ -1155,6 +1130,14 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+
+	/**
+	 * 根据id查询数据
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse infoInfoAction(Integer id);
 
 	/**
 	 * 修改根据条件查询友情链接列表

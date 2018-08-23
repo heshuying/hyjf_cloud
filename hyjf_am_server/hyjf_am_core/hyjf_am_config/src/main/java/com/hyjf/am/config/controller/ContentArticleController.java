@@ -64,7 +64,7 @@ public class ContentArticleController {
         ContentArticleResponse response = new ContentArticleResponse();
         int totalPage = contentArticleService.getNoticeListCount(request.getNoticeType());
         if (totalPage > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), totalPage, request.getPageSize());
+            Paginator paginator = new Paginator(request.getCurrPage(), totalPage, request.getPageSize());
             List<ContentArticle> list = contentArticleService.searchNoticeList(request.getNoticeType(),paginator.getOffset(),paginator.getLimit());
             if (!CollectionUtils.isEmpty(list)) {
                 List<ContentArticleVO> result = CommonUtils.convertBeanList(list, ContentArticleVO.class);
@@ -149,9 +149,9 @@ public class ContentArticleController {
      * @return
      */
     @RequestMapping("/countcontentarticlebytype")
-    public ContentArticleCustomizeResponse countContentArticleByType(@RequestBody Map<String, Object> params) {
+    public ContentArticleCustomizeResponse countContentArticleByType() {
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
-        Integer count = contentArticleService.countContentArticleByType(params);
+        Integer count = contentArticleService.countContentArticleByType();
         if (count != null) {
             response.setCount(count);
             return response;
@@ -296,7 +296,7 @@ public class ContentArticleController {
             params.put("limitStart", -1);
             params.put("limitEnd", -1);
             // 查询总数
-            Integer count = contentArticleService.countContentArticleByType(params);
+            Integer count = contentArticleService.countContentArticleByType();
             if (count != null && count > 0) {
                 // 构造分页
                 if(form.getCurrentPage()<=0){
