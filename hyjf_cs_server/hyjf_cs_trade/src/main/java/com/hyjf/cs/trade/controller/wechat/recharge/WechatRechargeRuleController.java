@@ -12,7 +12,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.recharge.WechatRechargeRuleService;
@@ -55,11 +54,8 @@ public class WechatRechargeRuleController {
 
     @ApiOperation(value = "获取充值规则", notes = "获取充值规则")
     @GetMapping(value = "/rechargeRule")
-    public WeChatResult rechargeRule() {
-        WeChatResult result = new WeChatResult();
-        WxRechargeDescResultBean bean = wechatRechargeRuleService.getRechargeRule();
-        result.setData(bean);
-        return result;
+    public WxRechargeDescResultBean rechargeRule() {
+        return wechatRechargeRuleService.getRechargeRule();
     }
 
     /**
