@@ -1132,6 +1132,14 @@ public interface AmConfigClient {
 	LinkResponse insertAction(ContentLinksRequestBean requestBean);
 
 	/**
+	 * 根据id查询数据
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse infoInfoAction(Integer id);
+
+	/**
 	 * 修改根据条件查询友情链接列表
 	 *
 	 * @param requestBean

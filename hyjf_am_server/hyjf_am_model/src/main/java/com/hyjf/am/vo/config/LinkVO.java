@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.util.Date;
@@ -278,6 +279,7 @@ public class LinkVO extends BaseVO {
         this.updateUserId = updateUserId;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -286,6 +288,7 @@ public class LinkVO extends BaseVO {
         this.createTime = createTime;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

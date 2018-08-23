@@ -55,6 +55,19 @@ public class ContentLinksController extends BaseController {
         return new AdminResult<>();
     }
 
+    @ApiOperation(value = "内容中心-友情链接  迁移到查看详细画面", notes = "内容中心-友情链接  迁移到查看详细画面")
+    @PostMapping("/infoInfoAction")
+    public AdminResult infoInfoAction(@RequestBody ContentLinksRequestBean requestBean) {
+        LinkResponse response = contentLinksService.infoInfoAction(requestBean);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response.getResult());
+    }
+
     @ApiOperation(value = "修改内容中心-友情链接", notes = "修改内容中心-友情链接")
     @PostMapping("/update")
     public AdminResult update(@RequestBody ContentLinksRequestBean requestBean) {
