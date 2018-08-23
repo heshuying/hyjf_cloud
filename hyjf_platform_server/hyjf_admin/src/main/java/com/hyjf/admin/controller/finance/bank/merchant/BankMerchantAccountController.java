@@ -27,6 +27,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -79,7 +80,7 @@ public class BankMerchantAccountController extends BaseController {
     @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
         AdminSystemVO adminSystem = getUser(request);
-      //  CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
@@ -196,6 +197,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "圈存弹出窗" ,tags = "圈存弹出窗" )
     @ResponseBody
+    @ApiImplicitParam(name = "accountCode",value = "accountCode:账户",dataType = "String")
     @GetMapping(value = "/rechargeInit/{accountCode}" , produces = "application/json; charset=utf-8")
     public AdminResult rechargeInit(@PathVariable String accountCode){
         AdminResult adminResult = new AdminResult();

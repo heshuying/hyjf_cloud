@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "授权状态&授权记录",tags ="授权状态&授权记录")
+@Api(value = "会员中心-授权状态&授权记录",tags ="会员中心-授权状态&授权记录")
 @RestController
 @RequestMapping("/hyjf-admin/userauth")
 public class UserauthController extends BaseController {

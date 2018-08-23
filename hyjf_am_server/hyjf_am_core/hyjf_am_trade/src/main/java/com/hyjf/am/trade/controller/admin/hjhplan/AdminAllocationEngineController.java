@@ -300,10 +300,14 @@ public class AdminAllocationEngineController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/checkRepeat/{labelName}/{planNid}", method = RequestMethod.POST)
-    public boolean checkRepeat(@PathVariable String labelName, @PathVariable String planNid) {
-    	boolean Flag = adminAllocationEngineService.checkRepeat(labelName,planNid);
-    	return Flag;
+    @RequestMapping(value = "/checkRepeat", method = RequestMethod.POST)
+    public HjhAllocationEngineResponse checkRepeat(@RequestBody @Valid AllocationEngineRuquest form) {
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+    	int Flag = adminAllocationEngineService.checkRepeat(form);
+        response.setFlag(Flag);
+        //代表成功
+        response.setRtn(Response.SUCCESS);
+    	return response;
     }
     
 	/**

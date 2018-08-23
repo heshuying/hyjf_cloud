@@ -4106,7 +4106,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlanAll(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-        borrowRepayPlanCrt.andUserIdEqualTo(userId);
+//todo 暂时删除       borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanExample.setOrderByClause("repay_period");
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
@@ -4117,7 +4117,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public BorrowRepayPlan searchRepayPlan(int userId, String borrowNid, int period) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-        borrowRepayPlanCrt.andUserIdEqualTo(userId);
+//        borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanCrt.andRepayPeriodEqualTo(period);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
@@ -5058,5 +5058,116 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
 
         return repayProjectInfo;
+    }
+
+    @Override
+    public boolean checkRepayInfo(Integer userId, String borrowNid) {
+        BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
+        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
+                                     BigDecimal repayTotal, String userName) {
+        BankRepayFreezeLog log = new BankRepayFreezeLog();
+        log.setBorrowNid(borrowNid);
+        log.setAccount(account);
+        log.setAmount(repayTotal);
+        log.setDelFlag(0);// 0 有效 1 无效
+        log.setOrderId(orderId);
+        log.setUserId(userId);
+        log.setUserName(userName);
+        log.setCreateTime(GetDate.getDate());
+        log.setCreateUserId(userId);
+        log.setCreateUserName(userName);
+        int flag = this.bankRepayFreezeLogMapper.insertSelective(log);
+        if (flag > 0) {
+            logger.info("====================插入冻结表日志成功!============");
+        } else {
+            logger.info("====================插入冻结表日志失败!============");
+        }
+    }
+
+    @Override
+    public void deleteFreezeTempLogs(String orderId) {
+        BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(example);
+        if (log != null && log.size() > 0) {
+            for (int i = 0; i < log.size(); i++) {
+                BankRepayFreezeLog record = log.get(i);
+                record.setDelFlag(1);// 0 有效 1无效
+                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
+                if (flag > 0) {
+                    logger.info("=============还款冻结成功,删除还款冻结临时日志成功=========");
+                } else {
+                    logger.info("==============删除还款冻结临时日志失败============");
+                }
+            }
+        }
+    }
+
+    @Override
+    public Borrow searchRepayProject(int userId, String userName, String roleId, String borrowNid) {
+        // 获取当前的用户还款的项目
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria borrowCrt = example.createCriteria();
+        borrowCrt.andBorrowNidEqualTo(borrowNid);
+        if (StringUtils.isNotEmpty(roleId) && "3".equals(roleId)) {// 如果是垫付机构
+            borrowCrt.andRepayOrgUserIdEqualTo(userId);
+        } else {// 普通借款人
+            borrowCrt.andUserIdEqualTo(userId);
+        }
+        List<BorrowInfo> borrowInfoList = this.borrowInfoMapper.selectByExample(example);
+        if (borrowInfoList != null && borrowInfoList.size() == 1) {
+            return this.getBorrow(borrowInfoList.get(0).getBorrowNid());
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException {
+        RepayBean RepayBean = this.calculateRepay(userId, borrow);
+        return RepayBean.getRepayAccountAll();
+    }
+
+    @Override
+    public BigDecimal searchRepayByTermTotal(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception {
+        BorrowRepay borrowRepay = this.searchRepay(userId, borrow.getBorrowNid());
+        BigDecimal repayPlanTotal = new BigDecimal(0);
+        // 判断用户的余额是否足够还款
+        if (borrowRepay != null) {
+            RepayBean repayByTerm = new RepayBean();
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            // 计算当前还款期数
+            int period = periodTotal - borrowRepay.getRepayPeriod() + 1;
+            repayPlanTotal = calculateRepayPlan(repayByTerm, borrow, period);
+        }
+        return repayPlanTotal;
+    }
+
+    @Override
+    public RepayBean calculateRepayByTerm(int userId, Borrow borrow) throws Exception {
+
+        RepayBean repay = new RepayBean();
+        // 获取还款总表数据
+        BorrowRepay borrowRepay = this.searchRepay(userId, borrow.getBorrowNid());
+        // 判断用户的余额是否足够还款
+        if (borrowRepay != null) {
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repay);
+            repay.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
+            int period = borrow.getBorrowPeriod() - repay.getRepayPeriod() + 1;
+
+            this.calculateRepayPlan(repay, borrow, period);
+        }
+        return repay;
     }
 }

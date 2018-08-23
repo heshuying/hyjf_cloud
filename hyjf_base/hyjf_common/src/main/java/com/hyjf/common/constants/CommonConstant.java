@@ -152,4 +152,25 @@ public class CommonConstant {
     public static final String JSON_USER_LOGIN_ERROR_KEY = "userError";
     /** ValidateForm请求返回值*/
     public static final String JSON_USER_LOGIN_ERROR_VLUES = "userError";
+
+    /**
+     * ----------------------------------APP端银行页面调用请求类型---------------------------------------
+     */
+    /**
+     * 开户
+     */
+    public static final String APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT = "1";
+    /**
+     * 散标投资
+     */
+    public static final String APP_BANK_REQUEST_TYPE_TENDER = "2";
+    
+    
+    /**
+     * 数据源控制优先级别(值越小优先级越高)，读方法切面
+     */
+    public static final String[] DATASOURCE_QUERY_PREFIX = {"select","query","count","search","get","find","check"};
+    public static final int DATASOURCE_AOP_DS = 1;
+    public static final int DATASOURCE_AOP_TRANSACTION = 2;
+    
 }

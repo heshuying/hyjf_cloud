@@ -29,7 +29,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         Criteria criteria = new Criteria();
 
         if (form.getTagId() != null) {
-            criteria.and("tagId").equals(form.getTagId());
+            criteria.and("tagId").is(form.getTagId());
         }
         if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
@@ -44,10 +44,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
-            criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
+            criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
-
-        if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
+        criteria.and("msgDestinationType").is(0);
+       if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
             Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
             criteria.and("sendTime").gte(time);
             if (form.getEndSendTimeSrch() != null) {
@@ -60,10 +60,6 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
                 criteria.and("sendTime").lte(time2);
             }
         }
-
-
-        criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
-
         Query query = new Query(criteria);
         return (int)mongoTemplate.count(query,MessagePushMsg.class);
     }
@@ -74,11 +70,9 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public List<MessagePushMsg> getRecordList(MessagePushNoticesRequest form, Integer offset, Integer limit){
         Criteria criteria = new Criteria();
-        if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-            criteria.and("msgDestinationType").equals(form.getEndSendTimeSrch());
-        }
+
         if (form.getTagId() != null) {
-            criteria.and("tagId").equals(form.getTagId());
+            criteria.and("tagId").is(form.getTagId());
         }
         if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
@@ -93,7 +87,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
-            criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
+            criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
         if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
             Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
@@ -108,7 +102,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
                 criteria.and("sendTime").lte(time2);
             }
         }
-        criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
+        criteria.and("msgDestinationType").is(0);
         Query query = new Query(criteria);
         query.skip(offset).limit(limit);
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
@@ -122,9 +116,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public MessagePushMsg getRecord(MessagePushNoticesRequest request){
         Criteria criteria = new Criteria();
-        if (request.getNoticesSendStatusSrch() != null) {
-            criteria.and("id").equals(request.getId());
-        }
+        criteria.and("id").is(request.getIds());
         Query query = new Query(criteria);
         return mongoTemplate.findOne(query,MessagePushMsg.class);
     }
@@ -148,10 +140,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      * 删除数据
      * @return
      */
-    public void deleteRecord(Integer id){
+    public void deleteRecord(String id){
         Query query = new Query();
         Criteria criteria = new Criteria();
-        criteria.and("id").equals(id);
+        criteria.and("id").is(id);
         query.addCriteria(criteria);
         this.del(query);
     }

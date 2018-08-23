@@ -13,8 +13,6 @@ import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hyjf-admin/merchant/account")
 public class MerchantAccountController extends BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(MerchantAccountController.class);
+
     @Autowired
     MerchantAccountService merchantAccountService;
 

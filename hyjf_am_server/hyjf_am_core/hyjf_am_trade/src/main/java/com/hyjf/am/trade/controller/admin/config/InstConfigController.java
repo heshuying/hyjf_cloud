@@ -53,7 +53,8 @@ public class InstConfigController {
         //查询保证金配置条数
         List<HjhInstConfig> recordList = this.instConfigService.instConfigInitByPage(-1,-1);
         if (!CollectionUtils.isEmpty(recordList)) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size());
+            response.setRecordTotal(recordList.size());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             recordList =instConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
             for(HjhInstConfig instConfigVO:recordList){
@@ -71,7 +72,6 @@ public class InstConfigController {
             }
 
             response.setResultList(resList);
-            response.setRecordTotal(recordList.size());
             response.setRtn(Response.SUCCESS);
             return response;
         }
@@ -100,7 +100,10 @@ public class InstConfigController {
                 }
                 response.setResult(recordWrap);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.FAIL);
+            response.setMessage("查询失败！");
             return response;
         }
         return null;
@@ -114,15 +117,14 @@ public class InstConfigController {
     public AdminInstConfigListResponse insertInstConfig(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
         String instCode = GetCode.generateInstCode(8);
-        try{
-           int result =this.instConfigService.insertInstConfig(req,instCode);
-            if(result > 0 && req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)){
-                RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instCode, req.getCapitalToplimit().toString());
-                resp.setRtn("SUCCESS");
-            }
-        }catch (Exception e){
-            resp.setRtn("FAIL");
+        int result =this.instConfigService.insertInstConfig(req,instCode);
+        if(result > 0 && req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)){
+            RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instCode, req.getCapitalToplimit().toString());
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("添加失败！");
         return resp;
     }
 
@@ -133,32 +135,30 @@ public class InstConfigController {
     @RequestMapping("/update")
     public AdminInstConfigListResponse updateInstConfig(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
-        try{
-            HjhInstConfig instConfig = null;
-            if(req.getId() != null ){
-                instConfig = this.instConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
-            }
-            int result = instConfigService.updateInstConfigRecordById(req);
-            // 更新redis中的可用余额
-            if(result > 0 && !req.getCapitalToplimit(). equals(instConfig.getCapitalToplimit())){
-                if(!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instConfig.getInstCode())){
-                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(), req.getCapitalToplimit().toString());
-                }else {
-                    if(req.getCapitalToplimit().compareTo(instConfig.getCapitalToplimit()) > 0){
-                        redisAdd(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),req.getCapitalToplimit().subtract(instConfig.getCapitalToplimit()).toString());//增加redis相应计划可投金额
-                    }else{
-                        redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),instConfig.getCapitalToplimit().subtract(req.getCapitalToplimit()).toString());//减少风险保证金可投金额
+        HjhInstConfig instConfig = null;
+        if(req.getId() != null ){
+            instConfig = this.instConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
+        }
+        int result = instConfigService.updateInstConfigRecordById(req);
+        // 更新redis中的可用余额
+        if(result > 0 && !req.getCapitalToplimit(). equals(instConfig.getCapitalToplimit())){
+            if(!RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instConfig.getInstCode())){
+                RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(), req.getCapitalToplimit().toString());
+            }else {
+                if(req.getCapitalToplimit().compareTo(instConfig.getCapitalToplimit()) > 0){
+                    redisAdd(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),req.getCapitalToplimit().subtract(instConfig.getCapitalToplimit()).toString());//增加redis相应计划可投金额
+                }else{
+                    redisSubstrack(RedisConstants.CAPITAL_TOPLIMIT_ + instConfig.getInstCode(),instConfig.getCapitalToplimit().subtract(req.getCapitalToplimit()).toString());//减少风险保证金可投金额
 
-                    }
                 }
             }
-            resp.setRtn("SUCCESS");
-        }catch (Exception e){
-            resp.setRtn("FAIL");
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("修改失败！");
         return  resp;
     }
-
     /**
      * 删除保证金配置
      * @param req
@@ -166,34 +166,9 @@ public class InstConfigController {
     @RequestMapping("/delete")
     public AdminInstConfigListResponse deleteInstConfigById(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
-        try{
-            this.instConfigService.deleteInstConfig(req);
-            resp.setRtn("SUCCESS");
-        }catch (Exception e){
-            resp.setRtn("FAIL");
-        }
-        return  resp;
-    }
-
-
-
-
-    /**
-     * 调用校验表单方法
-     *
-     * @return
-     */
-    private AdminInstConfigListResponse validatorFieldCheck(AdminInstConfigListResponse resp, AdminInstConfigListRequest req) {
-        // 字段校验
-//		if (form.getType() != null
-//				&& !ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "name", form.getType(), 20, true)) {
-//			return modelAndView;
-//		}
-//		if (form.getMonthTender() != null
-//				&& !ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "value", form.getMonthTender(), 20, true)) {
-//			return modelAndView;
-//		}
-        return null;
+        this.instConfigService.deleteInstConfig(req);
+        resp.setRtn(Response.SUCCESS);
+        return resp;
     }
 
     /**

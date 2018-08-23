@@ -1,30 +1,33 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 
 /**
  * @author by xiehuili on 2018/7/6.
  */
+@ApiModel(value="保证金配置对象",description="保证金配置对象")
 public class AdminInstConfigListRequest extends BasePage {
-
+    @ApiModelProperty(value = "根据ids查询和删除")
     private String ids;
-
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "机构编号")
     private String instCode;
-
+    @ApiModelProperty(value = "机构名称")
     private String instName;
-
+    @ApiModelProperty(value = "机构类别")
     private Integer instType;
-
+    @ApiModelProperty(value = "额度上限")
     private BigDecimal capitalToplimit;
-
+    @ApiModelProperty(value = "提现手续费")
     private BigDecimal commissionFee;
-
+    @ApiModelProperty(value = "等额本息保证金的回滚方式")
     private Integer repayCapitalType;
-
+    @ApiModelProperty(value = "备注说明")
     private String remark;
 
     private Integer userId;

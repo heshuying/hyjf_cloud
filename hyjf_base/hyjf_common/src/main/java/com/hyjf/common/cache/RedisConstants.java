@@ -315,4 +315,30 @@ public class RedisConstants {
      * 上海大屏幕运营数据 : 公司动态列表
      */
     public static final String ARTICLE_LIST = "ARTICLE_LIST";
+
+    /**
+     * 协议模板二期---动态展示协议前台展示名称
+     */
+    public static final String PROTOCOL_PARAMS = "params";
+
+    /**
+     * 同步余额rediskey
+     */
+    public static final String SYNBALANCE = "synBalance";
+
+
+    /**
+     * 受托支付申请防并发key
+     */
+    public static final String CONCURRENCE_TRUSTEEPAY = "trusteePay:";
+
+    /**
+     * 担保机构批量还款防并发key
+     */
+    public static final String CONCURRENCE_BATCH_ORGREPAY_USERID = "batchOrgRepayUserid:";
+
+    /**
+     * 线下充值类型
+     */
+    public static final String UNDER_LINE_RECHARGE_TYPE = "UNDER_LINE_RECHARGE_TYPE";
 }

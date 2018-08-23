@@ -110,7 +110,7 @@ public class OperationLogController  extends BaseController {
      * @return
      */
     @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
-    @RequestMapping("/exportAction")
+    @PostMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
         AdminOperationLogRequest form= new AdminOperationLogRequest();

@@ -9,12 +9,10 @@ import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,18 +49,18 @@ public class OperationalDataController {
 	@GetMapping ("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
-		Calendar cal = Calendar.getInstance();
 		JSONObject result = new JSONObject();
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
 
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
+			if(oe==null){
+				result.put("status", "999");
+				result.put("statusDesc", "暂无任何数据");
+				return result;
+			}
 			JSONObject info = new JSONObject();
-
 			//累计交易笔数(实时)
 			info.put("CumulativeTransactionNum", platDataStatisticsService.selectTotalTradeSum());
 			//累计交易总额(实时)
@@ -75,16 +73,8 @@ public class OperationalDataController {
 			info.put("CutOffDate", transferIntToDate(staticMonth));
 			
 			// 获取12个月的数据
-			Document dbObject = new Document();
-			Document fieldsObject = new Document();
-			// 指定返回的字段
-			fieldsObject.put("statisticsMonth", true);
-			fieldsObject.put("accountMonth", true);
-			fieldsObject.put("tradeCountMonth", true);
-			query = new BasicQuery(dbObject, fieldsObject);
-			query.limit(12);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList(query);
+
+			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList();
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -128,13 +118,8 @@ public class OperationalDataController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity(query);
-
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
 			JSONObject detail = new JSONObject();
-			
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
 				detail.put("LoanNum", oe.getLoanNum());
@@ -185,10 +170,7 @@ public class OperationalDataController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -225,11 +207,7 @@ public class OperationalDataController {
 		result.put("statusDesc", "成功");
 		try {
 			JSONObject info = new JSONObject();
-
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");

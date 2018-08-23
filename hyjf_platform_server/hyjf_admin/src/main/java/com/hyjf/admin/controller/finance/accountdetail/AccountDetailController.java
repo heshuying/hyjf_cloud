@@ -158,7 +158,6 @@ public class AccountDetailController extends BaseController {
     @PostMapping(value = "/accountdetailDataRepair")
     @ResponseBody
     public AdminResult accountdetailDataRepair() {
-        String strRepayDate = "";
         // 查询出还款后,交易明细有问题的用户ID
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
@@ -168,7 +167,7 @@ public class AccountDetailController extends BaseController {
                 for(AdminAccountDetailDataRepairVO adminAccountDetailDataRepairVO:adminAccountDetailDataRepairVOList){
                     Integer userId = adminAccountDetailDataRepairVO.getUserId();
                     // 查询交易明细最小的id
-                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.accountdetailDataRepair(userId);
+                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.getdetailDataRepair(userId);
                     if(null!=accountdetailDataRepair&& null!=accountdetailDataRepair.getResult()){
                         Integer accountListId = Integer.parseInt(accountdetailDataRepair.getResult().getId());
                         this.repayDataRepair(userId, accountListId);
@@ -236,13 +235,12 @@ public class AccountDetailController extends BaseController {
     /**
      * 导出资金明细列表
      *
-     * @param request
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
-    public void exportAccountsExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
+    public void exportAccountsExcel(HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "资金明细";
 

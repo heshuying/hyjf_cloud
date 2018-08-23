@@ -13,6 +13,8 @@ import org.quartz.JobExecutionException;
 @DisallowConcurrentExecution            //禁止并发
 public class OperationalDataJob extends BaseJob implements Job {
 
+    //  0 0 */2 * * ?  --> 每两个小时运行一次
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("OperationalDataJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());

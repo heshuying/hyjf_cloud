@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,11 +109,26 @@ public class AppBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+    public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
-        AppResult<AppInvestInfoResultVO> result = borrowTenderService.getInvestInfoApp(tender);
+        // 前端要求改成bean，不要封装
+        AppInvestInfoResultVO result = borrowTenderService.getInvestInfoApp(tender);
         return result;
     }
 
+    @ApiOperation(value = "APP端获取投资URL", notes = "APP端获取投资URL")
+    @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
+    public JSONObject getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+        logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
+        tender.setUserId(userId);
+        //ModelAndView mv = borrowTenderService.getAppTenderUrl(tender);
+        String url = borrowTenderService.getAppTenderUrl(tender);
+        JSONObject result = new JSONObject();
+        result.put("tenderUrl", url);
+        result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
+        result.put(CustomConstants.APP_REQUEST,"/hyjf-app/user/invest/getTenderUrl");
+        return result;
+    }
 }

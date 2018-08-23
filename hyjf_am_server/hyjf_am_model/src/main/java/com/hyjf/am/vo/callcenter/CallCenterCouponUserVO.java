@@ -81,6 +81,10 @@ public class CallCenterCouponUserVO extends BaseVO implements Serializable {
 
     private String readFlag;
 
+    /**
+     * 优惠券来源
+     */
+    private Integer couponSourceNum;
     private String couponSource;
     private String couponContent;
 
@@ -306,6 +310,14 @@ public class CallCenterCouponUserVO extends BaseVO implements Serializable {
 
     public void setCouponUserCode(String couponUserCode) {
         this.couponUserCode = couponUserCode;
+    }
+
+    public Integer getCouponSourceNum() {
+        return couponSourceNum;
+    }
+
+    public void setCouponSourceNum(Integer couponSourceNum) {
+        this.couponSourceNum = couponSourceNum;
     }
 
     public String getCouponSource() {

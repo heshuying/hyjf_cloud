@@ -94,6 +94,12 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
+    /**
+     * 散标投资记录
+     * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectInvestList()
+     * @date 2018/8/20 14:06
+     */
     @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
     @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
     public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
@@ -186,6 +192,7 @@ public class WebProjectListController extends BaseTradeController {
     /**
      *  计划详情标的组成
      * @author zhangyk
+     * 原接口： com.hyjf.web.hjhdetail.HjhDetailController.searchPlanBorrow()
      * @date 2018/8/16 11:01
      */
     @ApiOperation(value = "计划详情标的组成" , notes = "计划详情标的组成")

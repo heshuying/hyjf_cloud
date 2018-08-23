@@ -27,7 +27,7 @@ import javax.validation.Valid;
  * @author wangjun
  * @version BorrowFullController, v0.1 2018/7/6 9:31
  */
-@Api(value = "汇直投-借款复审接口", tags = "汇直投-借款复审接口")
+@Api(value = "产品中心-汇直投-借款复审", tags = "产品中心-汇直投-借款复审")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_full")
 public class BorrowFullController extends BaseController {
@@ -37,6 +37,12 @@ public class BorrowFullController extends BaseController {
     /** 权限 */
     public static final String PERMISSIONS = "borrowfull";
 
+    /**
+     * 借款复审初始化/获取列表共用接口
+     *
+     * @param borrowFullRequestBean
+     * @return
+     */
     @ApiOperation(value = "借款复审初始化/获取列表共用接口", notes = "借款复审初始化/获取列表共用接口")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -47,6 +53,12 @@ public class BorrowFullController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 借款复审详细信息
+     *
+     * @param borrowFullRequestBean
+     * @return
+     */
     @ApiOperation(value = "借款复审详细信息", notes = "借款复审详细信息")
     @PostMapping("/get_full_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
@@ -56,6 +68,13 @@ public class BorrowFullController extends BaseController {
         return borrowFullService.getFullInfo(borrowFullRequest);
     }
 
+    /**
+     * 复审提交
+     *
+     * @param request
+     * @param borrowFullRequestBean
+     * @return
+     */
     @ApiOperation(value = "复审提交", notes = "复审提交")
     @PostMapping("/update_borrow_full")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)

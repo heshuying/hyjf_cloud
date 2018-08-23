@@ -283,7 +283,7 @@
         </table>
 
         <table tableName="ht_user_alias" domainObjectName="UserAlias">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_bind_email_log" domainObjectName="UserBindEmailLog">
@@ -341,7 +341,9 @@
         </table>
 
         <table tableName="ht_user_portrait" domainObjectName="UserPortrait">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="invest_age" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="attribute" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_utm" domainObjectName="Utm">
@@ -1850,6 +1852,9 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+        <table tableName="ht_sms_count" domainObjectName="SmsCount">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
     </context>
 </generatorConfiguration>

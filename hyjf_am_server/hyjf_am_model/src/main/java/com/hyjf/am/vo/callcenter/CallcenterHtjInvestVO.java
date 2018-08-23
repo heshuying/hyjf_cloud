@@ -15,31 +15,31 @@ public class CallcenterHtjInvestVO extends BaseVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-     * ÍÆ¼öÈË 
+     * ï¿½Æ¼ï¿½ï¿½ï¿½ 
      */
     private String refereeUserName;
     /**
-     * ¼Æ»®±àºÅ
+     * ï¿½Æ»ï¿½ï¿½ï¿½ï¿½
      */
     private String debtPlanNid;
     /**
-     * Ô¤ÆÚÄê»¯
+     * Ô¤ï¿½ï¿½ï¿½ê»¯
      */
     private String expectApr;
     /**
-     * ÆÚÏÞ
+     * ï¿½ï¿½ï¿½ï¿½
      */
     private String debtLockPeriod;
     /**
-     * ¼ÓÈë½ð¶î
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private String accedeAccount;
     /**
-     * »¹¿î·½Ê½ 
+     * ï¿½ï¿½ï¿½î·½Ê½ 
      */
     private String repaymentMethod;
     /**
-     * ÓÃ»§ÊôÐÔ
+     * ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     private String userAttribute;
     /**
@@ -47,9 +47,10 @@ public class CallcenterHtjInvestVO extends BaseVO implements Serializable {
      */
     private String platform;
     /**
-     * ¼ÓÈëÊ±¼ä 
+     * ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ 
      */
     private String createTime;
+
     public String getRefereeUserName() {
         return refereeUserName;
     }

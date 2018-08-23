@@ -60,5 +60,44 @@
 			AND oau.id = #{userId}
 	</select>
 
+	<!-- add by nxl 查找离职信息-->
+	<resultMap id="UserLeaveMap" type="com.hyjf.am.user.dao.model.customize.AdminEmployeeLeaveCustomize">
+		<result column="user_id" 		property="userId" 	  	 jdbcType="INTEGER" />
+		<result column="oa_user_id" 	property="oaUserId" 	 jdbcType="INTEGER" />
+		<result column="entry_date" 	property="entryDate" 	 jdbcType="VARCHAR" />
+		<result column="end_time"  		property="endTime" 		 jdbcType="VARCHAR" />
+		<result column="depart_id1"   	property="departId1" 	 jdbcType="VARCHAR" />
+		<result column="depart_name1" 	property="departName1" 	 jdbcType="VARCHAR" />
+		<result column="depart_id2" 	property="departId2" 	 jdbcType="VARCHAR" />
+		<result column="depart_name2" 	property="departName2" 	 jdbcType="INTEGER" />
+		<result column="depart_id3" 	property="departId3"     jdbcType="VARCHAR" />
+		<result column="depart_name3" 	property="departName3" 	 jdbcType="VARCHAR" />
+		<result column="staff_type" 	property="staffType" 	 jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserLeaveByUserId" resultMap="UserLeaveMap" parameterType="java.lang.Integer">
+		SELECT
+			hydu.user_id,
+			oau.id AS oa_user_id,
+			oau.entrydate AS entry_date,
+			FROM_UNIXTIME( oau.leave_success_time, '%Y-%m-%d %H:%i:%s' ) AS end_time,
+			oad1.id AS depart_id1,
+			oad1.`name` AS depart_name1,
+			oad2.id AS depart_id2,
+			oad2.`name` AS depart_name2,
+			oad3.id AS depart_id3,
+			oad3.`name` AS depart_name3,
+			oad3.cuttype AS staff_type
+		FROM
+			ht_r_oa_users oau
+		LEFT JOIN ht_user hydu ON hydu.user_id = oau.hyd_id
+		LEFT JOIN ht_r_oa_department oad3 ON oau.departmentid = oad3.id
+		LEFT JOIN ht_r_oa_department oad2 ON oad2.id = oad3.parentid
+		LEFT JOIN ht_r_oa_department oad1 ON oad1.id = oad2.parentid
+		WHERE
+			hydu.user_id = #{userId}
+		AND oau.user_status  = 'Q'
+		ORDER BY
+			oau.leave_success_time ASC
+	</select>
 </mapper>
 

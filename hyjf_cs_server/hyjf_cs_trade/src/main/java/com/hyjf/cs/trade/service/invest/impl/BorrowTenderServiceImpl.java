@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
@@ -30,6 +31,7 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -53,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -680,13 +683,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender) {
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
 
         AppInvestInfoResultVO investInfo = new AppInvestInfoResultVO();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         df.setRoundingMode(RoundingMode.FLOOR);
         BigDecimal couponInterest = BigDecimal.ZERO;
         BigDecimal borrowInterest = new BigDecimal(0);
+
+        String investType = tender.getBorrowNid().substring(0, 3);
+
         // 查询项目信息
         String money = tender.getAccount();
         // 优惠券总张数
@@ -862,10 +868,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setRealAmount("");
         investInfo.setCouponType("");
 
-        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
+        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
         investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
-        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
-        investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
+        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setBorrowInterest(CommonUtils.formatAmount(borrowInterest) + "元");
+        // 安卓的历史回报使用这个字段
+        investInfo.setProspectiveEarnings(CommonUtils.formatAmount(borrowInterest.add(couponInterest)));
+        investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
@@ -882,7 +893,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = investInfo.getBorrowAccountWait().replace(",", "");
-            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+            logger.info("borrow.getTenderAccountMax()=[{}],borrowAccountWaitStr=[{}]",borrowInfo.getTenderAccountMax(),borrowAccountWaitStr);
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 investInfo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
@@ -903,14 +915,48 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setAnnotation("");
 
         // 设置无用的东西 不给app返回null
-        investInfo.setProspectiveEarnings("");
+
         investInfo.setEndTime("");
         investInfo.setDesc1("");
         investInfo.setButtonWord("");
         investInfo.setStandardValues("");
-        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);
-        return result;
+
+        // 投资协议
+        this.setProtocolsToResultVO(investInfo,investType);
+
+        // 前端要求改成bean，不要封装
+/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
+        result.setData(investInfo);*/
+        return investInfo;
+    }
+    /**
+     * 投资协议列表
+     * @param investInfo
+     * @param investType
+     */
+    private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
+        List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"agreement/AgreementViewList?borrowType="+investType);
+        list.add(newAgreementBean);
+        investInfo.setProtocols(list);
+        investInfo.setProtocolUrlDesc("协议列表");
+    }
+
+    /**
+     * app端获取投资url
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public String getAppTenderUrl(TenderRequest tender) {
+        tender.setPlatform((tender.getPlatform() == null || "".equals(tender.getPlatform()))?"2":tender.getPlatform());
+        String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+        logger.info("url:[{}]",url);
+        //ModelAndView mv = new ModelAndView("redirect:"+url);
+        return url;
     }
 
     /**

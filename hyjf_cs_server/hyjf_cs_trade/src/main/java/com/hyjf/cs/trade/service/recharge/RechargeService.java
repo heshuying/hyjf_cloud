@@ -66,7 +66,16 @@ public interface RechargeService extends BaseTradeService {
 	 BankCallBean insertGetMV(UserDirectRechargeBean rechargeBean) throws Exception;
 
 
-	BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money) throws Exception;
+	/**
+	 * 充值接口
+	 * @param userId
+	 * @param ipAddr
+	 * @param mobile
+	 * @param money
+	 * @return
+	 * @throws Exception
+	 */
+	BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception;
 	/**
 	 * @Description 获取充值页面数据
 	 * @Author pangchengchao

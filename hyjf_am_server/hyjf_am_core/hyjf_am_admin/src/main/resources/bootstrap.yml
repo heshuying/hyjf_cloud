@@ -17,6 +17,15 @@ spring:
 server:
   port: 8099
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: am-admin.log
 file:

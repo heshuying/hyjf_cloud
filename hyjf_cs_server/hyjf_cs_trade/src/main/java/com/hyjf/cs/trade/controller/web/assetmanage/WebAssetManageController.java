@@ -164,6 +164,11 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 获取用户还款计划页面数据
+     * @author wangjun
+     * @return
+     */
     @ApiOperation(value = "获取用户还款计划页面数据", notes = "获取用户还款计划页面数据")
     @PostMapping(value = "/getRepayPlanInfo", produces = "application/json;charset=utf-8")
     public WebResult<Object> getRepayPlanInfo(@RequestBody @Valid WebGetRepayMentRequestVO requestVO){
@@ -174,6 +179,11 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 获取用户散标转让记录详情
+     * @author wangjun
+     * @return
+     */
     @ApiOperation(value = "获取用户散标转让记录详情", notes = "获取用户散标转让记录详情")
     @GetMapping(value = "/getMyCreditAssignDetail/{creditNid}")
     public WebResult<Object> getMyCreditAssignDetail(@RequestHeader(value = "userId") Integer userId, @PathVariable String creditNid){
@@ -191,8 +201,8 @@ public class WebAssetManageController extends BaseTradeController {
      * @date 2018/8/18 15:59
      */
     @ApiOperation(value = "获取我加入的计划详情信息" , notes = "获取我加入的计划详情信息")
-    @PostMapping(value = "/getMyPlanInfoDetail")
-    public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId") Integer userId , @RequestBody AssetManagePlanRequest request){
+    @PostMapping(value = "/getMyPlanInfoDetail",produces = "application/json;charset=utf-8")
+    public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId" ,required = true) Integer userId , @RequestBody AssetManagePlanRequest request){
         WebResult result = assetManageService.getMyPlanInfoDetail(request,userId);
         return result;
     }

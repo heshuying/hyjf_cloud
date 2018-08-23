@@ -5,7 +5,6 @@ package com.hyjf.cs.user.service.register.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.resquest.user.UserActionUtmRequest;
@@ -23,7 +22,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -31,14 +29,14 @@ import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.UserRegistResult;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
-import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
 import org.apache.commons.lang3.StringUtils;
@@ -50,9 +48,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,11 +83,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     /**
      * api注册参数校验
-     *
+     *  @param
      * @param
      */
     @Override
-    public void apiCheckParam(RegisterRequest registerRequest) {
+    public void apiCheckParam( RegisterRequest registerRequest) {
         // 手机号
         String mobile = registerRequest.getMobile();
         // 机构编号
@@ -284,10 +280,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         BeanUtils.copyProperties(registerRequest, registerVO);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        //HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
+        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
         // 机构编号
-        //CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
-        registerUserRequest.setInstCode(registerRequest.getInstCode());
+        CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
+        registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
         CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在

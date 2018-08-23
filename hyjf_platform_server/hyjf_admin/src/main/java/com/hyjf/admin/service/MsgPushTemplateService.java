@@ -3,10 +3,8 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-
-import java.util.List;
 
 /**
  * @author fuqiang
@@ -18,7 +16,7 @@ public interface MsgPushTemplateService {
      *
      * @return
      */
-    List<MessagePushTemplateVO> findAll();
+    MessagePushTemplateResponse findAll();
 
     /**
      * 根据条件查询消息推送模板
@@ -26,7 +24,7 @@ public interface MsgPushTemplateService {
      * @param request
      * @return
      */
-    List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request);
+    MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request);
 
     /**
      * 新增消息推送模板

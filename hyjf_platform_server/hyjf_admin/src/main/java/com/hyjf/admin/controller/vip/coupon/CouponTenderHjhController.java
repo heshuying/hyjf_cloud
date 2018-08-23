@@ -12,6 +12,7 @@ import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.common.util.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -56,6 +57,10 @@ public class CouponTenderHjhController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponTenderRequest.getCurrPage(), couponTenderRequest.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -87,6 +92,7 @@ public class CouponTenderHjhController extends BaseController {
 
             couponTenderHztVo.setDetail(detail);
             couponTenderHztVo.setCouponRecoverlist(list);
+            lrs.setData(couponTenderHztVo);
             return new AdminResult<>(lrs);
         }else{
             return new AdminResult(BaseResult.FAIL,"请选择用户优惠券");

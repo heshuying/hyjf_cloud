@@ -9,6 +9,7 @@ import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 /**
@@ -48,4 +49,12 @@ public interface HjhCreditTenderService {
 	 * @param instCode
 	 */
 	void updateSaveSignInfo(TenderAgreementVO tenderAgreement,String borrowNid, Integer transType, String instCode);
+	
+	/**
+	 * 传参查询承接债转表列总计
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	HjhCreditTenderSumVO getCalcSumByParam(HjhCreditTenderRequest form);
 }

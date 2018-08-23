@@ -148,4 +148,19 @@ public interface BorrowService extends BaseService {
 	 * @date 2018/8/10 15:40
 	 */  
 	public BorrowInfoWithBLOBs getBorrowInfoWithBLOBs(String borrowNid);
+
+
+	/**
+	 * 查询计划还款日前一天，处于投资中和复审中的原始标的，发送邮件预警
+	 * @author zhangyk
+	 * @date 2018/8/20 16:25
+	 */
+    List<BorrowCustomizeVO> selectUnDealBorrowBeforeLiquidate();
+	/**
+	 * 列表导出
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 }

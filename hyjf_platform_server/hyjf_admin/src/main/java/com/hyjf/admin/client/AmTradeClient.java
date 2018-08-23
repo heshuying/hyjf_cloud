@@ -17,6 +17,7 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -1342,7 +1343,7 @@ public interface AmTradeClient {
      * 验证重复
      * @param planNid
      */
-    boolean checkRepeat(String labelName,String planNid);
+    int checkRepeat(AllocationEngineRuquest form);
     
     /** 获取还款方式
      * @param planNid
@@ -1710,7 +1711,7 @@ public interface AmTradeClient {
      * @param borrowCommonRequest
      * @return
      */
-    String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
+    BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
     /**
      * 根据资产编号查询该资产下面的产品类型
@@ -1824,6 +1825,63 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+
+    /**
+     * 更新充值状态
+     * @param userId
+     * @param nid
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateRechargeStatus(Integer userId, String nid);
+
+    /**
+     * 充值掉单后,更新用户的账户信息
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
+
+    /**
+     * 获取线下充值类型列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse selectUnderLineList(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 添加线下充值类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse insterUnderRechargeCode(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 获取当前code 是否存在
+     * @param code
+     * @return
+     * @Author : huanghui
+     */
+    boolean getUnderLineRecharge(String code);
+
+    /**
+     * 更新指定线下数据类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateUnderLineRecharge(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 删除指定充值类型数据
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean deleteUnderLineRecharge(Integer id);
 
     /**
      *
@@ -2671,5 +2729,68 @@ public interface AmTradeClient {
      * @return
      */
     List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest);
+
+	/**
+	 * 传参查询承接债转表列总计
+	 * @auth libin
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+    HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form);
+
+    /**
+     * 查询合作机构配置列表
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest);
+    /**
+     * 查询合作机构配置详情页面
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest);
+
+    /**
+     * 编辑保存合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 修改合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 删除合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate);
+
+    /**
+     * 更新borrowTender表
+     * @auth nxl
+     * @return
+     */
+    Boolean updateBorrowTender(BorrowTenderUpdRequest request);
+
 }
 

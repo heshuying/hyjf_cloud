@@ -3,23 +3,19 @@
  */
 package com.hyjf.admin.controller.message;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.MessagePushTemplateStaticsService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.MessagePushTemplateStaticsService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
-import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.am.vo.admin.MessagePushTemplateStaticsVO;
-
-import io.swagger.annotations.Api;
 
 /**
  * @author fq
@@ -34,7 +30,7 @@ public class MessagePushTemplateStaticsController extends BaseController {
 
 	@ApiOperation(value = "查询模板消息统计报表", notes = "查询模板消息统计报表")
 	@PostMapping("/select")
-	public AdminResult<ListResult<MessagePushTemplateStaticsVO>> select(
+	public AdminResult select(
 			@RequestBody MessagePushTemplateStaticsRequest request) {
 		MessagePushTemplateStaticsResponse response = service.selectTemplateStatics(request);
 		if (response == null) {
@@ -43,6 +39,6 @@ public class MessagePushTemplateStaticsController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult(response.getResultList());
 	}
 }

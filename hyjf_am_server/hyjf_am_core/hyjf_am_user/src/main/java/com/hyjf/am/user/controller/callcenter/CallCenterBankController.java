@@ -86,7 +86,6 @@ public class CallCenterBankController extends BaseController{
 
     @RequestMapping("/executeRecord")
     public Integer executeRecord(@RequestBody @Valid CallCenterServiceUsersRequest callCenterServiceUsersRequest){
-        /*CallCenterServiceUsersResponse callCenterServiceUsersResponse = new CallCenterServiceUsersResponse();*/
         return callCenterBankService.updateRecord(callCenterServiceUsersRequest);
     }
 
@@ -123,7 +122,7 @@ public class CallCenterBankController extends BaseController{
     	return CallCenterAccountHuifuResponse;
     }
 
-    @RequestMapping("/getVipLevel/{couponCode}")
+    @RequestMapping("/getCouponContent/{couponCode}")
     public String getVipLevel(@PathVariable String couponCode){
         return callCenterBankService.getCouponContent(couponCode);
     }

@@ -3,13 +3,16 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,9 +61,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public List<ContentArticleVO> aboutUsClient() {
+	public List<ContentArticleVO> aboutUsClient(BasePage request) {
 		ContentArticleResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/article/contentArticleList", null, ContentArticleResponse.class);
+				"http://AM-CONFIG/am-config/article/contentArticleList", request, ContentArticleResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -72,6 +75,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ContentArticleResponse response = restTemplate
 				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + id, ContentArticleResponse.class);
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public EventVO getEventDetailById(Integer id) {
+		EventResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/getEventDetail/" + id, EventResponse.class);
+		if (response != null){
 			return response.getResult();
 		}
 		return null;
@@ -100,12 +118,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<ContentArticleVO> getknowsList(ContentArticleRequest request) {
+    public ContentArticleResponse getknowsList(ContentArticleRequest request) {
         ContentArticleResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/article/getKnowsList",request ,ContentArticleResponse.class);
-            if (response != null){
-            return response.getResultList();
-        }
-        return null;
+        return response;
 
     }
 
@@ -121,10 +136,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public List<ContentArticleVO> getIndexList(ContentArticleRequest request) {
+	public List<Map<String, Object>> getIndexList(ContentArticleRequest request) {
 		ContentArticleResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/article/index",request ,ContentArticleResponse.class);
 		if (response != null){
-			return response.getResultList();
+			return response.getResponseList();
 		}
 		return null;
 
@@ -229,4 +244,28 @@ public class AmConfigClientImpl implements AmConfigClient {
 		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
 		return response;
 	}
+
+    @Override
+    public List<JxBankConfigVO> getBankRecordList() {
+		JxBankConfigResponse response=restTemplate
+				.getForObject("http://AM-CONFIG/am-config/config/getbanklist" , JxBankConfigResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+    }
+
+	/**
+	 *获取公司公告列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request) {
+		ContentArticleResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/article/getCompanyDynamicsListPage",request,ContentArticleResponse.class).getBody();
+		return response;
+
+	}
+
+
 }

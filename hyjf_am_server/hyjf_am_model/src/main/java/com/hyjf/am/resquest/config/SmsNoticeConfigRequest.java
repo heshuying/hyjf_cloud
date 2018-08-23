@@ -12,7 +12,7 @@ public class SmsNoticeConfigRequest extends Request implements Serializable {
 
     private String name;
 
-    private String value;
+    private String configValue;
 
     private String pvalue;
 
@@ -51,12 +51,12 @@ public class SmsNoticeConfigRequest extends Request implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getValue() {
-        return value;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
     }
 
     public String getPvalue() {

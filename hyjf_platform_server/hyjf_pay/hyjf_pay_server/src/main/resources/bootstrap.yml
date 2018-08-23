@@ -6,6 +6,19 @@ spring:
       uri: http://micoserver:2222/
       profile: test
       name: pay
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
 
 logging:
   file: pay.log

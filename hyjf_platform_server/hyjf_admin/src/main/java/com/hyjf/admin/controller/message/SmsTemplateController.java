@@ -8,6 +8,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SmsTemplateService;
+import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 import io.swagger.annotations.Api;
@@ -58,11 +59,11 @@ public class SmsTemplateController extends BaseController {
 	@ApiOperation(value = "根据条件查询所有短信模版", notes = "根据条件查询所有短信模版")
 	@PostMapping("/findSmsTemplate")
 	public AdminResult<ListResult<SmsTemplateVO>> findSmsTemplate(@RequestBody SmsTemplateRequest request) {
-		List<SmsTemplateVO> voList = smsTemplateService.findSmsTemplate(request);
-		if (CollectionUtils.isEmpty(voList)) {
+		SmsTemplateResponse response = smsTemplateService.findSmsTemplate(request);
+		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		return new AdminResult<>(ListResult.build(voList, voList.size()));
+		return new AdminResult(response);
 	}
 
 	/**
@@ -76,16 +77,35 @@ public class SmsTemplateController extends BaseController {
 	public JSONObject insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			smsTemplateService.insertSmsTemplate(request);
-			jsonObject.put("status", "000");
-			jsonObject.put("statusDesc", "添加短信模板成功");
-			return jsonObject;
+			int num = smsTemplateService.insertSmsTemplate(request);
+			if (num > 0) {
+				jsonObject.put("status", "000");
+				jsonObject.put("statusDesc", "添加短信模板成功");
+				return jsonObject;
+			} else {
+				jsonObject.put("status", "99");
+				jsonObject.put("statusDesc", "添加短信模板失败");
+				return jsonObject;
+			}
 		} catch (Exception e) {
 			logger.error("添加短信模板失败...", e);
 			jsonObject.put("status", "99");
 			jsonObject.put("statusDesc", "添加短信模板失败");
 			return jsonObject;
 		}
+	}
+
+	/**
+	 * 短信模板详情
+	 *
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "短信模板详情", notes = "短信模板详情")
+	@PostMapping("/infoAction")
+	public AdminResult infoAction(@RequestBody SmsTemplateRequest request) {
+		SmsTemplateVO vo = smsTemplateService.selectSmsTemByTplCode(request);
+		return new AdminResult(vo);
 	}
 
 	/**
@@ -99,10 +119,16 @@ public class SmsTemplateController extends BaseController {
 	public JSONObject updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			smsTemplateService.updateSmsTemplate(request);
-			jsonObject.put("status", "000");
-			jsonObject.put("statusDesc", "修改短信模版成功");
-			return jsonObject;
+			int num = smsTemplateService.updateSmsTemplate(request);
+			if (num > 0) {
+				jsonObject.put("status", "000");
+				jsonObject.put("statusDesc", "修改短信模版成功");
+				return jsonObject;
+			} else {
+				jsonObject.put("status", "99");
+				jsonObject.put("statusDesc", "修改短信模版失败");
+				return jsonObject;
+			}
 		} catch (Exception e) {
 			logger.error("修改短信模版失败...", e);
 			jsonObject.put("status", "99");
@@ -111,24 +137,30 @@ public class SmsTemplateController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "开启短信模版", notes = "开启短信模版")
-	@PostMapping("/openAction")
-	public JSONObject openAction(@RequestBody SmsTemplateRequest request) {
+	@ApiOperation(value = "开关闭短信模板", notes = "开关闭短信模板")
+	@PostMapping("/updateStatus")
+	public JSONObject updateStatus(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			smsTemplateService.openAction(request);
-			jsonObject.put("status", "000");
-			jsonObject.put("statusDesc", "开启短信模版成功");
-			return jsonObject;
+			int num = smsTemplateService.updateStatus(request);
+			if (num > 0) {
+				jsonObject.put("status", "000");
+				jsonObject.put("statusDesc", "开关闭短信模板成功");
+				return jsonObject;
+			} else {
+				jsonObject.put("status", "99");
+				jsonObject.put("statusDesc", "开关闭短信模板失败");
+				return jsonObject;
+			}
 		} catch (Exception e) {
-			logger.error("开启短信模版失败...", e);
+			logger.error("开关闭短信模板失败...", e);
 			jsonObject.put("status", "99");
-			jsonObject.put("statusDesc", "开启短信模版失败");
+			jsonObject.put("statusDesc", "开关闭短信模板失败");
 			return jsonObject;
 		}
 	}
 
-	@ApiOperation(value = "关闭短信模版", notes = "关闭短信模版")
+	/*@ApiOperation(value = "关闭短信模版", notes = "关闭短信模版")
 	@PostMapping("/closeAction")
 	public JSONObject closeAction(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
@@ -143,5 +175,5 @@ public class SmsTemplateController extends BaseController {
 			jsonObject.put("statusDesc", "关闭短信模版失败");
 			return jsonObject;
 		}
-	}
+	}*/
 }

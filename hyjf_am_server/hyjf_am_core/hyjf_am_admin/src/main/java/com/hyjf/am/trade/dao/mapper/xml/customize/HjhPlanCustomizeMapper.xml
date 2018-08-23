@@ -78,7 +78,7 @@
 		END AS lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
-	    hha.add_time AS add_time,
+        DATE_FORMAT( hha.create_time, '%Y-%m-%d %H:%i:%s' ) AS add_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'待确认') AS quit_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'待确认') AS last_payment_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.acctual_payment_time=0,NULL,hha.acctual_payment_time), '%Y-%m-%d' ),'待确认') AS acctual_payment_time,
@@ -370,7 +370,7 @@
 			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 			left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
 			WHERE
-				hb.plan_nid = #{planNId}
+				hb.plan_nid = #{planNid}
 			AND hb.STATUS = 2
 			AND hb.borrow_full_status = 0
 			ORDER BY
@@ -937,10 +937,7 @@ ORDER BY
 		dpa.user_name
 		END user_name,
 		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accede_account,
-		FROM_UNIXTIME(
-		dpa.create_time,
-		'%Y-%m-%d %H:%i:%s'
-		) AS create_time,
+		dpa.create_time AS create_time,
 		dpa.client
 		FROM
 		ht_hjh_accede dpa
@@ -987,7 +984,7 @@ ORDER BY
 
 	</select>
 
-	<resultMap id="userHjhInvistListMap" type="com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO">
+	<resultMap id="userHjhInvistListMap" type="com.hyjf.am.trade.dao.model.customize.UserHjhInvistListCustomize">
 		<result column="nid" property="nid" jdbcType="VARCHAR" />
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="account" property="account" jdbcType="VARCHAR" />
@@ -1052,7 +1049,7 @@ ORDER BY
 		WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天')
 		ELSE CONCAT(hb.borrow_period, '个月')
 		END AS borrow_period,
-		hbt.create_tiem as addtime,
+		hbt.create_time as addtime,
 
 		CASE
 		WHEN hb.borrow_style = 'endday' or hb.borrow_style = 'end' or hb.borrow_style = 'endmonth'

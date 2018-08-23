@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.ActivityListMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.ActivityList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="time_start" property="timeStart" jdbcType="INTEGER" />
+    <result column="time_end" property="timeEnd" jdbcType="INTEGER" />
+    <result column="img_pc" property="imgPc" jdbcType="VARCHAR" />
+    <result column="img_app" property="imgApp" jdbcType="VARCHAR" />
+    <result column="img_wei" property="imgWei" jdbcType="VARCHAR" />
+    <result column="activity_pc_url" property="activityPcUrl" jdbcType="VARCHAR" />
+    <result column="activity_app_url" property="activityAppUrl" jdbcType="VARCHAR" />
+    <result column="activity_wei_url" property="activityWeiUrl" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="qr" property="qr" jdbcType="VARCHAR" />
+    <result column="platform" property="platform" jdbcType="VARCHAR" />
+    <result column="url_foreground" property="urlForeground" jdbcType="VARCHAR" />
+    <result column="url_background" property="urlBackground" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, title, time_start, time_end, img_pc, img_app, img_wei, activity_pc_url, activity_app_url, 
+    activity_wei_url, img, qr, platform, url_foreground, url_background, description, 
+    create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.ActivityListExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_activity_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_activity_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_activity_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.ActivityListExample" >
+    delete from ht_activity_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.ActivityList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_activity_list (title, time_start, time_end, 
+      img_pc, img_app, img_wei, 
+      activity_pc_url, activity_app_url, activity_wei_url, 
+      img, qr, platform, 
+      url_foreground, url_background, description, 
+      create_time, update_time)
+    values (#{title,jdbcType=VARCHAR}, #{timeStart,jdbcType=INTEGER}, #{timeEnd,jdbcType=INTEGER}, 
+      #{imgPc,jdbcType=VARCHAR}, #{imgApp,jdbcType=VARCHAR}, #{imgWei,jdbcType=VARCHAR}, 
+      #{activityPcUrl,jdbcType=VARCHAR}, #{activityAppUrl,jdbcType=VARCHAR}, #{activityWeiUrl,jdbcType=VARCHAR}, 
+      #{img,jdbcType=VARCHAR}, #{qr,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
+      #{urlForeground,jdbcType=VARCHAR}, #{urlBackground,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.ActivityList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_activity_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="timeStart != null" >
+        time_start,
+      </if>
+      <if test="timeEnd != null" >
+        time_end,
+      </if>
+      <if test="imgPc != null" >
+        img_pc,
+      </if>
+      <if test="imgApp != null" >
+        img_app,
+      </if>
+      <if test="imgWei != null" >
+        img_wei,
+      </if>
+      <if test="activityPcUrl != null" >
+        activity_pc_url,
+      </if>
+      <if test="activityAppUrl != null" >
+        activity_app_url,
+      </if>
+      <if test="activityWeiUrl != null" >
+        activity_wei_url,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="qr != null" >
+        qr,
+      </if>
+      <if test="platform != null" >
+        platform,
+      </if>
+      <if test="urlForeground != null" >
+        url_foreground,
+      </if>
+      <if test="urlBackground != null" >
+        url_background,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null" >
+        #{timeStart,jdbcType=INTEGER},
+      </if>
+      <if test="timeEnd != null" >
+        #{timeEnd,jdbcType=INTEGER},
+      </if>
+      <if test="imgPc != null" >
+        #{imgPc,jdbcType=VARCHAR},
+      </if>
+      <if test="imgApp != null" >
+        #{imgApp,jdbcType=VARCHAR},
+      </if>
+      <if test="imgWei != null" >
+        #{imgWei,jdbcType=VARCHAR},
+      </if>
+      <if test="activityPcUrl != null" >
+        #{activityPcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityAppUrl != null" >
+        #{activityAppUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityWeiUrl != null" >
+        #{activityWeiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="qr != null" >
+        #{qr,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null" >
+        #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="urlForeground != null" >
+        #{urlForeground,jdbcType=VARCHAR},
+      </if>
+      <if test="urlBackground != null" >
+        #{urlBackground,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.ActivityListExample" resultType="java.lang.Integer" >
+    select count(*) from ht_activity_list
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_activity_list
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.timeStart != null" >
+        time_start = #{record.timeStart,jdbcType=INTEGER},
+      </if>
+      <if test="record.timeEnd != null" >
+        time_end = #{record.timeEnd,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgPc != null" >
+        img_pc = #{record.imgPc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgApp != null" >
+        img_app = #{record.imgApp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgWei != null" >
+        img_wei = #{record.imgWei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityPcUrl != null" >
+        activity_pc_url = #{record.activityPcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityAppUrl != null" >
+        activity_app_url = #{record.activityAppUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityWeiUrl != null" >
+        activity_wei_url = #{record.activityWeiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.img != null" >
+        img = #{record.img,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qr != null" >
+        qr = #{record.qr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platform != null" >
+        platform = #{record.platform,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlForeground != null" >
+        url_foreground = #{record.urlForeground,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlBackground != null" >
+        url_background = #{record.urlBackground,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_activity_list
+    set id = #{record.id,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      time_start = #{record.timeStart,jdbcType=INTEGER},
+      time_end = #{record.timeEnd,jdbcType=INTEGER},
+      img_pc = #{record.imgPc,jdbcType=VARCHAR},
+      img_app = #{record.imgApp,jdbcType=VARCHAR},
+      img_wei = #{record.imgWei,jdbcType=VARCHAR},
+      activity_pc_url = #{record.activityPcUrl,jdbcType=VARCHAR},
+      activity_app_url = #{record.activityAppUrl,jdbcType=VARCHAR},
+      activity_wei_url = #{record.activityWeiUrl,jdbcType=VARCHAR},
+      img = #{record.img,jdbcType=VARCHAR},
+      qr = #{record.qr,jdbcType=VARCHAR},
+      platform = #{record.platform,jdbcType=VARCHAR},
+      url_foreground = #{record.urlForeground,jdbcType=VARCHAR},
+      url_background = #{record.urlBackground,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.ActivityList" >
+    update ht_activity_list
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="timeStart != null" >
+        time_start = #{timeStart,jdbcType=INTEGER},
+      </if>
+      <if test="timeEnd != null" >
+        time_end = #{timeEnd,jdbcType=INTEGER},
+      </if>
+      <if test="imgPc != null" >
+        img_pc = #{imgPc,jdbcType=VARCHAR},
+      </if>
+      <if test="imgApp != null" >
+        img_app = #{imgApp,jdbcType=VARCHAR},
+      </if>
+      <if test="imgWei != null" >
+        img_wei = #{imgWei,jdbcType=VARCHAR},
+      </if>
+      <if test="activityPcUrl != null" >
+        activity_pc_url = #{activityPcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityAppUrl != null" >
+        activity_app_url = #{activityAppUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityWeiUrl != null" >
+        activity_wei_url = #{activityWeiUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="qr != null" >
+        qr = #{qr,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null" >
+        platform = #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="urlForeground != null" >
+        url_foreground = #{urlForeground,jdbcType=VARCHAR},
+      </if>
+      <if test="urlBackground != null" >
+        url_background = #{urlBackground,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.ActivityList" >
+    update ht_activity_list
+    set title = #{title,jdbcType=VARCHAR},
+      time_start = #{timeStart,jdbcType=INTEGER},
+      time_end = #{timeEnd,jdbcType=INTEGER},
+      img_pc = #{imgPc,jdbcType=VARCHAR},
+      img_app = #{imgApp,jdbcType=VARCHAR},
+      img_wei = #{imgWei,jdbcType=VARCHAR},
+      activity_pc_url = #{activityPcUrl,jdbcType=VARCHAR},
+      activity_app_url = #{activityAppUrl,jdbcType=VARCHAR},
+      activity_wei_url = #{activityWeiUrl,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      qr = #{qr,jdbcType=VARCHAR},
+      platform = #{platform,jdbcType=VARCHAR},
+      url_foreground = #{urlForeground,jdbcType=VARCHAR},
+      url_background = #{urlBackground,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

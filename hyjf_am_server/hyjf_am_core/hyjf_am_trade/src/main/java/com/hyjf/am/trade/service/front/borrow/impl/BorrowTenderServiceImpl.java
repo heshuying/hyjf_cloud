@@ -8,9 +8,12 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -161,5 +164,49 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     @Override
     public String countMoneyByBorrowId(Map<String, Object> params) {
         return borrowTenderInfoCustomizeMapper.countMoneyByBorrowId(params);
+    }
+
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    @Override
+    public List<BorrowTender> selectBorrowTenderList(String repairStartDate, String repairEndDate) {
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria crt = example.createCriteria();
+        if (StringUtils.isNotBlank(repairStartDate) && StringUtils.isNotBlank(repairEndDate)) {
+            String strStart = repairStartDate + " 00:00:00";
+            String strEnd = repairEndDate + " 23:59:59";
+            try {
+                Date start = smp.parse(strStart);
+                Date end = smp.parse(strEnd);
+                crt.andCreateTimeGreaterThanOrEqualTo(start);
+                crt.andCreateTimeLessThanOrEqualTo(end);
+                List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
+                return borrowTenderList;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+       return null;
+    }
+
+    /**
+     * 更新标的投资详情表
+     * @param borrowTender
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowTender(BorrowTender borrowTender){
+        int updFlg = borrowTenderMapper.updateByPrimaryKey(borrowTender);
+        if(updFlg>0){
+            logger.info("=========borrowTender表更新成功==============");
+            return true;
+        }else{
+            throw new RuntimeException("============borrowTender表更新成功失败!========");
+        }
     }
 }

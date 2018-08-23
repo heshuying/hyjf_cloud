@@ -232,4 +232,10 @@ public interface AmUserClient {
      * @return
      */
     Integer updateStatusByUserId( Integer userId,String smsOpenStatus,String emailOpenStatus);
+
+    /**
+     * 得到千乐渠道用户
+     * @return
+     */
+    List<Integer> getQianleUser();
 }

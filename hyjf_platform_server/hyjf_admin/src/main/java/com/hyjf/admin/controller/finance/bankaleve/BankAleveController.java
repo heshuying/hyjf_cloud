@@ -34,7 +34,7 @@ import java.util.List;
  * 资金中心->银行账务明细
  */
 
-@Api(value = "资金中心->银行账务明细",tags = "资金中心->银行账务明细")
+@Api(value = "资金中心-银行账务明细",tags = "资金中心-银行账务明细")
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {
@@ -43,6 +43,13 @@ public class BankAleveController {
     /** 权限 */
     public static final String PERMISSIONS = "bankalevelist";
 
+    /**
+     * 银行账务明细列表查询
+    * @author Zha Daojian
+    * @date 2018/8/21 9:56
+    * @param bankAleveRequest
+    * @return com.alibaba.fastjson.JSONObject
+    **/
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细列表查询")
     @PostMapping(value = "/bankalevelist")
     @ResponseBody

@@ -44,8 +44,8 @@ public class AppOperationReportController extends BaseController {
 	}
 	@ApiOperation(value = "运营报告明细", notes = "运营报告明细")
 	@GetMapping("/reportInfo/{id}")
-	public OperationReportResponse reportInfo(@PathVariable String id) {
-		OperationReportResponse response = operationReportService.reportInfo(id);
+	public JSONObject reportInfo(@PathVariable String id) {
+		JSONObject response = operationReportService.reportInfo(id);
 		return response;
 	}
 

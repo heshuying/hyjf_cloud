@@ -719,4 +719,203 @@ WHERE
 		   LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  <include refid="Where_Clause" />
 		 </select>
+
+
+     <!--清算日前一天查询处于投资中或者复审中的原始标的，进行预警-->
+	<select id="selectUnDealBorrowBeforeLiquidate" resultMap="selectBorrowListMap" >
+		<!--  散标和计划标的 -->
+		SELECT b.borrow_nid, b.`status`
+		FROM ht_borrow b
+		INNER JOIN ht_borrow_tender bt ON bt.borrow_nid = b.borrow_nid
+		WHERE EXISTS(
+		SELECT hr.id
+		FROM ht_hjh_accede hr
+		WHERE DATE_ADD(FROM_UNIXTIME(UNIX_TIMESTAMP(NOW()), '%Y-%m-%d'), INTERVAL 1 DAY) = hr.end_date AND hr.accede_order_id = bt.accede_order_id
+		)  and (b.`status` = 2 or b.`status` = 3 )
+
+
+		<!--  债转  -->
+		<!-- union all
+	  SELECT b.borrow_nid, b.`status`
+	  FROM huiyingdai_borrow b
+	  INNER JOIN hyjf_debt_credit_tender dct ON b.borrow_nid = dct.borrow_nid
+	  WHERE EXISTS(
+		 SELECT hr.id
+		 FROM hyjf_hjh_repay hr
+		 WHERE DATE_ADD(FROM_UNIXTIME(UNIX_TIMESTAMP(NOW()), '%Y-%m-%d'), INTERVAL 1 DAY) = FROM_UNIXTIME(hr.repay_should_time,'%Y-%m-%d') AND hr.accede_order_id = dct.assign_plan_order_id
+	 )  and (b.`status` = 2 or b.`status` = 3) -->
+	</select>
+	<!-- 导出 -->
+	<resultMap id="exportBorrowListMap" type="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		<!-- 序号借款编号  --> 
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<!-- 借款人ID  --> 
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<!-- 项目申请人  --> 
+		<result column="applicant" property="applicant" jdbcType="VARCHAR" />
+		<!-- 借款人用户名 --> 
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<!-- 借款标题 --> 
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<!-- 项目标题 --> 
+		<result column="project_name" property="projectName" jdbcType="VARCHAR" />		
+		<!-- 项目类型 --> 
+		<result column="borrow_project_type_name" property="borrowProjectTypeName" jdbcType="VARCHAR" />
+		<!-- 借款金额（元） --> 
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<!-- 借款期限 --> 
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<!-- 年化收益 --> 
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<!-- 还款方式 --> 
+		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+		<!-- 融资服务费率 --> 
+		<result column="borrow_service_scale" property="borrowServiceScale" jdbcType="VARCHAR" />
+		<!-- 账户管理费率 --> 
+		<result column="borrow_manager_scale" property="borrowManagerScale" jdbcType="VARCHAR" />
+		<!-- 合作机构 --> 
+		<result column="borrow_measures_instit" property="borrowMeasuresInstit" jdbcType="VARCHAR" />
+		<!-- 已借到金额 --> 
+		<result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<!-- 剩余金额 --> 
+		<result column="borrow_account_wait" property="borrowAccountWait" jdbcType="VARCHAR" />
+		<!-- 借款进度 --> 
+		<result column="borrow_account_scale" property="borrowAccountScale" jdbcType="VARCHAR" />
+		<!-- 项目状态 --> 
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<!-- 添加时间 --> 
+		<result column="addtime" property="addtime" jdbcType="VARCHAR" />
+		<!-- 初审通过时间 --> 
+		<result column="verify_over_time" property="verifyOverTime" jdbcType="VARCHAR" />
+		<!-- 定时发标时间 --> 
+		<result column="ontime" property="ontime" jdbcType="VARCHAR" />
+		<!-- 预约开始时间 --> 
+		<result column="bookingBeginTime" property="bookingBeginTime" jdbcType="VARCHAR" />
+		<!-- 预约截止时间 --> 
+		<result column="bookingEndTime" property="bookingEndTime" jdbcType="VARCHAR" />
+		<!-- 实际发标时间 --> 
+		<result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
+		<!-- 投际截止时间--> 
+		<result column="borrow_valid_time" property="borrowValidTime" jdbcType="VARCHAR" />
+		<!-- 满标时间 --> 
+		<result column="borrow_full_time" property="borrowFullTime" jdbcType="VARCHAR" />
+		<!-- 复审通过时间 --> 
+		<result column="reverify_time" property="reverifyTime" jdbcType="VARCHAR" />
+		<!-- 放款完成时间 --> 
+		<result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
+		<!-- 最后还款日 --> 
+		<result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
+		<!-- 备案时间-->	
+		<result column="regist_time" property="registTime" jdbcType="VARCHAR" />
+		<!-- 复审用户名-->	
+		<result column="reverify_user_name" property="reverifyUserName" jdbcType="VARCHAR" />
+		<!--  垫付机构用户名-->	
+		<result column="repay_org_name" property="repayOrgUserName" jdbcType="VARCHAR" />
+		<!--  计划编号 -->	
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<!--  资产来源 -->	
+		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
+		<!--  借款人姓名 -->	
+		<result column="borrower_name" property="borrowerName" jdbcType="VARCHAR" />
+		<!--  所在地区 -->	
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<!--  借款人属性 -->	
+		<result column="attribute" property="attribute" jdbcType="VARCHAR" />
+		<!--  受托支付标志 0 否；1是 -->	
+		<result column="entrustedFlg" property="entrustedFlg" />
+		<!--  受托支付用户名 0 否；1是 -->	
+		<result column="entrustedUsername" property="entrustedUsername" />
+		<!-- 账户操作人-->	
+		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+		<!-- 备案人员-->	
+		<result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
+		<!-- 备注-->	
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<!-- 标签名称-->	
+		<result column="labelName" property="labelNameSrch" jdbcType="VARCHAR" />
+		<!-- ADD BY LIUSHOUYI 合规检查 START -->
+		<!-- 创建人姓名 -->
+		<result column="createname" property="createname" jdbcType="VARCHAR" />
+		<!-- 备案人姓名 -->
+		<result column="registname" property="registname" jdbcType="VARCHAR" />
+		<!-- ADD BY LIUSHOUYI 合规检查 END -->
+		<!-- 加息率 -->
+		<result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="exportBorrowList" resultMap="exportBorrowListMap" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+		  b.borrow_nid,
+		  b.user_id,
+		  b.borrow_user_name AS username,
+		  bi.applicant,
+		  bi.`name` AS borrow_name,
+		  bi.project_name,
+		  bpt.borrow_name AS borrow_project_type_name,
+		  b.account,
+		  CASE WHEN b.borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END AS borrow_period,
+		  CONCAT(b.borrow_apr, '%') borrow_apr,
+		  bs.`name` AS borrow_style,
+		  b.service_fee_rate AS borrow_service_scale,
+		  b.manage_fee_rate AS borrow_manager_scale,
+		  bi.borrow_measures_instit AS borrow_measures_instit,
+		  b.borrow_account_yes,
+		  b.borrow_account_wait,
+		  b.reverify_user_name,
+		  bi.repay_org_name,
+		  bi.entrusted_flg AS entrustedFlg,
+		  bi.entrusted_user_name AS entrustedUsername,
+		  b.create_user_name,
+		  b.regist_user_name,
+		  b.create_user_name AS createname,
+		  b.regist_user_name AS registname,
+		  bi.borrow_extra_yield,
+		  bi.remark,
+		  IFNULL(label.label_name, '--') AS labelName,
+		  DATE_FORMAT(b.regist_time,'%Y-%c-%d %h:%i:%s') AS regist_time,
+		  CONCAT(b.borrow_account_scale, '%') borrow_account_scale,
+		  b.`status` AS `status`,
+		  b.create_time as addtime,
+			b.verify_over_time AS verify_over_time,
+		  CASE WHEN ontime <![CDATA[<>]]> 0 THEN FROM_UNIXTIME( b.ontime, '%Y-%m-%d %H:%i:%s' )  ELSE '' END AS ontime,
+		  CASE WHEN verify_time IS NOT NULL AND verify_time != '0' THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' )  ELSE '' END AS verify_time,
+		  CASE WHEN verify_time IS NOT NULL AND verify_time != '0' THEN FROM_UNIXTIME( b.verify_time + (b.borrow_valid_time * 24 *60 *60), '%Y-%m-%d %H:%i:%s' )  ELSE '' END AS borrow_valid_time,
+		  CASE WHEN borrow_full_time <![CDATA[<>]]> 0 AND borrow_full_time IS NOT NULL THEN FROM_UNIXTIME( b.borrow_full_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS borrow_full_time,
+		  CASE WHEN reverify_time <![CDATA[<>]]> 0 THEN FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS reverify_time,
+		  CASE WHEN recover_last_time <![CDATA[<>]]> 0 THEN FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS recover_last_time,
+		  CASE WHEN repay_last_time <![CDATA[<>]]> 0 THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d' ) ELSE '' END AS repay_last_time,
+		  b.plan_nid,
+		  hic.inst_name,
+		CASE 
+			WHEN bi.company_or_personal=2  THEN hbm.name
+			WHEN bi.company_or_personal=1 THEN hbu.username
+			ELSE
+				''
+			END AS borrower_name,
+
+			CASE 
+			WHEN bi.company_or_personal=2  THEN hbm.city
+			WHEN bi.company_or_personal=1 THEN ''
+			ELSE
+				''
+			END AS location,
+
+			CASE 
+			WHEN bi.company_or_personal=2  THEN '个人'
+			WHEN bi.company_or_personal=1 THEN '企业'
+			ELSE
+				''
+			END AS attribute
+		FROM
+		  ht_borrow b
+		  LEFT JOIN ht_borrow_info bi on b.borrow_nid=bi.borrow_nid
+		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
+		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
+		  LEFT JOIN ht_borrow_user hbu ON hbu.borrow_nid=b.borrow_nid
+		  LEFT JOIN ht_borrow_maninfo hbm ON hbm.borrow_nid=b.borrow_nid
+		<include refid="Where_Clause" />
+		ORDER BY
+		  b.create_time DESC, b.id DESC
+	</select>
 </mapper>

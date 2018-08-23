@@ -5,6 +5,9 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -14,6 +17,10 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
     private int recordTotal;
 
     private boolean bool;
+
+    private List<String> couponStatus;
+
+    private List<ParamNameVO> couponType;
 
     public int getRecordTotal() {
         return recordTotal;
@@ -29,5 +36,21 @@ public class CouponCheckResponse extends Response<CouponCheckVO> {
 
     public void setBool(boolean bool) {
         this.bool = bool;
+    }
+
+    public List<String> getCouponStatus() {
+        return couponStatus;
+    }
+
+    public void setCouponStatus(List<String> couponStatus) {
+        this.couponStatus = couponStatus;
+    }
+
+    public List<ParamNameVO> getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(List<ParamNameVO> couponType) {
+        this.couponType = couponType;
     }
 }

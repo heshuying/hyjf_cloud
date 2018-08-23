@@ -1,7 +1,10 @@
 package com.hyjf.cs.trade.bean.app;
 
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppInvestInfoResultVO implements Serializable {
 
@@ -10,6 +13,8 @@ public class AppInvestInfoResultVO implements Serializable {
      * 此处为属性说明
      */
     private static final long serialVersionUID = -2087974873373127422L;
+
+    private List<NewAgreementBean> protocols = new ArrayList<NewAgreementBean>();
 
     private String borrowNid;
 
@@ -89,6 +94,7 @@ public class AppInvestInfoResultVO implements Serializable {
     private String protocolUrlDesc = "";
     /** 协议列表url */
     private String protocolUrl = "";
+
     /** 投资类型  */
     private String borrowType = "";
     
@@ -123,6 +129,10 @@ public class AppInvestInfoResultVO implements Serializable {
 
     /**产品加息利息*/
     private String borrowExtraYield = "";
+    // 前端要求的格式
+    private String status = "";
+    // 前端要求的格式
+    private String statusDesc = "";
     
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
@@ -479,5 +489,29 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setBorrowExtraYield(String borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public List<NewAgreementBean> getProtocols() {
+        return protocols;
+    }
+
+    public void setProtocols(List<NewAgreementBean> protocols) {
+        this.protocols = protocols;
     }
 }

@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
@@ -9,12 +10,10 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
-import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
@@ -44,7 +43,6 @@ public interface AmUserClient {
      * @auth sunpeikai
      */
     List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId);
-
     /**
      * 根据userId查询用户信息
      *
@@ -982,4 +980,149 @@ public interface AmUserClient {
      * @return
      */
     UserVO getUserByMobile(String mobile);
+
+    /**
+     * 获取CA认证异常列表
+     * @param aprlr
+     * @return
+     */
+    CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest aprlr);
+
+    /**
+     * 查询短信统计，通过分公司显示
+     * @param request
+     * @return
+     */
+    SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request);
+
+    /**
+     * 查询短信总条数+总费用
+     * @param request
+     * @return
+     */
+    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
+
+    /**
+     * 获取部门列表
+     * @param o
+     * @return
+     */
+    List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o);
+
+    /**
+     * 在筛选条件下查询出用户
+     * @param requestBean
+     * @return
+     */
+    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+
+	/**
+     * 获取用户账户信息byaccountId
+     * @auth libin
+     * @param accountId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccountByAccountId(String accountId);
+    /**
+     * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId);
+    /**
+     * 获取所有用户信息
+     * @auth nxl
+     * @return
+     */
+    UserResponse selectAllUser();
+
+    /**
+     * 查询此段时间的用户推荐人的修改记录
+     * @param userId
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate);
+
+    /**
+     * 查找员工信息
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId);
+    /**
+     * 根据用户id获取离职信息
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId);
+
+    /**
+     * 通过手机号和身份证查询掉单信息
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param mobile，idcard
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard );
+
+    /**
+     * 通过手机号和身份证查询用户信息
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param request
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request);
+
+    /**
+     * 根据订单号查询用户的开户记录
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param orderId
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String  orderId);
+
+    /**
+     * 删除用户开户日志
+    * @author Zha Daojian
+    * @date 2018/8/22 11:30
+    * @param userId
+    * @return java.lang.Boolean
+    **/
+    Boolean deleteBankOpenAccountLogByUserId(Integer  userId);
+
+    /**
+     * 查询返回的电子账号是否已开户
+    * @author Zha Daojian
+    * @date 2018/8/22 13:38
+    * @param accountId
+    * @return java.lang.Boolean
+    **/
+    Boolean checkAccountByAccountId(String accountId);
+
+    /**
+     * 查询开户渠道
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
+     * @param userId
+     * @return java.lang.Boolean
+     **/
+    AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId);
+
+    /**
+     * 开户更新开户渠道统计开户时间
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
+     * @param appChannelStatisticsDetailVO
+     * @return java.lang.Boolean
+     **/
+    Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
+
 }

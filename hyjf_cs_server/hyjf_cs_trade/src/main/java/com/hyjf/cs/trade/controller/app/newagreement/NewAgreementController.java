@@ -18,7 +18,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.utils.ProtocolEnum;
+import com.hyjf.cs.common.util.ProtocolEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
@@ -53,7 +53,7 @@ import java.util.Map;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "app端-协议接口", tags = "app端-协议接口")
+@Api(tags = "app端-协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
@@ -151,7 +151,7 @@ public class NewAgreementController extends BaseTradeController{
 	
     /**
      * 
-     *（二）汇计划投资服务协议
+     *（二）汇计划投资服务协议    已测试
      * @author libin
      * @param request
      * @return
@@ -159,16 +159,16 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "APP端协议接口", notes = "汇计划投资服务协议")
     @ResponseBody
     @PostMapping("/hjhInfo")
-    public NewAgreementResultBean hjhInfo(HttpServletRequest request) {
+    public NewAgreementResultBean hjhInfo(@RequestHeader(value = "userId") Integer userId, 
+    									  @RequestHeader("accedeOrderId") String accedeOrderId) {
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
-		String accedeOrderId = request.getParameter("accedeOrderId");
-		String sign = request.getParameter("sign");
-		logger.info("get sign is: {}",sign);
+		/*String accedeOrderId = request.getParameter("accedeOrderId");*/
+		logger.info("get sign is: {}",userId);
 		logger.info("get accedeOrderId is: {}",accedeOrderId);
 		JSONObject jsonObject = new JSONObject();
 		try {
-		    if (StringUtils.isEmpty(sign)
+		    if (userId == null
 	                || StringUtils.isEmpty(accedeOrderId)) {
 	            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
 	            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
@@ -196,7 +196,7 @@ public class NewAgreementController extends BaseTradeController{
                     agreementImages = imgUrl;
                 }
                 newAgreementResultBean.setAgreementImages(agreementImages);
-	            Integer userId = SecretUtil.getUserId(sign);
+	            /*Integer userId = SecretUtil.getUserId(sign);*/
 	            logger.info("get userId is: {}",userId);
 	            // 1基本信息
 	            Map<String, Object> params = new HashMap<String, Object>();
@@ -241,7 +241,7 @@ public class NewAgreementController extends BaseTradeController{
 
 	/**
      * 
-     * （三）债权转让协议
+     * （三）债权转让协议   已测试
      * 
      * @author libin
      * @param request
@@ -251,32 +251,38 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
     @ResponseBody
     @PostMapping("/userCreditContract")
-    public NewAgreementResultBean userCreditContract(HttpServletRequest request, HttpServletResponse response ) {
+    public NewAgreementResultBean userCreditContract(@RequestHeader(value = "userId") Integer userId,
+    												 @RequestHeader("borrowType") String borrowType,
+    												 @RequestHeader("nid") String nid,
+    												 HttpServletRequest request) {
     	logger.info("*******************************债权转让协议************************************");
     	NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
         JSONObject jsonObject = new JSONObject();
-        String borrowType = request.getParameter("borrowType");
+        /*String borrowType = request.getParameter("borrowType");*/
         try {
             if(borrowType!=null&&"HJH".equals(borrowType)){
-                String userId = request.getParameter("userId"); // 随机字符串
+                /*String userId = request.getParameter("userId");*/ // 随机字符串
                 // 注意：nid只是跟移动端约定这么定义，实际上这个nid是 ht_hjh_debt_credit_tender 的 id 主键
-                String nid = request.getParameter("nid");
-                if (StringUtils.isEmpty(userId)) {
+                /*String nid = request.getParameter("nid");*/
+/*                if (StringUtils.isEmpty(userId)) {
                     userId="0";
+                }*/
+                if(userId == null){
+                	userId= 0;
                 }
                 logger.info("get userId is: {}",userId);
                 logger.info("我的计划-计划详情-资产列表-协议，债转id :{}", nid);
                 // 线程不安全,这里只是取值,暂用
                 DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-                // 债转承接信息
+                // 债转承接信息 使用  债转id  主键查询  债转表 hyjf_hjh_debt_credit_tender 表
                 HjhDebtCreditTenderVO hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByPrimaryKey(Integer.parseInt(nid));
                 if (hjhDebtCreditTender != null) {
                     //获取承接订单;
-                    String assignNid =  hjhDebtCreditTender.getAssignOrderId();
-                    logger.info("我的计划-计划详情-资产列表-协议，债转标号assignNid :{}", assignNid);
+                    /*String assignNid =  hjhDebtCreditTender.getAssignOrderId();*/
+                    logger.info("我的计划-计划详情-资产列表-协议，债转标号assignNid :{}", hjhDebtCreditTender.getAssignOrderId());
                     // 原代码将移动端传入的 assignNid 当做查询用的 tenderNid  example.createCriteria().andTenderNidEqualTo(nid);
-                    List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(assignNid);
+                    List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(hjhDebtCreditTender.getAssignOrderId());
                     //获取法大大合同url
                     String agreementImages = "";
                     if(null != tenderAgreements && tenderAgreements.size() > 0){
@@ -309,6 +315,7 @@ public class NewAgreementController extends BaseTradeController{
                     UserVO borrowUser = this.agreementService.getUserByUserId(borrow.getUserId());
                     // 债转信息
                     /*HjhDebtCredit hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());*/
+                    // 表 ht_hjh_debt_credit
                     HjhDebtCreditVO hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());
                     /*jsonObject.put("addTime", GetDate.times10toStrYYYYMMDD(hjhDebtCreditTender.getCreateTime()));*/
                     // ht_debt_credit_tender 创建时间
@@ -410,7 +417,7 @@ public class NewAgreementController extends BaseTradeController{
                 logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
                 return newAgreementResultBean;
             }else{
-                String sign = request.getParameter("sign");
+                /*String sign = request.getParameter("sign");*/
                 String bidNid = request.getParameter("bidNid");
                 String creditNid = request.getParameter("creditNid");
                 String creditTenderNid = request.getParameter("creditTenderNid");
@@ -423,7 +430,7 @@ public class NewAgreementController extends BaseTradeController{
                 logger.info("get appTenderCreditAssignedBean is: {}",JSONObject.toJSON(appTenderCreditAssignedBean));
                 // 获取用户id
                 try {
-                    if (StringUtils.isEmpty(sign)
+                    if (userId == null
                             || StringUtils.isEmpty(bidNid)|| StringUtils.isEmpty(creditNid)
                             || StringUtils.isEmpty(creditTenderNid)|| StringUtils.isEmpty(assignNid)) {
                         newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
@@ -431,7 +438,7 @@ public class NewAgreementController extends BaseTradeController{
                         newAgreementResultBean.setInfo(jsonObject);
                         return newAgreementResultBean;
                     }
-                    Integer userId = SecretUtil.getUserId(sign);
+                    /*Integer userId = SecretUtil.getUserId(sign);*/
                     //获取承接订单;
                     /*List<TenderAgreement> tenderAgreements= fddGenerateContractService.selectByExample(assignNid);*/
                     List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(assignNid);

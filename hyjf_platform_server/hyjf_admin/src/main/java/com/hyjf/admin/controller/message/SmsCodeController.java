@@ -26,6 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +56,14 @@ public class SmsCodeController extends BaseController {
     @PostMapping("/query_user")
     public JSONObject queryUser(@RequestBody SmsCodeRequestBean requestBean) {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(STATUS, SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         // 在筛选条件下查询出用户
         List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
-        jsonObject.put("user_number", msgs.size());
+        jsonObject.put("user_number", 0);
+		if (!CollectionUtils.isEmpty(msgs)) {
+			jsonObject.put("user_number", msgs.size());
+		}
         jsonObject.put("smsCode", requestBean);
         BigDecimal remain_money = BigDecimal.ZERO;
         int remain_number = 0;
@@ -75,7 +81,7 @@ public class SmsCodeController extends BaseController {
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
         } catch (Exception e1) {
-            e1.printStackTrace();
+            logger.error("在筛选条件下查询出用户出错...", e1);
         }
         // 短信余额
         jsonObject.put("remain_money", remain_money.toPlainString());
@@ -110,25 +116,34 @@ public class SmsCodeController extends BaseController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "发送短信", notes = "发送短信")
     @PostMapping("/send_message_action")
-    public JSONObject send(HttpServletRequest request, SmsCodeRequestBean form) throws ParseException {
+    public JSONObject send(HttpServletRequest request, @RequestBody SmsCodeRequestBean form) throws ParseException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("success", false);
+        jsonObject.put("status", SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         logger.info("后台发送短信开始...");
         // 获取用户输入的手机号码
         String mobile = form.getUser_phones();
         if (form.getMessage() == null) {
             jsonObject.put("msg", "发送消息不能为空");
+            jsonObject.put("status", FAIL);
+            jsonObject.put("statusDesc", FAIL_DESC);
             return jsonObject;
         }
         if (request.getHeader("Referer").contains("timeinit")) {
             if (mobile.contains(",")) {
                 jsonObject.put("msg", "单发只能发送一条");
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;
             }
             boolean flag = smsCodeService.getUserByMobile(mobile);
             if (!flag) {
                 jsonObject.put("msg", "单发不能发送平台外的用户手机号");
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;
             }
         }
@@ -138,14 +153,20 @@ public class SmsCodeController extends BaseController {
         form.setIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
         if (sendType == null) {
             jsonObject.put("msg", "请选择发送类型");
+            jsonObject.put("status", FAIL);
+            jsonObject.put("statusDesc", FAIL_DESC);
             return jsonObject;
         } else if (sendType.equals("ontime")) {
             if (form.getOn_time() == null || form.getOn_time().equals("")) {
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 jsonObject.put("msg", "请选择发送时间");
                 return jsonObject;
             }
             if (StringUtils.isEmpty(mobile)) {
                 if (form.getOpen_account() == null) {
+                    jsonObject.put("status", FAIL);
+                    jsonObject.put("statusDesc", FAIL_DESC);
                     jsonObject.put("msg", "请选择发送条件或者填写手机号");
                     return jsonObject;
                 }
@@ -156,6 +177,8 @@ public class SmsCodeController extends BaseController {
                 jsonObject.put("msg", "定时发送任务创建成功");
                 return jsonObject;
             } else {
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
                 jsonObject.put("msg", "定时发送任务创建失败");
                 return jsonObject;
             }
@@ -163,6 +186,8 @@ public class SmsCodeController extends BaseController {
         } else {
             if (StringUtils.isEmpty(mobile)) {
                 if (form.getOpen_account() == null) {
+                    jsonObject.put("status", FAIL);
+                    jsonObject.put("statusDesc", FAIL_DESC);
                     jsonObject.put("msg", "请选择发送条件或者填写手机号");
                     return jsonObject;
                 }
@@ -258,6 +283,8 @@ public class SmsCodeController extends BaseController {
             jsonObject.put("success", true);
             jsonObject.put("msg", "发送成功");
         }
+        jsonObject.put("status", SUCCESS);
+        jsonObject.put("statusDesc", SUCCESS_DESC);
         return jsonObject;
     }
 }

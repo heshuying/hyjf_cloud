@@ -2,11 +2,11 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.admin.BankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -102,7 +103,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BanksConfigVO> getRechargeQuotaLimit() {
 		BanksConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getRechargeQuotaLimit" , BanksConfigResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/config/getbanklist" , BanksConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -110,4 +111,38 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 
+	/**
+	 * 判断某天是否是节假日
+	 * 
+	 * @param somdate
+	 * @return
+	 */
+	@Override
+	public boolean checkSomedayIsWorkDate(Date somdate) {
+		HolidaysConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/holidaysConfig/checkSomedayIsWorkDate/" + somdate,
+						HolidaysConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.isWorkDateFlag();
+		}
+		throw new RuntimeException("查询节假日配置错误...");
+	}
+
+	/**
+	 * 取从某天开始推后的第一个工作日开始时间
+	 * @param somedate
+	 * @return
+	 */
+	@Override
+	public Date getFirstWorkdateAfterSomedate(Date somdate) {
+		HolidaysConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomedate/" + somdate,
+						HolidaysConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getSomedate();
+		}
+		throw new RuntimeException("查询节假日配置错误...");
+	}
 }

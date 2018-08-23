@@ -4,11 +4,10 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +17,7 @@ import java.util.List;
  * @version BankRedPacketAccountServiceImpl, v0.1 2018/7/10 9:57
  */
 @Service
-public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountService {
-
-    @Autowired
-    BankMerchantAccountListCustomizeMapper bankMerchantAccountListCustomizeMapper;
+public class BankRedPacketAccountServiceImpl extends BaseServiceImpl implements BankRedPacketAccountService {
 
     /**
      * 获取商户子账户列表

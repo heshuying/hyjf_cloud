@@ -11,13 +11,13 @@ import com.hyjf.am.vo.admin.SmsLogVO;
  * @version SmsLogResponse, v0.1 2018/8/15 14:14
  */
 public class SmsLogResponse extends Response<SmsLogVO> {
-    private Integer logCount;
+    private int logCount;
 
-    public Integer getLogCount() {
+    public int getLogCount() {
         return logCount;
     }
 
-    public void setLogCount(Integer logCount) {
+    public void setLogCount(int logCount) {
         this.logCount = logCount;
     }
 }

@@ -17,7 +17,7 @@ public class RegistrantChangeStatisticsServiceImpl extends BaseServiceImpl imple
 
 
     @Override
-    public Integer registrantChangeStatisticsCount(Date startTime, Date endTime) {
+    public Integer queryRegistrantChangeStatisticsCount(Date startTime, Date endTime) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
 

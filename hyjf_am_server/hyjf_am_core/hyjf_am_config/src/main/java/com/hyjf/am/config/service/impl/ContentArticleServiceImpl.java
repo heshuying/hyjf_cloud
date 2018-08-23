@@ -45,18 +45,68 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
         ContentArticleExample example = new ContentArticleExample();
-        if (request.getLimitStart() != -1) {
-            example.setLimitStart(request.getLimitStart());
-            example.setLimitEnd(request.getLimitEnd());
+        if (request != null) {
+            if (request.getLimitStart() != null && request.getLimitStart() != -1) {
+                example.setLimitStart(request.getLimitStart());
+                example.setLimitEnd(request.getLimitEnd());
+            }
+            if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+                int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+                int limitEnd = request.getPageSize();
+                example.setLimitStart(limitStart);
+                example.setLimitEnd(limitEnd);
+            }
+            ContentArticleExample.Criteria crt = example.createCriteria();
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getNoticeType())) {
+                crt.andTypeEqualTo(request.getNoticeType());
+            }
+            crt.andStatusEqualTo(1);
         }
-        ContentArticleExample.Criteria crt = example.createCriteria();
-        crt.andTypeEqualTo(request.getNoticeType());
-        crt.andStatusEqualTo(1);
         example.setOrderByClause("create_time Desc");
         List<ContentArticle> list = contentArticleMapper.selectByExample(example);
         return list;
     }
 
+
+    /**
+     *
+     * 获取公司公告件数
+     * @author liuyang
+     * @param noticeType
+     * @return
+     */
+    @Override
+    public int getNoticeListCount(String noticeType) {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        return contentArticleMapper.countByExample(example);
+    }
+
+    /**
+     *
+     * 获取公司公告列表
+     * @author liuyang
+     * @param noticeType
+     * @param offset
+     * @param limit
+     * @return
+     */
+    @Override
+    public List<ContentArticle> searchNoticeList(String noticeType, int offset, int limit) {
+        ContentArticleExample example = new ContentArticleExample();
+        if (offset != -1) {
+            example.setLimitStart(offset);
+            example.setLimitEnd(limit);
+        }
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        example.setOrderByClause("create_time Desc");
+        List<ContentArticle> contentArticles = contentArticleMapper.selectByExample(example);
+        return contentArticles;
+    }
     /**
      * 分页查询
      *
@@ -191,7 +241,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit) {
+    public List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit) {
         ContentArticleExample example = new ContentArticleExample();
         if (offset != -1) {
             example.setLimitStart(offset);
@@ -282,8 +332,8 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public Integer countContentArticleByType(Map<String, Object> params) {
-        return contentArticleCustomizeMapper.countContentArticleByType(params);
+    public Integer countContentArticleByType() {
+        return contentArticleMapper.countByExample(new ContentArticleExample());
     }
 
     /**

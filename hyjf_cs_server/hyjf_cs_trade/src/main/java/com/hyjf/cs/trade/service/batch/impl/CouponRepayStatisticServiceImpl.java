@@ -8,9 +8,9 @@ import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import com.hyjf.am.vo.trade.HolidaysConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.CouponRepayMonitorClient;
-import com.hyjf.cs.trade.client.HolidaysConfigClient;
 import com.hyjf.cs.trade.service.batch.CouponRepayStatisticService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +27,13 @@ import java.util.*;
 @Service
 public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticService {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayStatisticServiceImpl.class);
-
-    public static final String DATE_FORMAT = "yyyy年MM月dd日";
-
     public static final String DATE_FORMAT_2 = "yyyy-MM-dd";
-
+    @Autowired
+    private AmConfigClient amConfigClient;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
     private CouponRepayMonitorClient couponRepayMonitorClient;
-    @Autowired
-    private HolidaysConfigClient holidaysConfigClient;
 
     /**
      * 自动生成加息券每日收益统计数据
@@ -52,15 +48,9 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
 
         //计算结束时间
         Calendar calendarEnd = Calendar.getInstance();
-        calendarEnd.setTime(calendarStart.getTime());
-        calendarEnd.add(Calendar.DAY_OF_MONTH, 3);
-        this.getStatisticEndTime(calendarEnd);
+        Date endTime = amConfigClient.getFirstWorkdateAfterSomedate(calendarStart.getTime());
+        calendarEnd.setTime(endTime);
         long timeEnd = calendarEnd.getTime().getTime()/1000;
-
-        //统计待收收益
-//        Map<String,Object> paraMap = new HashMap<String,Object>();
-//        paraMap.put("timeStart", timeStart);
-//        paraMap.put("timeEnd", timeEnd);
 
         List<CouponRecoverCustomizeVO> interestWaitList = amTradeClient.selectCouponInterestWaitToday(timeStart,timeEnd);
         interestWaitList = processInterestWaitList(interestWaitList, calendarEnd);
@@ -83,9 +73,6 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
                 interestReceived = BigDecimal.ZERO;
             }
 
-//            CouponRepayMonitorExample example = new CouponRepayMonitorExample();
-//            CouponRepayMonitorExample.Criteria criteria = example.createCriteria();
-//            criteria.andDayEqualTo(nowDay);
             List<CouponRepayMonitorVO> monitors = couponRepayMonitorClient.selectCouponRepayMonitor(nowDay);
 
             if(monitors == null || monitors.isEmpty()){
@@ -132,7 +119,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
             }
         }else {
             for(int i=0; i<3; i++){
-                String recoverTime = (String)interestWaitListProcessed.get(i).getRecoverTime();
+                String recoverTime = interestWaitListProcessed.get(i).getRecoverTime();
                 Calendar recoverTimeC = Calendar.getInstance();
                 recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
                 if(this.checkIsHoliday(recoverTimeC)){
@@ -200,7 +187,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
     public BigDecimal getInterestWaitHolidayTotal(List<CouponRecoverCustomizeVO> interestWaitListProcessed){
         BigDecimal result = BigDecimal.ZERO;
         for(CouponRecoverCustomizeVO interestMap : interestWaitListProcessed){
-            String recoverTime = (String)interestMap.getRecoverTime();
+            String recoverTime = interestMap.getRecoverTime();
             Calendar recoverTimeC = Calendar.getInstance();
             recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
             if(this.checkIsHoliday(recoverTimeC)){
@@ -244,24 +231,6 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         return result;
     }
 
-    /**
-     *
-     * 获取节假日列表
-     * @return
-     */
-    public List<HolidaysConfigVO> getHolidayList(){
-//        HolidaysConfigExample example=new HolidaysConfigExample();
-//        example.setOrderByClause("statr_time asc");
-        String orderByClause = "statr_time asc";
-        return holidaysConfigClient.selectHolidaysConfig(orderByClause);
-//        List<HolidaysConfig> holidays = new ArrayList<HolidaysConfig>();
-//        HolidaysConfig holiday = new HolidaysConfig();
-//        holiday.setStatrTime("2016年07月26日");
-//        holiday.setEndTime("2016年07月29日");
-//        holiday.setEventsName("我的假期");
-//        holidays.add(holiday);
-//        return holidays;
-    }
 
     /**
      *
@@ -270,41 +239,11 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
      */
     public Calendar getStatisticStartTime(){
         Calendar calendar = Calendar.getInstance();
-//        calendar.set(2016, 6, 23);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND,0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
-    }
-
-    /**
-     *
-     * 递归计算统计结束时间
-     * @param calendar
-     */
-    public void getStatisticEndTime(Calendar calendar){
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        String week = GetDate.getWeekOfDate(calendar.getTime());
-        if("周六".equals(week) || "周日".equals(week)){
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            getStatisticEndTime(calendar);
-        }
-
-        List<HolidaysConfigVO> holidays = this.getHolidayList();
-        for(HolidaysConfigVO holiday : holidays){
-            //Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
-           // Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
-//            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
-//                calendar.add(Calendar.DAY_OF_MONTH, 1);
-//                getStatisticEndTime(calendar);
-//            }
-        }
-
-        return;
     }
 
     /**
@@ -315,25 +254,7 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
      * @return
      */
     public boolean checkIsHoliday(Calendar calendar){
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        String week = GetDate.getWeekOfDate(calendar.getTime());
-        if("周六".equals(week) || "周日".equals(week)){
-            return true;
-        }
-
-        List<HolidaysConfigVO> holidays = this.getHolidayList();
-//        for(HolidaysConfigVO holiday : holidays){
-//            Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
-//            Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
-//            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
-//                return true;
-//            }
-//        }
-
-        return false;
+        return !amConfigClient.checkSomedayIsWorkDate(calendar.getTime());
     }
 
 }

@@ -8,9 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -49,6 +47,16 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     @Autowired
     private AppMessageProducer appMessageProducer;
 
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
+
+    @Autowired
+    private CouponRepayMessageProducer couponRepayMessageProducer;
+
+    @Autowired
+    private CouponLoansMessageProducer couponLoansMessageProducer;
+
+    @Autowired
     private CommisionComputeService commisionComputeService;
     /**
      * 用户ID
@@ -467,9 +475,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 计划收益
         params.put("type", 2);
         params.put("recoverInterestAmount", accountInterest);
-        //TODO: 运营数据队列
-//		rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_OPERATION_DATA,
-//				JSONObject.toJSONString(params));
+        //运营数据队列
+        try {
+            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        }catch (MQException e){
+            logger.error("=================发送运营数据更新MQ失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+        }
     }
 
 
@@ -729,14 +740,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 logger.info("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId());
             }
             try {
-                //生成并签署加入计划投资服务协议 add by  2018-2-26
+                //生成并签署加入计划投资服务协议
                 sendPlanContract(hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
                 //优惠券放款
                 couponLoan(hjhAccede);
                 // 双十二活动删除
                 //actBalloonTender(hjhAccede);
             } catch (Exception e) {
-                logger.info("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+                logger.error("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
             }
         }
     }
@@ -1132,13 +1143,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      *
      * @param hjhAccede
      */
-    private void couponRepay(HjhAccede hjhAccede) {
+    private void couponRepay(HjhAccede hjhAccede) throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        //TODO: 优惠券还款队列
-//        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
+        //优惠券还款队列
+        couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
     }
 
     /**
@@ -1146,13 +1157,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      *
      * @param hjhAccede
      */
-    private void couponLoan(HjhAccede hjhAccede) {
+    private void couponLoan(HjhAccede hjhAccede) throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        //TODO: 优惠券放款队列
-//        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
+        //优惠券放款队列
+        couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
     }
 
     /**

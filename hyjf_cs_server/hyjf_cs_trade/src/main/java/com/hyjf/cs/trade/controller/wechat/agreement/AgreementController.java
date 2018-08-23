@@ -3,35 +3,29 @@
  */
 package com.hyjf.cs.trade.controller.wechat.agreement;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.utils.ProtocolEnum;
+import com.hyjf.cs.common.util.ProtocolEnum;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author libin
  * @version AgreementController.java, v0.1 2018年7月27日 上午10:26:08
  */
-@Api(tags = "Wechat端协议接口")
+@Api(tags = "weChat端-协议接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/agreement")
 public class AgreementController extends BaseTradeController{
@@ -42,8 +36,8 @@ public class AgreementController extends BaseTradeController{
     /**
      * 查询协议图片(这个方法跟前端协商暂时废弃)
      * @author libin
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ApiOperation(value = "微信端协议接口", notes = "跳转协议")

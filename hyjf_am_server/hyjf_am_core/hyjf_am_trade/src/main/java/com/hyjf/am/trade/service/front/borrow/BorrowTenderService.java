@@ -100,4 +100,17 @@ public interface BorrowTenderService {
      * @return
      */
     String countMoneyByBorrowId(Map<String,Object> params);
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    List<BorrowTender> selectBorrowTenderList(String repairStartDate, String repairEndDate);
+    /**
+     * 更新标的投资详情表
+     * @param borrowTender
+     * @return
+     */
+    Boolean updateBorrowTender(BorrowTender borrowTender);
 }
