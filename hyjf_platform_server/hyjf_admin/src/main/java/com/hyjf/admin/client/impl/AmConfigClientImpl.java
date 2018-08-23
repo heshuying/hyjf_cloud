@@ -11,7 +11,6 @@ import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -1701,6 +1700,12 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
+                LinkResponse.class);
+    }
+
+    @Override
+    public LinkResponse infoInfoAction(Integer id) {
+        return restTemplate.getForObject("http://AM-CONFIG//am-config/content/contentlinks/getrecord/" + id,
                 LinkResponse.class);
     }
 
