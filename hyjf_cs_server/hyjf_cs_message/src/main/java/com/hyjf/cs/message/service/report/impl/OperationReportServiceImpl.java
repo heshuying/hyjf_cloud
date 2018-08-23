@@ -71,7 +71,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		JSONObject response = new JSONObject();
 		if(request.getIsRelease()==null){
 			response.put("success", "success");
-			response.put("isRelease", "发布状态为空");
+			response.put("releaseFlag", "发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
