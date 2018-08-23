@@ -87,11 +87,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
 
-	@Override
-	public BankCardVO selectBankCardByUserId(Integer userId) {
-		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
-		return bankCard;
-	}
+
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -99,11 +95,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return account;
 	}
 
-	@Override
-	public UserVO getUsers(Integer userId) {
-		UserVO users = amUserClient.findUserById(userId);
-		return users;
-	}
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
