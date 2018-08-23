@@ -1,7 +1,9 @@
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 
@@ -153,4 +155,10 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	BigDecimal sumBorrowUserMoneyTopOne();
+
+	/**
+	 * 查询千乐渠道散标数据
+	 * @return
+	 */
+	List<DataSearchCustomizeVO> querySanList( DataSearchRequest dataSearchRequest);
 }

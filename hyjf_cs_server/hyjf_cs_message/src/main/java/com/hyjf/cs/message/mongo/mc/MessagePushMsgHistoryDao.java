@@ -137,7 +137,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	public Integer countRecordList(MessagePushHistoryRequest form){
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
-			criteria.and("tagId").equals(form.getHistoryTagIdSrch());
+			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
 		if (StringUtils.isNotEmpty(form.getHistoryTitleSrch())) {
@@ -154,7 +154,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTerminal").regex(form.getHistoryTerminalSrch());
 		}
 		if (form.getHistorySendStatusSrch() != null) {
-			criteria.and("msgSendStatus").equals(form.getHistorySendStatusSrch());
+			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
 		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
 			try {
@@ -173,7 +173,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {
-				criteria.and("msgFirstreadPlat").equals(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
+				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -188,7 +188,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	public List<MessagePushMsgHistory> getRecordList(MessagePushHistoryRequest form,Integer offset,Integer limit){
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
-			criteria.and("tagId").equals(form.getHistoryTagIdSrch());
+			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
 		if (StringUtils.isNotEmpty(form.getHistoryTitleSrch())) {
@@ -205,7 +205,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTerminal").regex(form.getHistoryTerminalSrch());
 		}
 		if (form.getHistorySendStatusSrch() != null) {
-			criteria.and("msgSendStatus").equals(form.getHistorySendStatusSrch());
+			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
 		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
 			try {
@@ -223,7 +223,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {
-				criteria.and("msgFirstreadPlat").equals(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
+				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
 			} catch (NumberFormatException e) {
 			}
 		}
