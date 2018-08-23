@@ -65,7 +65,12 @@
 		          '0'
 		        END
 		    END AS credit_status,
-		   CASE WHEN bc.add_time != 0 AND bc.add_time IS NOT NULL THEN FROM_UNIXTIME( bc.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time,
+		   <!-- CASE WHEN bc.add_time != 0 AND bc.add_time IS NOT NULL THEN FROM_UNIXTIME( bc.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time, -->
+		   CASE WHEN bc.create_time IS NOT NULL THEN 
+		   DATE_FORMAT(bc.create_time,'%Y-%m-%d %H:%i:%S')
+		   ELSE '' 
+		   END AS add_time,
+		   
 		   CASE WHEN b.repay_last_time != 0 AND b.repay_last_time IS NOT NULL THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS repay_last_time
 		FROM
 		    ht_borrow_credit bc
@@ -73,7 +78,7 @@
 		INNER JOIN ht_borrow_info info ON bc.bid_nid = info.borrow_nid
 	   <include refid="Where_Clause" />
 		ORDER BY
-		  bc.add_time DESC
+		  bc.create_time DESC
 	    <if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitSize}
 	    </if>
