@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -61,8 +61,8 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     @Override
-    public List<ContentArticleVO> getNoticeListCount() {
-        return amConfigClient.aboutUsClient();
+    public List<ContentArticleVO> getNoticeListCount(BasePage request) {
+        return amConfigClient.aboutUsClient(request);
     }
 
     @Override
