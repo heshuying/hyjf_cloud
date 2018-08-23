@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,4 +46,18 @@ public interface AmConfigClient {
 	BanksConfigVO getBankNameByBankId(String bankId);
 
     List<BanksConfigVO> getRechargeQuotaLimit();
+
+	/**
+	 * 判断某天是否是节假日
+	 * @param somdate
+	 * @return
+	 */
+	boolean checkSomedayIsWorkDate(Date somdate);
+
+	/**
+	 * 取从某天开始推后的第一个工作日开始时间
+	 * @param somedate
+	 * @return
+	 */
+	Date getFirstWorkdateAfterSomedate(Date somdate);
 }
