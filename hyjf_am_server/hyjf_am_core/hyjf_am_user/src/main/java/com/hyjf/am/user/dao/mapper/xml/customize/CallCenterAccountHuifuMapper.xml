@@ -73,11 +73,9 @@
 			ELSE	
 				'否'
 			END AS card_type,	
-			hyduab.account AS account,	
-			 from_unixtime(	
-				hyduab.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS add_time
+			hyduab.account AS account,
+			<!-- from_unixtime(	hyduab.create_time,'%Y-%m-%d %H:%i:%s') AS add_time -->
+			DATE_FORMAT(hyduab.create_time,'%Y-%m-%d %H:%i:%S') AS add_time
 			FROM	
 				ht_user hydu
 			INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
