@@ -29,7 +29,7 @@ public class WebOperationReportController extends BaseController {
 	private OperationReportService operationReportService;
 
 	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表")
-	@PostMapping("/reportList")
+	@GetMapping("/reportList")
 	public WebResult<Object> listByRelease(@RequestParam(value = "releaseFlag",required = false) Integer releaseFlag,
 										   @RequestParam(value = "paginatorPage",required = false,defaultValue = "0") Integer paginatorPage) {
 		WebResult result = new WebResult();
