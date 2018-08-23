@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.plancenter.planrepay;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
@@ -34,41 +35,31 @@ public class HjhRepayController {
 
     private static Logger logger = LoggerFactory.getLogger(HjhRepayController.class);
 
-    @RequestMapping(value = "/getRepayCount")
-    public Integer getRepayCount(@RequestBody HjhRepayRequest repayRequest){
-        return hjhRepayService.getRepayCount(repayRequest);
-    }
-
+    /**
+     * 计划还款列表
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/hjhRepayList", method = RequestMethod.POST)
     public HjhRepayResponse hjhRepayList(@RequestBody HjhRepayRequest request){
         HjhRepayResponse response = new HjhRepayResponse();
-        String returnCode = Response.FAIL;
 
-        List<HjhRepay> hjhRepayVOList = hjhRepayService.selectByExample(request);
+        // 查询 总条数
+        Integer count = this.hjhRepayService.getRepayCount(request);
 
-        if (!CollectionUtils.isEmpty(hjhRepayVOList)) {
-            List<HjhRepayVO> hjhRepayVOLists = CommonUtils.convertBeanList(hjhRepayVOList, HjhRepayVO.class);
-            response.setResultList(hjhRepayVOLists);
-            returnCode = Response.SUCCESS;
+        if (request.getCurrPage() > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
         }
-        response.setRtn(returnCode);
+
+        List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(request);
+
+        if (!CollectionUtils.isEmpty(repayVOList)){
+            response.setResultList(repayVOList);
+            response.setCount(count);
+            response.setRtn(Response.SUCCESS);
+        }
         return response;
-    }
-
-    @RequestMapping(value = "/hjhRepaymentDetails/{accedeOrderId}")
-    public HjhRepayResponse hjhRepaymentDetails(@PathVariable String accedeOrderId){
-        HjhRepayResponse response = new HjhRepayResponse();
-
-        String returnCode = Response.FAIL;
-
-        List<HjhRepayVO> hjhRepayMentDetailList = hjhRepayService.selectByAccedeOrderId(accedeOrderId);
-
-        if (!CollectionUtils.isEmpty(hjhRepayMentDetailList)){
-            List<HjhRepayVO> hjhRepayMentDetailVoList = CommonUtils.convertBeanList(hjhRepayMentDetailList, HjhRepayVO.class);
-            response.setResultList(hjhRepayMentDetailVoList);
-            returnCode = Response.SUCCESS;
-        }
-        response.setRtn(returnCode);
-        return  response;
     }
 }
