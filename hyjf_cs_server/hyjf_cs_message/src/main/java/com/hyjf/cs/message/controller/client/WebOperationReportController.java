@@ -40,9 +40,12 @@ public class WebOperationReportController extends BaseController {
 		request.setIsRelease(releaseFlag);
 		request.setCurrPage(paginatorPage);
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
-		if(response.get("success").equals("success")){
+		if("success".equals(response.get("success"))){
 			result.setData(response.get("recordList"));
-		}
+		}else{
+            result.setStatus("1");
+            result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
+        }
 		return result;
 
 	}
