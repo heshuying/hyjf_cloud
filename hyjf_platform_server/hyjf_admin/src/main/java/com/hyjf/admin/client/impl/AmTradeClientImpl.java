@@ -3888,7 +3888,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         adminBankAccountCheckCustomizeVO.setUserId(userId);
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
-        String url = "http://AM-TRADE/am-trade/bankaccountmanage/updateAccountCheck/";
+        String url = "http://AM-TRADE/am-trade/bankAccountManage/updateaccountcheck/";
         String result = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, String.class).getBody();
         if (result != null) {
             return result;
