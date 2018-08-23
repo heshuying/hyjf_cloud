@@ -9,10 +9,14 @@ import com.hyjf.am.trade.bean.BorrowCommonFileData;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -33,6 +37,8 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.annotation.Resource;
+
 @Service
 public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCommonService {
 
@@ -41,6 +47,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public static final String BORROW_LOG_UPDATE = "修改";
 	public static final String BORROW_LOG_ADD = "新增";
 	public static final String BORROW_LOG_DEL = "删除";
+    @Resource
+    private AutoIssueMessageProducer autoIssueMessageProducer;
 //    @Autowired
 //    @Qualifier("myAmqpTemplate")
 //    private RabbitTemplate rabbitTemplate;
@@ -263,26 +271,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 借款人用户名
 		borrow.setBorrowUserName(borrowBean.getUsername().trim());
 
-		// 受托支付新增
-		RUserExample example1 = new RUserExample();
-		RUserExample.Criteria cra1 = example1.createCriteria();
-		cra1.andUsernameEqualTo(borrowBean.getEntrustedUsername().trim());
+
 //		cra1.andBankOpenAccountEqualTo(1);
 //		cra1.andStatusEqualTo(0);
-		List<RUser> userList1 = this.rUserMapper.selectByExample(example1);
-		borrow.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
-		if("1".equals(borrowBean.getEntrustedFlg())){
-			borrow.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
-			borrow.setEntrustedUserId(userList1.get(0).getUserId());
+		if(borrowBean.getEntrustedFlg().equals("1")) {
+			// 受托支付新增
+			RUserExample example1 = new RUserExample();
+			RUserExample.Criteria cra1 = example1.createCriteria();
+			cra1.andUsernameEqualTo(borrowBean.getEntrustedUsername().trim());
+			List<RUser> userList1 = this.rUserMapper.selectByExample(example1);
+			borrow.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
+			if("1".equals(borrowBean.getEntrustedFlg())){
+				borrow.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
+				borrow.setEntrustedUserId(userList1.get(0).getUserId());
+			}
 		}
-
-		borrow.setRemark(borrowBean.getRemark().trim());
+		borrow.setRemark(borrowBean.getRemark());
 		// 项目申请人
-		borrow.setApplicant(borrowBean.getApplicant().trim());
+		borrow.setApplicant(borrowBean.getApplicant());
 		borrow.setCreateUserName(adminUsername);
 		borrow.setRemark(borrowBean.getRemark());
 		// 垫付机构用户名
-		String repayOrgName =borrowBean.getRepayOrgName().trim();
+		String repayOrgName =borrowBean.getRepayOrgName();
 		// 垫付机构用户名不为空的情况
 		if (StringUtils.isNotEmpty(repayOrgName)) {
 			// 根据垫付机构用户名检索垫付机构用户ID
@@ -412,7 +422,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// ----------风险缓释金添加-------
 		// 资产编号
-		borrow.setBorrowAssetNumber(borrowBean.getBorrowAssetNumber().trim());
+		borrow.setBorrowAssetNumber(borrowBean.getBorrowAssetNumber());
 		// 项目来源
 		borrow.setBorrowProjectSource(borrowBean.getBorrowProjectSource());
 		// 起息时间
@@ -743,9 +753,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrow.setIsShow(1);
 		}
 		borrow.setPublishInstCode(borrowBean.getPublishInstCode());
-
+		borrow.setIsMonth(borrowBean.getIsMonth());
 		this.borrowMapper.insertSelective(borrow);
-
+		
+		BorrowInfoWithBLOBs borrowinfo=new BorrowInfoWithBLOBs();
+		BeanUtils.copyProperties(borrow, borrowinfo);
+		this.borrowInfoMapper.insert(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息(信批新增字段)
@@ -797,9 +810,14 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
-								//TODO 成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
-						        this.sendToMQ(borrowBean,"" );
-						        _log.info(borrowNid + "已发送至MQ");
+								//成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
+								 try {
+		                                JSONObject params = new JSONObject();
+		                                params.put("borrowNid", borrow.getBorrowNid());
+		                                autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+		                            } catch (MQException e) {
+		                                logger.error("发送【关联计划队列】MQ失败...");
+		                            }
 							}
 						}
 						//添加修改日志

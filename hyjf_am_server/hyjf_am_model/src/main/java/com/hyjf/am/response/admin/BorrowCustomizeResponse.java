@@ -9,6 +9,7 @@ import java.util.Map;
 import com.hyjf.am.response.AdminResponse;
 
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -23,6 +24,14 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	private List<BorrowProjectTypeVO> borrowProjectType;
 	private List<BorrowStyleVO> borrowStyle;
 	private Map<String, String> st;
+	private List<BorrowCommonCustomizeVO> borrowCommonCustomizeList;
+	
+	public List<BorrowCommonCustomizeVO> getBorrowCommonCustomizeList() {
+		return borrowCommonCustomizeList;
+	}
+	public void setBorrowCommonCustomizeList(List<BorrowCommonCustomizeVO> borrowCommonCustomizeList) {
+		this.borrowCommonCustomizeList = borrowCommonCustomizeList;
+	}
 	public Map<String, String> getSt() {
 		return st;
 	}
