@@ -6,9 +6,11 @@ package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushMsgService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 
@@ -65,6 +67,8 @@ public class MessagePushMessageController extends BaseController {
     private MessagePushTagService messagePushTagService;
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
+    @Autowired
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -265,52 +269,17 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        String fileDomainUrl = FILEDOMAINURL;
-        String filePhysicalPath = FILEPHYSICALPATH;
-        String fileUploadTempPath = FILEUPLOADTEMPPATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
-        BorrowCommonImageVO fileMeta = null;
-        LinkedList<BorrowCommonImageVO> files = new LinkedList<BorrowCommonImageVO>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            // 图片上传
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImageVO();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
-        }
-        return JSONObject.toJSONString(files, true);
     }
 
 
