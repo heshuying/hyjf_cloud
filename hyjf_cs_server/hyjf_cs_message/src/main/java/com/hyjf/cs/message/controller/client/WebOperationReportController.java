@@ -5,6 +5,7 @@ package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
+import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author tanyy
@@ -39,6 +42,9 @@ public class WebOperationReportController extends BaseController {
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
 		if(response.get("success")=="success"){
 			result.setData(response.get("recordList"));
+		}else{
+			List<OperationReportVO> recordList = new ArrayList<>();
+			result.setData(recordList);
 		}
 		return result;
 
