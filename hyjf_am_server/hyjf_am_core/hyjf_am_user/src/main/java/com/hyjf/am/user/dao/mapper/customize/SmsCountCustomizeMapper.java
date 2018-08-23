@@ -19,4 +19,6 @@ public interface SmsCountCustomizeMapper {
     Integer querySmsCountNumberTotal(SmsCountRequest request);
 
     List<OADepartmentCustomize> queryDepartmentInfo();
+
+    int selectCount(SmsCountRequest request);
 }

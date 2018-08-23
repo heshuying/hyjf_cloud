@@ -783,4 +783,14 @@ public class UserController extends BaseController {
                                         @PathVariable String emailOpenStatus){
         return userService.updateStatusByUserId(userId, smsOpenStatus, emailOpenStatus);
     }
+
+    /**
+     * 查询千乐渠道的用户id
+     * @return
+     */
+    @GetMapping("/getQianleUser")
+    public List<Integer> getQianleUser() {
+        return userService.getQianleUser();
+    }
+
 }

@@ -11,7 +11,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
-import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
@@ -35,8 +34,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     private HjhAccedeMapper hjhAccedeMapper;
     @Autowired
     private HjhPlanBorrowTmpMapper hjhPlanBorrowTmpMapper;
-    @Autowired
-    private AutoTenderService autoTenderService;
+
 
     private Logger logger = LoggerFactory.getLogger(AutoTenderExceptionServiceImpl.class);
 

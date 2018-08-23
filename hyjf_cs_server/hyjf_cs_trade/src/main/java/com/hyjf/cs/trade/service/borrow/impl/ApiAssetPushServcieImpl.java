@@ -235,7 +235,13 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     pushBean.setIsPunished("暂无");
                 }
                 // 信批需求(资产只有个人) end
-
+                // add by nxl 20180710互金系统,新添加借款人地址 Start
+                if (pushBean.getAddress() == null || pushBean.getAddress().length() >99) {
+                    pushBean.setRetCode("ZT000015");
+                    pushBean.setRetMsg("借款人地址信息不正确");
+                    continue;
+                }
+                // add by nxl 20180710互金系统,新添加借款人地址End
 
                 // 包装资产信息
                 HjhPlanAssetVO record = new HjhPlanAssetVO();

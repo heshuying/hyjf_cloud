@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/hyjf-admin/exception/user_auth_exception")
-@Api(value = "自动投资债转授权异常",tags = "自动投资债转授权异常")
+@Api(value = "异常中心-自动投资债转授权异常",tags = "异常中心-自动投资债转授权异常")
 public class UserAuthExceptionController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

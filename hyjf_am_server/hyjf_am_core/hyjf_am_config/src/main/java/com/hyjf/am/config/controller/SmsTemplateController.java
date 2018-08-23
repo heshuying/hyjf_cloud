@@ -84,7 +84,7 @@ public class SmsTemplateController extends BaseConfigController{
 			response.setResultList(voList);
 		}
 		// 查询总条数
-        int count = smsTemplateService.selectCount();
+        int count = smsTemplateService.selectCount(request);
 		response.setCount(count);
 		return response;
 	}
@@ -95,8 +95,8 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/insertTemplate")
-    public void insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        smsTemplateService.insertSmsTemplate(request);
+    public int insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.insertSmsTemplate(request);
     }
 
     /**
@@ -105,8 +105,8 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/open_sms_template")
-    public void openSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        smsTemplateService.openSmsTemplate(request);
+    public int openSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.updateSmsTemplateStatus(request);
     }
 
     /**
@@ -125,7 +125,19 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/update_sms_template")
-    public void updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        smsTemplateService.updateSmsTemplate(request);
+    public int updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.updateSmsTemplate(request);
+    }
+
+    @RequestMapping("/find_by_id/{id}")
+    public SmsTemplateResponse findById(@PathVariable Integer id) {
+        SmsTemplateResponse response = new SmsTemplateResponse();
+        SmsTemplate smsTemplate = smsTemplateService.findById(id);
+        if (smsTemplate != null) {
+            SmsTemplateVO vo = new SmsTemplateVO();
+            BeanUtils.copyProperties(smsTemplate, vo);
+            response.setResult(vo);
+        }
+        return response;
     }
 }

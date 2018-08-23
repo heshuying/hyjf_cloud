@@ -34,13 +34,13 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public void insertSmsTemplate(SmsTemplateRequest request) {
-		amConfigClient.insertSmsTemplate(request);
+	public int insertSmsTemplate(SmsTemplateRequest request) {
+		return amConfigClient.insertSmsTemplate(request);
 	}
 
 	@Override
-	public void openAction(SmsTemplateRequest request) {
-		amConfigClient.openSmsTemplate(request);
+	public int updateStatus(SmsTemplateRequest request) {
+		return amConfigClient.updateStatus(request);
 	}
 
 	@Override
@@ -49,7 +49,15 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public void updateSmsTemplate(SmsTemplateRequest request) {
-		amConfigClient.updateSmsTemplate(request);
+	public int updateSmsTemplate(SmsTemplateRequest request) {
+		return amConfigClient.updateSmsTemplate(request);
+	}
+
+	@Override
+	public SmsTemplateVO selectSmsTemByTplCode(SmsTemplateRequest request) {
+		if (request != null) {
+			return amConfigClient.findSmsTemById(request.getId());
+		}
+        return null;
 	}
 }

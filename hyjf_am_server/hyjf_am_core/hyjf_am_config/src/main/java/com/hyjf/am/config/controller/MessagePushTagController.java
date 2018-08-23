@@ -56,14 +56,14 @@ public class MessagePushTagController extends BaseConfigController{
 	 * @return
 	 */
 	@PostMapping("/searchList")
-	public MessagePushTagResponse searchList(MessagePushTagRequest request) {
+	public MessagePushTagResponse searchList(@RequestBody MessagePushTagRequest request) {
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		Integer count = messagePushTagServcie.countRecord(request);
 		Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
 		if (request.getPageSize() == 0) {
 			paginator = new Paginator(request.getCurrPage(), count);
 		}
-		List<MessagePushTag> messagePushTagList = messagePushTagServcie.searchList(request,paginator.getOffset(),paginator.getOffset());
+		List<MessagePushTag> messagePushTagList = messagePushTagServcie.searchList(request,paginator.getOffset(),paginator.getLimit());
 		response.setCount(count);
 		if (count > 0) {
 			List<MessagePushTagVO> list = CommonUtils.convertBeanList(messagePushTagList,MessagePushTagVO.class);
@@ -97,11 +97,11 @@ public class MessagePushTagController extends BaseConfigController{
 	 * @return
 	 */
 	@PostMapping("/insertMessagePushTag")
-	public MessagePushTagResponse insertAction(MessagePushTagRequest request) {
+	public MessagePushTagResponse insertAction(@RequestBody MessagePushTagRequest request) {
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		MessagePushTag messagePushTag = new MessagePushTag();
+		BeanUtils.copyProperties(request,messagePushTag);
 		messagePushTag.setCreateTime(GetDate.getDate());
-		messagePushTag.setCreateUserName(request.getCreateUserName());
 		messagePushTag.setStatus(0);
 		try {
 			Integer result = messagePushTagServcie.insertAction(messagePushTag);
@@ -122,10 +122,11 @@ public class MessagePushTagController extends BaseConfigController{
 	 * @return
 	 */
 	@PostMapping("/updateMessagePushTag")
-	public MessagePushTagResponse updateAction(MessagePushTagRequest request) {
+	public MessagePushTagResponse updateAction(@RequestBody MessagePushTagRequest request) {
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		MessagePushTag messagePushTag = new MessagePushTag();
 		BeanUtils.copyProperties(request,messagePushTag);
+		messagePushTag.setUpdateTime(GetDate.getDate());
 		try {
 			Integer result = messagePushTagServcie.updateAction(messagePushTag);
 			if (result > 0) {
@@ -168,7 +169,7 @@ public class MessagePushTagController extends BaseConfigController{
 	 * @return
 	 */
 	@PostMapping("/updatePushTag")
-	public MessagePushTagResponse updatePushTag(MessagePushTagVO messagePushTagVO) {
+	public MessagePushTagResponse updatePushTag(@RequestBody MessagePushTagVO messagePushTagVO) {
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		MessagePushTag messagePushTag = new MessagePushTag();
 		BeanUtils.copyProperties(messagePushTagVO,messagePushTag);

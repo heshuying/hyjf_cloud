@@ -73,5 +73,5 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param tender
      * @return
      */
-    ModelAndView getAppTenderUrl(TenderRequest tender);
+    String getAppTenderUrl(TenderRequest tender);
 }

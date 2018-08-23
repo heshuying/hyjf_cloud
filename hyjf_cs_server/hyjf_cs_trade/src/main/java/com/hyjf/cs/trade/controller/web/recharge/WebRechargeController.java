@@ -6,8 +6,10 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -82,7 +84,7 @@ public class WebRechargeController extends BaseTradeController{
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
+		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney(), StringUtil.valueOf(ClientConstants.WEB_CLIENT));
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);

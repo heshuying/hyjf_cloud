@@ -3,6 +3,7 @@ package com.hyjf.am.vo.trade.borrow;
 import com.hyjf.am.vo.BaseVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 
 public class BorrowTenderVO extends BaseVO {
@@ -97,6 +98,10 @@ public class BorrowTenderVO extends BaseVO {
     private Integer investType;
 
     private Integer tenderType;
+
+    private String tenderFrom;
+
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -458,5 +463,21 @@ public class BorrowTenderVO extends BaseVO {
 
     public void setTenderType(Integer tenderType) {
         this.tenderType = tenderType;
+    }
+
+    public String getTenderFrom() {
+        return tenderFrom;
+    }
+
+    public void setTenderFrom(String tenderFrom) {
+        this.tenderFrom = tenderFrom;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

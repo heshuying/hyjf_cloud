@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
@@ -14,6 +15,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +43,13 @@ public class BorrowAuthController extends BaseTradeController {
     @ApiOperation(value = "待授权列表", notes = "待授权列表")
     @PostMapping(value = "/list_auth", produces = "application/json; charset=utf-8")
     public WebResult<List<BorrowAuthCustomizeVO>> authList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
-        WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<List<BorrowAuthCustomizeVO>>();
-        WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
+        WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<>();
+        if(StringUtils.isBlank(requestBean.getUserId())){
+            requestBean.setUserId(String.valueOf(userId));
+        }
 
         logger.info("获取待授权列表开始，requestBean：{}", JSON.toJSONString(requestBean));
+
 
         // 请求参数校验
         borrowAuthService.checkForAuthList(requestBean);
@@ -77,7 +82,9 @@ public class BorrowAuthController extends BaseTradeController {
     @PostMapping(value = "/list_authed", produces = "application/json; charset=utf-8")
     public WebResult<List<BorrowAuthCustomizeVO>> authedList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
         WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<List<BorrowAuthCustomizeVO>>();
-        WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
+        if(StringUtils.isBlank(requestBean.getUserId())){
+            requestBean.setUserId(String.valueOf(userId));
+        }
 
         logger.info("获取已授权列表开始，requestBean：{}", JSON.toJSONString(requestBean));
 
@@ -149,7 +156,7 @@ public class BorrowAuthController extends BaseTradeController {
 
         // 绑卡后处理
         try {
-            boolean checkResult = RedisUtils.tranactionSet("trusteePay" + bean.getLogOrderId(), 600);
+            boolean checkResult = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_TRUSTEEPAY + bean.getLogOrderId(), 600);
             if(checkResult){
                 if (bean!=null&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) && "1".equals(bean.getState())) {
                     Integer rtn = borrowAuthService.updateTrusteePaySuccess(bean.getProductId());

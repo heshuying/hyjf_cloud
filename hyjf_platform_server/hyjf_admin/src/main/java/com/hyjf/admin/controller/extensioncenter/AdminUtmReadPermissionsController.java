@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @author tanyy
  * @version AdminUtmReadPermissionsController, v0.1 2018/7/18 16:03
  */
-@Api(tags ="渠道帐号管理")
+@Api(tags ="推广中心渠道帐号管理")
 @RestController
 @RequestMapping("/hyjf-admin/adminutmreadpermissions")
 public class AdminUtmReadPermissionsController extends BaseController {

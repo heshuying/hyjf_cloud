@@ -129,13 +129,6 @@ public interface PassWordService extends BaseUserService {
     JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean b);
 
     /**
-     * 查询交易密码失败原因
-     * @param logOrdId
-     * @return
-     */
-    String getFiledMess(String logOrdId);
-
-    /**
      * 组装参数调用银行
      * @param bean
      * @param user
