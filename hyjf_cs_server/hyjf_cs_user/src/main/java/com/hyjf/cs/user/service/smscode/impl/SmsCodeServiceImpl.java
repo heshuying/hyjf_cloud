@@ -86,7 +86,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      *
      * @param validCodeType
      * @param mobile
-     * @param token
      * @param ip
      */
     @Override
@@ -156,7 +155,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         String count = RedisUtils.get( RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set( RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0");
+            RedisUtils.set( RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0",24 * 60 * 60);
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -191,7 +190,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      *
      * @param validCodeType
      * @param mobile
-     * @param token
      * @param ip
      */
     @Override
@@ -306,7 +304,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0",24 * 60 * 60);
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {

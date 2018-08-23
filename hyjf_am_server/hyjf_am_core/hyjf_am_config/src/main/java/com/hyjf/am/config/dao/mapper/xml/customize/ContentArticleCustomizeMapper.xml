@@ -66,7 +66,6 @@
 			<if test="type != null and type != ''">
 				AND type = #{type}
 			</if>
-				ORDER BY create_time DESC
 			<if test="limitStart >= 0">
 				limit #{limitStart} , #{limitEnd}
 			</if>

@@ -66,6 +66,8 @@ public class WebOperationReportController extends BaseController {
 		if(response.get("success")!="success"){
 			result.setStatus("1");
 			result.setStatusDesc("失败");
+		}else {
+			result.setData(response);
 		}
 		return result;
 	}

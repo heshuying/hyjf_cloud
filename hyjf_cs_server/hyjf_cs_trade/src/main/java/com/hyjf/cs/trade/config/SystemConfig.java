@@ -8,6 +8,9 @@ public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
 
+    @Value("${hyjf.weChat.host}")
+    public String wechatHost;
+
     @Value("${http.hyjf.web.host}")
     public String httpWebHost;
 
@@ -135,6 +138,13 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
+    public String getWechatHost() {
+        return wechatHost;
+    }
+
+    public void setWechatHost(String wechatHost) {
+        this.wechatHost = wechatHost;
+    }
 
     public String getBankInstcode() {
         return bankInstcode;
