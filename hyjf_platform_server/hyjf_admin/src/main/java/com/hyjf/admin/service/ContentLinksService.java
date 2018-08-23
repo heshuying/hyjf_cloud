@@ -28,6 +28,14 @@ public interface ContentLinksService {
     LinkResponse insertAction(ContentLinksRequestBean requestBean);
 
     /**
+     * 根据id查询数据
+     *
+     * @param requestBean
+     * @return
+     */
+    LinkResponse infoInfoAction(ContentLinksRequestBean requestBean);
+
+    /**
      * 修改友情链接列表查询
      *
      * @param requestBean

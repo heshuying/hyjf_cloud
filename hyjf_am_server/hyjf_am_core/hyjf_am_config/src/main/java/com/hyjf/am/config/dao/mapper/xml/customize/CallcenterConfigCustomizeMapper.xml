@@ -4,8 +4,8 @@
 
 	<resultMap id="ConfigMap" type="com.hyjf.am.config.dao.model.customize.CallcenterBankConfigCustomize">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="bankName" property="bankName" jdbcType="VARCHAR" />
-		<result column="bankCode" property="bankCode" jdbcType="VARCHAR" />
+		<result column="bankName" property="bankName"  />
+		<result column="bankCode" property="bankCode"  />
 	</resultMap>
 	<select id="getBankConfigList" resultMap="ConfigMap" parameterType="com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest">
 		SELECT
