@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.hyjf.am.user.dao.mapper.customize.AdminAccountCustomizeQuiryMapper">
+    <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize">
+        <result column="user_id" property="userid" jdbcType="VARCHAR" />
+        <result column="accounts" property="accountStatus" jdbcType="VARCHAR" />
+        <result column="accounttime" property="regTimeEnd" jdbcType="TIMESTAMP" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="account" property="platform" jdbcType="INTEGER" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="accountEnquiry" parameterType="com.hyjf.am.resquest.user.BankOpenAccountLogRequest" resultMap="BaseResultMap" >
+        SELECT user_id,reg_esb account,bank_open_account accounts,mobile,username,(SELECT create_time FROM hyjf_bank_open_account WHERE user_id=users.user_id) accounttime FROM huiyingdai_users users WHERE 1=1
+        <if test="phone != null" >
+            and mobile =#{phone}
+        </if>
+        <if test="idcard != null" >
+            and user_id =(SELECT user_id FROM huiyingdai_users_info WHERE idcard=#{idcard})
+        </if>
+    </select>
+</mapper>
+
