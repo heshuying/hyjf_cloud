@@ -730,7 +730,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserInfoByUserInfo(UserInfoVO userInfoVO) {
-		UserInfoRequest request = null;
+		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		int result = restTemplate
 				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class)
