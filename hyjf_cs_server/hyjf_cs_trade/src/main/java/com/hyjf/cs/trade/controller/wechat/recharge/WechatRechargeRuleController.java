@@ -8,10 +8,7 @@ import com.hyjf.cs.trade.service.recharge.WechatRechargeRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wangjun
@@ -26,7 +23,7 @@ public class WechatRechargeRuleController {
     WechatRechargeRuleService wechatRechargeRuleService;
 
     @ApiOperation(value = "获取充值规则", notes = "获取充值规则")
-    @PostMapping(value = "/rechargeRule")
+    @GetMapping(value = "/rechargeRule")
     public WxRechargeDescResultBean rechargeRule() {
         return wechatRechargeRuleService.getRechargeRule();
     }
