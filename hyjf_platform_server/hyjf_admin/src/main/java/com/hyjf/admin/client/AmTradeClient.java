@@ -17,6 +17,7 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -2751,5 +2752,21 @@ public interface AmTradeClient {
      * @return
      */
     public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate);
+
+    /**
+     * 更新borrowTender表
+     * @auth nxl
+     * @return
+     */
+    Boolean updateBorrowTender(BorrowTenderUpdRequest request);
+
 }
 

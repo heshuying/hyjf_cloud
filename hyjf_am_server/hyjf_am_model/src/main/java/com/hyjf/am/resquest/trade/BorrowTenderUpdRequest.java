@@ -1,13 +1,11 @@
-package com.hyjf.am.vo.trade.borrow;
+package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.resquest.Request;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-
-public class BorrowTenderVO extends BaseVO {
-
+public class BorrowTenderUpdRequest extends Request {
 
     private Integer id;
 
@@ -61,9 +59,7 @@ public class BorrowTenderVO extends BaseVO {
 
     private BigDecimal loanFee;
 
-    private Integer addTime;
-
-    private String addip;
+    private String addIp;
 
     private Integer client;
 
@@ -313,20 +309,12 @@ public class BorrowTenderVO extends BaseVO {
         this.loanFee = loanFee;
     }
 
-    public Integer getAddTime() {
-        return addTime;
+    public String getAddIp() {
+        return addIp;
     }
 
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
-    }
-
-    public String getAddip() {
-        return addip;
-    }
-
-    public void setAddip(String addip) {
-        this.addip = addip == null ? null : addip.trim();
+    public void setAddIp(String addIp) {
+        this.addIp = addIp == null ? null : addIp.trim();
     }
 
     public Integer getClient() {
@@ -470,7 +458,7 @@ public class BorrowTenderVO extends BaseVO {
     }
 
     public void setTenderFrom(String tenderFrom) {
-        this.tenderFrom = tenderFrom;
+        this.tenderFrom = tenderFrom == null ? null : tenderFrom.trim();
     }
 
     public Date getCreateTime() {

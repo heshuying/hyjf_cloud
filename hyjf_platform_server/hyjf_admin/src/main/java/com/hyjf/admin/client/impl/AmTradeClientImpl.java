@@ -5696,4 +5696,31 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/partnerconfig/delete", req, AdminPartnerConfigDetailResponse.class)
                 .getBody();
     }
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate){
+        String url = tradeService + "/borrowTender/selectBorrowTenderListByDate/"+repairStartDate+"/"+repairEndDate;
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 更新borrowTender表
+     * @return
+     * @auth nxl
+     */
+    @Override
+    public Boolean updateBorrowTender(BorrowTenderUpdRequest request){
+        String url = tradeService + "/borrowTender/updateBorrowTender";
+        Boolean response = restTemplate.getForEntity(url, Boolean.class).getBody();
+        return response;
+    }
 }

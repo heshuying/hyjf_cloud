@@ -12,8 +12,8 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.service.front.user.UserManagerService;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
+import com.hyjf.am.user.service.front.user.UserManagerService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
@@ -22,10 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
@@ -667,5 +664,98 @@ public class UserManagerController extends BaseController {
     @RequestMapping("/bindThirdUser/{userId}/{bindUniqueId}/{bindPlatformId}")
     public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
     	return userManagerService. bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    }
+
+    /**
+     * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     * @param userId
+     * @return
+     */
+    @GetMapping("/queryUserAndDepartment/{userId}")
+    public UserUpdateParamCustomizeResponse queryUserAndDepartment(@PathVariable Integer userId) {
+        UserUpdateParamCustomizeResponse response = new UserUpdateParamCustomizeResponse();
+        response.setRtn(Response.FAIL);
+        List<UserUpdateParamCustomize> userUpdateParamCustomizeList = userManagerService.queryUserAndDepartment(userId);
+        if(!CollectionUtils.isEmpty(userUpdateParamCustomizeList)){
+            List<UserUpdateParamCustomizeVO> userUpdateParamCustomizeVOList = CommonUtils.convertBeanList(userUpdateParamCustomizeList,UserUpdateParamCustomizeVO.class);
+            response.setResultList(userUpdateParamCustomizeVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 获取所有用户信息
+     * @return
+     */
+    @RequestMapping("/selectAllUser")
+    public UserResponse selectAllUser() {
+        UserResponse response = new UserResponse();
+        response.setRtn(Response.FAIL);
+        List<User> userList = userManagerService.selectAllUser();
+        if(!CollectionUtils.isEmpty(userList)){
+            List<UserVO> userUpdateParamCustomizeVOList = CommonUtils.convertBeanList(userList,UserVO.class);
+            response.setResultList(userUpdateParamCustomizeVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 查询此段时间的用户推荐人的修改记录
+     * @param userId
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    @GetMapping("/searchSpreadUsersLogByDate/{userId}/{repairStartDate}/{repairEndDate}")
+    public SpreadsUserLogResponse searchSpreadUsersLogByDate(@PathVariable Integer userId,@PathVariable String repairStartDate, @PathVariable String repairEndDate) {
+        SpreadsUserLogResponse response = new SpreadsUserLogResponse();
+        response.setRtn(Response.FAIL);
+        List<SpreadsUserLog> spreadsUserLogList = userManagerService.searchSpreadUsersLogByDate(userId,repairStartDate,repairEndDate);
+        if(!CollectionUtils.isEmpty(spreadsUserLogList)){
+            List<SpreadsUserLogVO> spreadsUserLogVOList = CommonUtils.convertBeanList(spreadsUserLogList,SpreadsUserLogVO.class);
+            response.setResultList(spreadsUserLogVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 查找员工信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectEmployeeInfoByUserId/{userId}")
+    public EmployeeCustomizeResponse selectEmployeeInfoByUserId(@PathVariable Integer userId) {
+        EmployeeCustomizeResponse response = new EmployeeCustomizeResponse();
+        response.setRtn(Response.FAIL);
+        EmployeeCustomize employeeCustomize = userManagerService.selectEmployeeInfoByUserId(userId);
+        if(null!=employeeCustomize){
+            EmployeeCustomizeVO employeeCustomizeVO = new EmployeeCustomizeVO();
+            BeanUtils.copyProperties(employeeCustomize,employeeCustomizeVO);
+            response.setResult(employeeCustomizeVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 根据用户id获取离职信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectUserLeaveByUserId/{userId}")
+    public AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(@PathVariable Integer userId) {
+        AdminEmployeeLeaveCustomizeResponse response = new AdminEmployeeLeaveCustomizeResponse();
+        response.setRtn(Response.FAIL);
+        AdminEmployeeLeaveCustomize adminEmployeeLeaveCustomize = userManagerService.selectUserLeaveByUserId(userId);
+        if(null!=adminEmployeeLeaveCustomize){
+            AdminEmployeeLeaveCustomizeVO employeeCustomizeVO = new AdminEmployeeLeaveCustomizeVO();
+            BeanUtils.copyProperties(adminEmployeeLeaveCustomize,employeeCustomizeVO);
+            response.setResult(employeeCustomizeVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
     }
 }

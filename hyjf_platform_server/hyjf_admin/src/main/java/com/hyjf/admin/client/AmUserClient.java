@@ -1047,5 +1047,42 @@ public interface AmUserClient {
      * @return
      */
     BankOpenAccountVO getBankOpenAccountByAccountId(String accountId);
-    
+    /**
+     * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId);
+    /**
+     * 获取所有用户信息
+     * @auth nxl
+     * @return
+     */
+    UserResponse selectAllUser();
+
+    /**
+     * 查询此段时间的用户推荐人的修改记录
+     * @param userId
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate);
+
+    /**
+     * 查找员工信息
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId);
+    /**
+     * 根据用户id获取离职信息
+     * @param userId
+     * @auth nxl
+     * @return
+     */
+    AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId);
 }
