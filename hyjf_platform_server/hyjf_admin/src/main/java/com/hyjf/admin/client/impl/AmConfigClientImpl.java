@@ -1140,9 +1140,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public CouponCheckVO selectCoupon(Integer id) {
         String url = "http://AM-CONFIG/am-config/checkList/selectCoupon/" + id;
-        CouponCheckVO couponCheckVO = restTemplate.getForEntity(url, CouponCheckVO.class).getBody();
-        if (couponCheckVO != null) {
-            return couponCheckVO;
+        CouponCheckResponse response = restTemplate.getForEntity(url, CouponCheckResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }

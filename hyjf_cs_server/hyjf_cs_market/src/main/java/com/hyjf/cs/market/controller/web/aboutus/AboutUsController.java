@@ -318,7 +318,6 @@ public class AboutUsController extends BaseController {
 	public WebResult<JxBankConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
-			// TODO 参数为空转跳页面
 			//modelAndView = new ModelAndView("/contentarticle/bank-page");
 		}else{
 			List<JxBankConfigVO> list = aboutUsService.getBanksList();

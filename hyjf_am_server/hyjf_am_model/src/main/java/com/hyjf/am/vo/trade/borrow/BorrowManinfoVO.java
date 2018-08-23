@@ -93,6 +93,9 @@ public class BorrowManinfoVO extends BaseVO implements Serializable {
 
     private String isPunished;
 
+    // 借款人地址
+    private String address;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -413,5 +416,13 @@ public class BorrowManinfoVO extends BaseVO implements Serializable {
 
     public void setIsPunished(String isPunished) {
         this.isPunished = isPunished == null ? null : isPunished.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

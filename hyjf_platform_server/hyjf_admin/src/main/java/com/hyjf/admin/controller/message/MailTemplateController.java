@@ -132,7 +132,7 @@ public class MailTemplateController extends BaseController {
 	public JSONObject openAction(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
-			int sum = mailTemplateService.openAction(request);
+			int sum = mailTemplateService.updateStatus(request);
 			if (sum > 0) {
 				jsonObject.put("status", "000");
 				jsonObject.put("statusDesc", "开关闭模板成功");

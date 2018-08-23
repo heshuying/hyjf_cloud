@@ -53,7 +53,7 @@ public interface MailTemplateService {
      * 开启模板
      * @param request
      */
-    int openAction(MailTemplateRequest request);
+    int updateStatus(MailTemplateRequest request);
 
     /**
      * 模板详情

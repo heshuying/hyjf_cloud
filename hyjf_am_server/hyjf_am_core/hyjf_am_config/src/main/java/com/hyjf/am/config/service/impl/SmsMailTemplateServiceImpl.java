@@ -10,6 +10,7 @@ import com.hyjf.am.config.service.SmsMailTemplateService;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
         SmsMailTemplateExample example = new SmsMailTemplateExample();
         SmsMailTemplateExample.Criteria criteria = example.createCriteria();
         if (request != null) {
-            if (request.getMailName() != null) {
+            if (StringUtils.isNotBlank(request.getMailName())) {
                 criteria.andMailNameEqualTo(request.getMailName());
             }
             if (request.getMailStatus() != null) {
@@ -114,7 +115,7 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
         SmsMailTemplateExample example = new SmsMailTemplateExample();
         SmsMailTemplateExample.Criteria criteria = example.createCriteria();
         if (request != null) {
-            if (request.getMailName() != null) {
+            if (StringUtils.isNotBlank(request.getMailName())) {
                 criteria.andMailNameEqualTo(request.getMailName());
             }
             if (request.getMailStatus() != null) {

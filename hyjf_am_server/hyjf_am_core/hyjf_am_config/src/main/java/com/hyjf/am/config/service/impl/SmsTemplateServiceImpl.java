@@ -86,16 +86,10 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 
 	@Override
 	public Integer updateSmsTemplateStatus(SmsTemplateRequest request) {
-		if (StringUtils.isNotEmpty(request.getTplCode()) && request.getStatus() != null) {
-			SmsTemplateExample example = new SmsTemplateExample();
-			SmsTemplateExample.Criteria criteria = example.createCriteria();
-			criteria.andTplCodeEqualTo(request.getTplCode());
-			List<SmsTemplate> smsTemplateList = smsTemplateMapper.selectByExample(example);
-			if (!CollectionUtils.isEmpty(smsTemplateList)) {
-				SmsTemplate smsTemplate = smsTemplateList.get(0);
-				smsTemplate.setStatus(request.getStatus());
-				return smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
-			}
+		if (request.getId() != null && request.getStatus() != null) {
+			SmsTemplate smsTemplate = smsTemplateMapper.selectByPrimaryKey(request.getId());
+			smsTemplate.setStatus(request.getStatus());
+			return smsTemplateMapper.updateByPrimaryKeySelective(smsTemplate);
 		}
 		return 0;
 	}

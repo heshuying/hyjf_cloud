@@ -161,6 +161,8 @@ public class PushBean implements Serializable {
 	 * add by nxl 20180710 (企业)企业组织机构代码
 	 */
 	private String corporateCode;
+	// 借款人地址
+	private String address;
 
 	public String getCorporateCode() {
 		return corporateCode;
@@ -584,5 +586,13 @@ public class PushBean implements Serializable {
 
 	public void setIsPunished(String isPunished) {
 		this.isPunished = isPunished;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

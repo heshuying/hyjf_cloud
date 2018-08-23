@@ -35,7 +35,7 @@
 	</sql>
 
 	<select id="queryRechargeList" resultMap="RechargeMapResult"
-		parameterType="com.hyjf.am.trade.dao.mapper.customize.CallcenterRechargeCustomizeMapper">
+		parameterType="com.hyjf.am.resquest.callcenter.CallCenterBaseRequest">
 		SELECT
 			t.username,
 			#{mobile} AS mobile,
@@ -63,7 +63,7 @@
 				r.payment,
 				r.`status` AS status ,
 				r.`is_bank` AS isBank ,
-				FROM_UNIXTIME(r.add_time,'%Y-%m-%d %H:%i:%S') as create_time,
+				DATE_FORMAT(r.create_time,'%Y-%m-%d %H:%i:%S') as create_time,
 				CASE r.client WHEN 0 THEN 'PC'
 				WHEN 1 THEN '微信' WHEN 2 THEN
 				'android' WHEN

@@ -33,7 +33,7 @@
 		</if>
 	</sql>
 	<select id="queryAccountDetails" resultMap="AccountDetailMapResult"
-		parameterType="com.hyjf.am.trade.dao.mapper.customize.CallCenterAccountDetailCustomizeMapper">
+		parameterType="com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest">
 		SELECT
 			l.id,
 			#{userName} AS user_name,
@@ -58,7 +58,7 @@
 		 IFNULL(l.plan_balance, 0) AS planBalance,
 		 IFNULL(l.plan_frost, 0) AS planFrost,
 		 l.remark,
-		 FROM_UNIXTIME(
+		 DATE_FORMAT(
 			l.create_time,
 			'%Y-%m-%d %H:%i:%S'
 		) AS 'create_time',

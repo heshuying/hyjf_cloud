@@ -10,6 +10,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CouponCheckClient;
 import com.hyjf.admin.service.CouponCheckService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
@@ -137,6 +138,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     checkResponse.getMessage();
                 }
             } else {
+                checkResponse.setRtn(Response.FAIL);
                 checkResponse.setMessage("上传失败，文件后缀必须为CSV");
             }
         }
@@ -185,9 +187,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public boolean batchCheck(Integer path, HttpServletResponse response, String userId) throws Exception {
+    public boolean batchCheck(String path, HttpServletResponse response, String userId) throws Exception {
         try {
-            String[] split = String.valueOf(path).split(",");
+            String[] split = path.split(",");
             String filePath = split[1];
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("couponCode", "couponCode");
@@ -370,6 +372,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         return amConfigClient.getParamNameList(nameClass);
     }
 
+    @Override
+    public CouponCheckVO getCouponCheckById(int id) {
+        return amConfigClient.selectCoupon(id);
+    }
+
 
     /**
      * 根据用户名获取用户
@@ -421,41 +428,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         CouponRecoverCustomizeResponse response = amTradeClient.checkCouponSendExcess(couponCode);
         int remain = response.getCount();
         return remain > 0 ? true : false;
-    }
-
-
-    /**
-     * 批量上传发券接口
-     */
-//    public static JSONObject getBatchCoupons(String userId,Map<String,String> paramsMap) {
-//        String timestamp = String.valueOf(GetDate.getNowTime10());
-//        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_COUPON_KEY + userId + timestamp + SOA_COUPON_KEY));
-//        Map<String, String> params = new HashMap<String, String>();
-//
-//        // 用户id
-//        params.put("userId", userId+"");
-//        // 时间戳
-//        params.put("timestamp", timestamp);
-//        // 签名
-//        params.put("sign", chkValue);
-//        // 数据
-//        params.put("usercoupons", paramsMap.get("usercoupons"));
-//        // 请求路径
-//        String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_BATCH_SEND_USER;
-//        String result = HttpClientUtils.post(requestUrl, params);
-//        JSONObject status = JSONObject.parseObject(result);
-//        return status;
-//    }
-
-    @Bean(name = "multipartResolver")
-
-    public MultipartResolver multipartResolver(){
-        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setDefaultEncoding("UTF-8");
-        resolver.setResolveLazily(true);//resolveLazily属性启用是为了推迟文件解析，以在在UploadAction中捕获文件大小异常
-        resolver.setMaxInMemorySize(40960);
-        resolver.setMaxUploadSize(50*1024*1024);//上传文件大小 50M 50*1024*1024
-        return resolver;
     }
 
 }
