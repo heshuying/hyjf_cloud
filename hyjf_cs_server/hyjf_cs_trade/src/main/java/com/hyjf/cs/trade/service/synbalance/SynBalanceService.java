@@ -29,6 +29,7 @@ public interface SynBalanceService extends BaseTradeService {
      * @Version v0.1
      * @Date
      */
+    @Override
     UserVO getUsers(Integer userId);
 
     /**

@@ -123,7 +123,7 @@ public interface ContentArticleService {
      * 查询文章条数
      * @return
      */
-    Integer countContentArticleByType(Map<String, Object> params);
+    Integer countContentArticleByType();
 
     /**
      * 查询文章列表
