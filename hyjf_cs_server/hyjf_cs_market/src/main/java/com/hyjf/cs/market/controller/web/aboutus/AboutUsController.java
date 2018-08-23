@@ -17,6 +17,7 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
+import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,8 @@ public class AboutUsController extends BaseController {
 
 	@Autowired
 	private AboutUsService aboutUsService;
+	@Autowired
+    private AppFindService appFindService;
 
 
 	@ApiOperation(value = "关于我们", notes = "关于我们")
@@ -125,7 +128,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "网站公告列表", notes = "网站公告列表")
-	@GetMapping("/getNoticeListPage")
+	@PostMapping("/getNoticeListPage")
 	public WebResult<Map<String, Object>> getNoticeListPage(@RequestBody BasePage request) {
 		logger.info("web端获取网站公告列表数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -134,6 +137,10 @@ public class AboutUsController extends BaseController {
 			List<ContentArticleVO> recordList = aboutUsService.getNoticeListCount(request);
 			resultMap.put("contentArticleList", recordList);
 			result.setData(resultMap);
+            Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+            int count = appFindService.countContentArticleByType();
+            page.setTotal(count);
+            result.setPage(page);
 			return result;
 		} catch (Exception e) {
 			logger.error("web端获取网站公告列表失败...", e);

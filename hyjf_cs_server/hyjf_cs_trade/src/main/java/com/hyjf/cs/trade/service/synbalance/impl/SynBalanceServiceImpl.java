@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.service.synbalance.impl;
 
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
@@ -18,6 +20,8 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -158,5 +162,15 @@ public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBa
         return  amTradeClient.insertAccountDetails(synBalanceBeanRequest);
 
 
+    }
+
+    /**
+     * 获取数据表中线下充值类型
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request){
+        return amTradeClient.selectUnderLineRechargeList(request);
     }
 }

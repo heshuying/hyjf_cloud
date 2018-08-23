@@ -3,10 +3,9 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
@@ -16,6 +15,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -55,11 +55,12 @@ import java.util.List;
 public class UserCenterController extends BaseController {
 
     public static final String PERMISSIONS = "userslist";
-//    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private HjhCommissionService hjhCommissionService;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -572,6 +573,36 @@ public class UserCenterController extends BaseController {
         BeanUtils.copyProperties(companyInfoInstRequesetBean,updCompanyRequest);
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
         return new AdminResult<Response>(response);
+    }
+
+    /**
+     * 获取部门信息
+     * @param deptIds
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/getDepartmentList")
+    @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
+    public JSONObject getCrmDepartmentListAction(@RequestBody String deptIds) {
+        JSONObject jsonObject = new JSONObject();
+        // 部门
+        String[] list = new String[] {};
+        if (Validator.isNotNull(deptIds)) {
+            if (deptIds.contains(StringPool.COMMA)) {
+                list = deptIds.split(StringPool.COMMA);
+            } else {
+                list = new String[] { deptIds};
+            }
+        }
+        JSONArray ja = this.hjhCommissionService.getCrmDepartmentList(list);
+        if (ja != null) {
+            jsonObject.put("部门信息", ja.toString());
+            jsonObject.put("status", SUCCESS);
+        } else {
+            jsonObject.put("error", "未查询到该记录！");
+            jsonObject.put("status", FAIL);
+        }
+        return jsonObject;
     }
 
 }

@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.controller.api.synbalance;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -269,13 +271,55 @@ public class SynBalanceController extends BaseTradeController {
      * @param tranType
      * @return
      */
-    private boolean isRechargeTransType(String tranType) {
+    private boolean isRechargeTransTypeOld(String tranType) {
 
         if(BankCallConstant.TRANS_TYPE_7617.equals(tranType)||BankCallConstant.TRANS_TYPE_7820.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7821.equals(tranType)||BankCallConstant.TRANS_TYPE_7823.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7826.equals(tranType)||BankCallConstant.TRANS_TYPE_7938.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7939.equals(tranType)){
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否属于线下充值类型.
+     * 	优先从Redis中取数据,当Redis中的数据为空时,从数据表中读取数据
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    private boolean isRechargeTransType(String tranType) {
+        //从Redis获取线下充值类型List
+        String codeStringList = RedisUtils.get(RedisConstants.UNDER_LINE_RECHARGE_TYPE);
+        JSONArray redisCodeList = JSONArray.parseArray(codeStringList);
+
+        if (StringUtils.isBlank(codeStringList) || redisCodeList.size() <= 0){
+            logger.info(this.getClass().getName(), "---------------------------线下充值类型Redis为空!-------------------------");
+
+            UnderLineRechargeRequest request = new UnderLineRechargeRequest();
+            List<UnderLineRechargeVO> codeList = synBalanceService.selectUnderLineRechargeList(request);
+            if (codeList.isEmpty()){
+                logger.info(this.getClass().getName(), "---------------------------线下充值类型数据库未配置!-------------------------");
+                return false;
+            }else {
+                for (UnderLineRechargeVO code : codeList){
+                    if (code.getCode().equals(tranType)){
+                        return true;
+                    }else {
+                        continue;
+                    }
+                }
+            }
+        }else {
+
+            for(Object code : redisCodeList) {
+                if (code.equals(tranType)){
+                    return true;
+                }else {
+                    continue;
+                }
+            }
         }
         return false;
     }

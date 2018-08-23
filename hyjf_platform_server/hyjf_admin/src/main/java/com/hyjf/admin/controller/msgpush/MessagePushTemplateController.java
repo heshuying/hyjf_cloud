@@ -4,9 +4,11 @@
 package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
@@ -23,7 +25,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,19 +43,12 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/msgPush/template")
 public class MessagePushTemplateController extends BaseController {
 
-    @Value("${file.domain.url}")
-    private String FILEDOMAINURL;
-    @Value("${file.physical.path}")
-    private String FILEPHYSICALPATH;
-    @Value("${file.upload.temp.path}")
-    private String FILEUPLOADTEMPPATH;
-
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
     @Autowired
     private MessagePushTagService messagePushTagService;
     @Autowired
-    private ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -129,13 +123,13 @@ public class MessagePushTemplateController extends BaseController {
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
         BeanUtils.copyProperties(request, templateVO);
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl1());
         }
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
         templateVO.setTemplateCode(templateRequest.getTagCode() + "_" + templateRequest.getTemplateCode());
@@ -205,7 +199,7 @@ public class MessagePushTemplateController extends BaseController {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
             MessagePushTemplateVO record = response.getResult();
             // 新建状态只能启用，启用只能禁用，禁用只能启用
-            if (record.getStatus().intValue() == CustomConstants.MSG_PUSH_STATUS_0) {
+            if (record.getStatus() == CustomConstants.MSG_PUSH_STATUS_0) {
                 record.setStatus(CustomConstants.MSG_PUSH_STATUS_1);
             } else if (record.getStatus() == CustomConstants.MSG_PUSH_STATUS_1) {
                 record.setStatus(CustomConstants.MSG_PUSH_STATUS_2);
@@ -215,13 +209,13 @@ public class MessagePushTemplateController extends BaseController {
             MsgPushTemplateRequest request = new MsgPushTemplateRequest();
             BeanUtils.copyProperties(record, request);
             MessagePushTemplateResponse tagResponse = messagePushTemplateService.updateRecord(request);
-            if (response == null) {
+            if (tagResponse == null) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-            if (!Response.isSuccess(response)) {
-                return new AdminResult<>(FAIL, response.getMessage());
+            if (!Response.isSuccess(tagResponse)) {
+                return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
-            return new AdminResult<>(response);
+            return new AdminResult<>(tagResponse);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
@@ -262,14 +256,14 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

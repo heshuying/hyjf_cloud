@@ -108,7 +108,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             e.printStackTrace();
         }
 
-        return balance;
+        return new BigDecimal(10000);
     }
 
     /**

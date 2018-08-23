@@ -64,7 +64,7 @@ public class AppFindController extends BaseMarketController {
             params.put("limitStart", -1);
             params.put("limitEnd", -1);
             // 查询总数
-            Integer count = appFindService.countContentArticleByType(params);
+            Integer count = appFindService.countContentArticleByType();
 
             if (count != null && count > 0) {
                 // 构造分页
