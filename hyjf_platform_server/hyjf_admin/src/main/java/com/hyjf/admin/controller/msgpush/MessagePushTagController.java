@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.msgpush;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
@@ -19,6 +20,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
@@ -51,6 +54,8 @@ public class MessagePushTagController extends BaseController {
     private String FILEUPLOADTEMPPATH;
     @Autowired
     private MessagePushTagService messagePushTagService;
+    @Autowired
+    private ActivityListService activityListService;
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init",method = RequestMethod.POST)
@@ -186,52 +191,18 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "文件上传",notes = "文件上传")
     @RequestMapping(value = "/uploadFile",method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        String fileDomainUrl = FILEDOMAINURL;
-        String filePhysicalPath = FILEPHYSICALPATH;
-        String fileUploadTempPath = FILEUPLOADTEMPPATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
-        }
-
-        BorrowCommonImageVO fileMeta = null;
-        LinkedList<BorrowCommonImageVO> files = new LinkedList<BorrowCommonImageVO>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            // 图片上传
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImageVO();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            String s = activityListService.uploadFile(request, response);
+            if (StringUtils.isNotBlank(s)) {
+                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
-                fileMeta.setImageName(originalFilename);
+                return new AdminResult<>(FAIL, FAIL_DESC);
             }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return JSONObject.toJSONString(files, true);
+
     }
 
     /**

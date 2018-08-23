@@ -126,6 +126,7 @@ public class MessagePushTagController extends BaseConfigController{
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		MessagePushTag messagePushTag = new MessagePushTag();
 		BeanUtils.copyProperties(request,messagePushTag);
+		messagePushTag.setUpdateTime(GetDate.getDate());
 		try {
 			Integer result = messagePushTagServcie.updateAction(messagePushTag);
 			if (result > 0) {
