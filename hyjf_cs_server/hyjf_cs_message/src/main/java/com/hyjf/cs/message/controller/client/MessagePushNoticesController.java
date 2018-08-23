@@ -42,7 +42,7 @@ public class MessagePushNoticesController {
     @RequestMapping("/message_push_list")
     public MessagePushNoticesResponse selectMessagePushList(
             @RequestBody MessagePushNoticesRequest request) {
-         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
+        MessagePushNoticesResponse response = new MessagePushNoticesResponse();
         Integer count = messagePushNoticesService.getRecordCount(request);
         if (count > 0) {
             Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
@@ -79,9 +79,9 @@ public class MessagePushNoticesController {
     @RequestMapping("/delete_push_list")
     public MessagePushNoticesResponse deleteRecordAction(@RequestBody MessagePushNoticesRequest request) {
         String ids = request.getIds();
-        List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
+        List<String> recordList = JSONArray.parseArray(ids, String.class);
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
-        for (Integer id : recordList) {
+        for (String id : recordList) {
             messagePushNoticesService.deleteRecord(id);
         }
         response.setRtn(Response.SUCCESS);
@@ -94,9 +94,11 @@ public class MessagePushNoticesController {
      * @return
      */
     @RequestMapping("/get_push_record")
-    public MessagePushNoticesResponse getRecordAction(MessagePushNoticesRequest request) {
+    public MessagePushNoticesResponse getRecordAction(@RequestBody MessagePushNoticesRequest request) {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
-        messagePushNoticesService.getRecord(request);
+        MessagePushMsg record = messagePushNoticesService.getRecord(request);
+        MessagePushMsgVO messagePushMsgVO = CommonUtils.convertBean(record, MessagePushMsgVO.class);
+        response.setResult(messagePushMsgVO);
         response.setRtn(Response.SUCCESS);
         return response;
     }

@@ -13,10 +13,10 @@ import java.io.Serializable;
  * @author fq
  * @version MessagePushPlatStatics, v0.1 2018/8/14 16:10
  */
-@Document(collection = "ht_message_push_plat_statucs")
+@Document(collection = "ht_message_push_plat_statics")
 public class MessagePushPlatStatics implements Serializable {
     @Id
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -42,11 +42,11 @@ public class MessagePushPlatStatics implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

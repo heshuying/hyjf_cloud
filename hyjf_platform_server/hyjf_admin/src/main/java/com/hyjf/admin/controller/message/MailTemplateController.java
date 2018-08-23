@@ -8,17 +8,27 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MailTemplateService;
+import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,6 +39,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/mail/template")
 public class MailTemplateController extends BaseController {
+	@Value("${file.domain.url}")
+	private String url;
+	@Value("${file.physical.path}")
+	private String physical;
+	@Value("${file.upload.temp.path}")
+	private String temppath;
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -148,5 +164,62 @@ public class MailTemplateController extends BaseController {
 			jsonObject.put("statusDesc", "开关闭模板失败");
 			return jsonObject;
 		}
+	}
+
+	/**
+	 * 资料上传
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "资料上传")
+	@PostMapping("/uploadFile")
+	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+		String fileDomainUrl = UploadFileUtils.getDoPath(url);
+		String filePhysicalPath = UploadFileUtils.getDoPath(physical);
+		String fileUploadTempPath = UploadFileUtils.getDoPath(temppath);
+
+		String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+
+		File logoSaveFile = new File(logoRealPathDir);
+		if (!logoSaveFile.exists()) {
+			logoSaveFile.mkdirs();
+		}
+
+		BorrowCommonImage fileMeta = null;
+		LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+
+		Iterator<String> itr = multipartRequest.getFileNames();
+		MultipartFile multipartFile = null;
+
+		while (itr.hasNext()) {
+			multipartFile = multipartRequest.getFile(itr.next());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
+			String originalFilename = multipartFile.getOriginalFilename();
+			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+
+			// 文件大小
+			String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+
+			fileMeta = new BorrowCommonImage();
+			int index = originalFilename.lastIndexOf(".");
+			if (index != -1) {
+				fileMeta.setImageName(originalFilename.substring(0, index));
+			} else {
+				fileMeta.setImageName(originalFilename);
+			}
+
+			fileMeta.setImageRealName(fileRealName);
+			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+			fileMeta.setImageType(multipartFile.getContentType());
+			fileMeta.setErrorMessage(errorMessage);
+			// 获取文件路径
+			fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+			files.add(fileMeta);
+		}
+		return new AdminResult<LinkedList<BorrowCommonImage>>(files);
 	}
 }

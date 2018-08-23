@@ -683,7 +683,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public Map<String, Object> setWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount) {
-        // 消息类型(用户开户)
+        // 消息类型
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
         bean.setChannel(BankCallConstant.CHANNEL_WEI);
         if(user.getUserType() == 1){

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,86 +27,32 @@ import java.util.List;
 @RequestMapping("/am-config/holidaysConfig")
 public class HolidaysConfigController extends BaseConfigController {
 
-    @Autowired
-    private HolidaysConfigService holidaysConfigService;
-
-    @GetMapping("/selectHolidaysConfig/{orderByClause}")
-    public HolidaysConfigResponse selectHolidaysConfig(@PathVariable String orderByClause) {
-        HolidaysConfigResponse response = new HolidaysConfigResponse();
-        List<HolidaysConfig> holidaysConfigList = holidaysConfigService.selectHolidaysConfig(orderByClause);
-        if (!CollectionUtils.isEmpty(holidaysConfigList)) {
-            List<HolidaysConfigVO> holidaysConfigVOList = CommonUtils.convertBeanList(holidaysConfigList,HolidaysConfigVO.class);
-            response.setResultList(holidaysConfigVOList);
-        }
-        return response;
-    }
+	@Autowired
+	private HolidaysConfigService holidaysConfigService;
 
     /**
-     * 分页查询节假日配置
-     * @param adminRequest
+     * 判断某天是工作日还是节假日
+     * @param somedate
      * @return
      */
-    @RequestMapping ("/list")
-    public HolidaysConfigResponse selectHolidaysConfigListByPage(@RequestBody AdminHolidaysConfigRequest adminRequest) {
-        HolidaysConfigResponse response = new HolidaysConfigResponse();
-        List<HolidaysConfig> holidaysConfigList = holidaysConfigService.selectHolidaysConfigListByPage(new HolidaysConfig(), -1, -1);
-        if (!CollectionUtils.isEmpty(holidaysConfigList)) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), holidaysConfigList.size());
-            holidaysConfigList = this.holidaysConfigService.selectHolidaysConfigListByPage(new HolidaysConfig(), paginator.getOffset(),
-                    paginator.getLimit());
-            List<HolidaysConfigVO> holidaysConfigVOList = CommonUtils.convertBeanList(holidaysConfigList,HolidaysConfigVO.class);
-            response.setResultList(holidaysConfigVOList);
-            response.setRtn(Response.SUCCESS);
-        }
-        return response;
-    }
+	@GetMapping("/checkSomedayIsWorkDate/{somedate}")
+	public HolidaysConfigResponse selectHolidaysConfig(@PathVariable Date somedate) {
+		HolidaysConfigResponse response = new HolidaysConfigResponse();
+		Boolean flag = holidaysConfigService.isWorkdateOnSomeDay(somedate);
+		response.setWorkDateFlag(flag == null ? false : flag);
+		return response;
+	}
 
     /**
-     * 查询节假日配置详情页面
-     * @param id
+     * 取从某天开始推后的第一个工作日开始时间
+     * @param somedate
      * @return
      */
-    @RequestMapping ("/info/{id}")
-    public HolidaysConfigResponse selectHolidaysConfigInfo(@PathVariable Integer id) {
+    @GetMapping("/getFirstWorkdateAfterSomedate/{somedate}")
+    public HolidaysConfigResponse getFirstWorkdateAfterSomedate(@PathVariable Date somedate) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
-        HolidaysConfig holidaysConfig = holidaysConfigService.selectHolidaysConfigInfo(id);
-        if (null != holidaysConfig) {
-            HolidaysConfigVO holidaysConfigVO = CommonUtils.convertBean(holidaysConfig,HolidaysConfigVO.class);
-            response.setResult(holidaysConfigVO);
-            response.setRtn(Response.SUCCESS);
-        }
+        Date date = holidaysConfigService.getFirstWorkdateAfterSomedate(somedate);
+        response.setSomedate(date);
         return response;
     }
-
-    /**
-     * 添加节假日配置详情页面
-     * @param req
-     * @return
-     */
-    @RequestMapping ("/insert")
-    public HolidaysConfigResponse insertHolidaysConfigInfo(@RequestBody AdminHolidaysConfigRequest req) {
-        HolidaysConfigResponse response = new HolidaysConfigResponse();
-        int result =holidaysConfigService.insertHolidaysConfigInfo(req);
-        if(result > 0){
-            response.setRtn(Response.SUCCESS);
-        }
-        response.setRtn(Response.FAIL);
-        return response;
-    }
-    /**
-     * 修改节假日配置详情页面
-     * @param req
-     * @return
-     */
-    @RequestMapping ("/update")
-    public HolidaysConfigResponse updateHolidaysConfigInfo(@RequestBody AdminHolidaysConfigRequest req) {
-        HolidaysConfigResponse response = new HolidaysConfigResponse();
-        int result =holidaysConfigService.updateHolidaysConfigInfo(req);
-        if(result > 0){
-            response.setRtn(Response.SUCCESS);
-        }
-        response.setRtn(Response.FAIL);
-        return response;
-    }
-
 }

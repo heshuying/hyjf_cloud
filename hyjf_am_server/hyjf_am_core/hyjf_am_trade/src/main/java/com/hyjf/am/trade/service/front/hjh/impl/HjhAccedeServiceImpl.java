@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
@@ -25,6 +26,8 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
 
     @Autowired
     HjhAccedeMapper hjhAccedeMapper;
+    @Autowired
+    BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
 
     /**
      * 查询退出中和待进入锁定期的标的
@@ -130,5 +133,14 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
         hjhAccedeExample.createCriteria().andOrderStatusGreaterThanOrEqualTo(80);
         List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(hjhAccedeExample);
         return accedeList;
+    }
+
+    /**
+     * 更新未进入锁定期的计划订单的匹配期hjhaccede
+     * @return
+     */
+    @Override
+    public boolean updateMatchDays() {
+        return this.batchHjhAccedeCustomizeMapper.updateMatchDates() >= 0 ? true : false;
     }
 }

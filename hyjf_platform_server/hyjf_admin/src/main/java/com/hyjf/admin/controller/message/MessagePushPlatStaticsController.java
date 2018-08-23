@@ -4,13 +4,11 @@
 package com.hyjf.admin.controller.message;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushPlatStaticsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
-import com.hyjf.am.vo.admin.MessagePushPlatStaticsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,7 @@ public class MessagePushPlatStaticsController extends BaseController {
 
     @ApiOperation(value = "查询平台消息统计报表", notes = "查询平台消息统计报表")
     @PostMapping("/select")
-    public AdminResult<ListResult<MessagePushPlatStaticsVO>> select(
+    public AdminResult select(
             @RequestBody MessagePushPlatStaticsRequest request) {
         MessagePushPlatStaticsResponse response = tagService.selectTemplateStatics(request);
         if (response == null) {
@@ -41,6 +39,6 @@ public class MessagePushPlatStaticsController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+        return new AdminResult(response.getResultList());
     }
 }

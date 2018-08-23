@@ -68,10 +68,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 
 	@Override
 	public JSONObject getRecordListByReleaseJson(OperationReportRequest request) {
+		List<OperationReportVO> recordList = new ArrayList<>();
 		JSONObject response = new JSONObject();
 		if(request.getIsRelease()==null){
-			response.put("success", "success");
-			response.put("isRelease", "发布状态为空");
+			response.put("recordList", recordList);
+			response.put("error", "发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
@@ -96,7 +97,6 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query2 = new Query();
 			Criteria criteria2 = getCriteria(map, query2);
 			query2.addCriteria(criteria2);
-			List<OperationReportVO> recordList = new ArrayList<>();
 			List<OperationReportColumnEntity> mongodbList = operationReportColumnMongDao.find(query2);
 
 			Query queryReport = null;
@@ -186,8 +186,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.put("recordList", recordList);
 			response.put("success", "success");
 		} else {
-			response.put("success", "success");
-			response.put("countIsZero", "暂无任何数据");
+			response.put("error", "暂无任何数据");
 		}
 		return response;
 	}
