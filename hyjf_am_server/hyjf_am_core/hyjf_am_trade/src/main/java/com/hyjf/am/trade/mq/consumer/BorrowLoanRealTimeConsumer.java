@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -24,6 +25,7 @@ import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
 import com.hyjf.am.vo.message.MailMessage;
@@ -54,6 +56,9 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
     
 	@Autowired
 	MailProducer mailProducer;
+
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -147,9 +152,15 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 						params.put("type", 1);// 散标
 						params.put("money", borrowApicron.getBorrowAccount());
 						
-						//TODO: 运营数据的统计队列，暂时不加
+						// 运营数据的统计队列，暂时不加
 //						rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON,
 //								RabbitMQConstants.ROUTINGKEY_OPERATION_DATA, JSONObject.toJSONString(params));
+				        //运营数据队列
+				        try {
+				            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+				        }catch (MQException e){
+				            logger.error("发送运营数据更新MQ失败,放款标的:" + borrowApicron.getBorrowNid());
+				        }
 					}
 				}
 			} catch (Exception e) {
