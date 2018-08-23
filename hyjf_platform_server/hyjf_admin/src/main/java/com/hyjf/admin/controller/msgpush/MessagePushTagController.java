@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.controller.msgpush;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -44,7 +47,7 @@ public class MessagePushTagController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
     @Autowired
-    private ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -179,18 +182,17 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
     }
 
     /**
