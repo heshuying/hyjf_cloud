@@ -116,9 +116,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public MessagePushMsg getRecord(MessagePushNoticesRequest request){
         Criteria criteria = new Criteria();
-        if (request.getNoticesSendStatusSrch() != null) {
-            criteria.and("id").is(request.getId());
-        }
+        criteria.and("id").is(request.getIds());
         Query query = new Query(criteria);
         return mongoTemplate.findOne(query,MessagePushMsg.class);
     }
@@ -142,7 +140,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      * 删除数据
      * @return
      */
-    public void deleteRecord(Integer id){
+    public void deleteRecord(String id){
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("id").is(id);

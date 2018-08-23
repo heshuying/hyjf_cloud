@@ -17,7 +17,7 @@ public interface MessagePushNoticesService {
 
     void  insertRecord(MessagePushNoticesRequest request);
 
-    void  deleteRecord(Integer id);
+    void  deleteRecord(String id);
 
     void updateRecord(MessagePushMsg record);
 
