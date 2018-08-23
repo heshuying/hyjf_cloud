@@ -46,13 +46,15 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "初始化页面", notes = "初始化页面")
     @PostMapping("/couponInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CouponCheckVO>> couponInit(@RequestBody AdminCouponCheckRequest request) {
+    public AdminResult couponInit(@RequestBody AdminCouponCheckRequest request) {
         CouponCheckResponse ccr = couponCheckService.serchCouponList(request);
         List<String> couponStatus = new ArrayList<>();
         couponStatus.add("待审核");
         couponStatus.add("已发行");
         couponStatus.add("审核不通过");
         List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
+        ccr.setCouponStatus(couponStatus);
+        ccr.setCouponType(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -60,7 +62,7 @@ public class CouponCheckController extends BaseController {
             return new AdminResult<>(FAIL, ccr.getMessage());
 
         }
-        return new AdminResult<ListResult<CouponCheckVO>>(ListResult.build(ccr.getResultList(), ccr.getRecordTotal()));
+        return new AdminResult<>(ccr);
     }
 
 
@@ -72,7 +74,7 @@ public class CouponCheckController extends BaseController {
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
         for (String id : split) {
-            acr.setId(Integer.parseInt(id));
+            acr.setId(id);
             ccr = couponCheckService.deleteCouponList(acr);
         }
         if (ccr == null) {
@@ -88,8 +90,14 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "上传文件", notes = "上传文件")
     @PostMapping("/uploadAction")
     public AdminResult<CouponCheckVO> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CouponCheckResponse files = couponCheckService.uploadFile(request, response);
-        return new AdminResult<CouponCheckVO>(files.getResult());
+        CouponCheckResponse checkResponse = couponCheckService.uploadFile(request, response);
+        if (checkResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(checkResponse)) {
+            return new AdminResult<>(FAIL, checkResponse.getMessage());
+        }
+        return new AdminResult<CouponCheckVO>(checkResponse.getResult());
     }
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
@@ -102,24 +110,38 @@ public class CouponCheckController extends BaseController {
     @ApiOperation(value = "审核优惠券", notes = "审核优惠券")
     @PostMapping("/auditAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public AdminResult checkCoupon(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponCheckRequestBean requestBean) {
-        AdminCouponCheckRequest checkRequest = new AdminCouponCheckRequest();
-        BeanUtils.copyProperties(requestBean, request);
+    public AdminResult checkCoupon(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminCouponCheckRequest checkRequest) {
         CouponCheckResponse ccr = new CouponCheckResponse();
         String remark = checkRequest.getRemark();
         boolean results = false;
-        AdminSystemVO user = getUser(request);
-        String userId = user.getId();
+//        AdminSystemVO user = getUser(request);
+//        String userId = user.getId();
         //审核通过
         if (StringUtils.equals(String.valueOf(checkRequest.getStatus()), "2")) {
+            String path = checkRequest.getId();
+            String[] split = path.split(",");
+            String id = split[0];
+            CouponCheckVO couponCheck = couponCheckService.getCouponCheckById(Integer.parseInt(id));
             boolean flag = false;
-            try {
-                flag = couponCheckService.batchCheck(checkRequest.getId(), response, userId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (flag) {
+            if (1 == couponCheck.getStatus()) {
+                //审核状态设置为4，为临时状态-审核中，优惠券发送完成之后更改为审核成功，状态为2.
+                checkRequest.setStatus(4);
                 results = couponCheckService.updateCoupon(checkRequest);
+                try {
+                    flag = couponCheckService.batchCheck(checkRequest.getId(), response, "1");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (flag) {
+                    checkRequest.setStatus(2);
+                    results = couponCheckService.updateCoupon(checkRequest);
+                }else {
+                    ccr.setMessage("审核异常，请检查上传的Excel文件！");
+                    return new AdminResult<>(FAIL,ccr.getMessage());
+                }
+            }else {
+                ccr.setMessage("请勿重复审核！");
+                return new AdminResult<>(FAIL,ccr.getMessage());
             }
             //审核不通过需要填写备注,备注20字以内
         } else if (StringUtils.isNotBlank(remark) && remark.length() <= 20) {
@@ -128,11 +150,13 @@ public class CouponCheckController extends BaseController {
             ccr.setMessage("审核不通过需要填写备注,备注20字以内");
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        if (!results) {
+        if (results) {
+            ccr.setMessage("审核成功,正在发放优惠券");
+            return new AdminResult<>(SUCCESS, ccr.getMessage());
+        }else {
             ccr.setMessage("审核失败");
-            return new AdminResult<>(FAIL, ccr.getMessage());
+            return new AdminResult<>(FAIL,ccr.getMessage());
         }
-        return new AdminResult<>(ccr);
     }
 
 }

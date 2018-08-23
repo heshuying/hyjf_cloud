@@ -1,11 +1,13 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 
 /**
  * @author lisheng
@@ -33,7 +35,7 @@ public interface MessagePushNoticesService {
      * @return
      * @throws Exception
      */
-    String uploadFile(MultipartFile iconImg) throws Exception;
+    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception;
 
 
     /**

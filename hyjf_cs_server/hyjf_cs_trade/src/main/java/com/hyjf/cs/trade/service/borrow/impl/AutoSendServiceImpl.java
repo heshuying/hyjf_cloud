@@ -466,6 +466,8 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         }else{
             borrowManinfo.setIsPunished("暂无");
         }
+        //借款人地址
+        borrowManinfo.setAddress(hjhPlanAssetVO.getAddress());
         autoSendClient.insertBorrowManinfo(borrowManinfo);
         return 0;
     }

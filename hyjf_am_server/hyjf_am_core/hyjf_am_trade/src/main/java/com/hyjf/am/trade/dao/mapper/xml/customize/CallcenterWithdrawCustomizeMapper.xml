@@ -15,8 +15,8 @@
 		a.credited,
 		a.bank AS bank,
 		a.account,
-		FROM_UNIXTIME(
-		a.add_time,
+		DATE_FORMAT(
+		a.create_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS addtimeStr,
 		a.client AS clientStr,
@@ -29,7 +29,7 @@
 			AND a.user_id = #{userId}
 		</if>
 		ORDER BY
-		a.add_time DESC
+		a.create_time DESC
 		<if test="limitStart >= 0" >
 			limit #{limitStart} , #{limitEnd}
 		</if>

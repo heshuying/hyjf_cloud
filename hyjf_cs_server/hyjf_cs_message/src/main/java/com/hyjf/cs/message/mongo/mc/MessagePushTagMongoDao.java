@@ -33,7 +33,7 @@ public class MessagePushTagMongoDao extends BaseMongoDao<MessagePushTag> {
      */
     public List<MessagePushTag> getTagList(){
         Criteria criteria = new Criteria();
-        criteria.is("status").equals(1);
+        criteria.is("status").is(1);
         Query query = new Query(criteria);
         query.with(new Sort(Sort.Direction.ASC, "sort"));
         return mongoTemplate.find(query,MessagePushTag.class);

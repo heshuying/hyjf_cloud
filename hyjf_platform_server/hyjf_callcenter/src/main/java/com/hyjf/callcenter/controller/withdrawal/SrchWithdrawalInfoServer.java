@@ -35,14 +35,12 @@ public class SrchWithdrawalInfoServer extends CallcenterBaseController {
     private SrchWithdrawalInfoService srchWithdrawalInfoService;
     /**
      * 查询提现明细
-     * @param request
-     * @param response
      * @param bean
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/srchWithdrawalInfo", method = RequestMethod.POST)
-    public ResultListBean getContentOfWithdrawalInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserBean bean) {
+    public ResultListBean getContentOfWithdrawalInfo(@RequestBody UserBean bean) {
         //初始化结果bean
         ResultListBean result = new ResultListBean();
         //初始化查询bean

@@ -2073,4 +2073,82 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/queryUserAndDepartment/" + userId;
+		UserUpdateParamCustomizeResponse response = restTemplate.getForEntity(url, UserUpdateParamCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取所有用户信息
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserResponse selectAllUser(){
+		String url = "http://AM-USER/am-user/userManager/selectAllUser";
+		UserResponse response = restTemplate.postForEntity(url,null, UserResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 查询此段时间的用户推荐人的修改记录
+	 * @param userId
+	 * @param repairStartDate
+	 * @param repairEndDate
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate){
+		String url = "http://AM-USER/am-user/userManager/searchSpreadUsersLogByDate/"+userId+"/"+repairStartDate+"/"+repairEndDate;
+		SpreadsUserLogResponse response = restTemplate.postForEntity(url,null, SpreadsUserLogResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 查找员工信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectEmployeeInfoByUserId/"+userId;
+		EmployeeCustomizeResponse response = restTemplate.postForEntity(url,null, EmployeeCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 根据用户id获取离职信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectUserLeaveByUserId/"+userId;
+		AdminEmployeeLeaveCustomizeResponse response = restTemplate.postForEntity(url,null, AdminEmployeeLeaveCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
 }

@@ -230,4 +230,35 @@ public interface UserManagerService extends BaseService {
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId);
 
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
+    /**
+     * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     * @param userId
+     * @return
+     */
+    List<UserUpdateParamCustomize> queryUserAndDepartment(int userId);
+    /**
+     * 获取全部用户信息
+     * @return
+     */
+    List<User> selectAllUser();
+    /**
+     * 查询此段时间的用户推荐人的修改记录
+     * @param userId
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    List<SpreadsUserLog> searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate);
+    /**
+     * 查找员工信息(状态)
+     * @param userId
+     * @return
+     */
+     EmployeeCustomize selectEmployeeInfoByUserId(Integer userId);
+    /**
+     * 根据用户id获取离职信息
+     * @param userId
+     * @return
+     */
+    AdminEmployeeLeaveCustomize selectUserLeaveByUserId(Integer userId);
 }
