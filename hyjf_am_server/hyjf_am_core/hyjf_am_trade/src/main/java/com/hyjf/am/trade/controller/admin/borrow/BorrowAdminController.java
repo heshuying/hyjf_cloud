@@ -126,8 +126,8 @@ public class BorrowAdminController  {
 	 */
 	@ApiOperation(value = "导出借款列表")
 	@RequestMapping("/exportBorrowList")
-	public List<BorrowCommonCustomizeVO> exportBorrowList(@RequestBody @Valid BorrowBeanRequest form) {
-		
+	public BorrowCustomizeResponse exportBorrowList(@RequestBody @Valid BorrowBeanRequest form) {
+		BorrowCustomizeResponse bcr=new BorrowCustomizeResponse();
 
 		BorrowCommonCustomizeVO corrowCommonCustomize = new BorrowCommonCustomizeVO();
 		// 借款编码
@@ -166,7 +166,8 @@ public class BorrowAdminController  {
 		corrowCommonCustomize.setVerifyTimeEndSrch(form.getVerifyTimeEndSrch());
 		// ADD BY zhangyunkai 增加初审时间查询条件 end
 		List<BorrowCommonCustomizeVO> recordList = this.borrowService.exportBorrowList(corrowCommonCustomize);	
-		return recordList;
+		bcr.setBorrowCommonCustomizeList(recordList);
+		return bcr;
 	}
 
 
