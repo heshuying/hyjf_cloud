@@ -45,7 +45,7 @@ public class MessagePushNoticesController {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
         Integer count = messagePushNoticesService.getRecordCount(request);
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             List<MessagePushMsg> list = messagePushNoticesService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(list)) {
                 List<MessagePushMsgVO> voList = CommonUtils.convertBeanList(list,

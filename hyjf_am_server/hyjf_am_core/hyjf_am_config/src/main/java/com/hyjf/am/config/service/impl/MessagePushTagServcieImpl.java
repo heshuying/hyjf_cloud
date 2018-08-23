@@ -60,7 +60,7 @@ public class MessagePushTagServcieImpl implements MessagePushTagServcie {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
         }
-        example.setOrderByClause("sort asc");
+        example.setOrderByClause("sort_id asc");
         return this.messagePushTagMapper.selectByExample(example);
     }
 

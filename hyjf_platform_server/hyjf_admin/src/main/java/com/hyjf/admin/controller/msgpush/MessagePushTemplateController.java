@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -129,8 +130,8 @@ public class MessagePushTemplateController extends BaseController {
         String username = user.getUsername();
 
         // 调用校验
-        JSONObject jsonObject = new JSONObject();
-        if (validatorFieldCheck(jsonObject, templateRequest) != null) {
+        String message = validatorFieldCheck(templateRequest);
+        if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
@@ -162,8 +163,8 @@ public class MessagePushTemplateController extends BaseController {
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
         // 调用校验
-        JSONObject jsonObject = new JSONObject();
-        if (validatorFieldCheck(jsonObject, templateRequest) != null) {
+        String message = validatorFieldCheck(templateRequest);
+        if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
@@ -267,7 +268,6 @@ public class MessagePushTemplateController extends BaseController {
             response.setRtn(Response.FAIL);
             response.setMessage("请输入正确的http地址（全路径）!");
         }
-        // 没有错误时,返回y
         return new AdminResult<>(response);
     }
 
@@ -276,7 +276,7 @@ public class MessagePushTemplateController extends BaseController {
     public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             String s = activityListService.uploadFile(request, response);
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(s)) {
+            if (StringUtils.isNotBlank(s)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
             } else {
                 return new AdminResult<>(FAIL, FAIL_DESC);
@@ -291,14 +291,27 @@ public class MessagePushTemplateController extends BaseController {
      * @param request
      * @return
      */
-    private JSONObject validatorFieldCheck(JSONObject jsonObject, MsgPushTemplateRequest request) {
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "tagId", request.getTagId().toString());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "tagCode", request.getTagCode());
-        return jsonObject;
+    private String validatorFieldCheck(MsgPushTemplateRequest request) {
+        String message = null;
+        if (request.getTagId() == null) {
+            message = "标签id不能为空";
+        }
+        if (request.getTemplateCode() == null) {
+            message = "模板编码不能为空";
+        }
+        if (request.getTemplateTitle() == null) {
+            message = "模板名称不能为空";
+        }
+        if (request.getTemplateContent() == null) {
+            message = "模板内容不能为空";
+        }
+        if (request.getTemplateTerminal() == null) {
+            message = "推送终端不能为空";
+        }
+        if (request.getTemplateAction() == null) {
+            message = "后续动作不能为空";
+        }
+       return message;
     }
 
 

@@ -9,6 +9,7 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -27,10 +28,10 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * api渠道注册参数校验
-     *
-     * @param
+     *  @param
+     * @param userRegisterRequestBean
      */
-    void apiCheckParam(RegisterRequest registerRequest);
+    RegisterRequest apiCheckParam(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest);
 
     /**
      * app参数检查

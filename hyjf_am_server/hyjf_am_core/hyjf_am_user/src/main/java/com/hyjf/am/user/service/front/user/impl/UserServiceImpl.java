@@ -61,6 +61,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
+		Integer instType = userRequest.getInstType();
 
 		Integer attribute = null;
 		// 获取推荐人表
@@ -84,7 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUserInfo(userId, loginIp, attribute);
+		this.insertUserInfo(userId, loginIp, attribute,instType);
 
 		// 3. 写入用户账户表 迁移到组合层发送mq消息 避免连接mq超时引起长事务
 		// this.insertAccount(userId);
@@ -359,7 +360,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
+	private void insertUserInfo(int userId, String loginIp, Integer attribute,Integer instType) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
@@ -369,7 +370,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		userInfo.setUserId(userId);
 		// 默认投资人角色
-		userInfo.setRoleId(1);
+		if (instType!=null&&instType == 0) {
+			//用户角色1投资人2借款人3垫付机构
+			userInfo.setRoleId(2);
+			//借款人类型 1：内部机构 2：外部机构
+			userInfo.setBorrowerType(2);
+		} else {
+			userInfo.setRoleId(1);
+		}
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
@@ -1163,7 +1171,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUserInfo(userId, loginIp, 2);
+		this.insertUserInfo(userId, loginIp, 2,1);
 
 		// 4. 保存用户注册日志
 		this.insertRegLog(userId, loginIp);
@@ -1450,7 +1458,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		List<BankOpenAccount> list = this.bankOpenAccountMapper.selectByExample(example);
 		if(list.size() > 0){
 			return list.get(0);
-		}else return null;
+		}else{return null;}
 	}
 
 

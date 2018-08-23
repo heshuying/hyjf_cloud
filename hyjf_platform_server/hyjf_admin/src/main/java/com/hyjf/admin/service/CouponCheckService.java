@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.user.UserVO;
 
@@ -52,7 +53,7 @@ public interface CouponCheckService {
      * @param response
      * @return
      */
-    boolean batchCheck(Integer path, HttpServletResponse response, String userId) throws Exception;
+    boolean batchCheck(String path, HttpServletResponse response, String userId) throws Exception;
 
     /**
      *修改审核状态
@@ -67,4 +68,11 @@ public interface CouponCheckService {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
+
+    /**
+     * 根据id查询优惠券
+     * @param id
+     * @return
+     */
+    CouponCheckVO getCouponCheckById(int id);
 }

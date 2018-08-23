@@ -101,25 +101,52 @@ public class MessagePushNoticesServiceImpl implements MessagePushNoticesService 
      * @throws Exception
      */
     @Override
-    public String uploadFile(MultipartFile iconImg) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        // 单位字节
-        Long allowFileLength = 5000000L;
+    public LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+
         String fileDomainUrl = UploadFileUtils.getDoPath(url);
         String filePhysicalPath = UploadFileUtils.getDoPath(physical);
         String fileUploadTempPath = UploadFileUtils.getDoPath(real);
+
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+
         File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
         }
+
         BorrowCommonImage fileMeta = null;
-        // 生成图片文件名
-        String fileRealName = String.valueOf(System.currentTimeMillis());
-        fileRealName = fileRealName + UploadFileUtils.getSuffix(iconImg.getOriginalFilename());
-        // 上传至服务器
-        String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
-        return returnMessage;
+        LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+
+        Iterator<String> itr = multipartRequest.getFileNames();
+        MultipartFile multipartFile = null;
+
+        while (itr.hasNext()) {
+            multipartFile = multipartRequest.getFile(itr.next());
+            String fileRealName = String.valueOf(new Date().getTime());
+            String originalFilename = multipartFile.getOriginalFilename();
+            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+            // 图片上传
+            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+
+            fileMeta = new BorrowCommonImage();
+            int index = originalFilename.lastIndexOf(".");
+            if (index != -1) {
+                fileMeta.setImageName(originalFilename.substring(0, index));
+            } else {
+                fileMeta.setImageName(originalFilename);
+            }
+
+            fileMeta.setImageRealName(fileRealName);
+            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+            fileMeta.setImageType(multipartFile.getContentType());
+            fileMeta.setErrorMessage(errorMessage);
+            // 获取文件路径
+            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+            files.add(fileMeta);
+        }
+        return files;
     }
 
 

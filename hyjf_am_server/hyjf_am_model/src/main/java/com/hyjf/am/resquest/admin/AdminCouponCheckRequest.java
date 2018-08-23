@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version AdminCouponCheckRequest, v0.1 2018/7/4 10:54
  */
 public class AdminCouponCheckRequest extends BasePage {
-    private Integer id;
+    private String id;
 
     private String fileName;
 
@@ -50,11 +50,11 @@ public class AdminCouponCheckRequest extends BasePage {
         return paginatorPage;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

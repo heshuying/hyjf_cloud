@@ -3,7 +3,6 @@ package com.hyjf.am.user.dao.auto;
 
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.am.user.service.front.account.BindCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -213,9 +212,6 @@ public class AutoMapper {
 
     @Autowired
     protected UserMapper usersMapper;
-
-    @Autowired
-    protected BindCardService bindCardService;
 
     @Autowired
     protected UserInfoMapper usersInfoMapper;
