@@ -6,7 +6,6 @@ package com.hyjf.am.user.service.admin.message.impl;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.dao.mapper.auto.SmsCountMapper;
 import com.hyjf.am.user.dao.mapper.customize.SmsCountCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.SmsCountExample;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCountService;
@@ -33,6 +32,10 @@ public class SmsCountServiceImpl implements SmsCountService {
 
     @Override
     public List<SmsCountCustomize> querySmsCountLlist(SmsCountRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         List<SmsCountCustomize> list = smsCountCustomizeMapper.querySmsCountLlist(request);
         String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
         if (StringUtils.isEmpty(configMoney)) {
@@ -59,7 +62,7 @@ public class SmsCountServiceImpl implements SmsCountService {
     }
 
     @Override
-    public int selectCount() {
-        return smsCountMapper.countByExample(new SmsCountExample());
+    public int selectCount(SmsCountRequest request) {
+        return smsCountCustomizeMapper.selectCount(request);
     }
 }

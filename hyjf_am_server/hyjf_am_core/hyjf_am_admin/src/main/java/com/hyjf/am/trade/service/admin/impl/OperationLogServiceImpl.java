@@ -20,7 +20,8 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Service
+
+@Service("tradeOperationLogServiceImpl")
 public class OperationLogServiceImpl implements OperationLogService {
 
     @Autowired

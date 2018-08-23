@@ -35,7 +35,7 @@ public class MessagePushNoticesServiceImpl implements MessagePushNoticesService 
     }
 
     @Override
-    public void deleteRecord(Integer id) {
+    public void deleteRecord(String id) {
         messagePushMsgMongoDao.deleteRecord(id);
     }
 

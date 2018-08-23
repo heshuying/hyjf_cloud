@@ -1,14 +1,10 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
@@ -108,7 +104,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             e.printStackTrace();
         }
 
-        return balance;
+        return new BigDecimal(10000);
     }
 
     /**
@@ -204,4 +200,31 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         return amTradeClient.selectBorrowByNid(borrowNid);
     }
 
+
+    @Override
+    public BankCardVO selectBankCardByUserId(Integer userId) {
+        BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
+        return bankCard;
+    }
+
+    /**
+     * 根据用户ID取得用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoVO getUsersInfoByUserId(Integer userId) {
+        if (userId != null) {
+            UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(userId);
+            return usersInfo;
+        }
+        return null;
+    }
+
+    @Override
+    public UserVO getUsers(Integer userId) {
+        UserVO users = amUserClient.findUserById(userId);
+        return users;
+    }
 }

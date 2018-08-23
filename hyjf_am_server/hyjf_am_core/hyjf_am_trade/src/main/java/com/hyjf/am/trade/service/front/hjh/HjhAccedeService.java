@@ -59,4 +59,10 @@ public interface HjhAccedeService {
      * @date 2018/8/15 16:25
      */
     List<HjhAccede> getPlanOrderInvestExceptionList();
+
+    /**
+     * 更新未进入锁定期的计划订单的匹配期hjhaccede
+     * @return
+     */
+    boolean updateMatchDays();
 }

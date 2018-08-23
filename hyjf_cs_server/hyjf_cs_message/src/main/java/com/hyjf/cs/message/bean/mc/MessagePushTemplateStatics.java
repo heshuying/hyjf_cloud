@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Document(collection = "ht_message_push_template_statics")
 public class MessagePushTemplateStatics implements Serializable {
     @Id
-    private Integer id;
+    private String id;
 
     private Integer msgId;
 
@@ -44,11 +44,11 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

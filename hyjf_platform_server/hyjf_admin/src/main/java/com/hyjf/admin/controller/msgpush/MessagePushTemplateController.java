@@ -4,9 +4,11 @@
 package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
@@ -17,28 +19,19 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -50,17 +43,12 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/msgPush/template")
 public class MessagePushTemplateController extends BaseController {
 
-    @Value("${file.domain.url}")
-    private String FILEDOMAINURL;
-    @Value("${file.physical.path}")
-    private String FILEPHYSICALPATH;
-    @Value("${file.upload.temp.path}")
-    private String FILEUPLOADTEMPPATH;
-
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
     @Autowired
     private MessagePushTagService messagePushTagService;
+    @Autowired
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -125,8 +113,8 @@ public class MessagePushTemplateController extends BaseController {
         String username = user.getUsername();
 
         // 调用校验
-        JSONObject jsonObject = new JSONObject();
-        if (validatorFieldCheck(jsonObject, templateRequest) != null) {
+        String message = validatorFieldCheck(templateRequest);
+        if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
@@ -135,13 +123,13 @@ public class MessagePushTemplateController extends BaseController {
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
         BeanUtils.copyProperties(request, templateVO);
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1 || templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl1());
         }
-        if (templateRequest.getTemplateAction().intValue() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+        if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
             templateVO.setTemplateActionUrl(templateRequest.getTemplateActionUrl2());
         }
         templateVO.setTemplateCode(templateRequest.getTagCode() + "_" + templateRequest.getTemplateCode());
@@ -158,8 +146,8 @@ public class MessagePushTemplateController extends BaseController {
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
         // 调用校验
-        JSONObject jsonObject = new JSONObject();
-        if (validatorFieldCheck(jsonObject, templateRequest) != null) {
+        String message = validatorFieldCheck(templateRequest);
+        if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
@@ -211,7 +199,7 @@ public class MessagePushTemplateController extends BaseController {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
             MessagePushTemplateVO record = response.getResult();
             // 新建状态只能启用，启用只能禁用，禁用只能启用
-            if (record.getStatus().intValue() == CustomConstants.MSG_PUSH_STATUS_0) {
+            if (record.getStatus() == CustomConstants.MSG_PUSH_STATUS_0) {
                 record.setStatus(CustomConstants.MSG_PUSH_STATUS_1);
             } else if (record.getStatus() == CustomConstants.MSG_PUSH_STATUS_1) {
                 record.setStatus(CustomConstants.MSG_PUSH_STATUS_2);
@@ -221,13 +209,13 @@ public class MessagePushTemplateController extends BaseController {
             MsgPushTemplateRequest request = new MsgPushTemplateRequest();
             BeanUtils.copyProperties(record, request);
             MessagePushTemplateResponse tagResponse = messagePushTemplateService.updateRecord(request);
-            if (response == null) {
+            if (tagResponse == null) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-            if (!Response.isSuccess(response)) {
-                return new AdminResult<>(FAIL, response.getMessage());
+            if (!Response.isSuccess(tagResponse)) {
+                return new AdminResult<>(FAIL, tagResponse.getMessage());
             }
-            return new AdminResult<>(response);
+            return new AdminResult<>(tagResponse);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
@@ -245,8 +233,7 @@ public class MessagePushTemplateController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
         }
         return new AdminResult<>(response);
@@ -263,72 +250,73 @@ public class MessagePushTemplateController extends BaseController {
             response.setRtn(Response.FAIL);
             response.setMessage("请输入正确的http地址（全路径）!");
         }
-        // 没有错误时,返回y
         return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        String fileDomainUrl = FILEDOMAINURL;
-        String filePhysicalPath = FILEPHYSICALPATH;
-        String fileUploadTempPath = FILEUPLOADTEMPPATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
-        BorrowCommonImageVO fileMeta = null;
-        LinkedList<BorrowCommonImageVO> files = new LinkedList<BorrowCommonImageVO>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            // 图片上传
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImageVO();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
-        }
-        return JSONObject.toJSONString(files, true);
     }
 
+
     /**
+     * 画面校验
      * @param request
      * @return
      */
-    private JSONObject validatorFieldCheck(JSONObject jsonObject, MsgPushTemplateRequest request) {
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "tagId", request.getTagId().toString());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "templateCode", request.getTemplateCode());
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "tagCode", request.getTagCode());
-        return jsonObject;
+    private String validatorFieldCheck(MsgPushTemplateRequest request) {
+        String message = null;
+        if (request.getTagId() == null) {
+            message = "标签id不能为空";
+        }
+        if (request.getTemplateCode() == null || request.getTemplateCode().length() > 40) {
+            message = "模板编码不能为空或长度大于40字符";
+        }
+        if (request.getTemplateTitle() == null || request.getTemplateTitle().length() > 20) {
+            message = "模板名称不能为空或长度大于20字符";
+        }
+        if (request.getTemplateImageUrl() != null && request.getTemplateImageUrl().length() > 100) {
+            message = "图片url长度不能大于100字符";
+        }
+        if (request.getTemplateContent() == null || request.getTemplateContent().length() > 4000) {
+            message = "模板内容不能为空或内容长度不能大于4000字符";
+        }
+        if (request.getTemplateTerminal() == null || request.getTemplateTerminal().length() > 20) {
+            message = "推送终端不能为空或长度不能大于20字符";
+        }
+        if (request.getTemplateAction() == null) {
+            message = "后续动作不能为空";
+        }
+        if (request.getStatus() == null) {
+            message = "状态不能为空";
+        }
+        if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
+            if (request.getTemplateActionUrl1() == null || request.getTemplateActionUrl1().length() > 100) {
+                message = "后续动作url1不能为空或长度不能大于100字符";
+            }
+        }
+        if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
+            if (request.getTemplateActionUrl3() == null || request.getTemplateActionUrl3().length() > 100) {
+                message = "后续动作url3不能为空或长度不能大于100字符";
+            }
+        }
+        if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+            if (request.getTemplateActionUrl2() == null || request.getTemplateActionUrl2().length() > 100) {
+                message = "后续动作url2不能为空或长度不能大于100字符";
+            }
+        }
+
+       return message;
     }
 
 

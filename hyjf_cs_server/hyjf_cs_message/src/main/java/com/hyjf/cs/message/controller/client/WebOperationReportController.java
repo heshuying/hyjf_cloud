@@ -5,18 +5,21 @@ package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
+import com.hyjf.am.vo.datacollect.OperationReportVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.service.report.OperationReportService;
+import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author tanyy
@@ -30,37 +33,56 @@ public class WebOperationReportController extends BaseController {
 	@Autowired
 	private OperationReportService operationReportService;
 
+	@Autowired
+	private PlatDataStatisticsService platDataStatisticsService;
+
 	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表")
 	@GetMapping("/reportList")
-	public JSONObject listByRelease(HttpServletRequest httpServletRequest) {
+	public WebResult<Object> listByRelease(@RequestParam(value = "releaseFlag",required = false) Integer releaseFlag,
+										   @RequestParam(value = "paginatorPage",required = false,defaultValue = "0") Integer paginatorPage) {
+		WebResult result = new WebResult();
 		OperationReportRequest request = new OperationReportRequest();
-		String param1 =httpServletRequest.getParameter("isRelease");
-		String param2 =httpServletRequest.getParameter("paginatorPage");
-		request.setIsRelease(param1==null?null:Integer.valueOf(param1));
-		request.setCurrPage(param2==null?0:Integer.valueOf(param2));
+		request.setIsRelease(releaseFlag);
+		request.setCurrPage(paginatorPage);
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
-		return response;
+		BigDecimal sumTender = platDataStatisticsService.selectTotalInvest().setScale(2, BigDecimal.ROUND_DOWN);
+		BigDecimal sumProfit = platDataStatisticsService.selectTotalInterest().setScale(2, BigDecimal.ROUND_DOWN);
+		response.put("sumTender",sumTender);
+		response.put("sumProfit",sumProfit);
+		if("success".equals(response.get("success"))){
+			result.setData(response);
+		}else{
+            result.setStatus("1");
+            result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
+        }
+		return result;
 
 	}
 	@ApiOperation(value = "运营报告明细", notes = "运营报告明细")
 	@GetMapping("/reportInfo/{id}")
-	public JSONObject reportInfo(@PathVariable String id) {
+	public WebResult<Object> reportInfo(@PathVariable String id) {
+		WebResult result = new WebResult();
 		JSONObject response = operationReportService.reportInfo(id);
-		return response;
+		if(response.get("success")!="success"){
+			result.setStatus("1");
+			result.setStatusDesc("失败");
+		}else {
+			result.setData(response);
+		}
+		return result;
 	}
 
 	@ApiOperation(value = "进入页面预览初始化", notes = "进入页面预览初始化")
 	@GetMapping("/initMonthReport/{id}")
-	public JSONObject initMonthReport(@PathVariable String id) {
-		JSONObject jsonObject = new JSONObject();
+	public WebResult<Object> initMonthReport(@PathVariable String id) {
+		WebResult result = new WebResult();
 		OperationReportColumnEntity report = operationReportService.selectByPrimaryKey(id);
-		if(report!=null){
-			jsonObject.put("success", "success");
-			jsonObject.put("reportType",report.getOperationReportType());
+		if(report==null){
+			result.setStatus("1");
+			result.setStatusDesc("失败");
 		}else {
-			jsonObject.put("success", "success");
-			jsonObject.put("countIsZero", "暂无任何数据");
+			result.setData(report);
 		}
-		return jsonObject;
+		return result;
 	}
 }

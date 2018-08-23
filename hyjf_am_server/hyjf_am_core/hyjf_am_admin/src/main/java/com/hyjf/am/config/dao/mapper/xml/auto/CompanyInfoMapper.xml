@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.CompanyInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.CompanyInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="provence" property="provence" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="registration_time" property="registrationTime" jdbcType="VARCHAR" />
+    <result column="brief" property="brief" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="banner" property="banner" jdbcType="VARCHAR" />
+    <result column="reg_img1" property="regImg1" jdbcType="VARCHAR" />
+    <result column="reg_img2" property="regImg2" jdbcType="VARCHAR" />
+    <result column="reg_img3" property="regImg3" jdbcType="VARCHAR" />
+    <result column="reg_img4" property="regImg4" jdbcType="VARCHAR" />
+    <result column="reg_img5" property="regImg5" jdbcType="VARCHAR" />
+    <result column="reg_img6" property="regImg6" jdbcType="VARCHAR" />
+    <result column="QQ" property="qq" jdbcType="INTEGER" />
+    <result column="weibo" property="weibo" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="weixin" property="weixin" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="reg_money" property="regMoney" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="list_img" property="listImg" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, `name`, provence, city, registration_time, brief, tel, banner, reg_img1, reg_img2, 
+    reg_img3, reg_img4, reg_img5, reg_img6, QQ, weibo, email, weixin, `status`, reg_money, 
+    sort, list_img, create_user_id, update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_company_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_company_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfoExample" >
+    delete from ht_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_company_info (`name`, provence, city, 
+      registration_time, brief, tel, 
+      banner, reg_img1, reg_img2, 
+      reg_img3, reg_img4, reg_img5, 
+      reg_img6, QQ, weibo, 
+      email, weixin, `status`, 
+      reg_money, sort, list_img, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{name,jdbcType=VARCHAR}, #{provence,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{registrationTime,jdbcType=VARCHAR}, #{brief,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{banner,jdbcType=VARCHAR}, #{regImg1,jdbcType=VARCHAR}, #{regImg2,jdbcType=VARCHAR}, 
+      #{regImg3,jdbcType=VARCHAR}, #{regImg4,jdbcType=VARCHAR}, #{regImg5,jdbcType=VARCHAR}, 
+      #{regImg6,jdbcType=VARCHAR}, #{qq,jdbcType=INTEGER}, #{weibo,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{regMoney,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{listImg,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_company_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="provence != null" >
+        provence,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="registrationTime != null" >
+        registration_time,
+      </if>
+      <if test="brief != null" >
+        brief,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="banner != null" >
+        banner,
+      </if>
+      <if test="regImg1 != null" >
+        reg_img1,
+      </if>
+      <if test="regImg2 != null" >
+        reg_img2,
+      </if>
+      <if test="regImg3 != null" >
+        reg_img3,
+      </if>
+      <if test="regImg4 != null" >
+        reg_img4,
+      </if>
+      <if test="regImg5 != null" >
+        reg_img5,
+      </if>
+      <if test="regImg6 != null" >
+        reg_img6,
+      </if>
+      <if test="qq != null" >
+        QQ,
+      </if>
+      <if test="weibo != null" >
+        weibo,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="weixin != null" >
+        weixin,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="regMoney != null" >
+        reg_money,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="listImg != null" >
+        list_img,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provence != null" >
+        #{provence,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationTime != null" >
+        #{registrationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null" >
+        #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg1 != null" >
+        #{regImg1,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg2 != null" >
+        #{regImg2,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg3 != null" >
+        #{regImg3,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg4 != null" >
+        #{regImg4,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg5 != null" >
+        #{regImg5,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg6 != null" >
+        #{regImg6,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=INTEGER},
+      </if>
+      <if test="weibo != null" >
+        #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null" >
+        #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="regMoney != null" >
+        #{regMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="listImg != null" >
+        #{listImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfoExample" resultType="java.lang.Integer" >
+    select count(*) from ht_company_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_company_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provence != null" >
+        provence = #{record.provence,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationTime != null" >
+        registration_time = #{record.registrationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brief != null" >
+        brief = #{record.brief,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tel != null" >
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.banner != null" >
+        banner = #{record.banner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg1 != null" >
+        reg_img1 = #{record.regImg1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg2 != null" >
+        reg_img2 = #{record.regImg2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg3 != null" >
+        reg_img3 = #{record.regImg3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg4 != null" >
+        reg_img4 = #{record.regImg4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg5 != null" >
+        reg_img5 = #{record.regImg5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regImg6 != null" >
+        reg_img6 = #{record.regImg6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qq != null" >
+        QQ = #{record.qq,jdbcType=INTEGER},
+      </if>
+      <if test="record.weibo != null" >
+        weibo = #{record.weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weixin != null" >
+        weixin = #{record.weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.regMoney != null" >
+        reg_money = #{record.regMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=INTEGER},
+      </if>
+      <if test="record.listImg != null" >
+        list_img = #{record.listImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_company_info
+    set id = #{record.id,jdbcType=INTEGER},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      provence = #{record.provence,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      registration_time = #{record.registrationTime,jdbcType=VARCHAR},
+      brief = #{record.brief,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      banner = #{record.banner,jdbcType=VARCHAR},
+      reg_img1 = #{record.regImg1,jdbcType=VARCHAR},
+      reg_img2 = #{record.regImg2,jdbcType=VARCHAR},
+      reg_img3 = #{record.regImg3,jdbcType=VARCHAR},
+      reg_img4 = #{record.regImg4,jdbcType=VARCHAR},
+      reg_img5 = #{record.regImg5,jdbcType=VARCHAR},
+      reg_img6 = #{record.regImg6,jdbcType=VARCHAR},
+      QQ = #{record.qq,jdbcType=INTEGER},
+      weibo = #{record.weibo,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      weixin = #{record.weixin,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      reg_money = #{record.regMoney,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=INTEGER},
+      list_img = #{record.listImg,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfo" >
+    update ht_company_info
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provence != null" >
+        provence = #{provence,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationTime != null" >
+        registration_time = #{registrationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null" >
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="banner != null" >
+        banner = #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg1 != null" >
+        reg_img1 = #{regImg1,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg2 != null" >
+        reg_img2 = #{regImg2,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg3 != null" >
+        reg_img3 = #{regImg3,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg4 != null" >
+        reg_img4 = #{regImg4,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg5 != null" >
+        reg_img5 = #{regImg5,jdbcType=VARCHAR},
+      </if>
+      <if test="regImg6 != null" >
+        reg_img6 = #{regImg6,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        QQ = #{qq,jdbcType=INTEGER},
+      </if>
+      <if test="weibo != null" >
+        weibo = #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null" >
+        weixin = #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="regMoney != null" >
+        reg_money = #{regMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="listImg != null" >
+        list_img = #{listImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.CompanyInfo" >
+    update ht_company_info
+    set `name` = #{name,jdbcType=VARCHAR},
+      provence = #{provence,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      registration_time = #{registrationTime,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      banner = #{banner,jdbcType=VARCHAR},
+      reg_img1 = #{regImg1,jdbcType=VARCHAR},
+      reg_img2 = #{regImg2,jdbcType=VARCHAR},
+      reg_img3 = #{regImg3,jdbcType=VARCHAR},
+      reg_img4 = #{regImg4,jdbcType=VARCHAR},
+      reg_img5 = #{regImg5,jdbcType=VARCHAR},
+      reg_img6 = #{regImg6,jdbcType=VARCHAR},
+      QQ = #{qq,jdbcType=INTEGER},
+      weibo = #{weibo,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      weixin = #{weixin,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      reg_money = #{regMoney,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      list_img = #{listImg,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

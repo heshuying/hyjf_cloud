@@ -29,15 +29,12 @@ public class CouponServer extends CallcenterBaseController {
 	
 	/**
 	 * 按照用户名/手机号查询优惠券
-	 * @param request
-	 * @param response
 	 * @param bean
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getUserCouponInfoList", method = RequestMethod.POST)
-	public ResultListBean getUserCouponInfoList(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody UserBean bean) {
+	public ResultListBean getUserCouponInfoList(@RequestBody UserBean bean) {
 		ResultListBean result = new ResultListBean();
 
         CallCenterBaseRequest callCenterBaseRequest = new CallCenterBaseRequest();

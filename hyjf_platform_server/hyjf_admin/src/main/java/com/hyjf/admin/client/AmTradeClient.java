@@ -17,6 +17,7 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -1843,6 +1844,46 @@ public interface AmTradeClient {
     boolean updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
+     * 获取线下充值类型列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse selectUnderLineList(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 添加线下充值类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    UnderLineRechargeResponse insterUnderRechargeCode(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 获取当前code 是否存在
+     * @param code
+     * @return
+     * @Author : huanghui
+     */
+    boolean getUnderLineRecharge(String code);
+
+    /**
+     * 更新指定线下数据类型
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    boolean updateUnderLineRecharge(UnderLineRechargeRequestBean requestBean);
+
+    /**
+     * 删除指定充值类型数据
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean deleteUnderLineRecharge(Integer id);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
@@ -2672,5 +2713,60 @@ public interface AmTradeClient {
 	 * @return
 	 */
     HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form);
+
+    /**
+     * 查询合作机构配置列表
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse partnerConfigInit(AdminPartnerConfigListRequest adminRequest);
+    /**
+     * 查询合作机构配置详情页面
+     * @param adminRequest
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse searchPartnerConfigInfo(AdminPartnerConfigListRequest adminRequest);
+
+    /**
+     * 编辑保存合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse savePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 修改合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse updatePartnerConfig(AdminPartnerConfigListRequest req);
+
+    /**
+     * 删除合作机构配置
+     * @param req
+     * @author xiehuili
+     * @return
+     */
+    public AdminPartnerConfigDetailResponse deletePartnerConfig(AdminPartnerConfigListRequest req);
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @auth nxl
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate);
+
+    /**
+     * 更新borrowTender表
+     * @auth nxl
+     * @return
+     */
+    Boolean updateBorrowTender(BorrowTenderUpdRequest request);
+
 }
 

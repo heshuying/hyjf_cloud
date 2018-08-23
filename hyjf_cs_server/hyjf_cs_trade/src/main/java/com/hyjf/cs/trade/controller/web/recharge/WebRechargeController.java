@@ -10,6 +10,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -82,7 +83,16 @@ public class WebRechargeController extends BaseTradeController{
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
+
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getWeiFrontHost()+"/user/rechargeError";
+		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
+		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);

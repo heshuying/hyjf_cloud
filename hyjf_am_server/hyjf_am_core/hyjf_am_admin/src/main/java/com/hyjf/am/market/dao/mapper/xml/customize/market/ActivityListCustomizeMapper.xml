@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.ActivityListCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+				AND 1=1
+			<if test="title != null">
+				AND title LIKE CONCAT('%', #{title}, '%')
+			</if>
+			<if test="endTime != 0">
+				AND time_start <![CDATA[<=]]> #{endTime}
+			</if>
+			<if test="startTime != 0">
+				AND time_end <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="startCreate != 0">
+				AND create_time <![CDATA[>=]]> #{startCreate}
+			</if>
+			<if test="endCreate != 0">
+				AND create_time <![CDATA[<=]]> #{endCreate}
+			</if>
+			<if test="limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectActivityList" resultMap="BaseResultMap"
+		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+		SELECT * FROM huiyingdai_activity_list
+		<include refid="Where_Clause" />
+	</select>
+
+	<resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.ActivityList">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="time_start" property="timeStart" jdbcType="INTEGER" />
+		<result column="time_end" property="timeEnd" jdbcType="INTEGER" />
+		<result column="img" property="img" jdbcType="VARCHAR" />
+		<result column="qr" property="qr" jdbcType="VARCHAR" />
+		<result column="platform" property="platform" jdbcType="VARCHAR" />
+		<result column="url_foreground" property="urlForeground"
+			jdbcType="VARCHAR" />
+		<result column="url_background" property="urlBackground"
+			jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="where-all-page-condition">
+		<if test="title != null and title != ''">
+			AND title LIKE CONCAT('%', #{title}, '%')
+		</if>
+		<if test="endTime != null and endTime != 0">
+			AND time_start <![CDATA[<=]]>
+			#{endTime}
+		</if>
+		<if test="startTime != null and startTime != 0">
+			AND time_end <![CDATA[>=]]>
+			#{startTime}
+		</if>
+		<if test="platform != null and platform != ''">
+			AND platform like  CONCAT('%', #{platform}, '%')
+		</if>
+	</sql>
+	
+	<select id="queryActivityCount" resultType="java.lang.Integer"
+		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+		SELECT COUNT(1)
+		FROM ht_activity_list l
+		WHERE 1=1
+		<include refid="where-all-page-condition" />
+	</select>
+	
+	<select id="queryActivityList" resultMap="BaseResultMap"
+		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+		SELECT title, img, time_start, time_end, url_foreground
+		FROM ht_activity_list
+		WHERE 1=1
+		<include refid="where-all-page-condition" />
+		ORDER BY time_end desc
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	<select id="queryActivityListValid" resultMap="BaseResultMap"
+		parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+		SELECT id, title, img, time_start, time_end, url_foreground
+		FROM ht_activity_list
+		WHERE time_start <![CDATA[<=]]> #{nowTime} and time_end <![CDATA[>=]]> #{nowTime}
+		ORDER BY time_end desc
+		<if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	
+</mapper>

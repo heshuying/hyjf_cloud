@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.InvitePrizeConfMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.InvitePrizeConf" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="prize_name" property="prizeName" jdbcType="VARCHAR" />
+    <result column="prize_quantity" property="prizeQuantity" jdbcType="INTEGER" />
+    <result column="recommend_quantity" property="recommendQuantity" jdbcType="INTEGER" />
+    <result column="prize_reminder_quantity" property="prizeReminderQuantity" jdbcType="INTEGER" />
+    <result column="prize_group_code" property="prizeGroupCode" jdbcType="VARCHAR" />
+    <result column="prize_type" property="prizeType" jdbcType="TINYINT" />
+    <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+    <result column="prize_probability" property="prizeProbability" jdbcType="DECIMAL" />
+    <result column="prize_pic_url" property="prizePicUrl" jdbcType="VARCHAR" />
+    <result column="prize_kind" property="prizeKind" jdbcType="TINYINT" />
+    <result column="prize_sort" property="prizeSort" jdbcType="INTEGER" />
+    <result column="prize_status" property="prizeStatus" jdbcType="INTEGER" />
+    <result column="success_message" property="successMessage" jdbcType="VARCHAR" />
+    <result column="prize_apply_time" property="prizeApplyTime" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, prize_name, prize_quantity, recommend_quantity, prize_reminder_quantity, prize_group_code, 
+    prize_type, coupon_code, prize_probability, prize_pic_url, prize_kind, prize_sort, 
+    prize_status, success_message, prize_apply_time, remark, del_flag, create_user_id, 
+    update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConfExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_invite_prize_conf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_invite_prize_conf
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_invite_prize_conf
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConfExample" >
+    delete from ht_invite_prize_conf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_invite_prize_conf (prize_name, prize_quantity, recommend_quantity, 
+      prize_reminder_quantity, prize_group_code, 
+      prize_type, coupon_code, prize_probability, 
+      prize_pic_url, prize_kind, prize_sort, 
+      prize_status, success_message, prize_apply_time, 
+      remark, del_flag, create_user_id, 
+      update_user_id, create_time, update_time
+      )
+    values (#{prizeName,jdbcType=VARCHAR}, #{prizeQuantity,jdbcType=INTEGER}, #{recommendQuantity,jdbcType=INTEGER}, 
+      #{prizeReminderQuantity,jdbcType=INTEGER}, #{prizeGroupCode,jdbcType=VARCHAR}, 
+      #{prizeType,jdbcType=TINYINT}, #{couponCode,jdbcType=VARCHAR}, #{prizeProbability,jdbcType=DECIMAL}, 
+      #{prizePicUrl,jdbcType=VARCHAR}, #{prizeKind,jdbcType=TINYINT}, #{prizeSort,jdbcType=INTEGER}, 
+      #{prizeStatus,jdbcType=INTEGER}, #{successMessage,jdbcType=VARCHAR}, #{prizeApplyTime,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConf" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_invite_prize_conf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prizeName != null" >
+        prize_name,
+      </if>
+      <if test="prizeQuantity != null" >
+        prize_quantity,
+      </if>
+      <if test="recommendQuantity != null" >
+        recommend_quantity,
+      </if>
+      <if test="prizeReminderQuantity != null" >
+        prize_reminder_quantity,
+      </if>
+      <if test="prizeGroupCode != null" >
+        prize_group_code,
+      </if>
+      <if test="prizeType != null" >
+        prize_type,
+      </if>
+      <if test="couponCode != null" >
+        coupon_code,
+      </if>
+      <if test="prizeProbability != null" >
+        prize_probability,
+      </if>
+      <if test="prizePicUrl != null" >
+        prize_pic_url,
+      </if>
+      <if test="prizeKind != null" >
+        prize_kind,
+      </if>
+      <if test="prizeSort != null" >
+        prize_sort,
+      </if>
+      <if test="prizeStatus != null" >
+        prize_status,
+      </if>
+      <if test="successMessage != null" >
+        success_message,
+      </if>
+      <if test="prizeApplyTime != null" >
+        prize_apply_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prizeName != null" >
+        #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeQuantity != null" >
+        #{prizeQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="recommendQuantity != null" >
+        #{recommendQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="prizeReminderQuantity != null" >
+        #{prizeReminderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="prizeGroupCode != null" >
+        #{prizeGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeType != null" >
+        #{prizeType,jdbcType=TINYINT},
+      </if>
+      <if test="couponCode != null" >
+        #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeProbability != null" >
+        #{prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="prizePicUrl != null" >
+        #{prizePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeKind != null" >
+        #{prizeKind,jdbcType=TINYINT},
+      </if>
+      <if test="prizeSort != null" >
+        #{prizeSort,jdbcType=INTEGER},
+      </if>
+      <if test="prizeStatus != null" >
+        #{prizeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="successMessage != null" >
+        #{successMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeApplyTime != null" >
+        #{prizeApplyTime,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConfExample" resultType="java.lang.Integer" >
+    select count(*) from ht_invite_prize_conf
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_invite_prize_conf
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeName != null" >
+        prize_name = #{record.prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeQuantity != null" >
+        prize_quantity = #{record.prizeQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.recommendQuantity != null" >
+        recommend_quantity = #{record.recommendQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeReminderQuantity != null" >
+        prize_reminder_quantity = #{record.prizeReminderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeGroupCode != null" >
+        prize_group_code = #{record.prizeGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeType != null" >
+        prize_type = #{record.prizeType,jdbcType=TINYINT},
+      </if>
+      <if test="record.couponCode != null" >
+        coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeProbability != null" >
+        prize_probability = #{record.prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="record.prizePicUrl != null" >
+        prize_pic_url = #{record.prizePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeKind != null" >
+        prize_kind = #{record.prizeKind,jdbcType=TINYINT},
+      </if>
+      <if test="record.prizeSort != null" >
+        prize_sort = #{record.prizeSort,jdbcType=INTEGER},
+      </if>
+      <if test="record.prizeStatus != null" >
+        prize_status = #{record.prizeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.successMessage != null" >
+        success_message = #{record.successMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.prizeApplyTime != null" >
+        prize_apply_time = #{record.prizeApplyTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.delFlag != null" >
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_invite_prize_conf
+    set id = #{record.id,jdbcType=INTEGER},
+      prize_name = #{record.prizeName,jdbcType=VARCHAR},
+      prize_quantity = #{record.prizeQuantity,jdbcType=INTEGER},
+      recommend_quantity = #{record.recommendQuantity,jdbcType=INTEGER},
+      prize_reminder_quantity = #{record.prizeReminderQuantity,jdbcType=INTEGER},
+      prize_group_code = #{record.prizeGroupCode,jdbcType=VARCHAR},
+      prize_type = #{record.prizeType,jdbcType=TINYINT},
+      coupon_code = #{record.couponCode,jdbcType=VARCHAR},
+      prize_probability = #{record.prizeProbability,jdbcType=DECIMAL},
+      prize_pic_url = #{record.prizePicUrl,jdbcType=VARCHAR},
+      prize_kind = #{record.prizeKind,jdbcType=TINYINT},
+      prize_sort = #{record.prizeSort,jdbcType=INTEGER},
+      prize_status = #{record.prizeStatus,jdbcType=INTEGER},
+      success_message = #{record.successMessage,jdbcType=VARCHAR},
+      prize_apply_time = #{record.prizeApplyTime,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConf" >
+    update ht_invite_prize_conf
+    <set >
+      <if test="prizeName != null" >
+        prize_name = #{prizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeQuantity != null" >
+        prize_quantity = #{prizeQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="recommendQuantity != null" >
+        recommend_quantity = #{recommendQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="prizeReminderQuantity != null" >
+        prize_reminder_quantity = #{prizeReminderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="prizeGroupCode != null" >
+        prize_group_code = #{prizeGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeType != null" >
+        prize_type = #{prizeType,jdbcType=TINYINT},
+      </if>
+      <if test="couponCode != null" >
+        coupon_code = #{couponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeProbability != null" >
+        prize_probability = #{prizeProbability,jdbcType=DECIMAL},
+      </if>
+      <if test="prizePicUrl != null" >
+        prize_pic_url = #{prizePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeKind != null" >
+        prize_kind = #{prizeKind,jdbcType=TINYINT},
+      </if>
+      <if test="prizeSort != null" >
+        prize_sort = #{prizeSort,jdbcType=INTEGER},
+      </if>
+      <if test="prizeStatus != null" >
+        prize_status = #{prizeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="successMessage != null" >
+        success_message = #{successMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeApplyTime != null" >
+        prize_apply_time = #{prizeApplyTime,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.InvitePrizeConf" >
+    update ht_invite_prize_conf
+    set prize_name = #{prizeName,jdbcType=VARCHAR},
+      prize_quantity = #{prizeQuantity,jdbcType=INTEGER},
+      recommend_quantity = #{recommendQuantity,jdbcType=INTEGER},
+      prize_reminder_quantity = #{prizeReminderQuantity,jdbcType=INTEGER},
+      prize_group_code = #{prizeGroupCode,jdbcType=VARCHAR},
+      prize_type = #{prizeType,jdbcType=TINYINT},
+      coupon_code = #{couponCode,jdbcType=VARCHAR},
+      prize_probability = #{prizeProbability,jdbcType=DECIMAL},
+      prize_pic_url = #{prizePicUrl,jdbcType=VARCHAR},
+      prize_kind = #{prizeKind,jdbcType=TINYINT},
+      prize_sort = #{prizeSort,jdbcType=INTEGER},
+      prize_status = #{prizeStatus,jdbcType=INTEGER},
+      success_message = #{successMessage,jdbcType=VARCHAR},
+      prize_apply_time = #{prizeApplyTime,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

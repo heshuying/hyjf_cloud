@@ -127,6 +127,11 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	@Autowired
 	private AmTradeProducer amTradeProducer;
 
+	/**
+	 * 自动扣款（放款）(调用江西银行满标接口)
+	 * @param apicron
+	 * @return
+	 */
 	@Override
 	public BankCallBean requestLoans(BorrowApicron apicron) {
 

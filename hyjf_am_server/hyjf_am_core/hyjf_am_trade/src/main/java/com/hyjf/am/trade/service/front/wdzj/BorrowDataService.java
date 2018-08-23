@@ -15,7 +15,7 @@ public interface BorrowDataService {
 
     int countBorrowList(Map<String, Object> paraMap);
 
-    String sumBorrowAmount(Map<String, Object> paraMap);
+    String selectBorrowAmountSum(Map<String, Object> paraMap);
 
     List<WDZJPreapysListCustomize> selectPreapysList(Map<String, Object> paraMap);
 

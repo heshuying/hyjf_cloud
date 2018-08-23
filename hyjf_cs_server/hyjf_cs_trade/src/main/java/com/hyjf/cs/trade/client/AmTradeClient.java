@@ -5,6 +5,7 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -12,6 +13,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -405,7 +407,13 @@ public interface AmTradeClient {
      */
     boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
 
-
+    /**
+     * 获取线下充值类型列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
 
     /**
      * 获取项目列表
@@ -1686,4 +1694,11 @@ public interface AmTradeClient {
      * @return
      */
     MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
+    
+    /**
+     * 获取投资协议集合BYtenderNid
+     * @param tenderNid
+     * @return
+     */
+    List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid);
 }

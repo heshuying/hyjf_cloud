@@ -27,8 +27,8 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * api渠道注册参数校验
-     *
-     * @param
+     *  @param
+     * @param registerRequest
      */
     void apiCheckParam(RegisterRequest registerRequest);
 

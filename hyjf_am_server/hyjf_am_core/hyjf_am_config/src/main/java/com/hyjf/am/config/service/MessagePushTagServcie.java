@@ -32,10 +32,10 @@ public interface MessagePushTagServcie {
      * 根据条件查询列表
      * @param request
      * @param offset
-     * @param offset1
+     * @param limit
      * @return
      */
-    List<MessagePushTag> searchList(MessagePushTagRequest request, int offset, int offset1);
+    List<MessagePushTag> searchList(MessagePushTagRequest request, int offset, int limit);
 
     /**
      * 根据id获取标签详情

@@ -63,7 +63,7 @@ public class BorrowDataController extends BaseController {
      */
     @RequestMapping("/sum_borrowamount")
     public Response<String> sumBorrowAmount(@RequestBody Map<String, Object> requestBean){
-        String result = borrowDataService.sumBorrowAmount(requestBean);
+        String result = borrowDataService.selectBorrowAmountSum(requestBean);
         return new Response(result);
     }
 

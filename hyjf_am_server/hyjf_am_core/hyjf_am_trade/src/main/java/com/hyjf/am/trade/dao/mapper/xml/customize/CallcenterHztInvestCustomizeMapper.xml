@@ -113,7 +113,9 @@
 			ELSE
 				'现金'
 			END AS tender_type,
-			FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time,
+			<!-- FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time, -->
+			DATE_FORMAT(hdpa.create_time,'%Y-%m-%d %H:%i:%S') AS create_time,
+			
 			hdpa.create_time AS add_time_long
 		FROM
 			ht_debt_plan_accede hdpa

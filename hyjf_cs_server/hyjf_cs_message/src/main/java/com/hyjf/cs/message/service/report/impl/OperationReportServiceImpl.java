@@ -68,10 +68,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 
 	@Override
 	public JSONObject getRecordListByReleaseJson(OperationReportRequest request) {
+		List<OperationReportVO> recordList = new ArrayList<>();
 		JSONObject response = new JSONObject();
 		if(request.getIsRelease()==null){
-			response.put("success", "success");
-			response.put("isRelease", "发布状态为空");
+			response.put("recordList", recordList);
+			response.put("error", "发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
@@ -96,7 +97,6 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query2 = new Query();
 			Criteria criteria2 = getCriteria(map, query2);
 			query2.addCriteria(criteria2);
-			List<OperationReportVO> recordList = new ArrayList<>();
 			List<OperationReportColumnEntity> mongodbList = operationReportColumnMongDao.find(query2);
 
 			Query queryReport = null;
@@ -186,8 +186,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.put("recordList", recordList);
 			response.put("success", "success");
 		} else {
-			response.put("success", "success");
-			response.put("countIsZero", "暂无任何数据");
+			response.put("error", "暂无任何数据");
 		}
 		return response;
 	}
@@ -209,7 +208,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp2(record.get("timeEnd").toString());
 			criteria.and("createTime").gte(timeStar).lte(timeEnd);
 		}
-
+		if (record.get("isRelease") != null) {
+			criteria.and("isRelease").is(Integer.valueOf(record.get("isRelease").toString()));
+		}
 		if(record.get("monthType") != null){
 			criteria.and("createTime").lte(record.get("monthType").toString());
 		}
@@ -219,6 +220,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		}
 		if(record.get("limitEnd") != null){
 			query.limit(Integer.valueOf(record.get("limitEnd").toString()));
+		}
+		if (record.get("id") != null) {
+			criteria.and("_id").is(record.get("id").toString());
 		}
 		query.with(new Sort(Sort.Direction.DESC,"createTime"));
 

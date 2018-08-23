@@ -8,12 +8,8 @@ import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.VersionVO;
@@ -113,22 +109,7 @@ public interface AmConfigClient {
 	ParamNameResponse getNameCd(String code);
 
    	AdminSystemResponse isExistsApplicant(String applicant);
-   	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse infoAction();
-	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse download(MspApplytRequest mspApplytRequest);
-	public MspResponse searchAction(MspRequest mspRequest);
-	public MspResponse infoAction(MspRequest mspRequest);
-	public MspResponse insertAction(MspRequest mspRequest);
-	public MspResponse updateAction(MspRequest mspRequest);
-	public MspResponse configureNameError(MspRequest mspRequest);
-	public MspResponse deleteAction(MspRequest mspRequest);
-	public MspResponse checkAction(MspRequest mspRequest);
+
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 	/**
@@ -871,31 +852,6 @@ public interface AmConfigClient {
 	 */
 	public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req);
 
-	/**
-	 * 查询列表
-	 * @param adminRequest
-	 * @return
-	 */
-	public HolidaysConfigResponse initHolidaysConfig(AdminHolidaysConfigRequest adminRequest);
-	/**
-	 * 查询节假日配置详情页面
-	 * @param id
-	 * @return
-	 */
-	public HolidaysConfigResponse getHolidaysConfigById(Integer id);
-
-	/**
-	 * 编辑保存节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse saveHolidaysConfig(AdminHolidaysConfigRequest req);
-
-	/**
-	 * 修改节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse updateHolidaysConfig(AdminHolidaysConfigRequest req);
-
 	/**查询用户权限
 	 *
 	 * @param userName
@@ -930,7 +886,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<SmsMailTemplateVO> findMailTemplate(MailTemplateRequest request);
+	SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request);
 
 	/**
 	 * 新增邮件模板
@@ -938,7 +894,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertMailTemplate(MailTemplateRequest request);
+	int insertMailTemplate(MailTemplateRequest request);
 
 	/**
 	 * 修改邮件模板
@@ -946,7 +902,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void updateMailTemplate(MailTemplateRequest request);
+	int updateMailTemplate(MailTemplateRequest request);
 
 	/**
 	 * 查询所有消息推送模板
@@ -1014,7 +970,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertSmsTemplate(SmsTemplateRequest request);
+	int insertSmsTemplate(SmsTemplateRequest request);
 
 	public SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
 
@@ -1174,6 +1130,14 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+
+	/**
+	 * 根据id查询数据
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse infoInfoAction(Integer id);
 
 	/**
 	 * 修改根据条件查询友情链接列表
@@ -1365,7 +1329,7 @@ public interface AmConfigClient {
 	 * 开启模板
 	 * @param request
 	 */
-	void openAction(MailTemplateRequest request);
+	int openAction(MailTemplateRequest request);
 
 	/**
 	 * 获取充值银行卡列表
@@ -1407,7 +1371,7 @@ public interface AmConfigClient {
 	 * 开启短信配置模板
 	 * @param request
 	 */
-    void openSmsTemplate(SmsTemplateRequest request);
+    int updateStatus(SmsTemplateRequest request);
 
 	/**
 	 * 关闭短信配置模板
@@ -1419,5 +1383,26 @@ public interface AmConfigClient {
 	 * 修改短信模版
 	 * @param request
 	 */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param tplCode
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(String tplCode);
+
+	/**
+	 * 邮件模板详情
+	 * @param request
+	 * @return
+	 */
+	SmsMailTemplateVO infoAction(MailTemplateRequest request);
+
+	/**
+	 * 短信模板
+	 * @param id
+	 * @return
+	 */
+	SmsTemplateVO findSmsTemById(Integer id);
 }

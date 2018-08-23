@@ -59,7 +59,7 @@ public class UserInfoVO extends BaseVO implements Serializable {
 
 	private Integer promoteway;
 
-	private Boolean isContact;
+	private Integer isContact;
 
 	private Integer vipId;
 
@@ -273,11 +273,11 @@ public class UserInfoVO extends BaseVO implements Serializable {
 		this.promoteway = promoteway;
 	}
 
-	public Boolean getIsContact() {
+	public Integer getIsContact() {
 		return isContact;
 	}
 
-	public void setIsContact(Boolean isContact) {
+	public void setIsContact(Integer isContact) {
 		this.isContact = isContact;
 	}
 

@@ -49,7 +49,7 @@ public class BorrowStyleController {
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowStyleVO> hicv = CommonUtils.convertBeanList(recordList, BorrowStyleVO.class);
                 response.setResultList(hicv);
-                response.setRecordTotal(recordList.size());
+                response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
                 return response;
             }
