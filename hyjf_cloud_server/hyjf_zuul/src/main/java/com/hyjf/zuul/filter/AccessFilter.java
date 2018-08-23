@@ -349,6 +349,17 @@ public class AccessFilter extends ZuulFilter {
 				logger.error("login is invalid...");
 				return buildReturnContextOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 			}
+
+			// 页面不活动30分钟过期
+			Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + accessToken, Integer.class);
+			if (value == null) {
+				// 登陆过期
+				logger.error("login is invalid...");
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
+			}
+			// 每次操作，延长超时时间
+			RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + accessToken, user.getUserId(), 30*60);
+
 			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
 		}
