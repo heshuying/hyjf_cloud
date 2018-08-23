@@ -13,6 +13,7 @@ public class RegisterUserRequest {
 	private String loginIp;
 	private String platform;
 	private String instCode;
+	private Integer instType;
 
 	public String getMobile() {
 		return mobile;
@@ -76,5 +77,13 @@ public class RegisterUserRequest {
 
 	public void setInstCode(String instCode) {
 		this.instCode = instCode;
+	}
+
+	public Integer getInstType() {
+		return instType;
+	}
+
+	public void setInstType(Integer instType) {
+		this.instType = instType;
 	}
 }

@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -62,7 +64,7 @@ public class WechatRechargeController extends BaseTradeController{
 	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("wechat充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
+		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money, StringUtil.valueOf(ClientConstants.WECHAT_CLIENT));
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			modelAndView = BankCallUtils.callApi(bean);

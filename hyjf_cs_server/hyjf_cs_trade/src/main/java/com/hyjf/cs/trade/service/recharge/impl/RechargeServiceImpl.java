@@ -352,7 +352,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	@Override
-	public BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money) throws Exception {
+	public BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money, String client) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);
@@ -364,11 +364,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
+		String retUrl = super.getFrontHost(systemConfig,client)+"/user/rechargeError";
 		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+mobile;
-		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
-
-
+		String successfulUrl = super.getFrontHost(systemConfig,client)+"/user/rechargeSuccess?money="+money;
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setTxAmount(money);
 		directRechargeBean.setIdNo(idNo);

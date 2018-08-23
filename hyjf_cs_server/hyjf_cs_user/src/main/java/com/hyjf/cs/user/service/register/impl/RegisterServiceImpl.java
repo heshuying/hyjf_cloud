@@ -26,6 +26,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -83,21 +84,25 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     /**
      * api注册参数校验
-     *
-     * @param
+     *  @param
+     * @param userRegisterRequestBean
      */
     @Override
-    public void apiCheckParam(RegisterRequest registerRequest) {
+    public RegisterRequest apiCheckParam(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest) {
         // 手机号
-        String mobile = registerRequest.getMobile();
+        String mobile = userRegisterRequestBean.getMobile();
         // 机构编号
-        String instCode = registerRequest.getInstCode();
+        String instCode = userRegisterRequestBean.getInstCode();
         // 注册平台
-        String platform = registerRequest.getPlatform();
+        String platform = userRegisterRequestBean.getPlatform();
         // 注册渠道
-        String utmId = registerRequest.getUtmId();
+        String utmId = userRegisterRequestBean.getChannel();
         //推荐人
-        String reffer = registerRequest.getReffer();
+        String reffer = userRegisterRequestBean.getRecommended();
+
+        //切换参数实体
+        registerRequest.setUtmId(utmId);
+        registerRequest.setReffer(reffer);
         //手机号未填写
         CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.STATUS_ZC000001);
         // 机构编号
@@ -113,6 +118,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (StringUtils.isNotEmpty(reffer)) {
             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
+        return registerRequest;
     }
 
     /**
@@ -280,10 +286,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         BeanUtils.copyProperties(registerRequest, registerVO);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
-        //HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
+        HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
         // 机构编号
-        //CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
-        registerUserRequest.setInstCode(registerRequest.getInstCode());
+        CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
+        registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
         CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
