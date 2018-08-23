@@ -12,7 +12,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.recharge.WechatRechargeRuleService;
@@ -55,11 +54,8 @@ public class WechatRechargeRuleController {
 
     @ApiOperation(value = "获取充值规则", notes = "获取充值规则")
     @GetMapping(value = "/rechargeRule")
-    public WeChatResult rechargeRule() {
-        WeChatResult result = new WeChatResult();
-        WxRechargeDescResultBean bean = wechatRechargeRuleService.getRechargeRule();
-        result.setData(bean);
-        return result;
+    public WxRechargeDescResultBean rechargeRule() {
+        return wechatRechargeRuleService.getRechargeRule();
     }
 
     /**
@@ -83,8 +79,8 @@ public class WechatRechargeRuleController {
             // 获取用户的快捷卡信息
             BankCardVO bankCard = this.wechatRechargeRuleService.selectBankCardByUserId(userId);
             if (null != bankCard) {
-                resultVo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
-                resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+//                resultVo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+//                resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
                 resultVo.setBank(StringUtils.isBlank(bankCard.getBank()) ? StringUtils.EMPTY : bankCard.getBank());
                 // 银行卡号
                 resultVo.setCardNo(bankCard.getCardNo());
@@ -148,7 +144,6 @@ public class WechatRechargeRuleController {
         resultVo.setRcvAccount(RCV_ACCOUNT);
         resultVo.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
         resultVo.setKindlyReminder(KINDLY_REMINDER);
-        resultVo.setStatus("000");
         return resultVo;
     }
 

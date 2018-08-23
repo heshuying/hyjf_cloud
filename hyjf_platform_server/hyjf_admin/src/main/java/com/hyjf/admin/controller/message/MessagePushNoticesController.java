@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -85,8 +86,13 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "发送列表添加", notes = "发送列表添加")
     @PostMapping(value = "/add")
     @ResponseBody
-    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form) {
+    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
         try {
+            AdminSystemVO user = getUser(request);
+            if (user != null) {
+                String username = user.getUsername();
+                form.setUserName(username);
+            }
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.insertRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
@@ -117,8 +123,13 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "发送列表修改", notes = "发送列表修改")
     @PostMapping(value = "/update")
     @ResponseBody
-    public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form) {
+    public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
         try {
+            AdminSystemVO user = getUser(request);
+            if (user != null) {
+                String username = user.getUsername();
+                form.setUserName(username);
+            }
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.updateRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);

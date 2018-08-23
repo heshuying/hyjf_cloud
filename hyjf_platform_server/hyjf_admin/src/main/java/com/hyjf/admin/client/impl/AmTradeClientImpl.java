@@ -36,6 +36,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -5723,4 +5724,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         Boolean response = restTemplate.getForEntity(url, Boolean.class).getBody();
         return response;
     }
+	@Override
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
+                .getBody().getBorrowCommonCustomizeList();
+	}
 }

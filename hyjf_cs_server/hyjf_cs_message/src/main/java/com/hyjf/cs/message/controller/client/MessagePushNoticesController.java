@@ -145,6 +145,7 @@ public class MessagePushNoticesController {
             record.setPreSendTime(null);
             record.setSendTime(GetDate.getNowTime10());
         }
+        record.setLastupdateUserName(form.getUserName());
         messagePushNoticesService.updateRecord(record);
         response.setRtn(Response.SUCCESS);
         return response;
