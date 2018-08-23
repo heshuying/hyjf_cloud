@@ -26,18 +26,17 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.UserRegistResult;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
-import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
 import org.apache.commons.lang3.StringUtils;
@@ -85,24 +84,20 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     /**
      * api注册参数校验
      *  @param
-     * @param userRegisterRequestBean
+     * @param
      */
     @Override
-    public RegisterRequest apiCheckParam(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest) {
+    public void apiCheckParam( RegisterRequest registerRequest) {
         // 手机号
-        String mobile = userRegisterRequestBean.getMobile();
+        String mobile = registerRequest.getMobile();
         // 机构编号
-        String instCode = userRegisterRequestBean.getInstCode();
+        String instCode = registerRequest.getInstCode();
         // 注册平台
-        String platform = userRegisterRequestBean.getPlatform();
+        String platform = registerRequest.getPlatform();
         // 注册渠道
-        String utmId = userRegisterRequestBean.getChannel();
+        String utmId = registerRequest.getUtmId();
         //推荐人
-        String reffer = userRegisterRequestBean.getRecommended();
-
-        //切换参数实体
-        registerRequest.setUtmId(utmId);
-        registerRequest.setReffer(reffer);
+        String reffer = registerRequest.getReffer();
         //手机号未填写
         CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.STATUS_ZC000001);
         // 机构编号
@@ -118,7 +113,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (StringUtils.isNotEmpty(reffer)) {
             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
-        return registerRequest;
     }
 
     /**
