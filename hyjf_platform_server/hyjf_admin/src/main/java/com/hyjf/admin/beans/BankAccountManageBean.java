@@ -6,6 +6,7 @@ package com.hyjf.admin.beans;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,24 +26,29 @@ public class BankAccountManageBean implements Serializable {
     /**
      * 用户名
      */
+    @ApiModelProperty(value = "用户名")
     private String userNameSrch;
     /**
      * 部门
      */
+    @ApiModelProperty(value = "部门")
     private String combotreeSrch;
     /**
      * 部门
      */
+    @ApiModelProperty(value = "部门")
     private String[] combotreeListSrch;
 
     /**
      * 电子账号(检索用)
      */
+    @ApiModelProperty(value = "电子账号")
     private String accountSrch;
 
     /**
      * 会员等级(检索用)
      */
+    @ApiModelProperty(value = "会员等级")
     private String vipSrch;
 
     /**

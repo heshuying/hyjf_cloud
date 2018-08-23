@@ -1336,33 +1336,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountCount";
-		Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
-		return result;
-	}
-
-	@Override
-	public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountInfos";
-		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
-	public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountDetails";
-		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
 		String url = "http://AM-USER/am-user/bankaccountmanage/getbankopenaccount/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();

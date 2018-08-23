@@ -54,17 +54,17 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
 
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountCount(bankAccountManageRequest);
+        return this.amTradeClient.queryAccountCount(bankAccountManageRequest);
     }
 
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountInfos(bankAccountManageRequest);
+        return this.amTradeClient.queryAccountInfos(bankAccountManageRequest);
     }
 
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountDetails(bankAccountManageRequest);
+        return this.amTradeClient.queryAccountDetails(bankAccountManageRequest);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
 
     @Override
     public Integer selectAccountInfoCount(BankAccountManageRequest request) {
-        return this.amUserClient.queryAccountCount(request);
+        return this.amTradeClient.queryAccountCount(request);
     }
 
     /**

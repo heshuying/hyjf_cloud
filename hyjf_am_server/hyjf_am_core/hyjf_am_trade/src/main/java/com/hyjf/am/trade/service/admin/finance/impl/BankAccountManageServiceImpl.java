@@ -4,12 +4,15 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.trade.bean.ResultBean;
 import com.hyjf.am.trade.bean.SynBalanceBean;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminBankAccountCheckCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BankAccountManageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
@@ -18,6 +21,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -49,15 +53,6 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
 
     @Value("hyjf.bank.bankcode")
     private String bankBankCode;
-
-    @Autowired
-    AccountMapper accountMapper;
-
-    @Autowired
-    AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
-    @Autowired
-    AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
 
     @Override
     public Integer updateAccount(AccountVO accountVO) {
@@ -119,7 +114,6 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         }
         return msg;
     }
-
 
 
     /**
@@ -493,5 +487,48 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             return listAccount.get(0);
         }
         return null;
+    }
+
+
+    @Override
+    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+        // 部门
+        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeSrch())) {
+            if (bankAccountManageRequest.getCombotreeSrch().contains(StringPool.COMMA)) {
+                String[] list = bankAccountManageRequest.getCombotreeSrch().split(StringPool.COMMA);
+                bankAccountManageRequest.setCombotreeListSrch(list);
+            } else {
+                bankAccountManageRequest.setCombotreeListSrch(new String[]{bankAccountManageRequest.getCombotreeSrch()});
+            }
+        }
+        Integer accountCount = null;
+
+        // 为了优化检索查询，判断参数是否全为空，为空不进行带join count
+        if (checkFormAllBlank(bankAccountManageRequest)) {
+            accountCount = bankAccountManageCustomizeMapper.queryAccountCountAll(bankAccountManageRequest);
+        } else {
+            accountCount = bankAccountManageCustomizeMapper.queryAccountCount(bankAccountManageRequest);
+        }
+        return accountCount;
+    }
+
+    @Override
+    public List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+        // 为了优化检索查询，判断参数是否全为空，为空不进行带join count
+        if (checkFormAllBlank(bankAccountManageRequest)) {
+            bankAccountManageRequest.setInitQuery(1);
+        }
+        List<BankAccountManageCustomize> accountInfos = bankAccountManageCustomizeMapper.queryAccountInfos(bankAccountManageRequest);
+        return accountInfos;
+    }
+
+    private boolean checkFormAllBlank(BankAccountManageRequest bankAccountManageRequest) {
+        if (StringUtils.isBlank(bankAccountManageRequest.getUserNameSrch())
+                && StringUtils.isBlank(bankAccountManageRequest.getCombotreeSrch())
+                && StringUtils.isBlank(bankAccountManageRequest.getAccountSrch())
+                && StringUtils.isBlank(bankAccountManageRequest.getVipSrch())) {
+            return true;
+        }
+        return false;
     }
 }

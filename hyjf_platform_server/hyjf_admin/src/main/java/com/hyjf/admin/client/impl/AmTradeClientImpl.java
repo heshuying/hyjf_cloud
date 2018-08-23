@@ -5526,4 +5526,49 @@ public class AmTradeClientImpl implements AmTradeClient {
         NifaReportLogResponse response = restTemplate.postForEntity(url,request,NifaReportLogResponse.class).getBody();
         return response;
     }
+
+    /**
+     * 行账户管理页面查询件数
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bankAccountManage/queryAccountCount";
+        Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 账户管理页面查询列表
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bankAccountManage/queryAccountInfos";
+        BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 资金明细（列表）
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bankAccountManage/queryAccountDetails";
+        BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
