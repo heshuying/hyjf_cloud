@@ -64,7 +64,7 @@ public class ContentArticleController {
         ContentArticleResponse response = new ContentArticleResponse();
         int totalPage = contentArticleService.getNoticeListCount(request.getNoticeType());
         if (totalPage > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), totalPage, request.getPageSize());
+            Paginator paginator = new Paginator(request.getCurrPage(), totalPage, request.getPageSize());
             List<ContentArticle> list = contentArticleService.searchNoticeList(request.getNoticeType(),paginator.getOffset(),paginator.getLimit());
             if (!CollectionUtils.isEmpty(list)) {
                 List<ContentArticleVO> result = CommonUtils.convertBeanList(list, ContentArticleVO.class);
