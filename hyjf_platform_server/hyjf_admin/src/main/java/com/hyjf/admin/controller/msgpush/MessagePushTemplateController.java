@@ -233,8 +233,7 @@ public class MessagePushTemplateController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
         }
         return new AdminResult<>(response);

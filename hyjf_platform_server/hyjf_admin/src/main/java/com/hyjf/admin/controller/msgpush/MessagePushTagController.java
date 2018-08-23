@@ -17,6 +17,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -136,7 +137,7 @@ public class MessagePushTagController extends BaseController {
         return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "修改状态", notes = "修改装态")
+    @ApiOperation(value = "修改状态", notes = "修改状态")
     @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
     public AdminResult updateStatus(@RequestParam Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
@@ -163,7 +164,10 @@ public class MessagePushTagController extends BaseController {
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
     public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
-        Integer id = request.getId();
+        Integer id = 0;
+        if (request.getId() != null) {
+            id = request.getId();
+        }
         String tagCode = request.getTagCode();
         MessagePushTagResponse response = messagePushTagService.countByTagCode(id, tagCode);
         if (response == null) {
@@ -173,8 +177,7 @@ public class MessagePushTagController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
         }
         return new AdminResult<>(response);
