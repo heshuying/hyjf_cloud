@@ -125,7 +125,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "网站公告列表", notes = "网站公告列表")
-	@GetMapping("/getNoticeListPage")
+	@PostMapping("/getNoticeListPage")
 	public WebResult<Map<String, Object>> getNoticeListPage(@RequestBody BasePage request) {
 		logger.info("web端获取网站公告列表数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();

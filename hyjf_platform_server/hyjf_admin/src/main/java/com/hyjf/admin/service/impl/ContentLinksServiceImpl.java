@@ -3,16 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmConfigClient;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.beans.request.ContentLinksRequestBean;
-import com.hyjf.admin.client.ContentLinsClinet;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.ContentLinksService;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.vo.config.LinkVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author fuqiang
@@ -31,6 +29,11 @@ public class ContentLinksServiceImpl implements ContentLinksService {
     @Override
     public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
         return amConfigClient.insertAction(requestBean);
+    }
+
+    @Override
+    public LinkResponse infoInfoAction(ContentLinksRequestBean requestBean) {
+        return amConfigClient.infoInfoAction(requestBean.getId());
     }
 
     @Override
