@@ -80,11 +80,11 @@ public class MessagePushNoticesController {
     @RequestMapping("/delete_push_list")
     public MessagePushNoticesResponse deleteRecordAction(@RequestBody MessagePushNoticesRequest request) {
         String ids = request.getIds();
-        List<String> recordList = JSONArray.parseArray(ids, String.class);
+        //List<String> recordList = JSONArray.parseArray(ids, String.class);
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
-        for (String id : recordList) {
-            messagePushNoticesService.deleteRecord(id);
-        }
+       // for (String id : recordList) {
+        messagePushNoticesService.deleteRecord(ids);
+       //}
         response.setRtn(Response.SUCCESS);
         return response;
     }
