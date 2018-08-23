@@ -395,6 +395,14 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
     }
 
+	/**
+	 * 查询千乐用户
+	 * @return
+	 */
+	@Override
+    public List<Integer> getQianleUser() {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
+    }
     /**
 	 * 获取渠道用户userid集合
 	 * @param type 0无主单 1有主单
