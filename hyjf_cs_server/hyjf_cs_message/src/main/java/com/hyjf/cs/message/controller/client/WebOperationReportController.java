@@ -5,6 +5,7 @@ package com.hyjf.cs.message.controller.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
+import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author tanyy
@@ -29,7 +32,7 @@ public class WebOperationReportController extends BaseController {
 	private OperationReportService operationReportService;
 
 	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表")
-	@PostMapping("/reportList")
+	@GetMapping("/reportList")
 	public WebResult<Object> listByRelease(@RequestParam(value = "releaseFlag",required = false) Integer releaseFlag,
 										   @RequestParam(value = "paginatorPage",required = false,defaultValue = "0") Integer paginatorPage) {
 		WebResult result = new WebResult();
@@ -37,9 +40,12 @@ public class WebOperationReportController extends BaseController {
 		request.setIsRelease(releaseFlag);
 		request.setCurrPage(paginatorPage);
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
-		if(response.get("success")=="success"){
+		if("success".equals(response.get("success"))){
 			result.setData(response.get("recordList"));
-		}
+		}else{
+            result.setStatus("1");
+            result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
+        }
 		return result;
 
 	}

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -15,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,11 +50,13 @@ public class ApiRegisterController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public ApiResult<Map<String,Object>> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
-        logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
+    public ApiResult<Map<String,Object>> register(@RequestBody UserRegisterRequestBean userRegisterRequestBean, HttpServletRequest request) {
+        logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(userRegisterRequestBean));
         ApiResult<Map<String,Object>> result = new ApiResult<Map<String,Object>>();
         Map<String,Object> resultMap = new HashMap<>();
-        registService.apiCheckParam(registerRequest);
+        RegisterRequest registerRequest = new RegisterRequest();
+        BeanUtils.copyProperties(userRegisterRequestBean,registerRequest);
+        registerRequest = registService.apiCheckParam(userRegisterRequestBean,registerRequest);
         String ip =  GetCilentIP.getIpAddr(request);
         UserVO userVO = registService.apiRegister(registerRequest,ip);
         if (userVO != null) {

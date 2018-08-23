@@ -42,7 +42,7 @@ public class MessagePushNoticesController {
     @RequestMapping("/message_push_list")
     public MessagePushNoticesResponse selectMessagePushList(
             @RequestBody MessagePushNoticesRequest request) {
-         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
+        MessagePushNoticesResponse response = new MessagePushNoticesResponse();
         Integer count = messagePushNoticesService.getRecordCount(request);
         if (count > 0) {
             Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
