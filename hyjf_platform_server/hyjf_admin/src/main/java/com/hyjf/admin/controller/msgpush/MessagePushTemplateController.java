@@ -4,9 +4,11 @@
 package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
@@ -46,7 +48,7 @@ public class MessagePushTemplateController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
     @Autowired
-    private ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -254,16 +256,14 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        MessagePushTemplateResponse templateResponse = new MessagePushTemplateResponse();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                templateResponse.setUploadFileImagePath(s);
-                return new AdminResult<>(response);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
