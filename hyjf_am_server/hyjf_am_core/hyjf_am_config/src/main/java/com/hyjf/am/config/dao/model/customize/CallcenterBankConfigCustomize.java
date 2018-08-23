@@ -15,25 +15,25 @@ public class CallcenterBankConfigCustomize implements Serializable {
 	// 主键
 	private Integer id;
 	// 银行名称
-	private Integer bankName;
+	private String bankName;
 	// 银行代号
-	private Integer bankCode;
+	private String bankCode;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getBankName() {
+	public String getBankName() {
 		return bankName;
 	}
-	public void setBankName(Integer bankName) {
+	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
-	public Integer getBankCode() {
+	public String getBankCode() {
 		return bankCode;
 	}
-	public void setBankCode(Integer bankCode) {
+	public void setBankCode(String bankCode) {
 		this.bankCode = bankCode;
 	}
 }
