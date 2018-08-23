@@ -24,7 +24,8 @@ public class DataSearchServiceImpl implements DataSearchService {
 
     @Override
     public List<DataSearchCustomizeVO> findDataList(DataSearchRequest dataSearchRequest) {
-
+        List<Integer> qianleUser = amUserClient.getQianleUser();
+        amTradeClient.querySanList(dataSearchRequest);
         return null;
     }
 }

@@ -153,10 +153,12 @@ public class HjhPlanAssetVO extends BaseVO implements Serializable {
 
     //所属行业
     private String industryInvolved;
-
+    //企业注册地址
     private String registrationAddress;
-
+    //企业注册编码
     private String corporateCode;
+    //借款人地址
+    private String address;
 
     public String getRegistrationAddress() {
         return registrationAddress;
@@ -684,6 +686,14 @@ public class HjhPlanAssetVO extends BaseVO implements Serializable {
 
     public void setIsComplaint(String isComplaint) {
         this.isComplaint = isComplaint == null ? null : isComplaint.trim();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getIsPunished() {
