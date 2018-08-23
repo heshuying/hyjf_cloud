@@ -479,5 +479,8 @@ public class AutoMapper {
     @Resource
     protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
 
+    @Resource
+    protected UnderLineRechargeMapper underLineRechargeMapper;
+
 }
 

@@ -63,6 +63,9 @@ public class SystemConfig {
      */
     @Value("${hyjf.alerm.email}")
     private String hyjfAlertEmail;
+    
+    @Value("${hyjf.web.host}")
+    private String webHost;
 
 
     public String getBankInstcode() {
@@ -199,5 +202,13 @@ public class SystemConfig {
 
     public void setHyjfAlertEmail(String hyjfAlertEmail) {
         this.hyjfAlertEmail = hyjfAlertEmail;
+    }
+
+    public String getWebHost() {
+        return webHost;
+    }
+
+    public void setWebHost(String webHost) {
+        this.webHost = webHost;
     }
 }

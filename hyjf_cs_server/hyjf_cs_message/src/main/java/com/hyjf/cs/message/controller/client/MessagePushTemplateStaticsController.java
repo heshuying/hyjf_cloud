@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushTemplateStaticsController, v0.1 2018/8/14 14:49
  */
+@RestController
 @RequestMapping("/cs-message/messagepush_template_statics")
 public class MessagePushTemplateStaticsController extends BaseController {
 	@Autowired
