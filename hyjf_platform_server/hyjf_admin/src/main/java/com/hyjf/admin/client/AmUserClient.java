@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
@@ -42,7 +43,6 @@ public interface AmUserClient {
      * @auth sunpeikai
      */
     List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId);
-
     /**
      * 根据userId查询用户信息
      *
@@ -1039,7 +1039,7 @@ public interface AmUserClient {
      * @return
      */
     List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
-    
+
 	/**
      * 获取用户账户信息byaccountId
      * @auth libin
@@ -1085,4 +1085,68 @@ public interface AmUserClient {
      * @return
      */
     AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId);
+
+    /**
+     * 通过手机号和身份证查询掉单信息
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param mobile，idcard
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard );
+
+    /**
+     * 通过手机号和身份证查询用户信息
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param request
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request);
+
+    /**
+     * 根据订单号查询用户的开户记录
+     * @author Zha Daojian
+     * @date 2018/8/21 13:54
+     * @param orderId
+     * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+     **/
+    BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String  orderId);
+
+    /**
+     * 删除用户开户日志
+    * @author Zha Daojian
+    * @date 2018/8/22 11:30
+    * @param userId
+    * @return java.lang.Boolean
+    **/
+    Boolean deleteBankOpenAccountLogByUserId(Integer  userId);
+
+    /**
+     * 查询返回的电子账号是否已开户
+    * @author Zha Daojian
+    * @date 2018/8/22 13:38
+    * @param accountId
+    * @return java.lang.Boolean
+    **/
+    Boolean checkAccountByAccountId(String accountId);
+
+    /**
+     * 查询开户渠道
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
+     * @param userId
+     * @return java.lang.Boolean
+     **/
+    AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId);
+
+    /**
+     * 开户更新开户渠道统计开户时间
+     * @author Zha Daojian
+     * @date 2018/8/22 13:38
+     * @param appChannelStatisticsDetailVO
+     * @return java.lang.Boolean
+     **/
+    Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
+
 }

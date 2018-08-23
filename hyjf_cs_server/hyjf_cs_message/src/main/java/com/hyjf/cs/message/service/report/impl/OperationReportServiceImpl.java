@@ -71,9 +71,8 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		List<OperationReportVO> recordList = new ArrayList<>();
 		JSONObject response = new JSONObject();
 		if(request.getIsRelease()==null){
-			response.put("success", "success");
 			response.put("recordList", recordList);
-			response.put("releaseFlag", "发布状态为空");
+			response.put("error", "发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
@@ -187,8 +186,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.put("recordList", recordList);
 			response.put("success", "success");
 		} else {
-			response.put("success", "success");
-			response.put("countIsZero", "暂无任何数据");
+			response.put("error", "暂无任何数据");
 		}
 		return response;
 	}

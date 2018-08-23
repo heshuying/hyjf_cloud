@@ -10,12 +10,14 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.service.report.OperationReportService;
+import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,9 @@ public class WebOperationReportController extends BaseController {
 	@Autowired
 	private OperationReportService operationReportService;
 
+	@Autowired
+	private PlatDataStatisticsService platDataStatisticsService;
+
 	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表")
 	@GetMapping("/reportList")
 	public WebResult<Object> listByRelease(@RequestParam(value = "releaseFlag",required = false) Integer releaseFlag,
@@ -40,9 +45,16 @@ public class WebOperationReportController extends BaseController {
 		request.setIsRelease(releaseFlag);
 		request.setCurrPage(paginatorPage);
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
-		if(response.get("success").equals("success")){
-			result.setData(response.get("recordList"));
-		}
+		BigDecimal sumTender = platDataStatisticsService.selectTotalInvest().setScale(2, BigDecimal.ROUND_DOWN);
+		BigDecimal sumProfit = platDataStatisticsService.selectTotalInterest().setScale(2, BigDecimal.ROUND_DOWN);
+		response.put("sumTender",sumTender);
+		response.put("sumProfit",sumProfit);
+		if("success".equals(response.get("success"))){
+			result.setData(response);
+		}else{
+            result.setStatus("1");
+            result.setStatusDesc(response.get("error")==null?"失败":response.get("error").toString());
+        }
 		return result;
 
 	}
