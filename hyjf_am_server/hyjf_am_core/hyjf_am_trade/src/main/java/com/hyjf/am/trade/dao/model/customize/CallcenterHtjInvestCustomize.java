@@ -44,6 +44,7 @@ public class CallcenterHtjInvestCustomize implements Serializable {
      * 加入时间 
      */
     private String createTime;
+
     public String getRefereeUserName() {
         return refereeUserName;
     }
