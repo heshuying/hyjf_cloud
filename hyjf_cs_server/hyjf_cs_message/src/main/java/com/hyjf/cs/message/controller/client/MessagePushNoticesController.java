@@ -51,6 +51,7 @@ public class MessagePushNoticesController {
                 List<MessagePushMsgVO> voList = CommonUtils.convertBeanList(list,
                         MessagePushMsgVO.class);
                 response.setResultList(voList);
+                response.setRecordTotal(count);
             }
         }
         return response;
