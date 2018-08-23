@@ -252,4 +252,21 @@ public class CallCenterTradeController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 查询账户余额
+     * @author libin
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryAccountInfos", method = RequestMethod.POST)
+    public CallCenterBankAccountManageResponse queryAccountInfos(@RequestBody @Valid CallCenterBankAccountManageRequest request){
+        CallCenterBankAccountManageResponse callCenterBankAccountManageResponse = new CallCenterBankAccountManageResponse();
+        List<CallCenterBankAccountManageCustomize> list = callCenterTradeService.queryAccountInfos(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<CallCenterBankAccountManageVO> callCenterBankAccountManageVO = CommonUtils.convertBeanList(list,CallCenterBankAccountManageVO.class);
+            callCenterBankAccountManageResponse.setResultList(callCenterBankAccountManageVO);
+        }
+        return callCenterBankAccountManageResponse;
+    }
 }
