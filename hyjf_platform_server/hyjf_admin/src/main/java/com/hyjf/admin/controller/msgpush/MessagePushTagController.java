@@ -179,6 +179,7 @@ public class MessagePushTagController extends BaseController {
         if (response.getCount() > 0) {
             String message = "标签重复";
             response.setMessage(message);
+            return new AdminResult(FAIL,response.getMessage());
         }
         return new AdminResult<>(response);
     }
