@@ -40,11 +40,8 @@ public class WebOperationReportController extends BaseController {
 		request.setIsRelease(releaseFlag);
 		request.setCurrPage(paginatorPage);
 		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
-		if(response.get("success")=="success"){
+		if(response.get("success").equals("success")){
 			result.setData(response.get("recordList"));
-		}else{
-			List<OperationReportVO> recordList = new ArrayList<>();
-			result.setData(recordList);
 		}
 		return result;
 
