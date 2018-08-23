@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Document(collection = "ht_message_push_history")
 public class MessagePushMsgHistory implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -84,11 +84,11 @@ public class MessagePushMsgHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
