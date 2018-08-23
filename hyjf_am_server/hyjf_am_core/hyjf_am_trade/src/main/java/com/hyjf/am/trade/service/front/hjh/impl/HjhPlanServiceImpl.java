@@ -103,7 +103,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      */
     @Override
     public int insertHJHPlanAccede(HjhAccedeVO accedeVO, Account userAccount) {
-        TenderRequest request = null;
+        TenderRequest request = accedeVO.getRequest();
         HjhAccede planAccede = new HjhAccede();
         BeanUtils.copyProperties(accedeVO, planAccede);
         // 插入投资记录

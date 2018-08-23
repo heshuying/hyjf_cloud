@@ -272,7 +272,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                     AdminBankAccountCheckCustomizeVO customize = null;
                     if (StringUtils.isNotBlank(bankSeqNo) && ("O".equals(orFlage) || "0".equals(orFlage))) {
                         //判断是否是线下充值
-                        boolean isType = isRechargeTransType(bean.getTranType());
+                        boolean isType = getIsRechargeTransType(bean.getTranType());
                         if (isType) {
                             customize = this.adminBankAccountCheckCustomizeMapper.queryAccountDeatilByBankSeqNo(bankSeqNo);
                             if (customize != null) {
@@ -304,7 +304,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @param tranType
      * @return
      */
-    private boolean isRechargeTransType(String tranType) {
+    private boolean isRechargeTransTypeOld(String tranType) {
         if (BankCallConstant.TRANS_TYPE_7610.equals(tranType) || BankCallConstant.TRANS_TYPE_7611.equals(tranType) || BankCallConstant.TRANS_TYPE_7612.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7613.equals(tranType) || BankCallConstant.TRANS_TYPE_7617.equals(tranType) || BankCallConstant.TRANS_TYPE_7820.equals(tranType)
                 || BankCallConstant.TRANS_TYPE_7821.equals(tranType) || BankCallConstant.TRANS_TYPE_7823.equals(tranType)

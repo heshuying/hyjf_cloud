@@ -22,7 +22,7 @@ public interface AppFindService extends BaseMarketService {
      * @param params
      * @return
      */
-    Integer countContentArticleByType(Map<String,Object> params);
+    Integer countContentArticleByType();
 
     /**
      * 查询文章列表

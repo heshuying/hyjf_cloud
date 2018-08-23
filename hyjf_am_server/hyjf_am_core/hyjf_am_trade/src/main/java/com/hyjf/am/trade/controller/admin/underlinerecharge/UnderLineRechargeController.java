@@ -32,6 +32,11 @@ public class UnderLineRechargeController {
     @Autowired
     private UnderLineRechargeService underLineRechargeService;
 
+    /**
+     * 获取列表,后台使用.
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/selectUnderLineList", method = RequestMethod.POST)
     public UnderLineRechargeResponse selectUnderLineList(@RequestBody UnderLineRechargeRequest request){
         UnderLineRechargeResponse response = new UnderLineRechargeResponse();
@@ -54,6 +59,25 @@ public class UnderLineRechargeController {
         }
         return response;
     }
+
+    /**
+     * 获取列表,同步数据时使用
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectUnderLineListBySyn", method = RequestMethod.POST)
+    public UnderLineRechargeResponse selectUnderLineListBySyn(@RequestBody UnderLineRechargeRequest request){
+        UnderLineRechargeResponse response = new UnderLineRechargeResponse();
+
+        List<UnderLineRecharge> underLineRechargeList = this.underLineRechargeService.getUnderLineRechargeListByCode(request);
+
+        if (!CollectionUtils.isEmpty(underLineRechargeList)){
+            List<UnderLineRechargeVO> underLineRechargeVOList = CommonUtils.convertBeanList(underLineRechargeList, UnderLineRechargeVO.class);
+            response.setResultList(underLineRechargeVOList);
+        }
+        return response;
+    }
+
     /**
      * 数据写入
      * @param request
