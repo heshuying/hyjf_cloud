@@ -3,6 +3,12 @@
  */
 package com.hyjf.am.config.controller.admin;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Answer;
 import com.hyjf.am.config.dao.model.auto.Question;
@@ -13,11 +19,6 @@ import com.hyjf.am.response.config.QuestionResponse;
 import com.hyjf.am.vo.config.AnswerVO;
 import com.hyjf.am.vo.config.QuestionVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author nxl

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
+import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoRecordMessageProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -25,6 +26,7 @@ import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -49,6 +51,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public static final String BORROW_LOG_DEL = "删除";
     @Resource
     private AutoIssueMessageProducer autoIssueMessageProducer;
+    @Autowired
+    private AutoRecordMessageProducer autoRecordMessageProducer;
 //    @Autowired
 //    @Qualifier("myAmqpTemplate")
 //    private RabbitTemplate rabbitTemplate;
@@ -844,7 +848,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
      * 推送消息到MQ
      */
-    public void sendToMQ(BorrowCommonBean borrowBean,String routingKey){
+//    public void sendToMQ(BorrowCommonBean borrowBean,String routingKey){
 		// 加入到消息队列
 //        Map<String, String> params = new HashMap<String, String>();
 //        params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -852,7 +856,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //        params.put("instCode", borrowBean.getInstCode());
 //        //RabbitMQConstants.EXCHANGES_COUPON
 //        rabbitTemplate.convertAndSend("hyjf-direct-exchange", routingKey, JSONObject.toJSONString(params));
-	}
+//	}
 
 	/**
 	 * 借款表更新
@@ -5547,6 +5551,14 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			for (int i = 0; i < list.size(); i++) {
 				// TODO 三方资产录标的有发送MQ
 //				this.sendToMQ(list.get(i).getBorrowNid(), RabbitMQConstants.ROUTINGKEY_BORROW_RECORD);
+                logger.info(list.get(i).getBorrowNid()+" 发送自动备案消息到MQ ");
+                try {
+                    JSONObject params = new JSONObject();
+                    params.put("borrowNid", list.get(i).getBorrowNid());
+                    autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                } catch (MQException e) {
+                    logger.error("发送【自动备案消息到MQ】MQ失败...");
+                }
 				logger.info("标的编号：" + list.get(i).getBorrowNid()+ " 已发送到自动备案消息队列！");
 			}
 		}

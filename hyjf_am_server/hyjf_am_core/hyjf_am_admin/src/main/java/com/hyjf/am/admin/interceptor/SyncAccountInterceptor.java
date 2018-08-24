@@ -1,21 +1,26 @@
 package com.hyjf.am.admin.interceptor;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SyncAccountProducer;
-import com.hyjf.common.constants.MQConstant;
+import java.util.Properties;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.plugin.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Properties;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.SyncAccountProducer;
+import com.hyjf.common.constants.MQConstant;
 
 /**
  * 账户余额mybatis同步拦截器

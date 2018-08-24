@@ -1,9 +1,9 @@
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
-
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/19.

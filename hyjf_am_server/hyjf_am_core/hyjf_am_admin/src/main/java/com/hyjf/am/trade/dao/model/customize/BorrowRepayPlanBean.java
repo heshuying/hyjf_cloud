@@ -1,11 +1,10 @@
 package com.hyjf.am.trade.dao.model.customize;
 
+import java.io.Serializable;
+import java.util.List;
+
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author pangchengchao

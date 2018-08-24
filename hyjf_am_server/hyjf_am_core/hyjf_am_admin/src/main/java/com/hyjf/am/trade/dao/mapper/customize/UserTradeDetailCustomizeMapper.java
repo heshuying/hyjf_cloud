@@ -1,12 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

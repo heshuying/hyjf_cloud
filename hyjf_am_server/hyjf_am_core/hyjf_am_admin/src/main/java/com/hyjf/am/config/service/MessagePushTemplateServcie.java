@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
-
-import java.util.List;
 
 /**
  * @author fuqiang

@@ -1,12 +1,13 @@
 package com.hyjf.am.trade.service.admin.productcenter.hjhcredit.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.trade.dao.model.customize.AdminHjhDebtCreditCustomize;
 import com.hyjf.am.trade.service.admin.productcenter.hjhcredit.AdminHjhDebtCreditService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther:yangchangwei

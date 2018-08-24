@@ -11,9 +11,9 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.common.util.AsteriskProcessUtil;
-
 import java.io.Serializable;
+
+import com.hyjf.common.util.AsteriskProcessUtil;
 
 /**
  * @author 王坤

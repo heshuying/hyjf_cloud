@@ -1,5 +1,15 @@
 package com.hyjf.am.market.controller.admin.content;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.market.service.ContentAdsService;
 import com.hyjf.am.response.AdminResponse;
@@ -9,15 +19,6 @@ import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.vo.admin.AdsTypeVO;
 import com.hyjf.am.vo.config.ContentAdsBeanVO;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 内容中心-广告管理

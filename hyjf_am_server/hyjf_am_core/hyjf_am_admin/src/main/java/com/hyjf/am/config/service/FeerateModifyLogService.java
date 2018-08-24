@@ -1,7 +1,8 @@
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
 
 /**
  * @author xiehuili on 2018/8/14.

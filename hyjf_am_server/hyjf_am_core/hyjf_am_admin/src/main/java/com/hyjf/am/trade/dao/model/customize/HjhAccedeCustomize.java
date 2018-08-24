@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-
 import java.io.Serializable;
+
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 
 /**
  * @author liubin

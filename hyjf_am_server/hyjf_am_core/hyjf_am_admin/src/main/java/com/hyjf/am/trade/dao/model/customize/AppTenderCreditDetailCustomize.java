@@ -11,11 +11,12 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author Administrator

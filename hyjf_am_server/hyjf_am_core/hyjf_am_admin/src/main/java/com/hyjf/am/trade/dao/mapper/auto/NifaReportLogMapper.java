@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.NifaReportLog;
 import com.hyjf.am.trade.dao.model.auto.NifaReportLogExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface NifaReportLogMapper {
     int countByExample(NifaReportLogExample example);
