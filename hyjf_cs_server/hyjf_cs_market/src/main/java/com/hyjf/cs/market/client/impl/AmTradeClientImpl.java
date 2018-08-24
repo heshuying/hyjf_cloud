@@ -2,6 +2,7 @@ package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
@@ -12,6 +13,7 @@ import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -166,7 +168,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * @return
 	 */
     @Override
-    public List<DataSearchCustomizeVO> querySanList(DataSearchRequest dataSearchRequest) {
-        return null;
-    }
+    public DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest) {
+		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/querysanlist", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+	}
+
 }

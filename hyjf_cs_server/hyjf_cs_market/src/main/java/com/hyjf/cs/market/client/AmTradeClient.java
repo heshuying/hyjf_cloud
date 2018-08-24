@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
@@ -160,5 +161,5 @@ public interface AmTradeClient {
 	 * 查询千乐渠道散标数据
 	 * @return
 	 */
-	List<DataSearchCustomizeVO> querySanList( DataSearchRequest dataSearchRequest);
+	DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
 }

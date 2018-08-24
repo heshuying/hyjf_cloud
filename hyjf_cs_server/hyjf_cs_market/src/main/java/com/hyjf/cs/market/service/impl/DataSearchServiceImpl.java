@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.service.impl;
 
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.cs.market.client.AmTradeClient;
@@ -25,7 +26,8 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public List<DataSearchCustomizeVO> findDataList(DataSearchRequest dataSearchRequest) {
         List<Integer> qianleUser = amUserClient.getQianleUser();
-        amTradeClient.querySanList(dataSearchRequest);
+        dataSearchRequest.setUserIds(qianleUser);
+        DataSearchCustomizeResponse dataSearchCustomizeResponse = amTradeClient.querySanList(dataSearchRequest);
         return null;
     }
 }

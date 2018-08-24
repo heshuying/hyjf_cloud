@@ -35,10 +35,11 @@ public class DataSearchController {
      */
 
     @ApiOperation(value = "千乐数据查询", notes = "千乐数据查询")
-    @GetMapping("/getQianleList")
+    @GetMapping("/querysanlist")
     public JSONObject getQianleList(@RequestBody DataSearchBean dataSearchBean){
         JSONObject jsonObject = new JSONObject();
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(dataSearchBean, DataSearchRequest.class);
+
 
         List<DataSearchCustomizeVO> dataList = dataSearchService.findDataList(dataSearchRequest);
         return jsonObject;
