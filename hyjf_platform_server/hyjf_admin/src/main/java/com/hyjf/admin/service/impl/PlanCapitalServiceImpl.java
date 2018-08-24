@@ -19,8 +19,6 @@ import java.util.List;
 @Service
 public class PlanCapitalServiceImpl implements PlanCapitalService {
 
-    @Autowired
-    private AmTradeClient amTradeClient;
 
     @Autowired
     private CsMessageClient csMessageClient;
@@ -32,9 +30,9 @@ public class PlanCapitalServiceImpl implements PlanCapitalService {
     }
 
     @Override
-    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
-        List<HjhPlanCapitalVO> listResult = this.csMessageClient.getPlanCapitalList(hjhPlanCapitalRequest);
-        return listResult;
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
+        HjhPlanCapitalResponse planCapitalResponse = this.csMessageClient.getPlanCapitalList(hjhPlanCapitalRequest);
+        return planCapitalResponse;
     }
 }
 

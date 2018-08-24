@@ -1,5 +1,6 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -23,5 +24,5 @@ public interface PlanCapitalService {
      * @param hjhPlanCapitalRequest
      * @return
      */
-    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
+    HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 }

@@ -161,7 +161,7 @@ public interface CsMessageClient {
      * @return
      * @Author : huanghui
      */
-    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
+    HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
     /**
      * 获取消息模板统计报表
