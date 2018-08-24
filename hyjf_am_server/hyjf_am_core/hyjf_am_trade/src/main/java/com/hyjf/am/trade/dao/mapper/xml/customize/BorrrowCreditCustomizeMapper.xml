@@ -431,7 +431,7 @@
         SELECT
         SUM(hhdct.assign_capital) AS sumAccount
         FROM
-        hyjf_hjh_debt_credit_tender hhdct
+        ht_hjh_debt_credit_tender hhdct
 
         WHERE   hhdct.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 
@@ -444,9 +444,9 @@
         0 as vipLevel,
         SUBSTRING(FORMAT(hhdct.assign_capital,4),1,LENGTH(FORMAT(hhdct.assign_capital,4))-2) AS account,
         hhdct.client AS client,
-        hhdct.create_time  AS undertakeTime
+        date_format( hhdct.create_time,'%Y-%c-%d %H:%i:%s')  AS undertakeTime
         FROM
-        ht_debt_credit_tender hhdct
+        ht_hjh_debt_credit_tender hhdct
         LEFT JOIN ht_r_user hydu ON hhdct.user_id = hydu.user_id
 
         <where>
