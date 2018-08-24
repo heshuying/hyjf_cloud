@@ -19,4 +19,11 @@ public interface MessagePushTemplateStaticsService {
      * @return
      */
     List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request);
+
+    /**
+     * 查詢數量
+     * @param request
+     * @return
+     */
+    int selectCount(MessagePushTemplateStaticsRequest request);
 }

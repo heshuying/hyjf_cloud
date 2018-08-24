@@ -90,7 +90,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 	}
 
 	@Override
-	public MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId) {
+	public MessagePushMsgHistory getMsgPushMsgHistoryById(String msgId) {
 		return msgHistoryDao.getMsgPushMsgHistoryById(msgId);
 	}
 
