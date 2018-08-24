@@ -380,6 +380,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
 	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
+	ERR_BIND_REPEAT("1","重复绑定"),
 	ERR_DIC_NO_MATCH("ENM000001","字典表中没有值={0}的平台"),
 
 	// 枚举终结
