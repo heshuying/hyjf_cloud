@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -168,7 +169,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);
             result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
-            BanksConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
+            JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                 result.setLogo(systemConfig.getWebHost() + banksConfig.getBankIcon());
             } else {
