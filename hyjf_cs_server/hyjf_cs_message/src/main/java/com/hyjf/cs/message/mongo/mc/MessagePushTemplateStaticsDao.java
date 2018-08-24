@@ -3,16 +3,16 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
-import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 
 /**
  * @author fuqiang
@@ -66,13 +66,9 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
-		if (StringUtils.isNotBlank(request.getStartDateSrch())) {
-			Integer startTime = GetDate.dateString2Timestamp(request.getStartDateSrch());
-			criteria.and("createTime").gte(startTime);
-		}
-		if (StringUtils.isNotBlank(request.getEndDateSrch())) {
-			Integer endTime = GetDate.dateString2Timestamp(request.getEndDateSrch());
-			criteria.and("createTime").lte(endTime);
+		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
+			criteria.and("createTime").gte(request.getStartDateSrch() + " 00:00:00")
+					.lte(request.getEndDateSrch() + " 23:59:59");
 		}
 		if (StringUtils.isNotBlank(request.getMsgTitleSrch())) {
 			criteria.and("msgTitle").is(request.getMsgTitleSrch());
