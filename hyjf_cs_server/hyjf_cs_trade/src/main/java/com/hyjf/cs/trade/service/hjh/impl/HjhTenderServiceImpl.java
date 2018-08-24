@@ -373,6 +373,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 优惠券ID
             result.put("couponGrantId", cuc.getId());
             result.put("projectType",cuc.getProjectType());
+        }else{
+            // 优惠券类别
+            result.put("couponType", "");
+            // 优惠券额度
+            result.put("couponQuota", "");
+            // 优惠券ID
+            result.put("couponGrantId", "");
+            result.put("projectType","");
         }
         return result;
 
