@@ -793,4 +793,37 @@ public class UserController extends BaseController {
         return userService.getQianleUser();
     }
 
+    /**
+     * 插入ht_hjh_user_auth表
+     * @param hjhUserAuthRequest
+     */
+    @RequestMapping("/insertHjhUserAuth")
+    public int insertHjhUserAuth(@RequestBody HjhUserAuthRequest hjhUserAuthRequest) {
+        logger.info("insertHjhUserAuth:" + JSONObject.toJSONString(hjhUserAuthRequest));
+        HjhUserAuth hjhUserAuth = new HjhUserAuth();
+        BeanUtils.copyProperties(hjhUserAuthRequest,hjhUserAuth);
+        return userService.insertSelective(hjhUserAuth);
+    }
+    /**
+     * 更新ht_hjh_user_auth表
+     * @param hjhUserAuthRequest
+     */
+    @RequestMapping("/updateHjhUserAuth")
+    public int updateHjhUserAuth(@RequestBody HjhUserAuthRequest hjhUserAuthRequest) {
+        logger.info("updateHjhUserAuth:" + JSONObject.toJSONString(hjhUserAuthRequest));
+        HjhUserAuth hjhUserAuth = new HjhUserAuth();
+        BeanUtils.copyProperties(hjhUserAuthRequest,hjhUserAuth);
+        return userService.updateByPrimaryKeySelective(hjhUserAuth);
+    }
+    /**
+     * 更新 ht_hjh_user_auth_log 表
+     * @param hjhUserAuthLogRequest
+     */
+    @RequestMapping("/updateHjhUserAuthLog")
+    public int updateHjhUserAuthLog(@RequestBody HjhUserAuthLogRequest hjhUserAuthLogRequest) {
+        logger.info("updateHjhUserAuthLog:" + JSONObject.toJSONString(hjhUserAuthLogRequest));
+        HjhUserAuthLog hjhUserAuth = new HjhUserAuthLog();
+        BeanUtils.copyProperties(hjhUserAuthLogRequest,hjhUserAuth);
+        return userService.updateHjhUserAuthLog(hjhUserAuth);
+    }
 }
