@@ -427,7 +427,7 @@
         WHERE  ct.credit_nid = #{creditNid}
     </select>
 
-    <select id="sumUnderTakeAmount" resultType="int">
+    <select id="sumUnderTakeAmount" resultType="String">
         SELECT
         SUM(hhdct.assign_capital) AS sumAccount
         FROM

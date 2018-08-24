@@ -29,7 +29,7 @@ public interface BorrowCreditCustomizeMapper {
 
     BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
 
-    int sumUnderTakeAmount(String borrowNid);
+    String sumUnderTakeAmount(String borrowNid);
 
     List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> map);
 }
