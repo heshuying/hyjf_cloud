@@ -265,10 +265,10 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "APP端-获取提现URL", notes = "获取提现URL")
     @ResponseBody
+    @ApiOperation(value = "APP端-获取提现URL", notes = "获取提现URL")
     @PostMapping("/getCashUrl")
-    public JSONObject getCashUrl(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
+    public JSONObject getCashUrl(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         // 版本号
         String version = request.getParameter("version");
@@ -280,6 +280,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         String randomString = request.getParameter("randomString");
         // 唯一标识
         String sign = request.getParameter("sign");
+        // 获取token
+        String token = request.getParameter("token");
         // order
         String order = request.getParameter("order");
         // card 银行卡号
