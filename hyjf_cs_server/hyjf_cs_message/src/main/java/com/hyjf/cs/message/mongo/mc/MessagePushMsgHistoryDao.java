@@ -117,8 +117,8 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 * @param msgId
 	 * @return
 	 */
-	public MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId) {
-		Query query = new Query(new Criteria().and("msgId").is(msgId));
+	public MessagePushMsgHistory getMsgPushMsgHistoryById(String msgId) {
+		Query query = new Query(new Criteria().and("id").is(msgId));
 		return mongoTemplate.findOne(query, MessagePushMsgHistory.class);
 	}
 

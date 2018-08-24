@@ -44,6 +44,9 @@ public class MessagePushTemplateStaticsController extends BaseController {
 					MessagePushTemplateStaticsVO.class);
 			response.setResultList(voList);
 		}
+		// 查询数量
+		int count = staticsService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 }
