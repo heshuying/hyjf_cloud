@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.controller.wechat.recharge;
 
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -92,7 +92,7 @@ public class WechatRechargeRuleController {
                 // 银行代码
                 resultVo.setCode("");
                 Integer bankId = bankCard.getBankId();
-                BanksConfigVO banksConfig = wechatRechargeRuleService.getBanksConfigByBankId(bankId);
+                JxBankConfigVO banksConfig = wechatRechargeRuleService.getBanksConfigByBankId(bankId);
                 if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                     resultVo.setLogo(systemConfig.getWechatHost()+ banksConfig.getBankIcon());
                 } else {

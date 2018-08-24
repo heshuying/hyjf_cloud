@@ -43,7 +43,7 @@ public interface AmConfigClient {
 	 * @Version v0.1
 	 * @Date 2018/6/5 15:13
 	 */
-	BanksConfigVO getBankNameByBankId(String bankId);
+	JxBankConfigVO getBankNameByBankId(String bankId);
 
     List<BanksConfigVO> getRechargeQuotaLimit();
 
@@ -56,7 +56,7 @@ public interface AmConfigClient {
 
 	/**
 	 * 取从某天开始推后的第一个工作日开始时间
-	 * @param somedate
+	 * @param somdate
 	 * @return
 	 */
 	Date getFirstWorkdateAfterSomedate(Date somdate);

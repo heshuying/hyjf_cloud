@@ -11,6 +11,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -952,7 +953,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }
 
     @Override
-    public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+    public JxBankConfigVO getBanksConfigByBankId(Integer bankId) {
         return amConfigClient.getBankNameByBankId(bankId+"");
     }
 

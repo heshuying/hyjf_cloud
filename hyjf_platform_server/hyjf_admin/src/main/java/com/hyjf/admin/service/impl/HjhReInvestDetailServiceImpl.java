@@ -2,11 +2,10 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.HjhReInvestDetailService;
-import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
+import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
+import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 资金计划 -> 复投原始标的 实现
@@ -18,14 +17,20 @@ public class HjhReInvestDetailServiceImpl implements HjhReInvestDetailService {
     @Autowired
     private AmTradeClient amTradeClient;
 
+    /**
+     * 废弃
+     * @param data
+     * @param planNid
+     * @return
+     */
     @Override
     public Integer countHjhReInvestDetailTotal(String data, String planNid) {
         return this.amTradeClient.getHjhReInvestDetailListCount(data, planNid);
     }
 
     @Override
-    public List<HjhReInvestDetailVO> hjhReInvestDetailList(String data, String planNid) {
-        List<HjhReInvestDetailVO> recoList = this.amTradeClient.getHjhReInvestDetailList(data, planNid);
+    public HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request) {
+        HjhReInvestDetailResponse recoList = this.amTradeClient.getHjhReInvestDetailList(request);
         return recoList;
     }
 }
