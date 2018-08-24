@@ -8,7 +8,6 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.MsgPushBean;
@@ -226,7 +225,7 @@ public class MessagePushController extends BaseController {
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		//更新记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		if(msgHistory != null){
 			//第一次阅读
 			if(msgHistory.getMsgReadCountAndroid() == 0 && msgHistory.getMsgReadCountIos() == 0){
@@ -258,15 +257,8 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
 		// 获取记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		ret.put("msgHistory", msgHistory);
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
