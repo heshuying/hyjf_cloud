@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
@@ -15,9 +14,7 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -181,21 +178,21 @@ public interface CsMessageClient {
      *
      * @return
      */
-    List<MessagePushErrorVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
+    List<MessagePushMsgHistoryVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
 
     /**
      * 获取标签列表
      *
      * @return
      */
-    List<MessagePushErrorVO> getTagList();
+    List<MessagePushTagVO> getTagList();
 
     /**
      * 获取单个信息
      *
      * @return
      */
-    MessagePushErrorVO getRecord(Integer id);
+    MessagePushMsgHistoryVO getRecord(Integer id);
 
     /**
      * 推送极光消息
@@ -203,14 +200,7 @@ public interface CsMessageClient {
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
-    void sendMessage(MessagePushErrorVO msg);
-
-    /**
-     * (条件)查询 APP消息推送 异常处理 列表
-     * @param request
-     * @return
-     */
-    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+    void sendMessage(MessagePushMsgHistoryVO msg);
 
     /**
      * 数据修改 APP消息推送 异常处理

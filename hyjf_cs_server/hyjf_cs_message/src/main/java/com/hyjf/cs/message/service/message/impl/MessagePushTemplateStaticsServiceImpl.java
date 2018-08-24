@@ -5,6 +5,7 @@ package com.hyjf.cs.message.service.message.impl;
 
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.mongo.mc.MessagePushTagDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import java.util.List;
 public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplateStaticsService {
 	@Autowired
 	private MessagePushTemplateStaticsDao staticsDao;
+	@Autowired
+	private MessagePushTagDao messagePushTagDao;
 
 	@Override
 	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
@@ -35,5 +38,10 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 			return list.size();
 		}
 		return 0;
+	}
+
+	@Override
+	public String selectTagName(String tagId) {
+		return messagePushTagDao.selectTagName(tagId);
 	}
 }

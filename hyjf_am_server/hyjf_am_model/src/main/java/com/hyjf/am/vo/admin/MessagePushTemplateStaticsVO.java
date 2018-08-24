@@ -14,7 +14,9 @@ public class MessagePushTemplateStaticsVO extends BaseVO {
 
     private Integer msgId;
 
-    private Integer tagId;
+    private String tagId;
+
+    private String tagName;
 
     private String msgTitle;
 
@@ -54,11 +56,11 @@ public class MessagePushTemplateStaticsVO extends BaseVO {
         this.msgId = msgId;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
@@ -140,5 +142,13 @@ public class MessagePushTemplateStaticsVO extends BaseVO {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 }

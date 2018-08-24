@@ -29,9 +29,12 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param clientPc
      * @param channelPc
      * @param ip
+     * @param retUrl
+     * @param bgRetUrl
+     * @param successfulUrl
      * @return
      */
-    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip);
+    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip, String retUrl, String bgRetUrl, String successfulUrl);
 
     /**
      * 提现银行同步调用数据处理
