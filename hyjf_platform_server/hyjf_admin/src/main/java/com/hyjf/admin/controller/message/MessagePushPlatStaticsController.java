@@ -39,6 +39,6 @@ public class MessagePushPlatStaticsController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult(response.getResultList());
+        return new AdminResult(response);
     }
 }
