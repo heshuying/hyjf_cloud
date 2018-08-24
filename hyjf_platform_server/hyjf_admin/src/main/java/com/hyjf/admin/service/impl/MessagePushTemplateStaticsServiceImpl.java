@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.am.response.admin.MessagePushTagResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.MessagePushTemplateStaticsService;
 import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
@@ -19,9 +21,16 @@ import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplateStaticsService {
 	@Autowired
 	private CsMessageClient csMessageClient;
+	@Autowired
+	private AmMarketClient amMarketClient;
 
 	@Override
 	public MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
 		return csMessageClient.selectTemplateStatics(request);
+	}
+
+	@Override
+	public MessagePushTagResponse getMsgTagList() {
+		return amMarketClient.getTagList();
 	}
 }
