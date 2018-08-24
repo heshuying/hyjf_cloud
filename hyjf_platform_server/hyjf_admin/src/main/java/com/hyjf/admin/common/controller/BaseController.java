@@ -4,8 +4,8 @@
 package com.hyjf.admin.common.controller;
 
 
-import com.hyjf.admin.common.enums.MsgEnum;
 import com.hyjf.admin.common.result.BaseResult;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.StringUtil;
 import org.slf4j.Logger;
