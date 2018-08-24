@@ -26,4 +26,11 @@ public interface MessagePushTemplateStaticsService {
      * @return
      */
     int selectCount(MessagePushTemplateStaticsRequest request);
+
+    /**
+     * 获取标签
+     * @param tagId
+     * @return
+     */
+    String selectTagName(String tagId);
 }
