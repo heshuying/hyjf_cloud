@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.resquest.user;
+package com.hyjf.cs.user.bean;
 
 import com.hyjf.am.vo.BaseVO;
 import io.swagger.annotations.ApiModel;
@@ -11,15 +11,14 @@ import java.io.Serializable;
 
 /**
  * @author: sunpeikai
- * @version: NmcfLoginRequest, v0.1 2018/8/23 10:46
+ * @version: NmcfLoginRequestBean, v0.1 2018/8/23 10:46
  */
 @ApiModel(value = "纳觅财富第三方用户自动登录请求参数")
-public class NmcfLoginRequest extends BaseVO implements Serializable {
+public class NmcfLoginRequestBean extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = -20545325472232432L;
 
     @ApiModelProperty(value = "当前时间戳")
-
     private String timestamp;
 
     @ApiModelProperty(value = "机构编号")

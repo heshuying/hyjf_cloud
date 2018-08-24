@@ -220,11 +220,12 @@ public class WebProjectListController extends BaseTradeController {
     /**
      * 计划详情标的组成：标的详情
      * @author zhangyk
+     * 原接口：com.hyjf.web.hjhdetail.HjhDetailController.searchProjectInvestList()
      * @date 2018/8/16 11:01
      */
     @ApiOperation(value = "计划详情标的组成：标的详情" , notes = "计划详情标的组成：标的详情")
     @PostMapping(value = "/hjh/getBorrowDetail", produces = "application/json; charset=utf-8")
-    public Object getPlanBorrowDetail(@RequestBody @Valid WebBorrowRequestBean requestBean, @RequestHeader(value = "userId",required = false) Integer userId){
+    public Object getPlanBorrowDetail(@RequestBody  WebBorrowRequestBean requestBean, @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result  = webProjectListService.getPlanAccedeBorrowDetail(requestBean,userId);
         return result;
     }
@@ -232,18 +233,21 @@ public class WebProjectListController extends BaseTradeController {
 
 
 
+
     /**
-     *  计划详情优惠券列表
+     * 计划详情标的组成：投资记录
      * @author zhangyk
-     * 原接口：com.hyjf.web.plan.PlanController.getProjectAvailableUserCoupon()----post调用--->com.hyjf.api.web.plan.coupon.PlanCouponServer.getProjectAvailableUserCoupon()
-     * @date 2018/8/16 11:01
+     * 原接口：com.hyjf.web.hjhdetail.HjhDetailController.searchBorrowUndertakeList()
+     * @date 2018/8/24 10:13
      */
- /*   @ApiOperation(value = "计划详情优惠券列表" , notes = "计划详情优惠券列表")
-    @PostMapping(value = "/getProjectAvailableUserCoupon", produces = "application/json; charset=utf-8")
-    public Object getProjectAvailableUserCoupon(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) Integer userId){
-        WebResult result  = webProjectListService.getProjectAvailableUserCoupon(requestBean,userId);
+    @ApiOperation(value = "计划详情标的组成：投资记录" , notes = "计划详情标的组成：投资记录")
+    @PostMapping(value = "/hjh/getBorrowUndertake", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowUndertake(@RequestBody  WebBorrowRequestBean requestBean){
+        WebResult result  = webProjectListService.getPlanBorrowUndertake(requestBean);
         return result;
-    }*/
+    }
+
+
 
 
 

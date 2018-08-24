@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class MessagePushTemplateVO extends BaseVO implements Serializable {
     private Integer id;
 
-    private Integer tagId;
+    private String tagId;
 
     private String tagCode;
 
@@ -53,11 +53,11 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
