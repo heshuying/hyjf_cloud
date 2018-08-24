@@ -13,13 +13,6 @@ import java.util.List;
 public interface PlanCapitalService {
 
     /**
-     * 获取总条数
-     * @param request
-     * @return
-     */
-    Integer getPlanCapitaCount(HjhPlanCapitalRequest request);
-
-    /**
      * 获取资金计划列表
      * @param hjhPlanCapitalRequest
      * @return
