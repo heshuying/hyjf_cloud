@@ -41,6 +41,8 @@ public class BorrowCreditVO extends BaseVO implements Serializable {
 
     private String client;
 
+    private String creditUserId;
+
 
     public String getCreditId() {
         return creditId;
@@ -160,5 +162,17 @@ public class BorrowCreditVO extends BaseVO implements Serializable {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreditUserId() {
+        return creditUserId;
+    }
+
+    public void setCreditUserId(String creditUserId) {
+        this.creditUserId = creditUserId;
     }
 }

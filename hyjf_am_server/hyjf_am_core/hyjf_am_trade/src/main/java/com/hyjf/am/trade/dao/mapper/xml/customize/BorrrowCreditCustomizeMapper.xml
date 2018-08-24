@@ -127,6 +127,7 @@
         SELECT
         bc.credit_id,
         bc.credit_nid,
+        bc.credit_user_id,
         CASE
             WHEN bc.client = 1 THEN '微信'
             WHEN bc.client = 2 THEN 'android'
@@ -222,6 +223,7 @@
         <result column="add_time" property="addTime" jdbcType="VARCHAR" />
         <result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
         <result column="client" property="client" jdbcType="VARCHAR" />
+        <result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
     </resultMap>
 
 

@@ -5729,4 +5729,27 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow/exportBorrowList", borrowCommonCustomize, BorrowCustomizeResponse.class)
                 .getBody().getBorrowCommonCustomizeList();
 	}
+
+
+    @Override
+    public List<com.hyjf.am.vo.trade.BorrowCreditVO> selectBorrowCreditList() {
+        BorrowCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrowCredit/selectBorrowCreditList/",
+                BorrowCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO) {
+        Integer result =  restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
+                Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
 }

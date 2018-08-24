@@ -2771,5 +2771,18 @@ public interface AmTradeClient {
 
 	List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
 
+    /**
+     * 获取债转状态为0的数据
+     * @return
+     */
+    List<com.hyjf.am.vo.trade.BorrowCreditVO> selectBorrowCreditList();
+
+    /**
+     * 更新债转状态
+     * @return
+     */
+    Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
+
+
 }
 
