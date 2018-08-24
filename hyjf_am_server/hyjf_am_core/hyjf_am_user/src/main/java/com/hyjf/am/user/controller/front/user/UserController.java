@@ -101,7 +101,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/selectUtmPlatByUtmId/{utmId}")
-    public UtmPlatResponse selectUtmPlatByUtmId(String utmId) {
+    public UtmPlatResponse selectUtmPlatByUtmId(@PathVariable String utmId) {
         UtmPlat utmPlat = userService.selectUtmPlatByUtmId(utmId);
         UtmPlatResponse response = new UtmPlatResponse();
         if (null != utmPlat) {
@@ -664,7 +664,7 @@ public class UserController extends BaseController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectUtmPlatByUtmId/{userId}")
+    @RequestMapping("/selectUtmPlatByUserId/{userId}")
     public UtmPlatResponse selectUtmPlatByUserId(@PathVariable Integer userId) {
         UtmPlat utmPlat = userService.selectUtmPlatByUserId(userId);
         UtmPlatResponse response = new UtmPlatResponse();

@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class RegisterRequest extends AppBaseRequest {
 
-    @ApiModelProperty(value = "手机号web.app.weChat.api")
+    @ApiModelProperty(value = "手机号web.app.weChat")
     private String mobile ;
 
     @ApiModelProperty(value = "验证码web.app.weChat")
@@ -20,12 +20,12 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "登录密码web.app.weChat")
     private String password ;
 
-    @ApiModelProperty(value = "推荐人web.app.weChat.api")
+    @ApiModelProperty(value = "推荐人web.app.weChat")
     private String reffer;
 
-    @ApiModelProperty(value = "机构编号web.api")
+    @ApiModelProperty(value = "机构编号web")
     private String instCode;
-    @ApiModelProperty(value = "注册渠道web.api")
+    @ApiModelProperty(value = "注册渠道web")
     private String utmId;
 
     public String getInstCode() {
