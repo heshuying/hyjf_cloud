@@ -26,7 +26,7 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private String msgCode;
 
-    private Integer sendTime;
+    private String sendTime;
 
     private Integer iosDestinationCount;
 
@@ -40,7 +40,7 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private Integer androidReadCount;
 
-    private Integer createTime;
+    private String createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -84,11 +84,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.msgCode = msgCode == null ? null : msgCode.trim();
     }
 
-    public Integer getSendTime() {
+    public String getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(Integer sendTime) {
+    public void setSendTime(String sendTime) {
         this.sendTime = sendTime;
     }
 
@@ -140,11 +140,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.androidReadCount = androidReadCount;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 }
