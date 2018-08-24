@@ -9,6 +9,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -44,7 +45,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @Autowired
     private BankWithdrawService bankWithdrawService;
 
-
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 用户银行提现
      * @Description
@@ -68,7 +70,10 @@ public class WechatBankWithdrawController extends BaseTradeController {
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip);
+        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawError";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawSuccess";
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);

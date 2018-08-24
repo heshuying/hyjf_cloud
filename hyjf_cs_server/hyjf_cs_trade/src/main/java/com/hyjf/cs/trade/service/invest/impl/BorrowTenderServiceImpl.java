@@ -189,7 +189,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openError" + "?logOrdId=" + orderId;
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openSuccess?logOrdId="+orderId;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+        String bgRetUrl = "";
+        if(cuc != null){
+            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+        }else{
+            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + request.getCouponGrantId();
+        }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
