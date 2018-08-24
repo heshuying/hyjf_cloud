@@ -68,6 +68,7 @@ public class BanksConfigController extends BaseConfigController{
      * @param bankId
      * @return
      */
+/*
     @GetMapping("/getJxBankConfigByBankId/{bankId}")
     public JxBankConfigResponse getJxBankConfigByBankId(@PathVariable Integer bankId){
         JxBankConfigResponse response = new JxBankConfigResponse();
@@ -79,6 +80,7 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+*/
 
     /**
      * 获取银行卡配置信息
