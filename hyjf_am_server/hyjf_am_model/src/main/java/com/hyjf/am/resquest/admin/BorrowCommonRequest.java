@@ -24,7 +24,15 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	/**
 	 * serialVersionUID
 	 */
+	private int isMonth;
+	
+	public int getIsMonth() {
+		return isMonth;
+	}
 
+	public void setIsMonth(int isMonth) {
+		this.isMonth = isMonth;
+	}
 	private String chargeTimeType;
 	private  Integer chargeTime;
 	

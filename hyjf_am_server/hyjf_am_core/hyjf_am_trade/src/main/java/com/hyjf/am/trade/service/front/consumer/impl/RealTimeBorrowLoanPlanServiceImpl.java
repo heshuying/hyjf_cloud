@@ -529,7 +529,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						}else{
 							throw new Exception("标的号:" + borrowNid + ",放款完成保存还款计划失败!");
 						}
-						//TODO 生成投资人居间服务协议
+						// 生成投资人居间服务协议
 						createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
 					}
 				} catch (Exception e) {
@@ -981,7 +981,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().add(borrowRecover.getRecoverCapital())); // 未还款本金
 			borrow.setRepayLastTime(DateUtils.getRepayDate(borrowStyle, new Date(), borrowPeriod, borrowPeriod)); // 最后还款时间
 			borrow.setRepayNextTime(recoverTime); // 下次还款时间
-//			borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间 //TODO: 去掉后确认这个如何查询
+//			borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间 
 			boolean borrowFlags = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 			if (!borrowFlags) {
 				throw new RuntimeException("借款详情(huiyingdai_borrow)更新失败!" + "[投资订单号：" + ordId + "]");
@@ -1168,7 +1168,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						// 汇计划二期更新 分期的hyjf_hjh_debt_detail  12-8
 						HjhDebtDetail debtDetail = new HjhDebtDetail();
 						debtDetail.setUserId(borrowTender.getUserId());// 投资人用户ID
-	                    debtDetail.setUserName(borrowTender.getUserName());//投资人用户名//TODO:确认是一下用户名是否是对的
+	                    debtDetail.setUserName(borrowTender.getUserName());//投资人用户名
 	                    debtDetail.setBorrowUserId(borrowUserid);// 原标的的用户ID
 	                    debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标的借款人用户名
 	                    debtDetail.setBorrowNid(borrowNid);// 原标标的编号
@@ -1194,7 +1194,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //	                    debtDetail.setCreateTime(GetDate.getNowTime10());// 创建时间
 	                    debtDetail.setLoanTime(GetDate.getNowTime10());// 放款时间
 	                    debtDetail.setCreateUserId(borrowTender.getUserId());// 创建人用户ID
-	                    debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名//TODO:确认是一下用户名是否是对的
+	                    debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名
 	                    debtDetail.setBorrowName(borrowInfo.getName());// 借款标题
 	                    debtDetail.setBorrowApr(borrowApr);// 原标年化利率
 	                    debtDetail.setBorrowPeriod(borrowPeriod);// 借款期限
@@ -1489,7 +1489,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //			accountWebList.setCreateTime(borrowRecover.getCreateTime());
 			accountWebList.setRemark(borrowNid);
 			accountWebList.setFlag(1);
-			//TODO: 网站首支明细队列
+			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + borrowTender.getUserId() + "---------" + serviceFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));

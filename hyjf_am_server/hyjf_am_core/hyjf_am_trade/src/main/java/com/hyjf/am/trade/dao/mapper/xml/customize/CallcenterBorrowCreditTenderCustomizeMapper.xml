@@ -18,6 +18,16 @@
 		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
 		<result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
 		<result column="client" property="client" jdbcType="VARCHAR" />
+		
+		<result column="assign_nid" property="assignNid" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+		<result column="credit_username" property="creditUsername" jdbcType="VARCHAR" />
+		<result column="assign_capital_price" property="assignCapitalPrice" jdbcType="VARCHAR" />
+		<result column="assign_price" property="assignPrice" jdbcType="VARCHAR" />
+		<result column="assign_interest_advance" property="assignInterestAdvance" jdbcType="VARCHAR" />
+		<result column="credit_fee" property="creditFee" jdbcType="VARCHAR" />
+		<result column="assign_pay" property="assignPay" jdbcType="VARCHAR" />
+		
 	</resultMap>
 
  	<select id="getBorrowCreditTenderList" resultMap="ListMap" parameterType="com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest">
@@ -35,13 +45,18 @@
 			  FORMAT(ct.assign_interest_advance, 2) AS assign_interest_advance,	
 			  FORMAT(ct.credit_fee, 2)              AS credit_fee,	
 			  FORMAT(ct.assign_pay, 2)              AS assign_pay,	
-			  CASE WHEN ct.add_time != 0 AND ct.add_time IS NOT NULL THEN FROM_UNIXTIME( ct.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time	 
+			  <!-- CASE WHEN ct.add_time != 0 AND ct.add_time IS NOT NULL THEN FROM_UNIXTIME( ct.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time -->	
+			  
+			  CASE WHEN ct.create_time IS NOT NULL THEN 
+			  DATE_FORMAT(ct.create_time,'%Y-%m-%d %H:%i:%S') 
+			  ELSE '' END AS add_time	
+			   
 			FROM	
 			  ht_credit_tender ct	
 	        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid	
 	   <include refid="CreditInfo_Where_Clause" />
 		ORDER BY
-		  bc.add_time DESC
+		  bc.create_time DESC
 	    <if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitSize}
 	    </if>

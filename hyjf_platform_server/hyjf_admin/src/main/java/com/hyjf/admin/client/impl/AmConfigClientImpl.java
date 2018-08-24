@@ -1295,7 +1295,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AdminSystemResponse getUserInfo(AdminSystemRequest adminSystemRequest) {
         AdminSystemResponse adminSystemResponse = restTemplate
-                .postForEntity("http://AM-ADMIN/am-config/adminSystem/getuser", adminSystemRequest,
+                .postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser", adminSystemRequest,
                         AdminSystemResponse.class)
                 .getBody();
         if (adminSystemResponse != null) {

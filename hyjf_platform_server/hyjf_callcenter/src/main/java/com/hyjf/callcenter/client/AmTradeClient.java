@@ -69,6 +69,12 @@ public interface AmTradeClient {
      */
     List<CallCenterHtjRepaymentDetailVO> getHtjRepaymentDetailList(CallCenterBaseRequest callCenterBaseRequest);
 
+	/**
+	 * 查询 账户余额
+	 * 
+	 * @param accountManageBean
+	 * @return
+	 */
     List<CallCenterBankAccountManageVO> queryAccountInfos(CallCenterBankAccountManageRequest callCenterBankAccountManageRequest);
 
     List<CallCenterAccountDetailVO> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);

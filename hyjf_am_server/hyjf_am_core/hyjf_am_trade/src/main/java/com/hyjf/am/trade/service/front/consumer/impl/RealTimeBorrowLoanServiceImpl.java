@@ -465,7 +465,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					if (bean == null) {//放款失败
 						// 更新投资详情表
 						borrowTender.setStatus(2); // 状态 0，未放款，1，已放款 2放款失败
-//						borrowTender.setTenderStatus(2); // 投资状态 0，未放款，1，已放款 2放款失败 //TODO:待确认是否需要删除
+//						borrowTender.setTenderStatus(2); // 投资状态 0，未放款，1，已放款 2放款失败 
 //						borrowTender.setApiStatus(2); // 放款状态 0，未放款，1，已放款 2放款失败
 						boolean borrowTenderFlag = this.borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 						if (!borrowTenderFlag) {
@@ -473,7 +473,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						}
 						logger.info("-----------放款结束，放款失败---" + borrowNid + "--------投资订单号" + tenderOrderId);
 					}else{
-						//TODO 还款计划
+						//还款计划
 						if(i == tenderList.size() -1){
 							isLast = true;
 						}
@@ -498,7 +498,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						//双十二气球活动   
 			           // actBalloonTender(borrowTender);
 						
-						//crm投资推送 //TODO: 确认CRM 队列更新
+						//crm投资推送 //确认CRM 队列更新
 						try {
 							amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTender)));
 						} catch (Exception e) {
@@ -522,7 +522,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				calculateNew.setId(calculates.get(0).getId());
 				this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
 			}
-			//上市活动  //TODO: 微服务后没有了暂时注释
+			//上市活动  //微服务后没有了暂时注释
 //			CommonSoaUtils.listBorrow(borrow.getBorrowNid());
 			return true;
 		} else {
@@ -1384,7 +1384,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
             // 借款项目编号
             params.put("borrowNid", borrowNid);
             
-            //TODO: 优惠券放款确认
+            //优惠券放款确认
     		try {
     			logger.info("发送优惠券放款---" + borrowNid);
     			couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -1658,7 +1658,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 //			accountWebList.setCreateTime(borrowRecover.getCreateTime());
 			accountWebList.setRemark(borrowNid);
 	        accountWebList.setFlag(1);
-			//TODO: 网站首支明细队列
+			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + borrowTender.getUserId() + "---------" + serviceFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
