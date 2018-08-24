@@ -5,10 +5,12 @@ package com.hyjf.cs.user.controller.api.user.autologin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.NmcfLoginRequest;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.WebUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -75,6 +77,9 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //TODO:这里还没做
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
+        //loginService.login();
+        WebViewUserVO userVO = loginService.getWebViewUserByUserId(userId);
+        loginService.setToken(userVO);
 
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {

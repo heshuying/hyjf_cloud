@@ -87,4 +87,12 @@ public interface LoginService extends BaseUserService {
      * @return
      */
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+
+	/**
+	 * 根据身份证查询User
+	 * @auth sunpeikai
+	 * @param idCard 身份证号码
+	 * @return
+	 */
+	UserVO getUserByIdCard(String idCard);
 }
