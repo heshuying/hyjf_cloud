@@ -296,7 +296,7 @@ public class RepayManageController extends BaseController {
             return null;
         }
 
-        logger.info("计算完的还款bean数据：{}", repayByTerm);
+        logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
         return repayByTerm;
     }
 
