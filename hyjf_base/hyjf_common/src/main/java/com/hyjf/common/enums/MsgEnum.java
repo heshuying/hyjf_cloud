@@ -58,6 +58,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_JSON("ETY000103","传入JSON错误"),
 	ERR_PARAM_NUM("ETY000104", "请求参数不全"),
 	ERR_PARAM("ETY000105", "参数错误，请重试"),
+	ERR_AM_SYSTEM("ETY000198","接口(am)调用发生异常，请联系服务方"),
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
 	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
