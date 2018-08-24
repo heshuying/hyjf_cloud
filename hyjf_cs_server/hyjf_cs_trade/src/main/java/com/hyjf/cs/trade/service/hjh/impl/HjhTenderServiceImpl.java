@@ -357,7 +357,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 历史回报
         result.put("earnings", request.getEarnings());
         // 优惠券收益
-        result.put("couponInterest", request.getCouponInterest());
+        result.put("couponInterest", request.getCouponInterest()==null?0:request.getCouponInterest());
         // 投资金额
         result.put("account", request.getAccount());
         // 投资的计划
