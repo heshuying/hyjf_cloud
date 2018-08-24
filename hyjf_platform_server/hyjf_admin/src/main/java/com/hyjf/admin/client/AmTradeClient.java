@@ -1796,20 +1796,20 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 总条数
-     * @param data
-     * @param planNid
-     * @return
-     */
-    Integer getHjhReInvestDetailListCount(String data, String planNid);
-    /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * 汇计划 -> 资金计划 -> 复投原始标的 总条数 (废弃)
      * @param data
      * @param planNid
      * @return
      * @Author : huanghui
      */
-    List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
+    Integer getHjhReInvestDetailListCount(String data, String planNid);
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest requestBean);
 
     /**
      * 汇计划按天转让记录
@@ -2246,7 +2246,7 @@ public interface AmTradeClient {
 
     List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode);
 
-    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request);
+//    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request);
 
     /**
      * 查询配置中心保证金配置
