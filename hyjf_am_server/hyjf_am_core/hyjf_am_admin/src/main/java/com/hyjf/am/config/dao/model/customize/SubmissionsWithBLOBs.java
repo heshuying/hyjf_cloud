@@ -1,8 +1,8 @@
 package com.hyjf.am.config.dao.model.customize;
 
-import com.hyjf.am.config.dao.model.auto.Submissions;
-
 import java.io.Serializable;
+
+import com.hyjf.am.config.dao.model.auto.Submissions;
 
 /**
  * @author lisheng

@@ -1,13 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminRepayDelayCustomize;
-
-import java.util.List;
 
 /**
  * @author pangchengchao

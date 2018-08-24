@@ -1,5 +1,9 @@
 package com.hyjf.am.trade.bean;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
@@ -7,11 +11,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowCommonNameAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCompanyAuthenVO;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.common.paginator.Paginator;
-
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @package com.hyjf.admin.maintenance.AlllBorrowCustomize;

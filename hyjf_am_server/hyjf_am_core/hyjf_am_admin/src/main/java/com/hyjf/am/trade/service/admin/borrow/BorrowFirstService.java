@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.service.admin.borrow;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
-
-import java.util.List;
 
 /**
  * @author wangjun

@@ -3,11 +3,12 @@
  */
 package com.hyjf.am.trade.service.admin.htl.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.trade.dao.mapper.customize.HtlCommonCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.ProductSearchForPage;
 import com.hyjf.am.trade.service.admin.htl.HtlCommonService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author zhangqingqing

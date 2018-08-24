@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspZhixinginfosMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspZhixinginfos" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="zguxubg_id" property="zguxubgId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="paperNum" property="papernum" jdbcType="VARCHAR" />
+    <result column="zhixingCourt" property="zhixingcourt" jdbcType="VARCHAR" />
+    <result column="anliNum" property="anlinum" jdbcType="VARCHAR" />
+    <result column="anjianState" property="anjianstate" jdbcType="VARCHAR" />
+    <result column="zhixingTaget" property="zhixingtaget" jdbcType="VARCHAR" />
+    <result column="lianTime" property="liantime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, zguxubg_id, `name`, paperNum, zhixingCourt, anliNum, anjianState, zhixingTaget, 
+    lianTime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfosExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_zhixinginfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_zhixinginfos
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_zhixinginfos
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfosExample" >
+    delete from ht_msp_zhixinginfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfos" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_zhixinginfos (apply_id, zguxubg_id, `name`, 
+      paperNum, zhixingCourt, anliNum, 
+      anjianState, zhixingTaget, lianTime
+      )
+    values (#{applyId,jdbcType=VARCHAR}, #{zguxubgId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{papernum,jdbcType=VARCHAR}, #{zhixingcourt,jdbcType=VARCHAR}, #{anlinum,jdbcType=VARCHAR}, 
+      #{anjianstate,jdbcType=VARCHAR}, #{zhixingtaget,jdbcType=VARCHAR}, #{liantime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfos" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_zhixinginfos
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="zguxubgId != null" >
+        zguxubg_id,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="papernum != null" >
+        paperNum,
+      </if>
+      <if test="zhixingcourt != null" >
+        zhixingCourt,
+      </if>
+      <if test="anlinum != null" >
+        anliNum,
+      </if>
+      <if test="anjianstate != null" >
+        anjianState,
+      </if>
+      <if test="zhixingtaget != null" >
+        zhixingTaget,
+      </if>
+      <if test="liantime != null" >
+        lianTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="zguxubgId != null" >
+        #{zguxubgId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papernum != null" >
+        #{papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="zhixingcourt != null" >
+        #{zhixingcourt,jdbcType=VARCHAR},
+      </if>
+      <if test="anlinum != null" >
+        #{anlinum,jdbcType=VARCHAR},
+      </if>
+      <if test="anjianstate != null" >
+        #{anjianstate,jdbcType=VARCHAR},
+      </if>
+      <if test="zhixingtaget != null" >
+        #{zhixingtaget,jdbcType=VARCHAR},
+      </if>
+      <if test="liantime != null" >
+        #{liantime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfosExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_zhixinginfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_zhixinginfos
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zguxubgId != null" >
+        zguxubg_id = #{record.zguxubgId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.papernum != null" >
+        paperNum = #{record.papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zhixingcourt != null" >
+        zhixingCourt = #{record.zhixingcourt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anlinum != null" >
+        anliNum = #{record.anlinum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anjianstate != null" >
+        anjianState = #{record.anjianstate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zhixingtaget != null" >
+        zhixingTaget = #{record.zhixingtaget,jdbcType=VARCHAR},
+      </if>
+      <if test="record.liantime != null" >
+        lianTime = #{record.liantime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_zhixinginfos
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      zguxubg_id = #{record.zguxubgId,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      paperNum = #{record.papernum,jdbcType=VARCHAR},
+      zhixingCourt = #{record.zhixingcourt,jdbcType=VARCHAR},
+      anliNum = #{record.anlinum,jdbcType=VARCHAR},
+      anjianState = #{record.anjianstate,jdbcType=VARCHAR},
+      zhixingTaget = #{record.zhixingtaget,jdbcType=VARCHAR},
+      lianTime = #{record.liantime,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfos" >
+    update ht_msp_zhixinginfos
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="zguxubgId != null" >
+        zguxubg_id = #{zguxubgId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papernum != null" >
+        paperNum = #{papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="zhixingcourt != null" >
+        zhixingCourt = #{zhixingcourt,jdbcType=VARCHAR},
+      </if>
+      <if test="anlinum != null" >
+        anliNum = #{anlinum,jdbcType=VARCHAR},
+      </if>
+      <if test="anjianstate != null" >
+        anjianState = #{anjianstate,jdbcType=VARCHAR},
+      </if>
+      <if test="zhixingtaget != null" >
+        zhixingTaget = #{zhixingtaget,jdbcType=VARCHAR},
+      </if>
+      <if test="liantime != null" >
+        lianTime = #{liantime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspZhixinginfos" >
+    update ht_msp_zhixinginfos
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      zguxubg_id = #{zguxubgId,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      paperNum = #{papernum,jdbcType=VARCHAR},
+      zhixingCourt = #{zhixingcourt,jdbcType=VARCHAR},
+      anliNum = #{anlinum,jdbcType=VARCHAR},
+      anjianState = #{anjianstate,jdbcType=VARCHAR},
+      zhixingTaget = #{zhixingtaget,jdbcType=VARCHAR},
+      lianTime = #{liantime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

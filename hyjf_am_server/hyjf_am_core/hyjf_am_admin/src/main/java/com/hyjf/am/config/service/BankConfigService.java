@@ -1,10 +1,14 @@
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.*;
+import java.util.List;
+
+import com.hyjf.am.config.dao.model.auto.BankConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.dao.model.auto.JxBankConfig;
+import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
-
-import java.util.List;
 
 public interface BankConfigService {
 

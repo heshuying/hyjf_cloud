@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 
 public interface AdminTransferExceptionLogCustomizeMapper {
 

@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.ChinapnrExclusiveLog;
 import com.hyjf.am.trade.dao.model.auto.ChinapnrExclusiveLogExample;
 import com.hyjf.am.trade.dao.model.auto.ChinapnrExclusiveLogWithBLOBs;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface ChinapnrExclusiveLogMapper {
     int countByExample(ChinapnrExclusiveLogExample example);
