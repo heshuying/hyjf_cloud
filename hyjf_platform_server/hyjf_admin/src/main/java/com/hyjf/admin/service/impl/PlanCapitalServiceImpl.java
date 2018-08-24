@@ -24,12 +24,6 @@ public class PlanCapitalServiceImpl implements PlanCapitalService {
     private CsMessageClient csMessageClient;
 
     @Override
-    public Integer getPlanCapitaCount(HjhPlanCapitalRequest request) {
-        Integer count = this.csMessageClient.getPlanCapitalCount(request);
-        return count;
-    }
-
-    @Override
     public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
         HjhPlanCapitalResponse planCapitalResponse = this.csMessageClient.getPlanCapitalList(hjhPlanCapitalRequest);
         return planCapitalResponse;
