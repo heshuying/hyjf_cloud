@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fq
@@ -13,14 +14,17 @@ public class MessagePushPlatStaticsRequest extends BasePage {
     /**
      * 标签查询
      */
+    @ApiModelProperty(value = "标签")
     private String tagIdSrch;
     /**
      * 时间查询
      */
+    @ApiModelProperty(value = "开始时间")
     private String startDateSrch;
     /**
      * 时间查询
      */
+    @ApiModelProperty(value = "结束时间")
     private String endDateSrch;
 
     public String getTagIdSrch() {

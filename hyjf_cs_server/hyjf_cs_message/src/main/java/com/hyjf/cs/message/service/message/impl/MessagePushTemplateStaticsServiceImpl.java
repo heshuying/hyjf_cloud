@@ -9,6 +9,7 @@ import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -24,5 +25,15 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 	@Override
 	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
 		return staticsDao.selectTemplateStatics(request);
+	}
+
+	@Override
+	public int selectCount(MessagePushTemplateStaticsRequest request) {
+		request.setCurrPage(0);
+		List<MessagePushTemplateStatics> list = staticsDao.selectTemplateStatics(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }

@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.PlanRepayService;
+import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +21,23 @@ public class PlanRepayServiceImpl implements PlanRepayService {
     @Autowired
     private AmTradeClient amTradeClient;
 
+    /**
+     * 获取返回结果集
+     * @param request
+     * @return
+     */
     @Override
-    public Integer selectRepayCount(HjhRepayRequest request) {
-        //查询总条数
-        Integer hjhRepayCount = amTradeClient.getRepayCount(request);
-        return hjhRepayCount;
-    }
-
-
-    @Override
-    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
+    public HjhRepayResponse selectHjhRepayList(HjhRepayRequest request) {
         //查询列表
-        List<HjhRepayVO> recordList = amTradeClient.selectByExample(request);
+        HjhRepayResponse recordList = amTradeClient.selectHjhRepayList(request);
         return recordList;
     }
 
+    /**
+     * 根据订单号查询指定数据
+     * @param accedeOrderId
+     * @return
+     */
     @Override
     public HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId) {
         HjhRepayResponseBean repayResponseBean = new HjhRepayResponseBean();
