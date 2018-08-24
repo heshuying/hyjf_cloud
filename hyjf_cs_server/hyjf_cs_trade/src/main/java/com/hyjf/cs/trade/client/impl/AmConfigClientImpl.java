@@ -91,9 +91,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 * @Date 2018/6/5 15:13
 	 */
 	@Override
-	public BanksConfigVO getBankNameByBankId(String bankId) {
-		BanksConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+	public JxBankConfigVO getBankNameByBankId(String bankId) {
+		JxBankConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getJxBankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -131,7 +131,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 	/**
 	 * 取从某天开始推后的第一个工作日开始时间
-	 * @param somedate
+	 * @param somdate
 	 * @return
 	 */
 	@Override
