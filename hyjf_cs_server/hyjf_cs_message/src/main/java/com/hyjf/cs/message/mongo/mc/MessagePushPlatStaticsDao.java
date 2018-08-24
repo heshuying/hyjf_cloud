@@ -43,12 +43,14 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
         if (request.getTagIdSrch() != null) {
             criteria.and("tagId").regex(request.getTagIdSrch());
         }
-        int currPage = request.getCurrPage();
-        int pageSize = request.getPageSize();
-        int limitStart = (currPage - 1) * pageSize;
-        int limitEnd = limitStart + pageSize;
-        query.addCriteria(criteria);
-        query.skip(limitStart).limit(limitEnd);
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            int currPage = request.getCurrPage();
+            int pageSize = request.getPageSize();
+            int limitStart = (currPage - 1) * pageSize;
+            int limitEnd = limitStart + pageSize;
+            query.addCriteria(criteria);
+            query.skip(limitStart).limit(limitEnd);
+        }
         return mongoTemplate.find(query, getEntityClass());
     }
 }

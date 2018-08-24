@@ -3,18 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.ContentEnvironmentMapper;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironmentExample;
 import com.hyjf.am.config.service.ContentEnvironmentService;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author fuqiang

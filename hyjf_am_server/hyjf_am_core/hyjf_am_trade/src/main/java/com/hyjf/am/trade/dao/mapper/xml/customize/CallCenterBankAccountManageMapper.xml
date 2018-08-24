@@ -29,6 +29,10 @@
 		<result column="regionName" property="regionName" /> <!-- 大区 -->
 		<result column="branchName" property="branchName" /> <!-- 分公司  -->
 		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+		
+		<result column="balance_total" property="balanceTotal" />
+		<result column="frost_total" property="frostTotal" />
+		
 	</resultMap>
  	<select id="queryAccountInfos" resultMap="accountInfoMapResult" parameterType="com.hyjf.am.resquest.callcenter.CallCenterBankAccountManageRequest">
 		SELECT

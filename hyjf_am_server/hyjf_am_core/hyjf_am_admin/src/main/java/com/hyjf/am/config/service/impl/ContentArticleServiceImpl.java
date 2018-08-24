@@ -1,5 +1,18 @@
 package com.hyjf.am.config.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.config.dao.mapper.auto.ContentArticleMapper;
 import com.hyjf.am.config.dao.mapper.customize.ContentArticleCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.HelpCustomizeMapper;
@@ -14,18 +27,6 @@ import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {

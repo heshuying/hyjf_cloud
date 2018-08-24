@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.SmsCodeCustomizeMapper">
+   <resultMap id="queryuserMap" type="com.hyjf.am.user.dao.model.customize.SmsCodeCustomize">
+		<result column="mobile" property="user_phones" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="queryUser" resultMap="queryuserMap" parameterType="com.hyjf.am.user.dao.model.customize.SmsCodeCustomize">
+		  SELECT
+			DISTINCT u.mobile,u.user_id
+		  FROM
+			ht_user u
+		<where>
+		    <if test="open_account!=3" >
+		      AND u.bank_open_account= #{open_account,jdbcType=INTEGER}
+		    </if>
+		    <if test="re_time_begin != null" >
+		      AND u.reg_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+		    </if>
+		    <if test="re_time_end != null" >
+		      AND u.reg_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+		    </if>
+		</where>
+	</select>
+</mapper>

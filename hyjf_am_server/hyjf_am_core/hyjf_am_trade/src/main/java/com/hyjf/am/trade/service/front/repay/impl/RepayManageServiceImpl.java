@@ -4097,7 +4097,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlan(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-        borrowRepayPlanCrt.andUserIdEqualTo(userId);
+// todo 暂时注释掉       borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;

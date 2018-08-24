@@ -1,16 +1,17 @@
 package com.hyjf.am.admin.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpDeal;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Field;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.http.HttpDeal;
 
 /**
  * @Auther: walter.limeng

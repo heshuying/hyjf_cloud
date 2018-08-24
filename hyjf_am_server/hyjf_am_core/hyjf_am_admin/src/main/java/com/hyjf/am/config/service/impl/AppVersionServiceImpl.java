@@ -1,16 +1,17 @@
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.VersionMapper;
-import com.hyjf.am.config.dao.model.auto.Version;
-import com.hyjf.am.config.dao.model.auto.VersionExample;
-import com.hyjf.am.config.dao.model.customize.VersionConfigBean;
-import com.hyjf.am.config.service.AppVersionService;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hyjf.am.config.dao.mapper.auto.VersionMapper;
+import com.hyjf.am.config.dao.model.auto.Version;
+import com.hyjf.am.config.dao.model.auto.VersionExample;
+import com.hyjf.am.config.dao.model.customize.VersionConfigBean;
+import com.hyjf.am.config.service.AppVersionService;
 
 /**
  * @author lisheng

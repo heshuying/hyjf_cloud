@@ -43,6 +43,9 @@ public class MessagePushPlatStaticsController extends BaseController {
 			List<MessagePushPlatStaticsVO> voList = CommonUtils.convertBeanList(list, MessagePushPlatStaticsVO.class);
 			response.setResultList(voList);
 		}
+		// 查询数量
+		int count = service.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 }

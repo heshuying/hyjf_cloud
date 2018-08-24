@@ -1,11 +1,11 @@
 package com.hyjf.am.market.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.resquest.market.AdsRequest;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq

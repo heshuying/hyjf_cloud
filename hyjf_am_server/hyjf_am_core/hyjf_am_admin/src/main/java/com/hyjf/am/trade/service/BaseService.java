@@ -3,10 +3,19 @@
  */
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.trade.dao.model.auto.*;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
+import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.dao.model.auto.RUser;
 
 /**
  * 资金服务: BaseService

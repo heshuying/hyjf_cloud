@@ -1017,7 +1017,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_MONEY);
         }
         // 如果放款时间小于 20170703 重新计算已承接金额
-        if (borrowRecover.getAddTime() < 1499011200 && borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+        if (GetDate.getTime10(borrowRecover.getCreateTime()) < 1499011200 && borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
             // 计算已承接的债权
             BigDecimal assignedCapital = amTradeClient.getAssignCapital(borrowRecover.getNid());
             creditTenderLog.setTenderMoney(borrowRecover.getRecoverCapital().subtract(assignedCapital));
@@ -1098,7 +1098,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
-                    String nowDate = GetDate.getDateTimeMyTimeInMillis(borrowCredit.getAddTime());
+                    String nowDate = GetDate.getDateTimeMyTimeInMillis(borrowCredit.getCreateTime());
                     String recoverDate = GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime());
                     lastDays = GetDate.daysBetween(nowDate, recoverDate);
                 } catch (Exception e) {
@@ -1166,7 +1166,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } catch (Exception e) {
             logger.error("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
         }
-        if (ifOldDate != null && ifOldDate <= borrowCredit.getAddTime()) {
+        if (ifOldDate != null && ifOldDate <= GetDate.getTime10(borrowCredit.getCreateTime())) {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));

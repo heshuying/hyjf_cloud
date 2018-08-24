@@ -1,12 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoyong

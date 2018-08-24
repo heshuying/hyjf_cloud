@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.AdminPreRegistCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="id != null and id !='' ">
+				AND hp.id = #{id}
+			</if>
+			<if test="mobile != null and mobile !='' ">
+				AND hp.mobile LIKE CONCAT('%', #{mobile}, '%')
+			</if>
+			<if test="referrer != null and referrer !='' ">
+				AND hu.username LIKE CONCAT('%', #{referrer}, '%')
+			</if>
+			<if test="source != null and source !='' ">
+				AND hutmp.source_name LIKE CONCAT('%', #{source}, '%')
+			</if>
+			<if test="registFlag != null and registFlag !='' ">
+				AND hp.regist_flag LIKE CONCAT('%', #{registFlag}, '%')
+			</if>
+			<if test="preRegTimeStart != null and preRegTimeStart !='' ">
+				AND FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{preRegTimeStart}
+			</if>
+			<if test="preRegTimeEnd != null and preRegTimeEnd !='' ">
+				AND FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{preRegTimeEnd}
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="PreRegistListMap" type="com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="referrer" property="referrer" jdbcType="VARCHAR" />
+		<result column="utm" property="utm" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="preRegistTime" property="preRegistTime" jdbcType="VARCHAR" />
+		<result column="registFlag" property="registFlag" jdbcType="VARCHAR" />
+		<result column="registTime" property="registTime" jdbcType="VARCHAR" />
+		<result column="platformId" property="platformId" jdbcType="VARCHAR" />
+		<result column="platformName" property="platformName" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="VARCHAR" />
+		<result column="updateTime" property="updateTime" jdbcType="VARCHAR" />
+		<result column="updateBy" property="updateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectPreRegistList" resultMap="PreRegistListMap" parameterType="Map">
+		SELECT
+			hp.id AS id,
+			hp.mobile AS mobile,
+			hu.username AS referrer,
+			hutm.utm_term AS utm,
+			hutmp.source_name AS source,
+			FROM_UNIXTIME( hp.pre_regist_time, '%Y-%m-%d %H:%i:%s' ) AS preRegistTime,
+			hp.regist_flag AS registFlag,
+			hp.regist_time AS registTime,
+			hp.platform_id AS platformId,
+			hp.platform_name AS platformName,
+			hp.remark AS remark,
+			hp.create_time AS createTime,
+			hp.update_time AS updateTime,
+			hp.update_user AS updateBy
+		FROM
+			ht_pre_regist hp
+		LEFT JOIN ht_utm hutm ON hp.utm_id = hutm.utm_id
+		LEFT JOIN ht_utm_plat hutmp ON hp.source_id = hutmp.source_id
+		LEFT JOIN ht_user hu ON hp.referrer = hu.user_id
+		<include refid="Where_Clause" />
+		ORDER BY hp.pre_regist_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+	    </if>
+	</select>
+	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT COUNT(hp.id)
+		FROM
+			ht_pre_regist hp
+		LEFT JOIN ht_utm hutm ON hp.utm_id = hutm.utm_id
+		LEFT JOIN ht_utm_plat hutmp ON hp.source_id = hutmp.source_id
+		LEFT JOIN ht_user hu ON hp.referrer = hu.user_id
+		<include refid="Where_Clause" />
+	</select>
+</mapper>

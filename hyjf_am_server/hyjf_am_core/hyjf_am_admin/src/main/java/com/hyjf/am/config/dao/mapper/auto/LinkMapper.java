@@ -1,9 +1,11 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface LinkMapper {
     int countByExample(LinkExample example);

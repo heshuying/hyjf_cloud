@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.PlatformUserCountCustomizeMapper">
+
+  <select id="getUserInfo" resultType="com.hyjf.am.user.dao.model.customize.PlatformUserCountCustomize">
+	SELECT
+      hu.reg_esb client,
+      count(hu.user_id) registNumber,
+      count(hb.user_id)accountNumber
+      FROM
+          ht_users hu
+      LEFT JOIN ht_bank_open_account hb on hu.user_id = hb.user_id
+      <where>
+			<if test="startTime != null and endTime != ''">
+				AND FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{startTime}
+                AND FROM_UNIXTIME( hb.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="startTime != null and endTime != ''">
+				AND FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{endTime}
+                AND FROM_UNIXTIME( hb.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{endTime}
+			</if>
+		</where>
+      GROUP BY
+          hu.reg_esb
+  </select>
+</mapper>

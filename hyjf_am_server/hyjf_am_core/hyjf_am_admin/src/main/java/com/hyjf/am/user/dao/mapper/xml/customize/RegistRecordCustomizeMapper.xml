@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.RegistRecordCustomizeMapper">
+    <resultMap id="RegistListPOMap" type="com.hyjf.am.user.dao.model.customize.RegistRecordCustomize">
+        <result column="username" property="userName" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+        <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+        <result column="utm_source" property="sourceName" jdbcType="VARCHAR" />
+        <result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
+        <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+        <result column="reg_ip" property="regIP" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectRegistList" resultMap="RegistListPOMap" parameterType="Map">
+        SELECT
+        hydu.username,
+        hydu.mobile,
+        hydui.attribute AS user_property,
+        hydur.username AS recommend_name,
+        hydutm.utm_source AS utm_source,
+        hydu.reg_esb AS regist_plat,
+        date_format(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
+        hydu.reg_ip
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id=hydsu.spreads_user_id
+        LEFT JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
+        LEFT JOIN ht_utm hydutm ON hydur1.utm_id = hydutm.utm_id
+        <include refid="Where_Clause" />
+        ORDER BY hydu.reg_time DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+        SELECT COUNT(hydu.user_id)
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id=hydsu.spreads_user_id
+        <include refid="Where_Clause" />
+    </select>
+    <sql id="Where_Clause">
+        <where>
+            <if test="recommendName != null and recommendName !='' ">
+                AND hydur.username LIKE CONCAT(#{recommendName}, '%')
+            </if>
+            <if test="userName != null and userName !='' ">
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
+            </if>
+            <if test="regTimeStart != null and regTimeStart !='' ">
+                AND hydu.reg_time <![CDATA[>=]]> CONCAT(#{regTimeStart},' 00:00:00')
+            </if>
+            <if test="regTimeEnd != null and regTimeEnd !='' ">
+                AND hydu.reg_time <![CDATA[<=]]> CONCAT(#{regTimeEnd},' 23:59:59')
+            </if>
+            <if test="registPlat != null and registPlat !='' ">
+                AND hydu.reg_esb = #{registPlat}
+            </if>
+            <if test="mobile != null and mobile !='' ">
+                AND hydu.mobile LIKE CONCAT( #{mobile}, '%')
+            </if>
+        </where>
+    </sql>
+
+</mapper>

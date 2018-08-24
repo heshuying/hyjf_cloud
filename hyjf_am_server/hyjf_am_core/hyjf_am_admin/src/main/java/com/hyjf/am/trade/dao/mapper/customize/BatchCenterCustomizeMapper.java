@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-
-import java.util.List;
 
 /**
  * @Auther:yangchangwei

@@ -3,10 +3,27 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -17,14 +34,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
