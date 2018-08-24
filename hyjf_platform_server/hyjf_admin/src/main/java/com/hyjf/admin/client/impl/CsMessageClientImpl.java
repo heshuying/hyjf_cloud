@@ -200,11 +200,11 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      * @Author : huanghui
      */
     @Override
-    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
         HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalList",
                 hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
         if (response != null){
-            return response.getResultList();
+            return response;
         }
         return null;
     }

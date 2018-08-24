@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -130,7 +131,7 @@ public class MsgPushStaticsServiceImpl implements MsgPushStaticsService {
 		msgTemplateStatics.setIosSendCount(iosSendCount);
 		msgTemplateStatics.setIosDestinationCount(iosDestinationCount);
 		msgTemplateStatics.setAndroidDestinationCount(androidDestinationCount);
-		msgTemplateStatics.setSendTime(GetDate.getNowTime10());
+		msgTemplateStatics.setSendTime(GetDate.dateToString(new Date()));
 
 		this.templateStaticsDao.save(msgTemplateStatics);
 	}

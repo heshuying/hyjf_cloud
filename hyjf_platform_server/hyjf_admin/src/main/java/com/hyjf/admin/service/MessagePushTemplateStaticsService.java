@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
 
@@ -16,4 +17,10 @@ public interface MessagePushTemplateStaticsService {
      * @return
      */
     MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request);
+
+    /**
+     * 获取所有标签列表
+     * @return
+     */
+    MessagePushTagResponse getMsgTagList();
 }
