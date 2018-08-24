@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.JxBankConfig;
-
 import java.util.List;
+
+import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 
 /**
  * @author wangjun

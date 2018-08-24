@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.TzjCustomizeMapper">
+
+    <!-- 统计注册人数 -->
+    <select id="getRegistCount" resultType="java.lang.Integer">
+        SELECT
+          IFNULL(count(u.user_id),0) total_num
+        FROM
+          ht_user u
+        LEFT JOIN ht_user_info i ON i.user_id = u.user_id
+        LEFT JOIN ht_utm_reg r ON r.user_id = u.user_id
+        LEFT JOIN ht_utm m ON m.utm_id = r.utm_id
+        LEFT JOIN ht_utm_plat p ON p.source_id = m.source_id
+        WHERE u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<]]> #{endTime}
+        AND i.attribute = 0
+        AND p.source_name LIKE '%投之家推广%'
+    </select>
+
+    <!-- 统计开户人数 -->
+    <select id="getOpenCount" resultType="java.lang.Integer">
+        SELECT
+        IFNULL(count(u.user_id),0) total_num
+        FROM
+        ht_user u
+        LEFT JOIN ht_user_info i ON i.user_id = u.user_id
+        LEFT JOIN ht_utm_reg r ON r.user_id = u.user_id
+        LEFT JOIN ht_utm m ON m.utm_id = r.utm_id
+        LEFT JOIN ht_utm_plat p ON p.source_id = m.source_id
+        WHERE u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<]]> #{endTime}
+        AND u.bank_open_account = 1
+        AND i.attribute = 0
+        AND p.source_name LIKE '%投之家推广%'
+    </select>
+
+    <!-- 统计绑卡人数 -->
+    <select id="getCardBindCount" resultType="java.lang.Integer">
+        SELECT
+        IFNULL(count(u.user_id),0) total_num
+        FROM
+        ht_user u
+        INNER JOIN ht_bank_card c ON c.user_id = u.user_id
+        LEFT JOIN ht_user_info i ON i.user_id = u.user_id
+        LEFT JOIN ht_utm_reg r ON r.user_id = u.user_id
+        LEFT JOIN ht_utm m ON m.utm_id = r.utm_id
+        LEFT JOIN ht_utm_plat p ON p.source_id = m.source_id
+        WHERE u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<]]> #{endTime}
+        AND c.status = 1
+        AND i.attribute = 0
+        AND p.source_name LIKE '%投之家推广%'
+    </select>
+
+
+    <!-- 查询当天注册用户 -->
+    <select id="queryRegisterUsers" resultType="java.lang.Integer">
+        SELECT
+          u.user_id
+        FROM
+          ht_user u
+        LEFT JOIN ht_user_info i ON i.user_id = u.user_id
+        LEFT JOIN ht_utm_reg r ON r.user_id = u.user_id
+        LEFT JOIN ht_utm m ON m.utm_id = r.utm_id
+        LEFT JOIN ht_utm_plat p ON p.source_id = m.source_id
+        WHERE u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<]]> #{endTime}
+        AND i.attribute = 0
+        AND p.source_name LIKE '%投之家推广%'
+    </select>
+
+    <!-- 查询所有注册用户 -->
+    <select id="queryAllTzjUser" resultType="java.lang.Integer">
+        SELECT
+          u.user_id
+        FROM
+          ht_user u
+        LEFT JOIN ht_user_info i ON i.user_id = u.user_id
+        LEFT JOIN ht_utm_reg r ON r.user_id = u.user_id
+        LEFT JOIN ht_utm m ON m.utm_id = r.utm_id
+        LEFT JOIN ht_utm_plat p ON p.source_id = m.source_id
+        WHERE i.attribute = 0
+        AND p.source_name LIKE '%投之家推广%'
+    </select>
+</mapper>

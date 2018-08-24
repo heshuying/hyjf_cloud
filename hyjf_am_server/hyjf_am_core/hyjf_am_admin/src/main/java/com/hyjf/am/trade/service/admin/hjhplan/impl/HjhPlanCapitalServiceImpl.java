@@ -1,15 +1,14 @@
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
-import com.hyjf.am.trade.dao.model.customize.HjhReInvestDetailCustomize;
-import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 
 /**
  * 汇计划-资金计划

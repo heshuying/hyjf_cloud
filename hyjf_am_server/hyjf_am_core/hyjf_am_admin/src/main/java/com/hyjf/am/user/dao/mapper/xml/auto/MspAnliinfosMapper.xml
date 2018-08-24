@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspAnliinfosMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspAnliinfos" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="anli_id" property="anliId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="paperNum" property="papernum" jdbcType="VARCHAR" />
+    <result column="dangshirenType" property="dangshirentype" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="anjianTitle" property="anjiantitle" jdbcType="VARCHAR" />
+    <result column="endDate" property="enddate" jdbcType="VARCHAR" />
+    <result column="anjianType" property="anjiantype" jdbcType="VARCHAR" />
+    <result column="anjianNum" property="anjiannum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, anli_id, `name`, paperNum, dangshirenType, sex, birthday, anjianTitle, 
+    endDate, anjianType, anjianNum
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfosExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_anliinfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_anliinfos
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_anliinfos
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfosExample" >
+    delete from ht_msp_anliinfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfos" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_anliinfos (apply_id, anli_id, `name`, 
+      paperNum, dangshirenType, sex, 
+      birthday, anjianTitle, endDate, 
+      anjianType, anjianNum)
+    values (#{applyId,jdbcType=VARCHAR}, #{anliId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{papernum,jdbcType=VARCHAR}, #{dangshirentype,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=VARCHAR}, #{anjiantitle,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, 
+      #{anjiantype,jdbcType=VARCHAR}, #{anjiannum,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfos" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_anliinfos
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="anliId != null" >
+        anli_id,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="papernum != null" >
+        paperNum,
+      </if>
+      <if test="dangshirentype != null" >
+        dangshirenType,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="anjiantitle != null" >
+        anjianTitle,
+      </if>
+      <if test="enddate != null" >
+        endDate,
+      </if>
+      <if test="anjiantype != null" >
+        anjianType,
+      </if>
+      <if test="anjiannum != null" >
+        anjianNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="anliId != null" >
+        #{anliId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papernum != null" >
+        #{papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="dangshirentype != null" >
+        #{dangshirentype,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiantitle != null" >
+        #{anjiantitle,jdbcType=VARCHAR},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiantype != null" >
+        #{anjiantype,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiannum != null" >
+        #{anjiannum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfosExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_anliinfos
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_anliinfos
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anliId != null" >
+        anli_id = #{record.anliId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        `name` = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.papernum != null" >
+        paperNum = #{record.papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dangshirentype != null" >
+        dangshirenType = #{record.dangshirentype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anjiantitle != null" >
+        anjianTitle = #{record.anjiantitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enddate != null" >
+        endDate = #{record.enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anjiantype != null" >
+        anjianType = #{record.anjiantype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anjiannum != null" >
+        anjianNum = #{record.anjiannum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_anliinfos
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      anli_id = #{record.anliId,jdbcType=VARCHAR},
+      `name` = #{record.name,jdbcType=VARCHAR},
+      paperNum = #{record.papernum,jdbcType=VARCHAR},
+      dangshirenType = #{record.dangshirentype,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      birthday = #{record.birthday,jdbcType=VARCHAR},
+      anjianTitle = #{record.anjiantitle,jdbcType=VARCHAR},
+      endDate = #{record.enddate,jdbcType=VARCHAR},
+      anjianType = #{record.anjiantype,jdbcType=VARCHAR},
+      anjianNum = #{record.anjiannum,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfos" >
+    update ht_msp_anliinfos
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="anliId != null" >
+        anli_id = #{anliId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="papernum != null" >
+        paperNum = #{papernum,jdbcType=VARCHAR},
+      </if>
+      <if test="dangshirentype != null" >
+        dangshirenType = #{dangshirentype,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiantitle != null" >
+        anjianTitle = #{anjiantitle,jdbcType=VARCHAR},
+      </if>
+      <if test="enddate != null" >
+        endDate = #{enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiantype != null" >
+        anjianType = #{anjiantype,jdbcType=VARCHAR},
+      </if>
+      <if test="anjiannum != null" >
+        anjianNum = #{anjiannum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspAnliinfos" >
+    update ht_msp_anliinfos
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      anli_id = #{anliId,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      paperNum = #{papernum,jdbcType=VARCHAR},
+      dangshirenType = #{dangshirentype,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      anjianTitle = #{anjiantitle,jdbcType=VARCHAR},
+      endDate = #{enddate,jdbcType=VARCHAR},
+      anjianType = #{anjiantype,jdbcType=VARCHAR},
+      anjianNum = #{anjiannum,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

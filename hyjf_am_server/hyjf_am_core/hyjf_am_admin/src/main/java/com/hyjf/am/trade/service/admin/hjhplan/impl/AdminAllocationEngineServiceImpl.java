@@ -8,11 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine;
 import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample;
@@ -23,6 +23,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhRegion;
 import com.hyjf.am.trade.dao.model.auto.HjhRegionExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminAllocationEngineService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;

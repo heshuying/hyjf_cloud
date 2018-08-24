@@ -258,6 +258,7 @@ public class RepayManageController extends BaseController {
         String borrowNid = paraMap.get("borrowNid");
         String userId = paraMap.get("userId");
         boolean isAllRepay = Boolean.valueOf(paraMap.get("isAllRepay"));
+        logger.info("获取计算完的还款Bean开始：{}", paraMap);
 
         try {
             Borrow borrow = repayManageService.getBorrow(borrowNid);
@@ -297,6 +298,7 @@ public class RepayManageController extends BaseController {
             return response;
         }
 
+        logger.info("计算完的还款bean数据：{}", repayByTerm);
         response.setResult(repayByTerm);
         return response;
     }

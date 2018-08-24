@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.SmsTemplate;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
-
-import java.util.List;
 
 /**
  * @author fuqiang

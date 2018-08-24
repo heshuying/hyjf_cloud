@@ -3,18 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.TeamMapper;
 import com.hyjf.am.config.dao.model.auto.Team;
 import com.hyjf.am.config.dao.model.auto.TeamExample;
 import com.hyjf.am.config.service.TeamService;
 import com.hyjf.am.resquest.admin.TeamRequest;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author fuqiang

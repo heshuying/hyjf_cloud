@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.dao.model.auto.PushMoneyExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface PushMoneyMapper {
     int countByExample(PushMoneyExample example);

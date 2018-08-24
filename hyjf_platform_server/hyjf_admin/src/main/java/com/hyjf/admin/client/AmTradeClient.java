@@ -1785,7 +1785,7 @@ public interface AmTradeClient {
      * @return
      * @Author : huanghui
      */
-    public List<HjhRepayVO> selectByExample(HjhRepayRequest request);
+    HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
 
     /**
      * 指定指端检索 计划还款列表
