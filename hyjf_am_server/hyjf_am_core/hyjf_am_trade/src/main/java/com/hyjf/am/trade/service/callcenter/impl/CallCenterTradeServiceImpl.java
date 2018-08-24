@@ -49,6 +49,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     @Autowired
     private RUserCustomizeMapper rUserCustomizeMapper;
+
+    @Autowired
+    private CallCenterBankAccountManageMapper callCenterBankAccountManageMapper;
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -247,5 +250,17 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     @Override
     public RUser getRefereerInfoByUserId(Integer userId){
         return rUserCustomizeMapper.selectRefUserInfoByUserId(userId);
+    }
+
+    /**
+     * 查询账户余额
+     * @param callCenterBankAccountManageRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author libin
+     */
+    @Override
+    public List<CallCenterBankAccountManageCustomize> queryAccountInfos(CallCenterBankAccountManageRequest callCenterBankAccountManageRequest) {
+        List<CallCenterBankAccountManageCustomize> list = callCenterBankAccountManageMapper.queryAccountInfos(callCenterBankAccountManageRequest);
+        return list;
     }
 }

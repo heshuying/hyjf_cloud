@@ -98,6 +98,7 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
     @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
+    private String userName;
     public int getCurrPage() {
         return currPage;
     }
@@ -234,5 +235,11 @@ public class MessagePushNoticesRequest extends MessagePushMsgVO implements Seria
         this.updateOrReSend = updateOrReSend;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

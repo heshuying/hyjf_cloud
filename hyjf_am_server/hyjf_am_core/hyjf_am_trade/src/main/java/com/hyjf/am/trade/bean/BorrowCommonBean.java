@@ -29,6 +29,15 @@ public class BorrowCommonBean implements Serializable {
 	
 	private String pageUrl;
 	
+	private int isMonth;
+	
+	public int getIsMonth() {
+		return isMonth;
+	}
+
+	public void setIsMonth(int isMonth) {
+		this.isMonth = isMonth;
+	}
 
 	public String getPageUrl() {
         return pageUrl;

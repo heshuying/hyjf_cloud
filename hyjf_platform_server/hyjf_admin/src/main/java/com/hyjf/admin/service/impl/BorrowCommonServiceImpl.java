@@ -129,8 +129,8 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return amTradeClient.exportBorrowList(borrowCommonCustomize);
 	}
 
 }
