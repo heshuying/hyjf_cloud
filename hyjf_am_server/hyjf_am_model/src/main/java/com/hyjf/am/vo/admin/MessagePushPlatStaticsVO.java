@@ -14,7 +14,7 @@ public class MessagePushPlatStaticsVO extends BaseVO {
 
     private Integer tagId;
 
-    private Integer staDate;
+    private String staDate;
 
     private Integer destinationCount;
 
@@ -52,11 +52,11 @@ public class MessagePushPlatStaticsVO extends BaseVO {
         this.tagId = tagId;
     }
 
-    public Integer getStaDate() {
+    public String getStaDate() {
         return staDate;
     }
 
-    public void setStaDate(Integer staDate) {
+    public void setStaDate(String staDate) {
         this.staDate = staDate;
     }
 

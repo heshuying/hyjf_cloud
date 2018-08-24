@@ -184,27 +184,17 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     /**
-     * 获取汇计划--计划资金列表
-     * @param request
-     * @return
-     */
-    @Override
-    public Integer getPlanCapitalCount(HjhPlanCapitalRequest request){
-        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalCount", request, Integer.class).getBody();
-    }
-
-    /**
      * 获取汇计划--计划资金列表(从MongoDB读取数据)
      * @param hjhPlanCapitalRequest
      * @return
      * @Author : huanghui
      */
     @Override
-    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
         HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalList",
                 hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
         if (response != null){
-            return response.getResultList();
+            return response;
         }
         return null;
     }

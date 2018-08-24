@@ -225,8 +225,8 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
      */
     @Override
     public String sumUnderTakeAmountByBorrowNid(String borrowNid) {
-        int sum = borrowCreditCustomizeMapper.sumUnderTakeAmount(borrowNid);
-        return String.valueOf(sum);
+        String sum = borrowCreditCustomizeMapper.sumUnderTakeAmount(borrowNid);
+        return sum;
     }
 
 

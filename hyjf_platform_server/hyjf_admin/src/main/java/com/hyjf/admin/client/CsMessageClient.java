@@ -148,20 +148,12 @@ public interface CsMessageClient {
     SmsLogResponse findSmsLog(SmsLogRequest request);
 
     /**
-     * 获取汇计划 - 资金计划 条数
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    Integer getPlanCapitalCount(HjhPlanCapitalRequest request);
-
-    /**
      * 获取汇计划--计划资金列表
      * @param hjhPlanCapitalRequest
      * @return
      * @Author : huanghui
      */
-    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
+    HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
     /**
      * 获取消息模板统计报表
