@@ -5,18 +5,19 @@ package com.hyjf.am.trade.service.admin.coupon.impl;
 
 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
 import com.hyjf.am.trade.dao.mapper.customize.DataCenterCouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.admin.coupon.DataCenterCouponService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author fq

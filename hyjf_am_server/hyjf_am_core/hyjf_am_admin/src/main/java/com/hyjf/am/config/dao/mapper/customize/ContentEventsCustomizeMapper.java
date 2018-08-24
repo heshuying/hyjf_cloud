@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.dao.model.customize.ContentEventsCustomize;
-
-import java.util.List;
 
 public interface ContentEventsCustomizeMapper {
 

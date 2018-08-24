@@ -3,14 +3,14 @@
  */
 package com.hyjf.am.trade.service.admin.hjhplan;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRegion;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-
-import java.util.List;
 
 /**
  * @author libin

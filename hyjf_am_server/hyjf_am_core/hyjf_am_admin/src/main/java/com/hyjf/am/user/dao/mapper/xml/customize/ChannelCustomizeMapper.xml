@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.ChannelCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="sourceIdSrch != null and sourceIdSrch != ''">
+				AND utm.source_id = #{sourceIdSrch}
+			</if>
+			<if test="utmTermSrch != null and utmTermSrch != ''">
+				AND utm.utm_term LIKE CONCAT('%', #{utmTermSrch}, '%')
+			</if>
+		</where>
+	</sql>
+	
+	<select id="countList" resultType="java.lang.Integer" parameterType="com.hyjf.am.user.dao.model.customize.ChannelCustomize">
+		SELECT
+		  COUNT(1)
+		FROM
+		  ht_utm utm LEFT JOIN ht_utm_plat plat ON utm.source_id = plat.source_id
+		<include refid="Where_Clause" />
+	</select>
+
+	<resultMap id="selectListMap" type="com.hyjf.am.user.dao.model.customize.ChannelCustomize">
+		<result column="utm_id" property="utmId" jdbcType="VARCHAR" />
+		<result column="utm_source" property="utmSource" jdbcType="VARCHAR" />
+		<result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+		<result column="utm_medium" property="utmMedium" jdbcType="VARCHAR" />
+		<result column="utm_content" property="utmContent" jdbcType="VARCHAR" />
+		<result column="utm_campaign" property="utmCampaign" jdbcType="VARCHAR" />
+		<result column="utm_term" property="utmTerm" jdbcType="VARCHAR" />
+		<result column="utm_referrer" property="utmReferrer" jdbcType="VARCHAR" />
+		<result column="link_address" property="linkAddress" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectList" resultMap="selectListMap" parameterType="com.hyjf.am.user.dao.model.customize.ChannelCustomize">
+		SELECT
+		  utm.utm_id,
+		  utm.utm_source,
+		  utm.source_id,
+		  plat.source_name,
+		  utm.utm_medium,
+		  utm.utm_content,
+		  utm.utm_campaign,
+		  utm.utm_term,
+		  utm.utm_referrer,
+		  utm.link_address,
+	      u.username,
+		  utm.remark,
+		  utm.`status`
+		FROM
+		  ht_utm utm
+	      LEFT JOIN ht_utm_plat plat ON utm.source_id = plat.source_id
+	      LEFT JOIN ht_users u ON utm.utm_referrer = u.user_id
+	   <include refid="Where_Clause" />
+		ORDER BY
+		  utm.create_time DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+	<select id="selectChannelNameByUserId" resultType="java.lang.String" parameterType="int">
+		SELECT
+			IFNULL(
+				hydup.source_name,
+				hacsd.source_name
+			) source_name
+		FROM
+			ht_users hydu
+		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+		LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
+		LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
+		LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id
+-- 		LEFT JOIN hyjf_app_channel_statistics_detail hacsd ON hacsd.user_id = hydu.user_id
+		WHERE hydu.user_id = #{userId}
+	</select>
+</mapper>

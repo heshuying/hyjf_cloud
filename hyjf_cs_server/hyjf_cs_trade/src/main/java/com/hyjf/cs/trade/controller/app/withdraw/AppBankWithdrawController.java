@@ -162,7 +162,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         BankCardVO bankCard = bankWithdrawService.getBankCardVOByUserId(userId);
         if (bankCard!=null) {
             // 发卡行的名称
-            result.setBank(bankCard.getBank());
+            result.setBank(bankCard.getBank()==null?"":bankCard.getBank());
             // 卡号
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);

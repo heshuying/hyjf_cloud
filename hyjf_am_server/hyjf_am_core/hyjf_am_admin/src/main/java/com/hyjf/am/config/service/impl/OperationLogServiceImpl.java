@@ -1,14 +1,14 @@
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.customize.FeerateModifyLogCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.FeerateModifyLog;
 import com.hyjf.am.config.service.OperationLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/17.

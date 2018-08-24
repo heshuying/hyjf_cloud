@@ -53,16 +53,17 @@ public class WechatRechargeController extends BaseTradeController{
 	/**
 	 * 调用充值接口
 	 * @param request
-	 * @param
-	 * @param mobile
-	 * @param money
 	 * @return
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/recharge")
-	public ModelAndView recharge(@RequestHeader(value = "sign") String sign,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
+	public ModelAndView recharge(@RequestHeader(value = "sign") String sign,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) throws Exception {
 		logger.info("wechat充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
+		// 交易金额
+		String money = request.getParameter("money");
+		// 用户的手机号
+		String mobile = request.getParameter("mobile");
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getWechatHost()+"/hyjf-wechat/wx/recharge/return?sign="+sign+"&txAmount="+money;

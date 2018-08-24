@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.market.dao.mapper.customize.market;
 
-import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
-
 import java.util.List;
+
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 
 /**
  * @author yaoyong

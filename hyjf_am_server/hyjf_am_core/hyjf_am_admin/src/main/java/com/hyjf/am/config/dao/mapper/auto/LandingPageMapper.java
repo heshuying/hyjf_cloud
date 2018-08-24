@@ -1,9 +1,11 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.config.dao.model.auto.LandingPage;
 import com.hyjf.am.config.dao.model.auto.LandingPageExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface LandingPageMapper {
     int countByExample(LandingPageExample example);

@@ -1,5 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -7,11 +12,6 @@ import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author pangchengchao

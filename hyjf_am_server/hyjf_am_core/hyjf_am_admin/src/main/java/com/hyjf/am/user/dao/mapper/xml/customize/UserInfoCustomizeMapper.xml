@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserInfoCustomizeMapper">
+	<resultMap id="UserInfoMapResult" type="com.hyjf.am.user.dao.model.customize.UserInfoCustomize">
+		<result column="user_id" property="userId" /> <!-- 用户名 -->
+		<result column="username" property="userName" /> <!-- 用户名 -->
+		<result column="truename" property="trueName" /> <!--   -->
+		<result column="sex" property="sex" /><!-- 性别 -->
+		<result column="mobile" property="mobile" /> <!-- 手机 -->
+		<result column="regionName" property="regionName" /> <!-- 大区 -->
+		<result column="branchName" property="branchName" /> <!-- 分公司  -->
+		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+		<result column="referrer" property="referrer" /> <!-- 推荐人 -->
+		<result column="attribute" property="attribute" /> <!-- 属性-->
+	</resultMap>
+
+	<resultMap id="UsersPortraitMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
+		<id column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="age" jdbcType="INTEGER" property="age" />
+		<result column="sex" jdbcType="BIT" property="sex" />
+		<result column="education" jdbcType="VARCHAR" property="education" />
+		<result column="occupation" jdbcType="VARCHAR" property="occupation" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="interest" jdbcType="VARCHAR" property="interest" />
+		<result column="interest_sum" jdbcType="DECIMAL" property="interestSum" />
+		<result column="invest_sum" jdbcType="DECIMAL" property="investSum" />
+		<result column="recharge_sum" jdbcType="DECIMAL" property="rechargeSum" />
+		<result column="withdraw_sum" jdbcType="DECIMAL" property="withdrawSum" />
+		<result column="login_active" jdbcType="VARCHAR" property="loginActive" />
+		<result column="customer_source" jdbcType="VARCHAR" property="customerSource" />
+		<result column="last_login_time" jdbcType="INTEGER" property="lastLoginTime" />
+		<result column="last_recharge_time" jdbcType="INTEGER" property="lastRechargeTime" />
+		<result column="last_withdraw_time" jdbcType="INTEGER" property="lastWithdrawTime" />
+		<result column="invest_platform" jdbcType="INTEGER" property="investPlatform" />
+		<result column="invest_age" jdbcType="BIT" property="investAge" />
+		<result column="trade_number" jdbcType="INTEGER" property="tradeNumber" />
+		<result column="current_owner" jdbcType="VARCHAR" property="currentOwner" />
+		<result column="add_wechat" jdbcType="BIT" property="addWechat" />
+		<result column="invest_process" jdbcType="VARCHAR" property="investProcess" />
+		<result column="customer_complaint" jdbcType="VARCHAR" property="customerComplaint" />
+		<result column="invite_customer" jdbcType="INTEGER" property="inviteCustomer" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="mobile" jdbcType="CHAR" property="mobile" />
+	</resultMap>
+
+	<!-- 根据员工username 查询员工信息  -->
+	<select id="queryUserInfoByEmployeeName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
+		SELECT u.user_id, u.username, ui.truename,ui.attribute,
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		FROM huiyingdai_users u
+		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
+		INNER JOIN hyjf_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		WHERE 1=1
+	    <if test="employeeName != null and employeeName != ''">
+			AND u.username= #{employeeName}
+		</if>
+	</select>
+
+	<!-- 根据非员工客户username 查询客户信息  -->
+	<select id="queryUserInfoByName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
+		SELECT u.user_id, u.username, ui.truename,ui.attribute,
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		FROM huiyingdai_users u
+		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN huiyingdai_spreads_users su ON u.user_id= su.user_id
+		LEFT JOIN hyjf_crm.oa_users ou ON su.spreads_userid= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		WHERE 1=1
+	    <if test="userName != null and userName != ''">
+			AND u.username= #{userName}
+		</if>
+		group by u.user_id
+	</select>
+	
+	<!-- 根据员工user_id 查询员工信息  -->
+	<select id="queryUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
+		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		FROM ht_user u
+		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
+		LEFT JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid
+		LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid
+		WHERE 1=1
+	    <if test="user_id != null">
+			AND u.user_id= #{user_id}
+		</if>
+		group by u.user_id
+	</select>
+	
+	<!-- 根据员username 查询员工信息  -->
+	<select id="queryUserDepartmentInfoByUserName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
+		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		FROM huiyingdai_users u
+		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
+		LEFT JOIN hyjf_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+		LEFT JOIN hyjf_crm.oa_department od ON od.id = ou.departmentid
+		LEFT JOIN hyjf_crm.oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN hyjf_crm.oa_department od3 on od3.id = od2.parentid
+		WHERE 1=1
+	    <if test="userName != null">
+			AND u.username= #{userName}
+		</if>
+		group by u.user_id
+	</select>
+	
+	<!-- 根据员工user_id 查询员工信息  -->
+	<select id="selectUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
+		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.sex
+		FROM huiyingdai_users u
+		LEFT JOIN huiyingdai_users_info ui ON u.user_id= ui.user_id
+		WHERE 1=1
+	    <if test="user_id != null">
+			AND u.user_id= #{user_id}
+		</if>
+		group by u.user_id
+	</select>
+
+	<resultMap id="UserDepartmentInfoMapResult" type="com.hyjf.am.user.dao.model.customize.UserInfoCustomize">
+		<result column="user_id" property="userId"  jdbcType="INTEGER" /> <!-- 用户名 -->
+		<result column="username" property="userName"  jdbcType="VARCHAR" /> <!-- 用户名 -->
+		<result column="regionId" property="regionId"  jdbcType="INTEGER" /> <!-- 大区 -->
+		<result column="branchId" property="branchId"  jdbcType="INTEGER" /> <!-- 分公司  -->
+		<result column="departmentId" property="departmentId"  jdbcType="INTEGER" /> <!-- 部门  -->
+		<result column="regionName" property="regionName"  jdbcType="VARCHAR" /> <!-- 大区 -->
+		<result column="branchName" property="branchName"  jdbcType="VARCHAR" /> <!-- 分公司  -->
+		<result column="departmentName" property="departmentName"  jdbcType="VARCHAR" /> <!-- 部门  -->
+	</resultMap>
+	<!-- 根据员工ID 查询部门信息  -->
+	<select id="queryDepartmentInfoByUserId" resultMap="UserDepartmentInfoMapResult" parameterType="java.lang.Integer">
+		SELECT
+			`t`.user_id AS user_id,
+			t.username AS username,
+			`od3`.`id` AS `regionId`,
+			`od3`.`name` AS `regionName`,
+			`od2`.`id` AS `branchId`,
+			`od2`.`name` AS `branchName`,
+			`od`.`id` AS `departmentId`,
+			`od`.`name` AS `departmentName`
+		FROM
+			(
+				SELECT
+					u.user_id,
+					u.username,
+					CASE
+				WHEN ui.attribute = 2
+				OR ui.attribute = 3 THEN
+					u.user_id
+				ELSE
+					su.spreads_userid
+				END AS hyd_id
+				FROM
+					huiyingdai_users u
+				LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
+				LEFT JOIN huiyingdai_spreads_users su ON u.user_id = su.user_id
+				WHERE u.user_id =  #{userId}
+			) t
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.`hyd_id` = `t`.`hyd_id` AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+		WHERE
+			`od`.id IS NOT NULL
+	</select>
+
+	<resultMap id="DepartmentInfoResultMap" type="com.hyjf.am.user.dao.model.customize.OADepartmentCustomize" >
+	  <id column="id" property="id" jdbcType="INTEGER" />
+	  <result column="parentid" property="parentid" jdbcType="INTEGER" />
+	  <result column="name" property="name" jdbcType="VARCHAR" />
+	  <result column="description" property="description" jdbcType="VARCHAR" />
+	  <result column="ishead" property="ishead" jdbcType="INTEGER" />
+	  <result column="ishr" property="ishr" jdbcType="INTEGER" />
+	  <result column="isfinance" property="isfinance" jdbcType="INTEGER" />
+	  <result column="cuttype" property="cuttype" jdbcType="INTEGER" />
+	  <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+	  <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+	  <result column="header" property="header" jdbcType="VARCHAR" />
+	  <result column="manager" property="manager" jdbcType="VARCHAR" />
+	  <result column="position_category" property="positionCategory" jdbcType="INTEGER" />
+	  <result column="listorder" property="listorder" jdbcType="INTEGER" />
+	</resultMap>
+	<!-- 查询部门信息  -->
+	<select id="queryDepartmentInfo" resultMap="DepartmentInfoResultMap"
+		parameterType="com.hyjf.am.user.dao.model.customize.OADepartmentCustomize">
+		SELECT
+			id,
+			parentid,
+			name,
+			description,
+			ishead,
+			ishr,
+			isfinance,
+			cuttype,
+			provinceid,
+			cityid,
+			header,
+			manager,
+			position_category,
+			listorder
+		FROM
+			hyjf_crm.oa_department
+	</select>
+
+	<!-- 查询用户画像记录数 -->
+	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hup.user_id)
+		FROM
+		hyjf_users_portrait hup
+		LEFT JOIN huiyingdai_users hydur ON hydur.user_id = hup.user_id
+		<include refid="Where_Clause_UserPortrait"/>
+	</select>
+
+	<sql id="Where_Clause_UserPortrait">
+		<where>
+			<if test="userName != null and userName !='' ">
+				AND hup.user_name LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<if test="yesterdayBeginTime != null and yesterdayEndTime !=null ">
+				AND hup.last_login_time BETWEEN #{yesterdayBeginTime} AND #{yesterdayEndTime}
+			</if>
+		</where>
+	</sql>
+
+	<!--查询用户画像记录 -->
+	<select id="selectUserPortraitList" resultMap="UsersPortraitMap" parameterType="Map">
+		SELECT
+		hup.user_id,user_name,age,sex,education,occupation,city,interest,interest_sum,invest_sum,recharge_sum,withdraw_sum,login_active,
+		customer_source,ROUND((unix_timestamp(now())-last_login_time)/(60*60*24)) AS last_login_time,
+		ROUND((unix_timestamp(now())-last_recharge_time)/(60*60*24)) AS last_recharge_time,
+		ROUND((unix_timestamp(now())-last_withdraw_time)/(60*60*24)) AS last_withdraw_time,
+		invest_platform,invest_age,trade_number,current_owner,add_wechat,invest_process,customer_complaint,invite_customer,remark,
+		INSERT(hup.mobile, 3, 5, '****') as mobile
+		FROM
+		hyjf_users_portrait hup
+
+		<include refid="Where_Clause_UserPortrait"/>
+
+		ORDER BY hup.user_id DESC
+		<if test="limitStart != null and limitEnd !=null ">
+			limit #{limitStart},#{limitEnd}
+		</if>
+	</select>
+</mapper>
+

@@ -1,9 +1,9 @@
 package com.hyjf.am.market.dao.mapper.customize.market;
 
-import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
 
 /**
  * @Auther: walter.limeng

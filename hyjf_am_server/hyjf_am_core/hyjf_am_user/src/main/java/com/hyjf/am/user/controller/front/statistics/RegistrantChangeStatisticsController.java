@@ -30,7 +30,7 @@ public class RegistrantChangeStatisticsController extends BaseController {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static SimpleDateFormat month = new SimpleDateFormat("MM");
 
-    private static DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:");
+    private static DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private RegistrantChangeStatisticsService registrantChangeStatisticsService;

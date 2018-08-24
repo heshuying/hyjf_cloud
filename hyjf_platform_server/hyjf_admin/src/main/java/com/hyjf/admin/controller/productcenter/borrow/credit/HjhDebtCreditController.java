@@ -64,7 +64,7 @@ public class HjhDebtCreditController extends BaseController{
         List<BorrowStyleVO> styleVOList = borrowRegistExceptionService.selectBorrowStyleList();
         if(styleVOList != null && styleVOList.size() > 0){
             jsonObject.put("还款方式列表","borrowStyleList");
-            List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "nameCd", "name");
+            List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "id", "name");
             jsonObject.put("borrowStyleList",dropDownVOS);
         }else {
             jsonObject.put("status",FAIL);

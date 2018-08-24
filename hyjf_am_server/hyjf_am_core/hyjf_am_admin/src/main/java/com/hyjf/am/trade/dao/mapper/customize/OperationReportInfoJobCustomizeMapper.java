@@ -3,11 +3,12 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.vo.trade.OperationReportJobVO;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.Date;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 /**
  * @author tanyy
