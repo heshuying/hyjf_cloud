@@ -1,11 +1,8 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.response.HjhRepayResponseBean;
-import com.hyjf.am.response.admin.HjhRepayResponse;
+import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
-import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
-
-import java.util.List;
 
 /**
  * 订单退出 Service
@@ -13,10 +10,18 @@ import java.util.List;
  */
 public interface PlanRepayService {
 
-    Integer selectRepayCount(HjhRepayRequest request);
+    /**
+     * 获取返回结果集
+     * @param request
+     * @return
+     */
+    HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
 
-    List<HjhRepayVO> selectByExample(HjhRepayRequest request);
-
+    /**
+     * 根据订单号查询指定数据
+     * @param accedeOrderId
+     * @return
+     */
     HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId);
 
 }

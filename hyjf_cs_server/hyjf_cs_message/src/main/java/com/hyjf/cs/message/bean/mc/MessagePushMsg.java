@@ -115,10 +115,13 @@ public class MessagePushMsg implements Serializable {
         this.msgContent = msgContent;
     }
 
+    public String[] getMsgTerminal() {
+        return msgTerminal;
+    }
+
     public void setMsgTerminal(String[] msgTerminal) {
         this.msgTerminal = msgTerminal;
     }
-
 
     public Integer getMsgAction() {
         return msgAction;

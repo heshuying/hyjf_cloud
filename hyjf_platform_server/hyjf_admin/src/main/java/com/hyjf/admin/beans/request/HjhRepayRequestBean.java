@@ -1,58 +1,51 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Author : huanghui
  */
 public class HjhRepayRequestBean extends BasePage {
-    /**
-     * 检索条件 加入订单号
-     */
+
+    @ApiModelProperty(value = "计划订单号")
     private String accedeOrderIdSrch;
-    /**
-     * 检索条件 计划编号
-     */
+
+    @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
-    /**
-     * 检索条件 用户名
-     */
+
+    @ApiModelProperty(value = "用户名")
     private String userNameSrch;
-    /**
-     * 检索条件 锁定期
-     */
+
+    @ApiModelProperty(value = "锁定期")
     private String debtLockPeriodSrch;
-    /**
-     * 检索条件 回款状态：0 未回款，1 部分回款 2 已回款'
-     */
-    private String repayStatusSrch;
-    /**
-     * 检索条件 订单状态：0 自动投标中 1锁定中 2退出中 3已退出'
-     */
+
+    @ApiModelProperty(value = "推荐人")
+    private String refereeNameSrch;
+
+    @ApiModelProperty(value = "订单状态")
     private String orderStatusSrch;
+
+    @ApiModelProperty(value = "清算开始日期")
+    private String repayTimeStart;
+
+    @ApiModelProperty(value = "清算结束日期")
+    private String repayTimeEnd;
+
+    @ApiModelProperty(value = "实际退出开始日期")
+    private String actulRepayTimeStart;
+
+    @ApiModelProperty(value = "实际退出结束日期")
+    private String actulRepayTimeEnd;
     /**
      * 检索条件 还款方式
      */
     private String borrowStyleSrch;
-    /**
-     * 检索条件 应还日期开始
-     */
-    private String repayTimeStart;
-    /**
-     * 检索条件 应还日期结束
-     */
-    private String repayTimeEnd;
-    /**
-     * 检索条件 计划实际还款时间开始
-     */
-    private String actulRepayTimeStart;
-    /**
-     * 检索条件 计划实际还款时间结束
-     */
-    private String actulRepayTimeEnd;
 
-    private Integer limitStart;
-    private Integer limitEnd;
+    /**
+     * 检索条件 回款状态：0 未回款，1 部分回款 2 已回款'
+     */
+    private String repayStatusSrch;
 
     public String getAccedeOrderIdSrch() {
         return accedeOrderIdSrch;
@@ -86,12 +79,12 @@ public class HjhRepayRequestBean extends BasePage {
         this.debtLockPeriodSrch = debtLockPeriodSrch;
     }
 
-    public String getRepayStatusSrch() {
-        return repayStatusSrch;
+    public String getRefereeNameSrch() {
+        return refereeNameSrch;
     }
 
-    public void setRepayStatusSrch(String repayStatusSrch) {
-        this.repayStatusSrch = repayStatusSrch;
+    public void setRefereeNameSrch(String refereeNameSrch) {
+        this.refereeNameSrch = refereeNameSrch;
     }
 
     public String getOrderStatusSrch() {
@@ -100,14 +93,6 @@ public class HjhRepayRequestBean extends BasePage {
 
     public void setOrderStatusSrch(String orderStatusSrch) {
         this.orderStatusSrch = orderStatusSrch;
-    }
-
-    public String getBorrowStyleSrch() {
-        return borrowStyleSrch;
-    }
-
-    public void setBorrowStyleSrch(String borrowStyleSrch) {
-        this.borrowStyleSrch = borrowStyleSrch;
     }
 
     public String getRepayTimeStart() {
@@ -142,19 +127,19 @@ public class HjhRepayRequestBean extends BasePage {
         this.actulRepayTimeEnd = actulRepayTimeEnd;
     }
 
-    public Integer getLimitStart() {
-        return limitStart;
+    public String getBorrowStyleSrch() {
+        return borrowStyleSrch;
     }
 
-    public void setLimitStart(Integer limitStart) {
-        this.limitStart = limitStart;
+    public void setBorrowStyleSrch(String borrowStyleSrch) {
+        this.borrowStyleSrch = borrowStyleSrch;
     }
 
-    public Integer getLimitEnd() {
-        return limitEnd;
+    public String getRepayStatusSrch() {
+        return repayStatusSrch;
     }
 
-    public void setLimitEnd(Integer limitEnd) {
-        this.limitEnd = limitEnd;
+    public void setRepayStatusSrch(String repayStatusSrch) {
+        this.repayStatusSrch = repayStatusSrch;
     }
 }
