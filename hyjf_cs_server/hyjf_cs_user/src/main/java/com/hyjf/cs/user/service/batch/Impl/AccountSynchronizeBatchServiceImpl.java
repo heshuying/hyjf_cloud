@@ -170,7 +170,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                         return amUserClient.updateAccountMobileSynch(accountMobileSynchRequest);
                     }
                 }else{
-                    logger.error( "接口查询银行卡号异常:"+ userId);
+                    logger.error("接口查询银行卡号异常，返回错误码：{}，用户ID：{}", respCode, userId);
                 }
             }
         } catch (Exception e) {
