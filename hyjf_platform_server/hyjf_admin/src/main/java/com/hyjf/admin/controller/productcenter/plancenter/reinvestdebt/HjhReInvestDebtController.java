@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 产品中心 --> 汇计划 --> 资金计划 -> 复投承接
+ * 产品中心 --> 汇计划 --> 资金计划 -> 复投承接债权
  * @Author : huanghui
  */
-@Api(value = "产品中心-汇计划-资金计划",tags ="产品中心-汇计划-资金计划")
+@Api(value = "产品中心-汇计划-资金计划",tags ="产品中心-汇计划-资金计划-复投承接债权")
 @RestController
 @RequestMapping(value = "/hjhReInvestDebt")
 public class HjhReInvestDebtController extends BaseController {

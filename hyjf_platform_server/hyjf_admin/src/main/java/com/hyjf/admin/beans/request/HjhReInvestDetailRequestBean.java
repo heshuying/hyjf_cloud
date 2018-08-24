@@ -1,37 +1,37 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Author : huanghui
  */
-public class HjhReInvestDetailRequestBean extends BasePage {
+public class HjhReInvestDetailRequestBean {
 
-
-    //标的planNid
-    private String planNid;
-    //时间
+    @ApiModelProperty(value = "日期,默认值")
     private String date;
-    //计划投资订单号（检索）
+
+    @ApiModelProperty(value = "计划编号,默认值")
+    private String planNid;
+
+    @ApiModelProperty(value = "计划订单号")
     private String accedeOrderIdSrch;
-    //用户名（检索）
+
+    @ApiModelProperty(value = "用户名")
     private String userNameSrch;
-    //借款编号（检索）
+
+    @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
-    //借款期限(锁定期)（检索）
+
+    @ApiModelProperty(value = "借款期限")
     private String lockPeriodSrch;
-    //投资方式（检索）
+
+    @ApiModelProperty(value = "投资方式")
     private String investTypeSrch;
-    //还款方式（检索）
+
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyleSrch;
 
-    public String getPlanNid() {
-        return planNid;
-    }
-
-    public void setPlanNid(String planNid) {
-        this.planNid = planNid;
-    }
 
     public String getDate() {
         return date;
@@ -39,6 +39,14 @@ public class HjhReInvestDetailRequestBean extends BasePage {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
     }
 
     public String getAccedeOrderIdSrch() {
