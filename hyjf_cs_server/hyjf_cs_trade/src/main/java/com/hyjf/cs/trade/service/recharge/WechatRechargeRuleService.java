@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.service.recharge;
 
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
@@ -25,7 +25,7 @@ public interface WechatRechargeRuleService extends BaseTradeService{
      * @param bankId
      * @return
      */
-    BanksConfigVO getBanksConfigByBankId(Integer bankId);
+    JxBankConfigVO getBanksConfigByBankId(Integer bankId);
 
     /**
      * 根据用户ID查询企业用户账户信息

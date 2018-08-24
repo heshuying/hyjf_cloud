@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.recharge.impl;
 
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
@@ -43,7 +42,7 @@ public class WechatRechargeRuleServiceImpl extends BaseTradeServiceImpl implemen
     }
 
     @Override
-    public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+    public JxBankConfigVO getBanksConfigByBankId(Integer bankId) {
         return amConfigClient.getBankNameByBankId(bankId+"");
     }
 
