@@ -1,12 +1,8 @@
 package com.hyjf.am.trade.service.admin.hjhplan;
 
-import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
-import com.hyjf.am.trade.dao.model.customize.HjhReInvestDetailCustomize;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
-
-import java.util.Date;
 import java.util.List;
+
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 
 /**
  * 汇计划-资金计划

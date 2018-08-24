@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.PlatformCountRequest;
 import com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize;
-
-import java.util.List;
 
 /**
  * @author fq

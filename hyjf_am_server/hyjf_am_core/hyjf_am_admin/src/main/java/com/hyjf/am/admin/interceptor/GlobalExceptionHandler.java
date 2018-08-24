@@ -1,15 +1,16 @@
 package com.hyjf.am.admin.interceptor;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.exception.ReturnMessageException;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.exception.ReturnMessageException;
 
 /**
  * @author xiasq

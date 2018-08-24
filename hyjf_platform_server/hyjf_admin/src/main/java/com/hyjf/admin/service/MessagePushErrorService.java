@@ -4,7 +4,8 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
@@ -27,14 +28,14 @@ public interface MessagePushErrorService {
      *
      * @return
      */
-    List<MessagePushErrorVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
+    List<MessagePushMsgHistoryVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
 
     /**
      * 获取标签列表
      *
      * @return
      */
-    List<MessagePushErrorVO> getTagList();
+    List<MessagePushTagVO> getTagList();
 
     /**
      * 获取数据字典名称
@@ -48,7 +49,7 @@ public interface MessagePushErrorService {
      *
      * @return
      */
-    MessagePushErrorVO getRecord(Integer id);
+    MessagePushMsgHistoryVO getRecord(Integer id);
 
     /**
      * 推送极光消息
@@ -56,5 +57,5 @@ public interface MessagePushErrorService {
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
-    void sendMessage(MessagePushErrorVO msg);
+    void sendMessage(MessagePushMsgHistoryVO msg);
 }

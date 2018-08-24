@@ -6,7 +6,7 @@ package com.hyjf.am.vo.admin;
  */
 
 public class MessagePushMsgHistoryVO {
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -56,7 +56,7 @@ public class MessagePushMsgHistoryVO {
 
     private String msgRemark;
 
-    private String  sendTime;
+    private Integer sendTime;
 
     private Integer msgDestinationCountIos;
 
@@ -78,11 +78,11 @@ public class MessagePushMsgHistoryVO {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -270,11 +270,11 @@ public class MessagePushMsgHistoryVO {
         this.msgRemark = msgRemark == null ? null : msgRemark.trim();
     }
 
-    public String getSendTime() {
+    public Integer getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Integer sendTime) {
         this.sendTime = sendTime;
     }
 

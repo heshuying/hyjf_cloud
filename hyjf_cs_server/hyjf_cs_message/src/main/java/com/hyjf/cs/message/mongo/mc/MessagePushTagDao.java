@@ -38,4 +38,20 @@ public class MessagePushTagDao extends BaseMongoDao<MessagePushTag> {
         return mongoTemplate.find(query, MessagePushTag.class);
     }
 
+    /**
+     * 获取标签名称
+     * @param tagId
+     * @return
+     */
+    public String selectTagName(String tagId) {
+        Criteria criteria = new Criteria();
+        Query query = new Query();
+        // 条件查询
+        criteria.and("id").is(tagId);
+        MessagePushTag tag = mongoTemplate.findOne(query, getEntityClass());
+        if (tag != null) {
+            return tag.getTagName();
+        }
+        return null;
+    }
 }

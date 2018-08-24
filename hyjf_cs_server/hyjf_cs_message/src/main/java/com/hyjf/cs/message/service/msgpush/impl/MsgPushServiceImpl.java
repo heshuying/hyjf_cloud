@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -126,14 +127,14 @@ public class MsgPushServiceImpl implements MsgPushService {
 		msgSta.setMsgCode(template.getTemplateCode());
 		msgSta.setMsgTitle(template.getTemplateTitle());
 		msgSta.setTagId(template.getTagId());
-		msgSta.setSendTime(template.getCreateTime());
+		msgSta.setSendTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(template.getCreateTime()));
 		msgSta.setAndroidDestinationCount(0);
 		msgSta.setIosDestinationCount(0);
 		msgSta.setAndroidReadCount(0);
 		msgSta.setAndroidSendCount(0);
 		msgSta.setIosReadCount(0);
 		msgSta.setIosSendCount(0);
-		msgSta.setCreateTime(GetDate.getNowTime10());
+		msgSta.setCreateTime(GetDate.dateToString(new Date()));
 		// 插入数据
 		this.msgStaticsDao.insert(msgSta);
 	}

@@ -1,8 +1,8 @@
 package com.hyjf.am.market.service;
 
-import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
-
 import java.util.List;
+
+import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
 
 /**
  * @Auther: walter.limeng

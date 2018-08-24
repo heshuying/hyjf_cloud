@@ -3,19 +3,20 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.LinkMapper;
-import com.hyjf.am.config.dao.model.auto.Link;
-import com.hyjf.am.config.dao.model.auto.LinkExample;
-import com.hyjf.am.config.service.ContentPartnerService;
-import com.hyjf.am.resquest.admin.ContentPartnerRequest;
-import com.hyjf.common.util.GetDate;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import com.hyjf.am.config.dao.mapper.auto.LinkMapper;
+import com.hyjf.am.config.dao.model.auto.Link;
+import com.hyjf.am.config.dao.model.auto.LinkExample;
+import com.hyjf.am.config.service.ContentPartnerService;
+import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author fuqiang

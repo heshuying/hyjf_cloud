@@ -1,10 +1,5 @@
 package com.hyjf.zuul.config;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -18,6 +13,11 @@ import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -76,7 +76,9 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 		Map<String, ZuulRoute> routes = new LinkedHashMap<String, ZuulRoute>();
 		List<GatewayApiConfigVO> results = amConfigClient.findGatewayConfigs();
 		if (!CollectionUtils.isEmpty(results)) {
-			Map<String, GatewayApiConfigVO> map = new HashMap<>(results.size());
+			//设置map的初始容量值
+			int capacity = (int) ((float) results.size() / 0.75F + 1.0F);
+			Map<String, GatewayApiConfigVO> map = new HashMap<>(capacity);
 			for (GatewayApiConfigVO result : results) {
 				ZuulRoute zuulRoute = new ZuulRoute();
 				// 去掉请求前缀

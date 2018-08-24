@@ -9,6 +9,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.BankWithdrawVO;
@@ -43,7 +44,8 @@ public class WebBankWithdrawController extends BaseTradeController {
     @Autowired
     private BankWithdrawService bankWithdrawService;
 
-
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * @Description 跳转到提现页面
      * @Author pangchengchao
@@ -80,8 +82,11 @@ public class WebBankWithdrawController extends BaseTradeController {
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
+        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawError";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawSuccess";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);

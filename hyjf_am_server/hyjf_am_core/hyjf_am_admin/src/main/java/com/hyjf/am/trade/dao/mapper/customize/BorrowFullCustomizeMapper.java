@@ -3,13 +3,14 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.customize.BorrowFullCustomize;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun

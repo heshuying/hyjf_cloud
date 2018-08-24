@@ -117,6 +117,13 @@ public interface WebProjectListService extends BaseTradeService {
      */
     public WebResult getPlanAccedeBorrowDetail(WebBorrowRequestBean requestBean , Integer userId);
 
+    /**
+     * 查询计划标的组成：承接记录
+     * @author zhangyk
+     * @date 2018/8/24 10:23
+     */
+    public WebResult getPlanBorrowUndertake(WebBorrowRequestBean requestBean );
+
 
 
 }

@@ -3,20 +3,21 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
-import com.hyjf.am.config.dao.model.auto.SiteSetting;
-import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
-import com.hyjf.am.config.service.SiteSettingService;
-import com.hyjf.am.resquest.admin.SitesettingRequest;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
+import java.util.List;
+import java.util.Random;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Random;
+import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
+import com.hyjf.am.config.dao.model.auto.SiteSetting;
+import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
+import com.hyjf.am.config.service.SiteSettingService;
+import com.hyjf.am.resquest.admin.SitesettingRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 
 /**
  * @author fuqiang

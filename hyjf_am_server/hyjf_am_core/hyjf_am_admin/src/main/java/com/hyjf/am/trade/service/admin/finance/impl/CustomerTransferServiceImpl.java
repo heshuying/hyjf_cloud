@@ -3,25 +3,29 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
-import com.hyjf.am.resquest.admin.CustomerTransferRequest;
-import com.hyjf.am.resquest.admin.TransferListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.UserTransferMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.ThreeDESUtils;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
+import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
+import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
+import com.hyjf.am.trade.dao.mapper.auto.UserTransferMapper;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.UserTransfer;
+import com.hyjf.am.trade.dao.model.auto.UserTransferExample;
+import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.ThreeDESUtils;
 
 /**
  * @author: sunpeikai

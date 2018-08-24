@@ -18,9 +18,9 @@ public class MessagePushPlatStatics implements Serializable {
     @Id
     private String id;
 
-    private Integer tagId;
+    private String tagId;
 
-    private Integer staDate;
+    private String staDate;
 
     private Integer destinationCount;
 
@@ -50,19 +50,19 @@ public class MessagePushPlatStatics implements Serializable {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
-    public Integer getStaDate() {
+    public String getStaDate() {
         return staDate;
     }
 
-    public void setStaDate(Integer staDate) {
+    public void setStaDate(String staDate) {
         this.staDate = staDate;
     }
 

@@ -3,9 +3,29 @@
  */
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngine;
+import com.hyjf.am.trade.dao.model.auto.HjhAllocationEngineExample;
+import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhLabelExample;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -13,15 +33,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author libin

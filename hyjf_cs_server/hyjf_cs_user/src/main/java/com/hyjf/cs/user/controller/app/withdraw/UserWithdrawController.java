@@ -176,7 +176,7 @@ public class UserWithdrawController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "获取提现信息")
-    @PostMapping(value = "/bank/user/withdraw/getInfoAction")
+    @PostMapping(value = "/user/withdraw/getInfoAction")
     public JSONObject getCashInfo(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);
         ret.put("request","/hyjf-app/user/withdraw/getInfoAction");
