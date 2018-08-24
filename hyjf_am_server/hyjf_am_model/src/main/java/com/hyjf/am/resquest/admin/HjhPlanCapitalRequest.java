@@ -3,6 +3,7 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 汇计划--计划资金
@@ -10,65 +11,39 @@ import java.math.BigDecimal;
  */
 public class HjhPlanCapitalRequest extends BasePage implements Serializable {
 
-    /**
-     * 检索条件 计划编号
-     */
-    private String planNidSrch;
-    /**
-     * 检索条件 计划名称
-     */
-    private String planNameSrch;
-    /**
-     * 检索条件锁定期
-     */
-    private String lockPeriodSrch;
-    /**
-     * 检索条件 日期开始
-     */
     private String dateFromSrch;
-    /**
-     * 检索条件 日期结束
-     */
+
     private String dateToSrch;
 
-    /** 总计：复投总额 */
-    private BigDecimal sumReinvestAccount;
+    private Integer id;
 
-    /** 总计：债转总额 */
-    private BigDecimal sumCreditAccount;
+    private Date date;
 
-    /**
-     *  日期KEY1
-     */
-    private String dateKey;
+    private String planNid;
+
+    private String planName;
+
+    private Integer lockPeriod;
+
+    private Integer isMonth;
+
+    private BigDecimal reinvestAccount;
+
+    private BigDecimal creditAccount;
+
+    private Integer createUser;
+
+    private Integer createTime;
+
+    private Integer updateUser;
+
+    private Integer updateTime;
+
+    private Integer delFlg;
 
     private Integer limitStart = -1;
 
     private Integer limitEnd = -1;
-
-    public String getPlanNidSrch() {
-        return planNidSrch;
-    }
-
-    public void setPlanNidSrch(String planNidSrch) {
-        this.planNidSrch = planNidSrch;
-    }
-
-    public String getPlanNameSrch() {
-        return planNameSrch;
-    }
-
-    public void setPlanNameSrch(String planNameSrch) {
-        this.planNameSrch = planNameSrch;
-    }
-
-    public String getLockPeriodSrch() {
-        return lockPeriodSrch;
-    }
-
-    public void setLockPeriodSrch(String lockPeriodSrch) {
-        this.lockPeriodSrch = lockPeriodSrch;
-    }
 
     public String getDateFromSrch() {
         return dateFromSrch;
@@ -86,28 +61,108 @@ public class HjhPlanCapitalRequest extends BasePage implements Serializable {
         this.dateToSrch = dateToSrch;
     }
 
-    public BigDecimal getSumReinvestAccount() {
-        return sumReinvestAccount;
+    public Integer getId() {
+        return id;
     }
 
-    public void setSumReinvestAccount(BigDecimal sumReinvestAccount) {
-        this.sumReinvestAccount = sumReinvestAccount;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public BigDecimal getSumCreditAccount() {
-        return sumCreditAccount;
+    public Date getDate() {
+        return date;
     }
 
-    public void setSumCreditAccount(BigDecimal sumCreditAccount) {
-        this.sumCreditAccount = sumCreditAccount;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getDateKey() {
-        return dateKey;
+    public String getPlanNid() {
+        return planNid;
     }
 
-    public void setDateKey(String dateKey) {
-        this.dateKey = dateKey;
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
+
+    public Integer getLockPeriod() {
+        return lockPeriod;
+    }
+
+    public void setLockPeriod(Integer lockPeriod) {
+        this.lockPeriod = lockPeriod;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
+    }
+
+    public BigDecimal getReinvestAccount() {
+        return reinvestAccount;
+    }
+
+    public void setReinvestAccount(BigDecimal reinvestAccount) {
+        this.reinvestAccount = reinvestAccount;
+    }
+
+    public BigDecimal getCreditAccount() {
+        return creditAccount;
+    }
+
+    public void setCreditAccount(BigDecimal creditAccount) {
+        this.creditAccount = creditAccount;
+    }
+
+    public Integer getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Integer getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getDelFlg() {
+        return delFlg;
+    }
+
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 
     public Integer getLimitStart() {

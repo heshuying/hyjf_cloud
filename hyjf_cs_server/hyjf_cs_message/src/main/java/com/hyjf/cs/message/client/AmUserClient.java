@@ -2,6 +2,7 @@ package com.hyjf.cs.message.client;
 
 import java.util.List;
 
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -75,7 +76,7 @@ public interface AmUserClient {
 	 * @param mobile
 	 * @return
 	 */
-	MessagePushErrorVO getMobileCodeByNumber(String mobile);
+	AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
 
 
 	/**
