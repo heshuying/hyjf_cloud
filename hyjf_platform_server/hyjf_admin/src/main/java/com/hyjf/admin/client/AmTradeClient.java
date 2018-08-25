@@ -2022,9 +2022,10 @@ public interface AmTradeClient {
     TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
 
     /**
-     * 复投承接债权列表
+     * 汇计划 -- 复投承接债权列表
      * @param request
      * @return
+     * @Author : huanghui
      */
     HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request);
 
