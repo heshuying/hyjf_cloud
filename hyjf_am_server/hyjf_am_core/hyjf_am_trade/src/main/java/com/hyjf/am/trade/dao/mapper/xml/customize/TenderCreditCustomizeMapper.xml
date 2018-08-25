@@ -172,7 +172,7 @@
 			ht_borrow_recover hbr
 		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
 		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
-		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = bi.borrow_nid
+		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	
