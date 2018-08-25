@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.plancenter.reinvestdebt
 
 import java.util.List;
 
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,8 @@ public class HjhReInvestDebtController {
     public HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request){
         HjhReInvestDebtResponse response = new HjhReInvestDebtResponse();
 
-        List<HjhPlanCapitalCustomizeVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
-        response.setResultList(responseList);
+//        List<HjhReInvestDebtVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
+//        response.setResultList(responseList);
         return response;
     }
 
