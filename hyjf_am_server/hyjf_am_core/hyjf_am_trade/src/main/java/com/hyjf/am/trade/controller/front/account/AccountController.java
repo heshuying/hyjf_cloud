@@ -49,9 +49,7 @@ public class AccountController extends BaseController {
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(borrowUserId);
         if (account != null) {
-            AccountVO accountVO = new AccountVO();
-            BeanUtils.copyProperties(account,accountVO);
-            response.setResult(accountVO);
+            response.setResult(CommonUtils.convertBean(account,AccountVO.class));
         }
         return response;
     }
