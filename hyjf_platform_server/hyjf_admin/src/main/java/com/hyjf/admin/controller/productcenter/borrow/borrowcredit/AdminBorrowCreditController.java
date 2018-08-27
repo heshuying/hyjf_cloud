@@ -56,4 +56,14 @@ public class AdminBorrowCreditController {
        return result;
     }
 
+    @ApiOperation(value = "取消债权转让", notes = "取消债权转让")
+    @PostMapping("/cancel")
+    @ResponseBody
+    public Object creditCalcel(@RequestBody BorrowCreditRequest request){
+        AdminResult result =  borrowCreditService.cancelCredit(request);
+        return result;
+    }
+
+
+
 }

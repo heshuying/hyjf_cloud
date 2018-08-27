@@ -976,7 +976,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity(userService+"/user/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+				.getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -1038,5 +1038,38 @@ public class AmUserClientImpl implements AmUserClient {
 			return   response.getResult();
 		}
 		return  null;
+	}
+	/**
+	 * 插入ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int insertHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/insertHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新 ht_hjh_user_auth_log 表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuthLog",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
 	}
 }

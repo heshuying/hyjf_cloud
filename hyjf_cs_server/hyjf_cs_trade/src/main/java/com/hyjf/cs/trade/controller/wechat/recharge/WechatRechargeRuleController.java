@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.controller.wechat.recharge;
 
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -79,8 +79,8 @@ public class WechatRechargeRuleController {
             // 获取用户的快捷卡信息
             BankCardVO bankCard = this.wechatRechargeRuleService.selectBankCardByUserId(userId);
             if (null != bankCard) {
-                resultVo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
-                resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+//                resultVo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+//                resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
                 resultVo.setBank(StringUtils.isBlank(bankCard.getBank()) ? StringUtils.EMPTY : bankCard.getBank());
                 // 银行卡号
                 resultVo.setCardNo(bankCard.getCardNo());
@@ -92,7 +92,7 @@ public class WechatRechargeRuleController {
                 // 银行代码
                 resultVo.setCode("");
                 Integer bankId = bankCard.getBankId();
-                BanksConfigVO banksConfig = wechatRechargeRuleService.getBanksConfigByBankId(bankId);
+                JxBankConfigVO banksConfig = wechatRechargeRuleService.getBanksConfigByBankId(bankId);
                 if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                     resultVo.setLogo(systemConfig.getWechatHost()+ banksConfig.getBankIcon());
                 } else {
@@ -144,7 +144,6 @@ public class WechatRechargeRuleController {
         resultVo.setRcvAccount(RCV_ACCOUNT);
         resultVo.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
         resultVo.setKindlyReminder(KINDLY_REMINDER);
-        resultVo.setStatus("000");
         return resultVo;
     }
 

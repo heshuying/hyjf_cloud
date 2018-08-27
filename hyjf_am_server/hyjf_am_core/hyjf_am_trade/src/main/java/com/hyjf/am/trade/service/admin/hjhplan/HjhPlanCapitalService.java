@@ -16,19 +16,16 @@ public interface HjhPlanCapitalService {
 
     /**
      * 复投原始标的 条数
-     * @param data
-     * @param planNid
+     * @param request
      * @return
      */
-    Integer queryReInvestDetailCount(String data, String planNid);
+    Integer queryReInvestDetailCount(HjhReInvestDetailRequest request);
 
     /**
      * 复投原始标的 类表
-     * @param data
-     * @param planNid
+     * @param request
      * @return
      */
-    List<HjhReInvestDetailVO> getReinvestInfo(String data, String planNid);
-//    List<HjhReInvestDetailCustomize> getReinvestInfo(String data, String planNid);
+    List<HjhReInvestDetailVO> getReinvestInfo(HjhReInvestDetailRequest request);
 
 }

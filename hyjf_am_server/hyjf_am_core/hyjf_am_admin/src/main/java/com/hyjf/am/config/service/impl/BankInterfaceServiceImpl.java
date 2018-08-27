@@ -1,17 +1,18 @@
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.BankInterfaceMapper;
 import com.hyjf.am.config.dao.mapper.customize.BankInterfaceCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.BankInterface;
 import com.hyjf.am.config.dao.model.auto.BankInterfaceExample;
 import com.hyjf.am.config.service.BankInterfaceService;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao

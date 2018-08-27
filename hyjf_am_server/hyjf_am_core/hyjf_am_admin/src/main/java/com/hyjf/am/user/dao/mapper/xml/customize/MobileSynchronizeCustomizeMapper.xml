@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.MobileSynchronizeCustomizeMapper">
+	<resultMap id="mobileSynchronizeListMap" type="com.hyjf.am.user.dao.model.customize.MobileSynchronizeCustomize">
+		<result column="user_id" property="userId" /> <!-- 用户id -->
+		<result column="username" property="userName"/><!-- 用户名 -->
+		<result column="account" property="accountId"/><!-- 用户电子账户号 -->
+		<result column="mobile" property="mobile"/><!-- 手机号 -->
+	</resultMap>
+	<sql id="Where_Clause">
+		<where>
+			<!-- 用户名 -->
+			<if test="userNameSrch != null and userNameSrch != ''">
+				hu.username LIKE CONCAT('%', #{userNameSrch}, '%')
+			</if>
+			<!-- 电子账户号 -->
+			<if test="accountIdSrch != null and accountIdSrch != ''">
+				AND hboa.`account` LIKE CONCAT('%', #{accountIdSrch}, '%')
+			</if>
+			<!-- 手机号 -->
+			<if test="mobileSrch!=null and mobileSrch != ''">
+				hu.mobile LIKE CONCAT('%',#{mobileSrch},'%')
+			</if>
+		</where>
+	</sql>
+
+	<!-- 获取已开户用户件数 -->
+	<select id="countBankOpenAccountUser" parameterType="com.hyjf.am.resquest.admin.MobileSynchronizeRequest" resultType="java.lang.Integer">
+		SELECT
+			count(hu.user_id)
+		FROM
+			ht_user hu
+		INNER JOIN ht_bank_open_account hboa ON hu.user_id = hboa.user_id
+		<include refid="Where_Clause" />
+	</select>
+
+	<!-- 获取已开户用户列表-->
+	<select id="selectBankOpenAccountUserList" parameterType="com.hyjf.am.resquest.admin.MobileSynchronizeRequest"  resultMap="mobileSynchronizeListMap">
+		SELECT
+			hu.user_id,
+			hu.username,
+			hboa.account,
+			hu.mobile
+		FROM
+			ht_user hu
+		INNER JOIN ht_bank_open_account hboa ON hu.user_id = hboa.user_id
+		<include refid="Where_Clause" />
+		ORDER BY hu.reg_time desc
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>

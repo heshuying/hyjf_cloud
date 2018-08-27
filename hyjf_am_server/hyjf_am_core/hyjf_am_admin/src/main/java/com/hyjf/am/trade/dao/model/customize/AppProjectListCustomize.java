@@ -11,8 +11,6 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import java.io.Serializable;
-
 /**
  * app 实体
  */

@@ -3,12 +3,9 @@
  */
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
 import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
-
-import java.util.List;
 
 /**
  * @author tanyy

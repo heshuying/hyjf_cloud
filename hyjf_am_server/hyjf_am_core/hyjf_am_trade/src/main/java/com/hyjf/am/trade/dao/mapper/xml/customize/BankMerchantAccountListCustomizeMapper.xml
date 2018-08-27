@@ -89,10 +89,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, order_id, borrow_nid, region_name, branch_name, department_name, user_id, account_id, 
+    id, order_id, borrow_nid, region_name, branch_name, department_name, hbmal.user_id, account_id,
     amount, bank_account_type, bank_account_code, bank_account_balance, bank_account_frost, 
-    trans_type, `type`, `status`, seq_no, tx_date, tx_time, create_time, create_user_id, 
-    create_user_name, update_time, update_user_id, update_user_name, remark
+    trans_type, `type`, `status`, seq_no, tx_date, tx_time, hbmal.create_time, create_user_id,
+    create_user_name, hbmal.update_time, update_user_id, update_user_name, remark
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" >
     select
@@ -115,15 +115,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from ht_bank_merchant_account_list
+    from ht_bank_merchant_account_list hbmal
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_bank_merchant_account_list
+    delete from ht_bank_merchant_account_list hbmal
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" >
-    delete from ht_bank_merchant_account_list
+    delete from ht_bank_merchant_account_list hbmal
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -132,7 +132,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_bank_merchant_account_list (order_id, borrow_nid, region_name, 
+    insert into ht_bank_merchant_account_list hbmal (order_id, borrow_nid, region_name,
       branch_name, department_name, user_id, 
       account_id, amount, bank_account_type, 
       bank_account_code, bank_account_balance, bank_account_frost, 
@@ -155,7 +155,7 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_bank_merchant_account_list
+    insert into ht_bank_merchant_account_list hbmal
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
         order_id,
@@ -319,7 +319,7 @@
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update ht_bank_merchant_account_list
+    update ht_bank_merchant_account_list hbmal
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -405,7 +405,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update ht_bank_merchant_account_list
+    update ht_bank_merchant_account_list hbmal
     set id = #{record.id,jdbcType=INTEGER},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
@@ -437,7 +437,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    update ht_bank_merchant_account_list
+    update ht_bank_merchant_account_list hbmal
     <set >
       <if test="orderId != null" >
         order_id = #{orderId,jdbcType=VARCHAR},
@@ -518,7 +518,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    update ht_bank_merchant_account_list
+    update ht_bank_merchant_account_list hbmal
     set order_id = #{orderId,jdbcType=VARCHAR},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       region_name = #{regionName,jdbcType=VARCHAR},

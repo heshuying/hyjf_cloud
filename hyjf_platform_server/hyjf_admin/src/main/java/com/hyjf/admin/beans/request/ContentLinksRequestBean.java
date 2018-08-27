@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -14,14 +15,19 @@ import java.util.Date;
 public class ContentLinksRequestBean extends BaseRequest {
     private Integer id;
 
+    @ApiModelProperty(value = "连接类型1友情连接2合作伙伴")
     private Integer type;
 
+    @ApiModelProperty(value = "状态 1启用 2关闭")
     private Integer status;
 
+    @ApiModelProperty(value = "排序")
     private Integer order;
 
+    @ApiModelProperty(value = "网址")
     private String url;
 
+    @ApiModelProperty(value = "网站名称")
     private String webname;
 
     private String summary;

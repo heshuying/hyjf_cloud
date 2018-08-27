@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
-
 import java.util.Date;
 import java.util.List;
+
+import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 
 public interface HjhAccountBalanceCustomizeMapper {
     /**

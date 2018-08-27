@@ -46,7 +46,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-提现管理",tags = "资金中心-提现管理")
 @RestController
-@RequestMapping("/finance/withdraw")
+@RequestMapping("/hyjf-admin/finance/withdraw")
 public class WithdrawController extends BaseController {
 
 	@Autowired

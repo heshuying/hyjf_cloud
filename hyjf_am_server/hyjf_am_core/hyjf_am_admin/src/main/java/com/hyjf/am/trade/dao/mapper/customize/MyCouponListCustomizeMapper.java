@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 
 /**
  * @author hesy

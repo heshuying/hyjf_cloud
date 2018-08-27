@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
@@ -16,35 +16,35 @@ import java.util.Map;
 public class EvalationInitResponseBean {
     // 用户角色
     @ApiModelProperty(value = "测评等级")
-    private List<ParamName> evaluationStatus;
+    private List<DropDownVO> evaluationStatus;
     // 用户属性
     @ApiModelProperty(value = "测评状态")
-    private List<ParamName> evaluationType;
+    private List<DropDownVO> evaluationType;
     // 开户状态
     @ApiModelProperty(value = "开户状态")
-    private Map<String, String> accountStatus;
+    private List<DropDownVO> accountStatus;
 
-    public List<ParamName> getEvaluationStatus() {
+    public List<DropDownVO> getEvaluationStatus() {
         return evaluationStatus;
     }
 
-    public void setEvaluationStatus(List<ParamName> evaluationStatus) {
+    public void setEvaluationStatus(List<DropDownVO> evaluationStatus) {
         this.evaluationStatus = evaluationStatus;
     }
 
-    public List<ParamName> getEvaluationType() {
+    public List<DropDownVO> getEvaluationType() {
         return evaluationType;
     }
 
-    public void setEvaluationType(List<ParamName> evaluationType) {
+    public void setEvaluationType(List<DropDownVO> evaluationType) {
         this.evaluationType = evaluationType;
     }
 
-    public Map<String, String> getAccountStatus() {
+    public List<DropDownVO> getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(Map<String, String> accountStatus) {
+    public void setAccountStatus(List<DropDownVO> accountStatus) {
         this.accountStatus = accountStatus;
     }
 }

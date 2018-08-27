@@ -137,6 +137,16 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 页面绑卡
 			BindCardPageRequestBean bean = (BindCardPageRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getRetUrl() + bean.getForgotPwdUrl() + bean.getNotifyUrl() + bean.getTimestamp();
+		}else if(BaseDefine.METHOD_SERVER_REGISTER.equals(methodName)){
+			// 用户注册
+			UserRegisterRequestBean bean = (UserRegisterRequestBean) paramBean;
+			sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
+			//用户开户
+		}else if (BaseDefine.METHOD_SERVER_SYNCUSERINFO.equals(methodName)) {
+			//查询用户信息
+			SyncUserInfoRequestBean bean = (SyncUserInfoRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getTimestamp();
+			logger.info("sign is :{}", sign);
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -267,7 +277,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			return retBean;
 
 		} else {
-			// 保存用户开户日志
+			// 保存用户验证码日志
 			BankSmsLogRequest request = new BankSmsLogRequest();
 			request.setSrvAuthCode(bean.getSrvAuthCode());
 			request.setSrvTxCode(bean.getTxCode());
@@ -542,6 +552,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	protected String generatorToken(int userId, String username) {
 		AccessToken accessToken = new AccessToken(userId, username, Instant.now().getEpochSecond());
 		String token = JwtHelper.generatorToken(accessToken);
+		// 1.设置页面30分钟超时 2.jwt无法删除已知非法token,redis可以做到
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, userId, 30*60);
 		return token;
 	}
 

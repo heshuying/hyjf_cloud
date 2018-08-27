@@ -3,11 +3,10 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -16,90 +15,90 @@ import java.util.Map;
 public class UserManagerInitResponseBean {
     // 用户角色
     @ApiModelProperty(value = "用户角色")
-    private Map<String, String> userRoles;
+    private List<DropDownVO> userRoles;
     // 用户属性
     @ApiModelProperty(value = "用户属性")
-    private Map<String, String> userPropertys;
+    private List<DropDownVO> userPropertys;
     // 开户状态
     @ApiModelProperty(value = "开户状态")
-    private Map<String, String> accountStatus;
+    private List<DropDownVO> accountStatus;
     // 用户状态
     @ApiModelProperty(value = "用户状态")
-    private Map<String, String> userStatus;
+    private List<DropDownVO> userStatus;
     // 注册平台
     @ApiModelProperty(value = "注册平台")
-    private Map<String, String> registPlat;
+    private List<DropDownVO> registPlat;
     // 用户类型
     @ApiModelProperty(value = "用户类型")
-    private Map<String, String> userTypes;
+    private List<DropDownVO> userTypes;
     // 借款人类型
     @ApiModelProperty(value = "借款人类型")
-    private Map<String, String> borrowTypes;
+    private List<DropDownVO> borrowTypes;
     //
     @ApiModelProperty(value = "机构配置")
-    private List<HjhInstConfigVO> listHjhInstConfig;
+    private List<DropDownVO> listHjhInstConfig;
 
-    public Map<String, String> getUserRoles() {
+    public List<DropDownVO> getUserRoles() {
         return userRoles;
     }
 
-    public void setUserRoles(Map<String, String> userRoles) {
+    public void setUserRoles(List<DropDownVO> userRoles) {
         this.userRoles = userRoles;
     }
 
-    public Map<String, String> getUserPropertys() {
+    public List<DropDownVO> getUserPropertys() {
         return userPropertys;
     }
 
-    public void setUserPropertys(Map<String, String> userPropertys) {
+    public void setUserPropertys(List<DropDownVO> userPropertys) {
         this.userPropertys = userPropertys;
     }
 
-    public Map<String, String> getAccountStatus() {
+    public List<DropDownVO> getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(Map<String, String> accountStatus) {
+    public void setAccountStatus(List<DropDownVO> accountStatus) {
         this.accountStatus = accountStatus;
     }
 
-    public Map<String, String> getUserStatus() {
+    public List<DropDownVO> getUserStatus() {
         return userStatus;
     }
 
-    public void setUserStatus(Map<String, String> userStatus) {
+    public void setUserStatus(List<DropDownVO> userStatus) {
         this.userStatus = userStatus;
     }
 
-    public Map<String, String> getRegistPlat() {
+    public List<DropDownVO> getRegistPlat() {
         return registPlat;
     }
 
-    public void setRegistPlat(Map<String, String> registPlat) {
+    public void setRegistPlat(List<DropDownVO> registPlat) {
         this.registPlat = registPlat;
     }
 
-    public Map<String, String> getUserTypes() {
+    public List<DropDownVO> getUserTypes() {
         return userTypes;
     }
 
-    public void setUserTypes(Map<String, String> userTypes) {
+    public void setUserTypes(List<DropDownVO> userTypes) {
         this.userTypes = userTypes;
     }
 
-    public Map<String, String> getBorrowTypes() {
+    public List<DropDownVO> getBorrowTypes() {
         return borrowTypes;
     }
 
-    public void setBorrowTypes(Map<String, String> borrowTypes) {
+    public void setBorrowTypes(List<DropDownVO> borrowTypes) {
         this.borrowTypes = borrowTypes;
     }
 
-    public List<HjhInstConfigVO> getListHjhInstConfig() {
+    public List<DropDownVO> getListHjhInstConfig() {
         return listHjhInstConfig;
     }
 
-    public void setListHjhInstConfig(List<HjhInstConfigVO> listHjhInstConfig) {
+    public void setListHjhInstConfig(List<DropDownVO> listHjhInstConfig) {
         this.listHjhInstConfig = listHjhInstConfig;
     }
 }

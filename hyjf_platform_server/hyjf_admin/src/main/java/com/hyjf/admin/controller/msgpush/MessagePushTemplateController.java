@@ -118,11 +118,13 @@ public class MessagePushTemplateController extends BaseController {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
+        templateVO.setTagId(String.valueOf(templateRequest.getTagId()));
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
@@ -192,7 +194,7 @@ public class MessagePushTemplateController extends BaseController {
     }
 
 
-    @ApiOperation(value = "修改状态", notes = "修改装态")
+    @ApiOperation(value = "修改状态", notes = "修改状态")
     @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
     public AdminResult updateStatus(Integer id) {
         if (id != null) {
@@ -233,9 +235,9 @@ public class MessagePushTemplateController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
+            return new AdminResult(FAIL,response.getMessage());
         }
         return new AdminResult<>(response);
     }

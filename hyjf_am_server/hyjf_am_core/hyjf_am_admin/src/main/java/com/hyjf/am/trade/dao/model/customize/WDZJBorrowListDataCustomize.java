@@ -1,10 +1,11 @@
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.hyjf.common.validator.Validator;
 
 public class WDZJBorrowListDataCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;

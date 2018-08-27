@@ -9,6 +9,7 @@ import com.hyjf.cs.message.mongo.mc.MessagePushPlatStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushPlatStaticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -24,5 +25,15 @@ public class MessagePushPlatStaticsServiceImpl implements MessagePushPlatStatics
     @Override
     public List<MessagePushPlatStatics> selectPlatStatics(MessagePushPlatStaticsRequest request) {
         return staticsDao.selectPlatStatics(request);
+    }
+
+    @Override
+    public int selectCount(MessagePushPlatStaticsRequest request) {
+        request.setCurrPage(0);
+        List<MessagePushPlatStatics> list = staticsDao.selectPlatStatics(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.size();
+        }
+        return 0;
     }
 }

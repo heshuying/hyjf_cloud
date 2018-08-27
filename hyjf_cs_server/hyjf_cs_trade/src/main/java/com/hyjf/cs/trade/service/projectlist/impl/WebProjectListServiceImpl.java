@@ -535,6 +535,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params.put("limitStart", page.getOffset());
             params.put("limitEnd", page.getLimit());
             List<AppProjectInvestListCustomizeVO> list = amTradeClient.selectProjectInvestList(params);
+            // 由于上市活动没有上线，暂时数据库没有相应的数据表，暂时不处理，待上市活动上线后，再添加
             if (!CollectionUtils.isEmpty(list)) {
                 Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
                 if (!CollectionUtils.isEmpty(map)){
@@ -1525,4 +1526,66 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
        }
     result.setData(info);
    }
+
+
+
+    /**
+     * 查询计划标的组成：承接记录
+     * @author zhangyk
+     * @date 2018/8/24 10:23
+     */
+    @Override
+    public WebResult getPlanBorrowUndertake(WebBorrowRequestBean requestBean) {
+        WebResult result = new WebResult();
+        JSONObject info = new JSONObject();
+        String borrowNid = requestBean.getBorrowNid();
+        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_REQUIRED,"借款编号");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid",borrowNid);
+        // 查询总条数
+        int count = amTradeClient.countCreditTenderByBorrowNidAndUserId(params);
+        // 初始化总金额
+        String totalAccount = "0";
+        Page page = Page.initPage(requestBean.getCurrPage(),requestBean.getPageSize());
+        if (count > 0){
+            DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+            params.put("limitStart",page.getOffset());
+            params.put("limitEnd", page.getLimit());
+            totalAccount = amTradeClient.sumUndertakeAccount(borrowNid);
+            List<ProjectUndertakeListVO> list = amTradeClient.selectProjectUndertakeList(params);
+            // 查询redis，转化client属性，
+            if (!CollectionUtils.isEmpty(list)){
+                if (!CollectionUtils.isEmpty(list)) {
+                    Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                    if (!CollectionUtils.isEmpty(map)){
+                        for (ProjectUndertakeListVO vo : list){
+                            if (StringUtils.isNotBlank(vo.getClient())){
+                                vo.setClient(map.get(vo.getClient()));
+                            }
+                        }
+                    }
+                }
+            }
+            // 格式化属性
+            if(StringUtils.isNotBlank(totalAccount)){
+                totalAccount = df.format(new BigDecimal(totalAccount));
+            }
+            CommonUtils.convertNullToEmptyString(list);
+            info.put("recordList", list);
+            // 总承接金额
+            info.put("sumAccount", String.valueOf(totalAccount));
+            // 承接总人次
+            info.put("sumTimes", count);
+        }else{
+            info.put("recordList", new ArrayList<>());
+            // 总承接金额
+            info.put("sumAccount", totalAccount);
+            // 承接总人次
+            info.put("sumTimes", 0);
+        }
+        page.setTotal(count);
+        result.setData(info);
+        result.setPage(page);
+        return result;
+    }
 }

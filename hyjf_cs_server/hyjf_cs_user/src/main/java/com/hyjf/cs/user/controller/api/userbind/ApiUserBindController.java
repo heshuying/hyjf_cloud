@@ -19,6 +19,7 @@ import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,67 @@ public class ApiUserBindController extends BaseUserController {
 	private WebLoginController loginController;
     /** 纳觅财富机构编号 */
     public static final String NMCF_PID = "11000002";
-    
+
+    /**
+     * 页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+	@ApiOperation(value = "获取登录参数",notes = "获取登录参数")
+	@PostMapping(value = "/bindApi")
+	public JSONObject bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody ApiUserPostBean apiUserPostBean){
+		// 设置接口结果页的信息（返回Url）
+		this.initCheckUtil(apiUserPostBean);
+		JSONObject result = new JSONObject();
+		// 验证
+		this.checkPostBeanOfWeb(apiUserPostBean);
+		logger.info("验签开始....");
+		// 验签
+		this.checkSign(apiUserPostBean);
+		logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
+		// 解密
+		int bindUniqueId = this.decrypt(apiUserPostBean);
+		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
+		result.put("instcode",apiUserPostBean.getPid());
+		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+
+		if(userId == null){
+			// 跳转登陆授权画面
+			result.put("apiForm",new BeanMap(apiUserPostBean));
+			//modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
+		}else{
+			// 登陆
+			WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
+			loginService.setToken(webUser);
+			//WebUtils.sessionLogin(request, response, webUser);
+
+			//重复绑定
+			CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
+		}
+		String idCard = apiUserPostBean.getIdCard();
+		String phone = apiUserPostBean.getMobile();
+		String mobile = apiUserPostBean.getMobile()==null?"":phone;
+		String readonly = "";
+		if (!StringUtils.isEmpty(idCard)) {
+			UserVO userVO = loginService.getUserByIdCard(idCard);
+			String hyjfMobile = userVO.getMobile();
+			if(hyjfMobile != null){
+				mobile = hyjfMobile;
+				readonly = "readonly";
+			}
+		}else {
+			if (!StringUtils.isEmpty(phone)) {
+				readonly = "readonly";
+			}
+		}
+		result.put("mobile", mobile);
+		result.put("readonly", readonly);
+
+		return result;
+	}
+
+
 	/**
 	 * 授权按钮
 	 * @param

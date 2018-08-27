@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import org.apache.ibatis.annotations.Param;
-
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 统计运营报告的相关数据

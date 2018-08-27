@@ -4,7 +4,6 @@
 package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import java.util.List;
@@ -41,13 +40,5 @@ public interface MessagePushErrorService {
      *
      * @return
      */
-    MessagePushMsgHistory getRecord(Integer id);
-
-    /**
-     * 推送极光消息
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    void sendMessage(MessagePushErrorVO msg);
+    MessagePushMsgHistory getRecord(String id);
 }

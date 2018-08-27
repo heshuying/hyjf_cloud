@@ -2,10 +2,12 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
@@ -56,13 +58,13 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
 
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         BatchBorrowRecoverReponse batchBorrowRepayReponse = amTradeClient.getBatchBorrowRecoverList(request);
         if (null != batchBorrowRepayReponse) {
             List<BatchBorrowRecoverVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
             Integer recordCount = batchBorrowRepayReponse.getRecordTotal();
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
-                this.queryBatchCenterStatusName(listAccountDetail,"REVERIFY_STATUS");
+                this.queryBatchCenterStatusName(listAccountDetail,request.getNameClass());
             }
             if (null != listAccountDetail) {
                 BatchBorrowRecoverVo sumVo = this.queryBatchCenterListSum(request);
@@ -268,9 +270,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         }
         //资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.findHjhInstConfigList();
+        List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(hjhInstConfigList, "instCode", "instName");
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             jsonObject.put("资金来源列表","hjhInstConfigList");
-            jsonObject.put("hjhInstConfigList",hjhInstConfigList);
+            jsonObject.put("hjhInstConfigList",dropDownVOS);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取资金来源列表失败！");

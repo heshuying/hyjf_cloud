@@ -103,7 +103,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param userId
      * @param sign
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")

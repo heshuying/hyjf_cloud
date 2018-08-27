@@ -1,11 +1,11 @@
 package com.hyjf.am.market.service;
 
+import java.util.List;
+
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
-
-import java.util.List;
 
 /**
  * @author lisheng

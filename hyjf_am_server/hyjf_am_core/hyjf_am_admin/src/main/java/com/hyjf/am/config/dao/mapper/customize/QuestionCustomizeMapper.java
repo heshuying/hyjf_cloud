@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
-
-import java.util.List;
 
 public interface QuestionCustomizeMapper {
 

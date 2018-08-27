@@ -10,6 +10,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,8 +43,17 @@ public class MessagePushTemplateStaticsController extends BaseController {
 		if (!CollectionUtils.isEmpty(list)) {
 			List<MessagePushTemplateStaticsVO> voList = CommonUtils.convertBeanList(list,
 					MessagePushTemplateStaticsVO.class);
+			for (MessagePushTemplateStaticsVO vo : voList) {
+				if (StringUtils.isNotBlank(vo.getTagId())) {
+					String tagName = staticsService.selectTagName(vo.getTagId());
+					vo.setTagName(tagName);
+				}
+			}
 			response.setResultList(voList);
 		}
+		// 查询数量
+		int count = staticsService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 }

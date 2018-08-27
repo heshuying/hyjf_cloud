@@ -46,6 +46,7 @@ import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
@@ -101,6 +102,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	
 	@Autowired
 	private WrbCallBackProducer wrbCallBackProducer;
+
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
     
     
 	@Override
@@ -1489,7 +1493,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setRemark(borrowNid); // 投资编号
 			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
-			//TODO: 网站首支明细队列
+			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
@@ -2091,7 +2095,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
-                //TODO: 核对参数
+                //核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -2339,7 +2343,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 params.put("borrowNid", borrowNid);
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
-                //TODO: 核对参数
+                //核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
         			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
@@ -2403,16 +2407,30 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		repayParams.put("recoverInterestAmount", recoverInterestAmount);// 当期已收利息
 		logger.info("-----------已收利息---" + recoverInterestAmount);
 		
-		//TODO: 更新运营数据队列
+		//更新运营数据队列
 //		rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_OPERATION_DATA,
 //				JSONObject.toJSONString(repayParams));
+        try {
+            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(repayParams)));
+        }catch (MQException e){
+            logger.error("发送运营数据更新MQ失败,还款标的:" + borrowNid);
+        }
 
 		logger.info("-----------还款完成，更新状态完成---" + borrowNid + "---------【还款期数】" + periodNow);
 		return true;
 	}
 
 
-	//TODO 还款后变更投资人资金明细
+	/**
+	 *  还款后变更投资人资金明细
+	 * @param apicron
+	 * @param borrow
+	 * @param borrowInfo
+	 * @param borrowRecover
+	 * @param repayDetail
+	 * @return
+	 * @throws Exception
+	 */
 	private boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, JSONObject repayDetail) throws Exception {
 
 		logger.info("-----------还款开始---" + apicron.getBorrowNid() + "---------");
@@ -2874,7 +2892,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setRemark(borrowNid); // 投资编号
 			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
-			//TODO: 网站首支明细队列
+			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
                 accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
@@ -2911,7 +2929,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			params.put("backTime", GetDate.formatDateTime(System.currentTimeMillis()));
 			// 还款金额
 			params.put("backMoney", repayAccount.toString());
-			//TODO: 风车理财队列
+			//风车理财队列
 			try {
 //				rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_WRB_CALLBACK_NOTIFY, JSONObject.toJSONString(params));
 				logger.info("发送风车理财---" + borrowTender.getNid() + "---------" + repayAccount.toString());

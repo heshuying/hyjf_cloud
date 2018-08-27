@@ -1,22 +1,21 @@
 package com.hyjf.am.response.admin;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
-
-import java.util.List;
 
 /**
  * 汇计划-计划资金-复投详情
  * @Author : huanghui
  */
-public class HjhReInvestDetailResponse {
+public class HjhReInvestDetailResponse extends Response<HjhReInvestDetailVO> {
 
-    private List<HjhReInvestDetailVO> ResultList;
+    private int count;
 
-    public List<HjhReInvestDetailVO> getResultList() {
-        return ResultList;
+    public int getCount() {
+        return count;
     }
 
-    public void setResultList(List<HjhReInvestDetailVO> resultList) {
-        ResultList = resultList;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

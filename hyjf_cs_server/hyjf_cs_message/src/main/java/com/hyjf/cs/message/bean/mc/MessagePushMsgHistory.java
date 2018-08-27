@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Document(collection = "ht_message_push_history")
 public class MessagePushMsgHistory implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -68,13 +68,13 @@ public class MessagePushMsgHistory implements Serializable {
 
     private Integer msgDestinationCountAndroid;
 
-    private Integer createTime;
+    private String createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer lastupdateTime;
+    private String lastupdateTime;
 
     private Integer lastupdateUserId;
 
@@ -84,11 +84,11 @@ public class MessagePushMsgHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -300,11 +300,11 @@ public class MessagePushMsgHistory implements Serializable {
         this.msgDestinationCountAndroid = msgDestinationCountAndroid;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -324,11 +324,11 @@ public class MessagePushMsgHistory implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getLastupdateTime() {
+    public String getLastupdateTime() {
         return lastupdateTime;
     }
 
-    public void setLastupdateTime(Integer lastupdateTime) {
+    public void setLastupdateTime(String lastupdateTime) {
         this.lastupdateTime = lastupdateTime;
     }
 

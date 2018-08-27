@@ -26,6 +26,7 @@ import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -1784,7 +1785,7 @@ public interface AmTradeClient {
      * @return
      * @Author : huanghui
      */
-    public List<HjhRepayVO> selectByExample(HjhRepayRequest request);
+    HjhRepayResponse selectHjhRepayList(HjhRepayRequest request);
 
     /**
      * 指定指端检索 计划还款列表
@@ -1795,20 +1796,20 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 总条数
-     * @param data
-     * @param planNid
-     * @return
-     */
-    Integer getHjhReInvestDetailListCount(String data, String planNid);
-    /**
-     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * 汇计划 -> 资金计划 -> 复投原始标的 总条数 (废弃)
      * @param data
      * @param planNid
      * @return
      * @Author : huanghui
      */
-    List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
+    Integer getHjhReInvestDetailListCount(String data, String planNid);
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param requestBean
+     * @return
+     * @Author : huanghui
+     */
+    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest requestBean);
 
     /**
      * 汇计划按天转让记录
@@ -2021,9 +2022,10 @@ public interface AmTradeClient {
     TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
 
     /**
-     * 复投承接债权列表
+     * 汇计划 -- 复投承接债权列表
      * @param request
      * @return
+     * @Author : huanghui
      */
     HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request);
 
@@ -2245,7 +2247,7 @@ public interface AmTradeClient {
 
     List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode);
 
-    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request);
+//    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request);
 
     /**
      * 查询配置中心保证金配置
@@ -2791,6 +2793,21 @@ public interface AmTradeClient {
      * @return
      */
     Boolean updateBorrowTender(BorrowTenderUpdRequest request);
+
+	List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
+
+    /**
+     * 获取债转状态为0的数据
+     * @return
+     */
+    List<com.hyjf.am.vo.trade.BorrowCreditVO> selectBorrowCreditList();
+
+    /**
+     * 更新债转状态
+     * @return
+     */
+    Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
+
 
 }
 

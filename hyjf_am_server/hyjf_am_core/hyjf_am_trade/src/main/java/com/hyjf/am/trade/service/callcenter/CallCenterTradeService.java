@@ -110,4 +110,12 @@ public interface CallCenterTradeService {
      * @return
      */
     RUser getRefereerInfoByUserId(Integer userId);
+
+    /**
+     * 查询账户余额
+     * @param callCenterBankAccountManageRequest
+     * @return List<CallCenterCouponBackMoneyCustomize>
+     * @author libin
+     */
+    List<CallCenterBankAccountManageCustomize> queryAccountInfos(CallCenterBankAccountManageRequest callCenterBankAccountManageRequest);
 }

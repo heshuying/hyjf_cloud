@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -331,7 +330,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setLogRemark("充值页面");
 		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
-		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1");
+		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1&logOrdId="+bean.getLogOrderId());
 		// 页面调用必须传的
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_DIRECT_RECHARGE_PAGE);
 		// 插入充值记录
@@ -502,7 +501,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	public void checkUserMessage(BankCardVO bankCard,Integer userId,String money){
-		ModelAndView modelAndView = new ModelAndView();
 		UserVO users=this.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);

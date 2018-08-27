@@ -11,10 +11,10 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
 
 public interface AppProjectListCustomizeMapper {
 

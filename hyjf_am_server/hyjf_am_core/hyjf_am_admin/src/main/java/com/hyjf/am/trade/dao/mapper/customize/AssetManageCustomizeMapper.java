@@ -11,14 +11,21 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.*;
-import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
-import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppMyPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CurrentHoldObligatoryRightListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CurrentHoldPlanListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RepayMentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RepayMentPlanListCustomize;
+import com.hyjf.am.trade.dao.model.customize.TenderCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.WechatRepayMentListCustomize;
 
 
 public interface AssetManageCustomizeMapper {

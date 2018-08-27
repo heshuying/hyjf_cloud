@@ -8,7 +8,6 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.MsgPushBean;
@@ -104,7 +103,9 @@ public class MessagePushController extends BaseController {
 
 	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
 	@PostMapping("/getMsgListAction")
-	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
+	public JSONObject getMsgListAction(
+			@RequestHeader(value = "userId") Integer userId,
+			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
@@ -123,7 +124,7 @@ public class MessagePushController extends BaseController {
 		ret.put("statusDesc", "成功");
 		// 获取标签信息
 		// 查询列表数量
-		int count = msgPushService.countMsgHistoryRecord(0, null, null);
+		int count = msgPushService.countMsgHistoryRecord(0, userId, null);
 
 		// 返回列表
 		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();
@@ -131,7 +132,7 @@ public class MessagePushController extends BaseController {
 		pageSize = Integer.valueOf(pageSize);
 		int limitStart = pageSize * (page - 1);
 		try {
-			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, null, null, limitStart, pageSize);
+			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, userId, null, limitStart, pageSize);
 			boolean firstFlag = false;
 			if (page <= 1) {
 				firstFlag = true;
@@ -226,7 +227,7 @@ public class MessagePushController extends BaseController {
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		//更新记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		if(msgHistory != null){
 			//第一次阅读
 			if(msgHistory.getMsgReadCountAndroid() == 0 && msgHistory.getMsgReadCountIos() == 0){
@@ -258,15 +259,8 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
 		// 获取记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		ret.put("msgHistory", msgHistory);
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");

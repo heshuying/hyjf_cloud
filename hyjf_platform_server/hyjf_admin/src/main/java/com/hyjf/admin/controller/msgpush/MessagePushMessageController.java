@@ -32,10 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -139,17 +136,20 @@ public class MessagePushMessageController extends BaseController {
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
 
+        templateRequest.setCreateUserName(username);
+        templateRequest.setCreateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -190,12 +190,16 @@ public class MessagePushMessageController extends BaseController {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
+
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
@@ -239,12 +243,20 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "删除手动发送消息", notes = "删除手动发送消息")
     @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(String ids) {
+    public AdminResult deleteAction(@RequestParam String ids) {
         if (ids == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
-        MessagePushMsgResponse response = messagePushMsgService.deleteAction(recordList);
+        String msgIds[] = ids.split(",");
+        List<MessagePushMsgVO> recordList = new ArrayList<>();
+        for (String id : msgIds) {
+            MessagePushMsgResponse msgResponse = messagePushMsgService.getRecord(id);
+            MessagePushMsgVO msgVO = msgResponse.getResult();
+            recordList.add(msgVO);
+        }
+        MessagePushMsgRequest request = new MessagePushMsgRequest();
+        request.setRecordList(recordList);
+        MessagePushMsgResponse response = messagePushMsgService.deleteAction(request);
         if (response.getCount() > 0) {
             return new AdminResult<>(response);
         }
