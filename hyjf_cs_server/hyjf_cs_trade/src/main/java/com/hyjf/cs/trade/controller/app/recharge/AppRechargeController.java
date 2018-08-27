@@ -142,6 +142,11 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
 		directRechargeBean.setPlatform(platform);
+		logger.info("directRechargeBean is :{}", JSONObject.toJSONString(directRechargeBean));
+		logger.info("userId is :{}", userId);
+		logger.info("ipAddr is :{}", ipAddr);
+		logger.info("mobile is :{}", mobile);
+		logger.info("money is :{}", money);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
