@@ -98,7 +98,7 @@ public class MessagePushErrorController {
      * @return
      */
     @RequestMapping("getRecord/{id}")
-    public MessagePushHistoryResponse getRecord(@PathVariable Integer id) {
+    public MessagePushHistoryResponse getRecord(@PathVariable String id) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
         if (msg != null){

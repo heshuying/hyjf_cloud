@@ -74,7 +74,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public MessagePushMsgHistory getRecord(Integer id) {
+    public MessagePushMsgHistory getRecord(String id) {
         return messagePushMsgHistoryDao.getRecord(id);
     }
 }
