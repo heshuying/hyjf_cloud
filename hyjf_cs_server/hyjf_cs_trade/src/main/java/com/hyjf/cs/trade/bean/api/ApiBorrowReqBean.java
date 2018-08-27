@@ -8,4 +8,14 @@ import com.hyjf.cs.trade.bean.BaseBean;
  * @date 2018/8/27 10:00
  */
 public class ApiBorrowReqBean extends BaseBean {
+
+    private String borrowStatus;
+
+    public String getBorrowStatus() {
+        return borrowStatus;
+    }
+
+    public void setBorrowStatus(String borrowStatus) {
+        this.borrowStatus = borrowStatus;
+    }
 }

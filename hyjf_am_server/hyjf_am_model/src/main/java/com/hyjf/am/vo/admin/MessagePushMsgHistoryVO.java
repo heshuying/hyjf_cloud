@@ -56,25 +56,35 @@ public class MessagePushMsgHistoryVO {
 
     private String msgRemark;
 
-    private Integer sendTime;
+    private String sendTime;
 
     private Integer msgDestinationCountIos;
 
     private Integer msgDestinationCountAndroid;
 
-    private Integer createTime;
+    private String createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer lastupdateTime;
+    private String lastupdateTime;
 
     private Integer lastupdateUserId;
 
     private String lastupdateUserName;
 
     private String msgJpushZyb2Id;
+
+    private String tagName;
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -270,11 +280,11 @@ public class MessagePushMsgHistoryVO {
         this.msgRemark = msgRemark == null ? null : msgRemark.trim();
     }
 
-    public Integer getSendTime() {
+    public String getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(Integer sendTime) {
+    public void setSendTime(String sendTime) {
         this.sendTime = sendTime;
     }
 
@@ -294,11 +304,11 @@ public class MessagePushMsgHistoryVO {
         this.msgDestinationCountAndroid = msgDestinationCountAndroid;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -318,11 +328,11 @@ public class MessagePushMsgHistoryVO {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getLastupdateTime() {
+    public String getLastupdateTime() {
         return lastupdateTime;
     }
 
-    public void setLastupdateTime(Integer lastupdateTime) {
+    public void setLastupdateTime(String lastupdateTime) {
         this.lastupdateTime = lastupdateTime;
     }
 

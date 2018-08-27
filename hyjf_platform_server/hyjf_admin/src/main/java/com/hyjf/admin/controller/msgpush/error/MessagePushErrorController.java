@@ -73,7 +73,7 @@ public class MessagePushErrorController extends BaseController {
     public JSONObject update(@RequestParam("id") String id) {
         // 重发此消息
         MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
-        this.messagePushErrorService.sendMessage(msg);
+        //this.messagePushErrorService.sendMessage(msg);
         JSONObject jsonObject = new JSONObject();
         //返回状态
         jsonObject.put("status", "000");
