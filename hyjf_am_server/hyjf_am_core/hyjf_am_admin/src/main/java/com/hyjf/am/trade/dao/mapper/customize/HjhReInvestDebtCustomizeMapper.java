@@ -17,7 +17,7 @@ public interface HjhReInvestDebtCustomizeMapper {
      * @param hjhReInvestDebtCustomize
      * @return
      */
-//    Integer queryReInvestDebtCount(HjhReInvestDebtCustomize hjhReInvestDebtCustomize);
+    Integer queryReInvestDebtCount(Map<String, Object> param);
 
     /**
      * 复投详情

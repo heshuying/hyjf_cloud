@@ -3527,7 +3527,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BankMerchantAccountResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/account/getbankmerchantaccount/" + accountCode,
                 BankMerchantAccountResponse.class).getBody();
-        if (response == null) {
+        if (response != null) {
             return response.getResult();
         }
         return null;
@@ -3549,7 +3549,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BankMerchantAccountInfoResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/account/getBankMerchantAccountInfo/" + accountCode,
                 BankMerchantAccountInfoResponse.class).getBody();
-        if (response == null) {
+        if (response != null) {
             return response.getResult();
         }
         return null;
@@ -4654,11 +4654,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 汇计划 -- 复投承接债权列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
     @Override
     public HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request) {
         HjhReInvestDebtResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhReInvestDebt/hjhReInvestDebtList", request, HjhReInvestDebtResponse.class).getBody();
 
-        if (response != null) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
