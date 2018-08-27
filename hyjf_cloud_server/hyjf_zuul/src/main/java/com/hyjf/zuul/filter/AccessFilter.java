@@ -428,6 +428,7 @@ public class AccessFilter extends ZuulFilter {
 			SecretUtil.refreshSign(sign);
 			ctx.addZuulRequestHeader("userId", userId + "");
 			ctx.addZuulRequestHeader("accountId", accountId);
+			ctx.addZuulRequestHeader("sign",sign);
 		} else {
 			return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
 		}
