@@ -271,7 +271,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
         
         cra.andCreateTimeGreaterThanOrEqualTo(GetDate.getTodayBeforeOrAfter(-1));// 一天之前
         // modify by liubin 江西银行充值掉单异常处理修正 start
-        cra.andCreateTimeLessThanOrEqualTo(GetDate.getSomeTimeBeforeOrAfterMin(new Date(), -30));// 30分钟之前的充值订单TODO
+        cra.andCreateTimeLessThanOrEqualTo(GetDate.getSomeTimeBeforeOrAfterMin(new Date(), -30));// 30分钟之前的充值订单
         // modify by liubin 江西银行充值掉单异常处理修正 end
         return this.accountRechargeMapper.selectByExample(example);
     }
