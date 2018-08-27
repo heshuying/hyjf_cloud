@@ -68,8 +68,7 @@ public class AppRechargeController extends BaseTradeController{
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
-		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) +
-				"/hyjf-app/bank/user/userDirectRecharge/recharge?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
+		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
 		String token = "";
 		String order = "";
