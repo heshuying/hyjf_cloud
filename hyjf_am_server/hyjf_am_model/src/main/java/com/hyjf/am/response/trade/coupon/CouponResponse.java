@@ -1,9 +1,8 @@
 package com.hyjf.am.response.trade.coupon;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 
-public class CouponResponse extends Response<CouponUserForAppCustomizeVO> {
+public class CouponResponse extends Response {
     private Integer totalRecord;
 
     public Integer getTotalRecord() {
