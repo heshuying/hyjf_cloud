@@ -362,8 +362,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setUserId(userId);
 		directRechargeBean.setIp(ipAddr);
 		directRechargeBean.setUserName(user.getUsername());
-		directRechargeBean.setPlatform("0");
-		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
+		directRechargeBean.setPlatform(directRechargeBean.getPlatform());
+		directRechargeBean.setChannel(directRechargeBean.getChannel());
 		directRechargeBean.setAccountId(account.getAccount());
 		BankCallBean bean = this.insertGetMV(directRechargeBean);
 		return bean;
