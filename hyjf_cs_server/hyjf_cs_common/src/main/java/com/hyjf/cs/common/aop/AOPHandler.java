@@ -12,17 +12,13 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
 package com.hyjf.cs.common.aop;
 
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.response.Response;
-import com.hyjf.common.exception.AMException;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -176,7 +172,7 @@ public class AOPHandler {
 	 * @return
 	 * @throws Throwable
 	 */
-	@Around("execution(public * org.springframework.web.client.RestTemplate.*(..))")
+	/*@Around("execution(public * org.springframework.web.client.RestTemplate.*(..))")
 	public Object amExceptionHandler(ProceedingJoinPoint pjp) throws Throwable {
 
 		Object result = null;
@@ -190,5 +186,5 @@ public class AOPHandler {
 			throw e;
 		}
 		return result;
-	}
+	}*/
 }
