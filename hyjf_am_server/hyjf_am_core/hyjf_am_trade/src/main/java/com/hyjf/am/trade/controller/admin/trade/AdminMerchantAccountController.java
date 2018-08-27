@@ -36,13 +36,13 @@ public class AdminMerchantAccountController {
      * @return
      */
     @RequestMapping("/selectMerchantAccountListByPage")
-    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest adminRequest) {
+    public MerchantAccountResponse selectMerchantAccountListByPage(@RequestBody AdminMerchantAccountRequest adminRequest) {
         logger.info("平台设置账户列表..." + JSONObject.toJSON(adminRequest));
         MerchantAccountResponse  result=new MerchantAccountResponse();
         //查询平台设置账户列表条数
         int recordTotal = merchantAccountService.getMerchantAccountListCountByPage(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize()== 0?10:adminRequest.getPageSize());
             //查询记录
             List<MerchantAccount> recordList =merchantAccountService.getMerchantAccountListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -78,6 +78,8 @@ public class AdminMerchantAccountController {
                 result.setResult(recordVo);
                 result.setRtn(Response.SUCCESS);
             }
+            result.setRtn(Response.SUCCESS);
+            result.setMessage("查询数据为空！");
             return result;
         }
         return null;
@@ -94,6 +96,7 @@ public class AdminMerchantAccountController {
         if(cot > 0 ){
             resp.setRtn(Response.SUCCESS);
         }else{
+            resp.setMessage("添加失败！");
             resp.setRtn(Response.FAIL);
         }
         return resp;
@@ -105,11 +108,12 @@ public class AdminMerchantAccountController {
     @RequestMapping("/updateAccountConfig")
     public MerchantAccountResponse updateAccountConfig(@RequestBody AdminMerchantAccountRequest adminRequest) {
         MerchantAccountResponse resp = new MerchantAccountResponse();
-        // 插入
+        // 修改
         int cot = merchantAccountService.updateAccountConfig(adminRequest);
         if(cot > 0 ){
             resp.setRtn(Response.SUCCESS);
         }else{
+            resp.setMessage("修改失败！");
             resp.setRtn(Response.FAIL);
         }
         return resp;
@@ -118,14 +122,16 @@ public class AdminMerchantAccountController {
      * 根据子账户名称检索
      * @return
      */
-    public int countAccountListInfoBySubAccountName(HashMap<String,String> map){
+    @RequestMapping("/countAccountListInfoBySubAccountName")
+    public int countAccountListInfoBySubAccountName(@RequestBody HashMap<String,String> map){
         return merchantAccountService.countAccountListInfoBySubAccountName(map);
     }
     /**
      * 根据子账户代号检索
      * @return
      */
-    public int countAccountListInfoBySubAccountCode(HashMap<String,String> map){
+    @RequestMapping("/countAccountListInfoBySubAccountCode")
+    public int countAccountListInfoBySubAccountCode(@RequestBody HashMap<String,String> map){
         return merchantAccountService.countAccountListInfoBySubAccountCode(map);
     }
 
