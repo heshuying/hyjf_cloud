@@ -123,6 +123,7 @@ public class MyProfileController extends BaseUserController {
         List<CouponUserListCustomizeVO> list=new ArrayList<CouponUserListCustomizeVO>();
         DecimalFormat df = new DecimalFormat(",###");
         df.setRoundingMode(RoundingMode.FLOOR);
+
         for (CouponUserForAppCustomizeVO config : configs) {
             CouponUserListCustomizeVO customize=new CouponUserListCustomizeVO();
             customize.setId(config.getId());
