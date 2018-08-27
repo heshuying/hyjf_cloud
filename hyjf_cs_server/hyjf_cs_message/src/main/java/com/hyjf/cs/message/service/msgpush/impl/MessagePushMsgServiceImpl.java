@@ -27,7 +27,7 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
     }
 
     @Override
-    public MessagePushMsg getMessagePushMsgById(Integer id) {
+    public MessagePushMsg getMessagePushMsgById(String id) {
         return messagePushMessageDao.getMessagePushMsgById(id);
     }
 
@@ -44,7 +44,7 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
     }
 
     @Override
-    public Integer deleteMessagePushMsg(List<Integer> recordList) {
+    public Integer deleteMessagePushMsg(List<MessagePushMsg> recordList) {
         messagePushMessageDao.deleteBatch(recordList);
         return 1;
     }

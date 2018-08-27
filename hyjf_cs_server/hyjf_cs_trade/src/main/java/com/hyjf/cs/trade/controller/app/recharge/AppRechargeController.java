@@ -10,6 +10,8 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -70,16 +72,25 @@ public class AppRechargeController extends BaseTradeController{
 		/** 充值接口 */
 		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
-		String token = "";
-		String order = "";
+		String isMencry = vo.getIsMencry();// 版本号
+		logger.info("解密前的手机号["+mobile+"],充值金额:[" + vo.getMoney() + "]");
+		if(!"1".equals(isMencry)){
+			String key = SecretUtil.getKey(vo.getSign());
+			if (Validator.isNull(key)) {
+				object.put("status",CustomConstants.APP_STATUS_FAIL);
+				object.put("statusDesc","请求参数非法");
+				return object;
+			}
+			// 解密
+			mobile = DES.decodeValue(key, mobile);
+		}
+		logger.info("充值手机号为["+mobile+"],充值金额:[" + vo.getMoney() + "]");
 		// 校验数据并拼接回传地址
 		if (Validator.isNull(vo.getMoney())) {
 			object.put("status",CustomConstants.APP_STATUS_FAIL);
 			object.put("statusDesc","请求参数非法");
 		} else {// 拼接充值地址并返回
 			mobile = strEncode(vo.getMobile());
-			token = strEncode(vo.getToken());
-			order = strEncode(vo.getOrder());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
 			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
 

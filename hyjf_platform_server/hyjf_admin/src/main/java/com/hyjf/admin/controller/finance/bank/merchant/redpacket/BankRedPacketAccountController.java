@@ -63,6 +63,7 @@ public class BankRedPacketAccountController extends BaseController {
         }
         List<BankMerchantAccountListCustomizeVO> recordList = response.getResultList();
         result.put("recordList",recordList);
+        result.put("total",response.getRecordTotal());
         return new AdminResult(result);
     }
 
