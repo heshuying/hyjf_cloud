@@ -94,9 +94,9 @@
     <select id="queryAccountCountAll" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
 		SELECT
-				count(a.user_id)
-			FROM
-				ht_account a
+		  count(a.user_id)
+		FROM
+		  ht_account a
 	</select>
 
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"

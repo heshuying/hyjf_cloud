@@ -27,7 +27,7 @@ import java.util.List;
 
 @Api(value = "银行账户管理")
 @RestController
-@RequestMapping("/am-trade/bankAccountManage")
+@RequestMapping("/am-trade/bank_account_manage")
 public class BankAccountManageController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class BankAccountManageController {
      * @Desc :查询总件数
      */
     @ApiOperation(value = "银行账户管理查询总件数")
-    @PostMapping("/updateAccount")
+    @PostMapping("/update_account")
     public Integer updateAccount(AccountVO accountVO) {
         Integer count = bankAccountManageService.updateAccount(accountVO);
         return count;
@@ -49,7 +49,7 @@ public class BankAccountManageController {
      * @Desc :查询总件数
      */
     @ApiOperation(value = "银行账户管理查询总件数")
-    @PostMapping("/updateaccountcheck")
+    @PostMapping("/update_account_check")
     public String updateAccountCheck(AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
         String result = bankAccountManageService.updateAccountCheck(adminBankAccountCheckCustomizeVO);
         return result;
@@ -60,7 +60,7 @@ public class BankAccountManageController {
      * @Desc :查询总件数
      */
     @ApiOperation(value = "银行账户管理查询总件数")
-    @PostMapping("/queryAccountCount")
+    @PostMapping("/query_account_count")
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
         Integer count = bankAccountManageService.queryAccountCount(bankAccountManageRequest);
         return count;
@@ -71,7 +71,7 @@ public class BankAccountManageController {
      * @Desc :查询列表数据
      */
     @ApiOperation(value = "银行账户管理查询列表")
-    @PostMapping("/queryAccountInfos")
+    @PostMapping("/query_account_infos")
     public BankAccountManageCustomizeResponse queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
         BankAccountManageCustomizeResponse response = new BankAccountManageCustomizeResponse();
         List<BankAccountManageCustomize> bankAccountManageCustomizes = bankAccountManageService.queryAccountInfos(bankAccountManageRequest);

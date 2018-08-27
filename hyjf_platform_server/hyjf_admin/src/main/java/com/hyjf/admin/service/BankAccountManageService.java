@@ -16,15 +16,10 @@ import java.util.List;
  * @version BankAccountManageService, v0.1 2018/6/29 11:54
  */
 public interface BankAccountManageService {
-    /**
-     * 行账户管理页面查询件数
-     * @param bankAccountManageRequest
-     * @return
-     */
-    Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest);
 
     /**
      * 账户管理页面查询列表
+     *
      * @param bankAccountManageRequest
      * @return
      */
@@ -32,6 +27,7 @@ public interface BankAccountManageService {
 
     /**
      * 资金明细（列表）
+     *
      * @param bankAccountManageRequest
      * @return
      */
@@ -39,6 +35,7 @@ public interface BankAccountManageService {
 
     /**
      * 查询用户是否开户
+     *
      * @param userId
      * @return
      */
@@ -46,6 +43,7 @@ public interface BankAccountManageService {
 
     /**
      * 更新用户账户信息
+     *
      * @param userId
      * @param balance
      * @param frost
@@ -55,6 +53,7 @@ public interface BankAccountManageService {
 
     /**
      * 线下充值对账
+     *
      * @param userId
      * @param startTime
      * @param endTime
