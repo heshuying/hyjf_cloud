@@ -3,6 +3,7 @@ package com.hyjf.am.resquest.trade;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -25,6 +26,7 @@ public class DataSearchRequest implements Serializable {
     @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
+    private List<Integer> userIds;
 
 
     public String getAddTimeStart() {
@@ -84,4 +86,11 @@ public class DataSearchRequest implements Serializable {
         this.pageSize = pageSize;
     }
 
+    public List<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<Integer> userIds) {
+        this.userIds = userIds;
+    }
 }
