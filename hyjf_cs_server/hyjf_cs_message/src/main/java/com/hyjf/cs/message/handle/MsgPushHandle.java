@@ -30,6 +30,7 @@ import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.PushPayload;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -308,6 +309,9 @@ public class MsgPushHandle {
 		return histories;
 	}
 
+	@Value("hyjf.env.test")
+	private boolean HYJF_ENV_TEST;
+
 	/**
 	 * 极光推送及更新发送状态
 	 *
@@ -315,6 +319,15 @@ public class MsgPushHandle {
 	 */
 	public void send(MessagePushMsgHistory msg) throws Exception {
 		logger.info("开始推送: msg_id is :{}, msg_content is:{}", msg.getId(), msg.getMsgContent());
+
+		if(HYJF_ENV_TEST){
+			logger.info("测试环境不推送.....");
+			msg.setSendTime(GetDate.getNowTime10());
+			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
+			messagePushMsgHistoryDao.save(msg);
+			return;
+		}
+
 		String msgId = ""; // 极光返回id
 		String msgProId = "";// 新极光返回id
 		String msgZNBID = "";// 周年版返回id
