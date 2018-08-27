@@ -1234,7 +1234,7 @@ public class FddHandle {
 
 			String phpWebHost = "";
 			//PropUtils.getSystem("hyjf.web.host.php");
-			//TODO 在老系統中找不到對應的資源文件,後面解決
+			//hyjf.web.host.php 不再使用
 			if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
 				resultMap.put("phpWebHost", phpWebHost);
 			} else {

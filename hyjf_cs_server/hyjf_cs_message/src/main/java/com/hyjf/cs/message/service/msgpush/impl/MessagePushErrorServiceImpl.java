@@ -8,7 +8,7 @@ import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.PushPayload;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -74,7 +74,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public MessagePushMsgHistory getRecord(Integer id) {
+    public MessagePushMsgHistory getRecord(String id) {
         return messagePushMsgHistoryDao.getRecord(id);
     }
 
@@ -85,7 +85,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @author Michael
      */
     @Override
-    public void sendMessage(MessagePushErrorVO msg) {
+    public void sendMessage(MessagePushMsgHistory msg) {
         String msgId = ""; // 极光返回id
         String msgProId = "";// 新极光返回id
         String msgZNBID = "";// 周年版返回id
@@ -114,7 +114,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
             }
             // 个人用户推送
         } else if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
-            MessagePushErrorVO commonBean = amUserClient.getMobileCodeByNumber(msg.getMsgDestination());
+            AdminMsgPushCommonCustomizeVO commonBean = amUserClient.getMobileCodeByNumber(msg.getMsgDestination());
             if (commonBean != null) {
                 userId = commonBean.getUserId();
                 pcode = commonBean.getPackageCode();
@@ -191,7 +191,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
         }
         // 成功
         if (StringUtils.isNotEmpty(msgId)) {
-            msg.setSendTime(GetDate.getNowTime10());
+            msg.setSendTime(GetDate.getNowTime10() + "");
             msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
             msg.setMsgJpushId(msgId);
             msg.setMsgJpushProId(msgProId);
@@ -206,7 +206,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
             System.out.println("发送消息成功：msgZYBID: " + msgZYBID);
             System.out.println("发送消息成功：msgZZBID: " + msgZZBID);
         } else {
-            msg.setSendTime(GetDate.getNowTime10());
+            msg.setSendTime(GetDate.getNowTime10() + "");
             msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_2);
             msg.setMsgRemark(errorMsg);
         }

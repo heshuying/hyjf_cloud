@@ -6,7 +6,7 @@ package com.hyjf.am.vo.admin;
  */
 
 public class MessagePushMsgHistoryVO {
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -56,19 +56,19 @@ public class MessagePushMsgHistoryVO {
 
     private String msgRemark;
 
-    private String  sendTime;
+    private String sendTime;
 
     private Integer msgDestinationCountIos;
 
     private Integer msgDestinationCountAndroid;
 
-    private Integer createTime;
+    private String createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer lastupdateTime;
+    private String lastupdateTime;
 
     private Integer lastupdateUserId;
 
@@ -76,13 +76,23 @@ public class MessagePushMsgHistoryVO {
 
     private String msgJpushZyb2Id;
 
+    private String tagName;
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
+
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -294,11 +304,11 @@ public class MessagePushMsgHistoryVO {
         this.msgDestinationCountAndroid = msgDestinationCountAndroid;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -318,11 +328,11 @@ public class MessagePushMsgHistoryVO {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getLastupdateTime() {
+    public String getLastupdateTime() {
         return lastupdateTime;
     }
 
-    public void setLastupdateTime(Integer lastupdateTime) {
+    public void setLastupdateTime(String lastupdateTime) {
         this.lastupdateTime = lastupdateTime;
     }
 

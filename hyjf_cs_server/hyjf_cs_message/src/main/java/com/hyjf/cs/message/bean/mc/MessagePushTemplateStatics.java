@@ -16,17 +16,17 @@ import java.io.Serializable;
 @Document(collection = "ht_message_push_template_statics")
 public class MessagePushTemplateStatics implements Serializable {
     @Id
-    private Integer id;
+    private String id;
 
     private Integer msgId;
 
-    private Integer tagId;
+    private String tagId;
 
     private String msgTitle;
 
     private String msgCode;
 
-    private Integer sendTime;
+    private String sendTime;
 
     private Integer iosDestinationCount;
 
@@ -40,15 +40,15 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private Integer androidReadCount;
 
-    private Integer createTime;
+    private String createTime;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -60,11 +60,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.msgId = msgId;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
@@ -84,11 +84,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.msgCode = msgCode == null ? null : msgCode.trim();
     }
 
-    public Integer getSendTime() {
+    public String getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(Integer sendTime) {
+    public void setSendTime(String sendTime) {
         this.sendTime = sendTime;
     }
 
@@ -140,11 +140,11 @@ public class MessagePushTemplateStatics implements Serializable {
         this.androidReadCount = androidReadCount;
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 }

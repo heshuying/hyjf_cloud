@@ -3,9 +3,7 @@ package com.hyjf.cs.trade.service.recharge;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
@@ -22,17 +20,11 @@ import java.util.Map;
  *
  */
 public interface RechargeService extends BaseTradeService {
-	/**
-	 * 根据用户Id,银行卡号检索用户银行卡信息
-	 * @param userId
-	 * @param
-	 * @return
-	 */
-	BankCardVO selectBankCardByUserId(Integer userId);
+
 
 	AccountVO getAccount(Integer userId);
 
-	UserVO getUsers(Integer userId);
+
     String getBankRetMsg(String retCode);
 
 	/**
@@ -53,7 +45,8 @@ public interface RechargeService extends BaseTradeService {
 	 */
 	 JSONObject handleRechargeInfo(BankCallBean bean, Map<String, String> params);
 
-	 UserInfoVO getUsersInfoByUserId(Integer userId);
+	 @Override
+     UserInfoVO getUsersInfoByUserId(Integer userId);
 
 	/**
 	 *
@@ -72,11 +65,10 @@ public interface RechargeService extends BaseTradeService {
 	 * @param ipAddr
 	 * @param mobile
 	 * @param money
-	 * @param client
 	 * @return
 	 * @throws Exception
 	 */
-	BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money, String client) throws Exception;
+	BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception;
 	/**
 	 * @Description 获取充值页面数据
 	 * @Author pangchengchao

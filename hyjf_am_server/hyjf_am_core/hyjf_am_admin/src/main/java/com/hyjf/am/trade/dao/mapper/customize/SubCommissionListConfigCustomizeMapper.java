@@ -1,8 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 
 /**
  * @author by xiehuili on 2018/7/9.

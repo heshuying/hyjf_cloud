@@ -23,27 +23,27 @@ public class MessagePushTemplateStaticsRequest extends BasePage implements Seria
     /**
      * 标题查询
      */
-    @ApiModelProperty(name = "标题")
+    @ApiModelProperty(value = "标题")
     private String msgTitleSrch;
     /**
      * 标签查询
      */
-    @ApiModelProperty(name = "标签")
+    @ApiModelProperty(value = "标签")
     private String tagIdSrch;
     /**
      * 消息编码查询
      */
-    @ApiModelProperty(name = "消息编码")
+    @ApiModelProperty(value = "消息编码")
     private String msgCodeSrch;
     /**
      * 时间查询
      */
-    @ApiModelProperty(name = "开始时间")
+    @ApiModelProperty(value = "开始时间")
     private String startDateSrch;
     /**
      * 时间查询
      */
-    @ApiModelProperty(name = "结束时间")
+    @ApiModelProperty(value = "结束时间")
     private String endDateSrch;
 
     public String getMsgTitleSrch() {

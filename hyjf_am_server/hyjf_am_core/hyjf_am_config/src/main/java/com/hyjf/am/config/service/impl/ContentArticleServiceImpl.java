@@ -45,13 +45,23 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
         ContentArticleExample example = new ContentArticleExample();
-        if (request.getLimitStart() != -1) {
-            example.setLimitStart(request.getLimitStart());
-            example.setLimitEnd(request.getLimitEnd());
+        if (request != null) {
+            if (request.getLimitStart() != null && request.getLimitStart() != -1) {
+                example.setLimitStart(request.getLimitStart());
+                example.setLimitEnd(request.getLimitEnd());
+            }
+            if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+                int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+                int limitEnd = request.getPageSize();
+                example.setLimitStart(limitStart);
+                example.setLimitEnd(limitEnd);
+            }
+            ContentArticleExample.Criteria crt = example.createCriteria();
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getNoticeType())) {
+                crt.andTypeEqualTo(request.getNoticeType());
+            }
+            crt.andStatusEqualTo(1);
         }
-        ContentArticleExample.Criteria crt = example.createCriteria();
-        crt.andTypeEqualTo(request.getNoticeType());
-        crt.andStatusEqualTo(1);
         example.setOrderByClause("create_time Desc");
         List<ContentArticle> list = contentArticleMapper.selectByExample(example);
         return list;
@@ -322,8 +332,8 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public Integer countContentArticleByType(Map<String, Object> params) {
-        return contentArticleCustomizeMapper.countContentArticleByType(params);
+    public Integer countContentArticleByType() {
+        return contentArticleMapper.countByExample(new ContentArticleExample());
     }
 
     /**

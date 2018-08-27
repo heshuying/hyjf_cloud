@@ -502,4 +502,26 @@ public interface AmUserClient {
 	 * @return
 	 */
     UserEvalationResultVO skipEvaluate(Integer userId, int countScore);
+
+	/**
+	 * 插入ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int insertHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest);
+	/**
+	 * 更新ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int updateHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest);
+	/**
+	 * 更新 ht_hjh_user_auth_log 表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest);
 }

@@ -222,7 +222,7 @@ public class MessagePushTagController extends BaseConfigController{
 	}
 
 
-	@RequestMapping("/getTagLisst")
+	@RequestMapping("/getTagList")
 	public MessagePushTagResponse getTagList() {
 		MessagePushTagResponse response = new MessagePushTagResponse();
 		List<MessagePushTag> list = messagePushTagServcie.getTagList();

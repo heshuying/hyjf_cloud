@@ -1520,4 +1520,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     public List<Integer> getQianleUser() {
 		return qianleUserCustomizeMapper.queryQianleUser();
     }
+
+	/**
+	 * 更新ht_hjh_user_auth_log
+	 * @param hjhUserAuthLog
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog){
+		return hjhUserAuthLogMapper.updateByPrimaryKeySelective(hjhUserAuthLog);
+	}
 }

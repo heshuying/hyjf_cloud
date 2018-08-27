@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @version MessagePushMsgHistoryNew, v0.1 2018/7/25 10:46
  */
 public class MessagePushMsgHistoryNew implements Serializable {
-	private Integer id;
+	private String id;
 
 	// private Integer tagId;
 
@@ -21,11 +21,11 @@ public class MessagePushMsgHistoryNew implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

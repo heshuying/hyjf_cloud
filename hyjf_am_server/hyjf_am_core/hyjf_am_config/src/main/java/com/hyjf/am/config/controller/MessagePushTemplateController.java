@@ -154,6 +154,7 @@ public class MessagePushTemplateController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
+        messagePushTemplate.setTagId(Integer.parseInt(templateVO.getTagId()));
         Integer result = templateServcie.insertMessagePushTemplate(messagePushTemplate);
         response.setCount(result);
         return response;

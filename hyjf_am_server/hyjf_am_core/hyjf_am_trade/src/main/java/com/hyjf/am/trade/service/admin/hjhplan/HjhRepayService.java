@@ -19,7 +19,7 @@ public interface HjhRepayService {
      */
     Integer getRepayCount(HjhRepayRequest repayRequest);
 
-    List<HjhRepay> selectByExample(HjhRepayRequest request);
+    List<HjhRepayVO> selectByExample(HjhRepayRequest request);
 
     List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 

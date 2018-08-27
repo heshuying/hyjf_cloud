@@ -64,7 +64,7 @@ public class HjhDebtCreditController extends BaseController{
         List<BorrowStyleVO> styleVOList = borrowRegistExceptionService.selectBorrowStyleList();
         if(styleVOList != null && styleVOList.size() > 0){
             jsonObject.put("还款方式列表","borrowStyleList");
-            List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "nameCd", "name");
+            List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "id", "name");
             jsonObject.put("borrowStyleList",dropDownVOS);
         }else {
             jsonObject.put("status",FAIL);
@@ -87,6 +87,16 @@ public class HjhDebtCreditController extends BaseController{
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取还款状态列表失败！");
+        }
+        HjhDebtCreditListRequest request = new HjhDebtCreditListRequest();
+        JSONObject creditDetail = queryHjhDebtCreditDetail(request);
+        if(creditDetail != null){
+            List<HjhDebtCreditVo> hjhDebtCreditVoList = (List<HjhDebtCreditVo>) creditDetail.get(LIST);
+            if(hjhDebtCreditVoList != null && hjhDebtCreditVoList.size() > 0){
+                jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
+                jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
+                jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+            }
         }
         return jsonObject;
     }

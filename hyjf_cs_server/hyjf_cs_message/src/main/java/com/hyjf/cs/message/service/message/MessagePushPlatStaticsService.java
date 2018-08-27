@@ -19,4 +19,11 @@ public interface MessagePushPlatStaticsService {
      * @return
      */
     List<MessagePushPlatStatics> selectPlatStatics(MessagePushPlatStaticsRequest request);
+
+    /**
+     * 查詢数量
+     * @param request
+     * @return
+     */
+    int selectCount(MessagePushPlatStaticsRequest request);
 }

@@ -1,5 +1,7 @@
 package com.hyjf.admin.beans.request;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -8,31 +10,25 @@ import java.math.BigDecimal;
  */
 public class HjhPlanCapitalRequestBean {
 
-    /**
-     * 检索条件 计划编号
-     */
+    @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
-    /**
-     * 检索条件 计划名称
-     */
+
+    @ApiModelProperty(value = "计划名称")
     private String planNameSrch;
-    /**
-     * 检索条件锁定期
-     */
+
+    @ApiModelProperty(value = "锁定期")
     private String lockPeriodSrch;
-    /**
-     * 检索条件 日期开始
-     */
+
+    @ApiModelProperty(value = "日期开始")
     private String dateFromSrch;
-    /**
-     * 检索条件 日期结束
-     */
+
+    @ApiModelProperty(value = "日期结束")
     private String dateToSrch;
 
-    /** 总计：复投总额 */
+    @ApiModelProperty(value = "复投总额")
     private BigDecimal sumReinvestAccount;
 
-    /** 总计：债转总额 */
+    @ApiModelProperty(value = "债转总额")
     private BigDecimal sumCreditAccount;
 
     public String getPlanNidSrch() {

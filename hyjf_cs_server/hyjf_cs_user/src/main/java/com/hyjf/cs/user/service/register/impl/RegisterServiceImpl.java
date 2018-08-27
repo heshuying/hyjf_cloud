@@ -25,21 +25,19 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.UserRegistResult;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
-import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
-import com.hyjf.cs.user.vo.RegisterVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,24 +83,20 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     /**
      * api注册参数校验
      *  @param
-     * @param userRegisterRequestBean
+     * @param
      */
     @Override
-    public RegisterRequest apiCheckParam(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest) {
+    public void apiCheckParam( RegisterRequest registerRequest) {
         // 手机号
-        String mobile = userRegisterRequestBean.getMobile();
+        String mobile = registerRequest.getMobile();
         // 机构编号
-        String instCode = userRegisterRequestBean.getInstCode();
+        String instCode = registerRequest.getInstCode();
         // 注册平台
-        String platform = userRegisterRequestBean.getPlatform();
+        String platform = registerRequest.getPlatform();
         // 注册渠道
-        String utmId = userRegisterRequestBean.getChannel();
+        String utmId = registerRequest.getUtmId();
         //推荐人
-        String reffer = userRegisterRequestBean.getRecommended();
-
-        //切换参数实体
-        registerRequest.setUtmId(utmId);
-        registerRequest.setReffer(reffer);
+        String reffer = registerRequest.getReffer();
         //手机号未填写
         CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.STATUS_ZC000001);
         // 机构编号
@@ -113,12 +107,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(StringUtils.isNotEmpty(utmId), MsgEnum.STATUS_ZC000019);
 
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
-        CheckUtil.check(!existUser(mobile), MsgEnum.STATUS_ZC000005);
+
         // TODO: 2018/6/23 原代码平台推荐人未作处理
         if (StringUtils.isNotEmpty(reffer)) {
             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
-        return registerRequest;
     }
 
     /**
@@ -275,15 +268,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * api注册
      *
      * @param
+     * @param userRegisterRequestBean
      * @param ipAddr
      * @return
      */
     @Override
-    public UserVO apiRegister(RegisterRequest registerRequest, String ipAddr) {
+    public UserVO apiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerRequest, registerUserRequest);
-        RegisterVO registerVO = new RegisterVO();
-        BeanUtils.copyProperties(registerRequest, registerVO);
         registerUserRequest.setLoginIp(ipAddr);
         // 根据机构编号检索机构信息
         HjhInstConfigVO instConfig = this.amTradeClient.selectInstConfigByInstCode(registerRequest.getInstCode());
@@ -291,7 +283,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstType(instConfig.getInstType());
         // 验签
-        CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
+      //  CheckUtil.check(this.verifyRequestSign(userRegisterRequestBean, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
@@ -536,6 +528,24 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         } else {
             return -3;
         }
+    }
+
+    @Override
+    public String getAccountId(Integer userId) {
+        AccountVO account = amTradeClient.getAccount(userId);
+        if(null != account){
+            return account.getAccountId();
+        }
+        return null;
+    }
+
+    @Override
+    public String getAutoInvesStatus(Integer userId) {
+        HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(userId);
+        if (null!= hjhUserAuth){
+            return String.valueOf(hjhUserAuth.getAutoInvesStatus());
+        }
+        return null;
     }
 
     /**

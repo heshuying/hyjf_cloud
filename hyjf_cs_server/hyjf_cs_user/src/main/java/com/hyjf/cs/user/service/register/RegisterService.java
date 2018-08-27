@@ -29,9 +29,9 @@ public interface RegisterService extends BaseUserService {
     /**
      * api渠道注册参数校验
      *  @param
-     * @param userRegisterRequestBean
+     * @param registerRequest
      */
-    RegisterRequest apiCheckParam(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest);
+    void apiCheckParam(RegisterRequest registerRequest);
 
     /**
      * app参数检查
@@ -52,11 +52,13 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * api端注册
+     *
+     * @param userRegisterRequestBean
      * @param registerRequest
      * @param ipAddr
      * @return
      */
-    UserVO apiRegister(RegisterRequest registerRequest, String ipAddr);
+    UserVO apiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr);
 
     /**
      * 融东风注册
@@ -119,4 +121,18 @@ public interface RegisterService extends BaseUserService {
      * @return
      */
     int updateLoginInAction(String userName,String password,String ipAddr);
+
+    /**
+     * 获取账户id
+     * @param userId
+     * @return
+     */
+    String getAccountId(Integer userId);
+
+    /**
+     * 获取授权状态
+     * @param userId
+     * @return
+     */
+    String getAutoInvesStatus(Integer userId);
 }

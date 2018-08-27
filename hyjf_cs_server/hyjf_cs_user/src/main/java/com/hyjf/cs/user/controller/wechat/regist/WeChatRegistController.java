@@ -109,7 +109,7 @@ public class WeChatRegistController extends BaseUserController {
     @PostMapping(value = "/registAction.do")
     public UserRegistResult registAction(HttpServletRequest request) throws UnsupportedEncodingException {
         UserRegistResult ret = new UserRegistResult();
-        ret.setRequest("/registAction");
+        ret.setRequest("/registAction.do");
         // 手机号
         String mobile = request.getParameter("mobile");
         // 验证码

@@ -201,7 +201,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
         // 平台密码校验
         UserVO userVO = getUserByUserId(user.getUserId());
-        String mdPassword = MD5.toMD5Code(password + userVO.getSalt());
+        String mdPassword = MD5Utils.MD5(MD5Utils.MD5(password) + userVO.getSalt());
         if (!mdPassword.equals(userVO.getPassword())) {
             throw  new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }

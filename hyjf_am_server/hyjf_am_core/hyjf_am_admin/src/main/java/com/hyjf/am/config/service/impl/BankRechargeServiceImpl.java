@@ -1,16 +1,17 @@
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.BankRechargeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfig;
 import com.hyjf.am.config.dao.model.auto.BankRechargeConfigExample;
 import com.hyjf.am.config.service.BankRechargeService;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/19.

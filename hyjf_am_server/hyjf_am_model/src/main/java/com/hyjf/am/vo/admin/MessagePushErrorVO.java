@@ -120,11 +120,11 @@ public class MessagePushErrorVO extends BaseVO implements Serializable {
         this.client = client;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -400,7 +400,7 @@ public class MessagePushErrorVO extends BaseVO implements Serializable {
         this.msgJpushTestId = msgJpushTestId == null ? null : msgJpushTestId.trim();
     }
 
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 

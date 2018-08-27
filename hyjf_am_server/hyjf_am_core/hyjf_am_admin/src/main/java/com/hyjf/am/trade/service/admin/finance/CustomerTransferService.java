@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.UserTransfer;
-
-import java.util.List;
 
 /**
  * @author: sunpeikai

@@ -1,8 +1,10 @@
 package com.hyjf.am.admin.config.ds;
 
-import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
-import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
-import com.hyjf.common.constants.CommonConstant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -24,10 +26,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
+import com.hyjf.common.constants.CommonConstant;
 
 @Configuration
 @MapperScan("com.hyjf.am.*.dao.mapper")

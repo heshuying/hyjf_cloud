@@ -10,10 +10,12 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushTemplateStaticsController, v0.1 2018/8/14 14:49
  */
+@RestController
 @RequestMapping("/cs-message/messagepush_template_statics")
 public class MessagePushTemplateStaticsController extends BaseController {
 	@Autowired
@@ -40,8 +43,17 @@ public class MessagePushTemplateStaticsController extends BaseController {
 		if (!CollectionUtils.isEmpty(list)) {
 			List<MessagePushTemplateStaticsVO> voList = CommonUtils.convertBeanList(list,
 					MessagePushTemplateStaticsVO.class);
+			for (MessagePushTemplateStaticsVO vo : voList) {
+				if (StringUtils.isNotBlank(vo.getTagId())) {
+					String tagName = staticsService.selectTagName(vo.getTagId());
+					vo.setTagName(tagName);
+				}
+			}
 			response.setResultList(voList);
 		}
+		// 查询数量
+		int count = staticsService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 }

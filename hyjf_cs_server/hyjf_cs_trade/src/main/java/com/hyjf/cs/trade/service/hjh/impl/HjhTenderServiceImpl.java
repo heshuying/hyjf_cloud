@@ -357,11 +357,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 历史回报
         result.put("earnings", request.getEarnings());
         // 优惠券收益
-        result.put("couponInterest", request.getCouponInterest());
+        result.put("couponInterest", request.getCouponInterest()==null?0:request.getCouponInterest());
         // 投资金额
         result.put("account", request.getAccount());
         // 投资的计划
         result.put("borrowNid", plan.getPlanNid());
+
+        result.put("plan","1");
         // 如果有优惠券  放上优惠券面值和类型
         if (cuc != null) {
             // 优惠券类别
@@ -370,6 +372,15 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             result.put("couponQuota", cuc.getCouponQuota());
             // 优惠券ID
             result.put("couponGrantId", cuc.getId());
+            result.put("projectType",cuc.getProjectType());
+        }else{
+            // 优惠券类别
+            result.put("couponType", "");
+            // 优惠券额度
+            result.put("couponQuota", "");
+            // 优惠券ID
+            result.put("couponGrantId", "");
+            result.put("projectType","");
         }
         return result;
 

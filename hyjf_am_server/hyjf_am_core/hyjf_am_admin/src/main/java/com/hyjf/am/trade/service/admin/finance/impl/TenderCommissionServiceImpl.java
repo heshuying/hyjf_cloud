@@ -1,5 +1,9 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.trade.dao.mapper.auto.TenderCommissionMapper;
 import com.hyjf.am.trade.dao.model.auto.TenderCommission;
@@ -7,9 +11,6 @@ import com.hyjf.am.trade.dao.model.auto.TenderCommissionExample;
 import com.hyjf.am.trade.service.admin.finance.TenderCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @version TenderCommissionServiceImpl, v0.1 2018/8/7 9:39

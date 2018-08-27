@@ -4,11 +4,11 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.MessagePushErrorService;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public List<MessagePushErrorVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd) {
+    public List<MessagePushMsgHistoryVO> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd) {
         return csMessageClient.getRecordListT(request, limitStart, limitEnd);
     }
     /**
@@ -51,7 +51,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public List<MessagePushErrorVO> getTagList() {
+    public List<MessagePushTagVO> getTagList() {
         return csMessageClient.getTagList();
     }
     /**
@@ -69,7 +69,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public MessagePushErrorVO getRecord(Integer id) {
+    public MessagePushMsgHistoryVO getRecord(String id) {
         return csMessageClient.getRecord(id);
     }
     /**
@@ -79,7 +79,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @author Michael
      */
     @Override
-    public void sendMessage(MessagePushErrorVO msg) {
+    public void sendMessage(MessagePushMsgHistoryVO msg) {
         csMessageClient.sendMessage(msg);
     }
 }

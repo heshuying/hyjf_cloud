@@ -7,6 +7,7 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.AMException;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,14 @@ public class BaseController {
         CheckException e = (CheckException)ex;
         BaseResult<?> result = new BaseResult<>(e.getData());
         result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
+        return result;
+    }
+
+    @ExceptionHandler(value = ReturnMessageException.class)
+    @ResponseBody
+    public BaseResult defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
+        BaseResult result = new BaseResult<>();
+        result.setStatusInfo(e.getError().getCode(), e.getError().getMsg());
         return result;
     }
 
