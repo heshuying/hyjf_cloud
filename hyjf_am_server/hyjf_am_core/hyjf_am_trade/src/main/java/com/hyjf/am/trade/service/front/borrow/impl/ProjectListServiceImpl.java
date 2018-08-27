@@ -15,6 +15,7 @@ import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectListCustomize;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
@@ -416,4 +417,18 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
 
 
     //  -----------------------------------------wechat end   -----------------------------------------------
+
+
+    /*--------------------------------------------  api start  -------------------------------------------*/
+
+    /**
+     * api： 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 14:14
+     */
+    @Override
+    public List<ApiProjectListCustomize> getApiBorrowList(Map<String,Object> params) {
+        return webProjectListCustomizeMapper.getApiBorrowList(params);
+    }
+    /*--------------------------------------------  api end  -------------------------------------------*/
 }

@@ -131,7 +131,7 @@ public class ProjectConstant {
     /*   --------------------------  web端 结束 --------------------------------*/
 
     /*  -----------------------------api端 开始------------------------------------*/
-    public static final String  METHOD_BORROW_LIST = "getBorrowList";
+    public static final String  API_METHOD_BORROW_LIST = "getBorrowList";
 
     /*  -----------------------------api端 结束------------------------------------*/
 
@@ -142,7 +142,7 @@ public class ProjectConstant {
      * @param paramBean
      * @return
      */
-    private boolean verifyRequestSign(BaseBean paramBean, String methodName) {
+    public static boolean verifyRequestSign(BaseBean paramBean, String methodName) {
 
         String sign = org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -151,7 +151,7 @@ public class ProjectConstant {
         if (org.apache.commons.lang.StringUtils.isEmpty(instCode)) {
             return false;
         }
-        if (METHOD_BORROW_LIST.equals(methodName)){
+        if (API_METHOD_BORROW_LIST.equals(methodName)){
             ApiBorrowReqBean bean = (ApiBorrowReqBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowStatus() + bean.getTimestamp();
         }

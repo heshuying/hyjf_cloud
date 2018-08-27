@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -1701,4 +1702,11 @@ public interface AmTradeClient {
      * @return
      */
     List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid);
+
+    /**
+     * api: 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
 }
