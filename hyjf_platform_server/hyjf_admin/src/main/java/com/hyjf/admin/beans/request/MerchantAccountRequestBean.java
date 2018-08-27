@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-public class MerchantAccountRequestBean  implements Serializable {
+public class MerchantAccountRequestBean extends BasePage implements Serializable {
     /** serialVersionUID */
     private static final long serialVersionUID = 7768418442884796575L;
 

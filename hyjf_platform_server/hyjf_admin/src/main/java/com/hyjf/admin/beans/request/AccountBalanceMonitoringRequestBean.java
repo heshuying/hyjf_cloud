@@ -5,6 +5,7 @@ import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/13.
@@ -28,7 +29,7 @@ public class AccountBalanceMonitoringRequestBean extends BaseRequest {
     private String subAccountTypeSear;
 
     @ApiModelProperty(value = "列表数据JSON")
-    private String balanceDataJson;
+    private List<AccountBalanceMonitoringRequestBean> balanceDataJson;
 
     private Integer id;
 
@@ -96,11 +97,11 @@ public class AccountBalanceMonitoringRequestBean extends BaseRequest {
         this.subAccountTypeSear = subAccountTypeSear;
     }
 
-    public String getBalanceDataJson() {
+    public List<AccountBalanceMonitoringRequestBean> getBalanceDataJson() {
         return balanceDataJson;
     }
 
-    public void setBalanceDataJson(String balanceDataJson) {
+    public void setBalanceDataJson(List<AccountBalanceMonitoringRequestBean> balanceDataJson) {
         this.balanceDataJson = balanceDataJson;
     }
 
