@@ -68,7 +68,7 @@ public class AutoTenderExceptionController extends BaseController {
     @PostMapping(value = "/selectAccedeRecordList")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<AdminPlanAccedeListVO>> selectAccedeRecordList(HttpServletRequest request, @RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) {
+    public AdminResult<ListResult<AdminPlanAccedeListVO>> selectAccedeRecordList(@RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) {
         AutoTenderExceptionRequest autoTenderExceptionRequest = new AutoTenderExceptionRequest();
         BeanUtils.copyProperties(autoTenderExceptionRequestBean, autoTenderExceptionRequest);
         AutoTenderExceptionResponse autoTenderExceptionResponse = autoTenderExceptionService.selectAccedeRecordList(autoTenderExceptionRequest);
