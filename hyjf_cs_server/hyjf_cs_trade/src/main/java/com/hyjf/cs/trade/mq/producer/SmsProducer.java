@@ -17,7 +17,6 @@ import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
 
 @Component
 public class SmsProducer extends Producer {
-	private static final Logger logger = LoggerFactory.getLogger(SmsProducer.class);
 
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {

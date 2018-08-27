@@ -1527,7 +1527,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode) {
         Map map = new HashMap();
         map.put("ids", ids);
-        map.put("subAccountName", subAccountCode);
+        map.put("subAccountCode", subAccountCode);
         return restTemplate.
                 postForEntity("http://AM-TRADE/am-trade/config/accountconfig/countAccountListInfoBySubAccountCode", map, Integer.class).getBody();
     }
@@ -3799,7 +3799,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         List<AccountBalanceMonitoringRequestBean> res = new ArrayList<AccountBalanceMonitoringRequestBean>();
         if (Validator.isNotNull(response)) {
             List<MerchantAccountVO> merchantAccountVOList = response.getResultList();
-            BeanUtils.copyProperties(merchantAccountVOList, res);
+            res = CommonUtils.convertBeanList(merchantAccountVOList,AccountBalanceMonitoringRequestBean.class);
             return res;
         }
         return null;

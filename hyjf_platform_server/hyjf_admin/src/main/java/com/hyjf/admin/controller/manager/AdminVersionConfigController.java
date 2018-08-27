@@ -6,7 +6,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.VersionConfigService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -48,6 +46,12 @@ public class AdminVersionConfigController extends BaseController {
         }
         if(StringUtils.isNotEmpty(versionRequestBean.getVersionSrh())){
             adminRequest.setVersionSrh(versionRequestBean.getVersionSrh());
+        }
+        if(versionRequestBean.getCurrPage() > -1){
+            adminRequest.setCurrPage(versionRequestBean.getCurrPage());
+        }
+        if(versionRequestBean.getPageSize() > -1){
+            adminRequest.setPageSize(versionRequestBean.getPageSize());
         }
         AdminVersionResponse response=adminVersionConfigService.versionConfigInit(adminRequest);
         if(response==null) {
@@ -86,16 +90,17 @@ public class AdminVersionConfigController extends BaseController {
     public AdminResult<AdminVersionResponse> insertVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         BeanUtils.copyProperties(versionRequestBean, adminRequest);
-        AdminVersionResponse adminResponse= null;
-        ModelAndView mv = new ModelAndView();
+        AdminVersionResponse adminResponse= new AdminVersionResponse();
         // 画面验证
-        this.validatorFieldCheck(mv, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
+        String message= this.validatorFieldCheck(adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             //数据字典
             List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
             List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
             adminResponse.setVersionNames(versionName);
             adminResponse.setIsUpdates(isUpdate);
+            adminResponse.setRtn(Response.FAIL);
+            adminResponse.setMessage(message);
             return new AdminResult<AdminVersionResponse>(adminResponse) ;
         }
         adminResponse = adminVersionConfigService.saveVersionConfig(adminRequest);
@@ -116,10 +121,9 @@ public class AdminVersionConfigController extends BaseController {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         BeanUtils.copyProperties(versionRequestBean, adminRequest);
         AdminVersionResponse adminResponse= null;
-        ModelAndView mv = new ModelAndView();
         // 画面验证
-        this.validatorFieldCheck(mv, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
+       String message= this.validatorFieldCheck(adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             //数据字典
             List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
             List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
@@ -143,9 +147,8 @@ public class AdminVersionConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionResponse adminResponse= null;
-        if(StringUtils.isNotBlank(versionRequestBean.getIds())){
-            Integer id = Integer.valueOf(versionRequestBean.getIds());
-            adminResponse = adminVersionConfigService.deleteVersionConfig(id);
+        if(null != versionRequestBean.getId()&&versionRequestBean.getId().intValue()>0){
+            adminResponse = adminVersionConfigService.deleteVersionConfig(versionRequestBean.getId());
         }
         if(adminResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -160,25 +163,41 @@ public class AdminVersionConfigController extends BaseController {
     /**
      * 画面校验
      *
-     * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, AdminVersionRequest form) {
+    private String validatorFieldCheck(AdminVersionRequest form) {
         // 系统名称
-        boolean typeFlag = ValidatorFieldCheckUtil.validateRequired(modelAndView, "type", String.valueOf(form.getType()));
+        if(null == form.getType()){
+            return "type 不能为空！";
+        }
         // 版本号
-        boolean verFlag = ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "version", form.getVersion(), 12, false);
+        if(null == form.getVersion()){
+            return "version 不能为空！";
+        }
+        if(null != form.getVersion()&&  form.getVersion().length()>12){
+            return "version长度不能超过12位！";
+        }
         // 地址
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "url", form.getUrl(), 255, false);
+        if(null == form.getUrl()){
+            return "url 不能为空！";
+        }
+        if(null != form.getUrl()&&  form.getUrl().length()>255){
+            return "url长度不能超过12位！";
+        }
         // 版本描述
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "content", form.getContent(), 500, false);
-
-        if (typeFlag && verFlag && StringUtils.isNotEmpty(form.getVersion())) {
+        if(null == form.getContent()){
+            return "content 不能为空！";
+        }
+        if(null != form.getContent()&&  form.getContent().length()>500){
+            return "content长度不能超过12位！";
+        }
+        if (StringUtils.isNotEmpty(form.getVersion())) {
             VersionVO version = this.adminVersionConfigService.getVersionByCode(form.getId(), form.getType(), form.getVersion());
             if (version != null) {
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "type-verdioncode", "exists.type.versioncode");
+                return "该系统下已存在此版本";
             }
         }
+        return "";
     }
 
 }

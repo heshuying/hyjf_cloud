@@ -8,12 +8,11 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.user.bean.BaseResultBean;
-import com.hyjf.cs.user.bean.PaymentAuthPageBean;
-import com.hyjf.cs.user.bean.PaymentAuthPageRequestBean;
-import com.hyjf.cs.user.bean.PaymentAuthPageResultBean;
+import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.service.paymentauthpage.PaymentAuthPageService;
@@ -21,6 +20,7 @@ import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,14 +47,32 @@ public class PaymentAuthPageController extends BaseController {
     private PaymentAuthPageService paymentAuthPageService;
     @Autowired
     private AutoPlusService autoPlusService;
+    @Autowired
+    private SystemConfig systemConfig;
 
-    /**错误页面*/
+    /**
+     * 错误页面
+     */
     public static final String PATH_OPEN_ACCOUNT_PAGE_ERROR = "/bank/user/trusteePay/error";
+    public static final String CALL_BACK_TRUSTEEPAY_VIEW = "/callback/callback_trusteepay";
+    /**
+     * 外部服务接口:缴费授权 @RequestMapping
+     */
+    public static final String REQUEST_MAPPING = "/server/user/paymentAuthPage";
+    /**
+     * 同步回调
+     */
+    public static final String RETURL_SYN_ACTION = "/paymentauthReturn";
+    /**
+     * 异步回调
+     */
+    public static final String RETURL_ASY_ACTION = "/paymentauthBgreturn";
+
 
     @PostMapping("/page")
     @ResponseBody
-    @ApiOperation(value = "用户缴费授权",notes = "用户缴费授权")
-    public ModelAndView openAccont(@RequestBody PaymentAuthPageRequestBean requestBean, HttpServletRequest request,HttpServletResponse response) {
+    @ApiOperation(value = "用户缴费授权", notes = "用户缴费授权")
+    public ModelAndView openAccont(@RequestBody PaymentAuthPageRequestBean requestBean, HttpServletRequest request, HttpServletResponse response) {
         logger.info("======PaymentAuthPageController======page方法=====");
         ModelAndView modelAndView = new ModelAndView(PATH_OPEN_ACCOUNT_PAGE_ERROR);
         logger.info("缴费授权第三方请求参数：" + JSONObject.toJSONString(requestBean));
@@ -94,7 +112,7 @@ public class PaymentAuthPageController extends BaseController {
 
             // 根据电子账户号查询用户ID
             BankOpenAccountVO bankOpenAccount = paymentAuthPageService.seletBankOpenAccountByAccountId(requestBean.getAccountId());
-            if(bankOpenAccount == null){
+            if (bankOpenAccount == null) {
                 getErrorMV(requestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004, "没有根据电子银行卡找到用户");
                 logger.info("没有根据电子银行卡找到用户[" + JSONObject.toJSONString(requestBean, true) + "]");
                 return modelAndView;
@@ -124,10 +142,16 @@ public class PaymentAuthPageController extends BaseController {
 
             // 查询是否已经授权过
             boolean isAuth = paymentAuthPageService.checkIsAuth(user.getUserId(), BankCallConstant.TXCODE_PAYMENT_AUTH_PAGE);
-            if(isAuth){
+            if (isAuth) {
                 getErrorMV(requestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009, "已授权,请勿重复授权！");
                 return modelAndView;
             }
+            // 同步调用路径
+            String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + ".do?acqRes="
+                    + requestBean.getAcqRes() + StringPool.AMPERSAND + "callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+            // 异步调用路
+            String bgRetUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + ".do?acqRes="
+                    + requestBean.getAcqRes() + "&callback=" + requestBean.getNotifyUrl().replace("#", "*-*-*");
             // 拼装参数 调用江西银行
             // 同步调用路径
             /*String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath()
@@ -138,10 +162,7 @@ public class PaymentAuthPageController extends BaseController {
             String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath()
                     + PaymentAuthPageDefine.REQUEST_MAPPING + PaymentAuthPageDefine.RETURL_ASY_ACTION + ".do?acqRes="
                     + requestBean.getAcqRes() + "&callback=" + requestBean.getNotifyUrl().replace("#", "*-*-*");*/
-
-            String retUrl ="";
-            String bgRetUrl ="";
-                    // 用户ID
+            // 用户ID
             PaymentAuthPageBean openBean = new PaymentAuthPageBean();
             PropertyUtils.copyProperties(openBean, requestBean);
             openBean.setUserId(userId);
@@ -152,7 +173,7 @@ public class PaymentAuthPageController extends BaseController {
             String orderId = GetOrderIdUtils.getOrderId2(openBean.getUserId());
             openBean.setOrderId(orderId);
             modelAndView = paymentAuthPageService.getCallbankMV(openBean);
-            paymentAuthPageService.insertUserAuthLog(openBean.getUserId(), orderId,Integer.parseInt(openBean.getPlatform()),"5");
+            paymentAuthPageService.insertUserAuthLog(openBean.getUserId(), orderId, Integer.parseInt(openBean.getPlatform()), "5");
             logger.info("缴费授权页面end");
             return modelAndView;
         } catch (Exception e) {
@@ -162,8 +183,7 @@ public class PaymentAuthPageController extends BaseController {
         }
     }
 
-    private ModelAndView getErrorMV(PaymentAuthPageRequestBean userOpenAccountRequestBean, ModelAndView modelAndView,
-                                    String status, String des) {
+    private ModelAndView getErrorMV(PaymentAuthPageRequestBean userOpenAccountRequestBean, ModelAndView modelAndView, String status, String des) {
         PaymentAuthPageResultBean repwdResult = new PaymentAuthPageResultBean();
         BaseResultBean resultBean = new BaseResultBean();
         resultBean.setStatusForResponse(status);
@@ -174,14 +194,14 @@ public class PaymentAuthPageController extends BaseController {
         modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
     }
+
     /**
      * 异步回调
      */
     @PostMapping("/paymentauthBgreturn")
     @ResponseBody
-    @ApiOperation(value = "异步回调",notes = "异步回调")
-    public BankCallResult paymentAuthBgreturn(HttpServletRequest request, HttpServletResponse response,
-                                              @ModelAttribute BankCallBean bean) {
+    @ApiOperation(value = "异步回调", notes = "异步回调")
+    public BankCallResult paymentAuthBgreturn(HttpServletRequest request, HttpServletResponse response,@ModelAttribute BankCallBean bean) {
         logger.info("缴费授权异步回调start");
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
@@ -207,34 +227,81 @@ public class PaymentAuthPageController extends BaseController {
             if (bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
                     && "1".equals(bean.getTxState())) {
                 bean.setOrderId(bean.getLogOrderId());
-                paymentAuthPageService.updateUserAuth(userId,bean);
+                paymentAuthPageService.updateUserAuth(userId, bean);
                 message = "缴费授权成功";
                 status = ErrorCodeConstant.SUCCESS;
-            }else{
+            } else {
                 // 失败
                 message = "缴费授权失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode());
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info("缴费授权出错,userId:【"+userId+"】错误原因："+e.getMessage());
+            logger.info("缴费授权出错,userId:【" + userId + "】错误原因：" + e.getMessage());
             message = "缴费授权失败";
             status = ErrorCodeConstant.STATUS_CE999999;
         }
         // 返回值
         params.put("accountId", bean.getAccountId());
         params.put("status", status);
-        params.put("statusDesc",message);
+        params.put("statusDesc", message);
         params.put("deadline", bean.getDeadline());
         resultBean.setStatusForResponse(status);
         params.put("chkValue", resultBean.getChkValue());
-        params.put("acqRes",request.getParameter("acqRes"));
-        logger.info("缴费授权第三方返回参数："+JSONObject.toJSONString(params));
-        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
+        params.put("acqRes", request.getParameter("acqRes"));
+        logger.info("缴费授权第三方返回参数：" + JSONObject.toJSONString(params));
+        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
         logger.info("缴费授权异步回调end");
         result.setMessage("缴费授权权成功");
         result.setStatus(true);
         return result;
+    }
+
+    /**
+     * 同步回调
+     *
+     * @param request
+     * @param response
+     * @param bean
+     * @return
+     * @author sunss
+     */
+    @PostMapping("/paymentauthReturn")
+    @ApiOperation(value = "同步回调", notes = "同步回调")
+    public ModelAndView paymentAuthReturn(HttpServletRequest request, HttpServletResponse response,BankCallBean bean) {
+        logger.info("缴费授权同步回调start,请求参数为：【" + JSONObject.toJSONString(bean, true) + "】");
+        ModelAndView modelAndView = new ModelAndView(CALL_BACK_TRUSTEEPAY_VIEW);
+        AutoPlusRetBean repwdResult = new AutoPlusRetBean();
+        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
+        bean.convert();
+        repwdResult.set("accountId", bean.getAccountId());
+        //投资人签约状态查询
+        logger.info("缴费授权授权同步回调调用查询接口查询状态");
+        BankCallBean retBean = autoPlusService.getTermsAuthQuery(Integer.parseInt(bean.getLogUserId()), "000002");
+        logger.info("缴费授权授权同步回调调用查询接口查询状态结束  结果为:" + (retBean == null ? "空" : retBean.getPaymentAuth()));
+        bean = retBean;
+        if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())
+                && "1".equals(retBean.getPaymentAuth())) {
+            modelAndView.addObject("statusDesc", "缴费授权申请成功！");
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            repwdResult.set("status", resultBean.getStatus());
+            repwdResult.set("deadline", bean.getDeadline());
+        } else {
+            // 失败
+            modelAndView.addObject("statusDesc", "缴费授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            repwdResult.set("status", resultBean.getStatus());
+        }
+        //------------------------------------------------
+        repwdResult.setAcqRes(request.getParameter("acqRes"));
+        logger.info("缴费授权同步第三方返回参数：" + JSONObject.toJSONString(repwdResult));
+        modelAndView.addObject("callBackForm", repwdResult);
+        logger.info("缴费授权申请同步回调end");
+        return modelAndView;
     }
 
 }

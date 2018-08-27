@@ -15,7 +15,7 @@ public class SyncUserInfoResultBean extends BaseResult {
 
     private List<AccountBean> data;
 
-    static class AccountBean{
+    public static class AccountBean{
         //电子账号
         private String accountId;
         //计划待收金额

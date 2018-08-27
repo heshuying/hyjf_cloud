@@ -976,7 +976,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity(userService+"/user/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+				.getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}

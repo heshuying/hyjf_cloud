@@ -15,7 +15,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.HjhCommissionService;
+import com.hyjf.admin.service.SmsCountService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -59,7 +59,7 @@ public class UserCenterController extends BaseController {
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private HjhCommissionService hjhCommissionService;
+    private SmsCountService smsCountService;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -593,7 +593,7 @@ public class UserCenterController extends BaseController {
                 list = new String[] { deptIds};
             }
         }*/
-        JSONArray ja = this.hjhCommissionService.getCrmDepartmentList(list);
+        JSONArray ja = smsCountService.getCrmDepartmentList(list);
         if (ja != null) {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
             JSONObject jo = new JSONObject();

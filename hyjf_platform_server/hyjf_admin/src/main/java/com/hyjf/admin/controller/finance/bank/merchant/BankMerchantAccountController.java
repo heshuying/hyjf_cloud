@@ -225,12 +225,12 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "统一参数校验(真正调用圈存和圈提操作之前调用)" ,tags = "统一参数校验(真正调用圈存和圈提操作之前调用)" )
     @ResponseBody
-    @GetMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
-    public AdminResult checkAction(HttpServletRequest request){
+    @PostMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
+    public AdminResult checkAction(@RequestBody Map<String,String> params){
         AdminResult adminResult = new AdminResult();
         JSONObject ret = new JSONObject();
-        String amount = request.getParameter("amount");
-        String accountCode = request.getParameter("accountCode");
+        String amount = params.get("amount");
+        String accountCode =  params.get("accountCode");
         String msg = bankMerchantAccountService.checkParam(amount, accountCode);
         String checkStatus = "Y";
         if (StringUtils.isNotBlank(msg)) {
@@ -251,12 +251,12 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/7 10:50
      */
     @ApiOperation(value = "圈存操作" ,tags = "圈存操作" )
-    @GetMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
-    public AdminResult toRecharge(HttpServletRequest request){
+    @PostMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
+    public AdminResult toRecharge(@RequestBody Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
-        String accountCode = request.getParameter("accountCode");
-        String transAmt = request.getParameter("amount");// 交易金额
-        CheckUtil.check(StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
+        String amount = param.get("amount");
+        String accountCode =  param.get("accountCode");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         if (bankMerchantAccount == null){
             logger.error("没有查询到对应的商户号[{}]",accountCode);
@@ -308,7 +308,7 @@ public class BankMerchantAccountController extends BaseController {
         bean.setAccountId(accountCode);// 存管平台分配的账号
         bean.setCardNo(bankId);// 银行卡号
         bean.setCurrency("156");
-        bean.setTxAmount(CustomUtil.formatAmount(transAmt));
+        bean.setTxAmount(CustomUtil.formatAmount(amount));
         bean.setIdType(idType);// 证件类型25组织机构代码
         bean.setIdNo(idNo);// 证件号
         bean.setName(userName);// 姓名
@@ -424,13 +424,14 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/8 15:49selectUserHjhInvistDetail
      */
     @ApiOperation(value = "圈提操作" ,tags = "圈提操作" )
-    @GetMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
-    public AdminResult withDraw(HttpServletRequest request){
+    @PostMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
+    public AdminResult withDraw( @RequestBody  Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
         JSONObject result = new JSONObject();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        String accountCode = request.getParameter("accountCode");
-        String transAmt = request.getParameter("amount");// 交易金额
+        String accountCode = param.get("accountCode");
+        String transAmt = param.get("amount");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         String forgotPwdUrl="";
         if(bankMerchantAccount.getIsSetPassword()==0){
@@ -608,9 +609,9 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "用户同步余额")
     @ResponseBody
     @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
-    public JSONObject synbalance(HttpServletRequest request) {
+    public JSONObject synbalance(HttpServletRequest request,@RequestBody Map<String,String> param) {
         JSONObject ret = new JSONObject();
-        String accountCode = request.getParameter("accountCode");
+        String accountCode = param.get("accountCode");
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
         // 账户冻结金额
@@ -618,8 +619,19 @@ public class BankMerchantAccountController extends BaseController {
         // 账面余额
         BigDecimal currBalance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
+        // 版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
+        // 机构代码
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        // 交易日期
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        // 交易时间
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        //交易流水号
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         // 交易渠道
@@ -627,10 +639,11 @@ public class BankMerchantAccountController extends BaseController {
         // 电子账号
         bean.setAccountId(accountCode);
         // 订单号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId())));
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        bean.setLogUserId(getUser(request).getId());
+        bean.setLogUserId(userId+"");
         // 平台
         bean.setLogClient(0);
         try {

@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-public class AdminVersionRequest implements Serializable {
+public class AdminVersionRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 387630498860089653L;
     private String ids;
     private String nameSrh;
