@@ -11,10 +11,7 @@ import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -91,7 +88,7 @@ public class MyCouponListController extends BaseController {
      * @auther: walter.limeng
      * @date: 2018/7/9
      */
-    @RequestMapping(value = "/getmycouponbypage")
+    @PostMapping(value = "/getmycouponbypage")
     public CouponResponse getMyCouponByPage(@RequestBody @Valid MyCouponListRequest requestBean) {
         CouponResponse responseBean = new CouponResponse();
 
