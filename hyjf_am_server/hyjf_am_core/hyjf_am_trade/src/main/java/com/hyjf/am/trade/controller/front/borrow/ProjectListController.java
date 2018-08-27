@@ -19,6 +19,7 @@ import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectListCustomize;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
@@ -377,4 +378,20 @@ public class ProjectListController extends BaseController {
 
     // --------------------------------------wechat end--------------------------------------------------
 
+
+    /*---------------------------------------api start ------------------------------------------------*/
+    /**
+     * api： 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 14:47
+     */
+    @PostMapping("/api/getBorrowList")
+    public ApiProjectListResponse getBorrowList(@RequestBody Map<String,Object> params){
+        ApiProjectListResponse response = new ApiProjectListResponse();
+        List<ApiProjectListCustomize> list = projectListService.getApiBorrowList(params);
+        response.setResultList(list);
+        return response;
+    }
+
+    /*---------------------------------------api end ------------------------------------------------*/
 }

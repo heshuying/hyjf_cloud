@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppProjectListCustomize;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
@@ -153,4 +154,15 @@ public interface WebProjectListCustomizeMapper {
      */
     List<WechatHomeProjectListVO> selectHomeRepaymentsProjectList();
     //  -----------------------------------wechat end  -------------------------------------------
+
+    /*------------------------------------  api  start  --------------------------------------------*/
+    /**
+     * api：查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 14:16
+     */
+    List<ApiProjectListCustomize> getApiBorrowList(Map<String,Object> params);
+    /*------------------------------------  api  end  --------------------------------------------*/
+
+
 }
