@@ -12,6 +12,7 @@ import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
+import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -36,6 +38,8 @@ public class MessagePushErrorController {
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
+    @Autowired
+    private MessagePushTemplateStaticsService messagePushTemplateStaticsService;
 
     /**
      * 获取列表记录数
@@ -59,8 +63,23 @@ public class MessagePushErrorController {
     public MessagePushHistoryResponse getRecordListT(@RequestBody MessagePushErrorRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, request.getLimitStart(), request.getLimitEnd());
+
         if (!CollectionUtils.isEmpty(messagePushMsgHistory)){
             List<MessagePushMsgHistoryVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushMsgHistoryVO.class);
+
+            for (MessagePushMsgHistoryVO message:messagePushErrorVO) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String formatSendTime = simpleDateFormat.format(Long.valueOf(message.getSendTime()));
+                String formatCreateTime = simpleDateFormat.format(Long.valueOf(message.getCreateTime()));
+                String formatLastupdateTime = simpleDateFormat.format(Long.valueOf(message.getLastupdateTime()));
+                message.setSendTime(formatSendTime);
+                message.setCreateTime(formatCreateTime);
+                message.setLastupdateTime(formatLastupdateTime);
+                //获得tagName
+                String tagName = messagePushTemplateStaticsService.selectTagName(request.getTagIdSrch());
+                message.setTagName(tagName);
+            }
+
             response.setResultList(messagePushErrorVO);
             return response;
         }
@@ -109,7 +128,7 @@ public class MessagePushErrorController {
 
     /**
      * 推送极光消息
-     * @param msg
+     * @param messagePushMsgHistoryVO
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
