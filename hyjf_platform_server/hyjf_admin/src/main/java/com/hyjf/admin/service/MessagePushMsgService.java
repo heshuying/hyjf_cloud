@@ -24,7 +24,7 @@ public interface MessagePushMsgService {
      * @param id
      * @return
      */
-    MessagePushMsgResponse getRecord(Integer id);
+    MessagePushMsgResponse getRecord(String id);
 
     /**
      * 添加手动发送短信
@@ -42,8 +42,8 @@ public interface MessagePushMsgService {
 
     /**
      * 删除手动发送短信
-     * @param recordList
+     * @param request
      * @return
      */
-    MessagePushMsgResponse deleteAction(List<Integer> recordList);
+    MessagePushMsgResponse deleteAction(MessagePushMsgRequest request);
 }

@@ -94,7 +94,8 @@ public class MyProfileController extends BaseUserController {
     @GetMapping("/couponlist")
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
-        Integer userId = requestUtil.getRequestUserId(request);
+        Integer userId = 5341;
+                //requestUtil.getRequestUserId(request);
         if (userId==null){
             resultBean.setStatus(BaseResult.FAIL);
             resultBean.setStatusDesc("用户未登录!");
@@ -108,7 +109,7 @@ public class MyProfileController extends BaseUserController {
         }
 
         List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(list);
-        resultBean.setData(lstCoupon);
+        resultBean.setObject(lstCoupon);
         return resultBean;
     }
 
@@ -122,6 +123,7 @@ public class MyProfileController extends BaseUserController {
         List<CouponUserListCustomizeVO> list=new ArrayList<CouponUserListCustomizeVO>();
         DecimalFormat df = new DecimalFormat(",###");
         df.setRoundingMode(RoundingMode.FLOOR);
+
         for (CouponUserForAppCustomizeVO config : configs) {
             CouponUserListCustomizeVO customize=new CouponUserListCustomizeVO();
             customize.setId(config.getId());

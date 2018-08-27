@@ -1,9 +1,11 @@
 package com.hyjf.actuator;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
+import de.codecentric.boot.admin.server.domain.entities.InstanceRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
@@ -16,7 +18,6 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
  * @author xiasq
  * @version SpringBootAdminApplication, v0.1 2018/6/4 17:38
  */
-
 @Configuration
 @EnableAutoConfiguration
 @EnableAdminServer
@@ -25,6 +26,15 @@ public class SpringBootAdminApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootAdminApplication.class, args);
+	}
+
+
+	@Configuration
+	public static class DingDingNotifierConfig{
+		@Bean
+		public DingDingNotifier dingDingNotifier(InstanceRepository repository) {
+			return new DingDingNotifier(repository);
+		}
 	}
 
 	@Profile("insecure")

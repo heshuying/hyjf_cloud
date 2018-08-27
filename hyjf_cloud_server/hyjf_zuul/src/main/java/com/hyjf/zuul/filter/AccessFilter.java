@@ -355,14 +355,14 @@ public class AccessFilter extends ZuulFilter {
 			}
 
 			// 页面不活动30分钟过期
-			Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + accessToken, Integer.class);
+			Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, Integer.class);
 			if (value == null) {
 				// 登陆过期
 				logger.error("accessToken is timeout...");
 				return executeResultOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 			}
 			// 每次操作，延长超时时间
-			RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + accessToken, user.getUserId(), 30 * 60);
+			RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, user.getUserId(), 30 * 60);
 
 			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
