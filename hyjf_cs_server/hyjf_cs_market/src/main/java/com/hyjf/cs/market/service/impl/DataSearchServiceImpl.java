@@ -24,11 +24,11 @@ public class DataSearchServiceImpl implements DataSearchService {
     AmUserClient amUserClient;
 
     @Override
-    public List<DataSearchCustomizeVO> findDataList(DataSearchRequest dataSearchRequest) {
+    public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         List<Integer> qianleUser = amUserClient.getQianleUser();
         dataSearchRequest.setUserIds(qianleUser);
         DataSearchCustomizeResponse dataSearchCustomizeResponse = amTradeClient.querySanList(dataSearchRequest);
-        return null;
+        return dataSearchCustomizeResponse;
     }
 }
 

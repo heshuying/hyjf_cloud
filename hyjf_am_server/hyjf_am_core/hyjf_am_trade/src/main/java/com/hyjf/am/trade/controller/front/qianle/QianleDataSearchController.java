@@ -29,7 +29,7 @@ public class QianleDataSearchController {
      * @param dataSearchRequest
      * @return
      */
-    @RequestMapping(value = "querysanlist")
+    @RequestMapping(value = "/querysanlist")
     public DataSearchCustomizeResponse querySanList(@RequestBody DataSearchRequest dataSearchRequest){
         DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
         Integer total = qianleDataSearchService.querySanCount(dataSearchRequest);
@@ -49,6 +49,7 @@ public class QianleDataSearchController {
                 }
             }
             response.setResultList(dataSearchCustomizes);
+            response.setCount(total);
         }
         return response;
     }
@@ -78,6 +79,7 @@ public class QianleDataSearchController {
                 }
             }
             response.setResultList(dataSearchCustomizes);
+            response.setCount(total);
         }
         return response;
     }
@@ -108,6 +110,7 @@ public class QianleDataSearchController {
                 }
             }
             response.setResultList(dataSearchCustomizes);
+            response.setCount(total);
         }
         return response;
     }

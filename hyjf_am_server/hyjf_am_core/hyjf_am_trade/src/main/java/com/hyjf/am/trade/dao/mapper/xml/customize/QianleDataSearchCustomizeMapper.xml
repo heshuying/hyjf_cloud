@@ -59,7 +59,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by addtimes DESC
+        order by create_time DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
             limit #{limitStart} , #{limitEnd}
         </if>
@@ -133,7 +133,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by addtimes DESC
+        order by t1.create_time DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
             limit #{limitStart} , #{limitEnd}
         </if>
@@ -159,7 +159,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by addtimes DESC
+        order by t1.create_time DESC
     </select>
 
 
@@ -194,7 +194,7 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by addtimes DESC
+        order by t1.create_time DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
             limit #{limitStart} , #{limitEnd}
         </if>
@@ -221,8 +221,6 @@
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
-        order by addtimes DESC
-
     </select>
 
 

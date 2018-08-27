@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.service;
 
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 
@@ -11,5 +12,5 @@ import java.util.List;
  */
 
 public interface DataSearchService {
-    List<DataSearchCustomizeVO> findDataList(DataSearchRequest dataSearchRequest);
+    DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest);
 }
