@@ -256,7 +256,7 @@ public class BankMerchantAccountController extends BaseController {
         AdminResult adminResult = new AdminResult();
         String amount = param.get("amount");
         String accountCode =  param.get("accountCode");// 交易金额
-        CheckUtil.check(StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         if (bankMerchantAccount == null){
             logger.error("没有查询到对应的商户号[{}]",accountCode);
@@ -431,6 +431,7 @@ public class BankMerchantAccountController extends BaseController {
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         String accountCode = param.get("accountCode");
         String transAmt = param.get("amount");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         String forgotPwdUrl="";
         if(bankMerchantAccount.getIsSetPassword()==0){

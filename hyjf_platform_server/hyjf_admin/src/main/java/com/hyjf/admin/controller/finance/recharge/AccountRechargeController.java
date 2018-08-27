@@ -109,10 +109,10 @@ public class AccountRechargeController extends BaseController {
         rechargeType.put("value", "个人网银充值");
         rechargeType2.put("key", "B2B");
         rechargeType2.put("value", "企业网银充值");
-        rechargeType3.put("key", "B2B");
-        rechargeType3.put("value", "企业网银充值");
-        rechargeType4.put("key", "B2B");
-        rechargeType4.put("value", "企业网银充值");
+        rechargeType3.put("key", "QP");
+        rechargeType3.put("value", "快捷充值");
+        rechargeType4.put("key", "OFFLINE");
+        rechargeType4.put("value", "线下充值");
 
         //map加入List
         rechargeList.add(rechargeType);
