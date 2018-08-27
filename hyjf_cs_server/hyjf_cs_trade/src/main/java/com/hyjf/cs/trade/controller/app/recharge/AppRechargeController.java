@@ -59,7 +59,7 @@ public class AppRechargeController extends BaseTradeController{
 	 *
 	 * app获取快捷充值地址的数据接口 需要将请求参数拼接到地址上并带回
 	 *
-	 * @author renxingchen
+	 * @author pcc
 	 * @param vo
 	 * @return
 	 */
@@ -73,18 +73,7 @@ public class AppRechargeController extends BaseTradeController{
 		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
 		String isMencry = vo.getIsMencry();// 版本号
-		logger.info("解密前的手机号["+mobile+"],充值金额:[" + vo.getMoney() + "]");
-		if(!"1".equals(isMencry)){
-			String key = SecretUtil.getKey(vo.getSign());
-			if (Validator.isNull(key)) {
-				object.put("status",CustomConstants.APP_STATUS_FAIL);
-				object.put("statusDesc","请求参数非法");
-				return object;
-			}
-			// 解密
-			mobile = DES.decodeValue(key, mobile);
-		}
-		logger.info("充值手机号为["+mobile+"],充值金额:[" + vo.getMoney() + "]");
+
 		// 校验数据并拼接回传地址
 		if (Validator.isNull(vo.getMoney())) {
 			object.put("status",CustomConstants.APP_STATUS_FAIL);
@@ -112,8 +101,18 @@ public class AppRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
-	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
+	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "key") String key,
+								 HttpServletRequest request, String mobile, String money, String isMencry) throws Exception {
 		logger.info("app充值服务");
+		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
+		if(!"1".equals(isMencry)){
+			if (Validator.isNull(key)) {
+				throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
+			}
+			// 解密
+			mobile = DES.decodeValue(key, mobile);
+		}
+		logger.info("充值手机号为["+mobile+"],充值金额:[" + money + "]");
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 		UserVO userVO=userRechargeService.getUserByUserId(user.getUserId());
 		if(null==userVO){
