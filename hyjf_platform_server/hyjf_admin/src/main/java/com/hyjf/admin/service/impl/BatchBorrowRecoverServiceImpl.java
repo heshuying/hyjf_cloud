@@ -261,9 +261,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         jsonObject.put("status",SUCCESS);
         //批次状态
         Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
+        List<DropDownVO> paramMapList = ConvertUtils.convertParamMapToDropDown(paramNameMap);
         if(paramNameMap != null && paramNameMap.size() > 0){
             jsonObject.put("批次状态列表","recoverStatusList");
-            jsonObject.put("recoverStatusList",paramNameMap);
+            jsonObject.put("recoverStatusList",paramMapList);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取转让状态列表失败！");

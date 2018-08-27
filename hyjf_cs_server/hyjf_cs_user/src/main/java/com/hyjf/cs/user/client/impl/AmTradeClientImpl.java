@@ -3,11 +3,14 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
@@ -28,6 +31,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -614,12 +618,42 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
         String url = "http://AM-TRADE/am-trade/coupon/getmycouponbypage";
-        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        CouponResponseForCoupon response = restTemplate.postForEntity(url, requestBean, CouponResponseForCoupon.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
         return null;
     }
 
+    /**
+     * 借款人受托支付申请异步回调更新数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Boolean updateTrusteePaySuccess(String borrowNid){
+        String url = "http://AM-TRADE/am-trade/trustee/update/" + borrowNid;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return false;
+    }
 
+    /**
+     * 查询信托白名单
+     *
+     * @param instCode
+     * @param receiptAccountId
+     * @return
+     */
+    @Override
+    public STZHWhiteListVO getSTZHWhiteList(String instCode, String receiptAccountId){
+        String url = "http://AM-TRADE/am-trade/trustee/getSTZHWhiteList/" + instCode + "/" + receiptAccountId;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

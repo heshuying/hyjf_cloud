@@ -700,30 +700,6 @@ public interface AmUserClient {
     ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
 
     /**
-     * 行账户管理页面查询件数
-     *
-     * @param bankAccountManageRequest
-     * @return
-     */
-    Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest);
-
-    /**
-     * 账户管理页面查询列表
-     *
-     * @param bankAccountManageRequest
-     * @return
-     */
-    List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
-
-    /**
-     * 资金明细（列表）
-     *
-     * @param bankAccountManageRequest
-     * @return
-     */
-    List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest);
-
-    /**
      * 获取用户账户信息
      *
      * @param userId

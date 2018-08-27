@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.message.controller.client;
 
-import cn.jpush.api.utils.StringUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
@@ -13,7 +12,7 @@ import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
-import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
+import com.hyjf.cs.message.handle.MsgPushHandle;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -39,8 +37,9 @@ public class MessagePushErrorController {
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
+
     @Autowired
-    private MessagePushTemplateStaticsService messagePushTemplateStaticsService;
+    private MsgPushHandle msgPushHandle;
 
     /**
      * 获取列表记录数
@@ -64,29 +63,8 @@ public class MessagePushErrorController {
     public MessagePushHistoryResponse getRecordListT(@RequestBody MessagePushErrorRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, request.getLimitStart(), request.getLimitEnd());
-
         if (!CollectionUtils.isEmpty(messagePushMsgHistory)){
             List<MessagePushMsgHistoryVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushMsgHistoryVO.class);
-
-            for (MessagePushMsgHistoryVO message:messagePushErrorVO) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                if (StringUtils.isNotEmpty(message.getSendTime())){
-                    String formatSendTime = simpleDateFormat.format(Long.valueOf(message.getSendTime()));
-                    message.setSendTime(formatSendTime);
-                }
-                if (StringUtils.isNotEmpty(message.getCreateTime())){
-                    String formatCreateTime = simpleDateFormat.format(Long.valueOf(message.getCreateTime()));
-                    message.setCreateTime(formatCreateTime);
-                }
-                if (StringUtils.isNotEmpty(message.getLastupdateTime())){
-                    String formatLastupdateTime = simpleDateFormat.format(Long.valueOf(message.getLastupdateTime()));
-                    message.setLastupdateTime(formatLastupdateTime);
-                }
-                //获得tagName
-                String tagName = messagePushTemplateStaticsService.selectTagName(request.getTagIdSrch());
-                message.setTagName(tagName);
-            }
-
             response.setResultList(messagePushErrorVO);
             return response;
         }
@@ -119,7 +97,7 @@ public class MessagePushErrorController {
      *
      * @return
      */
-    @GetMapping("getRecord/{id}")
+    @RequestMapping("getRecord/{id}")
     public MessagePushHistoryResponse getRecord(@PathVariable String id) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
@@ -140,9 +118,9 @@ public class MessagePushErrorController {
      * @author Michael
      */
     @RequestMapping("sendMessage")
-    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) {
+    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
         MessagePushMsgHistory msg = new MessagePushMsgHistory();
         BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
-        messagePushErrorService.sendMessage(msg);
+        msgPushHandle.send(msg);
     }
 }

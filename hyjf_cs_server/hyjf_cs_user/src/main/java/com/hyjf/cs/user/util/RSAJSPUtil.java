@@ -218,17 +218,19 @@ public class RSAJSPUtil {
 		String password = null;
 		try {
 			String prik = "";
-			// byte[] keyBytes3 =
-			// Base64.decodeBase64("MIIBNgIBADANBgkqhkiG9w0BAQEFAASCASAwggEcAgEAAoGBALVbwYZxzBE6
-			// Dgxx/ZYCO2XJyH9Dj1mRN7TiCCqNU1JiJM9rgUW0aHFcMc+iSWGSIGyrQiT0
-			// EA7moBsTfekwGRXIv16KNXTkDX1G8lzgmkFCpXNxEHAzyle/jHdqJ82dBzDa
-			// rfHNSnZJPHNUcB3n5FojRty+eJZkuWwq/wmRGWEDAgEAAoGAckTPCfP3nT8U
-			// DPlhyzu6yya5op4h21BpZhopBQ6o2jamdN6KxC2oxQxPAkGBtO2Kao35jikN
-			// WSYs6QJ+CghZNNXSW8XlrnFqHQNTlpwehsdxpqH8N4OcPC3jl/ZkZdYhvfoY
-			// CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");
-			String req = getHyjfReqPriKeyPath();
+			byte[] keyBytes3 =
+			Base64.decodeBase64("MIIBNgIBADANBgkqhkiG9w0BAQEFAASCASAwggEcAgEAAoGBALVbwYZxzBE6" +
+							"Dgxx/ZYCO2XJyH9Dj1mRN7TiCCqNU1JiJM9rgUW0aHFcMc+iSWGSIGyrQiT0" +
+							"EA7moBsTfekwGRXIv16KNXTkDX1G8lzgmkFCpXNxEHAzyle/jHdqJ82dBzDa" +
+							"rfHNSnZJPHNUcB3n5FojRty+eJZkuWwq/wmRGWEDAgEAAoGAckTPCfP3nT8U" +
+							"DPlhyzu6yya5op4h21BpZhopBQ6o2jamdN6KxC2oxQxPAkGBtO2Kao35jikN" +
+							"WSYs6QJ+CghZNNXSW8XlrnFqHQNTlpwehsdxpqH8N4OcPC3jl/ZkZdYhvfoY" +
+					"CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");
+
+			/*String req = getHyjfReqPriKeyPath();
 			prik = readToString(req + PRIK_NAME);
-			byte[] keyBytes3 = Base64.decodeBase64(prik);
+			byte[] keyBytes3 = Base64.decodeBase64(prik);*/
+
 			PrivateKey privateKey = RSAKeyUtil.getPrivateKey(keyBytes3);
 
 			byte[] en_identityCode = hexStringToBytes(rsapassword);
