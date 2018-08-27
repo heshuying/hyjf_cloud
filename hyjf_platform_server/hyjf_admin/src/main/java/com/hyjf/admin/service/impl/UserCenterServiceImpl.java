@@ -74,38 +74,6 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
     /**
-     * 初始化用户管理页面
-     * @return
-     */
-    @Override
-    public UserManagerInitResponseBean initUserManaget(){
-        UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
-        // 用户角色
-        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
-        // 用户属性
-        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
-        // 开户状态
-        Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
-        // 用户状态
-        Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
-        // 注册平台
-        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
-        // 用户类型
-        Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
-        // 借款人类型
-        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
-        List<HjhInstConfigVO> listHjhInstConfig =  amTradeClient.selectInstConfigAll();
-        userManagerInitResponseBean.setUserRoles(userRoles);
-        userManagerInitResponseBean.setUserPropertys(userPropertys);
-        userManagerInitResponseBean.setAccountStatus(accountStatus);
-        userManagerInitResponseBean.setUserStatus(userStatus);
-        userManagerInitResponseBean.setRegistPlat(registPlat);
-        userManagerInitResponseBean.setUserTypes(userTypes);
-        userManagerInitResponseBean.setBorrowTypes(borrowTypes);
-        userManagerInitResponseBean.setListHjhInstConfig(listHjhInstConfig);
-        return userManagerInitResponseBean;
-    }
-    /**
      * 查找用户信息
      *
      * @param request
