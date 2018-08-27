@@ -262,7 +262,12 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         return result;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public BigDecimal getAccountBalance(Integer userId) {
+        BigDecimal balance = getBankBalance(userId,BANK_MERRP_ACCOUNT);
+        return balance;
+    }
+
     public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;

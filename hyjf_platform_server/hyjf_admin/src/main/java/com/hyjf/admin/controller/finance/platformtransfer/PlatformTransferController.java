@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,6 +88,15 @@ public class PlatformTransferController extends BaseController {
         }else{
             return new AdminResult(FAIL,result.getString("info"));
         }
+    }
+
+    @ApiOperation(value = "平台转账-查询商户账户余额",notes = "平台转账-查询商户账户余额")
+    @PostMapping(value = "/tohandrecharge")
+    public AdminResult toHandRecharge(@RequestHeader(value = "userId")Integer userId){
+        BigDecimal balance = platformTransferService.getAccountBalance(userId);
+        Map<String,BigDecimal> map = new HashMap<>();
+        map.put("balance",balance);
+        return new AdminResult(map);
     }
 
     /**
