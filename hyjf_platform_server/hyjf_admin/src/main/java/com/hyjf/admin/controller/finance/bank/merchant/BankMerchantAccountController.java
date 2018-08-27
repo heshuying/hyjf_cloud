@@ -618,8 +618,19 @@ public class BankMerchantAccountController extends BaseController {
         // 账面余额
         BigDecimal currBalance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
+        // 版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
+        // 机构代码
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        // 交易日期
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        // 交易时间
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        //交易流水号
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         // 交易渠道
@@ -627,10 +638,11 @@ public class BankMerchantAccountController extends BaseController {
         // 电子账号
         bean.setAccountId(accountCode);
         // 订单号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId())));
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        bean.setLogUserId(getUser(request).getId());
+        bean.setLogUserId(userId+"");
         // 平台
         bean.setLogClient(0);
         try {
