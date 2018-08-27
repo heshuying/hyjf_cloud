@@ -235,7 +235,7 @@ public interface CsMessageClient {
      * @param id
      * @return
      */
-    MessagePushMsgResponse getMessagePushMsgById(Integer id);
+    MessagePushMsgResponse getMessagePushMsgById(String id);
 
     /**
      * 添加手动发送短信
@@ -253,8 +253,8 @@ public interface CsMessageClient {
 
     /**
      * 删除手动发送短信
-     * @param recordList
+     * @param request
      * @return
      */
-    MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList);
+    MessagePushMsgResponse deleteMessagePushMsg(MessagePushMsgRequest request);
 }
