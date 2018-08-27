@@ -192,7 +192,7 @@ public class MsgPushHandle {
 			history.setMsgUserId(null);
 			history.setSendTime(null);
 			history.setTagCode(messagePushTemplate.getTagCode());
-			history.setTagId(messagePushTemplate.getTagId());
+			history.setTagId(Integer.valueOf(messagePushTemplate.getTagId()));
 			if (userAliasVO.getClient().equals(CustomConstants.CLIENT_ANDROID)) {
 				history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
 				history.setMsgDestinationCountIos(0);// IOS目标推送数
@@ -245,7 +245,7 @@ public class MsgPushHandle {
 			history.setMsgUserId(null);
 			history.setSendTime(null);
 			history.setTagCode(message.getTagCode());
-			history.setTagId(message.getTagId());
+			history.setTagId(Integer.valueOf(message.getTagId()));
 			history.setMsgDestinationCountAndroid(amUserClient.countAliasByClient(CustomConstants.CLIENT_ANDROID));// 安卓目标推送数
 			history.setMsgDestinationCountIos(amUserClient.countAliasByClient(CustomConstants.CLIENT_IOS));// IOS目标推送数
 			// 插入数据库
@@ -287,7 +287,7 @@ public class MsgPushHandle {
 						history.setMsgUserId(null);
 						history.setSendTime(null);
 						history.setTagCode(message.getTagCode());
-						history.setTagId(message.getTagId());
+						history.setTagId(Integer.valueOf(message.getTagId()));
 						if (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_ANDROID)) {
 							history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
 							history.setMsgDestinationCountIos(0);// IOS目标推送数
