@@ -390,21 +390,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * 定时任务提现
      */
     @Override
-    public Boolean batchWithdraw() {
-        Boolean ret = true;
+    public void batchWithdraw() {
         List<AccountWithdrawVO> withdrawList = this.amTradeClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
-                if (!updateWithdraw(accountWithdraw)){
-                    ret = false;
-                }
+                updateWithdraw(accountWithdraw);
             }
-        }else{
-            ret = false;
         }
-
-        return ret;
     }
+
 
     @Override
     public UserVO findUserByMobile(String mobile) {
@@ -421,25 +415,23 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * add by jijun 20180621
      * @param accountwithdraw
      */
-    private boolean updateWithdraw(AccountWithdrawVO accountwithdraw) {
+    private void updateWithdraw(AccountWithdrawVO accountwithdraw) {
         //调用银行接口
         BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
-        boolean result = false;
         if (bean != null) {
             int userId = accountwithdraw.getUserId();
             BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
             String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
             //调用后平台操作
-            result=this.amTradeClient.handlerAfterCash(CommonUtils.convertBean(bean,BankCallBeanVO.class), accountwithdraw,bankCard,withdrawFee);
+            boolean result=this.amTradeClient.handlerAfterCash(CommonUtils.convertBean(bean,BankCallBeanVO.class), accountwithdraw,bankCard,withdrawFee);
             if (result){
-                logger.info("银行提现掉单修复成功!");
+                logger.info("银行提现掉单修复成功!,账户:"+accountwithdraw.getAccountId());
 
             }else{
-                logger.info("银行提现掉单修复失败！");
+                logger.info("银行提现掉单修复失败!,账户:"+accountwithdraw.getAccountId());
             }
         }
-        return result;
     }
 
     /**

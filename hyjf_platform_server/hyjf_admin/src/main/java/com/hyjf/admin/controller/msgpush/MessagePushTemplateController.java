@@ -118,11 +118,13 @@ public class MessagePushTemplateController extends BaseController {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
+        templateVO.setTagId(String.valueOf(templateRequest.getTagId()));
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
