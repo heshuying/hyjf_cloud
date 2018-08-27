@@ -16,6 +16,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.service.paymentauthpage.PaymentAuthPageService;
+import com.hyjf.cs.user.service.repayauth.RepayAuthPageService;
 import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -48,6 +49,8 @@ public class RepayAuthController extends BaseController {
     private PaymentAuthPageService paymentAuthPageService;
     @Autowired
     private AutoPlusService autoPlusService;
+    @Autowired
+    private RepayAuthPageService pageService;
     @Autowired
     SystemConfig systemConfig;
 
@@ -171,7 +174,7 @@ public class RepayAuthController extends BaseController {
         bean.setNotifyUrl(bgRetUrl);//异步通知地址
         bean.setForgotPwdUrl(payRequestBean.getForgotPwdUrl());
         // 插入日志
-//        this.repayAuthService.insertUserAuthLog(user.getUserId(), bean,Integer.parseInt(payRequestBean.getPlatform()));
+        this.pageService.insertUserAuthLog(user.getUserId(), bean,Integer.parseInt(payRequestBean.getPlatform()));
         // 跳转到汇付天下画面
         try {
             modelAndView = BankCallUtils.callApi(bean);
