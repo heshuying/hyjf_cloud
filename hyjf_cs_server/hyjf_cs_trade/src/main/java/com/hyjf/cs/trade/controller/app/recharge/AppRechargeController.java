@@ -95,19 +95,20 @@ public class AppRechargeController extends BaseTradeController{
 	/**
 	 * 调用充值接口
 	 * @param request
-	 * @param
-	 * @param mobile
-	 * @param money
 	 * @return
 	 */
-	@ResponseBody
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
 	public AppResult<Object> recharge(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "key") String key,
-									  HttpServletRequest request, String mobile, String money, String isMencry) throws Exception {
+									  HttpServletRequest request) throws Exception {
 		logger.info("app充值服务");
-		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
+
 		AppResult<Object> result = new AppResult<Object>();
+		String mobile = request.getParameter("mobile");// 手机号
+		String money = request.getParameter("money");// 交易金额
+		String isMencry = request.getParameter("isMencry");// 版本标识
+		String platform = request.getParameter("platform");// 平台
+		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
 				throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
@@ -132,12 +133,14 @@ public class AppRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getAppFrontHost()+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn" + "?phone="+mobile;
-		String successfulUrl = systemConfig.getAppFrontHost()+"/user/rechargeSuccess?money="+money;
+		String retUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/failed";
+		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String successfulUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/success?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
+		directRechargeBean.setPlatform(platform);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
