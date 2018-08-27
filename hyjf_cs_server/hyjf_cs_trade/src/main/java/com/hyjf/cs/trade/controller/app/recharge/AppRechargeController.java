@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
@@ -64,7 +65,8 @@ public class AppRechargeController extends BaseTradeController{
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
-		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/hyjf-app/bank/user/userDirectRecharge/recharge?";
+		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) +
+				"/hyjf-app/bank/user/userDirectRecharge/recharge?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
 		String token = "";
 		String order = "";
@@ -77,12 +79,7 @@ public class AppRechargeController extends BaseTradeController{
 			token = strEncode(vo.getToken());
 			order = strEncode(vo.getOrder());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
-			sb.append("version=").append(vo.getVersion()).append(CustomConstants.APP_PARM_AND).append("netStatus=").append(vo.getNetStatus()).append(CustomConstants.APP_PARM_AND).append("platform=")
-					.append(vo.getPlatform()).append(CustomConstants.APP_PARM_AND).append("token=").append(token).append(CustomConstants.APP_PARM_AND).append("sign=")
-					.append(vo.getSign()).append(CustomConstants.APP_PARM_AND).append("randomString=").append(vo.getRandomString()).append(CustomConstants.APP_PARM_AND).append("order=")
-					.append(order).append(CustomConstants.APP_PARM_AND).append("platform=").append(strEncode(vo.getPlatform())).append(CustomConstants.APP_PARM_AND)
-					.append("money=").append(vo.getMoney()).append(CustomConstants.APP_PARM_AND).append("cardNo=").append(vo.getCardNo()).append(CustomConstants.APP_PARM_AND).append("code=")
-					.append(vo.getCode()).append("&isMencry=").append("2").append("&mobile=").append(mobile);
+			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
 
 			object.put("rechargeUrl",sb.toString());
 			logger.info("请求充值接口url："+sb.toString());
