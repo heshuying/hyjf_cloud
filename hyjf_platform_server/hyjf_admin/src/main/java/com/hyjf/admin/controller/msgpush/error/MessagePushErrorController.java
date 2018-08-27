@@ -40,8 +40,7 @@ public class MessagePushErrorController extends BaseController {
 
     @PostMapping("/getListByConditions")
     @ApiParam(required = false, name = "requestBean", value = "查询条件")
-    @ApiOperation(value = "(条件)查询 APP消息推送 异常处理 列表", httpMethod = "POST",
-                                  notes = "(条件)查询 APP消息推送 异常处理 列表")
+    @ApiOperation(value = "(条件)查询 APP消息推送 异常处理 列表", httpMethod = "POST", notes = "(条件)查询 APP消息推送 异常处理 列表")
     public JSONObject getListByConditions(@RequestBody MessagePushErrorRequestBean requestBean) {
         MessagePushErrorRequest request = new MessagePushErrorRequest();
         BeanUtils.copyProperties(requestBean, request);
@@ -69,14 +68,12 @@ public class MessagePushErrorController extends BaseController {
         return jsonObject;
     }
 
-    @PutMapping("/update")
-    @ApiOperation(value = "数据修改 APP消息推送 异常处理", notes = "数据修改 APP消息推送 异常处理")
-    public JSONObject update(@RequestBody Integer id) {
+    @GetMapping("/update")
+    @ApiOperation(value = "数据修改 APP消息推送 异常处理", httpMethod = "POST", notes = "数据修改 APP消息推送 异常处理")
+    public JSONObject update(@RequestParam("id") String id) {
         // 重发此消息
-        if (id != null) {
-            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
-            this.messagePushErrorService.sendMessage(msg);
-        }
+        MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
+        this.messagePushErrorService.sendMessage(msg);
         JSONObject jsonObject = new JSONObject();
         //返回状态
         jsonObject.put("status", "000");

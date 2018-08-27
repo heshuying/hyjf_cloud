@@ -246,7 +246,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitle").is("%" + request.getMsgTitleSrch() + "%");
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
+			criteria.and("tagId").is(request.getTagIdSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("nsgCode").is(request.getMsgCodeSrch());
@@ -276,7 +276,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagIdSrch").is(Integer.valueOf(request.getTagIdSrch()));
+			criteria.and("tagId").is(request.getTagIdSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
 			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
@@ -301,15 +301,15 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 *
 	 * @return
 	 */
-	public MessagePushMsgHistory getRecord(Integer id) {
+	public MessagePushMsgHistory getRecord(String id) {
 		Criteria criteria = new Criteria();
 		Query query = new Query();
 		// 条件查询
 		if(id != null){
 			criteria.and("id").is(id);
 		}
-		List<MessagePushMsgHistory> list = mongoTemplate.find(query, MessagePushMsgHistory.class);
-		return list.get(0);
+        MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
+		return one;
 	}
 
 
