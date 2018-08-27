@@ -379,7 +379,7 @@ public class AppBankWithdrawController extends BaseTradeController {
 
         try {
             /** 充值接口 */
-            String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
+            String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType=" +CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
             String uuid = getUUID();
             RedisUtils.set("widraw"+cardNo, uuid);
             ret.put("status", "0");
@@ -387,7 +387,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", requestStr);
             StringBuffer sbUrl = new StringBuffer();
             sbUrl.append(withdrawUrl);
-            sbUrl.append("?").append("cardNo").append("=").append(cardNo);
+            sbUrl.append("&").append("cardNo").append("=").append(cardNo);
             sbUrl.append("&").append("total").append("=").append(total);
             sbUrl.append("&").append("routeCode").append("=").append(routeCode);
             sbUrl.append("&").append("openCardBankCode").append("=").append(openCardBankCode);
@@ -431,9 +431,10 @@ public class AppBankWithdrawController extends BaseTradeController {
         String platform = request.getParameter("platform");
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
+        if(null==userVO){
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
+
         if(0==userVO.getIsSetPassword()){
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }

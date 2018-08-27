@@ -374,7 +374,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
             return "请输入账户号";
         }
         BankMerchantAccountVO bankMerchantAccount =  amTradeClient.getBankMerchantAccount(accountCode);
-        if (bankMerchantAccount != null ) {
+        if (bankMerchantAccount == null ) {
             return "账户不存在";
         }
         if(bankMerchantAccount.getIsSetPassword()==0){

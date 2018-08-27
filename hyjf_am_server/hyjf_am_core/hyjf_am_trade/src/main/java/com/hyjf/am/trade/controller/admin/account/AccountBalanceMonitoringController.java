@@ -72,7 +72,7 @@ public class AccountBalanceMonitoringController {
             List<MerchantAccount> merchantAccounts= accountBalanceMonitoringService.selectAccountBalanceMonitoringById(adminRequest);
             if(!CollectionUtils.isEmpty(merchantAccounts)){
                 List<MerchantAccountVO> merchantAccountVOList = CommonUtils.convertBeanList(merchantAccounts, MerchantAccountVO.class);
-                merchantAccountVOList=this.forback(merchantAccountVOList);
+//                merchantAccountVOList=this.forback(merchantAccountVOList);
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(merchantAccountVOList.size());
                 response.setRtn(Response.SUCCESS);
@@ -100,6 +100,7 @@ public class AccountBalanceMonitoringController {
             if(cot > 0 ){
                 resp.setRtn(Response.SUCCESS);
             }else{
+                resp.setMessage("修改失败！");
                 resp.setRtn(Response.FAIL);
             }
         }catch (Exception e){

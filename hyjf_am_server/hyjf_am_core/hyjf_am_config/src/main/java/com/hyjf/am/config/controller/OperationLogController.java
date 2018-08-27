@@ -40,7 +40,7 @@ public class OperationLogController extends BaseConfigController {
         int recordTotal = this.operationLogService.selectOperationLogCountByPage(map);
         if (recordTotal > 0) {
             Paginator paginator = new Paginator((int)map.get("paginatorPage"), recordTotal);
-            //查询记录  todo
+            //查询记录
             List<FeerateModifyLog> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<FeerateModifyLogVO> feerateModifyLogVOList = CommonUtils.convertBeanList(recordList, FeerateModifyLogVO.class);

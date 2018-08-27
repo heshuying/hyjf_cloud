@@ -58,13 +58,13 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
 
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         BatchBorrowRecoverReponse batchBorrowRepayReponse = amTradeClient.getBatchBorrowRecoverList(request);
         if (null != batchBorrowRepayReponse) {
             List<BatchBorrowRecoverVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
             Integer recordCount = batchBorrowRepayReponse.getRecordTotal();
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
-                this.queryBatchCenterStatusName(listAccountDetail,"REVERIFY_STATUS");
+                this.queryBatchCenterStatusName(listAccountDetail,request.getNameClass());
             }
             if (null != listAccountDetail) {
                 BatchBorrowRecoverVo sumVo = this.queryBatchCenterListSum(request);
