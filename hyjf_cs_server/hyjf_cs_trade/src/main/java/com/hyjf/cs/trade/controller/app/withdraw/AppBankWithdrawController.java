@@ -387,7 +387,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", requestStr);
             StringBuffer sbUrl = new StringBuffer();
             sbUrl.append(withdrawUrl);
-            sbUrl.append("?").append("cardNo").append("=").append(cardNo);
+            sbUrl.append("&").append("cardNo").append("=").append(cardNo);
             sbUrl.append("&").append("total").append("=").append(total);
             sbUrl.append("&").append("routeCode").append("=").append(routeCode);
             sbUrl.append("&").append("openCardBankCode").append("=").append(openCardBankCode);
