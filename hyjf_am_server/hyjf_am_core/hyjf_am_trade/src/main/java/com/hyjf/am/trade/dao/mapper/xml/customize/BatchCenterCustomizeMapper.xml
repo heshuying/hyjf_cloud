@@ -82,14 +82,8 @@
         hba.fail_amount fail_amount,
         hba.fail_counts fail_counts,
         hba.`status`,
-        from_unixtime(
         hba.create_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS create_time,
-        from_unixtime(
         hba.update_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS update_time,
         hba.is_repay_org_flag is_repay_org_flag,
         hba.data
         FROM
