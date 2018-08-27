@@ -45,7 +45,7 @@ public class SystemConfig {
     /**
      * 银行代码
      */
-//    @Value("${hyjf.bank.bankcode}")
+   @Value("${hyjf.bank.bankcode}")
     private String BANK_BANKCODE;
 
     /**
