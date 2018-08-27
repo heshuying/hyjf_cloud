@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.SmsMailTemplate;
 import com.hyjf.am.config.service.SmsMailTemplateService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
@@ -87,8 +88,9 @@ public class SmsMailTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/insertMailTemplate")
-    public int insertMailTemplate(@RequestBody MailTemplateRequest request) {
-        return smsMailTemplateService.insertMailTemplate(request);
+    public IntegerResponse insertMailTemplate(@RequestBody MailTemplateRequest request) {
+        int num = smsMailTemplateService.insertMailTemplate(request);
+        return new IntegerResponse(num);
     }
 
     /**
@@ -97,8 +99,9 @@ public class SmsMailTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/update_mail_template")
-    public int updateMailTemplate(@RequestBody MailTemplateRequest request) {
-        return smsMailTemplateService.updateMailTemplate(request);
+    public IntegerResponse updateMailTemplate(@RequestBody MailTemplateRequest request) {
+        int num = smsMailTemplateService.updateMailTemplate(request);
+        return new IntegerResponse(num);
     }
 
     /**
@@ -107,17 +110,9 @@ public class SmsMailTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/update_status")
-    public int updateStatus(@RequestBody MailTemplateRequest request) {
-        return smsMailTemplateService.updateStatus(request);
-    }
-
-    /**
-     * 开启短信模板
-     * @param request
-     */
-    @RequestMapping("/open_action")
-    public void openMailTemplate(@RequestBody MailTemplateRequest request) {
-        smsMailTemplateService.openMailTemplate(request);
+    public IntegerResponse updateStatus(@RequestBody MailTemplateRequest request) {
+        int num = smsMailTemplateService.updateStatus(request);
+        return new IntegerResponse(num);
     }
 
     @RequestMapping("/find_by_id/{id}")

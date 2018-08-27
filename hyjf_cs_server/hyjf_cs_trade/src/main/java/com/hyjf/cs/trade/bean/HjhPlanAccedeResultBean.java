@@ -17,6 +17,7 @@ public class HjhPlanAccedeResultBean extends BaseResultBeanFrontEnd {
     private Integer userCount;
     // 加入金额
     private String account;
+    //
     private Boolean isEnd;
 
     private List<AccedeList> accedeList;

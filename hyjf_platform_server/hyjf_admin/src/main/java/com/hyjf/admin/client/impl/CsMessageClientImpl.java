@@ -330,7 +330,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     @Override
-    public MessagePushMsgResponse getMessagePushMsgById(Integer id) {
+    public MessagePushMsgResponse getMessagePushMsgById(String id) {
         MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/getmessagepushmsgbyid/"+id,MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;
@@ -359,8 +359,8 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     }
 
     @Override
-    public MessagePushMsgResponse deleteMessagePushMsg(List<Integer> recordList) {
-        MessagePushMsgResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg/" + recordList,
+    public MessagePushMsgResponse deleteMessagePushMsg(MessagePushMsgRequest request) {
+        MessagePushMsgResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/app_message/deletemessagepushmsg",request,
                 MessagePushMsgResponse.class).getBody();
         if (response != null) {
             return response;

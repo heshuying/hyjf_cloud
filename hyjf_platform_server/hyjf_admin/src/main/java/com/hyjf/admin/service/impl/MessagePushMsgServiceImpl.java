@@ -28,7 +28,7 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
     }
 
     @Override
-    public MessagePushMsgResponse getRecord(Integer id) {
+    public MessagePushMsgResponse getRecord(String id) {
         return csMessageClient.getMessagePushMsgById(id);
     }
 
@@ -43,7 +43,7 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
     }
 
     @Override
-    public MessagePushMsgResponse deleteAction(List<Integer> recordList) {
-        return csMessageClient.deleteMessagePushMsg(recordList);
+    public MessagePushMsgResponse deleteAction(MessagePushMsgRequest request) {
+        return csMessageClient.deleteMessagePushMsg(request);
     }
 }
