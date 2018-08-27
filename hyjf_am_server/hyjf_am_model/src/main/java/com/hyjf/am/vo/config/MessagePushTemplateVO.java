@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -133,6 +134,7 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
         this.status = status;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getCreateTime() {
         return createTime;
     }
@@ -157,6 +159,7 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getLastupdateTime() {
         return lastupdateTime;
     }
