@@ -49,7 +49,7 @@ public class RepayAuthController extends BaseController {
     @Autowired
     private AutoPlusService autoPlusService;
     @Autowired
-    private SystemConfig systemConfig;
+    SystemConfig systemConfig;
 
     public static final String REQUEST_MAPPING = "hyjf-api/server/repayAuth";
     /**

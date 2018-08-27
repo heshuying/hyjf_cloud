@@ -34,6 +34,11 @@ public class SignUtil {
             PaymentAuthPageRequestBean bean = (PaymentAuthPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId()+bean.getRetUrl()+bean.getNotifyUrl() + bean.getTimestamp();
         }
+        if (methodName.equals("/server/repayAuth/repayAuth")) {
+            // 还款授权
+            PaymentAuthPageRequestBean bean = (PaymentAuthPageRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId()+bean.getRetUrl()+bean.getNotifyUrl() + bean.getTimestamp();
+        }
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
 }
