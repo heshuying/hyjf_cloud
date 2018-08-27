@@ -107,7 +107,7 @@ public class AppRechargeController extends BaseTradeController{
 		String mobile = request.getParameter("mobile");// 手机号
 		String money = request.getParameter("money");// 交易金额
 		String isMencry = request.getParameter("isMencry");// 版本标识
-		String planform = request.getParameter("planform");// 平台
+		String platform = request.getParameter("platform");// 平台
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
@@ -140,7 +140,7 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
-		directRechargeBean.setPlatform(planform);
+		directRechargeBean.setPlatform(platform);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
