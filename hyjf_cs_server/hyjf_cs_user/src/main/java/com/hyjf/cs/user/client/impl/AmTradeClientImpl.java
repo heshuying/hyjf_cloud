@@ -8,6 +8,7 @@ import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
@@ -614,7 +615,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
         String url = "http://AM-TRADE/am-trade/coupon/getmycouponbypage";
-        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        CouponResponseForCoupon response = restTemplate.postForEntity(url, requestBean, CouponResponseForCoupon.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
