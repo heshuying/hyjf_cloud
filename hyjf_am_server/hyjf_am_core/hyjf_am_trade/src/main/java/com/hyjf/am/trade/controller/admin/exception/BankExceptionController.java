@@ -51,7 +51,7 @@ public class BankExceptionController extends BaseController {
     @Autowired
 	private BankTenderCancelService bankTenderCancelService;
 
-    @RequestMapping("/recharge")
+    @GetMapping("/recharge")
     public void recharge(){
         logger.info("recharge...");
         bankRechargeService.recharge();
