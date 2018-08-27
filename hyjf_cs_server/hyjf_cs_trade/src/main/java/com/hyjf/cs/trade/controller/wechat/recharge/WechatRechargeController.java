@@ -92,7 +92,7 @@ public class WechatRechargeController extends BaseTradeController{
 	 * @Return: ModelAndView
 	 */
 	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
-	@PostMapping("/return")
+	@GetMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
 		logger.info("[wechat页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
