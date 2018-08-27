@@ -74,7 +74,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public MessagePushMsgHistory getRecord(Integer id) {
+    public MessagePushMsgHistory getRecord(String id) {
         return messagePushMsgHistoryDao.getRecord(id);
     }
 
@@ -191,7 +191,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
         }
         // 成功
         if (StringUtils.isNotEmpty(msgId)) {
-            msg.setSendTime(GetDate.getNowTime10());
+            msg.setSendTime(GetDate.getNowTime10() + "");
             msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
             msg.setMsgJpushId(msgId);
             msg.setMsgJpushProId(msgProId);
@@ -206,7 +206,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
             System.out.println("发送消息成功：msgZYBID: " + msgZYBID);
             System.out.println("发送消息成功：msgZZBID: " + msgZZBID);
         } else {
-            msg.setSendTime(GetDate.getNowTime10());
+            msg.setSendTime(GetDate.getNowTime10() + "");
             msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_2);
             msg.setMsgRemark(errorMsg);
         }

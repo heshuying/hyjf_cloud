@@ -192,7 +192,7 @@ public interface CsMessageClient {
      *
      * @return
      */
-    MessagePushMsgHistoryVO getRecord(Integer id);
+    MessagePushMsgHistoryVO getRecord(String id);
 
     /**
      * 推送极光消息

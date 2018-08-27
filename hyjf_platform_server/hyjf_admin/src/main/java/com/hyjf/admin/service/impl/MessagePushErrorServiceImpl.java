@@ -69,7 +69,7 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
      * @return
      */
     @Override
-    public MessagePushMsgHistoryVO getRecord(Integer id) {
+    public MessagePushMsgHistoryVO getRecord(String id) {
         return csMessageClient.getRecord(id);
     }
     /**

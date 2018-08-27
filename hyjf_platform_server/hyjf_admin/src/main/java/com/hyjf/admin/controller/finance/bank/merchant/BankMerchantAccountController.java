@@ -79,15 +79,17 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "账户信息")
     @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
+        AdminResult result = new AdminResult();
         AdminSystemVO adminSystem = getUser(request);
-        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+  //      CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
         BigDecimal availableBalanceSum = BigDecimal.ZERO;
         // 冻结金额总计
         BigDecimal frostSum = BigDecimal.ZERO;
-        form.setUserId(Integer.parseInt(adminSystem.getId()));
+        //form.setUserId(Integer.parseInt(adminSystem.getId()));
+        form.setUserId(5234);
         BankMerchantAccountResponse response = bankMerchantAccountService.selectBankMerchantAccount(form);
         if(response == null||response.getRecordTotal()==0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -104,20 +106,21 @@ public class BankMerchantAccountController extends BaseController {
         form.setAccountBalanceSum(String.valueOf(accountBalanceSum));
         form.setAvailableBalanceSum(String.valueOf(availableBalanceSum));
         form.setFrostSum(String.valueOf(frostSum));
-        return new AdminResult(form);
+        result.setTotalCount(response.getRecordTotal());
+        result.setData(form);
+        return result;
     }
 
     /**
      * 设置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
     @ApiOperation(value = "设置交易密码")
     @PostMapping(value = "/setPassword")
-    public AdminResult setPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    public AdminResult setPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.setPassword(accountCode);
         return result;
     }
@@ -145,14 +148,13 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 重置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
     @ApiOperation(value = "重置交易密码")
     @PostMapping(value = "/resetPassword")
-    public AdminResult resetPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    public AdminResult resetPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.resetPassword(accountCode);
         return result;
     }
@@ -616,8 +618,19 @@ public class BankMerchantAccountController extends BaseController {
         // 账面余额
         BigDecimal currBalance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
+        // 版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
+        // 机构代码
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        // 交易日期
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        // 交易时间
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        //交易流水号
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         // 交易渠道
@@ -625,10 +638,11 @@ public class BankMerchantAccountController extends BaseController {
         // 电子账号
         bean.setAccountId(accountCode);
         // 订单号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId())));
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        bean.setLogUserId(getUser(request).getId());
+        bean.setLogUserId(userId+"");
         // 平台
         bean.setLogClient(0);
         try {

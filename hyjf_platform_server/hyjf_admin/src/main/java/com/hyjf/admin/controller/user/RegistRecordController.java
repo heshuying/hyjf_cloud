@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.hyjf.admin.beans.request.RegistRcordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.beans.vo.RegistRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -15,6 +16,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +33,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -48,8 +51,11 @@ public class RegistRecordController extends BaseController {
     @PostMapping(value = "/userRegistInit")
     @ResponseBody
     public AdminResult<UserManagerInitResponseBean>  userRegistInit() {
+        UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
         // 注册平台
-        UserManagerInitResponseBean userManagerInitResponseBean = registRecordService.initRegist();
+        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        List<DropDownVO> listRegistPlat = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(registPlat);
+        userManagerInitResponseBean.setRegistPlat(listRegistPlat);
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
     }
 

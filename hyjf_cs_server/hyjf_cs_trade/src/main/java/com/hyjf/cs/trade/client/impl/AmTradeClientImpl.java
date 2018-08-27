@@ -31,6 +31,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -3814,11 +3815,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBeanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-tradet/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return JSON.parseObject(response.getResult(), RepayBean.class);
-        }
-        return null;
+        RepayBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,RepayBean.class).getBody();
+        return response;
     }
 
     /**
@@ -3826,11 +3824,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,Response.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResult();
-        }
-        return null;
+        ProjectBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,ProjectBean.class).getBody();
+//        if (Response.isSuccess(response)){
+////            return JSON.parseObject(response.getResult(), ProjectBean.class);
+////        }
+        return response;
     }
 
     /**
@@ -3985,4 +3983,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+
+    /**
+     * 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 14:00
+     */
+    @Override
+    public List<ApiProjectListCustomize> getApiProjectList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/projectlist/api/getBorrowList";
+        ApiProjectListResponse response = restTemplate.postForEntity(url,params,ApiProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

@@ -432,7 +432,7 @@ public class RepayManageController extends BaseTradeController {
             BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
             String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
             // 申请冻结资金失败
-            if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+            if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 if (!"".equals(respCode)) {
                     this.repayManageService.deleteFreezeLogByOrderId(orderId);
                 }
@@ -458,7 +458,10 @@ public class RepayManageController extends BaseTradeController {
                 webResult.setStatusDesc("还款失败，请稍后再试...");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("还款申请冻结资金异常", e);
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("还款申请冻结资金异常");
+            return webResult;
         }
         return webResult;
     }

@@ -167,10 +167,10 @@ public class MsgPushHandle {
 		if (userAliasVO != null) {
 			int msgId = 0;
 			MessagePushMsgHistory history = new MessagePushMsgHistory();
-			history.setCreateTime(GetDate.getNowTime10());
+			history.setCreateTime(GetDate.getNowTime10() + "");
 			history.setCreateUserId(null);
 			history.setCreateUserName("系统自动触发");
-			history.setLastupdateTime(GetDate.getNowTime10());
+			history.setLastupdateTime(GetDate.getNowTime10() + "");
 			history.setLastupdateUserId(null);
 			history.setLastupdateUserName("系统自动触发");
 			history.setMsgAction(messagePushTemplate.getTemplateAction());
@@ -220,10 +220,10 @@ public class MsgPushHandle {
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人
 			MessagePushMsgHistory history = new MessagePushMsgHistory();
-			history.setCreateTime(message.getCreateTime());
+			history.setCreateTime(message.getCreateTime() + "");
 			history.setCreateUserId(message.getCreateUserId());
 			history.setCreateUserName(message.getCreateUserName());
-			history.setLastupdateTime(GetDate.getNowTime10());
+			history.setLastupdateTime(GetDate.getNowTime10() + "");
 			history.setLastupdateUserId(message.getCreateUserId());
 			history.setLastupdateUserName(message.getCreateUserName());
 			history.setMsgAction(message.getMsgAction());
@@ -262,10 +262,10 @@ public class MsgPushHandle {
 				if (msgPushCommonList != null && msgPushCommonList.size() != 0) {
 					for (int i = 0; i < msgPushCommonList.size(); i++) {
 						MessagePushMsgHistory history = new MessagePushMsgHistory();
-						history.setCreateTime(message.getCreateTime());
+						history.setCreateTime(message.getCreateTime() + "");
 						history.setCreateUserId(message.getCreateUserId());
 						history.setCreateUserName(message.getCreateUserName());
-						history.setLastupdateTime(GetDate.getNowTime10());
+						history.setLastupdateTime(GetDate.getNowTime10() + "");
 						history.setLastupdateUserId(message.getCreateUserId());
 						history.setLastupdateUserName(message.getCreateUserName());
 						history.setMsgAction(message.getMsgAction());
@@ -477,7 +477,7 @@ public class MsgPushHandle {
 		if (StringUtils.isNotEmpty(msgId) || StringUtils.isNotEmpty(msgProId) || StringUtils.isNotEmpty(msgZNBID)
 				|| StringUtils.isNotEmpty(msgYXBID) || StringUtils.isNotEmpty(msgZYBID)
 				|| StringUtils.isNotEmpty(msgZZBID) || StringUtils.isNotEmpty(msgTESTID)) {
-			msg.setSendTime(GetDate.getNowTime10());
+			msg.setSendTime(GetDate.getNowTime10() + "");
 			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
 			msg.setMsgJpushId(msgId);
 			msg.setMsgJpushProId(msgProId);
@@ -494,7 +494,7 @@ public class MsgPushHandle {
 			logger.info("发送消息成功：msgZZBID: " + msgZZBID);
 			logger.info("发送消息成功：msgTESTID: " + msgTESTID);
 		} else {
-			msg.setSendTime(GetDate.getNowTime10());
+			msg.setSendTime(GetDate.getNowTime10() + "");
 			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_2);
 			msg.setMsgRemark(errorMsg);
 			logger.info("发送消息失败：" + errorMsg);

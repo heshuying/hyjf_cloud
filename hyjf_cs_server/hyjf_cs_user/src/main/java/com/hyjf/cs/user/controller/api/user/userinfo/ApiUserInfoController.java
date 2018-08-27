@@ -7,8 +7,10 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.cs.user.bean.SyncUserInfoRequestBean;
 import com.hyjf.cs.user.bean.SyncUserInfoResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.service.userinfo.ApiUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/server/user")
 public class ApiUserInfoController extends BaseUserController {
 
+    @Autowired
+    private ApiUserInfoService apiUserInfoService;
+
     @ApiOperation(value = "用户信息查询",notes = "用户信息查询")
     @PostMapping(value = "/syncUserInfo")
     public SyncUserInfoResultBean syncUserInfo(@RequestBody SyncUserInfoRequestBean requestBean){
-
         logger.info(JSON.toJSONString(requestBean));
-
-        return new SyncUserInfoResultBean();
+        return apiUserInfoService.syncUserInfo(requestBean);
     }
 
 }

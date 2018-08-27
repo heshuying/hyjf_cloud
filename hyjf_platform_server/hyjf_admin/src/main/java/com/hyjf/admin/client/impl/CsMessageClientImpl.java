@@ -292,7 +292,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      * @return
      */
     @Override
-    public MessagePushMsgHistoryVO getRecord(Integer id) {
+    public MessagePushMsgHistoryVO getRecord(String id) {
         MessagePushHistoryResponse response = restTemplate
                 .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecord/" + id,
                         MessagePushHistoryResponse.class);

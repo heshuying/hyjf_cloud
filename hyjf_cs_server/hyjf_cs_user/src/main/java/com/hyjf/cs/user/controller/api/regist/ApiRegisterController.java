@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangqingqing
  * @version RegisterController, v0.1 2018/6/11 14:27
  */
-@Api(value = "api端-用户注册接口",tags = "api端-用户注册接口")
+@Api(value = "api端-用户注册接口", tags = "api端-用户注册接口")
 @RestController
 @RequestMapping("/hyjf-api/user")
 public class ApiRegisterController extends BaseUserController {
@@ -53,22 +53,42 @@ public class ApiRegisterController extends BaseUserController {
         logger.info("api端注册接口, registerVO is :{}", JSONObject.toJSONString(userRegisterRequestBean));
         UserRegisterResultBean result = new UserRegisterResultBean();
         RegisterRequest registerRequest = new RegisterRequest();
-        BeanUtils.copyProperties(userRegisterRequestBean,registerRequest);
-        //切换参数实体
+        //切换参数实体(调共用方法)
+        BeanUtils.copyProperties(userRegisterRequestBean, registerRequest);
         registerRequest.setUtmId(userRegisterRequestBean.getChannel());
         registerRequest.setReffer(userRegisterRequestBean.getRecommended());
+        //验证参数
         registService.apiCheckParam(registerRequest);
-        String ip =  GetCilentIP.getIpAddr(request);
-        UserVO userVO = registService.apiRegister(registerRequest,ip);
-        if (userVO != null) {
-            logger.info("api端注册成功, userId is :{}", userVO.getUserId());
+        //获取ip
+        String ip = GetCilentIP.getIpAddr(request);
+        //验证手机号是否已被注册
+        UserVO user = registService.getUsersByMobile(registerRequest.getMobile());
+        if (null!=user) {
+            result.setStatus(MsgEnum.STATUS_ZC000005.getCode());
+            result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getMsg());
+            result.setStatusDesc("手机号已在平台注册");
+            result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
+            if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
+                result.setAccount(registService.getAccountId(user.getUserId()));
+            }
+            if (user.getIsSetPassword() != null) {
+                result.setIsSetPassword(String.valueOf(user.getIsSetPassword()));
+            }
+            result.setAutoInvesStatus(registService.getAutoInvesStatus(user.getUserId()));
+            result.setUserId(user.getUserId());
+            return result;
+        }
+        //调用注册方法
+        user = registService.apiRegister(userRegisterRequestBean,registerRequest, ip);
+        if (user != null) {
+            logger.info("api端注册成功, userId is :{}", user.getUserId());
             result.setStatus(ErrorCodeConstant.SUCCESS);
             result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             result.setStatusDesc("注册成功");
             // 用户Id
-            result.setUserId(userVO.getUserId());
+            result.setUserId(user.getUserId());
             // 用户名
-            result.setUserName(userVO.getUsername());
+            result.setUserName(user.getUsername());
             result.setIsOpenAccount("0");
         } else {
             logger.error("api端注册失败...");

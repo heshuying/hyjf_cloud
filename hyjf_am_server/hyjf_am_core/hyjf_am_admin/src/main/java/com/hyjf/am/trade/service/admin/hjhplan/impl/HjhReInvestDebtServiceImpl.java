@@ -24,8 +24,8 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
 
         Map<String, Object> param = new HashMap<String, Object>();
 
-        if (StringUtils.isNotEmpty(request.getPlanNidSrch())){
-            param.put("planNid", request.getPlanNidSrch());
+        if (StringUtils.isNotEmpty(request.getPlanNid())){
+            param.put("planNid", request.getPlanNid());
         }
 
         List<HjhPlanCapitalCustomizeVO> recordList = hjhReInvestDebtCustomizeMapper.queryReinvestDebtList(param);

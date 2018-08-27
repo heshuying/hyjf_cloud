@@ -5,6 +5,7 @@ import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
 import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
 import com.hyjf.admin.beans.CreditUserInfoBean;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
+import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -229,10 +230,10 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @date 2018/7/13 15:21
      */
     @Override
-    public AdminResult getCreditUserInfo(HttpServletRequest request) {
+    public AdminResult getCreditUserInfo(BorrowCreditTenderInfoRequest request) {
         AdminResult result = new AdminResult();
-        String userId = request.getParameter("userId");
-        String assignNid = request.getParameter("assignNid");
+        String userId = request.getUserId();
+        String assignNid = request.getAssignNid();
         CheckUtil.check(StringUtils.isNotBlank(userId) ,MsgEnum.ERR_OBJECT_REQUIRED,"用户");
         CheckUtil.check(StringUtils.isNotBlank(assignNid) ,MsgEnum.ERR_OBJECT_REQUIRED,"承接订单号");
         String url = BANK_OPEN_ACCOUNT_URL +userId;
