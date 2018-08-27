@@ -27,7 +27,7 @@ public interface UserService extends BaseService {
 
 	/**
 	 * 生成唯一用户id
-	 * 
+	 *
 	 * @param mobile
 	 * @return
 	 */
@@ -35,7 +35,7 @@ public interface UserService extends BaseService {
 
 	/**
 	 * 根据手机号查找用户信息
-	 * 
+	 *
 	 * @param mobile
 	 * @return
 	 */
@@ -50,7 +50,7 @@ public interface UserService extends BaseService {
 
 	/**
 	 * 根据推荐人手机号或userId查询推荐人
-	 * 
+	 *
 	 * @param reffer
 	 * @return
 	 */
@@ -245,5 +245,20 @@ public interface UserService extends BaseService {
 	 */
 	CorpOpenAccountRecord selectUserBusiNameByUsername(String userName);
 
+	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+	Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus);
 
+	List<Integer> getQianleUser();
+	/**
+	 * 更新ht_hjh_user_auth_log
+	 * @param hjhUserAuthLog
+	 * @return
+	 */
+	int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog);
 }

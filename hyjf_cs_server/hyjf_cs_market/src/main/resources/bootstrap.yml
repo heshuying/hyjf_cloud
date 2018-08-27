@@ -19,9 +19,21 @@ spring:
 server:
   port: 8083
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: cs-market.log
 
 hyjf.api.web.url: http://test.hyjf.com:8080/hyjf-api-web/
 
 hyjf.web.host: http://test.hyjf.com:8080/hyjf-web
+#swagger启用开关
+swagger:
+ enable: true

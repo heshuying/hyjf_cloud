@@ -3,12 +3,14 @@ package com.hyjf.am.vo.config;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author xiasq
  * @version SmsTemplateVO, v0.1 2018/5/4 10:22
  */
 public class SmsTemplateVO extends BaseVO implements Serializable {
+    private Integer id;
 
     private String tplCode;
 
@@ -16,13 +18,21 @@ public class SmsTemplateVO extends BaseVO implements Serializable {
 
     private Integer status;
 
-    private Integer createTime;
+    private Date createTime;
 
-    private Integer updateTime;
+    private Date updateTime;
 
     private String tplContent;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getTplName() {
         return tplName;
@@ -40,19 +50,19 @@ public class SmsTemplateVO extends BaseVO implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -75,7 +85,8 @@ public class SmsTemplateVO extends BaseVO implements Serializable {
     @Override
     public String toString() {
         return "SmsTemplateVO{" +
-                "tplCode='" + tplCode + '\'' +
+                "id=" + id +
+                ", tplCode='" + tplCode + '\'' +
                 ", tplName='" + tplName + '\'' +
                 ", status=" + status +
                 ", createTime=" + createTime +

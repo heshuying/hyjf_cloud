@@ -549,4 +549,21 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
         return null;
     }
+
+
+    /**
+     * 查询计划还款日前一天，处于投资中和复审中的原始标的，发送邮件预警
+     * @author zhangyk
+     * @date 2018/8/20 16:26
+     */
+    @Override
+    public List<BorrowCustomizeVO> selectUnDealBorrowBeforeLiquidate() {
+        List<BorrowCustomizeVO> list = borrowCustomizeMapper.selectUnDealBorrowBeforeLiquidate();
+        return list;
+    }
+
+	@Override
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.exportBorrowList(BorrowCommonCustomizeVO);
+	}
 }

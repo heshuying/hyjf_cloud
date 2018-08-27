@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.subcommission;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SubCommissionService;
@@ -38,7 +39,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-平台账户分佣",tags = "资金中心-平台账户分佣")
 @RestController
-@RequestMapping(value = "/hyjf-admin/subcommission")
+@RequestMapping(value = "/hyjf-admin/finance/subcommission")
 public class SubCommissionController extends BaseController {
 
     @Autowired
@@ -52,14 +53,11 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣列表查询",notes = "平台账户分佣列表查询")
     @PostMapping(value = "/subcommissionlist")
-    public AdminResult subCommissionList(@RequestBody SubCommissionRequest request){
-        Map<String,Object> result = new HashMap<>();
+    public AdminResult<ListResult<SubCommissionVO>> subCommissionList(@RequestBody SubCommissionRequest request){
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        result.put("subCommissionVOList",subCommissionVOList);
-        return new AdminResult(result);
+        return new AdminResult<>(ListResult.build(subCommissionVOList,count));
     }
 
     /**

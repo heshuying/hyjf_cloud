@@ -4,11 +4,10 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +17,7 @@ import java.util.List;
  * @version BankRedPacketAccountServiceImpl, v0.1 2018/7/10 9:57
  */
 @Service
-public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountService {
-
-    @Autowired
-    BankMerchantAccountListCustomizeMapper bankMerchantAccountListCustomizeMapper;
+public class BankRedPacketAccountServiceImpl extends BaseServiceImpl implements BankRedPacketAccountService {
 
     /**
      * 获取商户子账户列表
@@ -53,18 +49,42 @@ public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountServ
     private BankMerchantAccountListExample createBankMerchantAccountListCustomize(BankRedPacketAccountListRequest form) {
         BankMerchantAccountListExample example = new BankMerchantAccountListExample();
         BankMerchantAccountListExample.Criteria criteria = example.createCriteria();
-        criteria.andTypeIn(form.getTypeList());
-        criteria.andTransTypeIn(form.getTransTypeList());
-        criteria.andStatusIn(form.getStatusList());
-        criteria.andBankAccountCodeEqualTo(form.getBankAccountCode());
-        criteria.andSeqNoEqualTo(form.getSeqNo());
-        criteria.andOrderIdEqualTo(form.getOrderId());
-        criteria.andAccountIdEqualTo(form.getAccountId());
-        criteria.andTypeEqualTo(form.getType());
-        criteria.andStatusEqualTo(form.getStatus());
-        criteria.andTransTypeEqualTo(form.getTransType());
-        criteria.andCreateTimeGreaterThan(form.getTimeStartSrch());
-        criteria.andCreateTimeLessThan(form.getTimeEndSrch());
+        if(null!=form.getTypeList()){
+            criteria.andTypeIn(form.getTypeList());
+        }
+        if(null != form.getTransTypeList()){
+            criteria.andTransTypeIn(form.getTransTypeList());
+        }
+        if(null != form.getStatusList()){
+            criteria.andStatusIn(form.getStatusList());
+        }
+        if(null != form.getBankAccountCode()){
+            criteria.andBankAccountCodeEqualTo(form.getBankAccountCode());
+        }
+        if(null != form.getSeqNo()){
+            criteria.andSeqNoEqualTo(form.getSeqNo());
+        }
+        if(null != form.getOrderId()){
+            criteria.andOrderIdEqualTo(form.getOrderId());
+        }
+        if(null != form.getAccountId()){
+            criteria.andAccountIdEqualTo(form.getAccountId());
+        }
+        if(null != form.getType()){
+            criteria.andTypeEqualTo(form.getType());
+        }
+        if(null != form.getStatus()){
+            criteria.andStatusEqualTo(form.getStatus());
+        }
+        if(null != form.getTransType()){
+            criteria.andTransTypeEqualTo(form.getTransType());
+        }
+        if(null != form.getTimeStartSrch()){
+            criteria.andCreateTimeGreaterThan(form.getTimeStartSrch());
+        }
+        if(null != form.getTimeEndSrch()){
+            criteria.andCreateTimeLessThan(form.getTimeEndSrch());
+        }
         return example;
     }
 }

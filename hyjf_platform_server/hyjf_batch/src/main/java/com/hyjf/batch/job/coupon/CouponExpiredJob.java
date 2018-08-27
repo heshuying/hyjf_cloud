@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 @DisallowConcurrentExecution
 public class CouponExpiredJob extends BaseJob implements Job {
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponRepayJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(CouponExpiredJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/batch/coupon/expired", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/coupon/expired", String.class);
         logger.info("CouponExpiredJob execute end...");
     }
 }

@@ -101,4 +101,20 @@ public interface BaseService {
      * @return
      */
     BigDecimal getBankBalance(Integer userId, String accountId);
+
+    /**
+     * 根据借款编号获取该机构的审核配置
+     *
+     * @param borrowNid
+     * @return
+     */
+    HjhAssetBorrowtype selectAssetBorrowType(String borrowNid);
+
+    /**
+     *  判断是否属于线下充值类型.
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    boolean getIsRechargeTransType(String tranType);
 }

@@ -9,6 +9,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.BankWithdrawVO;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -32,7 +34,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "web端用户提现接口")
+@Api(tags = "web端-用户提现接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/withdraw")
@@ -42,14 +44,15 @@ public class WebBankWithdrawController extends BaseTradeController {
     @Autowired
     private BankWithdrawService bankWithdrawService;
 
-
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * @Description 跳转到提现页面
      * @Author pangchengchao
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "web端获取用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
@@ -68,7 +71,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date  用户提现调用银行页面
      */
-    @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     @RequestLimit(seconds=3)
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "userId") int userId,
@@ -79,8 +82,11 @@ public class WebBankWithdrawController extends BaseTradeController {
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
+        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawError";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawSuccess";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -100,7 +106,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
+    @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     @ResponseBody
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
@@ -127,7 +133,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
+    @ApiOperation(value = "查询提现失败原因", notes = "查询提现失败原因")
     @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {

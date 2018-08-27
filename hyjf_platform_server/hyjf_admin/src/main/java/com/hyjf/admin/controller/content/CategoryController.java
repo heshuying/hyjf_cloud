@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
  * @Date: 2018/7/20 15:08
  * @Description: CategoryController
  */
-@Api(value = "admin内容中心-帮助中心" ,tags ="内容中心-帮助中心")
+@Api(tags ="内容中心-帮助中心")
 @RestController
 @RequestMapping("/hyjf-admin/content/help")
 public class CategoryController extends BaseController {
@@ -32,7 +33,7 @@ public class CategoryController extends BaseController {
     private CategoryService categoryService;
 
     @ApiOperation(value = "内容中心-帮助中心", notes = "帮助中心-条件列表查询")
-    @RequestMapping("/init")
+    @RequestMapping(value = "/init",method = RequestMethod.POST)
     public CategoryResponse searchAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-条件列表查询开始......");
         CategoryResponse response = categoryService.getCategoryPage(categoryBeanRequest);
@@ -40,7 +41,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-二级菜单联动", notes = "帮助中心-二级菜单联动")
-    @RequestMapping("/changesubtypeaction")
+    @RequestMapping(value = "/changesubtypeaction",method = RequestMethod.POST)
     public CategoryResponse changeSubTypeAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-二级菜单联动......");
         categoryBeanRequest.setIsShow(true);
@@ -49,7 +50,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-二级菜单联动2,只显示可用的二级菜单", notes = "帮助中心-二级菜单联动2,只显示可用的二级菜单")
-    @RequestMapping("/changesubtypeaction2")
+    @RequestMapping(value = "/changesubtypeaction2",method = RequestMethod.POST)
     public CategoryResponse changeSubTypeAction2(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-二级菜单联动2,只显示可用的二级菜单......");
         categoryBeanRequest.setIsShow(false);
@@ -58,7 +59,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-跳转到添加分类的页面", notes = "帮助中心-跳转到添加分类的页面")
-    @RequestMapping("/infotypeaction")
+    @RequestMapping(value = "/infotypeaction",method = RequestMethod.POST)
     public CategoryResponse infoTypeAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-跳转到添加分类的页面......");
         CategoryResponse response = new CategoryResponse();
@@ -71,7 +72,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-跳转到添加子分类的页面", notes = "帮助中心-跳转到添加子分类的页面")
-    @RequestMapping("/infosubtypeaction")
+    @RequestMapping(value = "/infosubtypeaction",method = RequestMethod.POST)
     public CategoryResponse infoSubTypeAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-跳转到添加子分类的页面......");
         CategoryResponse response = new CategoryResponse();
@@ -81,7 +82,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-添加分类", notes = "帮助中心-添加分类")
-    @RequestMapping("/addaction")
+    @RequestMapping(value = "/addaction",method = RequestMethod.POST)
     public CategoryResponse addCate(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-添加分类......");
         CategoryResponse response = new CategoryResponse();
@@ -94,7 +95,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-修改分类", notes = "帮助中心-修改分类")
-    @RequestMapping("/updateaction")
+    @RequestMapping(value = "/updateaction",method = RequestMethod.POST)
     public CategoryResponse updateAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-修改分类......");
         CategoryResponse response = new CategoryResponse();
@@ -112,7 +113,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-关闭模板", notes = "帮助中心-关闭模板")
-    @RequestMapping("/closeaction")
+    @RequestMapping(value = "/closeaction",method = RequestMethod.POST)
     public CategoryResponse closeAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-关闭模板......");
         CategoryResponse response = new CategoryResponse();
@@ -135,7 +136,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-启用模板", notes = "帮助中心-启用模板")
-    @RequestMapping("/openaction")
+    @RequestMapping(value = "/openaction",method = RequestMethod.POST)
     public CategoryResponse openAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-启用模板......");
         CategoryResponse response = new CategoryResponse();
@@ -158,7 +159,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-删除前的验证", notes = "帮助中心-删除前的验证")
-    @RequestMapping("/beforedelinfoaction")
+    @RequestMapping(value = "/beforedelinfoaction",method = RequestMethod.POST)
     public CategoryResponse beforeDelInfoAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-删除前的验证......");
         CategoryResponse response = new CategoryResponse();
@@ -187,7 +188,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-删除分类", notes = "帮助中心-删除分类")
-    @RequestMapping("/delaction")
+    @RequestMapping(value = "/delaction",method = RequestMethod.POST)
     public CategoryResponse delAction(ContentAdsRequest request,CategoryBeanRequest categoryBeanRequest){
         logger.info("查询内容中心-帮助中心-删除分类......");
         CategoryResponse response = new CategoryResponse();
@@ -227,7 +228,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-问题列表", notes = "帮助中心-问题列表查询")
-    @RequestMapping("/helpinit")
+    @RequestMapping(value = "/helpinit",method = RequestMethod.POST)
     public CategoryResponse helpInit(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-问题列表查询开始......");
         CategoryResponse response = categoryService.getHelpPage(contentHelpBeanRequest);
@@ -235,7 +236,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-列表页跳转详情页(含有id更新，不含有id添加)", notes = "帮助中心-问题列表页跳转详情页(含有id更新，不含有id添加)")
-    @RequestMapping("/helpinfoaction")
+    @RequestMapping(value = "/helpinfoaction",method = RequestMethod.POST)
     public CategoryResponse helpInfo(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-列表页跳转详情页(含有id更新，不含有id添加)查询开始......");
         CategoryResponse response = categoryService.getHelpInfo(contentHelpBeanRequest);
@@ -243,7 +244,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-添加问题", notes = "帮助中心-添加问题")
-    @RequestMapping("/helpaddaction")
+    @RequestMapping(value = "/helpaddaction",method = RequestMethod.POST)
     public CategoryResponse addHelp(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-添加问题开始......");
         CategoryResponse response = categoryService.insertHelpInfo(contentHelpBeanRequest);
@@ -251,7 +252,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-修改问题", notes = "帮助中心-修改问题")
-    @RequestMapping("/helpupdateaction")
+    @RequestMapping(value = "/helpupdateaction",method = RequestMethod.POST)
     public CategoryResponse updateHelpAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-修改问题开始......");
         CategoryResponse response = categoryService.updateHelpAction(contentHelpBeanRequest);
@@ -259,7 +260,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-关闭问题", notes = "帮助中心-关闭问题")
-    @RequestMapping("/closehelpaction")
+    @RequestMapping(value = "/closehelpaction",method = RequestMethod.POST)
     public CategoryResponse closeHelpAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-关闭问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -275,7 +276,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-开启问题", notes = "帮助中心-开启问题")
-    @RequestMapping("/openhelpaction")
+    @RequestMapping(value = "/openhelpaction",method = RequestMethod.POST)
     public CategoryResponse openHelpAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-开启问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -291,7 +292,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-删除问题", notes = "帮助中心-删除问题")
-    @RequestMapping("/delhelpaction")
+    @RequestMapping(value = "/delhelpaction",method = RequestMethod.POST)
     public CategoryResponse delHelpAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-删除问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -307,7 +308,7 @@ public class CategoryController extends BaseController {
     }
 
     @ApiOperation(value = "内容中心-帮助中心-启用智齿常见问题", notes = "帮助中心-启用智齿常见问题")
-    @RequestMapping("/movezhichiaction")
+    @RequestMapping(value = "/movezhichiaction",method = RequestMethod.POST)
     public CategoryResponse moveZhiChiAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-启用智齿常见问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -323,7 +324,7 @@ public class CategoryController extends BaseController {
 
 
     @ApiOperation(value = "内容中心-帮助中心-开启常见问题", notes = "帮助中心-开启常见问题")
-    @RequestMapping("/moveoftenaction")
+    @RequestMapping(value = "/moveoftenaction",method = RequestMethod.POST)
     public CategoryResponse moveOftenAction(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-开启常见问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -340,7 +341,7 @@ public class CategoryController extends BaseController {
 
 
     @ApiOperation(value = "内容中心-帮助中心-问题列表", notes = "帮助中心-问题列表查询")
-    @RequestMapping("/ofteninit")
+    @RequestMapping(value = "/ofteninit",method = RequestMethod.POST)
     public CategoryResponse oftenInit(ContentAdsRequest request,ContentHelpBeanRequest contentHelpBeanRequest){
         logger.info("查询内容中心-帮助中心-问题列表查询开始......");
         CategoryResponse response = categoryService.getOftenInitPage(contentHelpBeanRequest);

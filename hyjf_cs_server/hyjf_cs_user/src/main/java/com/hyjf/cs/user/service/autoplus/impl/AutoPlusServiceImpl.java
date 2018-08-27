@@ -20,14 +20,13 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.*;
-import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -58,9 +57,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     private AmUserClient amUserClient;
 
     @Autowired
-    private AmConfigClient amConfigClient;
-
-    @Autowired
     AmDataCollectClient amDataCollectClient;
 
     @Autowired
@@ -79,7 +75,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public Map<String, Object> userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode) {
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
-        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1) {
+        if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_2)) {
+            //用户已授权自动债转
+            throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
+        }else if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue() == 1&&type.equals(ClientConstants.QUERY_TYPE_1)) {
+            //用户已授权自动投资
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
@@ -225,14 +225,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/invesbgreturn";
+            bgRetUrl = systemConfig.getWebHost()+"/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/creditbgreturn";
+            bgRetUrl = systemConfig.getWebHost()+"/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app
@@ -419,15 +419,17 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public BankCallBean appGetCommonBankCallBean(UserVO users, int type, String lastSrvAuthCode, String smsCode, String sign, String token) {
         String remark = "";
         String txcode = "";
+        BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
+        String retUrl = systemConfig.getAppHost() + "/user/setting/authorization/result/failed";
+        String success = systemConfig.getAppHost() + "/user/setting/authorization/result/success";
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
-        BankCallBean bean = new BankCallBean();
+        bean.setRetUrl(retUrl);
+        bean.setSuccessfulUrl(success);
         if (type == 1) {
             // 2.4.4.投资人自动投标签约增强
-            retUrl += "/userAuthInvesReturn";
             bgRetUrl += "/userAuthInvesBgreturn";
             remark = "投资人自动投标签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS;
@@ -439,7 +441,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             bean.setTotAmount("1000000000");
         } else if (type == 2) {
             // 2.4.8.投资人自动债权转让签约增强
-            retUrl += "/userAuthCreditReturn";
             bgRetUrl += "/userAuthCreditBgreturn";
             remark = "投资人自动债权转让签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
@@ -452,10 +453,10 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setChannel(BankCallConstant.CHANNEL_APP);
         bean.setAccountId(bankOpenAccount.getAccount());
         bean.setOrderId(orderId);
+        //异步回调
+        bean.setNotifyUrl(bgRetUrl);
         //忘记密码通知地址
         bean.setForgotPwdUrl(forgetPassworedUrl);
-        bean.setRetUrl(retUrl);
-        bean.setNotifyUrl(bgRetUrl);
         // 前导业务授权码
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         // 手机验证码
@@ -469,57 +470,31 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     @Override
-    public BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId) {
-        String errorPath = systemConfig.getAppServerHost() + "/user/setting/authorization/result/failed";
+    public void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId) {
         if (checkResult != null) {
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "非法参数！");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"非法参数!");
         }
         if (userId == null || userId == 0) {
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未登录!");
         }
         // 检查数据是否完整
         if (Validator.isNull(srvAuthCode) || Validator.isNull(code)) {
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "验证码或前导业务码不能为空");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"验证码或前导业务码不能为空!");
         }
         UserVO user = getUsersById(userId);
         if (user.getBankOpenAccount() == 0) {
             // 未开户
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未开户！");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未开户!");
         }
         // 判断用户是否设置过交易密码
         if (user.getIsSetPassword() == 0) {
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未设置交易密码");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未设置交易密码!");
         }
         // 判断是否授权过
         HjhUserAuthVO hjhUserAuth = this.getHjhUserAuth(user.getUserId());
         if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus() == 1) {
-            BaseMapBean baseMapBean = new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户自动投资已授权,无需重复授权");
-            baseMapBean.setCallBackAction(errorPath);
-            return baseMapBean;
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户自动投资已授权,无需重复授权!");
         }
-        return null;
     }
 
     /**
@@ -824,16 +799,17 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public BankCallBean weChatGetCommonBankCallBean(UserVO users, int type, String srvAuthCode, String code, String sign) {
         String remark = "";
         String txcode = "";
+
+        BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getWeChatHost() + "/user/autoplus";
+        String retUrl = systemConfig.getWeChatHost() + "/user/setting/authorization/result/failed?sign="+sign+"&logOrdId="+bean.getLogOrderId();
+        String success = systemConfig.getWeChatHost() + "/user/setting/authorization/result/success?sign="+sign;
         // 异步调用路
         String bgRetUrl = systemConfig.getWeChatHost() + "/user/autoplus";
         String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
 
-        BankCallBean bean = new BankCallBean();
         if (type == 1) {
             // 2.4.4.投资人自动投标签约增强
-            retUrl += "/userAuthInvesReturn";
             bgRetUrl += "/userAuthInvesBgreturn";
             remark = "投资人自动投标签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS;
@@ -845,7 +821,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             bean.setTotAmount("1000000000");
         } else if (type == 2) {
             // 2.4.8.投资人自动债权转让签约增强
-            retUrl += "/userAuthCreditReturn";
             bgRetUrl += "/userAuthCreditBgreturn";
             remark = "投资人自动债权转让签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
@@ -859,7 +834,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setAccountId(bankOpenAccount.getAccount());
         bean.setOrderId(orderId);
         bean.setForgotPwdUrl(forgetPassworedUrl);
-        bean.setRetUrl(retUrl + "?sign=" + sign);
+        bean.setRetUrl(retUrl);
+        bean.setSuccessfulUrl(success);
         bean.setNotifyUrl(bgRetUrl);
         bean.setLastSrvAuthCode(srvAuthCode);
         bean.setSmsCode(code);

@@ -36,13 +36,13 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectAccountBalanceMonitoringByPage")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控列表..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response =new AdminAccountBalanceMonitoringResponse();
         //查询平台账户配置 余额监控条数
         int recordTotal = this.accountBalanceMonitoringService.getAccountBalanceMonitoringCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize() ==0?10:adminRequest.getPageSize());
             //查询平台账户配置 余额监控记录
             List<MerchantAccount> recordList =accountBalanceMonitoringService.getAccountBalanceMonitoringByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -51,7 +51,10 @@ public class AccountBalanceMonitoringController {
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
             return response;
         }
         return null;
@@ -62,18 +65,22 @@ public class AccountBalanceMonitoringController {
      * @return
      */
     @RequestMapping("/selectaccountBalanceMonitoringById")
-    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest) {
+    public AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringById(@RequestBody AdminAccountBalanceMonitoringRequest adminRequest) {
         logger.info("平台账户配置 余额监控详情页面..." + JSONObject.toJSON(adminRequest));
         AdminAccountBalanceMonitoringResponse  response = new AdminAccountBalanceMonitoringResponse();
         try{
             List<MerchantAccount> merchantAccounts= accountBalanceMonitoringService.selectAccountBalanceMonitoringById(adminRequest);
             if(!CollectionUtils.isEmpty(merchantAccounts)){
                 List<MerchantAccountVO> merchantAccountVOList = CommonUtils.convertBeanList(merchantAccounts, MerchantAccountVO.class);
-                merchantAccountVOList=this.forback(merchantAccountVOList);
+//                merchantAccountVOList=this.forback(merchantAccountVOList);
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(merchantAccountVOList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
+            return response;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -93,6 +100,7 @@ public class AccountBalanceMonitoringController {
             if(cot > 0 ){
                 resp.setRtn(Response.SUCCESS);
             }else{
+                resp.setMessage("修改失败！");
                 resp.setRtn(Response.FAIL);
             }
         }catch (Exception e){
@@ -112,7 +120,8 @@ public class AccountBalanceMonitoringController {
         for (int i = 0; i < recordList.size(); i++) {
             MerchantAccountVO record = new MerchantAccountVO();
             BeanUtils.copyProperties(recordList.get(i), record);
-            record.setIds(String.valueOf(recordList.get(i).getId()));
+            //todo 联调时注意下，用id代替ids行不？
+//            record.setIds(String.valueOf(recordList.get(i).getId()));
             result.add(record);
         }
         return result;

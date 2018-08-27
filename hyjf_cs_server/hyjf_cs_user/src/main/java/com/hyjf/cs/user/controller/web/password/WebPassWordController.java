@@ -366,13 +366,14 @@ public class WebPassWordController extends BaseUserController{
      * @Description 调用银行失败原因
      * @Author
      */
-    @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
+    @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
     @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        String retMsg = passWordService.getFiledMess(logOrdId);
+        String retMsg = passWordService.getFailedMess(param.get("logOrdId"));
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);

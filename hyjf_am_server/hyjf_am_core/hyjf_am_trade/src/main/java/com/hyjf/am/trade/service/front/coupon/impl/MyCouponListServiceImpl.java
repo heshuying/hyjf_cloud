@@ -521,7 +521,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                     continue;
                 }
             }else if("2".equals(tenderQuota)){
-                if(new Double(bestCoupon.getTenderQuota())> new Double(money)){
+                if("不限".equals(bestCoupon.getTenderQuota()) || new Double(bestCoupon.getTenderQuotaAmount())> new Double(money)){
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getProjectExpirationType());
                     notAvailableCouponList.add(couponBean);
                     continue;
@@ -627,7 +627,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                         continue;
                     }
                 } else if ("2".equals(tenderQuota)) {
-                    if (new Double(userCouponConfigCustomize.getTenderQuota()) > new Double(money)) {
+                    if ("不限".equals(userCouponConfigCustomize.getTenderQuota()) || new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)) {
                         couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getProjectExpirationType());
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
@@ -788,6 +788,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
         couponBean.setProjectType(projectString);
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
+        couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
         //处理优惠券使用平台
         String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
         couponBean.setOperationPlatform(clientString);

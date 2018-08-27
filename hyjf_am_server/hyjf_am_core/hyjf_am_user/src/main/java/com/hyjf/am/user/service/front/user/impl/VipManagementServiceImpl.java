@@ -59,14 +59,12 @@ public class VipManagementServiceImpl extends BaseServiceImpl implements VipMana
             Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
             Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
-            Map<String, String> is_51 = CacheUtil.getParamNameMap("IS_51");
             for (VipManageListCustomize vipManageListCustomize : manageList) {
                 vipManageListCustomize.setUserRole(userRoles.getOrDefault(vipManageListCustomize.getUserRole(), null));
                 vipManageListCustomize.setUserProperty(userProperty.getOrDefault(vipManageListCustomize.getUserProperty(), null));
                 vipManageListCustomize.setAccountStatus(accountStatus.getOrDefault(vipManageListCustomize.getAccountStatus(), null));
                 vipManageListCustomize.setUserStatus(userStatus.getOrDefault(vipManageListCustomize.getUserStatus(), null));
                 vipManageListCustomize.setRegistPlat(client.getOrDefault(vipManageListCustomize.getRegistPlat(), null));
-                vipManageListCustomize.setIs51(is_51.getOrDefault(vipManageListCustomize.getIs51(), null));
             }
         }
         return manageList;

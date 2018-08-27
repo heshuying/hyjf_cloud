@@ -18,7 +18,7 @@ import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -99,7 +99,7 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
-    @RequestMapping(value = "/doLoginOut.do")
+    @PostMapping(value = "/doLoginOut.do")
     public BaseResultBean doLoginOut( String sign) {
         LoginResultBean result = new LoginResultBean();
         result.setStatus(ResultEnum.SUCCESS.getStatus());

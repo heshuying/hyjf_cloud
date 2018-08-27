@@ -48,15 +48,20 @@
 			</if>
 			<!-- 时间 -->
 			<if test="assignTimeStart != null and assignTimeStart != ''">
-				AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00'))
+				<!-- AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00')) -->
+				AND ct.create_time <![CDATA[>=]]> STR_TO_DATE(#{assignTimeStart}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="assignTimeEnd != null and assignTimeEnd != ''">
-				AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59'))
+				<!-- AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59')) -->
+				AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{assignTimeEnd}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
+			
+			<if test="tenderType != null and tenderType != ''">
+				AND ct.tender_type = #{tenderType}
+			</if>
+			
 		</where>
 	</sql>
-	
-	
 	<resultMap id="DebtCreditTenderMap" type="com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO">
 		<result column="id" property="id" jdbcType="VARCHAR" />
 		<result column="assign_user_name" property="assignUserName" jdbcType="VARCHAR" />
@@ -72,7 +77,7 @@
 		<result column="assign_interest_advance" property="assignInterestAdvance" jdbcType="VARCHAR" />
 		<result column="assign_pay" property="assignPay" jdbcType="VARCHAR" />
 		<result column="assign_type_name" property="assignTypeName" jdbcType="VARCHAR" />
-		<result column="assign_time" property="assignTime" jdbcType="VARCHAR" />
+		<result column="assign_time" property="assignTime" />
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
 		<result column="assign_period" property="assignPeriod" jdbcType="VARCHAR" />
 		<!--合同状态-->
@@ -85,6 +90,12 @@
 		<result column="viewpdf_url" property="viewpdfUrl"  />
 		<!--脱敏后合同查看地址-->
 		<result column="img_url" property="imgUrl"  />
+		<!--是否复投承接-->
+		<result column="tender_type" property="tenderType"/>
+		<!--债转服务费-->
+		<result column="assign_service_fee" property="assignServiceFee"/>
+		<!--债转服务费率-->
+		<result column="assign_service_apr" property="assignServiceApr"/>
 	</resultMap>
 	
 	<select id="selectDebtCreditTenderList" resultMap="DebtCreditTenderMap" parameterType="map">
@@ -103,17 +114,19 @@
 			ct.assign_interest_advance,
 			ct.assign_pay,
 			ct.assign_type AS assign_type_name,
-			FROM_UNIXTIME(
-				ct.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS assign_time,
+			DATE_FORMAT(ct.create_time, '%Y-%m-%d %H:%i:%s' ) AS assign_time,
 			CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
  			bc.assign_period,
 		    hta.status AS contractStatus,
 			hta.contract_number AS contract_number,
 			hta.download_url AS download_url,
 			hta.viewpdf_url AS viewpdf_url,
-			hta.img_url AS img_url
+			hta.img_url AS img_url,
+			
+			CASE  WHEN  ct.tender_type = 1 THEN  '是' ELSE '否' END  AS  tender_type,
+			ct.assign_service_fee AS assign_service_fee,
+			CASE WHEN	ct.assign_service_apr <![CDATA[<>]]> 0 then  ct.assign_service_apr ELSE '0.00' END AS assign_service_apr
+			
 		FROM
 			ht_hjh_debt_credit_tender ct
 		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
@@ -126,4 +139,23 @@
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>
 	</select>
+	
+	<resultMap id="sumMap" type="com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO">
+		<result column="sumAssignCapital" property="sumAssignCapital" jdbcType="VARCHAR" />
+		<result column="sumAssignInterestAdvance" property="sumAssignInterestAdvance" jdbcType="VARCHAR" />
+		<result column="sumAssignPay" property="sumAssignPay" jdbcType="VARCHAR" />
+		<result column="sumAssignServiceFee" property="sumAssignServiceFee" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getHjhCreditTenderCalcSumByParam" resultMap="sumMap" parameterType="map" >
+	    select
+		  sum(ct.assign_capital) AS sumAssignCapital,
+          sum(ct.assign_interest_advance) AS  sumAssignInterestAdvance,
+		  sum(ct.assign_pay) AS  sumAssignPay,
+		  sum(ct.assign_service_fee) AS sumAssignServiceFee
+	    from ht_hjh_debt_credit_tender ct
+		    INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
+			INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+	    <include refid="Where_Clause" />
+    </select>
 </mapper>

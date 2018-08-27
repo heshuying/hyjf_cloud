@@ -7,11 +7,13 @@ import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
@@ -20,6 +22,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -49,7 +52,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhInstConfigVO selectInstConfigByInstCode(String instCode) {
         HjhInstConfigResponse response = restTemplate
-                .getForEntity(tradeService+"/trade/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
+                .getForEntity(tradeService+"/hjhInstConfig/selectInstConfigByInstCode/"+instCode, HjhInstConfigResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResult();
@@ -603,6 +606,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/assetmanage/selectTenderToCreditList";
         AppTenderToCreditListCustomizeResponse response=restTemplate.postForEntity(url,params,AppTenderToCreditListCustomizeResponse.class).getBody();
         if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/coupon/getmycouponbypage";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
             return response.getResultList();
         }
         return null;

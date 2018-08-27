@@ -90,6 +90,8 @@ public class SrchBalanceInfoServer extends CallcenterBaseController {
 				returnBean.setBalanceTotal(customize.getBalanceTotal());
 				//汇付冻结金额
 				returnBean.setFrostTotal(customize.getFrostTotal());
+				
+				result.getDataList().add(returnBean);
 			}
         } else {
 			result.statusMessage(BaseResultBean.STATUS_FAIL,"该用户无用户名！");

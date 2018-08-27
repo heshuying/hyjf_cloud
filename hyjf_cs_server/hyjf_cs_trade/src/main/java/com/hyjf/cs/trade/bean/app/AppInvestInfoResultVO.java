@@ -1,7 +1,10 @@
 package com.hyjf.cs.trade.bean.app;
 
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppInvestInfoResultVO implements Serializable {
 
@@ -10,6 +13,8 @@ public class AppInvestInfoResultVO implements Serializable {
      * 此处为属性说明
      */
     private static final long serialVersionUID = -2087974873373127422L;
+
+    private List<NewAgreementBean> protocols = new ArrayList<NewAgreementBean>();
 
     private String borrowNid;
 
@@ -57,7 +62,7 @@ public class AppInvestInfoResultVO implements Serializable {
     private String isUsedCoupon;
     
     /** 可用优惠券数量 */
-    private String couponAvailableCount;
+    private String couponAvailableCount = "0";
 
     // 投资描述
     private String investmentDescription;
@@ -65,32 +70,33 @@ public class AppInvestInfoResultVO implements Serializable {
     // 起投金额
     private String initMoney;
     // 倍增金额
-    private String increaseMoney;
+    private String increaseMoney = "0";
 
     /** 全投金额 */
     private String investAllMoney;
 
     /** 认购本金 */
-    private String assignCapital;
+    private String assignCapital = "";
 
     /** 实际支付 */
-    private String assignPay;
+    private String assignPay = "";
 
     /** 折价率 */
-    private String creditDiscount;
+    private String creditDiscount = "";
 
     /** 垫付利息 */
-    private String assignInterestAdvance;
+    private String assignInterestAdvance = "";
 
     /** 实际支付计算式 */
-    private String assignPayText;
+    private String assignPayText = "";
     
     /** 协议列表描述 */
-    private String protocolUrlDesc;
+    private String protocolUrlDesc = "";
     /** 协议列表url */
-    private String protocolUrl;
+    private String protocolUrl = "";
+
     /** 投资类型  */
-    private String borrowType;
+    private String borrowType = "";
     
     /** 垫付利息  */
     private String paymentOfInterest;
@@ -122,7 +128,11 @@ public class AppInvestInfoResultVO implements Serializable {
     private String standardValues;
 
     /**产品加息利息*/
-    private String borrowExtraYield;
+    private String borrowExtraYield = "";
+    // 前端要求的格式
+    private String status = "";
+    // 前端要求的格式
+    private String statusDesc = "";
     
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
@@ -479,5 +489,29 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setBorrowExtraYield(String borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public List<NewAgreementBean> getProtocols() {
+        return protocols;
+    }
+
+    public void setProtocols(List<NewAgreementBean> protocols) {
+        this.protocols = protocols;
     }
 }

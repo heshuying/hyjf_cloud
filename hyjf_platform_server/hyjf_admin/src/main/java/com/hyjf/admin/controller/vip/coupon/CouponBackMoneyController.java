@@ -8,6 +8,7 @@ import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.common.util.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -58,6 +59,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -83,6 +88,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -108,6 +117,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -133,6 +146,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -158,6 +175,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 
@@ -183,6 +204,10 @@ public class CouponBackMoneyController extends BaseController {
             couponTenderHztVo.setInvestTotal(investTotal);
             couponTenderHztVo.setRecordList(recordList);
         }
+        lrs.setData(couponTenderHztVo);
+        Page page = Page.initPage(couponBackMoneyCustomize.getCurrPage(), couponBackMoneyCustomize.getPageSize());
+        page.setTotal(count);
+        lrs.setPage(page);
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
 }

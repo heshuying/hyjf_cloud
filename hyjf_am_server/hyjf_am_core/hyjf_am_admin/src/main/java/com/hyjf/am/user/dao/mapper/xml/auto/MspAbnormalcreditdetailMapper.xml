@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditdetailMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="abcd_id" property="abcdId" jdbcType="VARCHAR" />
+    <result column="checkOverdueDate" property="checkoverduedate" jdbcType="VARCHAR" />
+    <result column="overdueDays" property="overduedays" jdbcType="VARCHAR" />
+    <result column="overdueReason" property="overduereason" jdbcType="VARCHAR" />
+    <result column="overdueState" property="overduestate" jdbcType="VARCHAR" />
+    <result column="operTime" property="opertime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, abcd_id, checkOverdueDate, overdueDays, overdueReason, overdueState, operTime, 
+    remark
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_abnormalcreditdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_abnormalcreditdetail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_abnormalcreditdetail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetailExample" >
+    delete from ht_msp_abnormalcreditdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_abnormalcreditdetail (abcd_id, checkOverdueDate, overdueDays, 
+      overdueReason, overdueState, operTime, 
+      remark)
+    values (#{abcdId,jdbcType=VARCHAR}, #{checkoverduedate,jdbcType=VARCHAR}, #{overduedays,jdbcType=VARCHAR}, 
+      #{overduereason,jdbcType=VARCHAR}, #{overduestate,jdbcType=VARCHAR}, #{opertime,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_abnormalcreditdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="abcdId != null" >
+        abcd_id,
+      </if>
+      <if test="checkoverduedate != null" >
+        checkOverdueDate,
+      </if>
+      <if test="overduedays != null" >
+        overdueDays,
+      </if>
+      <if test="overduereason != null" >
+        overdueReason,
+      </if>
+      <if test="overduestate != null" >
+        overdueState,
+      </if>
+      <if test="opertime != null" >
+        operTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="abcdId != null" >
+        #{abcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkoverduedate != null" >
+        #{checkoverduedate,jdbcType=VARCHAR},
+      </if>
+      <if test="overduedays != null" >
+        #{overduedays,jdbcType=VARCHAR},
+      </if>
+      <if test="overduereason != null" >
+        #{overduereason,jdbcType=VARCHAR},
+      </if>
+      <if test="overduestate != null" >
+        #{overduestate,jdbcType=VARCHAR},
+      </if>
+      <if test="opertime != null" >
+        #{opertime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetailExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_abnormalcreditdetail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_abnormalcreditdetail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.abcdId != null" >
+        abcd_id = #{record.abcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkoverduedate != null" >
+        checkOverdueDate = #{record.checkoverduedate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overduedays != null" >
+        overdueDays = #{record.overduedays,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overduereason != null" >
+        overdueReason = #{record.overduereason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.overduestate != null" >
+        overdueState = #{record.overduestate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.opertime != null" >
+        operTime = #{record.opertime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_abnormalcreditdetail
+    set id = #{record.id,jdbcType=INTEGER},
+      abcd_id = #{record.abcdId,jdbcType=VARCHAR},
+      checkOverdueDate = #{record.checkoverduedate,jdbcType=VARCHAR},
+      overdueDays = #{record.overduedays,jdbcType=VARCHAR},
+      overdueReason = #{record.overduereason,jdbcType=VARCHAR},
+      overdueState = #{record.overduestate,jdbcType=VARCHAR},
+      operTime = #{record.opertime,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail" >
+    update ht_msp_abnormalcreditdetail
+    <set >
+      <if test="abcdId != null" >
+        abcd_id = #{abcdId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkoverduedate != null" >
+        checkOverdueDate = #{checkoverduedate,jdbcType=VARCHAR},
+      </if>
+      <if test="overduedays != null" >
+        overdueDays = #{overduedays,jdbcType=VARCHAR},
+      </if>
+      <if test="overduereason != null" >
+        overdueReason = #{overduereason,jdbcType=VARCHAR},
+      </if>
+      <if test="overduestate != null" >
+        overdueState = #{overduestate,jdbcType=VARCHAR},
+      </if>
+      <if test="opertime != null" >
+        operTime = #{opertime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail" >
+    update ht_msp_abnormalcreditdetail
+    set abcd_id = #{abcdId,jdbcType=VARCHAR},
+      checkOverdueDate = #{checkoverduedate,jdbcType=VARCHAR},
+      overdueDays = #{overduedays,jdbcType=VARCHAR},
+      overdueReason = #{overduereason,jdbcType=VARCHAR},
+      overdueState = #{overduestate,jdbcType=VARCHAR},
+      operTime = #{opertime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

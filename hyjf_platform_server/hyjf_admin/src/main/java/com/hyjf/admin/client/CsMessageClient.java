@@ -3,15 +3,18 @@
  */
 package com.hyjf.admin.client;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.admin.beans.request.SmsLogRequestBean;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
+import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -131,7 +134,7 @@ public interface CsMessageClient {
      *
      * @return
      */
-    JSONObject smsLogList();
+    SmsLogResponse smsLogList();
 
     /**
      * 根据条件查询消息中心短信发送记录
@@ -139,15 +142,7 @@ public interface CsMessageClient {
      * @param request
      * @return
      */
-    JSONObject findSmsLog(SmsLogRequest request);
-
-    /**
-     * 获取汇计划 - 资金计划 条数
-     * @param request
-     * @return
-     * @Author : huanghui
-     */
-    Integer getPlanCapitalCount(HjhPlanCapitalRequest request);
+    SmsLogResponse findSmsLog(SmsLogRequest request);
 
     /**
      * 获取汇计划--计划资金列表
@@ -155,6 +150,111 @@ public interface CsMessageClient {
      * @return
      * @Author : huanghui
      */
-    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
+    HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
+    /**
+     * 获取消息模板统计报表
+     * @param request
+     * @return
+     */
+    MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request);
+
+    /**
+     * 获取消息平台统计报表
+     * @param request
+     * @return
+     */
+    MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
+
+    /**
+     * 获取列表记录数
+     *
+     * @return
+     */
+    Integer getRecordCount(MessagePushErrorRequest request);
+
+    /**
+     * 获取列表
+     *
+     * @return
+     */
+    List<MessagePushMsgHistoryVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取标签列表
+     *
+     * @return
+     */
+    List<MessagePushTagVO> getTagList();
+
+    /**
+     * 获取单个信息
+     *
+     * @return
+     */
+    MessagePushMsgHistoryVO getRecord(String id);
+
+    /**
+     * 推送极光消息
+     * @param msg
+     * @return 成功返回消息id  失败返回 error
+     * @author Michael
+     */
+    void sendMessage(MessagePushMsgHistoryVO msg);
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse update(MessagePushErrorRequest request);
+
+    /**
+     *查询定时发送短信列表
+     * @param request
+     * @return
+     */
+    SmsOntimeResponse queryTime(SmsLogRequest request);
+
+    /**
+     * 条件查询短信记录列表
+     * @param requestBean
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequestBean requestBean);
+
+    /**
+     * 获取手动发放消息列表
+     * @param request
+     * @return
+     */
+    MessagePushMsgResponse selectMessagePushMsg(MessagePushMsgRequest request);
+
+    /**
+     * 根据id获取手动发放消息
+     * @param id
+     * @return
+     */
+    MessagePushMsgResponse getMessagePushMsgById(String id);
+
+    /**
+     * 添加手动发送短信
+     * @param templateVO
+     * @return
+     */
+    MessagePushMsgResponse insertMessagePushMsg(MessagePushMsgVO templateVO);
+
+    /**
+     * 修改手动发送短信
+     * @param templateRequest
+     * @return
+     */
+    MessagePushMsgResponse updateMessagePushMsg(MessagePushMsgRequest templateRequest);
+
+    /**
+     * 删除手动发送短信
+     * @param request
+     * @return
+     */
+    MessagePushMsgResponse deleteMessagePushMsg(MessagePushMsgRequest request);
 }

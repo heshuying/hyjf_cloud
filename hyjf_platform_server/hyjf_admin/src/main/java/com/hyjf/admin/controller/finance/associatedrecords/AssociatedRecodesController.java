@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.associatedrecords;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssociatedRecordsService;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-定向转账-关联记录",tags = "资金中心-定向转账-关联记录")
 @RestController
-@RequestMapping(value = "/hyjf-admin/associatedrecords")
+@RequestMapping(value = "/hyjf-admin/finance/associatedrecords")
 public class AssociatedRecodesController extends BaseController {
 
     @Autowired
@@ -49,14 +50,11 @@ public class AssociatedRecodesController extends BaseController {
      */
     @ApiOperation(value = "查询关联记录列表",notes = "查询关联记录列表")
     @PostMapping(value = "/getassociatedrecordlist")
-    public AdminResult getAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
+    public AdminResult<ListResult<AssociatedRecordListVo>> getAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
         count = (count == null)?0:count;
-        Map<String,Object> map = new HashMap<>();
-        map.put("count",count);
         List<AssociatedRecordListVo> associatedRecordListVoList = associatedRecordsService.getAssociatedRecordList(request);
-        map.put("associatedRecordListVoList",associatedRecordListVoList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(associatedRecordListVoList,count));
     }
     /**
      * 关联记录列表导出

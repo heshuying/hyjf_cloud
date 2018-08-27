@@ -139,4 +139,132 @@ public interface AssetManageCustomizeMapper {
      * @return
      */
     Integer selectNearlyRepaymentTime(Map<String, Object> params);
+
+    /**
+     * 获取当前持有现金投资不分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> realInvestmentRepaymentPlanNoStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有现金投资不分期还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize realInvestmentRepaymentPlanNoStagesDetails(Map<String, Object> params);
+
+    /**
+     * 获取当前持有现金投资分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> realInvestmentRepaymentPlanStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有现金投资分期还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize realInvestmentRepaymentPlanStagesDetails(Map<String, Object> params);
+
+    /**
+     * 获取当前持有部分债转不分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> assignRepaymentPlanNoStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有部分债转不分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize assignRepaymentPlanNoStagesDetails(Map<String, Object> params);
+
+    /**
+     * 获取当前持有部分债转分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> assignRepaymentPlanStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有部分债转分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize assignRepaymentPlanStagesDetails(Map<String, Object> params);
+
+    /**
+     * 债权承接还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> creditRepaymentPlanList(Map<String, Object> params);
+
+    /**
+     * 债权承接还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize creditRepaymentPlanDetails(Map<String, Object> params);
+
+    /**
+     * 优惠券还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> couponRepaymentPlanList(Map<String, Object> params);
+
+    /**
+     * 优惠券还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize couponRepaymentPlanDetails(Map<String, Object> params);
+
+    /**
+     * 获取当前持有融通宝不分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> rtbRepaymentPlanNoStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有融通宝不分期还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize rtbRepaymentPlanNoStagesDetails(Map<String, Object> params);
+
+    /**
+     * 获取当前持有融通宝分期还款计划列表
+     *
+     * @param params
+     * @return
+     */
+    List<CurrentHoldRepayMentPlanListCustomize> rtbRepaymentPlanStagesList(Map<String, Object> params);
+
+    /**
+     * 获取当前持有融通宝分期还款计划详情
+     *
+     * @param params
+     * @return
+     */
+    CurrentHoldRepayMentPlanDetailsCustomize rtbRepaymentPlanStagesDetails(Map<String, Object> params);
 }

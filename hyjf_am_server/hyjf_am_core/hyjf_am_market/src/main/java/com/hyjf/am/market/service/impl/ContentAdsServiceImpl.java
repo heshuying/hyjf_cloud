@@ -7,6 +7,7 @@ import com.hyjf.am.market.dao.model.auto.AdsExample;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.market.dao.model.auto.AdsTypeExample;
 import com.hyjf.am.market.service.ContentAdsService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.vo.admin.AdsTypeVO;
@@ -45,7 +46,6 @@ public class ContentAdsServiceImpl implements ContentAdsService {
      */
     @Override
     public ContentAdsResponse searchActionPage(ContentAdsRequest request) {
-        List<ContentAdsBeanVO> contentAdsBeanVOList = new ArrayList<>();
         ContentAdsBeanVO contentAdsBeanVO = new ContentAdsBeanVO();
         ContentAdsResponse response = new ContentAdsResponse();
         int count = countRecordList(request);
@@ -56,13 +56,11 @@ public class ContentAdsServiceImpl implements ContentAdsService {
             List<AdsVO> recordList = CommonUtils.convertBeanList(asdList, AdsVO.class);
             contentAdsBeanVO.setRecordList(recordList);
 
-            List<AdsType> adsTypeList = getAdsTypeList();
-            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
-            contentAdsBeanVO.setAdsTypeList(towList);
-            contentAdsBeanVOList.add(contentAdsBeanVO);
+//            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
+//            contentAdsBeanVO.setAdsTypeList(towList);
+//            contentAdsBeanVOList.add(contentAdsBeanVO);
 
             response.setResult(contentAdsBeanVO);
-            response.setResultList(contentAdsBeanVOList);
         }
 
         return response;
@@ -154,7 +152,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
             return false;
         }
         Ads record = new Ads();
-        BeanUtils.copyProperties(record, record);
+        BeanUtils.copyProperties(vo, record);
 
         if(record.getIsIndex()==null){
             record.setIsIndex(new Integer("0"));
@@ -166,13 +164,35 @@ public class ContentAdsServiceImpl implements ContentAdsService {
     }
 
     @Override
+    public ContentAdsResponse infoaction(Integer id) {
+        ContentAdsResponse response = new ContentAdsResponse();
+        Ads ads = adsMapper.selectByPrimaryKey(id);
+
+        if(ads == null){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+
+        ContentAdsBeanVO contentAdsBeanVO = new ContentAdsBeanVO();
+        List<AdsVO> listAds = new ArrayList<>();
+        AdsVO vo = new AdsVO();
+        BeanUtils.copyProperties(ads,vo);
+
+        listAds.add(vo);
+        contentAdsBeanVO.setRecordList(listAds);
+        response.setResult(contentAdsBeanVO);
+        return response;
+    }
+
+    @Override
     public boolean updateAction(ContentAdsRequest request) {
         AdsVO vo = request.getAds();
         if(vo == null){
             return false;
         }
         Ads record = new Ads();
-        BeanUtils.copyProperties(record, record);
+        BeanUtils.copyProperties(vo, record);
 
         Integer now = GetDate.getMyTimeInMillis();
         if (record.getIsIndex() == null) {

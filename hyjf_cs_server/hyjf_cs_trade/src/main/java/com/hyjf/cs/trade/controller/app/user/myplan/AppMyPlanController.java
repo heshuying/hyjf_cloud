@@ -2,10 +2,8 @@ package com.hyjf.cs.trade.controller.app.user.myplan;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.MyPlanListResultBean;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
@@ -27,24 +25,24 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author pangchengchao
- * @version WechatMyAssetController, v0.1 2018/7/24 12:02
+ * @Description
+ * @Author pangchengchao
+ * @Version v0.1
+ * @Date  app端-用户我的计划接口
  */
 
-@Api(value = "app端用户我的计划接口",tags = "app端用户我的计划接口")
-@Controller
+@Api(value = "app端-用户我的计划接口",tags = "app端-用户我的计划接口")
+@RestController
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {
     private final String ILLEGAL_PARAMETER_STATUS_DESC = "请求参数非法";
     private final String TOKEN_ISINVALID_STATUS = "Token失效，请重新登录";
-    /** 计息时间 */
-    private final String PLAN_ON_ACCRUAL = "计划进入锁定期后开始计息";
 
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
     @Autowired
     private AppMyPlanService appMyPlanService;
     /**
-     * 微信端获取首页散标列表
+     * App端:获取我的散标信息
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
@@ -108,19 +106,21 @@ public class AppMyPlanController extends BaseTradeController {
             List<AppMyPlanCustomizeVO> customizeProjectList, HttpServletRequest request) {
         List<MyPlanListResultBean.ProjectList> projectList = new ArrayList<>();
         MyPlanListResultBean.ProjectList project;
-
+        //判断列表是否为空
         if (CollectionUtils.isEmpty(customizeProjectList)) {
             return projectList;
         }
-
+        //构建返回页面展示类格式
         for (AppMyPlanCustomizeVO entity : customizeProjectList) {
             project = new MyPlanListResultBean.ProjectList();
             BeanUtils.copyProperties(entity, project);
+            //初始化加入金额
             project.setBorrowTheFirst(DF_FOR_VIEW.format(new BigDecimal(entity.getAccedeAmount())));
             project.setBorrowTheFirstDesc("加入金额");
+            //计划锁定期
             project.setBorrowTheSecond(entity.getLockPeriod());
             project.setBorrowTheSecondDesc("锁定期限");
-
+            //如果是标签类型有就转换为优惠券类别
             String label = entity.getLabel();
             switch (label) {
                 case "1":
@@ -135,7 +135,7 @@ public class AppMyPlanController extends BaseTradeController {
                 default:
                     project.setLabel("");
             }
-
+            //根据type判断计划是否已退出
             if ("1".equals(project.getType())) {
                 project.setBorrowTheThirdDesc("加入时间");
                 project.setBorrowTheThird(entity.getCreateTime());

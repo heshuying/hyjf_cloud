@@ -21,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Zha Daojian
+ * @version BankAleveController, v0.1 2018/6/29 13:55
+ */
 @RestController
 @RequestMapping("/am-trade/bankaleve")
 public class BankAleveController extends BaseController {
@@ -29,11 +33,11 @@ public class BankAleveController extends BaseController {
 	private BankAleveService aleveService;
 
 	/**
-	 * 银行账务明细志表
-	 *
-	 * @param request
-	 * @return
-	 */
+	* @author Zha Daojian
+	* @date 2018/8/16 11:38
+	* @param request
+	* @return com.hyjf.am.response.trade.BankAleveResponse
+	**/
 	@RequestMapping(value = "/selectBankAleveInfoList")
 	public BankAleveResponse selectBankAleveInfoList(@RequestBody @Valid BankAleveRequest request){
 		logger.info("request:" +JSONObject.toJSON(request));

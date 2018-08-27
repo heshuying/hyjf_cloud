@@ -12,7 +12,7 @@ import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.password.PassWordService;
-import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "api端密码相关服务",tags = "api端密码相关服务")
+@Api(value = "api端-密码相关服务",tags = "api端-密码相关服务")
 @Controller
 @RestController
 @RequestMapping("/hyjf-api/user/password")

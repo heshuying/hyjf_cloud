@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.platformtransfer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformTransferService;
@@ -39,7 +40,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-转账管理-平台转账",tags = "资金中心-转账管理-平台转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/platformtransfer")
+@RequestMapping(value = "/hyjf-admin/finance/platformtransfer")
 public class PlatformTransferController extends BaseController {
 
     @Autowired
@@ -53,14 +54,11 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public AdminResult transferList(@RequestBody PlatformTransferListRequest request){
-        Map<String,Object> result = new HashMap<>();
+    public AdminResult<ListResult<AccountRechargeVO>> transferList(@RequestBody PlatformTransferListRequest request){
         Integer count = platformTransferService.getPlatformTransferCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
         List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(request);
-        result.put("accountRechargeVOList",accountRechargeVOList);
-        return new AdminResult(result);
+        return new AdminResult<>(ListResult.build(accountRechargeVOList,count));
     }
 
     /**
@@ -82,7 +80,7 @@ public class PlatformTransferController extends BaseController {
         if("0".equals(result.get("status"))){
             return new AdminResult(SUCCESS,SUCCESS_DESC);
         }else{
-            return new AdminResult(FAIL,result.get("info").toString());
+            return new AdminResult(FAIL,result.getString("info"));
         }
     }
 

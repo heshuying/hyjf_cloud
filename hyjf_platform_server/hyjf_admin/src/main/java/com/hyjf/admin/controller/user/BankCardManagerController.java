@@ -9,11 +9,13 @@ import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
 import com.hyjf.admin.beans.vo.BankCardLogCustomizedVO;
 import com.hyjf.admin.beans.vo.BankcardInitCustomizeVO;
 import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankCardManagerService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
@@ -59,13 +61,19 @@ public class BankCardManagerController extends BaseController {
     public AdminResult<BankcardInitCustomizeVO> userManagerInit() {
         // 银行卡属性
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
+        List<DropDownVO> bankcardPropertyList = ConvertUtils.convertParamMapToDropDown(bankcardProperty);
         // 是否默认
         Map<String, String> bankcardType = CacheUtil.getParamNameMap("BANKCARD_TYPE");
+        List<DropDownVO> bankcardTypeList = ConvertUtils.convertParamMapToDropDown(bankcardType);
+
         List<BankConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
+        List<DropDownVO> listBanksConfigDrop = ConvertUtils.convertListToDropDown(listBanksConfigVO,"code","name");
+
         BankcardInitCustomizeVO bankcardInitCustomizeVO = new BankcardInitCustomizeVO();
-        bankcardInitCustomizeVO.setBankcardType(bankcardType);
-        bankcardInitCustomizeVO.setBankcardProperty(bankcardProperty);
-        bankcardInitCustomizeVO.setListBanksConfigVO(listBanksConfigVO);
+        bankcardInitCustomizeVO.setBankcardType(bankcardTypeList);
+        bankcardInitCustomizeVO.setBankcardProperty(bankcardPropertyList);
+        bankcardInitCustomizeVO.setListBanksConfigVO(listBanksConfigDrop);
+
         return new AdminResult<BankcardInitCustomizeVO>(bankcardInitCustomizeVO);
 
 

@@ -22,6 +22,7 @@
 	   <result column="project_expiration_length_min" property="projectExpirationLengthMin" />
 	   <result column="project_expiration_length_max" property="projectExpirationLengthMax" />
 	   <result column="add_flag" property="addFlag" />
+	   <result column="tender_quota_amount" property="tenderQuotaAmount" />
     </resultMap>
 
     <select id="selectMyCouponList" resultMap="MyCouponListResultMap" parameterType="java.util.Map">
@@ -157,7 +158,8 @@
 		cc.project_expiration_type expiration_type,
 		cc.project_expiration_length,
 		cc.project_expiration_length_min,
-		cc.project_expiration_length_max
+		cc.project_expiration_length_max,
+		cc.tender_quota tender_quota_amount
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
@@ -254,16 +256,16 @@
 			hcc.audit_content,
 			hcc.audit_user,
 			hcc.audit_time,
-			hcc.add_time,
-			hcc.add_user,
+			hcc.create_time,
+			-- hcc.add_user,
 			hcc.update_time,
-			hcc.update_user,
+			-- hcc.update_user,
 			hcu.del_flag,
 			hcu.id user_coupon_id,
 			FROM_UNIXTIME(hcu.end_time,'%Y.%m.%d') end_time,
-			FROM_UNIXTIME(hcu.add_time,'%Y.%m.%d') coupon_add_time,
+			hcu.create_time as coupon_add_time,
 			hcu.coupon_user_code coupon_user_code,
-			hcc.add_flg add_flg,
+		    hcc.add_flag add_flg,
 			hcc.coupon_profit_time coupon_profit_time
 		FROM
 			ht_coupon_user hcu

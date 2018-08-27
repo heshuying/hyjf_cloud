@@ -1,9 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.AccountBalanceMonitoringRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -11,7 +9,6 @@ import com.hyjf.admin.service.AccountBalanceMonitoringService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
 import com.hyjf.am.resquest.admin.AdminAccountBalanceMonitoringRequest;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +24,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-@Api(value = "配置中心平台账户配置", tags = "配置中心平台账户配置")
+@Api(tags = "配置中心-平台账户配置--余额监控")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountbalance")
 public class AccountBalanceMonitoringController extends BaseController {
@@ -41,95 +38,95 @@ public class AccountBalanceMonitoringController extends BaseController {
     @ApiOperation(value = "查询配置中心平台账户配置 余额监控", notes = "查询配置中心平台账户配置 余额监控")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringInit(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
-        AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
+    public AdminResult accountBalanceMonitoringInit(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+        AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         //可以直接使用
         BeanUtils.copyProperties(requestBean, adminRequest);
-        AdminAccountBalanceMonitoringResponse response=accountBalanceMonitoringService.selectaccountBalanceMonitoringByPage(adminRequest);
-        if(response==null) {
+        AdminAccountBalanceMonitoringResponse response = accountBalanceMonitoringService.selectaccountBalanceMonitoringByPage(adminRequest);
+        if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(response);
     }
 
-        @ApiOperation(value = "检索配置中心平台账户配置 余额监控", notes = "检索配置中心平台账户配置 余额监控")
-        @PostMapping("/searchAction")
-        @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-        public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringSearch(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
-            AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
-            //可以直接使用
-            BeanUtils.copyProperties(requestBean, adminRequest);
-            AdminAccountBalanceMonitoringResponse response=accountBalanceMonitoringService.selectaccountBalanceMonitoringByPage(adminRequest);
-            if(response==null) {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-            if (!Response.isSuccess(response)) {
-                return new AdminResult<>(FAIL, response.getMessage());
-
-            }
-            return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
-        }
-
-        @ApiOperation(value = "平台账户配置 余额监控 详情页面", notes = "平台账户配置 余额监控 详情页面")
-        @PostMapping("/infoAction")
-        @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-        public AdminResult<MerchantAccountVO>  merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
-            AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
-            //可以直接使用
-            BeanUtils.copyProperties(requestBean, adminRequest);
-            AdminAccountBalanceMonitoringResponse adminResponse= accountBalanceMonitoringService.selectaccountBalanceMonitoringById(adminRequest);
-            if (adminResponse == null) {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
-            if (!Response.isSuccess(adminResponse)) {
-                return new AdminResult<>(FAIL, adminResponse.getMessage());
-            }
-            return new AdminResult<MerchantAccountVO>(adminResponse.getResult()) ;
-        }
-
-    @ApiOperation(value = "平台账户配置 余额监控详情页面", notes = "平台账户配置 余额监控详情页面")
-    @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult<MerchantAccountVO>  updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
-        AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
+    @ApiOperation(value = "检索配置中心平台账户配置 余额监控", notes = "检索配置中心平台账户配置 余额监控")
+    @PostMapping("/searchAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult accountBalanceMonitoringSearch(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+        AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
+        //可以直接使用
         BeanUtils.copyProperties(requestBean, adminRequest);
-        // 画面传来的值
-        List<AccountBalanceMonitoringRequestBean> updateDataList = this.setPageListInfo( requestBean);
-        // 数据库检索的数据
-        List<AccountBalanceMonitoringRequestBean> list = this.accountBalanceMonitoringService.searchMerchantAccountList(adminRequest, -1, -1);
+        AdminAccountBalanceMonitoringResponse response = accountBalanceMonitoringService.selectaccountBalanceMonitoringByPage(adminRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
 
-        List<AccountBalanceMonitoringRequestBean> resultList = this.forback(list);
-        // 判断数据是否更新
-        List<AccountBalanceMonitoringRequestBean> updateList = this.compareResultList(resultList, updateDataList);
-        // 数据更新
-        AdminAccountBalanceMonitoringResponse adminResponse=this.accountBalanceMonitoringService.updateMerchantAccountList(updateList);
+        }
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(response);
+    }
+
+    @ApiOperation(value = "平台账户配置 余额监控 详情页面", notes = "平台账户配置 余额监控 详情页面")
+    @PostMapping("/infoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    public AdminResult merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+        AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
+        //可以直接使用
+        BeanUtils.copyProperties(requestBean, adminRequest);
+        AdminAccountBalanceMonitoringResponse adminResponse = accountBalanceMonitoringService.selectaccountBalanceMonitoringById(adminRequest);
         if (adminResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(adminResponse)) {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
         }
-        return new AdminResult<MerchantAccountVO>(adminResponse.getResult()) ;
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(adminResponse);
+    }
+
+    @ApiOperation(value = "平台账户配置 余额监控详情页面", notes = "平台账户配置 余额监控详情页面")
+    @PostMapping("/updateAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    public AdminResult updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+        AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
+        BeanUtils.copyProperties(requestBean, adminRequest);
+        // 画面传来的值
+        List<AccountBalanceMonitoringRequestBean> updateDataList = requestBean.getBalanceDataJson();
+        // 数据库检索的数据
+        List<AccountBalanceMonitoringRequestBean> list = this.accountBalanceMonitoringService.searchMerchantAccountList(adminRequest, -1, -1);
+
+//        List<AccountBalanceMonitoringRequestBean> resultList = this.forback(list);
+        // 判断数据是否更新
+        List<AccountBalanceMonitoringRequestBean> updateList = this.compareResultList(list, updateDataList);
+        // 数据更新
+        AdminAccountBalanceMonitoringResponse adminResponse = this.accountBalanceMonitoringService.updateMerchantAccountList(updateList);
+        if (adminResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(adminResponse)) {
+            return new AdminResult<>(FAIL, adminResponse.getMessage());
+        }
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(adminResponse);
     }
 
     /**
-     *
      * 判断数据是否有变化
+     *
      * @param oldList
      * @param newList
      */
     private List<AccountBalanceMonitoringRequestBean> compareResultList(List<AccountBalanceMonitoringRequestBean> oldList,
-                                                         List<AccountBalanceMonitoringRequestBean> newList) {
+                                                                        List<AccountBalanceMonitoringRequestBean> newList) {
         List<AccountBalanceMonitoringRequestBean> resultList = new ArrayList<AccountBalanceMonitoringRequestBean>();
         for (int i = 0; i < oldList.size(); i++) {
             AccountBalanceMonitoringRequestBean oldRecord = oldList.get(i);
             AccountBalanceMonitoringRequestBean newRecord = newList.get(i);
             // 判断数据是否有更新
-            if (oldRecord.getIds().equals(newRecord.getIds())) {
+            if (oldRecord.getId().equals(newRecord.getId())) {
                 Long oldData =
                         oldRecord.getBalanceLowerLimit() == null ? new Long(0) : oldRecord.getBalanceLowerLimit();
                 Long newData =
@@ -151,9 +148,10 @@ public class AccountBalanceMonitoringController extends BaseController {
 
         return resultList;
     }
+
     /**
-     *
      * 画面项目反馈
+     *
      * @param recordList
      * @return
      */
@@ -167,20 +165,21 @@ public class AccountBalanceMonitoringController extends BaseController {
         }
         return result;
     }
-    /**
-     *
-     * json数据转换成实体
-     * @param from
-     * @return
-     */
-    public List<AccountBalanceMonitoringRequestBean> setPageListInfo(AccountBalanceMonitoringRequestBean from) {
-        List<AccountBalanceMonitoringRequestBean> merchantAccountList = new ArrayList<AccountBalanceMonitoringRequestBean>();
-        merchantAccountList = JSONArray.parseArray(from.getBalanceDataJson(), AccountBalanceMonitoringRequestBean.class);
-        for (AccountBalanceMonitoringRequestBean merchantAccount : merchantAccountList) {
-            merchantAccount.setId(Integer.parseInt(merchantAccount.getIds()));
-        }
-        return merchantAccountList;
-    }
+
+//    /**
+//     * json数据转换成实体
+//     *
+//     * @param from
+//     * @return
+//     */
+//    public List<AccountBalanceMonitoringRequestBean> setPageListInfo(AccountBalanceMonitoringRequestBean from) {
+//        List<AccountBalanceMonitoringRequestBean> merchantAccountList = new ArrayList<AccountBalanceMonitoringRequestBean>();
+//        merchantAccountList = JSONArray.parseArray(from.getBalanceDataJson(), AccountBalanceMonitoringRequestBean.class);
+//        for (AccountBalanceMonitoringRequestBean merchantAccount : merchantAccountList) {
+//            merchantAccount.setId(Integer.parseInt(merchantAccount.getIds()));
+//        }
+//        return merchantAccountList;
+//    }
 
 
 }

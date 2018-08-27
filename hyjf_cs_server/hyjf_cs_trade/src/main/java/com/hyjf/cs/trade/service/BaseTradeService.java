@@ -2,13 +2,8 @@ package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.util.ClientConstants;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.trade.config.SystemConfig;
 
 import java.math.BigDecimal;
 
@@ -60,4 +55,26 @@ public interface BaseTradeService extends BaseService{
     BankCardVO getBankCardVOByUserId(Integer userId);
 
     BorrowVO getBorrowByNid(String borrowNid);
+
+    /**
+     * 根据用户Id,银行卡号检索用户银行卡信息
+     * @param userId
+     * @param
+     * @return
+     */
+    BankCardVO selectBankCardByUserId(Integer userId);
+
+    /**
+     * 查询userInfo
+     * @param userId
+     * @return
+     */
+    UserInfoVO getUsersInfoByUserId(Integer userId);
+
+    /**
+     * 获取用户信息
+     * @param userId
+     * @return
+     */
+    UserVO getUsers(Integer userId);
 }

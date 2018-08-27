@@ -1,14 +1,10 @@
 package com.hyjf.am.trade.service.admin.impl;
 
-import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
-import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
 import com.hyjf.am.trade.service.admin.DayCreditDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,16 +15,24 @@ import java.util.Map;
 @Service
 public class DayCreditDetailServiceImpl extends BaseServiceImpl implements DayCreditDetailService {
 
+    /**
+     * 统计条数
+     * @param params
+     * @return
+     */
     @Override
-    public List<DayCreditDetailVO> selectDebtCreditList(DayCreditDetailRequest request) {
+    public Integer countDebtCredit(Map<String, Object> params) {
+        return this.hjhDayCreditDetailCustomizeMapper.countDebtCredit(params);
+    }
 
-        Map<String, Object> param = new HashMap<String, Object>();
-
-        if (StringUtils.isNotEmpty(request.getPlanNidSrch())){
-            param.put("planNid", request.getPlanNidSrch());
-        }
-
-        List<DayCreditDetailVO> recordList = hjhDayCreditDetailCustomizeMapper.selectDebtCreditList(param);
+    /**
+     * 计划按日转让列表
+     * @param params
+     * @return
+     */
+    @Override
+    public List<DayCreditDetailVO> selectDebtCreditList(Map<String, Object> params) {
+        List<DayCreditDetailVO> recordList = hjhDayCreditDetailCustomizeMapper.selectDebtCreditList(params);
         return recordList;
     }
 }

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/23 15:45
  */
-@Api(value = "Wechat端首页", tags = "Wechat端首页")
+@Api(value = "weChat端-首页", tags = "weChat端-首页")
 @RestController
 @RequestMapping(HomePageDefine.WECHAT_REQUEST_MAPPING)
 public class WechatHomeController {
@@ -32,7 +32,7 @@ public class WechatHomeController {
      * @author zhangyk
      * @date 2018/7/23 16:16
      */
-    @ApiOperation(value = "微信端:获取首页统计数据", notes = "微信端:获取首页统计数据")
+    @ApiOperation(value = "获取首页统计数据", notes = "获取首页统计数据")
     @GetMapping(value = HomePageDefine.WECHAT_HOME_INDEX_DATA_METHOD, produces = "application/json; charset=utf-8")
     public WechatHomePageResult getHomeData(@RequestHeader(value = "userId", required = false) String userId) {
         WechatHomePageResult result = new WechatHomePageResult();
@@ -41,7 +41,7 @@ public class WechatHomeController {
     }
 
 
-    @ApiOperation(value = "微信端:首页项目列表" , notes = "微信端：首页项目了列表")
+    @ApiOperation(value = "首页项目列表" , notes = "首页项目了列表")
     @GetMapping(value = HomePageDefine.WECHAT_HOME_PROJECT_LIST_METHOD,produces = "application/json; charset=utf-8")
     public BaseResultBean getHomeProjectList(HttpServletRequest request,
                                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,

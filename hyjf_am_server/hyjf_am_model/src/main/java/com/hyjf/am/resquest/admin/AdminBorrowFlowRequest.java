@@ -2,6 +2,8 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/30.
  */
+@ApiModel(value="流程配置",description="流程配置")
 public class AdminBorrowFlowRequest extends BasePage implements Serializable{
 
     /**
@@ -65,19 +68,15 @@ public class AdminBorrowFlowRequest extends BasePage implements Serializable{
     private int limitEnd = -1;
     /** 列表list */
 //    private List<HjhAssetBorrowTypeCustomize> recordList;
-
-    /** 资产来源 检索条件 */
+    @ApiModelProperty(value = "资产来源 检索条件")
     private String instCodeSrch;
-
-    /** 产品类型 检索条件 */
+    @ApiModelProperty(value = "产品类型 检索条件")
     private String assetTypeSrch;
-
-    /** 项目类型 */
+    @ApiModelProperty(value = "项目类型 ")
     private String borrowCdSrch;
-
-    /** 状态 检索条件 */
+    @ApiModelProperty(value = "状态 检索条件 ")
     private String statusSrch;
-
+    @ApiModelProperty(value = "期限 检索条件 ")
     private String manChargeTimeSear;
     private List<ParamNameVO> paramNameVOS;
     public String getInstCodeSrch() {

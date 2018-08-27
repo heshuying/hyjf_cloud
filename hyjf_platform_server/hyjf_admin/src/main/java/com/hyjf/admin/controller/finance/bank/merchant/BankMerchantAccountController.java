@@ -27,6 +27,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +45,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version BankMerchantAccountController, v0.1 2018/7/9 16:07
  */
-@Api(value = "江西银行商户子账户",tags ="江西银行商户子账户")
+@Api(value = "资金中心-银行平台账户-账户信息",tags ="资金中心-银行平台账户-账户信息")
 @RestController
 @RequestMapping("/hyjf-admin/bank/merchant/account")
 public class BankMerchantAccountController extends BaseController {
@@ -75,17 +76,20 @@ public class BankMerchantAccountController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "init")
+    @ApiOperation(value = "账户信息")
+    @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
+        AdminResult result = new AdminResult();
         AdminSystemVO adminSystem = getUser(request);
-        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+  //      CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
         BigDecimal availableBalanceSum = BigDecimal.ZERO;
         // 冻结金额总计
         BigDecimal frostSum = BigDecimal.ZERO;
-        form.setUserId(Integer.parseInt(adminSystem.getId()));
+        //form.setUserId(Integer.parseInt(adminSystem.getId()));
+        form.setUserId(5234);
         BankMerchantAccountResponse response = bankMerchantAccountService.selectBankMerchantAccount(form);
         if(response == null||response.getRecordTotal()==0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -102,19 +106,21 @@ public class BankMerchantAccountController extends BaseController {
         form.setAccountBalanceSum(String.valueOf(accountBalanceSum));
         form.setAvailableBalanceSum(String.valueOf(availableBalanceSum));
         form.setFrostSum(String.valueOf(frostSum));
-        return new AdminResult(form);
+        result.setTotalCount(response.getRecordTotal());
+        result.setData(form);
+        return result;
     }
 
     /**
      * 设置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
-    @RequestMapping(value = "/setPassword")
-    public AdminResult setPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    @ApiOperation(value = "设置交易密码")
+    @PostMapping(value = "/setPassword")
+    public AdminResult setPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.setPassword(accountCode);
         return result;
     }
@@ -124,7 +130,8 @@ public class BankMerchantAccountController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/passwordBgreturn")
+    @ApiOperation(value = "设置交易密码异步回调")
+    @PostMapping(value = "/passwordBgreturn")
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
@@ -141,13 +148,13 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 重置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
-    @RequestMapping(value = "/resetPassword")
-    public AdminResult resetPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    @ApiOperation(value = "重置交易密码")
+    @PostMapping(value = "/resetPassword")
+    public AdminResult resetPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.resetPassword(accountCode);
         return result;
     }
@@ -157,7 +164,8 @@ public class BankMerchantAccountController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/resetPasswordBgreturn")
+    @ApiOperation(value = "重置交易密码异步回调")
+    @PostMapping(value = "/resetPasswordBgreturn")
     public String resetPasswordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         result.setMessage("交易密码修改成功");
@@ -169,8 +177,8 @@ public class BankMerchantAccountController extends BaseController {
      * @Description 调用银行失败原因
      * @Author
      */
-    @ApiOperation(value = "admin端-调用银行失败原因", notes = "admin端-调用银行失败原因")
-    @RequestMapping("/searchFiledMess")
+    @ApiOperation(value = "调用银行失败原因", notes = "调用银行失败原因")
+    @PostMapping("/searchFiledMess")
     @ResponseBody
     public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
@@ -191,6 +199,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "圈存弹出窗" ,tags = "圈存弹出窗" )
     @ResponseBody
+    @ApiImplicitParam(name = "accountCode",value = "accountCode:账户",dataType = "String")
     @GetMapping(value = "/rechargeInit/{accountCode}" , produces = "application/json; charset=utf-8")
     public AdminResult rechargeInit(@PathVariable String accountCode){
         AdminResult adminResult = new AdminResult();
@@ -216,12 +225,12 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "统一参数校验(真正调用圈存和圈提操作之前调用)" ,tags = "统一参数校验(真正调用圈存和圈提操作之前调用)" )
     @ResponseBody
-    @GetMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
-    public AdminResult checkAction(HttpServletRequest request){
+    @PostMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
+    public AdminResult checkAction(@RequestBody Map<String,String> params){
         AdminResult adminResult = new AdminResult();
         JSONObject ret = new JSONObject();
-        String amount = request.getParameter("amount");
-        String accountCode = request.getParameter("accountCode");
+        String amount = params.get("amount");
+        String accountCode =  params.get("accountCode");
         String msg = bankMerchantAccountService.checkParam(amount, accountCode);
         String checkStatus = "Y";
         if (StringUtils.isNotBlank(msg)) {
@@ -242,12 +251,12 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/7 10:50
      */
     @ApiOperation(value = "圈存操作" ,tags = "圈存操作" )
-    @GetMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
-    public AdminResult toRecharge(HttpServletRequest request){
+    @PostMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
+    public AdminResult toRecharge(@RequestBody Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
-        String accountCode = request.getParameter("accountCode");
-        String transAmt = request.getParameter("amount");// 交易金额
-        CheckUtil.check(StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
+        String amount = param.get("amount");
+        String accountCode =  param.get("accountCode");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         if (bankMerchantAccount == null){
             logger.error("没有查询到对应的商户号[{}]",accountCode);
@@ -299,7 +308,7 @@ public class BankMerchantAccountController extends BaseController {
         bean.setAccountId(accountCode);// 存管平台分配的账号
         bean.setCardNo(bankId);// 银行卡号
         bean.setCurrency("156");
-        bean.setTxAmount(CustomUtil.formatAmount(transAmt));
+        bean.setTxAmount(CustomUtil.formatAmount(amount));
         bean.setIdType(idType);// 证件类型25组织机构代码
         bean.setIdNo(idNo);// 证件号
         bean.setName(userName);// 姓名
@@ -346,7 +355,7 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/8 14:17
      */
     @ResponseBody
-    @RequestMapping(value = RECHARGE_METHOD_NAME , produces = "application/json; charset=utf-8")
+    @PostMapping(value = RECHARGE_METHOD_NAME )
     public BankCallResult rechargeCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("圈存回调: 接收到参数[{}]",JSON.toJSONString(bean));
         logger.info( "公司账户[{}]充值回调开始", bean.getLogOrderId());
@@ -415,13 +424,14 @@ public class BankMerchantAccountController extends BaseController {
      * @date 2018/8/8 15:49selectUserHjhInvistDetail
      */
     @ApiOperation(value = "圈提操作" ,tags = "圈提操作" )
-    @GetMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
-    public AdminResult withDraw(HttpServletRequest request){
+    @PostMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
+    public AdminResult withDraw( @RequestBody  Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
         JSONObject result = new JSONObject();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        String accountCode = request.getParameter("accountCode");
-        String transAmt = request.getParameter("amount");// 交易金额
+        String accountCode = param.get("accountCode");
+        String transAmt = param.get("amount");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         String forgotPwdUrl="";
         if(bankMerchantAccount.getIsSetPassword()==0){
@@ -532,7 +542,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "提现异步回调", tags = "提现异步回调")
     @ResponseBody
-    @RequestMapping(value = WITHDRAW_METHOD_NAME , produces = "application/json; charset=utf-8")
+    @PostMapping(value = WITHDRAW_METHOD_NAME )
     public BankCallResult withdrawCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info(bean.getLogOrderId()+ " 公司账户提现回调开始");
         BankCallResult result = new BankCallResult();
@@ -596,11 +606,12 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 用户同步余额
      */
+    @ApiOperation(value = "用户同步余额")
     @ResponseBody
-    @RequestMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
-    public JSONObject synbalance(HttpServletRequest request) {
+    @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
+    public JSONObject synbalance(HttpServletRequest request,@RequestBody Map<String,String> param) {
         JSONObject ret = new JSONObject();
-        String accountCode = request.getParameter("accountCode");
+        String accountCode = param.get("accountCode");
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
         // 账户冻结金额
@@ -608,8 +619,19 @@ public class BankMerchantAccountController extends BaseController {
         // 账面余额
         BigDecimal currBalance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
+        // 版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
+        // 机构代码
+        bean.setInstCode(systemConfig.getBANK_INSTCODE());
+        bean.setBankCode(systemConfig.getBANK_BANKCODE());
+        // 交易日期
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        // 交易时间
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        //交易流水号
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         // 交易渠道
@@ -617,12 +639,11 @@ public class BankMerchantAccountController extends BaseController {
         // 电子账号
         bean.setAccountId(accountCode);
         // 订单号
-        // TODO: 2018/8/8 zhangqingqing
-        //bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId())));
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        // TODO: 2018/8/8 zhangqingqing
-        //bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        bean.setLogUserId(userId+"");
         // 平台
         bean.setLogClient(0);
         try {
@@ -673,13 +694,13 @@ public class BankMerchantAccountController extends BaseController {
      * @param form
      * @return
      */
-    @RequestMapping(value = "/redPocketSendAction")
+    @ApiOperation(value = "发红包")
+    @PostMapping(value = "/redPocketSendAction")
     public AdminResult redPocketSendAction(HttpServletRequest request, @ModelAttribute RedPocketBean form) {
         AdminResult result = new AdminResult();
         // 查询商户子账户余额
         String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
-        // TODO: 2018/8/8
-        int loginUserId = 0;//Integer.parseInt(ShiroUtil.getLoginUserId());
+        int loginUserId = Integer.parseInt(getUser(request).getId());
         BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
         // 画面验证
         // TODO: 2018/8/8 zhangqingqing
@@ -690,9 +711,7 @@ public class BankMerchantAccountController extends BaseController {
         }*/
         // IP地址
         String ip = CustomUtil.getIpAddr(request);
-        // TODO: 2018/8/8
-      //  String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId()));
-        String orderId = "";
+        String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId()));
         BankCallBean bean = new BankCallBean();
         // 交易代码
         bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);
@@ -706,8 +725,7 @@ public class BankMerchantAccountController extends BaseController {
         bean.setDesLine(orderId);
         // 订单号
         bean.setLogOrderId(orderId);
-        // TODO: 2018/8/8
-       // bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        bean.setLogUserId(getUser(request).getId());
         // 平台
         bean.setLogClient(0);
         bean.setLogIp(ip);

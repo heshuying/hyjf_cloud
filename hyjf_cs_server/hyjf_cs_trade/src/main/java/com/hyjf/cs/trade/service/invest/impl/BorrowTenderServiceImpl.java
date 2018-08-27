@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
@@ -30,6 +31,7 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -53,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -182,11 +185,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 投资用户名
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
-
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openError" + "?logOrdId=" + orderId;
-        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openSuccess?logOrdId="+orderId;
+        //错误页
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail";
+        //成功页
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success";
+        logger.info("投资结果页显示:错误页 -> [{}],成功页 -> [{}]",retUrl,successUrl);
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+        String bgRetUrl = "";
+        if(cuc != null){
+            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+        }else{
+            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + request.getCouponGrantId();
+        }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
@@ -197,6 +207,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         amTradeClient.updateBeforeChinaPnR(request);
         try {
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+            map.forEach((key,value)->{
+                logger.info("key:[{}],value:[{}]",key,value);
+            });
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             result.setData(map);
             return result;
@@ -565,6 +578,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
 
         BestCouponListVO couponConfig = new BestCouponListVO();
@@ -675,13 +693,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public AppResult<AppInvestInfoResultVO> getInvestInfoApp(TenderRequest tender) {
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
 
         AppInvestInfoResultVO investInfo = new AppInvestInfoResultVO();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         df.setRoundingMode(RoundingMode.FLOOR);
         BigDecimal couponInterest = BigDecimal.ZERO;
         BigDecimal borrowInterest = new BigDecimal(0);
+
+        String investType = tender.getBorrowNid().substring(0, 3);
+
         // 查询项目信息
         String money = tender.getAccount();
         // 优惠券总张数
@@ -691,6 +712,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
         if (null == borrow) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
@@ -704,9 +730,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setCouponAvailableCount(couponAvailableCount + "");
         // 优惠券总张数
         recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
-        //---------------------------------------------------------------------
         investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
         investInfo.setPaymentOfInterest("");
+        // 是否使用优惠券
+        investInfo.setIsUsedCoupon("0");
         // 检查优惠券可不可用
         CouponUserVO couponConfig = null;
         Integer userId = loginUser.getUserId();
@@ -781,8 +808,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (balanceWait == null || balanceWait.equals("")) {
             balanceWait = "0";
         }
+        if( money == null ){
+            money = "0";
+        }
         // 剩余可投小于起投，计算收益按照剩余可投计算
-        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 0) {
+        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrowInfo.getTenderAccountMin())) < 0) {
             money = new BigDecimal(balanceWait).intValue() + "";
         }
 
@@ -848,28 +878,34 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setRealAmount("");
         investInfo.setCouponType("");
 
-        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
+        investInfo.setDesc("历史年回报率: "+borrow.getBorrowApr()+"%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
         investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
-        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
-        investInfo.setBorrowInterest(CommonUtils.formatAmount(null, borrowInterest) + "元");
+        investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
+        investInfo.setBorrowInterest(CommonUtils.formatAmount(borrowInterest) + "元");
+        // 安卓的历史回报使用这个字段
+        investInfo.setProspectiveEarnings(CommonUtils.formatAmount(borrowInterest.add(couponInterest)));
+        investInfo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        investInfo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
         investInfo.setBalance(CommonUtils.formatAmount(null, balance));
-        investInfo.setInitMoney(borrow.getTenderAccountMin() + "");
+        investInfo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
         investInfo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
-        investInfo.setInvestmentDescription(borrow.getTenderAccountMin() + "元起投," + borrow.getBorrowIncreaseMoney() + "元递增");
+        investInfo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
         // 可用余额的递增部分
-        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).divide(new BigDecimal(borrow.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
-                .multiply(new BigDecimal(borrow.getBorrowIncreaseMoney())).add(new BigDecimal(borrow.getTenderAccountMin()));
-        if (balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
+        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
+                .multiply(new BigDecimal(borrowInfo.getBorrowIncreaseMoney())).add(new BigDecimal(borrowInfo.getTenderAccountMin()));
+        if (balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
             // 可用余额<起投金额 时 investAllMoney 传 -1
             // 全投金额
             investInfo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = investInfo.getBorrowAccountWait().replace(",", "");
-            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
-                investInfo.setInvestAllMoney(borrow.getTenderAccountMax() + "");
+            logger.info("borrow.getTenderAccountMax()=[{}],borrowAccountWaitStr=[{}]",borrowInfo.getTenderAccountMax(),borrowAccountWaitStr);
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                investInfo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
                 investInfo.setInvestAllMoney(tmpmoney + "");
@@ -879,7 +915,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
 
             //计算全投金额 modify by cwyang 2017-8-17
-            String result = getMinAmount(borrow.getTenderAccountMax(),tmpmoney,borrowAccountWaitStr);
+            String result = getMinAmount(borrowInfo.getTenderAccountMax(),tmpmoney,borrowAccountWaitStr);
             if (result != null) {
                 investInfo.setInvestAllMoney(result);
             }
@@ -887,9 +923,50 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         investInfo.setBorrowAccountWait(CommonUtils.formatAmount(borrow.getBorrowAccountWait()) + "");
         investInfo.setAnnotation("");
-        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);
-        return result;
+
+        // 设置无用的东西 不给app返回null
+
+        investInfo.setEndTime("");
+        investInfo.setDesc1("");
+        investInfo.setButtonWord("");
+        investInfo.setStandardValues("");
+
+        // 投资协议
+        this.setProtocolsToResultVO(investInfo,investType);
+
+        // 前端要求改成bean，不要封装
+/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
+        result.setData(investInfo);*/
+        return investInfo;
+    }
+    /**
+     * 投资协议列表
+     * @param investInfo
+     * @param investType
+     */
+    private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
+        List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
+        NewAgreementBean newAgreementBean=new NewAgreementBean("投资协议",  systemConfig.webHost+"agreement/AgreementViewList?borrowType="+investType);
+        list.add(newAgreementBean);
+        investInfo.setProtocols(list);
+        investInfo.setProtocolUrlDesc("协议列表");
+    }
+
+    /**
+     * app端获取投资url
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public String getAppTenderUrl(TenderRequest tender) {
+        tender.setPlatform((tender.getPlatform() == null || "".equals(tender.getPlatform()))?"2":tender.getPlatform());
+        String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        //String url = super.getFrontHost(systemConfig,tender.getPlatform()) +"/hyjf-app/user/invest/tender?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
+        url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+        logger.info("url:[{}]",url);
+        //ModelAndView mv = new ModelAndView("redirect:"+url);
+        return url;
     }
 
     /**

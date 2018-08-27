@@ -4,7 +4,12 @@
 package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MsgPushTemplateService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import io.swagger.annotations.Api;
@@ -12,20 +17,16 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fuqiang
  * @version MsgPushController, v0.1 2018/6/26 9:31
  */
-@Api(value = "消息推送", tags = "消息推送")
+@Api(tags = "消息中心-消息推送")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/template")
-public class MsgPushController {
+public class MsgPushController extends BaseController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -38,12 +39,16 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询所有消息推送模板", notes = "查询所有消息推送模板")
-	@RequestMapping("/findAll")
-	public JSONObject findAll() {
-		JSONObject jsonObject = new JSONObject();
-		List<MessagePushTemplateVO> voList = msgPushTemplateService.findAll();
-		jsonObject.put("msgPushTemplateList", voList);
-		return jsonObject;
+	@GetMapping("/findAll")
+	public AdminResult<ListResult<MessagePushTemplateVO>> findAll() {
+		MessagePushTemplateResponse response = msgPushTemplateService.findAll();
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
 	/**
@@ -52,12 +57,16 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件查询消息推送模板", notes = "根据条件查询消息推送模板")
-	@RequestMapping("/findMsgPushTemplate")
-	public JSONObject findMailTemplate(@RequestBody MsgPushTemplateRequest request) {
-		JSONObject jsonObject = new JSONObject();
-		List<MessagePushTemplateVO> voList = msgPushTemplateService.findMsgPushTemplate(request);
-		jsonObject.put("msgPushTemplateList", voList);
-		return jsonObject;
+	@PostMapping("/findMsgPushTemplate")
+	public AdminResult<ListResult<MessagePushTemplateVO>> findMailTemplate(@RequestBody MsgPushTemplateRequest request) {
+		MessagePushTemplateResponse response = msgPushTemplateService.findMsgPushTemplate(request);
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
 	/**
@@ -67,7 +76,7 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增消息推送模板", notes = "新增消息推送模板")
-	@RequestMapping("/insertMsgPushTemplate")
+	@PostMapping("/insertMsgPushTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {

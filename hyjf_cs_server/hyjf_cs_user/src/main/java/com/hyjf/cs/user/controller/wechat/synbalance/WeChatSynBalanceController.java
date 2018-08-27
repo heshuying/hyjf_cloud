@@ -14,16 +14,15 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.util.RequestUtil;
-import com.hyjf.cs.user.util.ResultEnum;
+import com.hyjf.cs.user.constants.ResultEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -31,7 +30,7 @@ import java.text.DecimalFormat;
  * @author wangjun
  * @version WeChatSynBalanceController, v0.1 2018/7/31 9:19
  */
-@Api(value = "wechat端我的-刷新按钮", tags = "wechat端我的-刷新按钮")
+@Api(value = "weChat端-我的刷新按钮", tags = "weChat端-我的刷新按钮")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/bank/user/synbalance")
 public class WeChatSynBalanceController extends BaseUserController {
@@ -44,12 +43,12 @@ public class WeChatSynBalanceController extends BaseUserController {
     @Autowired
     RequestUtil requestUtil;
 
-    @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
-    @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
-    public BaseResultBean synBalance(HttpServletRequest request, HttpServletResponse response) {
+    @ApiOperation(value = "我的-刷新", notes = "我的-刷新")
+    @PostMapping(value = "/init")
+    public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId) {
+        logger.info("请求用户ID：" + userId);
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();
         // 获取登陆用户userId
-        Integer userId = requestUtil.getRequestUserId(request);
         if (Validator.isNull(userId)) {
             result.setEnum(ResultEnum.ERROR_001);
             return result;
@@ -57,7 +56,7 @@ public class WeChatSynBalanceController extends BaseUserController {
         // 校验用户
         UserVO user = synBalanceService.getUsersById(userId);
         if (Validator.isNull(user)) {
-            result.setEnum(ResultEnum.ERROR_001);
+            result.setEnum(ResultEnum.ERROR_004);
             return result;
         }
         // 校验用户是否开户

@@ -159,5 +159,17 @@ public interface BaseUserService extends BaseService{
 
 	AccountVO getAccountByUserId(Integer userId);
 
+	/**
+	 * 获取失败信息
+	 * @param retCode
+	 * @return
+	 */
     String getBankRetMsg(String retCode);
+
+	/**
+	 * 查询交易密码失败原因
+	 * @param logOrdId
+	 * @return
+	 */
+	String getFailedMess(String logOrdId);
 }

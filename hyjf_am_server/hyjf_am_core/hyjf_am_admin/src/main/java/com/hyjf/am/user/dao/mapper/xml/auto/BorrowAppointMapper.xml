@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.BorrowAppointMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.BorrowAppoint" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="tender_nid" property="tenderNid" jdbcType="VARCHAR" />
+    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+    <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
+    <result column="borrow_account" property="borrowAccount" jdbcType="DECIMAL" />
+    <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="appoint_status" property="appointStatus" jdbcType="TINYINT" />
+    <result column="appoint_time" property="appointTime" jdbcType="TIMESTAMP" />
+    <result column="appoint_remark" property="appointRemark" jdbcType="VARCHAR" />
+    <result column="cancel_time" property="cancelTime" jdbcType="TIMESTAMP" />
+    <result column="tender_status" property="tenderStatus" jdbcType="TINYINT" />
+    <result column="tender_time" property="tenderTime" jdbcType="TIMESTAMP" />
+    <result column="tender_remark" property="tenderRemark" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, order_id, tender_nid, borrow_nid, borrow_period, borrow_apr, borrow_account, 
+    account, appoint_status, appoint_time, appoint_remark, cancel_time, tender_status, 
+    tender_time, tender_remark, create_user_id, update_user_id, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppointExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_borrow_appoint
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_borrow_appoint
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_borrow_appoint
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppointExample" >
+    delete from ht_borrow_appoint
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppoint" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_appoint (user_id, order_id, tender_nid, 
+      borrow_nid, borrow_period, borrow_apr, 
+      borrow_account, account, appoint_status, 
+      appoint_time, appoint_remark, cancel_time, 
+      tender_status, tender_time, tender_remark, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{userId,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{tenderNid,jdbcType=VARCHAR}, 
+      #{borrowNid,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowApr,jdbcType=DECIMAL}, 
+      #{borrowAccount,jdbcType=DECIMAL}, #{account,jdbcType=DECIMAL}, #{appointStatus,jdbcType=TINYINT}, 
+      #{appointTime,jdbcType=TIMESTAMP}, #{appointRemark,jdbcType=VARCHAR}, #{cancelTime,jdbcType=TIMESTAMP}, 
+      #{tenderStatus,jdbcType=TINYINT}, #{tenderTime,jdbcType=TIMESTAMP}, #{tenderRemark,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppoint" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_borrow_appoint
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid,
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid,
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period,
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr,
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="appointStatus != null" >
+        appoint_status,
+      </if>
+      <if test="appointTime != null" >
+        appoint_time,
+      </if>
+      <if test="appointRemark != null" >
+        appoint_remark,
+      </if>
+      <if test="cancelTime != null" >
+        cancel_time,
+      </if>
+      <if test="tenderStatus != null" >
+        tender_status,
+      </if>
+      <if test="tenderTime != null" >
+        tender_time,
+      </if>
+      <if test="tenderRemark != null" >
+        tender_remark,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderNid != null" >
+        #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowApr != null" >
+        #{borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccount != null" >
+        #{borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="appointStatus != null" >
+        #{appointStatus,jdbcType=TINYINT},
+      </if>
+      <if test="appointTime != null" >
+        #{appointTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointRemark != null" >
+        #{appointRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null" >
+        #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tenderStatus != null" >
+        #{tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tenderTime != null" >
+        #{tenderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tenderRemark != null" >
+        #{tenderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppointExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_appoint
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_borrow_appoint
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderNid != null" >
+        tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowNid != null" >
+        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.borrowPeriod != null" >
+        borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.borrowApr != null" >
+        borrow_apr = #{record.borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowAccount != null" >
+        borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.account != null" >
+        account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.appointStatus != null" >
+        appoint_status = #{record.appointStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.appointTime != null" >
+        appoint_time = #{record.appointTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.appointRemark != null" >
+        appoint_remark = #{record.appointRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cancelTime != null" >
+        cancel_time = #{record.cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tenderStatus != null" >
+        tender_status = #{record.tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.tenderTime != null" >
+        tender_time = #{record.tenderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.tenderRemark != null" >
+        tender_remark = #{record.tenderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_borrow_appoint
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      order_id = #{record.orderId,jdbcType=VARCHAR},
+      tender_nid = #{record.tenderNid,jdbcType=VARCHAR},
+      borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
+      borrow_apr = #{record.borrowApr,jdbcType=DECIMAL},
+      borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
+      account = #{record.account,jdbcType=DECIMAL},
+      appoint_status = #{record.appointStatus,jdbcType=TINYINT},
+      appoint_time = #{record.appointTime,jdbcType=TIMESTAMP},
+      appoint_remark = #{record.appointRemark,jdbcType=VARCHAR},
+      cancel_time = #{record.cancelTime,jdbcType=TIMESTAMP},
+      tender_status = #{record.tenderStatus,jdbcType=TINYINT},
+      tender_time = #{record.tenderTime,jdbcType=TIMESTAMP},
+      tender_remark = #{record.tenderRemark,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppoint" >
+    update ht_borrow_appoint
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderNid != null" >
+        tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowNid != null" >
+        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowPeriod != null" >
+        borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="borrowApr != null" >
+        borrow_apr = #{borrowApr,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account = #{borrowAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="appointStatus != null" >
+        appoint_status = #{appointStatus,jdbcType=TINYINT},
+      </if>
+      <if test="appointTime != null" >
+        appoint_time = #{appointTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointRemark != null" >
+        appoint_remark = #{appointRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cancelTime != null" >
+        cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tenderStatus != null" >
+        tender_status = #{tenderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tenderTime != null" >
+        tender_time = #{tenderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tenderRemark != null" >
+        tender_remark = #{tenderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.BorrowAppoint" >
+    update ht_borrow_appoint
+    set user_id = #{userId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      tender_nid = #{tenderNid,jdbcType=VARCHAR},
+      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      borrow_period = #{borrowPeriod,jdbcType=INTEGER},
+      borrow_apr = #{borrowApr,jdbcType=DECIMAL},
+      borrow_account = #{borrowAccount,jdbcType=DECIMAL},
+      account = #{account,jdbcType=DECIMAL},
+      appoint_status = #{appointStatus,jdbcType=TINYINT},
+      appoint_time = #{appointTime,jdbcType=TIMESTAMP},
+      appoint_remark = #{appointRemark,jdbcType=VARCHAR},
+      cancel_time = #{cancelTime,jdbcType=TIMESTAMP},
+      tender_status = #{tenderStatus,jdbcType=TINYINT},
+      tender_time = #{tenderTime,jdbcType=TIMESTAMP},
+      tender_remark = #{tenderRemark,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

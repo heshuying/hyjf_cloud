@@ -11,12 +11,14 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.user.bean.BaseMapBean;
-import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
-import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
@@ -28,11 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -49,6 +51,9 @@ public class WeChatAutoPlusController extends BaseUserController {
     @Autowired
     AutoPlusService autoPlusService;
 
+    @Autowired
+    SystemConfig systemConfig;
+
 
     /**
      *
@@ -56,15 +61,15 @@ public class WeChatAutoPlusController extends BaseUserController {
      * 请求地址: /wx/user/autoplus/sendcode.page
      * 需要参数: 授权类型userAutoType(0 自动投标授权 1 自动债转授权) mobile
      * @author sunss
-     * @param request
+     * @param
      * @param userAutoType
      * @param mobile
      * @return
      */
-    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
-    @RequestMapping(value = "/sendcode.do")
+    @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
+    @PostMapping(value = "/sendcode.do")
     @ResponseBody
-    public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, @RequestParam String userAutoType, String mobile) {
+    public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType, String mobile) {
         logger.info("发送授权短信验证码 接口,手机号为：【" + mobile + "】,授权类型为【" + userAutoType + "】,userid为：【" + userId + "】");
         String returnRequest = "/user/autoplus/sendcode";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
@@ -98,12 +103,13 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param userId
      * @param sign
      * @param request
-     * @param response
+     * @param
      * @return
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
-    @RequestMapping(value = "userAuthCredit.page")
-    public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response){
+    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
+    @PostMapping(value = "userAuthCredit.page")
+    public WeChatResult userAuthCredit(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request){
+        WeChatResult<Object> result = new WeChatResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         // 判断是否授权过
@@ -122,21 +128,23 @@ public class WeChatAutoPlusController extends BaseUserController {
             return getErrorModelAndView(ResultEnum.USER_ERROR_201, sign, "1", hjhUserAuth);
         }
         if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus().intValue()==1) {
-            ModelAndView mv = getErrorModelAndView(ResultEnum.USER_ERROR_203, sign,"1", hjhUserAuth);
+            result = getErrorModelAndView(ResultEnum.USER_ERROR_203, sign,"1", hjhUserAuth);
             if (hjhUserAuth.getAutoCreditStatus() == 1) {
-                return mv;
+                return result;
             }
         }
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 2, srvAuthCode, code, sign);
         // 插入日志
         this.autoPlusService.insertUserAuthLog(users, bean, 1, BankCallConstant.QUERY_TYPE_2);
+        Map<String, Object> map = new HashMap<>();
         try {
-            ModelAndView modelAndView = BankCallUtils.callApi(bean);
-            return modelAndView;
+           map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             return getErrorModelAndView(ResultEnum.USER_ERROR_205, sign, "1", hjhUserAuth);
         }
+        result.setData(map);
+        return result;
     }
 
     /**
@@ -147,7 +155,9 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthCreditReturn")
+/*
+    @ApiOperation(value = "用户授权自动债转同步回调")
+    @PostMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,@ModelAttribute BankCallBean bean, HttpServletRequest request) {
         bean.convert();
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
@@ -166,6 +176,7 @@ public class WeChatAutoPlusController extends BaseUserController {
         }
         return getErrorModelAndView(ResultEnum.USER_ERROR_205, sign, "1", hjhUserAuth);
     }
+*/
 
     /**
      * 用户授权自动债转异步回调
@@ -173,8 +184,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/userAuthCreditBgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthCreditBgreturn")
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -184,49 +195,52 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param userId
      * @param sign
      * @param request
-     * @param response
      * @return
      */
     @ApiOperation(value = "自动投资授权接口")
-    @RequestMapping(value = "/userAuthInves.page")
-    public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping(value = "/userAuthInves.page")
+    public WeChatResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
+        WeChatResult<Object> result = new WeChatResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         logger.info("自动投资授权接口,srvAuthCode为：【" + srvAuthCode + "】,code为【" + code + "】,userid为：【" + userId + "】");
-        // 判断是否授权过
+        // 获取授权信息
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
+        //检查参数
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
             return getErrorModelAndView(ResultEnum.PARAM, sign, "0",hjhUserAuth);
         }
         UserVO users = autoPlusService.getUsersById(userId);
+        //判断是否开户
         if (users.getBankOpenAccount() == 0) {
             // 未开户
             return getErrorModelAndView(ResultEnum.USER_ERROR_200, sign,"0", hjhUserAuth);
         }
-
         // 判断用户是否设置过交易密码
         if (users.getIsSetPassword() == 0) {
             // 未设置交易密码
             return getErrorModelAndView(ResultEnum.USER_ERROR_201, sign,"0", hjhUserAuth);
         }
-
         // 判断是否授权过
         if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue()==1) {
-            ModelAndView mv = getErrorModelAndView(ResultEnum.USER_ERROR_201, sign,"0", hjhUserAuth);
+            //
+            result = getErrorModelAndView(ResultEnum.USER_ERROR_202, sign,"0", hjhUserAuth);
             if (hjhUserAuth.getAutoInvesStatus() == 1) {
-                return mv;
+                return result;
             }
         }
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.weChatGetCommonBankCallBean(users, 1, srvAuthCode, code, sign);
         // 插入日志
         this.autoPlusService.insertUserAuthLog(users, bean, 1, BankCallConstant.QUERY_TYPE_1);
+        Map<String, Object> map = new HashMap<>();
         try {
-            ModelAndView modelAndView = BankCallUtils.callApi(bean);
-            return modelAndView;
+            map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             return getErrorModelAndView(ResultEnum.USER_ERROR_204, sign,"0", hjhUserAuth);
         }
+        result.setData(map);
+        return result;
     }
 
     /**
@@ -237,7 +251,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/userAuthInvesReturn")
+    /*@ApiOperation(value = "用户授权自动投资同步回调")
+    @PostMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         bean.convert();
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
@@ -256,7 +271,7 @@ public class WeChatAutoPlusController extends BaseUserController {
             return getSuccessModelAndView(sign, "0", hjhUserAuth);
         }
         return getErrorModelAndView(ResultEnum.USER_ERROR_204, sign, "0", hjhUserAuth);
-    }
+    }*/
 
     /**
      * @Author: zhangqingqing
@@ -282,18 +297,20 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param hjhUserAuth
      * @return
      */
-    private ModelAndView getErrorModelAndView(ResultEnum param, String sign, String type, HjhUserAuthVO hjhUserAuth) {
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
+    private WeChatResult getErrorModelAndView(ResultEnum param, String sign, String type, HjhUserAuthVO hjhUserAuth) {
+        WeChatResult<Object> result = new WeChatResult<>();
         BaseMapBean baseMapBean = new BaseMapBean();
-        baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
-        baseMapBean.set(CustomConstants.APP_STATUS_DESC, param.getStatusDesc());
+        result.setStatus(param.getStatus());
+        result.setStatusDesc(param.getStatusDesc());
         baseMapBean.set(CustomConstants.APP_SIGN, sign);
         baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
         baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
-        baseMapBean.setCallBackAction(CustomConstants.HOST + CommonConstant.JUMP_HTML_ERROR_PATH);
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
+        baseMapBean.setCallBackAction(systemConfig.getWeChatHost() + CommonConstant.JUMP_HTML_ERROR_PATH);
+        Map<String,Object> map = new HashMap<>();
+        map.put("callBackForm", baseMapBean);
+        result.setData(map);
+        return result;
     }
 
     /**
@@ -303,19 +320,18 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param hjhUserAuth
      * @return
      */
-    private ModelAndView getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
+    private WeChatResult getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
+        WeChatResult<Object> result = new WeChatResult<>();
         BaseMapBean baseMapBean = new BaseMapBean();
-        baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
-        baseMapBean.set(CustomConstants.APP_STATUS_DESC, ResultEnum.SUCCESS.getStatusDesc());
         baseMapBean.set(CustomConstants.APP_SIGN, sign);
         baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
         baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
-
         baseMapBean.setCallBackAction(CustomConstants.HOST + CommonConstant.JUMP_HTML_SUCCESS_PATH);
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
+        Map<String,Object> map = new HashMap<>();
+        map.put("callBackForm", baseMapBean);
+        result.setData(map);
+        return result;
     }
 
 }

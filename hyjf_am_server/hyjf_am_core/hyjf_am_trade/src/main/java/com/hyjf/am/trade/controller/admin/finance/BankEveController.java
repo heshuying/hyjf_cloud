@@ -22,6 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * @author Zha Daojian
+ * @version BankAleveController, v0.1 2018/6/29 13:55
+ */
 @RestController
 @RequestMapping("/am-trade/bankeve")
 public class BankEveController extends BaseController {
@@ -35,7 +40,7 @@ public class BankEveController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/selectBankEeveInfoList")
+	@RequestMapping(value = "/selectBankEveInfoList")
 	public BankEveResponse selectBankEeveInfoList(@RequestBody @Valid BankEveRequest request){
 		logger.info("request:" +JSONObject.toJSON(request));
 		BankEveResponse response = new BankEveResponse();

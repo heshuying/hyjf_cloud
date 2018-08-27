@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.evaluation.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
@@ -21,16 +22,16 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.soa.apiweb.CommonParamBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,18 +85,22 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
      */
     @Override
     public UserEvalationResultVO answerAnalysis(String userAnswer, Integer userId,String behaviorId) {
-        String[] answer = userAnswer.split(",");
-        List<String> answerList = new ArrayList<String>();
-        List<String> questionList = new ArrayList<String>();
-        for (String string : answer) {
-            if (string.split("_").length == 2) {
-                questionList.add(string.split("_")[0]);
-                answerList.add(string.split("_")[1]);
+        int countScore = 0;
+        if (!Strings.isNullOrEmpty(userAnswer)) {
+            String[] answer = userAnswer.split(",");
+            List<String> answerList = new ArrayList<String>();
+            List<String> questionList = new ArrayList<String>();
+            for (String string : answer) {
+                if (string.split("_").length == 2) {
+                    questionList.add(string.split("_")[0]);
+                    answerList.add(string.split("_")[1]);
+                }
             }
+            AnswerRequest answerRequest = new AnswerRequest();
+            answerRequest.setResultList(answerList);
+            countScore = amConfigClient.countScore(answerRequest);
         }
-        AnswerRequest answerRequest = new AnswerRequest();
-        answerRequest.setResultList(answerList);
-        int countScore = amConfigClient.countScore(answerRequest);
+
         UserEvalationRequest userEvalationRequest = new UserEvalationRequest();
         userEvalationRequest.setUserId(userId);
         userEvalationRequest.setCountScore(countScore);
@@ -228,7 +233,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             }
         }
         // 1_1,2_8
-        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, new Integer(userId),behaviorId);
+        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;
         // 发放优惠券 end

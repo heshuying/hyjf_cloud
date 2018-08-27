@@ -8,6 +8,9 @@ public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
 
+    @Value("${hyjf.weChat.host}")
+    public String wechatHost;
+
     @Value("${http.hyjf.web.host}")
     public String httpWebHost;
 
@@ -103,7 +106,7 @@ public class SystemConfig {
     // 请求密码请求地址
     @Value("${hyjf.req.password}")
     private String hyjfReqPasswordPath;
-
+    //是否是测试环境 true为测试环境  false为正式环境
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
     
@@ -135,6 +138,13 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
+    public String getWechatHost() {
+        return wechatHost;
+    }
+
+    public void setWechatHost(String wechatHost) {
+        this.wechatHost = wechatHost;
+    }
 
     public String getBankInstcode() {
         return bankInstcode;

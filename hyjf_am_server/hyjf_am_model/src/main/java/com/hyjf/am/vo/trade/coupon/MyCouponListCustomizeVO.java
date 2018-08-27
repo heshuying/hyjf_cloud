@@ -48,6 +48,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private Integer addFlag;
 
+    private String tenderQuotaAmount;
+
     //优惠券使用标识 0：未使用，1：已使用，2：审核不通过，3：待审核，4：已失效
     private Integer usedFlag;
 
@@ -209,6 +211,14 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setProjectExpirationLengthMax(Integer projectExpirationLengthMax) {
         this.projectExpirationLengthMax = projectExpirationLengthMax;
+    }
+
+    public String getTenderQuotaAmount() {
+        return tenderQuotaAmount;
+    }
+
+    public void setTenderQuotaAmount(String tenderQuotaAmount) {
+        this.tenderQuotaAmount = tenderQuotaAmount;
     }
 
     public Integer getAddFlag() {

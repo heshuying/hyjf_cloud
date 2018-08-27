@@ -3,17 +3,11 @@
  */
 package com.hyjf.cs.user.controller.wechat.myprofile;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -22,11 +16,11 @@ import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -40,7 +34,7 @@ import java.util.List;
  * @author jun
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */
-@Api(value = "wechat端账户总览",tags = "wechat端账户总览")
+@Api(value = "weChat端-账户总览",tags = "weChat端-账户总览")
 @RestController
 @RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {
@@ -52,12 +46,11 @@ public class MyProfileController extends BaseUserController {
     @Autowired
     private SystemConfig systemConfig;
 
-
-    @RequestMapping("/profile")
-    public WeChatResult myProfile(HttpServletRequest request) {
+    @ApiOperation(value = "查询用户账户信息", notes = "查询用户账户信息")
+    @GetMapping("/profile")
+    public WeChatResult myProfile(@RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
-        Integer userId = requestUtil.getRequestUserId(request);
         //用户真实姓名
         String trueUserName = myProfileService.getUserCallName(userId);
 
@@ -71,7 +64,7 @@ public class MyProfileController extends BaseUserController {
         //设置用户账户信息
         myProfileService.buildOutInfo(userId, myProfileVO);
 
-        result.setData(myProfileVO);
+        result.setObject(myProfileVO);
 
         this.getIconUrl(userId, myProfileVO);
 
@@ -97,6 +90,7 @@ public class MyProfileController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
@@ -106,21 +100,14 @@ public class MyProfileController extends BaseUserController {
             resultBean.setStatusDesc("用户未登录!");
             return resultBean;
         }
-        String resultStr = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
-        JSONObject resultJson = JSONObject.parseObject(resultStr);
-        if (resultJson==null){
+        List<CouponUserForAppCustomizeVO> list = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
+        if (CollectionUtils.isEmpty(list)){
             resultBean.setStatus(BaseResult.FAIL);
             resultBean.setStatusDesc("获取用户优惠券数据失败!");
             return resultBean;
         }
-        JSONArray data = resultJson.getJSONArray("data");
-        if (data==null){
-            resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("获取用户优惠券数据失败!");
-            return resultBean;
-        }
-        List<CouponUserForAppCustomizeVO> configs = JSON.parseArray(data.toJSONString(), CouponUserForAppCustomizeVO.class);
-        List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(configs);
+
+        List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(list);
         resultBean.setData(lstCoupon);
         return resultBean;
     }

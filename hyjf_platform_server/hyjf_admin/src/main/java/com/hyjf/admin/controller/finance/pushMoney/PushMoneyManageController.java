@@ -47,9 +47,9 @@ import java.util.Map;
  * 资金中心->直投提成管理
  */
 
-@Api(value = "资金中心->直投提成管理",tags = "资金中心->直投提成管理")
+@Api(value = "资金中心-直投提成管理",tags = "资金中心-直投提成管理")
 @RestController
-@RequestMapping("/hyjf-admin/pushMoney")
+@RequestMapping("/hyjf-admin/finance/pushMoney")
 public class PushMoneyManageController extends BaseController {
     @Autowired
     private PushMoneyManageService pushMoneyManageService;
@@ -57,12 +57,6 @@ public class PushMoneyManageController extends BaseController {
     /** 权限 */
     public static final String PERMISSIONS = "pushmoneymanagelist";
 
-    /**
-     * 直投提成管理列表查询
-     *
-     * @param requestBean
-     * @return 计划列表         已测试
-     */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -141,7 +135,7 @@ public class PushMoneyManageController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "直投提成管理", notes = "直投提成管理记录导出")
+    @ApiOperation(value = "直投提成管理记录导出", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
     public void exportExcel(@RequestBody @Valid PushMoneyRequestBean requestBean, HttpServletResponse response)  throws Exception {
         // 初始化原子层请求实体
@@ -219,7 +213,7 @@ public class PushMoneyManageController extends BaseController {
         result.put("pushMoneyVOList",pushMoneyVOList);
         Map<String,Object> totle = pushMoneyManageService.queryPushMoneyTotle(request);
         result.put("pushMoneyTotle",totle);
-        return new AdminResult(result);
+        return new AdminResult<>(result);
     }
 
     /**

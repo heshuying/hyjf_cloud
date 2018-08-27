@@ -6,18 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
 import com.hyjf.cs.message.bean.ic.OperationReportEntity;
 import com.hyjf.cs.message.bean.ic.SubEntity;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,17 +30,13 @@ import java.util.Map;
  * @author tanyy
  * @version OperationalDataController, v0.1 2018/8/6 17:39
  */
-@Api(value = "app运营数据",description ="app运营数据")
+@Api(tags ="app端-运营数据")
 @RestController
 @RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
 	
-	private Logger _log = LoggerFactory.getLogger(OperationalDataController.class);
+	private Logger logger = LoggerFactory.getLogger(OperationalDataController.class);
 	
-	@Autowired
-	private OperationMongoGroupDao operationMongoGroupDao;
-	@Autowired
-	private OperationMongDao operationMongDao;
 	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
 
@@ -53,21 +46,21 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第一页面接口数据获取", notes = "app运营数据第一页面接口数据获取")
-	@RequestMapping("/getPlatformRealTimeData")
+	@GetMapping ("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
-		Calendar cal = Calendar.getInstance();
 		JSONObject result = new JSONObject();
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
 
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
+			if(oe==null){
+				result.put("status", "999");
+				result.put("statusDesc", "暂无任何数据");
+				return result;
+			}
 			JSONObject info = new JSONObject();
-
 			//累计交易笔数(实时)
 			info.put("CumulativeTransactionNum", platDataStatisticsService.selectTotalTradeSum());
 			//累计交易总额(实时)
@@ -80,16 +73,8 @@ public class OperationalDataController {
 			info.put("CutOffDate", transferIntToDate(staticMonth));
 			
 			// 获取12个月的数据
-			Document dbObject = new Document();
-			Document fieldsObject = new Document();
-			// 指定返回的字段
-			fieldsObject.put("statisticsMonth", true);
-			fieldsObject.put("accountMonth", true);
-			fieldsObject.put("tradeCountMonth", true);
-			query = new BasicQuery(dbObject, fieldsObject);
-			query.limit(12);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			List<OperationReportEntity> list = operationMongDao.find(query);
+
+			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList();
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -126,20 +111,15 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第二页面和第三页面数据统计", notes = "app运营数据第二页面和第三页面数据统计")
-	@RequestMapping("/getLoanInvestData")
+	@GetMapping("/getLoanInvestData")
 	@ResponseBody
 	public JSONObject getLoanInvestData() {
 		JSONObject result = new JSONObject();
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationReportEntity oe = operationMongDao.findOne(query);
-
+			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
 			JSONObject detail = new JSONObject();
-			
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
 				detail.put("LoanNum", oe.getLoanNum());
@@ -160,19 +140,6 @@ public class OperationalDataController {
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
 
-
-/*			//借款人相关数据统计：
-			BorrowUserStatistic borrowUserData = platDataStatisticsService.selectBorrowUserStatistic();
-			BigDecimal borrowuserMoneyTopone = BigDecimal.ZERO;
-			BigDecimal borrowuserMoneyTopten = BigDecimal.ZERO;
-//			if(borrowUserData.getBorrowuserMoneyTotal() != null && borrowUserData.getBorrowuserMoneyTotal().compareTo(BigDecimal.ZERO) > 0){
-				//borrowuserMoneyTopone = borrowUserData.getBorrowuserMoneyTopone().divide(borrowUserData.getBorrowuserMoneyTotal(), BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
-				//borrowuserMoneyTopten = borrowUserData.getBorrowuserMoneyTopten().divide(borrowUserData.getBorrowuserMoneyTotal(), BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
-//				borrowuserMoneyTopone = borrowUserData.getBorrowuserMoneyTopone().divide(borrowUserData.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP);
-//				borrowuserMoneyTopten = borrowUserData.getBorrowuserMoneyTopten().divide(borrowUserData.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2,BigDecimal.ROUND_HALF_UP);
-
-//			}*/
-
 			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
 			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
 			detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
@@ -182,7 +149,7 @@ public class OperationalDataController {
 			result.put("info", detail);
 
 		} catch (Exception e) {
-			_log.error("发生异常", e);
+			logger.error("发生异常", e);
 			result.put("status", "999");
 			result.put("statusDesc", "失败");
 		}
@@ -196,17 +163,14 @@ public class OperationalDataController {
 	 * @return
 	 */
 	@ApiOperation(value = "app运营数据第四页面数据统计", notes = "app运营数据第四页面数据统计")
-	@RequestMapping("/getInvestorRegionData")
+	@GetMapping("/getInvestorRegionData")
 	@ResponseBody
 	public JSONObject getInvestorRegionData() {
 		JSONObject result = new JSONObject();
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -235,7 +199,7 @@ public class OperationalDataController {
 	 */
 
 	@ApiOperation(value = "app运营数据第五页面数据统计", notes = "app运营数据第五页面数据统计")
-	@RequestMapping("/getInvestorSexAgeData")
+	@GetMapping("/getInvestorSexAgeData")
 	@ResponseBody
 	public JSONObject getSexAgeData() {
 		JSONObject result = new JSONObject();
@@ -243,11 +207,7 @@ public class OperationalDataController {
 		result.put("statusDesc", "成功");
 		try {
 			JSONObject info = new JSONObject();
-
-			Query query = new Query();
-			query.limit(1);
-			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
-			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -300,9 +260,7 @@ public class OperationalDataController {
 	 * @return
 	 */
 	private String getAgeRate(int startAge, int endAge) {
-		String rate = "";
-		// todo 暂时没有db
-		rate = "25.00";
+		String rate = "25.00";
 		return rate;
 	}
 

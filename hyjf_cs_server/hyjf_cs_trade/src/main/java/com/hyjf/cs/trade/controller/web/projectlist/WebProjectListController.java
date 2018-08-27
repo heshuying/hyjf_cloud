@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
+import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
 import com.hyjf.cs.trade.bean.WebCreditRequestBean;
 import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @author liuyang
  * @version WebProjectListController, v0.1 2018/6/13 10:21
  */
-@Api(tags = "Web端项目列表")
+@Api(tags = "web端-项目列表")
 @RestController
 @RequestMapping("/hyjf-web/projectlist")
 public class WebProjectListController extends BaseTradeController {
@@ -82,9 +83,10 @@ public class WebProjectListController extends BaseTradeController {
     /**
      * web端新手标和散标标的详情
      * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectDetail()
      * @date 2018/6/22 16:06
      */
-    @ApiOperation(value = "新手标和散标标的详情", notes = "web端新手标和散标标的详情")
+    @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")
     @PostMapping(value = "/getBorrowDetail", produces = "application/json; charset=utf-8")
     public Object webBorrowDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getBorrowDetail(map,userId);
@@ -92,6 +94,12 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
+    /**
+     * 散标投资记录
+     * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectInvestList()
+     * @date 2018/8/20 14:06
+     */
     @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
     @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
     public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
@@ -117,6 +125,7 @@ public class WebProjectListController extends BaseTradeController {
 
     /**
      * 散标专区-债权转让详情
+     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchWebCreditTender()
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
@@ -180,7 +189,12 @@ public class WebProjectListController extends BaseTradeController {
         return result;
     }
 
-
+    /**
+     *  计划详情标的组成
+     * @author zhangyk
+     * 原接口： com.hyjf.web.hjhdetail.HjhDetailController.searchPlanBorrow()
+     * @date 2018/8/16 11:01
+     */
     @ApiOperation(value = "计划详情标的组成" , notes = "计划详情标的组成")
     @PostMapping(value = "/getPlanBorrowList", produces = "application/json; charset=utf-8")
     public Object getPlanBorrowList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "token",required = false) String token){
@@ -190,12 +204,52 @@ public class WebProjectListController extends BaseTradeController {
 
 
 
+    /**
+     * 计划详情加入记录
+     * @author zhangyk
+     * @date 2018/8/16 11:01
+     */
     @ApiOperation(value = "计划详情加入记录" , notes = "计划详情加入记录")
     @PostMapping(value = "/getPlanAccedeList", produces = "application/json; charset=utf-8")
     public Object getPlanAccedeList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) String userId){
         WebResult result  = webProjectListService.getPlanAccedeList(requestBean,userId);
         return result;
     }
+
+
+    /**
+     * 计划详情标的组成：标的详情
+     * @author zhangyk
+     * 原接口：com.hyjf.web.hjhdetail.HjhDetailController.searchProjectInvestList()
+     * @date 2018/8/16 11:01
+     */
+    @ApiOperation(value = "计划详情标的组成：标的详情" , notes = "计划详情标的组成：标的详情")
+    @PostMapping(value = "/hjh/getBorrowDetail", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowDetail(@RequestBody  WebBorrowRequestBean requestBean, @RequestHeader(value = "userId",required = false) Integer userId){
+        WebResult result  = webProjectListService.getPlanAccedeBorrowDetail(requestBean,userId);
+        return result;
+    }
+
+
+
+
+
+    /**
+     * 计划详情标的组成：投资记录
+     * @author zhangyk
+     * 原接口：com.hyjf.web.hjhdetail.HjhDetailController.searchBorrowUndertakeList()
+     * @date 2018/8/24 10:13
+     */
+    @ApiOperation(value = "计划详情标的组成：投资记录" , notes = "计划详情标的组成：投资记录")
+    @PostMapping(value = "/hjh/getBorrowUndertake", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowUndertake(@RequestBody  WebBorrowRequestBean requestBean){
+        WebResult result  = webProjectListService.getPlanBorrowUndertake(requestBean);
+        return result;
+    }
+
+
+
+
 
 
 

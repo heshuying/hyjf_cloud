@@ -1,34 +1,29 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 /**
  * @author by xiehuili on 2018/8/1.
  */
+@ApiModel(value="发标/复审",description="发标/复审")
 public class BorrowSendTypeRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 3803722754627032581L;
-    /**
-     * 唯一标识
-     */
+    @ApiModelProperty(value = "唯一标识")
     private String sendCd;
-    /**
-     * 名称
-     */
+    @ApiModelProperty(value = "名称")
     private String sendName;
-    /**
-     * 发表时间
-     */
+    @ApiModelProperty(value = "发表时间")
     private String afterTime;
-    /**
-     * 备注说明
-     */
+    @ApiModelProperty(value = "备注说明")
     private String remark;
-
+    @ApiModelProperty(value = "修改标志")
     private String modifyFlag;
 
     public String getSendCd() {

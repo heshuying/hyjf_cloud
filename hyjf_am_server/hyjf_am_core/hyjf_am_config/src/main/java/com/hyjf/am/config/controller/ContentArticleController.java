@@ -14,6 +14,7 @@ import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.WechatContentArticleResultVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,21 @@ public class ContentArticleController {
         return response;
     }
 
+    @PostMapping("/getCompanyDynamicsListPage")
+    public ContentArticleResponse getCompanyDynamicsListPage(@RequestBody ContentArticleRequest request) {
+        ContentArticleResponse response = new ContentArticleResponse();
+        int totalPage = contentArticleService.getNoticeListCount(request.getNoticeType());
+        if (totalPage > 0) {
+            Paginator paginator = new Paginator(request.getCurrPage(), totalPage, request.getPageSize());
+            List<ContentArticle> list = contentArticleService.searchNoticeList(request.getNoticeType(),paginator.getOffset(),paginator.getLimit());
+            if (!CollectionUtils.isEmpty(list)) {
+                List<ContentArticleVO> result = CommonUtils.convertBeanList(list, ContentArticleVO.class);
+                response.setResultList(result);
+                response.setRecordTotal(totalPage);
+            }
+        }
+        return response;
+    }
     /**
      * 查询公告列表
      * @author zhangyk
@@ -133,9 +149,9 @@ public class ContentArticleController {
      * @return
      */
     @RequestMapping("/countcontentarticlebytype")
-    public ContentArticleCustomizeResponse countContentArticleByType(@RequestBody Map<String, Object> params) {
+    public ContentArticleCustomizeResponse countContentArticleByType() {
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
-        Integer count = contentArticleService.countContentArticleByType(params);
+        Integer count = contentArticleService.countContentArticleByType();
         if (count != null) {
             response.setCount(count);
             return response;
@@ -190,13 +206,12 @@ public class ContentArticleController {
      * @return
      */
     @PostMapping("/getKnowsList")
-    public ContentArticleResponse getKnowReportList(ContentArticleRequest request) {
+    public ContentArticleResponse getKnowReportList(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
-
-        request.setNoticeType("3");
         int totalPage = contentArticleService.countHomeNoticeList(request.getNoticeType());
         if (totalPage>0) {
-            List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), request.getLimitStart(), request.getLimitEnd());
+            Paginator paginator = new Paginator(request.getCurrPage(), totalPage, request.getPageSize());
+            List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), paginator.getOffset(), paginator.getLimit());
             if (recordList != null && recordList.size() != 0) {
                 for (int i = 0; i < recordList.size(); i++) {
                     recordList.get(i).setContent((recordList.get(i).getContent().replaceAll("src=\"//", "src=\"" + webHost + "//")));
@@ -204,6 +219,7 @@ public class ContentArticleController {
             }
             List<ContentArticleVO> contentArticleVOS = CommonUtils.convertBeanList(recordList, ContentArticleVO.class);
             response.setResultList(contentArticleVOS);
+            response.setRecordTotal(totalPage);
         }
         return response;
     }
@@ -215,7 +231,7 @@ public class ContentArticleController {
      * @return
      */
     @PostMapping("/index")
-    private ContentArticleResponse help_index(ContentArticleRequest request) {
+    private ContentArticleResponse help_index(@RequestBody ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
         // 查出帮助中心分类
         List<HelpCategoryCustomize> list = contentArticleService.selectCategory("help");
@@ -236,7 +252,7 @@ public class ContentArticleController {
             }
             AllList.add(tmpmap);
         }
-
+        response.setResponseList(AllList);
         return response;
     }
 
@@ -280,7 +296,7 @@ public class ContentArticleController {
             params.put("limitStart", -1);
             params.put("limitEnd", -1);
             // 查询总数
-            Integer count = contentArticleService.countContentArticleByType(params);
+            Integer count = contentArticleService.countContentArticleByType();
             if (count != null && count > 0) {
                 // 构造分页
                 if(form.getCurrentPage()<=0){

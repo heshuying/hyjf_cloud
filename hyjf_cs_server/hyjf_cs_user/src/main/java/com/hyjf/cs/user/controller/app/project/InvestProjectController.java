@@ -21,14 +21,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -68,8 +67,8 @@ import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
 
 import io.swagger.annotations.Api;
 
-@Api(value = "app端我的资产",tags = "app端我的资产")
-@Controller
+@Api(value = "app端-我的资产",tags = "app端-我的资产")
+@RestController
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {
 
@@ -88,8 +87,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/getRepayList", produces = "application/json; charset=utf-8")
+	@ApiOperation(value = "查询用户还款中列表", notes = "查询用户还款中列表")
+	@PostMapping(value = "/getRepayList", produces = "application/json; charset=utf-8")
 	public JSONObject searchRepayList(@ModelAttribute RepayListBean form, HttpServletRequest request,
                                       HttpServletResponse response) {
 
@@ -140,8 +139,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.INVEST_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@ApiOperation(value = "查询用户投资中列表", notes = "查询用户投资中列表")
+	@PostMapping(value = InvestProjectDefine.INVEST_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchInvestList(@ModelAttribute InvestListBean form, HttpServletRequest request,
                                        HttpServletResponse response) {
 
@@ -190,8 +189,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.ALREADY_REPAY_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@ApiOperation(value = "查询用户已还款列表", notes = "查询用户已还款列表")
+	@PostMapping(value = InvestProjectDefine.ALREADY_REPAY_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchAlreadyRepayList(@ModelAttribute AlreadyRepayListBean form, HttpServletRequest request,
                                              HttpServletResponse response) {
 
@@ -241,8 +240,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.REPAY_PLAN_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@ApiOperation(value = "查看用户还款信息", notes = "查看用户还款信息")
+	@PostMapping(value = InvestProjectDefine.REPAY_PLAN_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchRepayPlanList(@ModelAttribute RepayPlanListBean form, HttpServletRequest request,
                                           HttpServletResponse response) {
 		JSONObject info = new JSONObject();
@@ -447,7 +446,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAY_CONTACT_ACTION)
+	@ApiOperation(value = "查看用户项目信息", notes = "查看用户项目信息")
+	@PostMapping(value = InvestProjectDefine.REPAY_CONTACT_ACTION)
 	public ModelAndView searchProjectInfo(@ModelAttribute ProjectContractDetailBean form, HttpServletRequest request,
                                           HttpServletResponse response) {
 
@@ -680,7 +680,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAY_PROJECT_DETAIL_ACTION)
+	@ApiOperation(value = "查看还款中项目详情", notes = "查看还款中项目详情")
+	@PostMapping(value = InvestProjectDefine.REPAY_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchRepayProjectDetail(InvestProjectBean form, HttpServletRequest request,
                                                  HttpServletResponse response) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.REPAY_PROJECT_DETAIL_PATH);
@@ -731,7 +732,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION)
+	@ApiOperation(value = "查看投资中项目详情", notes = "查看投资中项目详情")
+	@PostMapping(value = InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchInvestProjectDetail(InvestProjectBean form, HttpServletRequest request,
                                                   HttpServletResponse response) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.INVEST_PROJECT_DETAIL_PATH);
@@ -927,7 +929,8 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION)
+	@ApiOperation(value = "查看已还款项目详情", notes = "查看已还款项目详情")
+	@PostMapping(value = InvestProjectDefine.REPAYED_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchRepayedProjectDetail(InvestProjectBean form, HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView(InvestProjectDefine.REPAYED_PROJECT_DETAIL_PATH);
 		Map<String, Object> params = new HashMap<String, Object>();

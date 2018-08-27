@@ -35,11 +35,9 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +53,7 @@ import java.util.Map;
  * @version WithdrawController, v0.1 2018/7/19 14:01
  */
 
-@Api(value = "融东风提现接口")
+@Api(value = "api端-融东风提现接口",tags = "api端-融东风提现接口")
 @Controller
 @RequestMapping("/hyjf-api/surong/withdraw")
 public class WithdrawController extends BaseController {
@@ -70,9 +68,9 @@ public class WithdrawController extends BaseController {
 
 
     @ApiOperation(value = "获取提现信息", notes = "获取提现信息")
-    @RequestMapping("/getInfoAction")
+    @PostMapping("/getInfoAction")
     @ResponseBody
-    public JSONObject getCashInfo(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getInfoAction(HttpServletRequest request, HttpServletResponse response) {
         // ---传入参数---
         String getcash = request.getParameter("getcash"); // 提现金额
         Integer userId = Integer.valueOf(request.getParameter("userId")); // 用户ID
@@ -80,8 +78,7 @@ public class WithdrawController extends BaseController {
         logger.info("【获取提现信息   getcash:+" + getcash + " userId:" + userId + "】");
         JSONObject ret = new JSONObject();
         // 金额显示格式
-        DecimalFormat moneyFormat = null;
-        moneyFormat = CustomConstants.DF_FOR_VIEW;
+        DecimalFormat moneyFormat = CustomConstants.DF_FOR_VIEW;
         // 取得用户当前余额
         AccountVO account = rdfWithdrawService.getAccountByUserId(userId);
         if (account == null) {
@@ -103,7 +100,7 @@ public class WithdrawController extends BaseController {
         String isLargeWithdrawal = "0";
         // 取得银行卡信息
         List<BankCardVO> banks = rdfWithdrawService.selectBankCardByUserIdAndStatus(userId, 1);
-        if (banks.size() > 0) {
+        if (banks!=null&&banks.size() > 0) {
             ret.put("bankCnt", banks.size() + "");
             List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
             for (int j = 0; j < banks.size(); j++) {
@@ -152,8 +149,10 @@ public class WithdrawController extends BaseController {
         ret.put("statusDesc", "成功");
         return ret;
     }
-    @RequestMapping(value = "/cash",method = RequestMethod.GET)
-    public ModelAndView hello(HttpServletRequest request, HttpServletResponse response){
+
+    @ApiOperation(value = "提现", notes = "提现")
+    @PostMapping(value = "/cash")
+    public ModelAndView cash(HttpServletRequest request, HttpServletResponse response){
 
         String errorPage="redirect:"+systemConfig.getFrontHost() +"/user/openSuccess";
         // ---传入参数---
@@ -362,7 +361,8 @@ public class WithdrawController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/return")
+    @ApiIgnore
+    @GetMapping("/return")
     public ModelAndView cashReturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         bean.convert();
         logger.info("--↓↓ 提现同步回调Start ↓↓--orderId: " + bean.getLogOrderId() + " nid=" + request.getParameter("nid")
@@ -403,6 +403,7 @@ public class WithdrawController extends BaseController {
      * @param request
      * @return
      */
+    @ApiIgnore
     @ResponseBody
     @RequestMapping("/callback")
     public Object cashCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {

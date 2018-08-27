@@ -6,10 +6,12 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +22,15 @@ import java.util.UUID;
  * @author hesy
  * @version GetTokenDataServer, v0.1 2018/7/16 10:25
  */
-@Api(tags = "api端网贷之家token获取接口")
-@Controller
+@Api(tags = "api端-网贷之家token获取接口")
+@RestController
 @RequestMapping("/hyjf-api/wdzj/token")
 public class GetTokenDataServer extends BaseTradeController {
     @Autowired
     SystemConfig systemConfig;
 
-    @ResponseBody
-    @RequestMapping(value = "/getToken")
+    @ApiOperation(value = "token值获取", notes = "token值获取")
+    @PostMapping(value = "/getToken")
     public JSONObject getToken(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result;
         String usernameRight = systemConfig.getUserNameWDZJ();

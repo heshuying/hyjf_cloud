@@ -1,18 +1,20 @@
 package com.hyjf.am.response.admin;
 
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
 
-import java.util.List;
+/**
+ * @Author : huanghui
+ */
+public class HjhReInvestDebtResponse extends Response<HjhReInvestDebtVO> {
 
-public class HjhReInvestDebtResponse {
+    private int count;
 
-    private List<HjhPlanCapitalCustomizeVO> ResultList;
-
-    public List<HjhPlanCapitalCustomizeVO> getResultList() {
-        return ResultList;
+    public int getCount() {
+        return count;
     }
 
-    public void setResultList(List<HjhPlanCapitalCustomizeVO> resultList) {
-        ResultList = resultList;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

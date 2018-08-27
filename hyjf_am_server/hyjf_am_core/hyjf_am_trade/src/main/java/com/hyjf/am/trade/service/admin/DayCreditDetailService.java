@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.service.admin;
 
-import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 产品中心 --> 汇计划 --> 资金计划 -> 转让详情 Service
@@ -11,5 +11,16 @@ import java.util.List;
  */
 public interface DayCreditDetailService {
 
-    List<DayCreditDetailVO> selectDebtCreditList(DayCreditDetailRequest request);
+    /**
+     * 按日转让列表 条数
+     * @param params
+     * @return
+     */
+    Integer countDebtCredit(Map<String, Object> params);
+    /**
+     * 汇计划 - 资金计划 - 按日转让列表
+     * @param params
+     * @return
+     */
+    List<DayCreditDetailVO> selectDebtCreditList(Map<String, Object> params);
 }

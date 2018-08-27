@@ -69,9 +69,7 @@ public class UserHjhInvistListCustomizeVO extends BaseVO {
         this.borrowNid = borrowNid;
     }
     public String getAccount() {
-        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        df.setRoundingMode(RoundingMode.FLOOR);
-        return df.format(new BigDecimal(account));
+        return account;
     }
     public void setAccount(String account) {
         this.account = account;

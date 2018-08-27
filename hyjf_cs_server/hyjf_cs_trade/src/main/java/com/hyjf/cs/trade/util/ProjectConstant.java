@@ -1,14 +1,18 @@
 package com.hyjf.cs.trade.util;
 
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
-import com.hyjf.cs.trade.bean.BorrowMsgBean;
+import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -25,6 +29,8 @@ import java.util.Map;
  * @date 2018/7/2 16:37
  */
 public class ProjectConstant {
+
+    private static Logger logger = LoggerFactory.getLogger(ProjectConstant.class);
 
 
      public static final String REQUEST_HOME = "/hyjf-app";
@@ -123,6 +129,41 @@ public class ProjectConstant {
 
 
     /*   --------------------------  web端 结束 --------------------------------*/
+
+    /*  -----------------------------api端 开始------------------------------------*/
+    public static final String  API_METHOD_BORROW_LIST = "getBorrowList";
+
+    /*  -----------------------------api端 结束------------------------------------*/
+
+
+    /**
+     * 验证外部请求签名
+     *
+     * @param paramBean
+     * @return
+     */
+    public static boolean verifyRequestSign(BaseBean paramBean, String methodName) {
+
+        String sign = org.apache.commons.lang3.StringUtils.EMPTY;
+
+        // 机构编号必须参数
+        String instCode = paramBean.getInstCode();
+        if (org.apache.commons.lang.StringUtils.isEmpty(instCode)) {
+            return false;
+        }
+        if (API_METHOD_BORROW_LIST.equals(methodName)){
+            ApiBorrowReqBean bean = (ApiBorrowReqBean) paramBean;
+            sign = bean.getInstCode() + bean.getBorrowStatus() + bean.getTimestamp();
+        }
+
+        return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
+
+    }
+
+
+
+
+
 
     /*请求参数 end*/
 
@@ -654,6 +695,7 @@ public class ProjectConstant {
                 }
 
             } catch (Exception e) {
+                logger.error("数据转换异常[{}]",e);
                 continue;
             }
         }

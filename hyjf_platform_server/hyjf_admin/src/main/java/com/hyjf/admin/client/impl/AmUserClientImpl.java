@@ -1,20 +1,22 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -729,7 +732,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserInfoByUserInfo(UserInfoVO userInfoVO) {
-		UserInfoRequest request = null;
+		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		int result = restTemplate
 				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class)
@@ -1181,9 +1184,9 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName) {
+	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String tureName) {
 		CertificateAuthorityResponse response = restTemplate.getForEntity(
-				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + strIdNo + "/" + tureName,
+				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + tureName,
 				CertificateAuthorityResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1878,4 +1881,401 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return false;
 	}
+
+	/**
+	 * 银行卡异常count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/getBankCardExceptionCount";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 银行卡异常列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/searchBankCardExceptionList";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡(admin后台异常中心-银行卡异常用)
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultMsg();
+		}
+		return "";
+	}
+
+	@Override
+	public UserVO getUserByMobile(String mobile) {
+		UserResponse response = restTemplate.getForObject("http://AM-USER/am-user/findByMobile/" + mobile, UserResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取CA认证异常列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
+		String url = "http://AM-USER/am-user/certificate/getExceptionRecordList";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public SmsCountCustomizeResponse querySmsCountList(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_list", request, SmsCountCustomizeResponse.class);
+	}
+
+	@Override
+	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
+	}
+
+	@Override
+	public List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o) {
+		SmsCountCustomizeResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/sms_count/query_department_info", SmsCountCustomizeResponse.class,
+				Integer.class);
+		if (response != null) {
+			return response.getList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
+		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/sms_code/query_user",
+				requestBean, SmsCodeCustomizeResponse.class);
+		if (response != null) {
+			List<SmsCodeCustomizeVO> list = response.getResultList();
+			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-USER/am-user/sms_code/query_user",
+					requestBean, SmsCodeCustomizeResponse.class);
+			if (response1 != null) {
+				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
+				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
+					list.retainAll(list1);
+					return list;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 线下修改信息同步查询列表count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getModifyInfoCount(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/getModifyInfoCount";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 线下修改信息同步查询列表list
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/searchModifyInfoList";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 添加信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/insertAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 5;
+	}
+
+	/**
+	 * 根据主键id删除一条信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
+		String url = userService + "/accountmobilesynch/deleteAccountMobileSynch";
+		AccountMobileSynchResponse response = restTemplate.postForEntity(url,request,AccountMobileSynchResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+     * 获取用户账户信息byaccountId
+     * @auth libin
+     * @param accountId
+     * @return
+     */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccountId(String accountId) {
+		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/queryUserAndDepartment/" + userId;
+		UserUpdateParamCustomizeResponse response = restTemplate.getForEntity(url, UserUpdateParamCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取所有用户信息
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserResponse selectAllUser(){
+		String url = "http://AM-USER/am-user/userManager/selectAllUser";
+		UserResponse response = restTemplate.postForEntity(url,null, UserResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 查询此段时间的用户推荐人的修改记录
+	 * @param userId
+	 * @param repairStartDate
+	 * @param repairEndDate
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate){
+		String url = "http://AM-USER/am-user/userManager/searchSpreadUsersLogByDate/"+userId+"/"+repairStartDate+"/"+repairEndDate;
+		SpreadsUserLogResponse response = restTemplate.postForEntity(url,null, SpreadsUserLogResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 查找员工信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectEmployeeInfoByUserId/"+userId;
+		EmployeeCustomizeResponse response = restTemplate.postForEntity(url,null, EmployeeCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 根据用户id获取离职信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectUserLeaveByUserId/"+userId;
+		AdminEmployeeLeaveCustomizeResponse response = restTemplate.postForEntity(url,null, AdminEmployeeLeaveCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 通过手机号和身份证查询掉单信息
+	 *
+	 * @param mobile,idcard
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard ) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/bankOpenAccountLogSelect/"+mobile + "/" +idcard;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取掉单用户信息
+	 *
+	 * @param request
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/searchAccountEnquiry";
+		OpenAccountEnquiryResponse response = restTemplate.postForEntity(url,request, OpenAccountEnquiryResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据订单号查询用户的开户记录
+	 *
+	 * @param orderId
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String orderId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/selectBankOpenAccountLogByOrderId/"+orderId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 删除用户开户日志
+	 *
+	 * @param userId
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 11:30
+	 **/
+	@Override
+	public Boolean deleteBankOpenAccountLogByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/deleteBankOpenAccountLogByUserId/"+userId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isDeleteFlag();
+		}
+		return false;
+	}
+
+	/**
+	 * 查询返回的电子账号是否已开户
+	 *
+	 * @param accountId
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 13:38
+	 **/
+	@Override
+	public Boolean checkAccountByAccountId(String accountId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/checkAccountByAccountId/"+accountId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isDeleteFlag();
+		}
+		return false;
+	}
+
+	/**
+	 * 根据userId查询用户渠道信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
+		AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
+				"http://CS-MESSAGE/cs-message/search/getAppChannelStatisticsDetailByUserId/" + userId,
+				AppChannelStatisticsDetailResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 开户更新开户渠道统计开户时间
+	 *
+	 * @param appChannelStatisticsDetailVO
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 13:38
+	 **/
+	@Override
+	public Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO) {
+
+		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
+		BeanUtils.copyProperties(appChannelStatisticsDetailVO, request);
+		Boolean result = restTemplate.postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Boolean.class)
+				.getBody();
+		return result;
+	}
+
 }

@@ -4,9 +4,12 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.InvestorDebtBean;
+import com.hyjf.admin.beans.request.BorrowInvestDebtInfoRequest;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
+import com.hyjf.admin.beans.request.PdfSignRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -16,11 +19,11 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -37,13 +40,12 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
  * @version BorrowInvestController, v0.1 2018/7/10 9:06
  */
-@Api(value = "汇直投-投资明细接口", tags = "汇直投-投资明细接口")
+@Api(value = "产品中心-汇直投-投资明细", tags = "产品中心-汇直投-投资明细")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_invest")
 public class BorrowInvestController extends BaseController {
@@ -53,9 +55,17 @@ public class BorrowInvestController extends BaseController {
     @Autowired
     AdminCommonService adminCommonService;
 
-    /** 权限 */
+    /**
+     * 权限
+     */
     public static final String PERMISSIONS = "borrowinvest";
 
+    /**
+     * 投资明细初始化
+     *
+     * @param borrowInvestRequestBean
+     * @return
+     */
     @ApiOperation(value = "投资明细初始化", notes = "投资明细初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -67,17 +77,23 @@ public class BorrowInvestController extends BaseController {
         borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         //还款方式
-        List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //操作平台
-        Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
+        List<DropDownVO> clientList = adminCommonService.getParamNameList("CLIENT");
         responseBean.setClientList(clientList);
         //投资方式
-        Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
+        List<DropDownVO> investTypeList = adminCommonService.getParamNameList("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 投资明细列表查询
+     *
+     * @param borrowInvestRequestBean
+     * @return
+     */
     @ApiOperation(value = "投资明细列表查询/运营记录-投资明细", notes = "投资明细列表查询/运营记录-投资明细")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -89,6 +105,14 @@ public class BorrowInvestController extends BaseController {
         return new AdminResult(responseBean);
     }
 
+    /**
+     * 投资明细列表导出
+     *
+     * @param request
+     * @param response
+     * @param borrowInvestRequestBean
+     * @throws Exception
+     */
     @ApiOperation(value = "投资明细列表导出", notes = "投资明细列表导出")
     @PostMapping("/export_list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -101,7 +125,7 @@ public class BorrowInvestController extends BaseController {
 
         List<BorrowInvestCustomizeVO> resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
 
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[]{"序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "投资订单号", "冻结订单号", "投资人用户名", "投资人ID", "投资人用户属性（当前）", "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
                 "投资人用户属性（投资时）", "推荐人用户属性（投资时）", "推荐人（投资时）", "推荐人ID（投资时）", "一级分部（投资时）", "二级分部（投资时）", "团队（投资时）", "投资金额", "操作平台", "投资方式", "投资时间", "合同编号", "合同状态", "合同名称", "模版编号", "合同生成时间", "合同签署时间", "复投投资(是/否)"};
@@ -327,31 +351,56 @@ public class BorrowInvestController extends BaseController {
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 
+    /**
+     * 投资人债权明细
+     *
+     * @param request
+     * @return
+     */
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
-    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody BorrowInvestDebtInfoRequest request) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(request, investorDebtBean);
         return borrowInvestService.debtInfo(investorDebtBean);
     }
 
+    /**
+     * PDF脱敏图片预览
+     *
+     * @param nid
+     * @return
+     */
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
+    @ApiImplicitParam(name = "nid", value = "投资订单号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/pdf_preview/{nid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {
         return borrowInvestService.pdfPreview(nid);
     }
 
+    /**
+     * PDF签署
+     *
+     * @param pdfSignRequest
+     * @return
+     */
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdf_sign")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
-    public AdminResult pdfSign(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult pdfSign(@RequestBody PdfSignRequest pdfSignRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
-        BeanUtils.copyProperties(investorRequest, investorDebtBean);
+        BeanUtils.copyProperties(pdfSignRequest, investorDebtBean);
         return borrowInvestService.pdfSign(investorDebtBean);
     }
 
+    /**
+     * 发送协议
+     *
+     * @param investorRequest
+     * @return
+     */
     @ApiOperation(value = "发送协议", notes = "发送协议")
     @PostMapping("/send_agreement")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT_AGREEMENT)
@@ -359,6 +408,12 @@ public class BorrowInvestController extends BaseController {
         return borrowInvestService.sendAgreement(investorRequest);
     }
 
+    /**
+     * 运营记录-投资明细
+     *
+     * @param requestBean
+     * @return
+     */
     @ApiOperation(value = "运营记录-投资明细", notes = "运营记录-投资明细")
     @PostMapping("/optaction_init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -367,7 +422,7 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(requestBean, borrowInvestRequest);
         // 如果是从原始标的跳转过来，不默认时间，否则默认最近10天
-        if(!"1".equals(requestBean.getIsOptFlag())){
+        if (!"1".equals(requestBean.getIsOptFlag())) {
             borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
         }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);

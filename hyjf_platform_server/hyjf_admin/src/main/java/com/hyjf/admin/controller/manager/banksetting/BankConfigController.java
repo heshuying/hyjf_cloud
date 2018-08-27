@@ -32,7 +32,7 @@ import java.util.List;
  *  @version BankSettingController, v0.1 2018/7/11.
  *  银行配置
  */
-@Api(value = "配置中心银行配置", tags = "配置中心银行配置-银行配置")
+@Api(tags = "配置中心-银行配置--银行配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankconfig")
 public class BankConfigController extends BaseController {

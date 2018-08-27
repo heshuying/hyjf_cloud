@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -91,5 +92,13 @@ public class ProtocolClientImpl implements ProtocolClient {
                 request, AdminProtocolResponse.class);
 
         return response;
+    }
+
+    @Override
+    public List<ProtocolTemplateVO> getNewInfo() {
+        ResponseEntity<List> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/protocol/getnewinfo", List.class);
+
+        List<ProtocolTemplateVO> vo =  response.getBody();
+        return vo;
     }
 }

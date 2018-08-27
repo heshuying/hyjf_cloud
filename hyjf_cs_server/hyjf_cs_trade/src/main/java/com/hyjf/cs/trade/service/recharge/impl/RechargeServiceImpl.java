@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -87,11 +86,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
 
-	@Override
-	public BankCardVO selectBankCardByUserId(Integer userId) {
-		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
-		return bankCard;
-	}
+
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -99,11 +94,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return account;
 	}
 
-	@Override
-	public UserVO getUsers(Integer userId) {
-		UserVO users = amUserClient.findUserById(userId);
-		return users;
-	}
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
@@ -340,7 +330,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setLogRemark("充值页面");
 		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
-		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1");
+		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1&logOrdId="+bean.getLogOrderId());
 		// 页面调用必须传的
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_DIRECT_RECHARGE_PAGE);
 		// 插入充值记录
@@ -352,7 +342,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	@Override
-	public BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money) throws Exception {
+	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);
@@ -363,13 +353,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		UserInfoVO userInfo = this.getUsersInfoByUserId(userId);
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
-		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn" + "?phone="+mobile;
-		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
-
-		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setTxAmount(money);
 		directRechargeBean.setIdNo(idNo);
 		directRechargeBean.setName(name);
@@ -378,12 +362,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setUserId(userId);
 		directRechargeBean.setIp(ipAddr);
 		directRechargeBean.setUserName(user.getUsername());
-		directRechargeBean.setRetUrl(retUrl);
-		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setPlatform("0");
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setAccountId(account.getAccount());
-		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		BankCallBean bean = this.insertGetMV(directRechargeBean);
 		return bean;
 	}
@@ -520,7 +501,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	public void checkUserMessage(BankCardVO bankCard,Integer userId,String money){
-		ModelAndView modelAndView = new ModelAndView();
 		UserVO users=this.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);

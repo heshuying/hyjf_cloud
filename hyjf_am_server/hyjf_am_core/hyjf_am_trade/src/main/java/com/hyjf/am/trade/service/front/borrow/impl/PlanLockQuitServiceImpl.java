@@ -8,13 +8,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.*;
+import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -46,6 +46,18 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
 
     @Autowired
     private AppMessageProducer appMessageProducer;
+
+    @Autowired
+    private CalculateInvestInterestProducer calculateInvestInterestProducer;
+
+    @Autowired
+    private CouponRepayMessageProducer couponRepayMessageProducer;
+
+    @Autowired
+    private CouponLoansMessageProducer couponLoansMessageProducer;
+
+    @Autowired
+    private CommisionComputeService commisionComputeService;
     /**
      * 用户ID
      */
@@ -140,10 +152,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             updatePlanData(hjhAccede, hjhRepay);
             //更新计划账户金额
             updatePlanTenderAccount(hjhAccede, hjhRepay);
+            // 重新获取hjhRepay
+            hjhRepay = this.hjhRepayMapper.selectByPrimaryKey(hjhRepay.getId());
             //发送计划还款短信
             sendSms(hjhRepay);
             //发送计划退出通知
-            sendMessage(hjhAccede);
+            sendMessage(hjhRepay);
             try {
                 couponRepay(hjhAccede);
             } catch (Exception e) {
@@ -325,6 +339,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountForst = accountForst.add(availableInvestAccount);
         //计算账户订单利息
         BigDecimal accountInterest = accountForst.subtract(hjhAccede.getAccedeAccount());
+
+        //实际年化收益率
+        BigDecimal reallyApr = getAccedeReallyApr(accountForst,hjhAccede.getAccedeAccount(),hjhAccede.getPlanNid(),hjhAccede.getLockPeriod(),hjhAccede.getAccedeOrderId());
+        BigDecimal lqdServiceFee = hjhAccede.getLqdServiceFee();//清算服务费
+        //获得投资服务费率
+        BigDecimal tenderFeeRate = getTenderFeeRate(lqdServiceFee,hjhAccede.getAccedeAccount());
+        //计划加入明细金额变更
+        hjhAccede.setActualApr(reallyApr);
         //计划加入明细金额变更
         hjhAccede.setWaitTotal(new BigDecimal(0));
         hjhAccede.setWaitCaptical(new BigDecimal(0));
@@ -343,6 +365,9 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         hjhAccede.setFrostAccount(BigDecimal.ZERO);
         //计划订单可用金额
         hjhAccede.setAvailableInvestAccount(BigDecimal.ZERO);
+        hjhAccede.setFairValue(accountForst);//订单退出时重新计算公允价值
+        hjhAccede.setInvestServiceApr(tenderFeeRate);//更新投资服务费率
+        hjhAccede.setLqdProgress(BigDecimal.ONE);//已退出时更新清算进度为 100%
         int count = this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
         if (count > 0) {
             logger.info("================ 计划退出更新计划加入明细成功!计划加入订单号: " + hjhAccede.getAccedeOrderId());
@@ -351,6 +376,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         HjhRepay newRepay = hjhRepayMapper.selectByPrimaryKey(hjhRepay.getId());
         newRepay.setRepayTotal(accountForst);
         newRepay.setRepayAlready(accountForst);
+        newRepay.setActualRevenue(accountInterest);//实际收益
+        newRepay.setActualPayTotal(accountForst);//实际回款总额
         newRepay.setPlanRepayCapital(hjhAccede.getAccedeAccount());
         newRepay.setPlanRepayInterest(accountInterest);
         this.hjhRepayMapper.updateByPrimaryKey(newRepay);
@@ -448,9 +475,64 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 计划收益
         params.put("type", 2);
         params.put("recoverInterestAmount", accountInterest);
-        //TODO: 运营数据队列
-//		rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_OPERATION_DATA,
-//				JSONObject.toJSONString(params));
+        //运营数据队列
+        try {
+            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        }catch (MQException e){
+            logger.error("=================发送运营数据更新MQ失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+        }
+    }
+
+
+
+    /**
+     * 获得投资服务费率
+     *
+     * @param lqdServiceFee
+     * 清算服务费
+     * @param accedeAccount
+     * 订单加入金额
+     * @return
+     */
+    private BigDecimal getTenderFeeRate(BigDecimal lqdServiceFee, BigDecimal accedeAccount) {
+        if(lqdServiceFee.compareTo(BigDecimal.ZERO) > 0){
+            BigDecimal lqdRate = lqdServiceFee.divide(accedeAccount, 4, BigDecimal.ROUND_DOWN);
+            return lqdRate;
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 获得订单的实际年化收益率
+     * @param accountForst
+     * @param accedeAccount
+     * @param planNid
+     * @param lockPeriod
+     * @param accedeOrderId
+     * @return
+     */
+    private BigDecimal getAccedeReallyApr(BigDecimal accountForst, BigDecimal accedeAccount, String planNid, Integer lockPeriod, String accedeOrderId) {
+        HjhPlanExample example = new HjhPlanExample();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> hjhPlans = this.hjhPlanMapper.selectByExample(example);
+        BigDecimal reallyApr = new BigDecimal(0);
+        if(hjhPlans != null && hjhPlans.size() == 1){
+            HjhPlan hjhPlan = hjhPlans.get(0);
+            Integer isMonth = hjhPlan.getIsMonth();
+            if(1 == isMonth){//按月计息
+                reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
+                        .divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
+                        .multiply(new BigDecimal(12)).multiply(new BigDecimal(100));
+            }else if(0 == isMonth){//按日计息
+                reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
+                        .divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
+                        .multiply(new BigDecimal(360)).multiply(new BigDecimal(100));
+            }
+        }
+        reallyApr = reallyApr.setScale(4,BigDecimal.ROUND_DOWN);
+        logger.info("--------------------开始计算订单实际年化收益率，订单号:" + accedeOrderId + ",accountForst：" + accountForst
+                + ",accedeAccount:" + accedeAccount + ",lockperiod:" + lockPeriod + ",实际年化收益率：" + reallyApr.toString());
+        return reallyApr;
     }
 
     /**
@@ -490,13 +572,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     /**
      * 计划退出推送消息
      *
-     * @param hjhAccede
+     * @param hjhRepay
      * @author Administrator
      */
-    private void sendMessage(HjhAccede hjhAccede) {
-        int userId = hjhAccede.getUserId();
-        BigDecimal amount = hjhAccede.getWaitTotal();
-        String planNid = hjhAccede.getPlanNid();
+    private void sendMessage(HjhRepay hjhRepay) {
+        int userId = hjhRepay.getUserId();
+        BigDecimal amount = hjhRepay.getRepayTotal();
+        String planNid = hjhRepay.getPlanNid();
         HjhPlanExample example = new HjhPlanExample();
         example.createCriteria().andPlanNidEqualTo(planNid);
         List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
@@ -578,7 +660,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     }
 
     @Override
-    public void updateLockRepayInfo(String accedeOrderId) {
+    public void updateLockRepayInfo(HjhLockVo hjhLockVo) {
+        String accedeOrderId = hjhLockVo.getAccedeOrderId();
         //判断是否为计划最后一次复审
         //根据计划订单号判断是否为计划最后一次放款
         BorrowTenderExample example = new BorrowTenderExample();
@@ -648,18 +731,36 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             sendHjhLockMessage(hjhAccede);
             //发送短信
             sendSms(hjhAccede);
-
             try {
-                //生成并签署加入计划投资服务协议 add by  2018-2-26
+                //开始计算提成 add by cwyang 2018-5-24 汇计划3期由batch工程挪至此处处理
+                commisionCompute(hjhAccede,hjhLockVo);
+
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.info("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId());
+            }
+            try {
+                //生成并签署加入计划投资服务协议
                 sendPlanContract(hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
                 //优惠券放款
                 couponLoan(hjhAccede);
                 // 双十二活动删除
                 //actBalloonTender(hjhAccede);
             } catch (Exception e) {
-                logger.info("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+                logger.error("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
             }
         }
+    }
+
+    /**
+     * 开始计算订单提成
+     * @param hjhAccede
+     */
+    private void commisionCompute(HjhAccede hjhAccede,HjhLockVo hjhLockVo) {
+        logger.info("----------开始生成计划订单的提成计算，订单号：" + hjhAccede.getAccedeOrderId());
+        commisionComputeService.commisionCompute(hjhAccede,hjhLockVo);
+        logger.info("----------生成计划订单的提成计算完毕，订单号：" + hjhAccede.getAccedeOrderId());
+
     }
 
     /**
@@ -1042,13 +1143,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      *
      * @param hjhAccede
      */
-    private void couponRepay(HjhAccede hjhAccede) {
+    private void couponRepay(HjhAccede hjhAccede) throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        //TODO: 优惠券还款队列
-//        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
+        //优惠券还款队列
+        couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
     }
 
     /**
@@ -1056,13 +1157,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      *
      * @param hjhAccede
      */
-    private void couponLoan(HjhAccede hjhAccede) {
+    private void couponLoan(HjhAccede hjhAccede) throws Exception{
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        //TODO: 优惠券放款队列
-//        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
+        //优惠券放款队列
+        couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
     }
 
     /**

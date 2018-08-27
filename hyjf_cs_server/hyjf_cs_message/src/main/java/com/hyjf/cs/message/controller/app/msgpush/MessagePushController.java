@@ -8,7 +8,6 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.MsgPushBean;
@@ -19,10 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +29,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushController, v0.1 2018/7/25 9:06
  */
-@Api(value = "消息推送", tags = "消息推送")
+@Api(tags = "app端-消息推送")
 @RestController
 @RequestMapping("/hyjf-app/msgpush")
 public class MessagePushController extends BaseController {
@@ -43,7 +39,7 @@ public class MessagePushController extends BaseController {
 	private MsgPushService msgPushService;
 
 	@ApiOperation(value = "获取提醒列表", notes = "获取提醒列表")
-	@RequestMapping("/getTagListAction")
+	@PostMapping("/getTagListAction")
 	public JSONObject getTagListAction(@RequestHeader(value = "userId") Integer userId,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
@@ -61,21 +57,13 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
+
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 
 		page = Integer.valueOf(page);
 		pageSize = Integer.valueOf(pageSize);
 		int count = msgPushService.countMsgHistoryRecord(1, userId, null);
-		// int count = this.msgPushService.countMsgPushTagRecord(userId);
-		// ret.put("title", "消息盒子");
 		ret.put("count", count);
 		int limitStart = pageSize * (page - 1);
 
@@ -88,7 +76,8 @@ public class MessagePushController extends BaseController {
 				tagbean.setId(msg.getId());
 				tagbean.setTime(GetDate.timestamptoStrYYYYMMDDHHMM(msg.getSendTime().toString()));
 				int versionInt = 0;
-				String vers[] = version.split("\\."); // 取前三位版本号
+				// 取前三位版本号
+				String vers[] = version.split("\\.");
 				if (vers != null && vers.length > 0) {
 					versionInt = Integer.parseInt(vers[0] + vers[1] + vers[2]);
 				}
@@ -113,8 +102,10 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
-	@RequestMapping("/getMsgListAction")
-	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
+	@PostMapping("/getMsgListAction")
+	public JSONObject getMsgListAction(
+			@RequestHeader(value = "userId") Integer userId,
+			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
@@ -133,7 +124,7 @@ public class MessagePushController extends BaseController {
 		ret.put("statusDesc", "成功");
 		// 获取标签信息
 		// 查询列表数量
-		int count = msgPushService.countMsgHistoryRecord(0, null, null);
+		int count = msgPushService.countMsgHistoryRecord(0, userId, null);
 
 		// 返回列表
 		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();
@@ -141,7 +132,7 @@ public class MessagePushController extends BaseController {
 		pageSize = Integer.valueOf(pageSize);
 		int limitStart = pageSize * (page - 1);
 		try {
-			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, null, null, limitStart, pageSize);
+			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, userId, null, limitStart, pageSize);
 			boolean firstFlag = false;
 			if (page <= 1) {
 				firstFlag = true;
@@ -161,7 +152,7 @@ public class MessagePushController extends BaseController {
 				if (firstFlag) {
 					String webhost = UploadFileUtils.getDoPath(webHost) + "/hyjf-app".substring(1, "/hyjf-app".length())
 							+ "/";
-					webhost = webhost.substring(0, webhost.length() - 1);// http://new.hyjf.com/hyjf-app/
+					webhost = webhost.substring(0, webhost.length() - 1);
 					msgbean.setImgUrl(webhost + msg.getMsgImageUrl());
 					firstFlag = false;
 				}
@@ -190,8 +181,8 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
-	@RequestMapping("/alreadyReadAction")
-	public JSONObject alreadyReadAction(HttpServletRequest request) {
+	@PostMapping("/alreadyReadAction")
+	public JSONObject alreadyReadAction(HttpServletRequest request, @RequestHeader(value = "userId")Integer userId) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");
 		// 版本号
@@ -206,20 +197,6 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
-		// 取得用户iD
-		Integer userId = null;
-		try {
-			userId = SecretUtil.getUserId(sign);
-		} catch (Exception e) {
-			userId = null;
-		}
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		this.msgPushService.updateAllMsgPushMsgHistory(userId, platform);
@@ -227,7 +204,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息及消息推送已读", notes = "消息及消息推送已读")
-	@RequestMapping("/msgReadAction")
+	@GetMapping("/msgReadAction")
 	public JSONObject msgReadAction(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
@@ -246,17 +223,11 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
+
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		//更新记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		if(msgHistory != null){
 			//第一次阅读
 			if(msgHistory.getMsgReadCountAndroid() == 0 && msgHistory.getMsgReadCountIos() == 0){
@@ -274,7 +245,7 @@ public class MessagePushController extends BaseController {
 	}
 
 	@ApiOperation(value = "通知详情页", notes = "通知详情页")
-	@RequestMapping("/msgDetailAction")
+	@GetMapping("/msgDetailAction")
 	public JSONObject msgDetailAction(HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		// 唯一标识
@@ -288,15 +259,8 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
 		// 获取记录信息
-		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(msgIdStr);
 		ret.put("msgHistory", msgHistory);
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");

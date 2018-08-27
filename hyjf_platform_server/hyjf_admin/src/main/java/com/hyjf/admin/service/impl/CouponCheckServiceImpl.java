@@ -10,6 +10,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CouponCheckClient;
 import com.hyjf.admin.service.CouponCheckService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
@@ -18,6 +19,7 @@ import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -33,9 +35,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,8 +101,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     public CouponCheckResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
@@ -135,6 +138,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     checkResponse.getMessage();
                 }
             } else {
+                checkResponse.setRtn(Response.FAIL);
                 checkResponse.setMessage("上传失败，文件后缀必须为CSV");
             }
         }
@@ -183,9 +187,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public boolean batchCheck(Integer path, HttpServletResponse response, String userId) throws Exception {
+    public boolean batchCheck(String path, HttpServletResponse response, String userId) throws Exception {
         try {
-            String[] split = String.valueOf(path).split(",");
+            String[] split = path.split(",");
             String filePath = split[1];
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("couponCode", "couponCode");
@@ -363,6 +367,16 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         return result;
     }
 
+    @Override
+    public List<ParamNameVO> getParamNameList(String nameClass) {
+        return amConfigClient.getParamNameList(nameClass);
+    }
+
+    @Override
+    public CouponCheckVO getCouponCheckById(int id) {
+        return amConfigClient.selectCoupon(id);
+    }
+
 
     /**
      * 根据用户名获取用户
@@ -415,29 +429,5 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         int remain = response.getCount();
         return remain > 0 ? true : false;
     }
-
-
-    /**
-     * 批量上传发券接口
-     */
-//    public static JSONObject getBatchCoupons(String userId,Map<String,String> paramsMap) {
-//        String timestamp = String.valueOf(GetDate.getNowTime10());
-//        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_COUPON_KEY + userId + timestamp + SOA_COUPON_KEY));
-//        Map<String, String> params = new HashMap<String, String>();
-//
-//        // 用户id
-//        params.put("userId", userId+"");
-//        // 时间戳
-//        params.put("timestamp", timestamp);
-//        // 签名
-//        params.put("sign", chkValue);
-//        // 数据
-//        params.put("usercoupons", paramsMap.get("usercoupons"));
-//        // 请求路径
-//        String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_API_WEB_URL) + CommonSoaUtils.COUPON_BATCH_SEND_USER;
-//        String result = HttpClientUtils.post(requestUrl, params);
-//        JSONObject status = JSONObject.parseObject(result);
-//        return status;
-//    }
 
 }

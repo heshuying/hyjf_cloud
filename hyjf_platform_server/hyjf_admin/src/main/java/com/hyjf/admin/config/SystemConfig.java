@@ -45,7 +45,7 @@ public class SystemConfig {
     /**
      * 银行代码
      */
-//    @Value("${hyjf.bank.bankcode}")
+   @Value("${hyjf.bank.bankcode}")
     private String BANK_BANKCODE;
 
     /**
@@ -54,6 +54,7 @@ public class SystemConfig {
     @Value("${hyjf.bank.instcode}")
     private String BANK_INSTCODE;
 
+    @Value("${admin.front.host}")
     private String adminFrontHost;
 
     public String getAdminFrontHost() {
@@ -92,6 +93,18 @@ public class SystemConfig {
 
     @Value("${rtbzsc.contract.ftl.name}")
     private String rtbzscContractFtlName;
+
+    @Value("${new.hjh.invest.contract.ftl.name}")
+    private String newHjhInvestContractFtlName;
+
+    @Value("${credit.contract.ftl.name}")
+    private String creditContractFtlName;
+
+    @Value("${htj.tender.contract.ftl.name}")
+    private String htjTenderContractFtlName;
+
+    @Value("${tender.newcontract.ftl.name}")
+    private String tenderNewContractFtlName;
 
     @Value("${hyjf.contract.font}")
     private String contractFont;
@@ -250,6 +263,38 @@ public class SystemConfig {
 
     public void setRtbzscContractFtlName(String rtbzscContractFtlName) {
         this.rtbzscContractFtlName = rtbzscContractFtlName;
+    }
+
+    public String getNewHjhInvestContractFtlName() {
+        return newHjhInvestContractFtlName;
+    }
+
+    public void setNewHjhInvestContractFtlName(String newHjhInvestContractFtlName) {
+        this.newHjhInvestContractFtlName = newHjhInvestContractFtlName;
+    }
+
+    public String getCreditContractFtlName() {
+        return creditContractFtlName;
+    }
+
+    public void setCreditContractFtlName(String creditContractFtlName) {
+        this.creditContractFtlName = creditContractFtlName;
+    }
+
+    public String getHtjTenderContractFtlName() {
+        return htjTenderContractFtlName;
+    }
+
+    public void setHtjTenderContractFtlName(String htjTenderContractFtlName) {
+        this.htjTenderContractFtlName = htjTenderContractFtlName;
+    }
+
+    public String getTenderNewContractFtlName() {
+        return tenderNewContractFtlName;
+    }
+
+    public void setTenderNewContractFtlName(String tenderNewContractFtlName) {
+        this.tenderNewContractFtlName = tenderNewContractFtlName;
     }
 
     public String getContractFont() {

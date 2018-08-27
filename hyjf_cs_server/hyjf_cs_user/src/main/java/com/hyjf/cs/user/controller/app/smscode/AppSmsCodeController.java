@@ -2,7 +2,6 @@ package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
@@ -33,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",tags = "app端-验证码")
+@Api(tags = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -57,7 +56,7 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "app验证验证码",notes = "验证验证码")
+    @ApiOperation(value = "验证验证码",notes = "验证验证码")
     @PostMapping(value = "/validateVerificationCodeAction")
     public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -154,12 +153,12 @@ public class AppSmsCodeController extends BaseUserController {
      * 发送验证码
      *
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ResponseBody
     @ApiOperation(value = "发送短信",notes = "发送短信")
-    @RequestMapping(value = "/sendVerificationCodeAction")
+    @PostMapping(value = "/sendVerificationCodeAction")
     public JSONObject sendVerificationCodeAction(@RequestHeader(value = "userId", required = false) Integer userId,
                                                  @RequestHeader(value = "key") String key,
                                                  @RequestHeader(value = "version") String version,

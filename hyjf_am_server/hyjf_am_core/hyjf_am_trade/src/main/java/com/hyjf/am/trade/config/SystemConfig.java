@@ -52,6 +52,22 @@ public class SystemConfig {
     @Value("${hyjf.mail.loadrepay}")
     private String[] loadRepayMailAddrs;
 
+    /**
+     * 测试环境发送邮件列表
+     */
+    @Value("${hyjf.alerm.email.test}")
+    private String hyjfAlertEmailTest;
+
+    /**
+     * 正式环境发送邮件列表
+     */
+    @Value("${hyjf.alerm.email}")
+    private String hyjfAlertEmail;
+
+    @Value("${hyjf.3des.key}")
+    private String desKey;
+
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -171,6 +187,28 @@ public class SystemConfig {
 	public void setLoadRepayMailAddrs(String[] loadRepayMailAddrs) {
 		this.loadRepayMailAddrs = loadRepayMailAddrs;
 	}
-	
 
+    public String getHyjfAlertEmailTest() {
+        return hyjfAlertEmailTest;
+    }
+
+    public void setHyjfAlertEmailTest(String hyjfAlertEmailTest) {
+        this.hyjfAlertEmailTest = hyjfAlertEmailTest;
+    }
+
+    public String getHyjfAlertEmail() {
+        return hyjfAlertEmail;
+    }
+
+    public void setHyjfAlertEmail(String hyjfAlertEmail) {
+        this.hyjfAlertEmail = hyjfAlertEmail;
+    }
+
+    public String getDesKey() {
+        return desKey;
+    }
+
+    public void setDesKey(String desKey) {
+        this.desKey = desKey;
+    }
 }

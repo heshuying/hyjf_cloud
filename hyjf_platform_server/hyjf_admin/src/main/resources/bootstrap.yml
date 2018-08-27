@@ -10,15 +10,18 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
-  sleuth:
-    sampler:
-      percentage: 1.0
-#    kafka:
-#      bootstrap-servers: 123.56.216.212:9092
 server:
   port: 9093
-  session:
-     timeout: 36000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: admin.log
 file:
@@ -29,3 +32,6 @@ file:
    upload:
       temp:
          path:/data/upfiles/filetemp/image
+#swagger启用开关
+swagger:
+ enable: true

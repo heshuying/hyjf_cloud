@@ -1,5 +1,7 @@
 package com.hyjf.cs.message.mongo.ic;
 
+import com.hyjf.am.resquest.message.MessagePushMsgRequest;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -74,4 +76,5 @@ public abstract class BaseMongoDao<T> {
 			this.mongoTemplate.remove(list.get(i));
 		}
 	}
+
 }

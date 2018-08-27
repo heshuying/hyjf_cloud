@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(value = "配置中心操作日志配置",tags ="配置中心操作日志配置")
+@Api(tags ="配置中心-操作日志配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {
@@ -110,7 +110,7 @@ public class OperationLogController  extends BaseController {
      * @return
      */
     @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
-    @RequestMapping("/exportAction")
+    @PostMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
         AdminOperationLogRequest form= new AdminOperationLogRequest();

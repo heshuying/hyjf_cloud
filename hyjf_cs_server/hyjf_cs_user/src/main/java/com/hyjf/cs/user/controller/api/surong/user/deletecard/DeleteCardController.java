@@ -19,9 +19,11 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -49,14 +51,14 @@ public class DeleteCardController extends BaseUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/deletecard")
+    @ApiOperation(value = "用户删除银行卡")
+    @PostMapping(value = "/deletecard")
     public ModelAndView deleteCard(HttpServletRequest request, HttpServletResponse response) {
         logger.info("解绑卡接口start");
         //---传入参数---
         String sign = request.getParameter("sign");
         String mobile = request.getParameter("mobile"); // 用户ID
         String cardNo = request.getParameter("cardNo");
-        String from = request.getParameter("from");  //来自于哪个客户端
         ModelAndView modelAndView = new ModelAndView();
         // 唯一标识
         if(StringUtils.isEmpty(sign)){

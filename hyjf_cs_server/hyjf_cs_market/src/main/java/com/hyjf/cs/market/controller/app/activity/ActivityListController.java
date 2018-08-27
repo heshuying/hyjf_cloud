@@ -23,7 +23,7 @@ import java.util.List;
  * @Date: 2018/7/26 10:01
  * @Description: ActivityListController
  */
-@Api(value = "app活动", tags = "app活动")
+@Api(tags = "app端-app活动")
 @RestController
 @RequestMapping("/hyjf-app/activity")
 public class ActivityListController extends BaseMarketController {

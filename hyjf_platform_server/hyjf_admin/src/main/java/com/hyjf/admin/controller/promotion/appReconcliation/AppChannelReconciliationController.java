@@ -3,32 +3,30 @@ package com.hyjf.admin.controller.promotion.appReconcliation;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
-import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Auther: walter.limeng
  * @Date: 2018/7/24 16:38
  * @Description: AppChannelReconciliationController
  */
-@Api(value = "app渠道对账",tags ="app渠道对账")
+@Api(tags ="app渠道对账")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/app/channelreconciliation")
 public class AppChannelReconciliationController extends BaseController {
 
+    @Autowired
     private AppChannelReconciliationService appChannelReconciliationService;
 
     @ApiOperation(value = "app渠道对账-画面初始化", notes = "app渠道对账-画面初始化")

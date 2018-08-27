@@ -1,10 +1,16 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +58,13 @@ public class BorrowCommonController extends BaseController {
 	@Autowired
 	private InstConfigService instConfigService;
 
+	@Autowired
+	private AdminHjhLabelService adminHjhLabelService;
+
 	/**
      * 迁移到详细画面
      *
-     * @param request
-     * @param form
+     * @param borrowCommonRequest
      * @return
      */
 	@ApiOperation(value = "查询信息")
@@ -157,8 +165,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 添加信息
 	 *
-	 * @param request
-	 * @param form
+	 * @param borrowCommonRequest
 	 * @return
 	 * @throws Exception
 	 */
@@ -234,6 +241,46 @@ public class BorrowCommonController extends BaseController {
 //			return modelAndView;
 		//}
 
+		/*--------upd by liushouyi HJH3 Start---------------*/
+		// 新建标的使用引擎的时候验证是否有匹配的到的标签
+		if (isExistsRecord == false && StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+			Borrow borrow = new Borrow();
+			BorrowInfo borrowInfo = new BorrowInfo();
+
+			borrow.setBorrowStyle(form.getBorrowStyle());
+			// 借款期限长度不能超过3位，且必须为数字
+			borrow.setBorrowPeriod(Integer.valueOf(form.getBorrowPeriod()));
+			// 不大于30的最多带两位小数点的数字
+			borrow.setBorrowApr(new BigDecimal(form.getBorrowApr()));
+			// JSP输入校验：只能是100倍数的数字
+			borrow.setAccount(new BigDecimal(form.getAccount()));
+			// 录标页面没有该字段输入
+			borrowInfo.setAssetType(Integer.valueOf(form.getProjectType()));
+			// 资产来源
+			borrowInfo.setInstCode(form.getInstCode());
+			// 项目类型添加时borrowCd只能填写100以内的数字
+			borrow.setProjectType(Integer.valueOf(form.getProjectType()));
+			// 进计划的散标点击提交保存时验证该标的是否有相应的标签
+			// 获取标签id
+			HjhLabel label = adminHjhLabelService.getBestLabel(borrow,borrowInfo, null);
+			if(label == null || label.getId() == null){
+				// 返回错误信息
+				bcr.setRtn(Response.FAIL);
+				bcr.setMessage("该标的信息未能匹配到相应的标签，无法使用引擎进计划！");
+				return bcr;
+			}
+		}
+		// 初审的时候未打上标签的不允许再进计划
+		if ("BORROW_FIRST".equals(form.getMoveFlag()) && StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+			Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
+			if (null != borrow.getLabelId() && borrow.getLabelId().intValue() == 0) {
+				// 返回错误信息
+				bcr.setRtn(Response.FAIL);
+				bcr.setMessage("该标的录标时未获取到标签，初审发标时不可再使用引擎进计划！");
+				return bcr;
+			}
+		}
+
 		if (isExistsRecord) {
 			List<BorrowCommonNameAccountVO> borrowCommonNameAccountList = new ArrayList<BorrowCommonNameAccountVO>();
 			BorrowCommonNameAccountVO borrowCommonNameAccount = new BorrowCommonNameAccountVO();
@@ -248,6 +295,8 @@ public class BorrowCommonController extends BaseController {
 
 		} else {
 			this.borrowCommonService.insertRecord(form,borrowCommonRequest.getAdminUsername(),borrowCommonRequest.getAdminId());
+			// 插入borrow的标的判断是否自动备案
+            this.borrowCommonService.isAutoRecord(form.getBorrowPreNid());
 		}
 		// 列表迁移
         BorrowCommonVO vo=new BorrowCommonVO();
@@ -333,7 +382,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 用户是否存在
 	 *
-	 * @param request
+	 * @param userId
 	 * @return
 	 */
 	@ApiOperation(value = "检查用户Id")
@@ -406,7 +455,6 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取最新的借款预编码
 	 *
-	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = " 获取最新的借款预编码")
@@ -419,7 +467,6 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取现金贷的借款预编号
 	 *
-	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = " 获取现金贷的借款预编号")
@@ -432,7 +479,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 借款预编码是否存在
 	 *
-	 * @param request
+	 * @param borrowPreNid
 	 * @return
 	 */
 	@ApiOperation(value = " 借款预编码是否存在")
@@ -448,13 +495,13 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 获取融资服务费率 & 账户管理费率
 	 *
-	 * @param request
+	 * @param borrowCommonRequest
 	 * @return
 	 */
 	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
 	@RequestMapping("/getBorrowServiceScale")
-	public String getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
-		String scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest.getProjectType(),borrowCommonRequest.getChargeTimeType(),borrowCommonRequest.getInstCode(),borrowCommonRequest.getChargeTime());
+	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
+		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
 		return scale;
 	}
 
@@ -602,8 +649,6 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 根据资产编号查询该资产下面的产品类型
 	 *
-	 * @param request
-	 * @param attr
 	 * @param instCode
 	 * @return
 	 */
@@ -618,7 +663,7 @@ public class BorrowCommonController extends BaseController {
 	/**
 	 * 受托用户是否存在
 	 *
-	 * @param request
+	 * @param userName
 	 * @return
 	 */
 	@ApiOperation(value = " 受托用户是否存在")

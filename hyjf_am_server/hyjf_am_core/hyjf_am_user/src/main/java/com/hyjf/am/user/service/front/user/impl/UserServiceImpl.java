@@ -2,7 +2,9 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -19,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
+	@Autowired
+	QianleUserCustomizeMapper qianleUserCustomizeMapper;
 
 	/**
 	 * 注册
@@ -56,6 +61,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		String platform = userRequest.getPlatform();
 		String password = userRequest.getPassword();
 		String utmId = userRequest.getUtmId();
+		Integer instType = userRequest.getInstType();
 
 		Integer attribute = null;
 		// 获取推荐人表
@@ -79,7 +85,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUserInfo(userId, loginIp, attribute);
+		this.insertUserInfo(userId, loginIp, attribute,instType);
 
 		// 3. 写入用户账户表 迁移到组合层发送mq消息 避免连接mq超时引起长事务
 		// this.insertAccount(userId);
@@ -354,17 +360,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @param loginIp
 	 * @param attribute
 	 */
-	private void insertUserInfo(int userId, String loginIp, Integer attribute) {
+	private void insertUserInfo(int userId, String loginIp, Integer attribute,Integer instType) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setAttribute(0);
 		// 默认为无主单
 		// 根据ip获取注册地址
 		if (StringUtils.isNotEmpty(loginIp)) {
-			getAddress(loginIp, userInfo);
+			//getAddress(loginIp, userInfo);
 		}
 		userInfo.setUserId(userId);
 		// 默认投资人角色
-		userInfo.setRoleId(1);
+		if (instType!=null&&instType == 0) {
+			//用户角色1投资人2借款人3垫付机构
+			userInfo.setRoleId(2);
+			//借款人类型 1：内部机构 2：外部机构
+			userInfo.setBorrowerType(2);
+		} else {
+			userInfo.setRoleId(1);
+		}
 		userInfo.setMobileIsapprove(1);
 		userInfo.setTruenameIsapprove(0);
 		userInfo.setEmailIsapprove(0);
@@ -846,13 +859,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
 		deleteUserEvalationResultByUserId(userId);
-		String[] answer = userAnswer.split(",");
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
-		for (String string : answer) {
-			if (string.split("_").length == 2) {
-				questionList.add(string.split("_")[0]);
-				answerList.add(string.split("_")[1]);
+		if (!Strings.isNullOrEmpty(userAnswer)) {
+			String[] answer = userAnswer.split(",");
+			for (String string : answer) {
+				if (string.split("_").length == 2) {
+					questionList.add(string.split("_")[0]);
+					answerList.add(string.split("_")[1]);
+				}
 			}
 		}
 		AnswerRequest answerRequest = new AnswerRequest();
@@ -1156,7 +1171,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		int userId = user.getUserId();
 
 		// 2. 写入用户详情表
-		this.insertUserInfo(userId, loginIp, 2);
+		this.insertUserInfo(userId, loginIp, 2,1);
 
 		// 4. 保存用户注册日志
 		this.insertRegLog(userId, loginIp);
@@ -1443,7 +1458,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		List<BankOpenAccount> list = this.bankOpenAccountMapper.selectByExample(example);
 		if(list.size() > 0){
 			return list.get(0);
-		}else return null;
+		}else{return null;}
 	}
 
 
@@ -1464,5 +1479,55 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+	@Override
+	public Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus) {
+		User user = usersMapper.selectByPrimaryKey(userId);
+		if (user != null) {
+			if("0".equals(emailOpenStatus)){
+				user.setIsSmtp(1);
+			}else{
+				user.setIsSmtp(0);
+			}
+			if("0".equals(smsOpenStatus)){
+				user.setWithdrawSms(1);
+				user.setInvestSms(1);
+				user.setRechargeSms(1);
+				user.setRecieveSms(1);
+			}else{
+				user.setWithdrawSms(0);
+				user.setInvestSms(0);
+				user.setRechargeSms(0);
+				user.setRecieveSms(0);
+			}
+		}
+		return usersMapper.updateByPrimaryKeySelective(user);
+	}
+
+	/**
+	 * 查询千乐渠道的用户
+	 * @return
+	 */
+    @Override
+    public List<Integer> getQianleUser() {
+		return qianleUserCustomizeMapper.queryQianleUser();
+    }
+
+	/**
+	 * 更新ht_hjh_user_auth_log
+	 * @param hjhUserAuthLog
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog){
+		return hjhUserAuthLogMapper.updateByPrimaryKeySelective(hjhUserAuthLog);
 	}
 }

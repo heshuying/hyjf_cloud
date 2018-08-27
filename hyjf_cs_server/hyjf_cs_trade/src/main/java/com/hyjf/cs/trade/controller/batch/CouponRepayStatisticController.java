@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author yaoy
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 加息券还款统计定时任务
  */
 @RestController
-@RequestMapping("/batch/repayStatistic")
+@ApiIgnore
+@RequestMapping("/cs-trade/batch/repayStatistic")
 public class CouponRepayStatisticController {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayStatisticController.class);
 

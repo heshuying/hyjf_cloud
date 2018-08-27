@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
@@ -17,9 +19,10 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -296,6 +299,31 @@ public class BorrowTenderController extends BaseController {
     @PostMapping("/countMoneyByBorrowId")
     public String countMoneyByBorrowId(@RequestBody Map<String, Object> params){
         return borrowTenderService.countMoneyByBorrowId(params);
+    }
+
+    /**
+     * 查询固定时间间隔的用户投资列表
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    @GetMapping("/selectBorrowTenderListByDate/{repairStartDate}/{repairStartDate}")
+    public BorrowTenderResponse selectBorrowTenderListByDate(@PathVariable String repairStartDate, @PathVariable String repairEndDate){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        response.setRtn(Response.FAIL);
+        List<BorrowTender> borrowTenderList = borrowTenderService.selectBorrowTenderList(repairStartDate,repairEndDate);
+        if(CollectionUtils.isNotEmpty(borrowTenderList)){
+            List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(borrowTenderVOList);
+        }
+        return response;
+    }
+    @PostMapping(value = "/updateBorrowTender")
+    public Boolean updateBorrowTender(@RequestBody @Valid BorrowTenderUpdRequest request){
+        BorrowTender borrowTender = new BorrowTender();
+        BeanUtils.copyProperties(request,borrowTender);
+        return borrowTenderService.updateBorrowTender(borrowTender);
     }
 
 }

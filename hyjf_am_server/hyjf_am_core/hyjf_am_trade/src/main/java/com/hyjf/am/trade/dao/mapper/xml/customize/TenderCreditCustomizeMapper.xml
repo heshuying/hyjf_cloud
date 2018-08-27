@@ -53,18 +53,18 @@
 			AND hb.project_type != 8
 			AND hb.project_type != 13
 			AND hb.plan_nid IS NULL
-			AND hb.inst_code = 10000000
+			AND bi.inst_code = 10000000
 			AND hb.repay_last_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 30)
 			AND hb.borrow_style != 'month'
 			AND hb.borrow_style != 'principal'
-			AND hbr.advance_status != 3
+			<!-- AND bi.advance_status != 3 -->
 			AND hbr.delay_days = 0
 			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
 			AND hbr.recover_capital <![CDATA[>=]]> 1000
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
 			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30) 
 			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
-			AND hbr.addtime <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
+			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
 			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
 			AND hbr.user_id = #{userId}
 			<!-- 分期标提前还款该月不允许债转 -->
@@ -172,6 +172,7 @@
 			ht_borrow_recover hbr
 		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
 		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	
@@ -614,8 +615,138 @@
 			hhh.assign_nid = #{assignNid}
 			
 	</select>
+	<!-- 已承接或查看购买债转总数 -->
+	<select id="countCreditTenderAssigned" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+		COUNT(hct.assign_id) AS total
+		FROM
+		ht_credit_tender hct
+		LEFT JOIN ht_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hct.user_id = #{userId}
+			</if>
+			<if test="creditUserId != null and creditUserId != ''">
+				AND hbc.credit_user_id = #{creditUserId}
+			</if>
+			<if test="creditNid != null and creditNid != ''">
+				AND hbc.credit_nid = #{creditNid}
+			</if>
+			<if test="creditStatus != null and creditStatus != ''">
+				AND hbc.credit_status = #{creditStatus}
+			</if>
+		</where>
+	</select>
 
+	<!-- 已承接或查看购买债转详情查询 -->
+	<select id="selectCreditTenderAssigned" resultType="com.hyjf.am.trade.dao.model.customize.TenderCreditAssignedCustomize" parameterType="java.util.Map">
+		SELECT
+			hct.assign_id AS assignId,
+			hct.user_id AS userId,
+			hct.credit_user_id AS creditUserId,
+			hct.`status` AS `status`,
+			hct.bid_nid AS bidNid,
+			hct.credit_nid AS creditNid,
+			hct.credit_tender_nid AS creditTenderNid,
+			hct.assign_nid AS assignNid,
+			hct.assign_capital AS assignCapital,
+			hct.assign_account AS assignAccount,
+			hct.assign_interest AS assignInterest,
+			hct.assign_interest_advance AS assignInterestAdvance,
+			hct.assign_price AS assignPrice,
+			hct.assign_pay AS assignPay,
+			hct.assign_repay_account AS assignRepayAccount,
+			hct.assign_repay_capital AS assignRepayCapital,
+			hct.assign_repay_interest AS assignRepayInterest,
+			CASE
+			WHEN hct.assign_repay_end_time != 0 THEN
+			FROM_UNIXTIME( hct.assign_repay_end_time, '%Y-%m-%d' )
+			ELSE
+			NULL
+			END AS assignRepayEndTime,
+			CASE
+			WHEN hct.assign_repay_last_time != 0 THEN
+			FROM_UNIXTIME( hct.assign_repay_last_time, '%Y-%m-%d' )
+			ELSE
+			NULL
+			END AS assignRepayLastTime,
+			CASE
+			WHEN hct.assign_repay_next_time != 0 THEN
+			FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d' )
+			ELSE
+			NULL
+			END AS assignRepayNextTime,
+			CASE
+			WHEN hct.assign_repay_yes_time != 0 THEN
+			FROM_UNIXTIME( hct.assign_repay_yes_time, '%Y-%m-%d' )
+			ELSE
+			NULL
+			END AS assignRepayYesTime,
+			hct.assign_repay_period AS assignRepayPeriod,
+			DATE_FORMAT(hct.assign_create_date,'%Y-%m-%d') AS assignCreateDate,
+			hct.credit_fee AS creditFee,
+			DATE_FORMAT(hct.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,
+			DATE_FORMAT(hct.create_time,'%Y-%m-%d') AS createTimeDay,
+			DATE_FORMAT(hct.create_time,'%H:%i:%s') AS createTimeHour,
+			hbc.credit_term AS creditTerm,
+			hbc.bid_apr AS bidApr,
+			hbc.credit_discount AS creditDiscount,
+			DATE_FORMAT( hbt.create_time, '%Y-%m-%d' ) AS tenderTime,
+			hui.username AS creditAssignUserTrueName
+		FROM
+			ht_credit_tender hct
+			LEFT JOIN ht_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
+			LEFT JOIN ht_borrow_tender hbt ON hbc.tender_nid=hbt.nid AND hbc.bid_nid=hbt.borrow_nid
+			LEFT JOIN ht_r_user hui ON hui.user_id = hct.user_id
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hct.user_id = #{userId}
+			</if>
+			<if test="creditUserId != null and creditUserId != ''">
+				AND hbc.credit_user_id = #{creditUserId}
+			</if>
+			<if test="creditNid != null and creditNid != ''">
+				AND hbc.credit_nid = #{creditNid}
+			</if>
+			<if test="creditStatus != null and creditStatus != ''">
+				AND hbc.credit_status = #{creditStatus}
+			</if>
+		</where>
+		ORDER BY
+		hct.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 
-
+	<!-- 债转承接数据统计 -->
+	<select id="selectCreditTenderAssignedStatistic" resultType="com.hyjf.am.trade.dao.model.customize.TenderCreditAssignedStatisticCustomize" parameterType="java.util.Map">
+		SELECT
+			IFNULL(SUM(IFNULL(hct.assign_capital,0)),0) AS assignCapital,
+			IFNULL(SUM(IFNULL(hct.assign_interest_advance,0)),0) AS assignInterestAdvance,
+			IFNULL(SUM(IFNULL(hct.assign_pay,0) - IFNULL(hct.credit_fee,0)),0) AS moneyGet,
+			IFNULL(SUM(IFNULL(hct.credit_fee,0)),0) AS creditFee,
+			hbc.credit_capital AS creditCapital,
+			hbc.bid_nid AS bidNid,
+			DATE_FORMAT(hbc.create_time,'%Y-%m-%d %H:%i') AS createTime
+		FROM
+			ht_credit_tender hct
+			LEFT JOIN ht_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
+			LEFT JOIN ht_borrow_tender hbt ON hbc.tender_nid=hbt.nid AND hbc.bid_nid=hbt.borrow_nid
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hct.user_id = #{userId}
+			</if>
+			<if test="creditUserId != null and creditUserId != ''">
+				AND hbc.credit_user_id = #{creditUserId}
+			</if>
+			<if test="creditNid != null and creditNid != ''">
+				AND hbc.credit_nid = #{creditNid}
+			</if>
+			<if test="creditStatus != null and creditStatus != ''">
+				AND hbc.credit_status = #{creditStatus}
+			</if>
+		</where>
+	</select>
 	
 </mapper>

@@ -3,10 +3,13 @@
  */
 package com.hyjf.admin.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
+import com.hyjf.admin.client.PlatformCountClient;
 import com.hyjf.admin.service.PlatformCountService;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
-import org.springframework.stereotype.Service;
 
 /**
  * @author fuqiang
@@ -14,10 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PlatformCountServiceImpl implements PlatformCountService {
-
+    @Autowired
+    private PlatformCountClient platformCountClient;
 
     @Override
     public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {
-        return null;// todo fuqiang
+        return platformCountClient.searchAction(requestBean);
     }
 }

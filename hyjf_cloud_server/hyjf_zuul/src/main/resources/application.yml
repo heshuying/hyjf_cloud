@@ -18,7 +18,7 @@ basic:
 ignore:
   urls:
     app:
-      key: /hyjf-app/server/getBestServerAction,/hyjf-app/appUser/uploadAvatarAction
+      key: /hyjf-app/server/getBestServerAction,/hyjf-app/server/getKeyAction,/hyjf-app/appUser/uploadAvatarAction
 
 hyjf:
   domain:

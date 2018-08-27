@@ -3,9 +3,13 @@ package com.hyjf.cs.message.service.report;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.CalculateInvestInterest;
+import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
+import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 平台数据统计Service
@@ -39,6 +43,20 @@ public interface PlatDataStatisticsService extends BaseService {
      * @return
      */
     Integer selectTotalTradeSum();
-    
+    /**
+     * mogo查询单个OperationReportEntity
+     * @return
+     */
+    OperationReportEntity findOneOperationReportEntity();
+    /**
+     * mogo查询单个OperationMongoGroupEntity
+     * @return
+     */
+    OperationMongoGroupEntity findOneOperationMongoGroupEntity();
+    /**
+     * mogo查询多个OperationReportEntity
+     * @return
+     */
+    List<OperationReportEntity> findOperationReportEntityList();
 
 }

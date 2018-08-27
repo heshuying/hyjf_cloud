@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,16 +12,18 @@ import java.util.Date;
  */
 
 public class LandingPageVo extends BaseVO implements Serializable {
+
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "着落页名称")
     private String pageName;
-
+    @ApiModelProperty(value = "渠道")
     private String channelName;
-
+    @ApiModelProperty(value = "地址")
     private String pageUrl;
-
+    @ApiModelProperty(value = "上传图片-二维码")
     private String codeUrl;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     private Date createTime;

@@ -33,8 +33,9 @@ public class HjhRepayServiceImpl implements HjhRepayService {
 
 
         if (StringUtils.isNotEmpty(repayRequest.getAccedeOrderIdSrch())){
-            BigDecimal accedeOrderId = new BigDecimal(repayRequest.getAccedeOrderIdSrch());
-            criteria.andAccedeAccountEqualTo(accedeOrderId);
+//            BigDecimal accedeOrderId = new BigDecimal(repayRequest.getAccedeOrderIdSrch());
+//            criteria.andAccedeAccountEqualTo(accedeOrderId);
+            criteria.andAccedeOrderIdEqualTo(repayRequest.getAccedeOrderIdSrch());
         }
 
         //清算时间
@@ -75,13 +76,14 @@ public class HjhRepayServiceImpl implements HjhRepayService {
     }
 
     @Override
-    public List<HjhRepay> selectByExample(HjhRepayRequest request) {
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
         HjhRepayExample example = new HjhRepayExample();
         HjhRepayExample.Criteria criteria = example.createCriteria();
 
         if (StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
-            BigDecimal accedeOrderId = new BigDecimal(request.getAccedeOrderIdSrch());
-            criteria.andAccedeAccountEqualTo(accedeOrderId);
+//            BigDecimal accedeOrderId = new BigDecimal(request.getAccedeOrderIdSrch());
+//            criteria.andAccedeAccountEqualTo(accedeOrderId);
+            criteria.andAccedeOrderIdEqualTo(request.getAccedeOrderIdSrch());
         }
 
         //清算时间
@@ -119,7 +121,8 @@ public class HjhRepayServiceImpl implements HjhRepayService {
         }
 
         List<HjhRepay> repayList = hjhRepayMapper.selectByExample(example);
-        return repayList;
+        List<HjhRepayVO> repayVOList = CommonUtils.convertBeanList(repayList, HjhRepayVO.class);
+        return repayVOList;
     }
 
     @Override
@@ -134,5 +137,22 @@ public class HjhRepayServiceImpl implements HjhRepayService {
         List<HjhRepay> repayMentList = hjhRepayMapper.selectByExample(example);
         List<HjhRepayVO> repayMentVoList = CommonUtils.convertBeanList(repayMentList, HjhRepayVO.class);
         return repayMentVoList;
+    }
+
+    /**
+     * 订单退出超过两天邮件预警list
+     * @author zhangyk
+     * @date 2018/8/15 15:48
+     */
+    @Override
+    public List<HjhRepay> getPlanExitCheck() {
+        HjhRepayExample hjhRepayExample = new HjhRepayExample();
+        //获取当前的时间减去两天的时间就是前天的时间
+        int nowTime1 = GetDate.getNowTime10()-172800;
+        HjhRepayExample.Criteria createCriteria = hjhRepayExample.createCriteria();
+        createCriteria.andOrderStatusEqualTo(5);
+        createCriteria.andRepayShouldTimeLessThanOrEqualTo(nowTime1);
+        List<HjhRepay> repayList = hjhRepayMapper.selectByExample(hjhRepayExample);
+        return repayList;
     }
 }

@@ -11,6 +11,7 @@ import com.hyjf.callcenter.beans.CouponBackMoneyBean;
 import com.hyjf.callcenter.beans.CouponBean;
 import com.hyjf.callcenter.beans.CouponTenderBean;
 import com.hyjf.callcenter.beans.ResultListBean;
+import com.hyjf.callcenter.client.AmMarketClient;
 import com.hyjf.callcenter.client.AmTradeClient;
 import com.hyjf.callcenter.client.AmUserClient;
 import com.hyjf.callcenter.result.BaseResultBean;
@@ -36,6 +37,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Autowired
     AmUserClient amUserClient;
+
+    @Autowired
+    AmMarketClient amMarketClient;
     /**
      * 查询优惠券
      * @param centerBaseRequest
@@ -58,8 +62,10 @@ public class CouponServiceImpl implements CouponService {
                 //手机号
                 returnBean.setMobile(centerBaseRequest.getMobile());
 
-                //获取优惠券内容
-                if("3".equals(recordBean.getCouponSource())){
+                //获取优惠券内容(2：活动发放优惠券  3：vip礼包)
+                if(recordBean.getCouponSourceNum().equals(2)){
+                    returnBean.setCouponContent(amMarketClient.getCouponContent(recordBean.getActivityId()));
+                } else if(recordBean.getCouponSourceNum().equals(3)){
                     returnBean.setCouponContent(amUserClient.getCouponContent(recordBean.getCouponCode()));
                 }
                 result.getDataList().add(returnBean);

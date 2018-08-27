@@ -5,6 +5,7 @@ package com.hyjf.cs.message.service.message;
 
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.cs.message.bean.mc.SmsLog;
+import com.hyjf.cs.message.bean.mc.SmsOntime;
 
 import java.util.List;
 
@@ -19,4 +20,24 @@ public interface SmsLogService {
      * @return
      */
     List<SmsLog> findSmsLog(SmsLogRequest request);
+
+    /**
+     * 查询定时发送短信列表
+     * @param request
+     * @return
+     */
+    List<SmsOntime> queryTime(SmsLogRequest request);
+
+    /**
+     *查询条件查询短信记录列表
+     * @param request
+     * @return
+     */
+    Integer queryLogCount(SmsLogRequest request);
+
+    /**
+     * 查询所有短信发送记录
+     * @return
+     */
+    List<SmsLog> findSmsLogList();
 }

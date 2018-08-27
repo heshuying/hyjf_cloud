@@ -34,14 +34,12 @@ public class SrchRechargeInfoServer extends CallcenterBaseController {
 	private SrchRechargeInfoService srchRechargeInfoService;
 	/**
 	 * 呼叫中心接口调用入口
-	 * @param request
-	 * @param response
 	 * @param bean
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/srchRechargeInfo", method = RequestMethod.POST)
-	public ResultListBean getContentOfRechargeInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserBean bean) {
+	public ResultListBean getContentOfRechargeInfo(@RequestBody UserBean bean) {
 		//初始化结果bean
 		ResultListBean result = new ResultListBean();
 		//初始化查询bean

@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public interface MsgPushService {
 	 * @param msgId
 	 * @return
 	 */
-	MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId);
+	MessagePushMsgHistory getMsgPushMsgHistoryById(String msgId);
 
 	/**
 	 * 更新历史记录信息
@@ -63,4 +64,18 @@ public interface MsgPushService {
 	 * @param platform
 	 */
 	void updateAllMsgPushMsgHistory(Integer userId, String platform);
+
+	/**
+	 * 查询当天内的发送消息
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+    List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime);
+
+	/**
+	 * 插入统计数据
+	 * @param messagePush
+	 */
+	void insertMessagePush(MessagePush messagePush);
 }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.hyjf.batch.job.BaseJob;
 
 /**
+ * 消息推送定时任务
  * @author fuqiang
  * @version MsgPushJob, v0.1 2018/6/21 14:30
  */

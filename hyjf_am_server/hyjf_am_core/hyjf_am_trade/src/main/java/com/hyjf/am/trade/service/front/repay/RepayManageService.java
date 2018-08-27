@@ -55,4 +55,19 @@ public interface RepayManageService extends BaseService {
     boolean updateBorrowApicron(BorrowApicron apicron, int status);
 
     ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate);
+
+    boolean checkRepayInfo(Integer userId, String borrowNid);
+
+    void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
+                              BigDecimal repayTotal, String userName);
+
+    void deleteFreezeTempLogs(String orderId);
+
+    Borrow searchRepayProject(int userId, String userName, String roleId, String borrowNid);
+
+    BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException;
+
+    BigDecimal searchRepayByTermTotal(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
+
+    RepayBean calculateRepayByTerm(int userId, Borrow borrow) throws Exception;
 }

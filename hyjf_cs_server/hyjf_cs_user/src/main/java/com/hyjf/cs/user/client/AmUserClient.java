@@ -489,13 +489,6 @@ public interface AmUserClient {
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
-	 * 获取用户表总记录数
-	 *
-	 * @return
-	 */
-	Integer countAllUser();
-
-	/**
 	 * 插入各种信息
 	 * @param userActionUtmRequest
 	 * @return
@@ -509,4 +502,26 @@ public interface AmUserClient {
 	 * @return
 	 */
     UserEvalationResultVO skipEvaluate(Integer userId, int countScore);
+
+	/**
+	 * 插入ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int insertHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest);
+	/**
+	 * 更新ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int updateHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest);
+	/**
+	 * 更新 ht_hjh_user_auth_log 表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest);
 }

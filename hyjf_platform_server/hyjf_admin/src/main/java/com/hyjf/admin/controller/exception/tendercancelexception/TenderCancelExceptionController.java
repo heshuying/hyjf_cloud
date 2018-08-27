@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.exception.tendercancelexception;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.TenderCancelExceptionService;
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
@@ -25,7 +26,7 @@ import java.util.Map;
  * @version: TenderCancelException, v0.1 2018/7/11 9:43
  */
 @RestController
-@RequestMapping("/hyjf-admin/tendercancelexception")
+@RequestMapping("/hyjf-admin/exception/tendercancelexception")
 @Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
 public class TenderCancelExceptionController extends BaseController {
 
@@ -41,15 +42,12 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "查询银行投资撤销异常list", notes = "查询银行投资撤销异常list")
     @PostMapping(value = "/searchlist")
-    public AdminResult searchList(@RequestBody TenderCancelExceptionRequest request){
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<BorrowTenderTmpVO>> searchList(@RequestBody TenderCancelExceptionRequest request){
         // 数据总数
         Integer count = tenderCancelExceptionService.getTenderCancelExceptionCount(request);
-        map.put("count",count);
         // 异常列表list
         List<BorrowTenderTmpVO> borrowTenderTmpVOList = tenderCancelExceptionService.searchTenderCancelExceptionList(request);
-        map.put("borrowTenderTmpVOList",borrowTenderTmpVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(borrowTenderTmpVOList,count));
     }
 
     /**
@@ -83,7 +81,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "投资撤销异常处理", notes = "投资撤销异常处理")
     @PostMapping(value = "/handletendercancelexception")
-    public AdminResult handleTenderCancelException(@RequestHeader(value = "userId")Integer loginUserId,TenderCancelExceptionRequest request){
+    public AdminResult handleTenderCancelException(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody TenderCancelExceptionRequest request){
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(request.getOrderId())) {
             return new AdminResult<>(FAIL,"参数错误，请稍后再试！");

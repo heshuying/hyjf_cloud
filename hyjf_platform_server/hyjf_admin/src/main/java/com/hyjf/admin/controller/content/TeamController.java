@@ -4,10 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.admin.beans.request.TeamRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -25,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentTeamController, v0.1 2018/7/11 16:25
  */
-@Api(value = "公司管理-团队介绍", tags = "公司管理-团队介绍")
+@Api(tags = "公司管理-团队介绍")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentteam")
 public class TeamController extends BaseController {
@@ -33,7 +30,7 @@ public class TeamController extends BaseController {
 	private TeamService teamService;
 
 	@ApiOperation(value = "公司管理-团队介绍条件列表查询", notes = "公司管理-团队介绍条件列表查询")
-	@RequestMapping("/searchaction")
+	@PostMapping("/searchaction")
 	public AdminResult<ListResult<TeamVO>> searchAction(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.searchAction(requestBean);
 		if (response == null) {
@@ -46,7 +43,7 @@ public class TeamController extends BaseController {
 	}
 
 	@ApiOperation(value = "添加公司管理-团队介绍", notes = "添加公司管理-团队介绍")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.insertAction(requestBean);
 		if (response == null) {
@@ -59,7 +56,7 @@ public class TeamController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改公司管理-团队介绍", notes = "修改公司管理-团队介绍")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.updateAction(requestBean);
 		if (response == null) {
@@ -72,7 +69,7 @@ public class TeamController extends BaseController {
 	}
 
 	@ApiOperation(value = "修改公司管理-资质荣誉状态", notes = "修改公司管理-资质荣誉状态")
-	@RequestMapping("/updatestatus")
+	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.updateStatus(requestBean);
 		if (response == null) {
@@ -85,7 +82,7 @@ public class TeamController extends BaseController {
 	}
 
 	@ApiOperation(value = "删除公司管理-团队介绍", notes = "删除公司管理-团队介绍")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		TeamResponse response = teamService.deleteById(id);
 		if (response == null) {

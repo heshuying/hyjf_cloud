@@ -9,6 +9,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "wechat端用户提现接口")
+@Api(tags = "weChat端-用户提现接口")
 @Controller
 @RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {
@@ -44,7 +45,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @Autowired
     private BankWithdrawService bankWithdrawService;
 
-
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 用户银行提现
      * @Description
@@ -56,7 +58,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdraw")
     public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
                                          HttpServletRequest request) {
-        logger.info("wechat端提现接口, userId is :{}", userId);
+        logger.info("weChat端提现接口, userId is :{}", userId);
         String transAmt = request.getParameter("transAmt");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
@@ -68,12 +70,15 @@ public class WechatBankWithdrawController extends BaseTradeController {
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip);
+        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawError";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawSuccess";
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         ModelAndView modelAndView = new ModelAndView();
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            logger.info("wechat端提现失败");
+            logger.info("weChat端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
@@ -92,7 +97,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                       @ModelAttribute BankCallBean bean) {
         logger.info("[wechat用户银行提现同步回调开始]");
-        logger.info("wechat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
+        logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         String isSuccess = request.getParameter("isSuccess");
         String withdrawmoney = request.getParameter("withdrawmoney");
         String wifee = request.getParameter("wifee");
@@ -112,7 +117,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
-        logger.info("wechat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
+        logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID

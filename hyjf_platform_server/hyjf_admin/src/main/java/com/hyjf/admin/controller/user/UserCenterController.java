@@ -3,10 +3,9 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
@@ -16,6 +15,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.SmsCountService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -23,6 +23,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
@@ -40,9 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author nxl
@@ -55,18 +54,19 @@ import java.util.List;
 public class UserCenterController extends BaseController {
 
     public static final String PERMISSIONS = "userslist";
-//    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private SmsCountService smsCountService;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public  AdminResult<UserManagerInitResponseBean>  userManagerInit() {
-        UserManagerInitResponseBean userManagerInitResponseBean =userCenterService.initUserManaget();
+        UserManagerInitResponseBean userManagerInitResponseBean =this.initUserManaget();
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
 
     }
@@ -574,4 +574,78 @@ public class UserCenterController extends BaseController {
         return new AdminResult<Response>(response);
     }
 
+    /**
+     * 获取部门信息
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/getDepartmentList")
+    @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
+    public JSONObject getCrmDepartmentListAction() {
+        JSONObject jsonObject = new JSONObject();
+        // 部门
+        String[] list = new String[] {};
+        //ids 刷新时可用,暂不删除 保留
+        /*if (Validator.isNotNull(deptIds)) {
+            if (deptIds.contains(StringPool.COMMA)) {
+                list = deptIds.split(StringPool.COMMA);
+            } else {
+                list = new String[] { deptIds};
+            }
+        }*/
+        JSONArray ja = smsCountService.getCrmDepartmentList(list);
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
+            return ret;
+        }
+        return jsonObject;
+    }
+
+    public UserManagerInitResponseBean initUserManaget(){
+        UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
+        // 用户角色
+        Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
+        List<DropDownVO> listUserRoles = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userRoles);
+        // 用户属性
+        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
+        List<DropDownVO> listUserPropertys = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userPropertys);
+        // 开户状态
+        Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+        List<DropDownVO> listAccountStatus = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(accountStatus);
+        // 用户状态
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
+        List<DropDownVO> listUserStatus = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userStatus);
+        // 注册平台
+        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        List<DropDownVO> listRegistPlat = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(registPlat);
+        // 用户类型
+        Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
+        List<DropDownVO> listUserTypes = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(userTypes);
+        // 借款人类型
+        Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
+        List<DropDownVO> listBorrowTypes = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(borrowTypes);
+
+        List<HjhInstConfigVO> listHjhInstConfig =  userCenterService.selectInstConfigAll();
+        List<DropDownVO> dropDownVOList = com.hyjf.admin.utils.ConvertUtils.convertListToDropDown(listHjhInstConfig,"instCode","instName");
+        userManagerInitResponseBean.setUserRoles(listUserRoles);
+        userManagerInitResponseBean.setUserPropertys(listUserPropertys);
+        userManagerInitResponseBean.setAccountStatus(listAccountStatus);
+        userManagerInitResponseBean.setUserStatus(listUserStatus);
+        userManagerInitResponseBean.setRegistPlat(listRegistPlat);
+        userManagerInitResponseBean.setUserTypes(listUserTypes);
+        userManagerInitResponseBean.setBorrowTypes(listBorrowTypes);
+        userManagerInitResponseBean.setListHjhInstConfig(dropDownVOList);
+        return userManagerInitResponseBean;
+    }
 }

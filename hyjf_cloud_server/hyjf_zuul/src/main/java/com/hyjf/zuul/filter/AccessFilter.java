@@ -115,6 +115,7 @@ public class AccessFilter extends ZuulFilter {
 		String fullRequestUrl = request.getRequestURL().toString();
 		String requestUri = request.getRequestURI().toString();
 
+		// 访问url是不是需要判断登录
 		boolean secureVisitFlag;
 		Map<String, Object> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
 		if (!CollectionUtils.isEmpty(map)) {
@@ -127,6 +128,8 @@ public class AccessFilter extends ZuulFilter {
 		// 截取访问域名
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
+
+		// 执行不同渠道转发逻辑
 		if (requestUrl.contains(APP_CHANNEL)) {
 
 			// app 共同参数
@@ -138,13 +141,12 @@ public class AccessFilter extends ZuulFilter {
 				if (sign == null) {
 					logger.error("sign is empty");
 					// 不对其进行路由
-					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+					return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponseResult());
 				}
 				this.appNomalRequestProcess(request, ctx, sign);
 
-				if (secureVisitFlag) {
-					this.setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
-				}
+				this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
+
 			} else {
 				// app打开初始化操作
 				this.initServer(request, ctx);
@@ -154,22 +156,23 @@ public class AccessFilter extends ZuulFilter {
 			// app自带hyjf-app 直接返回即可
 			return null;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
-			if (secureVisitFlag) {
-				this.wechatSetUserIdProcess(request, ctx);
-			}
+			this.wechatSetUserIdProcess(request, ctx, secureVisitFlag);
 			// wechat自带hyjf-wechat 直接返回即可
 			return null;
-		} else if (requestUrl.contains(WEB_CHANNEL)) {
-			if (secureVisitFlag) {
-				ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
-			}
+		}
+
+		if (requestUrl.contains(WEB_CHANNEL)) {
+			ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
 		} else {
+			logger.error("error channel...");
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			return null;
 		}
+
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
@@ -186,6 +189,11 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
+		if (signValue == null) {
+			logger.error("sign is invalid");
+			// 不对其进行路由
+			return this.buildErrorRequestContext(ctx, 400, this.buildNoneSignResponseResult());
+		}
 		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
 		ctx.addZuulRequestHeader(SIGN, sign);
 		ctx.addZuulRequestHeader(KEY, signValue.getKey());
@@ -207,6 +215,7 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object initServer(HttpServletRequest request, RequestContext ctx) {
 		ctx.addZuulRequestHeader(VERSION, request.getParameter(VERSION));
+		ctx.addZuulRequestHeader(SIGN, request.getParameter(SIGN));
 		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
 		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
 		ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));
@@ -224,6 +233,7 @@ public class AccessFilter extends ZuulFilter {
 		HttpServletResponse response = ctx.getResponse();
 		response.setHeader(JUMP_COMMEND, getLinkJumpPrefix(version));
 		response.setHeader(VERSION, version);
+
 		return response;
 	}
 
@@ -272,7 +282,38 @@ public class AccessFilter extends ZuulFilter {
 		ctx.setSendZuulResponse(false);
 		ctx.setResponseStatusCode(gatewayCode);
 		ctx.setResponseBody(errorMessage);
-		return null;
+		return ctx;
+	}
+
+	/**
+	 * 重定向登录页面，返回指定错误，前端完成跳转
+	 * 
+	 * @param ctx
+	 * @param
+	 * @param
+	 * @return
+	 */
+	private Object redirectLoginPage(RequestContext ctx, String channel) {
+		ctx.setSendZuulResponse(false);
+		ctx.setResponseStatusCode(200);
+		JSONObject result = new JSONObject();
+
+		if (APP_CHANNEL.equals(channel)) {
+			result.put("status", "708");
+			result.put("statusDesc", "need login");
+		} else {
+			result.put("status", "999");
+			result.put("statusDesc", "need login");
+		}
+		ctx.setResponseBody(result.toJSONString());
+		return ctx;
+	}
+
+	private String buildNoneSignResponseResult() {
+		JSONObject result = new JSONObject();
+		result.put("status", "707");
+		result.put("statusDesc", "sign is invalid!");
+		return result.toJSONString();
 	}
 
 	/**
@@ -293,32 +334,36 @@ public class AccessFilter extends ZuulFilter {
 			token = request.getHeader(TOKEN);
 		}
 
-		if (StringUtils.isBlank(token) && isNecessary) {
+		// 需要安全访问的请求，token空不路由，否则直接返回
+		if (StringUtils.isBlank(token)) {
 			logger.error("token is empty...");
-			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
-			return ctx;
+			return executeResultOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 		}
 
 		// jwt解析token
 		AccessToken accessToken = JwtHelper.parseToken(token);
 		if (accessToken == null) {
-			if (isNecessary) {
-				logger.error("user is not exist...");
-				// 不对其进行路由
-				this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
-				return ctx;
-			} else {
-				return ctx;
-			}
+			logger.error("user is not exist...");
+			return executeResultOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 		} else {
 			Integer userId = accessToken.getUserId();
 			WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 			if (user == null) {
 				// 登陆过期
 				logger.error("login is invalid...");
-				return ctx;
+				return executeResultOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
 			}
+
+			// 页面不活动30分钟过期
+			Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, Integer.class);
+			if (value == null) {
+				// 登陆过期
+				logger.error("accessToken is timeout...");
+				return executeResultOfTokenInvalid(ctx, isNecessary, WEB_CHANNEL);
+			}
+			// 每次操作，延长超时时间
+			RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, user.getUserId(), 30 * 60);
+
 			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
 		}
@@ -326,36 +371,66 @@ public class AccessFilter extends ZuulFilter {
 	}
 
 	/**
-	 * 微信特殊处理
+	 * token无效情况下判断是否安全访问执行不同策略
+	 * 
+	 * @param ctx
+	 * @param isNecessary
+	 * @return
+	 */
+	private RequestContext executeResultOfTokenInvalid(RequestContext ctx, boolean isNecessary, String channel) {
+		if (isNecessary) {
+			// 不对其进行路由
+			this.redirectLoginPage(ctx, channel);
+		}
+		return ctx;
+	}
+
+	/**
+	 *  app处理
+	 * @param ctx
+	 * @param sign
+	 * @param isNecessary
+	 * @return
+	 */
+	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
+		Integer userId = SecretUtil.getUserId(sign);
+		if (userId == null) {
+			logger.error("token invalid...");
+			return executeResultOfTokenInvalid(ctx, isNecessary, APP_CHANNEL);
+		}
+		ctx.addZuulRequestHeader("userId", userId + "");
+		return ctx;
+	}
+
+	/**
+	 * 微信处理
 	 * 
 	 * @param request
 	 * @param ctx
 	 * @return
 	 */
-	private Object wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx) {
+	private RequestContext wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
 		String sign = request.getParameter(SIGN);
-		Integer userId = null;
-		String accountId = null;
 		if (StringUtils.isBlank(sign)) {
 			sign = (String) request.getAttribute(SIGN);
 		}
 		if (StringUtils.isNotBlank(sign)) {
 			// 获取用户ID
 			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-			if (appUserToken != null) {
-				userId = appUserToken.getUserId();
-				accountId = appUserToken.getAccountId();
+			if (appUserToken == null || appUserToken.getUserId() == null) {
+				logger.error("token invalid...");
+				return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
 			}
-			if (userId != null && userId > 0) {
-				// 需要刷新 sign
-				SecretUtil.refreshSign(sign);
-			}
-			request.setAttribute("userId", userId);
-			request.setAttribute("accountId", accountId);
+
+			Integer userId = appUserToken.getUserId();
+			String accountId = appUserToken.getAccountId();
+			// 需要刷新 sign
+			SecretUtil.refreshSign(sign);
 			ctx.addZuulRequestHeader("userId", userId + "");
 			ctx.addZuulRequestHeader("accountId", accountId);
+			ctx.addZuulRequestHeader("sign",sign);
 		} else {
-			this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+			return executeResultOfTokenInvalid(ctx, isNecessary, WECHAT_CHANNEL);
 		}
 		return ctx;
 	}

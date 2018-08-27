@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.math.BigDecimal;
@@ -60,4 +61,19 @@ public interface BankAccountManageService {
      * @return
      */
     String updateAccountCheck(Integer userId, String startTime, String endTime);
+
+    /**
+     * 银行账户管理页面数据条数
+     *
+     * @param request
+     * @return
+     */
+    Integer selectAccountInfoCount(BankAccountManageRequest request);
+
+    /**
+     * 获取部门列表
+     *
+     * @return
+     */
+    List<OADepartmentCustomizeVO> queryDepartmentInfo();
 }

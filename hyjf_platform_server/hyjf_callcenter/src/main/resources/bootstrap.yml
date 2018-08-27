@@ -6,9 +6,25 @@ spring:
       uri: http://micoserver:2222/
       profile: test
       name: callcenter
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
 
 server:
   port: 9094
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: callcenter.log
+#swagger启用开关
+swagger:
+ enable: true

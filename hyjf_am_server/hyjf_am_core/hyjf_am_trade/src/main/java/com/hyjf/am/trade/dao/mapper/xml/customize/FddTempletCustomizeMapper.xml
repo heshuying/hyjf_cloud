@@ -39,5 +39,13 @@
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
-	
+    <select id="selectContractTempId" resultMap="selectFddTempletListMap">
+        SELECT
+            fdd.id,
+            fdd.templet_id
+        FROM
+          ht_fdd_templet fdd
+        WHERE
+          fdd.templet_id NOT IN (SELECT DISTINCT (contract.templet_nid) FROM ht_nifa_contract_template contract)
+    </select>
 </mapper>

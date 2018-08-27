@@ -12,11 +12,14 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.wdzj.BorrowDataService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +33,8 @@ import java.util.Map;
  * @author hesy
  * @version BorrowDataController, v0.1 2018/7/16 15:04
  */
-@Api(tags = "api端网贷之家标的列表接口")
-@Controller
+@Api(tags = "api端-网贷之家标的列表接口")
+@RestController
 @RequestMapping("/hyjf-api/wdzj/borrowdata")
 public class BorrowDataController extends BaseController {
     @Autowired
@@ -45,8 +48,9 @@ public class BorrowDataController extends BaseController {
      * @param response
      * @return
      */
+    @ApiOperation(value = "标的放款数据接口", notes = "标的放款数据接口")
     @ResponseBody
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public JSONObject getBorrowDataList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();
@@ -128,8 +132,9 @@ public class BorrowDataController extends BaseController {
      * @param response
      * @return
      */
+    @ApiOperation(value = "标的提前放款数据接口", notes = "标的提前放款数据接口")
     @ResponseBody
-    @RequestMapping("/preapyslist")
+    @PostMapping("/preapyslist")
     public JSONObject getPreapysList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();

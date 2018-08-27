@@ -25,6 +25,15 @@ spring:
 server:
   port: 8096
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: am-trade.log
 file:
@@ -35,3 +44,6 @@ file:
  upload:
   real:
    path: 123
+#swagger启用开关
+swagger:
+ enable: true

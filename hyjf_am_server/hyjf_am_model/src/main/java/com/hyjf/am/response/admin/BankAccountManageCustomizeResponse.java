@@ -11,4 +11,14 @@ import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
  * @version BankAccountManageResponse, v0.1 2018/6/29 13:42
  */
 public class BankAccountManageCustomizeResponse extends Response<BankAccountManageCustomizeVO> {
+    private int recordTotal;
+
+    public int getRecordTotal() {
+        return recordTotal;
+    }
+
+    public void setRecordTotal(int recordTotal) {
+        this.recordTotal = recordTotal;
+    }
+
 }

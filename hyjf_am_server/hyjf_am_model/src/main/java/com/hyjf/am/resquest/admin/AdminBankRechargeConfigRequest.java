@@ -1,6 +1,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,15 +10,17 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/11.
  */
+@ApiModel(value="快捷充值限额",description="快捷充值限额")
 public class AdminBankRechargeConfigRequest  extends BasePage {
 
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "查询的id")
     private String ids;
-
+    @ApiModelProperty(value = "查询的开始时间")
     private String startCreate;
-
+    @ApiModelProperty(value = "查询的结束时间")
     private String endCreate;
 
     private Integer id;

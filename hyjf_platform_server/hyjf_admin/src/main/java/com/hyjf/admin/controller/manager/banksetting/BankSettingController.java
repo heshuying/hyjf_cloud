@@ -43,7 +43,7 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(description = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
+@Api(tags = "配置中心-银行配置 江西银行")
 @RestController
 @RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {
@@ -87,8 +87,7 @@ public class BankSettingController extends BaseController {
         Integer id = request.getId();
         if (id != null) {
             response = this.bankSettingService.getRecord(request);
-            //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
-             response.setFileDomainUrl(DOMAIN_URL);
+            response.setFileDomainUrl(DOMAIN_URL);
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -104,6 +103,10 @@ public class BankSettingController extends BaseController {
     public AdminResult insertBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/insert");
         AdminBankSettingResponse response = null;
+        if (bankSettingRequestBean.getBankName() == null || bankSettingRequestBean.getBankName().equals("")){
+            // 失败返回
+            return new AdminResult<>(FAIL, "请求参数bankName不能为空！");
+        }
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
         ModelAndView model =new ModelAndView();
@@ -136,6 +139,14 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/update");
+        if (bankSettingRequestBean.getId() == null){
+            // 失败返回
+            return new AdminResult<>(FAIL, "修改id不能为空！");
+        }
+        if (bankSettingRequestBean.getBankName() == null || bankSettingRequestBean.getBankName().equals("")){
+            // 失败返回
+            return new AdminResult<>(FAIL, "请求参数bankName不能为空！");
+        }
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean,request);

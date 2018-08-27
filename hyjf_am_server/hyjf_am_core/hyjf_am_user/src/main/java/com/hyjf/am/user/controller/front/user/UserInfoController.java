@@ -3,7 +3,9 @@ package com.hyjf.am.user.controller.front.user;
 import java.util.List;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.user.EmployeeCustomizeResponse;
-import com.hyjf.am.response.user.SpreadsUserResponse;
-import com.hyjf.am.response.user.UserInfoCrmResponse;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
@@ -161,6 +158,32 @@ public class UserInfoController extends BaseController {
 		response.setRtn(Response.FAIL);
 		response.setMessage(Response.FAIL_MSG);
 		return response;
+	}
+
+	/**
+	 * 获取用户部门信息
+	 */
+	@GetMapping("/queryDepartmentInfoByUserId/{userId}")
+	public UserInfoListCustomizeReponse queryDepartmentInfoByUserId(@PathVariable Integer userId){
+		UserInfoListCustomizeReponse response = new UserInfoListCustomizeReponse();
+		List<UserInfoCustomize> userInfoCustomize=userInfoService.queryDepartmentInfoByUserId(userId);
+		if (userInfoCustomize!=null){
+			List<UserInfoCustomizeVO> userInfoCustomizeVOS = CommonUtils.convertBeanList(userInfoCustomize, UserInfoCustomizeVO.class);
+			response.setResult(userInfoCustomizeVOS);
+		}
+		return response;
+	}
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@GetMapping("/getMobileCodeByNumber/{mobile}")
+	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(@PathVariable String mobile){
+		AdminMsgPushCommonCustomizeVO msgPushCommon = userInfoService.getMobileCodeByNumber(mobile);
+		return msgPushCommon;
 	}
 
 }

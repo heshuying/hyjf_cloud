@@ -32,7 +32,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.service.BankMerchantAccountService;
 import com.hyjf.admin.service.HjhCommissionService;
-import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
@@ -73,7 +73,7 @@ import com.alibaba.fastjson.JSONArray;
  * @author libin
  * @version HjhCommissionController.java, v0.1 2018年8月7日 下午2:38:45
  */
-@Api(value = "汇计划提成列表",tags = "汇计划提成列表")
+@Api(value = "资金中心-汇计划提成列表",tags = "资金中心-汇计划提成列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcommission")
 public class HjhCommissionController extends BaseController{
@@ -91,7 +91,7 @@ public class HjhCommissionController extends BaseController{
     private BankMerchantAccountService bankMerchantAccountService;
     
     @Autowired
-    private TransferExceptionLogService transferLogService;
+    private AdminTransferExceptionLogService transferLogService;
     
 	@Autowired
 	private SystemConfig systemConfig;

@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MerchantAccountService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
@@ -16,21 +15,17 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心账户平台设置",tags ="配置中心账户平台设置")
+@Api(tags ="配置中心-平台账户配置--账户设置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountconfig")
 public class AccountConfigController extends BaseController {
@@ -94,17 +89,18 @@ public class AccountConfigController extends BaseController {
     @ApiOperation(value = "账户平台设置添加", notes = "账户平台设置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult<MerchantAccountVO>  insertAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult  insertAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest req = new AdminMerchantAccountRequest();
         MerchantAccountResponse prs =new MerchantAccountResponse();
-         ModelAndView modelAndView= new ModelAndView();
         // 表单校验
-        this.validatorFieldCheck(modelAndView, merchantAccountRequestBean);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-            // 子账户类型 ---todo(返回子账号类型)
+        String message= this.validatorFieldCheck(merchantAccountRequestBean);
+        if (StringUtils.isNotBlank(message)) {
+            // 子账户类型
             List<ParamNameVO> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
-            String paramName =paramNameList.toString();
-            return new AdminResult<>(prs.getMessage(),paramName);
+            prs.setParamNameList(paramNameList);
+            prs.setRtn(Response.FAIL);
+            prs.setMessage(message);
+            return new  AdminResult<MerchantAccountResponse>(prs);
         }
         BeanUtils.copyProperties(merchantAccountRequestBean, req);
         prs = merchantAccountService.saveAccountConfig(req);
@@ -121,17 +117,18 @@ public class AccountConfigController extends BaseController {
     @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult<MerchantAccountVO>  updateAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult  updateAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest req = new AdminMerchantAccountRequest();
         MerchantAccountResponse prs =new MerchantAccountResponse();
-        ModelAndView modelAndView= new ModelAndView();
         // 表单校验
-        this.validatorFieldCheck(modelAndView, merchantAccountRequestBean);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-            // 子账户类型 ---todo(返回子账号类型)
+       String message= this.validatorFieldCheck(merchantAccountRequestBean);
+        if (StringUtils.isNotBlank(message)) {
+            // 子账户类型
             List<ParamNameVO> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
-            String paramName =paramNameList.toString();
-            return new AdminResult<>(prs.getMessage(),paramName);
+            prs.setParamNameList(paramNameList);
+            prs.setRtn(Response.FAIL);
+            prs.setMessage(message);
+            return new  AdminResult<MerchantAccountResponse>(prs);
         }
         BeanUtils.copyProperties(merchantAccountRequestBean, req);
         prs = merchantAccountService.updateAccountConfig(req);
@@ -147,19 +144,14 @@ public class AccountConfigController extends BaseController {
     @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult<MerchantAccountVO>  checkAccountConfig(HttpServletRequest request) {
+    public AdminResult<MerchantAccountVO>  checkAccountConfig(@RequestParam(value="name")String name,@RequestParam(value="param")String param,@RequestParam(value = "ids", required = false) String ids) {
         MerchantAccountResponse prs =new MerchantAccountResponse();
-        String name = request.getParameter("name");
-        String param = request.getParameter("param");
-        String ids = request.getParameter("ids");
         // 子账户名称
         if ("subAccountName".equals(name)) {
             // 根据子账户名称检索,是否重复
             int count = merchantAccountService.countAccountListInfoBySubAccountName(ids, param);
             if (count > 0) {
-                String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-                message = message.replace("{label}", "子账户名称");
-                return new AdminResult<>(SUCCESS,message);
+                return new AdminResult<>(SUCCESS,"{label}子账户名称重复了！");
             }
         }
         // 子账户代号
@@ -167,9 +159,7 @@ public class AccountConfigController extends BaseController {
             // 根据子账户代号检索,是否重复
             int result = merchantAccountService.countAccountListInfoBySubAccountCode(ids, param);
             if (result > 0) {
-                String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-                message = message.replace("{label}", "子账户代号");
-                return new AdminResult<>(SUCCESS,message);
+                return new AdminResult<>(SUCCESS,"{label}子账户代号重复了！");
             }
         }
         // 没有错误时,返回y
@@ -178,21 +168,26 @@ public class AccountConfigController extends BaseController {
     /**
      * 画面校验
      *
-     * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, MerchantAccountRequestBean form) {
+    private String validatorFieldCheck(MerchantAccountRequestBean form) {
         // 子账户名称
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "subAccountName", form.getSubAccountName());
-
+        if(StringUtils.isBlank(form.getSubAccountName())){
+            return "subAccountName 不能为空！";
+        }
         // 子账户类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "subAccountType", form.getSubAccountType());
-
+        if(StringUtils.isBlank(form.getSubAccountType())){
+            return "subAccountType 不能为空！";
+        }
         // 子账户代码
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "subAccountCode", form.getSubAccountCode());
-
+        if(StringUtils.isBlank(form.getSubAccountCode())){
+            return "subAccountCode 不能为空！";
+        }
         // 排序
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "order", String.valueOf(form.getSort()));
+        if(null == form.getSort()){
+            return "order 不能为空！";
+        }
+        return "";
     }
 
 }

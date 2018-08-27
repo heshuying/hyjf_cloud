@@ -46,12 +46,22 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
 
     @Autowired
     private BaseClient baseClient;
-
+    /**
+     * @Description 
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 统计我的计划数量 
+     */
     @Override
     public Integer countAppMyPlan(AssetManageBeanRequest params) {
         return amTradeClient.countAppMyPlan(params);
     }
-
+    /**
+     * @Description 
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date 查询我的计划列表
+     */
     @Override
     public List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params) {
         return amTradeClient.selectAppMyPlanList(params);

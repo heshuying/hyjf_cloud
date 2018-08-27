@@ -5,6 +5,7 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
 
 import java.util.List;
 
@@ -41,4 +42,56 @@ public interface MessagePushTemplateServcie {
      * @param request
      */
     void insertMsgPushTemplate(MsgPushTemplateRequest request);
+
+    /**
+     * 获取查询模板条数
+     * @param request
+     * @return
+     */
+    Integer countRecord(MsgPushTemplateRequest request);
+
+    /**
+     * 获取列表
+     * @param request
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<MessagePushTemplate> searchList(MsgPushTemplateRequest request, int offset, int limit);
+
+    /**
+     * 根据id获取消息模板
+     * @param id
+     * @return
+     */
+    MessagePushTemplate findMsgPushTemplateById(Integer id);
+
+    /**
+     * 添加模板
+     * @param messagePushTemplate
+     * @return
+     */
+    Integer insertMessagePushTemplate(MessagePushTemplate messagePushTemplate);
+
+    /**
+     * 修改模板
+     * @param messagePushTemplate
+     * @return
+     */
+    Integer updateAction(MessagePushTemplate messagePushTemplate);
+
+    /**
+     * 删除模板
+     * @param id
+     * @return
+     */
+    Integer deleteAction(List<Integer> ids);
+
+    /**
+     * 根据条件查询模板
+     * @param id
+     * @param templateCode
+     * @return
+     */
+    Integer countByTemplate(Integer id, String templateCode);
 }

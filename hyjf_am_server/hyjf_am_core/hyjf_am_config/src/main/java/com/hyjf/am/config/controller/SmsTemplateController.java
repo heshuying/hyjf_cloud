@@ -3,8 +3,12 @@
  */
 package com.hyjf.am.config.controller;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.model.auto.SmsTemplate;
+import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.response.config.SmsTemplateResponse;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -13,12 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.dao.model.auto.SmsTemplate;
-import com.hyjf.am.config.service.SmsTemplateService;
-import com.hyjf.am.response.config.SmsTemplateResponse;
-import com.hyjf.am.resquest.config.SmsTemplateRequest;
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * 短信模板
@@ -84,6 +83,9 @@ public class SmsTemplateController extends BaseConfigController{
 			List<SmsTemplateVO> voList = CommonUtils.convertBeanList(smsTemplateList, SmsTemplateVO.class);
 			response.setResultList(voList);
 		}
+		// 查询总条数
+        int count = smsTemplateService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 
@@ -93,7 +95,49 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/insertTemplate")
-    public void insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        smsTemplateService.insertSmsTemplate(request);
+    public int insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.insertSmsTemplate(request);
+    }
+
+    /**
+     * 开启短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/open_sms_template")
+    public int openSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.updateSmsTemplateStatus(request);
+    }
+
+    /**
+     * 关闭短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/close_sms_template")
+    public void closeSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        smsTemplateService.closeSmsTemplate(request);
+    }
+
+    /**
+     * 关闭短信模板
+     *
+     * @param request
+     */
+    @RequestMapping("/update_sms_template")
+    public int updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        return smsTemplateService.updateSmsTemplate(request);
+    }
+
+    @RequestMapping("/find_by_id/{id}")
+    public SmsTemplateResponse findById(@PathVariable Integer id) {
+        SmsTemplateResponse response = new SmsTemplateResponse();
+        SmsTemplate smsTemplate = smsTemplateService.findById(id);
+        if (smsTemplate != null) {
+            SmsTemplateVO vo = new SmsTemplateVO();
+            BeanUtils.copyProperties(smsTemplate, vo);
+            response.setResult(vo);
+        }
+        return response;
     }
 }

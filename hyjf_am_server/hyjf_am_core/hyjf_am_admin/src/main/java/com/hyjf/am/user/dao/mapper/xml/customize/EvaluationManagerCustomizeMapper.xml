@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.EvaluationManagerCustomizeMapper">
+    <sql id="Where_Clause">
+        <where>
+            <if test="userName != null and userName !=''">
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
+            </if>
+            <if test="realName != null and realName != ''">
+                AND hydui.truename LIKE CONCAT( #{realName}, '%')
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND hydu.mobile LIKE CONCAT(#{mobile}, '%')
+            </if>
+            <if test="userProperty != null and userProperty != ''">
+                AND pna.name_cd= #{userProperty,jdbcType=INTEGER}
+            </if>
+            <if test="accountStatus != null and accountStatus != ''">
+                AND hydu.bank_open_account = #{accountStatus,jdbcType=INTEGER}
+            </if>
+            <if test="is51 != null and is51 != ''">
+                AND IFNULL(hydui.is51,0) = #{is51,jdbcType=INTEGER}
+            </if>
+
+            <if test="evaluationStatus != null and evaluationStatus == '未测评'">
+                AND huer.user_id is null
+            </if>
+            <if test="evaluationStatus != null and evaluationStatus == '已测评'">
+                AND huer.user_id is not null
+                AND hydu.evaluation_expired_time <![CDATA[>]]> NOW()
+            </if>
+            <if test="evaluationStatus != null and evaluationStatus == '已过期'">
+                AND huer.user_id is not null
+                AND hydu.evaluation_expired_time <![CDATA[<=]]> NOW()
+            </if>
+            <if test="evaluationType != null and evaluationType != ''">
+                AND huer.eval_type = #{evaluationType,jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+    <resultMap id="UserEvalationResultListPOMap" type="com.hyjf.am.user.dao.model.customize.EvalationResultCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+        <result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
+        <result column="evaluation_status" property="evaluationStatus" jdbcType="VARCHAR" />
+        <result column="evaluation_type" property="evaluationType" jdbcType="VARCHAR" />
+        <result column="evaluation_score" property="evaluationScore" jdbcType="VARCHAR" />
+        <result column="createtime" property="createtime" jdbcType="VARCHAR" />
+        <result column="lasttime" property="lasttime" jdbcType="VARCHAR" />
+        <result column="evalationTime" property="evalationTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectUserEvalationResultList" resultMap="UserEvalationResultListPOMap" parameterType="Map">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydui.truename AS real_name,
+        hydu.mobile,
+        hydu.bank_open_account,
+        hydui.attribute AS user_property,
+        hydui.attribute AS user_property_id,
+        hydu.bank_open_account AS account_status,
+        CASE IFNULL(huer.user_id,0)
+        WHEN 0 THEN "未测评"
+        ELSE IF(hydu.evaluation_expired_time <![CDATA[<=]]> NOW()=0,"已测评","已过期") END evaluation_status,
+        huer.eval_type as evaluation_type,
+        huer.score_count evaluation_score,
+        date_format(huer.create_time, '%Y-%c-%d %h:%i:%s') createtime,
+        date_format(huer.lasttime, '%Y-%c-%d %h:%i:%s') lasttime,
+        date_format(hydu.evaluation_expired_time, '%Y-%c-%d %h:%i:%s') as evalationTime
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+        LEFT JOIN ht_user_evalation_result huer on hydu.user_id=huer.user_id
+        <include refid="Where_Clause" />
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countEvalationResultRecord" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(*)
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+        LEFT JOIN ht_user_evalation_result huer on hydu.user_id=huer.user_id
+        <include refid="Where_Clause" />
+    </select>
+
+    <resultMap id="UserEvalationPOMap" type="com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize">
+        <result column="question_id" property="question" jdbcType="VARCHAR" />
+        <result column="answer_id" property="answer" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="getUserEvalation" resultMap="UserEvalationPOMap" parameterType="java.lang.Integer">
+        select
+        hue.question_id,
+        hue.answer_id
+        from ht_user_evalation hue
+        where hue.er_id=#{id,jdbcType=INTEGER}
+        ORDER BY hue.question_id
+    </select>
+</mapper>

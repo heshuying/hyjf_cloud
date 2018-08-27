@@ -45,18 +45,20 @@
 			<if test="platformSrch != null and platformSrch != ''">
 				AND hdpa.client = #{platformSrch}
 			</if>
-			<if test="searchStartDate != null and searchStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-			</if>
-			<if test="searchEndDate != null and searchEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-			</if>
-			<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-			</if>
-			<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-			</if>
+			
+			<if test="searchStartDate != null and searchStartDate != ''">
+	            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="searchEndDate != null and searchEndDate != ''">
+	            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+	            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+	            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	        </if>
+			
 			<if test="matchDatesSrch != null and matchDatesSrch != ''">
 				AND hdpa.match_dates = #{matchDatesSrch}
 			</if>
@@ -212,10 +214,8 @@
 					hdpa.commission_count_time,
 					'%Y-%m-%d %H:%i'
 				) AS commission_count_time,
-				FROM_UNIXTIME(
-					hdpa.create_time,
-					'%Y-%m-%d %H:%i'
-				) AS create_time,
+				<!-- hdpa.create_time AS create_time, -->
+				DATE_FORMAT(hdpa.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 				hdpa.create_time AS add_time_long,
 				hdpa.invite_user_name referee_name, 
 				hdpa.invite_user_attribute AS recommend_attr, 
@@ -266,7 +266,6 @@
 			  	hdpa.invest_counts AS investCounts,
 			  	hdpa.match_dates AS matchDates
 				
-				
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
@@ -307,18 +306,20 @@
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}
 				</if>
-				<if test="searchStartDate != null and searchStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-				</if>
-				<if test="searchEndDate != null and searchEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-				</if>
-				<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-				</if>
-				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-				</if>
+
+				<if test="searchStartDate != null and searchStartDate != ''">
+		            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="searchEndDate != null and searchEndDate != ''">
+		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
 					AND hdpa.match_dates = #{matchDatesSrch}
 				</if>
@@ -345,6 +346,13 @@
 		<result column="wait_captical" property="sumWaitCaptical" />
 		<!-- 待(收)还利息 -->
 		<result column="wait_interest" property="sumWaitInterest" />
+		
+		<!-- 剩余合计 -->
+		<result column="sumAvailableInvestAccount" property="sumAvailableInvestAccount" />
+		<!-- 冻结合计 -->
+		<result column="sumFrostAccount" property="sumFrostAccount" />
+		<!-- 公允合计 -->
+		<result column="sumFairValue" property="sumFairValue" />
 	</resultMap>
 	<select id="sumAccedeRecord" resultMap="SumResultMap" parameterType="Map">
 			SELECT
@@ -352,7 +360,13 @@
 				SUM(hdpa.already_invest) AS already_invest,
 				SUM(hdpa.wait_total) AS wait_total,
 				SUM(hdpa.wait_captical) AS wait_captical,
-				SUM(hdpa.wait_interest) AS wait_interest
+				SUM(hdpa.wait_interest) AS wait_interest,
+				
+				SUM(hdpa.available_invest_account) AS sumAvailableInvestAccount,
+				SUM(hdpa.frost_account) AS sumFrostAccount,
+				CASE WHEN hdpa.order_status =5 OR hdpa.order_status =7 THEN  SUM(hdpa.fair_value)
+				ELSE 0 END AS sumFairValue
+				
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
@@ -390,32 +404,29 @@
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}
 				</if>
-				<if test="searchStartDate != null and searchStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-				</if>
-				<if test="searchEndDate != null and searchEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-				</if>
-				
-				
-				
 				<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
 					AND hdpa.lock_period = #{debtLockPeriodSrch}
 				</if>
-				<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-				</if>
-				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-				</if>
+				
+				<if test="searchStartDate != null and searchStartDate != ''">
+		            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="searchEndDate != null and searchEndDate != ''">
+		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
 					AND hdpa.match_dates = #{matchDatesSrch}
 				</if>
 				<if test="investCountsSrch != null and investCountsSrch != ''">
 					AND hdpa.invest_counts = #{investCountsSrch}
 				</if>
-	
-	
 			</where>
 	</select>
 	

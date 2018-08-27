@@ -3,15 +3,16 @@
  */
 package com.hyjf.admin.controller.finance.accountdetail;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
 import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
@@ -64,12 +65,10 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = null;
+    public AdminResult<List<DropDownVO>> userManagerInit() {
         List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
-        // List<AccountDetailVO> listAccountDetail =  accountDetailService.findAccountDetailList();
-
-        return jsonObject;
+        List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(accountTradeVOList,"id","name");
+        return new AdminResult<List<DropDownVO>>(dropDownVOList);
     }
 
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
@@ -79,16 +78,14 @@ public class AccountDetailController extends BaseController {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
-        List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if(accountDetailResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(accountDetailResponse)) {
             return new AdminResult<>(FAIL, accountDetailResponse.getMessage());
         }
-
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-        Integer recordCount = accountDetailResponse.getRecordTotal();
+        List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if (null != listAccountDetail && listAccountDetail.size() > 0) {
             for (AccountDetailVO accountDetailVO : listAccountDetail) {
                 //根据用户id获取用户信息
@@ -106,27 +103,10 @@ public class AccountDetailController extends BaseController {
                     accountDetailVO.setReferrerName(userSpreads.getUsername());
                     accountDetailVO.setReferrerId(userSpreads.getUserId().toString());
                 }
-                //根据推荐人姓名筛选
-                if (null != accountDetailRequestBean.getReferrerName()) {
-                    String referrerNameSearch = requestAccountDetail.getReferrerName().toString();
-                    UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(referrerNameSearch);
-                    String userRefer = userReferrerSearch.getUserId().toString();
-                    if (userRefer.equals(accountDetailVO.getReferrerId())) {
-                        listAccountDtaileShow.add(accountDetailVO);
-                    }
-                } else {
-                    listAccountDtaileShow.add(accountDetailVO);
-                }
-                //根据用户名查找
-                if (null != accountDetailRequestBean.getUsername()) {
-                    String userNameSearch = requestAccountDetail.getUsername().toString();
-                    UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(userNameSearch);
-                    String userRefer = userReferrerSearch.getUserId().toString();
-                    if (userRefer.equals(accountDetailVO.getUserId())) {
-                        listAccountDtaileShow.add(accountDetailVO);
-                    }
-                } else {
-                    listAccountDtaileShow.add(accountDetailVO);
+                //根据筛选条件判断
+                AccountDetailVO accountDetailVoDefine = SearchParan(accountDetailRequestBean,accountDetailVO);
+                if(null!=accountDetailVoDefine){
+                    listAccountDtaileShow.add(accountDetailVoDefine);
                 }
             }
         }
@@ -137,25 +117,53 @@ public class AccountDetailController extends BaseController {
         return new AdminResult<ListResult<AccountDetailCustomizeVO>>(ListResult.build(accountDetailCustomizeVOList, accountDetailResponse.getRecordTotal())) ;
     }
 
+    private AccountDetailVO SearchParan(AccountDetailRequestBean accountDetailRequestBean,AccountDetailVO accountDetailVO) {
+        AccountDetailVO accountDetailVoDefine = new AccountDetailVO();
+        //根据推荐人姓名筛选
+        if (null != accountDetailRequestBean.getReferrerName()) {
+            String referrerNameSearch = accountDetailRequestBean.getReferrerName().toString();
+            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(referrerNameSearch);
+            if (null != userReferrerSearch &&accountDetailVO.getReferrerId().equals(userReferrerSearch.getUserId().toString())) {
+                BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+            }else{
+                return null;
+            }
+        } else {
+            BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+        }
+        //根据用户名查找
+        if (null != accountDetailRequestBean.getUsername()) {
+            String userNameSearch = accountDetailRequestBean.getUsername().toString();
+            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(userNameSearch);
+            if (null != userReferrerSearch && accountDetailVO.getUserId().equals(userReferrerSearch.getUserId())) {
+                BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+            }else{
+                return null;
+            }
+        } else {
+            BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+        }
+        return accountDetailVoDefine;
+    }
 
 
     @ApiOperation(value = "交易明细修复", notes = "交易明细修复")
     @PostMapping(value = "/accountdetailDataRepair")
     @ResponseBody
     public AdminResult accountdetailDataRepair() {
-        String strRepayDate = "";
         // 查询出还款后,交易明细有问题的用户ID
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
             List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList = adminAccountDetailDataRepairResponse.getResultList();
-            List<Map<String, Object>> mapReturnList = getAccountId(adminAccountDetailDataRepairVOList);
-            if (null != mapReturnList&&mapReturnList.size()>0) {
-                for(Map<String, Object>mapReturn:mapReturnList){
-                    Integer userId = Integer.parseInt(mapReturn.get("userId").toString());
-                    Integer accountId = Integer.parseInt(mapReturn.get("accountId").toString());
-                    strRepayDate = this.repayDataRepair(userId, accountId);
-                    if(StringUtils.isNotBlank(strRepayDate)){
-                        return new AdminResult<>(FAIL, strRepayDate);
+            //
+            if (null!=adminAccountDetailDataRepairVOList&&adminAccountDetailDataRepairVOList.size()>0){
+                for(AdminAccountDetailDataRepairVO adminAccountDetailDataRepairVO:adminAccountDetailDataRepairVOList){
+                    Integer userId = adminAccountDetailDataRepairVO.getUserId();
+                    // 查询交易明细最小的id
+                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.getdetailDataRepair(userId);
+                    if(null!=accountdetailDataRepair&& null!=accountdetailDataRepair.getResult()){
+                        Integer accountListId = Integer.parseInt(accountdetailDataRepair.getResult().getId());
+                        this.repayDataRepair(userId, accountListId);
                     }
                 }
             }
@@ -166,6 +174,7 @@ public class AccountDetailController extends BaseController {
     }
 
     private String repayDataRepair(Integer userId, Integer accountListId) {
+        // 根据Id查询此条交易明细
         AccountListResponse accountListResponse = accountDetailService.selectAccountById(accountListId);
         if (null != accountListResponse && null != accountListResponse.getResult()) {
             AccountListVO accountListVO = accountListResponse.getResult();
@@ -173,8 +182,10 @@ public class AccountDetailController extends BaseController {
             BigDecimal balance = accountListVO.getBalance();
             // 查询此用户的下一条交易明细
             AccountListResponse accountListResponseNext = accountDetailService.selectNextAccountList(accountListId, userId);
+            // 如果下一条交易明细不为空
             if (null != accountListResponseNext && null != accountListResponseNext.getResult()) {
                 AccountListVO accountListVOnext = accountListResponseNext.getResult();
+                // 根据查询用交易类型查询用户操作金额
                 AccountTradeResponse accountTradeResponse = accountDetailService.selectAccountTradeByValue(accountListVOnext.getTrade());
                 if (null != accountTradeResponse && null != accountTradeResponse.getResult()) {
                     AccountTradeVO accountTradeVO = accountTradeResponse.getResult();
@@ -202,7 +213,7 @@ public class AccountDetailController extends BaseController {
                         return "交易明细更新失败,交易明细ID:" + accountListVOnext.getId();
                     }
                 } else {
-                    return "查询huiyingdai_account_trade交易类型失败,交易明细Value:" + accountListVOnext.getTrade();
+                    return "查询ht_account_trade交易类型失败,交易明细Value:" + accountListVOnext.getTrade();
                 }
 
             } else {
@@ -214,38 +225,15 @@ public class AccountDetailController extends BaseController {
         return null;
     }
 
-    private List<Map<String, Object>> getAccountId(List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList) {
-        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-        if (adminAccountDetailDataRepairVOList != null && adminAccountDetailDataRepairVOList.size() > 0) {
-            for (AdminAccountDetailDataRepairVO adminAccountDetailDataRepairCustomize : adminAccountDetailDataRepairVOList) {
-                Map<String, Object> mapReturn = new HashMap<String, Object>();
-                Integer userId = adminAccountDetailDataRepairCustomize.getUserId();
-                mapReturn.put("userId", userId);
-                // 查询交易明细最小的id
-                AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.accountdetailDataRepair(userId);
-                if (null != accountdetailDataRepair) {
-                    AdminAccountDetailDataRepairVO accountList = accountdetailDataRepair.getResult();
-                    if (accountList != null) {
-                        Integer accountListId = Integer.parseInt(accountList.getId());
-                        mapReturn.put("accountId", accountListId);
-                    }
-                }
-                listMap.add(mapReturn);
-            }
-        }
-        return listMap;
-    }
-
     /**
      * 导出资金明细列表
      *
-     * @param request
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
-    public void exportAccountsExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
+    public void exportAccountsExcel(HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "资金明细";
 

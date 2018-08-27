@@ -15,6 +15,7 @@ public class TotalMessageVO {
     //当前时间
     String date;
 
+    String isLogin;
     public String getTenderSum() {
         return tenderSum;
     }
@@ -45,5 +46,13 @@ public class TotalMessageVO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(String isLogin) {
+        this.isLogin = isLogin;
     }
 }

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/5 13:40
  */
-@Api(value = "APP端首页",tags = "APP端首页")
+@Api(value = "app端-首页",tags = "app端-首页")
 @RestController
 @RequestMapping(HomePageDefine.REQUEST_MAPPING)  // 保留原来请求路径
 public class AppHomeController {
@@ -30,9 +30,10 @@ public class AppHomeController {
     /**
      * 获取首页数据接口
      * 沿用原来的接口路径
+     * 原接口：
      * @return
      */
-    @ApiOperation(value = "APP:获取首页各项数据", notes = "APP:获取首页各项数据")
+    @ApiOperation(value = "获取首页各项数据", notes = "获取首页各项数据")
     @PostMapping(value = HomePageDefine.PROJECT_LIST_ACTION, produces = "application/json; charset=utf-8")
     public Object getHomeData(HttpServletRequest request , @RequestHeader(value = "userId" , required = false )String userId){
         // controller 不做业务处理

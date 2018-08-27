@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 
 /**
  * @package com.hyjf.admin.maintenance.AlllBorrowCustomize;
- * @author GOGTZ-Z
+ * @author dongzeshan
  * @date 2015/07/09 17:00
  * @version V1.0  
  */
@@ -24,7 +24,15 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	/**
 	 * serialVersionUID
 	 */
+	private int isMonth;
+	
+	public int getIsMonth() {
+		return isMonth;
+	}
 
+	public void setIsMonth(int isMonth) {
+		this.isMonth = isMonth;
+	}
 	private String chargeTimeType;
 	private  Integer chargeTime;
 	
@@ -1423,6 +1431,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsCertificate() {
+		if(comIsCertificate==null) {
+			return "0";
+		}
 		return comIsCertificate;
 	}
 
@@ -1431,6 +1442,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsOperation() {
+		if(comIsOperation==null) {
+			return "0";
+		}
 		return comIsOperation;
 	}
 
@@ -1439,6 +1453,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsFinance() {
+		if(comIsFinance==null) {
+			return "0";
+		}
 		return comIsFinance;
 	}
 
@@ -1447,6 +1464,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsEnterpriseCreidt() {
+		if(comIsEnterpriseCreidt==null) {
+			return "0";
+		}
 		return comIsEnterpriseCreidt;
 	}
 
@@ -1455,6 +1475,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsLegalPerson() {
+		if(comIsLegalPerson==null) {
+			return "0";
+		}
 		return comIsLegalPerson;
 	}
 
@@ -1463,6 +1486,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsAsset() {
+		if(comIsAsset==null) {
+			return "0";
+		}
 		return comIsAsset;
 	}
 
@@ -1471,6 +1497,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsPurchaseContract() {
+		if(comIsPurchaseContract==null) {
+			return "0";
+		}
 		return comIsPurchaseContract;
 	}
 
@@ -1479,6 +1508,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsSupplyContract() {
+		if(comIsSupplyContract==null) {
+			return "0";
+		}
 		return comIsSupplyContract;
 	}
 
@@ -3461,14 +3493,21 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsFunds() {
+		if(comIsFunds==null) {
+			return "0";
+		}
 		return comIsFunds;
 	}
 
 	public void setComIsFunds(String comIsFunds) {
+		
 		this.comIsFunds = comIsFunds;
 	}
 
 	public String getComIsManaged() {
+		if(comIsManaged==null) {
+			return "0";
+		}
 		return comIsManaged;
 	}
 
@@ -3477,14 +3516,21 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsAbility() {
+		if(comIsAbility==null) {
+			return "0";
+		}
 		return comIsAbility;
 	}
 
 	public void setComIsAbility(String comIsAbility) {
+		
 		this.comIsAbility = comIsAbility;
 	}
 
 	public String getComIsOverdue() {
+		if(comIsOverdue==null) {
+			return "0";
+		}
 		return comIsOverdue;
 	}
 
@@ -3493,6 +3539,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsComplaint() {
+		if(comIsComplaint==null) {
+			return "0";
+		}
 		return comIsComplaint;
 	}
 
@@ -3501,6 +3550,9 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsPunished() {
+		if(comIsPunished==null) {
+			return "0";
+		}
 		return comIsPunished;
 	}
 

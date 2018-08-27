@@ -1,11 +1,12 @@
 package com.hyjf.admin.client;
 
 
-import com.hyjf.am.response.admin.ContentAdsResponse;
-import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
+import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
+import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
@@ -78,9 +79,17 @@ public interface AmMarketClient {
 
     ContentAdsResponse inserAction(ContentAdsRequest request);
 
+    ContentAdsResponse infoaction(Integer id);
+
     ContentAdsResponse updateAction(ContentAdsRequest request);
 
     ContentAdsResponse deleteById(Integer id);
+
+    /**
+     * 获取广告类型下拉列表
+     * @return
+     */
+    ContentAdsResponse getAdsTypeList();
 
     /**
      * 根据活动ID获取活动title
@@ -90,4 +99,58 @@ public interface AmMarketClient {
     CouponTenderResponse getActivityById(Integer activityId);
 
     List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request);
+
+    /**
+     * 获取发送消息列表
+     * @param bean
+     * @return
+     */
+    MessagePushNoticesResponse getRecordList(MessagePushNoticesRequest bean);
+
+    /**
+     * 增加发送消息列表
+     * @param bean
+     * @return
+     */
+    MessagePushNoticesResponse insertRecord(MessagePushNoticesRequest bean);
+
+    /**
+     * 删除消息列表
+     * @param bean
+     * @return
+     */
+    MessagePushNoticesResponse deleteRecord(MessagePushNoticesRequest bean);
+
+    /**
+     * 删除消息列表
+     * @param bean
+     * @return
+     */
+    MessagePushNoticesResponse updateRecord(MessagePushNoticesRequest bean);
+
+    /**
+     * 获取发送历史消息列表
+     * @param request
+     * @return
+     */
+    MessagePushHistoryResponse getRecordList(MessagePushHistoryRequest request);
+    /**
+     * 获取消息推送标签列表
+     * @return
+     */
+    MessagePushTagResponse getAllPushTagList();
+
+    /**
+     * 根据id查询单条消息
+     * @param bean
+     * @return
+     */
+    MessagePushNoticesResponse getRecord(MessagePushNoticesRequest bean);
+
+
+    /**
+     * 获取标签列表
+     * @return
+     */
+    MessagePushTagResponse getTagList();
 }

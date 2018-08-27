@@ -12,6 +12,7 @@
 	    <result column="project_type" property="projectType" />
 	    <result column="tender_quota" property="tenderQuota" />
 	    <result column="project_expiration_type" property="projectExpirationType" />
+        <result column="coupon_source_num" property="couponSourceNum" />
 	    <result column="coupon_source" property="couponSource" />
 	    <result column="coupon_content" property="couponContent" />
 	    <result column="user_id" property="userId" />
@@ -27,6 +28,7 @@
 	    <result column="detail_url" property="detailUrl" />
 	    <result column="channel" property="channel" />
 	    <result column="attribute" property="attribute" />
+        <result column="activity_id" property="activityId" />
 	</resultMap>
 
 	<select id="selectCouponUserList" resultMap="selectCouponUserMap"
@@ -35,6 +37,7 @@
 			cu.id,
 			cc.coupon_code,
 			cu.coupon_user_code,
+			cu.activity_id,
 			cc.coupon_name,
 			CASE cu.attribute
 			WHEN 0 THEN
@@ -73,6 +76,7 @@
             ELSE
                 CONCAT(cc.coupon_quota, '%')
             END AS coupon_quota,
+            cu.coupon_source as coupon_source_num,
             CASE
             WHEN cu.coupon_source = 1 THEN
                 '手动发放'
@@ -84,11 +88,10 @@
                 ''
             END AS coupon_source,
 
+            <!--优惠券是活动发放或者vip的 现在涉及到跨库问题 取完list再遍历获取-->
             CASE
             WHEN cu.coupon_source = 1 THEN
                 cu.content
-            WHEN cu.coupon_source = 2 THEN
-                al.title
             ELSE
                 ''
             END AS coupon_content,
@@ -109,8 +112,8 @@
             WHEN cu.used_flag = 4 THEN
                 '已失效'
             END used_flag_View,
-             FROM_UNIXTIME(
-                cu.add_time,
+             DATE_FORMAT(
+                cu.create_time,
                 '%Y-%m-%d %H:%i:%S'
             ) AS add_time,
             cc.coupon_system AS coupon_system,
@@ -172,8 +175,7 @@
             END project_expiration_type
 		FROM
 			ht_coupon_user cu
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
-		LEFT JOIN ht_activity_list al ON cu.activity_id = al.id
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
         WHERE cu.user_id = #{userId}
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -258,7 +260,7 @@
                 ELSE
                 CONCAT(hb.borrow_period, '个月')
             END borrow_period,
-            FROM_UNIXTIME( hct.add_time, '%Y-%m-%d %H:%i' ) order_date,
+            DATE_FORMAT( hct.create_time, '%Y-%m-%d %H:%i' ) order_date,
             hcr.received_flg received_flg,
             CASE
                 WHEN hcc.project_expiration_type = 0 THEN
@@ -294,7 +296,7 @@
             hcc.coupon_system AS coupon_system,
             hcc.project_type AS project_type,
 
-            FROM_UNIXTIME( hcu.add_time, '%Y-%m-%d %H:%i' ) add_time
+            DATE_FORMAT( hcu.create_time, '%Y-%m-%d %H:%i' ) add_time
         FROM
             ht_coupon_tender hct
         INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1 AND hbt.user_id = #{userId}
@@ -375,8 +377,8 @@
             hcr.recover_account recover_interest,
             hcr.transfer_id transfer_id,
             hcr.received_flg received_flg,
-            FROM_UNIXTIME(
-            hbt.add_time,
+            DATE_FORMAT(
+            hbt.create_time,
             '%Y-%m-%d'
             ) add_time,
             FROM_UNIXTIME(

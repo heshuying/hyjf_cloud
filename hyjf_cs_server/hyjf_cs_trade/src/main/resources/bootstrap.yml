@@ -16,9 +16,20 @@ spring:
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
 
-
 server:
   port: 8082
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
 logging:
   file: cs-trade.log
+#swagger启用开关
+swagger:
+ enable: true

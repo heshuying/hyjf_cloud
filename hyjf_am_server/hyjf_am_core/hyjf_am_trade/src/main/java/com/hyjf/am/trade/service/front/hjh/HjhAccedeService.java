@@ -44,4 +44,25 @@ public interface HjhAccedeService {
     List<PlanDetailCustomize> getPlanDetail(String planNid);
 
     int updateHjhAccedeByPrimaryKey(HjhAccede hjhAccede);
+
+    /**
+     * 查询汇计划匹配期大于2天，短信预警
+     * @author zhangyk
+     * @date 2018/8/15 14:14
+     */
+    List<HjhAccede> getPlanMatchPeriodList();
+
+
+    /**
+     * 订单投资异常短信预警
+     * @author zhangyk
+     * @date 2018/8/15 16:25
+     */
+    List<HjhAccede> getPlanOrderInvestExceptionList();
+
+    /**
+     * 更新未进入锁定期的计划订单的匹配期hjhaccede
+     * @return
+     */
+    boolean updateMatchDays();
 }

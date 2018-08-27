@@ -4,21 +4,19 @@ import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
+import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 
@@ -111,22 +109,7 @@ public interface AmConfigClient {
 	ParamNameResponse getNameCd(String code);
 
    	AdminSystemResponse isExistsApplicant(String applicant);
-   	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse infoAction();
-	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
-	public MspApplytResponse download(MspApplytRequest mspApplytRequest);
-	public MspResponse searchAction(MspRequest mspRequest);
-	public MspResponse infoAction(MspRequest mspRequest);
-	public MspResponse insertAction(MspRequest mspRequest);
-	public MspResponse updateAction(MspRequest mspRequest);
-	public MspResponse configureNameError(MspRequest mspRequest);
-	public MspResponse deleteAction(MspRequest mspRequest);
-	public MspResponse checkAction(MspRequest mspRequest);
+
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 	/**
@@ -402,6 +385,8 @@ public interface AmConfigClient {
 	ContentArticleResponse searchAction(ContentArticleRequest contentArticleRequestBean);
 
 	ContentArticleResponse inserAction(ContentArticleRequest contentArticleRequestBean);
+
+	ContentArticleResponse findById(Integer id);
 
 	ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean);
 
@@ -867,31 +852,6 @@ public interface AmConfigClient {
 	 */
 	public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req);
 
-	/**
-	 * 查询列表
-	 * @param adminRequest
-	 * @return
-	 */
-	public HolidaysConfigResponse initHolidaysConfig(AdminHolidaysConfigRequest adminRequest);
-	/**
-	 * 查询节假日配置详情页面
-	 * @param id
-	 * @return
-	 */
-	public HolidaysConfigResponse getHolidaysConfigById(Integer id);
-
-	/**
-	 * 编辑保存节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse saveHolidaysConfig(AdminHolidaysConfigRequest req);
-
-	/**
-	 * 修改节假日配置
-	 * @return
-	 */
-	public HolidaysConfigResponse updateHolidaysConfig(AdminHolidaysConfigRequest req);
-
 	/**查询用户权限
 	 *
 	 * @param userName
@@ -926,7 +886,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<SmsMailTemplateVO> findMailTemplate(MailTemplateRequest request);
+	SmsMailTemplateResponse findMailTemplate(MailTemplateRequest request);
 
 	/**
 	 * 新增邮件模板
@@ -934,14 +894,22 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertMailTemplate(MailTemplateRequest request);
+	int insertMailTemplate(MailTemplateRequest request);
+
+	/**
+	 * 修改邮件模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	int updateMailTemplate(MailTemplateRequest request);
 
 	/**
 	 * 查询所有消息推送模板
 	 *
 	 * @return
 	 */
-	List<MessagePushTemplateVO> findAll();
+	MessagePushTemplateResponse findAll();
 
 	/**
 	 * 根据条件查询消息推送模板
@@ -949,7 +917,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request);
+	MessagePushTemplateResponse findMsgPushTemplate(MsgPushTemplateRequest request);
 
 	/**
 	 * 新增消息推送模板
@@ -994,7 +962,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request);
+	SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 新增短信模版
@@ -1002,7 +970,7 @@ public interface AmConfigClient {
 	 * @param request
 	 * @return
 	 */
-	void insertSmsTemplate(SmsTemplateRequest request);
+	int insertSmsTemplate(SmsTemplateRequest request);
 
 	public SubmissionsResponse findSubmissionsList(SubmissionsRequest form);
 
@@ -1164,6 +1132,14 @@ public interface AmConfigClient {
 	LinkResponse insertAction(ContentLinksRequestBean requestBean);
 
 	/**
+	 * 根据id查询数据
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse infoInfoAction(Integer id);
+
+	/**
 	 * 修改根据条件查询友情链接列表
 	 *
 	 * @param requestBean
@@ -1193,4 +1169,240 @@ public interface AmConfigClient {
 	 * @author: nxl
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
+	/**
+	 * 根据条件查询消息推送标签管理表
+	 * @param request
+	 * @return
+	 */
+    MessagePushTagResponse getMessagePushTagList(MessagePushTagRequest request);
+
+	/**
+	 * 根据id查询消息推送标签详情
+	 * @param id
+	 * @return
+	 */
+	MessagePushTagResponse getMessagePushTag(Integer id);
+
+	/**
+	 * 添加标签信息
+	 * @param request
+	 * @return
+	 */
+	MessagePushTagResponse insretMessagePushTag(MessagePushTagRequest request);
+
+	/**
+	 * 修改标签信息
+	 * @param tagRequest
+	 * @return
+	 */
+    MessagePushTagResponse updateMessagePushTag(MessagePushTagRequest tagRequest);
+
+	/**
+	 * 删除信息
+	 * @param id
+	 * @return
+	 */
+	MessagePushTagResponse deleteMessagePushTag(Integer id);
+
+	/**
+	 * 修改信息
+	 * @param record
+	 * @return
+	 */
+    MessagePushTagResponse updatePushTag(MessagePushTagVO record);
+
+	/**
+	 * 检查标签编码是否唯一
+	 *
+	 * @param id
+	 * @param tagCode
+	 */
+	MessagePushTagResponse countByTagCode(Integer id, String tagCode);
+
+	/**
+	 * 获取消息模板列表
+	 * @param request
+	 * @return
+	 */
+    MessagePushTemplateResponse getMessagePushTemplateList(MsgPushTemplateRequest request);
+
+	/**
+	 * 获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getAllPushTagList();
+
+	/**
+	 * 根据id获取模板
+	 * @param id
+	 * @return
+	 */
+    MessagePushTemplateResponse findMsgPushTemplateById(Integer id);
+
+	/**
+	 * 获取标签类型
+	 * @return
+	 */
+	List<MessagePushTagVO> getTagList();
+
+	/**
+	 * 查询数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request);
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request);
+
+	/**
+	 * 查询通知配置列表
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse initSmsNoticeConfig();
+	/**
+	 * 查询通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse smsNoticeConfigInfo(SmsNoticeConfigRequest request);
+	/**
+	 * 添加通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse insertSmsNoticeConfig(SmsNoticeConfigRequest request);
+
+	/**
+	 * 修改通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse updateSmsNoticeConfig(SmsNoticeConfigRequest request);
+	/**
+	 * 关闭通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse closeSmsNoticeConfig(SmsNoticeConfigRequest request);
+	/**
+	 * 打开通知配置详情
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsNoticeConfigResponse openSmsNoticeConfig(SmsNoticeConfigRequest request);
+
+	/**
+	 * 唯一性验证
+	 * @param name
+	 * @author xiehuili
+	 * @return
+	 */
+	public Integer onlyName(String name);
+
+	/**
+	 * 关闭模板
+	 * @param request
+	 */
+	void closeAction(MailTemplateRequest request);
+
+	/**
+	 * 开启模板
+	 * @param request
+	 */
+	int openAction(MailTemplateRequest request);
+
+	/**
+	 * 获取充值银行卡列表
+	 * @return
+	 * @Author : huanghui
+	 */
+	List<BanksConfigVO> getBankcardList();
+
+	/**
+	 * 添加消息模板
+	 * @param templateVO
+	 * @return
+	 */
+	MessagePushTemplateResponse insertMessageTemplate(MessagePushTemplateVO templateVO);
+
+	/**
+	 * 修改消息模板
+	 * @param templateRequest
+	 * @return
+	 */
+	MessagePushTemplateResponse updateMsgPushTemplate(MsgPushTemplateRequest templateRequest);
+
+	/**
+	 * 删除模板
+	 * @param recordList
+	 * @return
+	 */
+	MessagePushTemplateResponse deleteMessagePushTemplate(List<Integer> recordList);
+
+	/**
+	 * 根据id、templapteCode查询唯一消息模板
+	 * @param id
+	 * @param templateCode
+	 * @return
+	 */
+	MessagePushTemplateResponse countByTemplateCode(Integer id, String templateCode);
+
+	/**
+	 * 开启短信配置模板
+	 * @param request
+	 */
+    int updateStatus(SmsTemplateRequest request);
+
+	/**
+	 * 关闭短信配置模板
+	 * @param request
+	 */
+	void closeSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 修改短信模版
+	 * @param request
+	 */
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param tplCode
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(String tplCode);
+
+	/**
+	 * 邮件模板详情
+	 * @param request
+	 * @return
+	 */
+	SmsMailTemplateVO infoAction(MailTemplateRequest request);
+
+	/**
+	 * 短信模板
+	 * @param id
+	 * @return
+	 */
+	SmsTemplateVO findSmsTemById(Integer id);
 }

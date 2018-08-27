@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.exception.accountexception;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountExceptionService;
@@ -38,7 +39,7 @@ import java.util.Map;
  * @version: AccountExceptionController, v0.1 2018/7/11 15:02
  */
 @RestController
-@RequestMapping("/hyjf-admin/accountexception")
+@RequestMapping("/hyjf-admin/exception/accountexception")
 @Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
 public class AccountExceptionController extends BaseController {
 
@@ -53,15 +54,12 @@ public class AccountExceptionController extends BaseController {
      */
     @ApiOperation(value = "汇付对账列表", notes = "汇付对账列表")
     @PostMapping(value = "/accountexceptionlist")
-    public AdminResult accountExceptionList(@RequestBody AccountExceptionRequest request){
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<AccountExceptionVO>> accountExceptionList(@RequestBody AccountExceptionRequest request){
         // 数据总数
         Integer count = accountExceptionService.getAccountExceptionCount(request);
-        map.put("count",count);
         // 异常列表list
         List<AccountExceptionVO> accountExceptionVOList = accountExceptionService.searchAccountExceptionList(request);
-        map.put("accountExceptionVOList",accountExceptionVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(accountExceptionVOList,count));
     }
 
     /**

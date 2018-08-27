@@ -335,7 +335,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                         }
                         borrowRepayPlanBean.setNumber("第" + (i + 1) + "期");
-                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                        if (StringUtils.isNotBlank(borrowRepayPlan.getRepayTotal())){
+                            borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
+                        }
                         repayPlanList.add(borrowRepayPlanBean);
                     }
                 }
@@ -450,9 +452,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/30 11:09
      */
     @Override
-    public HjhPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize) {
+    public WechatPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize) {
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_OBJECT_BLANK,"计划编号");
-        HjhPlanBorrowResultBean vo = new HjhPlanBorrowResultBean();
+        WechatPlanBorrowResultBean vo = new WechatPlanBorrowResultBean();
         this.searchHjhPlanBorrow(vo,planId,currPage,pageSize);
         return vo;
     }
@@ -465,7 +467,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @param pageNo
      * @param pageSize
      */
-    public void searchHjhPlanBorrow(HjhPlanBorrowResultBean result, String planNid, int pageNo, int pageSize) {
+    public void searchHjhPlanBorrow(WechatPlanBorrowResultBean result, String planNid, int pageNo, int pageSize) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", planNid);
         Date date = GetDate.getDate();
@@ -491,10 +493,10 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             List<DebtPlanBorrowCustomizeVO> consumeList = amTradeClient.selectPlanBorrowList(params);
 
             if (!CollectionUtils.isEmpty(consumeList)) {
-                List<HjhPlanBorrowResultBean.BorrowList> borrowList = result.getBorrowList();
-                HjhPlanBorrowResultBean.BorrowList borrow = null;
+                List<WechatPlanBorrowResultBean.BorrowList> borrowList = result.getBorrowList();
+                WechatPlanBorrowResultBean.BorrowList borrow = null;
                 for (DebtPlanBorrowCustomizeVO entity : consumeList) {
-                    borrow = new HjhPlanBorrowResultBean.BorrowList();
+                    borrow = new WechatPlanBorrowResultBean.BorrowList();
                     borrow.setBorrowApr(entity.getBorrowApr());
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
@@ -521,7 +523,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     @Override
     public Object getPlanAccedeList(String planId, int currPage, int pageSize) {
         CheckUtil.check(StringUtils.isNotBlank(planId),MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
-        HjhPlanAccedeResultBean resultBean = new HjhPlanAccedeResultBean();
+        WechatPlanAccedeResultBean resultBean = new WechatPlanAccedeResultBean();
 
         this.getHjhPlanAccede(resultBean,planId,currPage,pageSize);
 
@@ -535,7 +537,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @param pageNo
      * @param pageSize
      */
-    private void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planNid, int pageNo, int pageSize) {
+    private void getHjhPlanAccede(WechatPlanAccedeResultBean result, String planNid, int pageNo, int pageSize) {
 
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(planNid);
@@ -560,12 +562,12 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             List<DebtPlanAccedeCustomizeVO> recordList = this.amTradeClient.selectPlanAccedeList(params);
 
             if (!CollectionUtils.isEmpty(recordList)) {
-                List<HjhPlanAccedeResultBean.AccedeList> accedeList = result.getAccedeList();
-                HjhPlanAccedeResultBean.AccedeList accede = null;
+                List<WechatPlanAccedeResultBean.AccedeList> accedeList = result.getAccedeList();
+                WechatPlanAccedeResultBean.AccedeList accede = null;
                 Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
                 for (DebtPlanAccedeCustomizeVO entity : recordList) {
                     entity.setClientName(relationMap.get(String.valueOf(entity.getClient())));
-                    accede = new HjhPlanAccedeResultBean.AccedeList();
+                    accede = new WechatPlanAccedeResultBean.AccedeList();
                     accede.setAccedeAccount(entity.getAccedeAccount());
                     accede.setAccedeTime(entity.getAccedeTime());
                     accede.setUserName(entity.getUserName());
@@ -759,6 +761,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
+        result.setHomeXshProjectList(vo.getHomeXshProjectList());
         result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
         result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;

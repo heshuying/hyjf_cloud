@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 import com.hyjf.am.vo.user.AdminUserAuthListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 
@@ -31,8 +32,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +45,7 @@ import javax.servlet.http.HttpServletResponse;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "授权状态&授权记录",tags ="授权状态&授权记录")
+@Api(value = "会员中心-授权状态&授权记录",tags ="会员中心-授权状态&授权记录")
 @RestController
 @RequestMapping("/hyjf-admin/userauth")
 public class UserauthController extends BaseController {
@@ -85,8 +88,13 @@ public class UserauthController extends BaseController {
 		}
 
 		//插入数据库
-		userauthService.cancelInvestAuth(userId);
-		return new AdminResult<>();
+		AdminUserAuthListResponse uu =userauthService.cancelInvestAuth(userId);
+		if(AdminUserAuthListResponse.isSuccess(uu)) {
+			return new AdminResult<>();
+		}else {
+			return new AdminResult<>(AdminResult.FAIL, uu.getMessage());
+		}
+		
 	}
 
 	/**
@@ -107,8 +115,13 @@ public class UserauthController extends BaseController {
 			return new AdminResult<>("99",  "当前用户存在持有中计划，不能解约！");
 		}
 		//插入数据库
-		userauthService.cancelCreditAuth(userId);
-		return new AdminResult<>();
+		AdminUserAuthListResponse uu = userauthService.cancelCreditAuth(userId);
+		if(AdminUserAuthListResponse.isSuccess(uu)) {
+			return new AdminResult<>();
+		}else {
+			return new AdminResult<>(AdminResult.FAIL, uu.getMessage());
+		}
+		
 		
 	}
 	/**
@@ -122,7 +135,18 @@ public class UserauthController extends BaseController {
 	public AdminResult<ListResult<AdminUserAuthLogListVO>> cancelCreditAuth(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody AdminUserAuthLogListRequest form) {
 		AdminUserAuthLogListResponse rqes = userauthService.userauthLoglist(form);
-		return new AdminResult<ListResult<AdminUserAuthLogListVO>>(ListResult.build(rqes.getResultList(), rqes.getRecordTotal()));
+		List<AdminUserAuthLogListVO> list = rqes.getResultList();
+		 Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+		Map<String, String> invert = CacheUtil.getParamNameMap("AUTO_INVER_TYPE");
+		 List<AdminUserAuthLogListVO> list2=new  ArrayList<AdminUserAuthLogListVO>();
+		 for (AdminUserAuthLogListVO adminUserAuthLogListVO : list) {
+			 AdminUserAuthLogListVO avo=new AdminUserAuthLogListVO();
+			 avo=adminUserAuthLogListVO;
+			 avo.setAuthType(invert.get(adminUserAuthLogListVO.getAuthType()));
+			 avo.setOperateEsb(client.get(adminUserAuthLogListVO.getOperateEsb()));
+			 list2.add(avo);
+		}
+		return new AdminResult<ListResult<AdminUserAuthLogListVO>>(ListResult.build(list2, rqes.getRecordTotal()));
 		
 	}
 	 /**
@@ -221,7 +245,8 @@ public class UserauthController extends BaseController {
         String sheetName = "授权记录";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
- 
+		Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+		Map<String, String> invert = CacheUtil.getParamNameMap("AUTO_INVER_TYPE");
         form.setCurrPage(-1);
         form.setPageSize(-1);
 		 List<AdminUserAuthLogListVO> recordList = userauthService.userauthLoglist(form).getResultList();
@@ -256,11 +281,11 @@ public class UserauthController extends BaseController {
                     } else if (celLength == 1) {// 订单号
                         cell.setCellValue(user.getOrderId());
                     } else if (celLength == 2) {// 类型
-                        cell.setCellValue(user.getAuthType());
+                        cell.setCellValue(invert.get(user.getAuthType()));
                     } else if (celLength == 3) {// 用户名
                         cell.setCellValue(user.getUserName());
                     } else if (celLength == 4) {// 操作平台
-                        cell.setCellValue(user.getOperateEsb());
+                        cell.setCellValue(client.get(user.getOperateEsb()));
                     } else if (celLength == 5) {// 订单状态
                         cell.setCellValue(user.getOrderStatus());
                     } else if (celLength == 6) {// 授权时间

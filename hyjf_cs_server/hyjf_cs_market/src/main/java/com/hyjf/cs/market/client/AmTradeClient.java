@@ -1,13 +1,17 @@
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -153,4 +157,19 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	BigDecimal sumBorrowUserMoneyTopOne();
+
+	/**
+	 * 查询千乐渠道散标数据
+	 * @return
+	 */
+	DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
+	DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
+
+	DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+
+	Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest);
+
+	Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest);
+
 }

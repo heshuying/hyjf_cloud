@@ -29,26 +29,51 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements com.hyj
     @Autowired
     AmTradeClient amTradeClient;
 
+    /**
+     * 结束债权列表
+     * @param requestBean
+     * @return
+     */
     @Override
     public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean) {
         return amTradeClient.getCreditEndList(requestBean);
     }
 
+    /**
+     * 结束债权列表总记录数
+     * @param requestBean
+     * @return
+     */
     @Override
     public int getCreditEndCount(BankCreditEndListRequest requestBean){
         return amTradeClient.getCreditEndCount(requestBean);
     }
 
+    /**
+     * 根据orderid检索
+     * @param orderId
+     * @return
+     */
     @Override
     public BankCreditEndVO getCreditEndByOrderId(String orderId){
         return amTradeClient.getCreditEndByOrderId(orderId);
     }
 
+    /**
+     * 更新结束债权记录
+     * @param requestBean
+     * @return
+     */
     @Override
     public int updateBankCreditEnd(BankCreditEndVO requestBean) {
         return amTradeClient.updateBankCreditEnd(requestBean);
     }
 
+    /**
+     * 批次恢复为初始状态
+     * @param requestBean
+     * @return
+     */
     @Override
     public boolean updateCreditEndForInitial(BankCreditEndVO requestBean) {
         return amTradeClient.updateCreditEndForInitial(requestBean)>0? true : false;

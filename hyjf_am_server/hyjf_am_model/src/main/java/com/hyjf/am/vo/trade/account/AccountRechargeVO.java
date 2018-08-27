@@ -15,6 +15,71 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
     /** 交易金额 */
     public String txAmount;
 
+    /**
+     * 银行名称
+     */
+    private String bankName;
+
+    /**
+     * 状态
+     */
+    private String statusName;
+
+    /**
+     * 手机号码
+     */
+    private String mobile;
+
+    /**
+     * 用户属性（当前）
+     */
+    private String userAttribute;
+
+    /**
+     * 用户所属一级分部（当前）
+     */
+    private String userRegionName;
+
+    /**
+     * 用户所属二级分部（当前）
+     */
+    private String userBranchName;
+
+    /**
+     * 用户所属团队（当前）
+     */
+    private String userDepartmentName;
+
+    /**
+     * 推荐人用户名（当前）
+     */
+    private String referrerName;
+
+    /**
+     * 用户角色
+     */
+    private String roleId;
+
+    /**
+     * 推荐人姓名（当前）
+     */
+    private String referrerTrueName;
+
+    /**
+     * 推荐人所属一级分部（当前）
+     */
+    private String referrerRegionName;
+
+    /**
+     * 推荐人所属二级分部（当前）
+     */
+    private String referrerBranchName;
+
+    /**
+     * 推荐人所属团队（当前）
+     */
+    private String referrerDepartmentName;
+
     private Integer id;
 
     private String nid;
@@ -29,7 +94,7 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     private Integer txTime;
 
-    private Integer seqNo;
+    private String seqNo;
 
     private String bankSeqNo;
 
@@ -173,11 +238,11 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
         this.txTime = txTime;
     }
 
-    public Integer getSeqNo() {
+    public String getSeqNo() {
         return seqNo;
     }
 
-    public void setSeqNo(Integer seqNo) {
+    public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
     }
 
@@ -403,5 +468,109 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getUserAttribute() {
+        return userAttribute;
+    }
+
+    public void setUserAttribute(String userAttribute) {
+        this.userAttribute = userAttribute;
+    }
+
+    public String getUserRegionName() {
+        return userRegionName;
+    }
+
+    public void setUserRegionName(String userRegionName) {
+        this.userRegionName = userRegionName;
+    }
+
+    public String getUserBranchName() {
+        return userBranchName;
+    }
+
+    public void setUserBranchName(String userBranchName) {
+        this.userBranchName = userBranchName;
+    }
+
+    public String getUserDepartmentName() {
+        return userDepartmentName;
+    }
+
+    public void setUserDepartmentName(String userDepartmentName) {
+        this.userDepartmentName = userDepartmentName;
+    }
+
+    public String getReferrerName() {
+        return referrerName;
+    }
+
+    public void setReferrerName(String referrerName) {
+        this.referrerName = referrerName;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getReferrerTrueName() {
+        return referrerTrueName;
+    }
+
+    public void setReferrerTrueName(String referrerTrueName) {
+        this.referrerTrueName = referrerTrueName;
+    }
+
+    public String getReferrerRegionName() {
+        return referrerRegionName;
+    }
+
+    public void setReferrerRegionName(String referrerRegionName) {
+        this.referrerRegionName = referrerRegionName;
+    }
+
+    public String getReferrerBranchName() {
+        return referrerBranchName;
+    }
+
+    public void setReferrerBranchName(String referrerBranchName) {
+        this.referrerBranchName = referrerBranchName;
+    }
+
+    public String getReferrerDepartmentName() {
+        return referrerDepartmentName;
+    }
+
+    public void setReferrerDepartmentName(String referrerDepartmentName) {
+        this.referrerDepartmentName = referrerDepartmentName;
     }
 }

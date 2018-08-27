@@ -1,12 +1,12 @@
 package com.hyjf.am.market.service.impl;
 
+import com.hyjf.am.market.config.SystemConfig;
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
 import com.hyjf.am.market.dao.mapper.customize.app.AppActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.mapper.customize.market.ActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.auto.ActivityListExample;
 import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
-import com.hyjf.am.market.datasource.SystemConfig;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -56,11 +54,14 @@ public class ActivityServiceImpl implements ActivityService {
         int activitycount = 0;
         ActivityListExample example = new ActivityListExample();
         ActivityListExample.Criteria criteria = example.createCriteria();
-        if (request.getTitle() != null || request.getStartTime() != 0 ) {
-            criteria.andTitleEqualTo(request.getTitle()).
-                    andTimeStartEqualTo(request.getStartTime()).
-                    andTimeEndEqualTo(request.getEndTime()).
-                    andCreateTimeBetween(GetDate.str2Timestamp(request.getStartCreate()), GetDate.str2Timestamp(request.getEndCreate()));
+        if (request.getTitle() != null ) {
+            criteria.andTitleEqualTo(request.getTitle());
+        }
+        if (request.getStartTime() != null && request.getEndTime() != null) {
+            criteria.andTimeEndEqualTo(request.getStartTime()).andTimeEndEqualTo(request.getEndTime());
+        }
+        if (request.getStartCreate() != null && request.getEndCreate() != null) {
+            criteria.andCreateTimeBetween(GetDate.str2Timestamp(request.getStartCreate()), GetDate.str2Timestamp(request.getEndCreate()));
         }
         activitycount = activityListMapper.countByExample(example);
         return activitycount;
@@ -117,42 +118,24 @@ public class ActivityServiceImpl implements ActivityService {
      * @return
      */
     @Override
-    public Map<String, Object> insertRecord(ActivityList activityList) {
+    public int insertRecord(ActivityList activityList) {
         activityList.setCreateTime(GetDate.getTimestamp());
         activityList.setUpdateTime(GetDate.getTimestamp());
         int insert = activityListMapper.insertSelective(activityList);
-        Map<String,Object> map = new HashMap<>();
-        if (insert > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "添加失败");
-        }
-        return map;
+        return insert;
     }
 
     @Override
-    public Map<String, Object> updateActivity(ActivityList activityList) {
+    public int updateActivity(ActivityList activityList) {
         activityList.setUpdateTime(GetDate.getTimestamp());
         int update = activityListMapper.updateByPrimaryKey(activityList);
-        Map<String,Object> map = new HashMap<>();
-        if (update > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "修改失败");
-        }
-        return map;
+        return update;
     }
 
     @Override
-    public Map<String, Object> deleteActivity(int id) {
+    public int deleteActivity(int id) {
         int delete = activityListMapper.deleteByPrimaryKey(id);
-        Map<String,Object> map = new HashMap<>();
-        if (delete > 0) {
-            map.put("success", true);
-        } else {
-            map.put("msg", "删除失败");
-        }
-        return map;
+        return delete;
     }
 
     /**

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(tags = "Web端债转投资")
+@Api(tags = "web端-债转投资")
 @RestController
 @RequestMapping("/hyjf-web/credit")
 public class CreditController {
@@ -35,7 +35,7 @@ public class CreditController {
      */
     @ApiOperation(value = "我要债转列表页 获取参数", notes = "首页 > 账户中心 > 资产管理 > 可转让列表")
     @PostMapping(value = "/creditListInit", produces = "application/json; charset=utf-8")
-    public WebResult getCreditList(@RequestBody MyCreditListRequest request,
+    public WebResult getCreditList(MyCreditListRequest request,
             @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result =  creditListService.getCreditListData(request,userId);
         return result;
@@ -63,7 +63,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = "用户中心验证投资人当天是否可以债转 每天三次", notes = "用户中心验证投资人当天是否可以债转")
-    @PostMapping(value = "/tender_able_to_credit", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tenderAbleToCredit", produces = "application/json; charset=utf-8")
     public WebResult tenderAbleToCredit(@RequestBody CreditDetailsRequestBean request,
                                           @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result =  creditListService.tenderAbleToCredit(request,userId);
@@ -71,7 +71,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = "用户中心检查是否可以债转", notes = "用户中心检查是否可以债转")
-    @PostMapping(value = "/check_can_credit", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkCanCredit", produces = "application/json; charset=utf-8")
     public WebResult checkCanCredit(@RequestBody CreditDetailsRequestBean request,
                                         @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result =  creditListService.checkCanCredit(request,userId);
@@ -79,7 +79,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = "用户中心债转提交保存", notes = "用户中心债转提交保存")
-    @PostMapping(value = "/save_tender_to_credit", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/saveTenderToCredit", produces = "application/json; charset=utf-8")
     public WebResult saveTenderToCredit(@RequestBody TenderBorrowCreditCustomize request,
                                     @RequestHeader(value = "userId",required = false) Integer userId){
         request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
@@ -88,7 +88,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = " 用户中心查询 债转详细预计服务费计算", notes = " 用户中心查询 债转详细预计服务费计算")
-    @PostMapping(value = "/except_credit_fee", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/exceptCreditFee", produces = "application/json; charset=utf-8")
     public WebResult getExpectCreditFee(@RequestBody TenderBorrowCreditCustomize request,
                                         @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result = creditListService.getExpectCreditFee(request,userId);
@@ -96,7 +96,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = "发送短信验证码（ajax请求） 短信验证码数据保存", notes = "发送短信验证码（ajax请求） 短信验证码数据保存")
-    @PostMapping(value = "/send_code", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sendCode", produces = "application/json; charset=utf-8")
     public WebResult sendCode(@RequestBody TenderBorrowCreditCustomize request,
                                         @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result = creditListService.sendCreditCode(request,userId);
@@ -104,7 +104,7 @@ public class CreditController {
     }
 
     @ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
-    @PostMapping(value = "/check_code", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkCode", produces = "application/json; charset=utf-8")
     public WebResult checkCode(@RequestBody TenderBorrowCreditCustomize request,
                               @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result = creditListService.checkCode(request,userId);

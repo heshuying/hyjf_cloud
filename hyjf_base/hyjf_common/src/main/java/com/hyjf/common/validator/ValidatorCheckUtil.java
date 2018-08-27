@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.GetSessionOrRequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +68,8 @@ public class ValidatorCheckUtil {
 	private static final String SIGNLESSNUMLENGTH = "signlessnumlength";
 	/** 汉字Key */
 	private static final String CHINESE = "chinese";
+	/** IdCard Key */
+	private static final String IDCARD = "idcard";
 
 	/**
 	 * 必须输入项目
@@ -341,6 +347,52 @@ public class ValidatorCheckUtil {
 	}
 
 	/**
+	 * 检查是否身份证
+	 *
+	 * @param
+	 * @param idcard
+	 * @param itemname
+	 * @param value
+	 * @param required
+	 * @return
+	 */
+	public static boolean validateIdCard(JSONObject info, String idcard, String itemname, String key, String value, int minlength, int maxlength,
+										 boolean required) {
+
+		boolean retValue = true;
+		// 判断是否为空
+		if (required) {
+			retValue = validateNumJustLength(info, itemname, key, value, maxlength, required);
+		}
+		// 判断idcard范围
+		if (retValue && !org.springframework.util.StringUtils.isEmpty(value)) {
+			try {
+				retValue = GenericValidator.isInRange(value.length(), minlength, maxlength);
+				if (!retValue) {
+					CustomErrors.add(info, itemname, RANGE, getErrorMessage(RANGE, minlength, maxlength));
+					retValue = false;
+				}
+			} catch (Exception e) {
+			}
+		}
+		// 判断是否只是数字和字母
+		if (retValue && !org.springframework.util.StringUtils.isEmpty(value)) {
+			if (!isAlphaNumeric(value)) {
+				CustomErrors.add(info, itemname, ALPHANUM, getErrorMessage(ALPHANUM));
+				retValue = false;
+			}
+		}
+		// 判断是否只是数字和字母
+		if (retValue && !org.springframework.util.StringUtils.isEmpty(value)) {
+			if (!isIDCard(value)) {
+				CustomErrors.add(info, itemname, IDCARD, getErrorMessage(IDCARD));
+				retValue = false;
+			}
+		}
+		return retValue;
+	}
+
+	/**
 	 * 检查是否电话号码
 	 *
 	 * @param
@@ -350,7 +402,7 @@ public class ValidatorCheckUtil {
 	 * @return
 	 */
 	public static boolean validateMobile(JSONObject info, String itemname, String key, String value, int maxlength,
-			boolean required) {
+										 boolean required) {
 
 		boolean retValue = validateNumJustLength(info, itemname, key, value, maxlength, required);
 		if (retValue && !StringUtils.isEmpty(value)) {
@@ -1072,4 +1124,101 @@ public class ValidatorCheckUtil {
                 return false;
         }
     }
+	/**
+	 * 身份证验证
+	 *
+	 * @param s
+	 *            号码内容
+	 * @return 是否有效 null和"" 都是false
+	 */
+	public static boolean isIDCard(String certNo) {
+		Map<Integer, String> zoneNum = new HashMap<Integer, String>();
+		zoneNum.put(11, "北京");
+		zoneNum.put(12, "天津");
+		zoneNum.put(13, "河北");
+		zoneNum.put(14, "山西");
+		zoneNum.put(15, "内蒙古");
+		zoneNum.put(21, "辽宁");
+		zoneNum.put(22, "吉林");
+		zoneNum.put(23, "黑龙江");
+		zoneNum.put(31, "上海");
+		zoneNum.put(32, "江苏");
+		zoneNum.put(33, "浙江");
+		zoneNum.put(34, "安徽");
+		zoneNum.put(35, "福建");
+		zoneNum.put(36, "江西");
+		zoneNum.put(37, "山东");
+		zoneNum.put(41, "河南");
+		zoneNum.put(42, "湖北");
+		zoneNum.put(43, "湖南");
+		zoneNum.put(44, "广东");
+		zoneNum.put(45, "广西");
+		zoneNum.put(46, "海南");
+		zoneNum.put(50, "重庆");
+		zoneNum.put(51, "四川");
+		zoneNum.put(52, "贵州");
+		zoneNum.put(53, "云南");
+		zoneNum.put(54, "西藏");
+		zoneNum.put(61, "陕西");
+		zoneNum.put(62, "甘肃");
+		zoneNum.put(63, "青海");
+		zoneNum.put(64, "新疆");
+		zoneNum.put(71, "台湾");
+		zoneNum.put(81, "香港");
+		zoneNum.put(82, "澳门");
+		zoneNum.put(91, "外国");
+		char[] PARITYBIT = { '1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2' };
+		int[] POWER_LIST = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };
+		if (certNo == null || certNo.length() != 18) {
+			return false;
+		}
+		final char[] cs = certNo.toUpperCase().toCharArray();
+		// 校验位数
+		int power = 0;
+		for (int i = 0; i < cs.length; i++) {
+			if (i == cs.length - 1 && cs[i] == 'X') {
+				break;// 最后一位可以 是X或x
+			}
+			if (cs[i] < '0' || cs[i] > '9') {
+				return false;
+			}
+			if (i < cs.length - 1) {
+				power += (cs[i] - '0') * POWER_LIST[i];
+			}
+		}
+
+		// 校验区位码
+		if (!zoneNum.containsKey(Integer.valueOf(certNo.substring(0, 2)))) {
+			return false;
+		}
+
+		// 校验年份
+		String year = certNo.substring(6, 10);
+
+		final int iyear = Integer.parseInt(year);
+		if (iyear < 1800 || iyear > Calendar.getInstance().get(Calendar.YEAR)) {
+			return false;// 1900年的PASS，超过今年的PASS
+		}
+
+		// 校验月份
+		String month = certNo.length() == 15 ? certNo.substring(8, 10) : certNo.substring(10, 12);
+		final int imonth = Integer.parseInt(month);
+		if (imonth < 1 || imonth > 12) {
+			return false;
+		}
+
+		// 校验天数
+		String day = certNo.length() == 15 ? certNo.substring(10, 12) : certNo.substring(12, 14);
+		final int iday = Integer.parseInt(day);
+		if (iday < 1 || iday > 31) {
+			return false;
+		}
+
+		// 校验"校验码"
+		if (certNo.length() == 15) {
+			return true;
+		}
+		return cs[cs.length - 1] == PARITYBIT[power % 11];
+	}
+
 }

@@ -191,7 +191,12 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USERID_KEY = "userId_";
+    public static final String USER_TOEKN_KEY = "TOKEN:";
+
+    /**
+     * 用户userId令牌前缀
+     */
+    public static final String USERID_KEY = "userId:";
 
     /**
      * 放款批次号key
@@ -273,4 +278,72 @@ public class RedisConstants {
 	 */
 	public static final String CLIENT = "CLIENT";
 
+    //某计划连续开放额度不同次数
+    public static final String CONT_WARN_OF_HJH_ACCOUNT = "contWarnOfHjhAccount:";
+
+    /**
+     * 群发短信--剩余短信条数
+     */
+    public static final String REMAIN_NUMBER = "remain_number";
+
+    /**
+     * 群发短信--短信余额
+     */
+    public static final String REMAIN_MONEY = "remain_money";
+
+    /**
+     * 上海大屏幕运营数据
+     */
+    public static final String SH_OPERATIONAL_DATA = "SH_OPERATIONAL_DATA:";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资人
+     */
+    public static final String STATISTICAL_INVESTOR = "STATISTICAL_INVESTOR";
+
+    /**
+     * 上海大屏幕运营数据 : 统计投资
+     */
+    public static final String STATISTICAL_INVESTMENT = "STATISTICAL_INVESTMENT";
+
+    /**
+     * 上海大屏幕运营数据 : 统计充值
+     */
+    public static final String STATISTICAL_RECHARGE = "STATISTICAL_RECHARGE";
+
+    /**
+     * 上海大屏幕运营数据 : 注册人统计
+     */
+    public static final String REGISTRANT_STATISTICS = "REGISTRANT_STATISTICS";
+
+    /**
+     * 上海大屏幕运营数据 : 公司动态列表
+     */
+    public static final String ARTICLE_LIST = "ARTICLE_LIST";
+
+    /**
+     * 协议模板二期---动态展示协议前台展示名称
+     */
+    public static final String PROTOCOL_PARAMS = "params";
+
+    /**
+     * 同步余额rediskey
+     */
+    public static final String SYNBALANCE = "synBalance";
+
+
+    /**
+     * 受托支付申请防并发key
+     */
+    public static final String CONCURRENCE_TRUSTEEPAY = "trusteePay:";
+
+    /**
+     * 担保机构批量还款防并发key
+     */
+    public static final String CONCURRENCE_BATCH_ORGREPAY_USERID = "batchOrgRepayUserid:";
+
+    /**
+     * 线下充值类型
+     */
+    public static final String UNDER_LINE_RECHARGE_TYPE = "UNDER_LINE_RECHARGE_TYPE";
 }

@@ -27,10 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +37,7 @@ import javax.validation.Valid;
  * @author yaoyong
  * @version CouponIssuanceController, v0.1 2018/7/5 10:05
  */
-@Api(value = "优惠券发行",tags = "优惠券发行" )
+@Api(tags = "VIP中心-优惠券发行" )
 @RestController
 @RequestMapping("/hyjf-admin/coupon/issuance")
 public class CouponIssuanceController extends BaseController {
@@ -51,7 +48,7 @@ public class CouponIssuanceController extends BaseController {
     @Autowired
     CouponConfigService couponConfigService;
 
-    @ApiOperation(value = "优惠券发行", notes = "页面初始化")
+    @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponConfigCustomizeVO>> init(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponConfigRequestBean requestBean) {
@@ -69,11 +66,11 @@ public class CouponIssuanceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券发行", notes = "修改页面信息")
-    @PostMapping("/updateAction")
+    @ApiOperation(value = "修改页面初始化", notes = "修改页面初始化")
+    @RequestMapping (value = "/updateAction",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     @ApiImplicitParam(name = "id", value = "主键")
-    public AdminResult<CouponConfigVO> updateCouponConfig(@RequestBody String id) {
+    public AdminResult<CouponConfigVO> updateCouponConfig(@PathVariable String id) {
         CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
         couponConfigRequest.setId(id);
         CouponConfigResponse ccr = couponConfigService.getCouponConfig(couponConfigRequest);
@@ -87,12 +84,12 @@ public class CouponIssuanceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券发行", notes = "保存修改信息")
+    @ApiOperation(value = "保存修改信息", notes = "保存修改信息")
     @PostMapping("/saveAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public AdminResult saveCouponConfig(@RequestBody CouponConfigRequestBean requestBean) {
-        CouponConfigRequest request = new CouponConfigRequest();
-        BeanUtils.copyProperties(requestBean, request);
+    public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
+//        CouponConfigRequest request = new CouponConfigRequest();
+//        BeanUtils.copyProperties(requestBean, request);
         CouponConfigResponse ccr = couponConfigService.saveCouponConfig(request);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -103,10 +100,10 @@ public class CouponIssuanceController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "优惠券发行", notes = "发行优惠券")
+    @ApiOperation(value = "发行优惠券", notes = "发行优惠券")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult insertAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+    public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = couponConfigService.insertAction(couponConfigRequest);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -118,10 +115,10 @@ public class CouponIssuanceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券发行", notes = "删除优惠券信息")
-    @PostMapping("/deleteAction")
+    @ApiOperation(value = "删除优惠券信息", notes = "删除优惠券信息")
+    @RequestMapping(value = "/deleteAction",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteAction(@RequestBody String id) {
+    public AdminResult deleteAction(@PathVariable String id) {
         CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
         couponConfigRequest.setId(id);
         CouponConfigResponse ccr = couponConfigService.deleteAction(couponConfigRequest);
@@ -135,10 +132,10 @@ public class CouponIssuanceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券发行", notes = "审核页面信息")
-    @PostMapping("/auditInfo")
+    @ApiOperation(value = "审核页面信息", notes = "审核页面信息")
+    @RequestMapping(value = "/auditInfo",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_AUDIT)
-    public AdminResult<CouponConfigVO> auditInfo(@RequestBody String id) {
+    public AdminResult<CouponConfigVO> auditInfo(@PathVariable String id) {
         CouponConfigRequest ccfr = new CouponConfigRequest();
         ccfr.setId(id);
         CouponConfigResponse response = couponConfigService.getAuditInfo(ccfr);
@@ -152,8 +149,8 @@ public class CouponIssuanceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "优惠券发行", notes = "保存审核信息")
-    @PostMapping("auditUpdateAction")
+    @ApiOperation(value = "保存审核信息", notes = "保存审核信息")
+    @PostMapping("/auditUpdateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_AUDIT)
     public AdminResult updateAudit(HttpServletRequest request, @RequestBody CouponConfigRequest couponConfigRequest) {
         AdminSystemVO user = getUser(request);
@@ -169,7 +166,7 @@ public class CouponIssuanceController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "优惠券发行", notes = "检查编号唯一性")
+    @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult checkAction(HttpServletRequest request, HttpServletResponse response) {

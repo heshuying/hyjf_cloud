@@ -75,7 +75,7 @@ public interface ContentArticleService {
      * 取首页公告(风险教育..)列表
      * @return
      */
-    List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit);
+    List<ContentArticle> searchHomeNoticeList(String noticeType, Integer offset, Integer limit);
 
 
     /**
@@ -123,7 +123,7 @@ public interface ContentArticleService {
      * 查询文章条数
      * @return
      */
-    Integer countContentArticleByType(Map<String, Object> params);
+    Integer countContentArticleByType();
 
     /**
      * 查询文章列表
@@ -139,4 +139,28 @@ public interface ContentArticleService {
      * @return
      */
     ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset);
+
+    /**
+     * 获取指定Type的文章列表
+     * @param type
+     * @return
+     * @Author : huanghui
+     */
+    List<ContentArticle> getContentArticListByType(String type);
+
+    /**
+     * 获取公司公告件数
+     * @param noticeType
+     * @return
+     */
+    int getNoticeListCount(String noticeType);
+
+    /**
+     * 分页查询公司公告
+     * @param noticeType
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<ContentArticle> searchNoticeList(String noticeType, int offset, int limit);
 }

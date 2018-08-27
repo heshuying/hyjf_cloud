@@ -9,6 +9,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -17,6 +18,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +28,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author sunss
  */
 @Api(value = "微信端用户开户",tags = "weChat端-用户开户")
 @RestController
-@RequestMapping("/hyjf-wechat/user/open")
+@RequestMapping("/hyjf-wechat/wx/user")
 public class WeChatBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatBankOpenController.class);
 
@@ -46,33 +49,35 @@ public class WeChatBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
-    @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/initopen")
     @ResponseBody
-    public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId, HttpServletRequest request) {
+    public Map userInfo(@RequestHeader(value = "userId") int userId) {
         logger.info("openAccount userInfo start, userId is :{}", userId);
-        WeChatResult<String> result = new WeChatResult<String>();
+        Map<String,String> result = new HashedMap();
         UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
-            logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
+            logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setData(mobile);
+            result.put("mobile",mobile);
+            result.put("status","000");
+            result.put("statusDesc","操作成功");
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
+            result.put("status","99");
+            result.put("statusDesc","操作失败");
         }
         return result;
     }
 
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
-    @PostMapping(value = "/openBankAccount")
+    @PostMapping(value = "/open")
     @ResponseBody
-    public ModelAndView openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WeChatResult<Map> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
-        ModelAndView reuslt = new ModelAndView();
+        WeChatResult reuslt = new WeChatResult();
 
         // 获取登录信息
         UserVO user = bankOpenService.getUsersById(userId);
@@ -93,7 +98,8 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_WX);
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
-        //reuslt = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        reuslt.setData(data);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {

@@ -1,7 +1,10 @@
 package com.hyjf.am.market.service;
 
+import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.response.admin.ContentAdsResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
+
+import java.util.List;
 
 /**
  * 内容中心-广告管理
@@ -20,6 +23,8 @@ public interface ContentAdsService {
      */
     boolean insertAction(ContentAdsRequest request);
 
+    ContentAdsResponse infoaction (Integer id);
+
     /**
      * 修改广告管理
      *
@@ -33,4 +38,6 @@ public interface ContentAdsService {
      * @param id
      */
     boolean deleteById(Integer id);
+
+    List<AdsType> getAdsTypeList();
 }

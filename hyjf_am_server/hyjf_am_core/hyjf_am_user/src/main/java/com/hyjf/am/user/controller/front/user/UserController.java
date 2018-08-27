@@ -101,7 +101,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/selectUtmPlatByUtmId/{utmId}")
-    public UtmPlatResponse selectUtmPlatByUtmId(String utmId) {
+    public UtmPlatResponse selectUtmPlatByUtmId(@PathVariable String utmId) {
         UtmPlat utmPlat = userService.selectUtmPlatByUtmId(utmId);
         UtmPlatResponse response = new UtmPlatResponse();
         if (null != utmPlat) {
@@ -664,7 +664,7 @@ public class UserController extends BaseController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectUtmPlatByUtmId/{userId}")
+    @RequestMapping("/selectUtmPlatByUserId/{userId}")
     public UtmPlatResponse selectUtmPlatByUserId(@PathVariable Integer userId) {
         UtmPlat utmPlat = userService.selectUtmPlatByUserId(userId);
         UtmPlatResponse response = new UtmPlatResponse();
@@ -768,5 +768,62 @@ public class UserController extends BaseController {
         response.setRtn(Response.FAIL);
         response.setMessage(Response.FAIL_MSG);
         return response;
+    }
+
+    /**
+     * 修改短信与邮件是否开启状态
+     * @param userId
+     * @param smsOpenStatus
+     * @param emailOpenStatus
+     * @return
+     */
+    @GetMapping("/updateStatusByUserId/{userId}/{smsOpenStatus}/{emailOpenStatus}")
+    public Integer updateStatusByUserId(@PathVariable Integer userId,
+                                        @PathVariable String smsOpenStatus,
+                                        @PathVariable String emailOpenStatus){
+        return userService.updateStatusByUserId(userId, smsOpenStatus, emailOpenStatus);
+    }
+
+    /**
+     * 查询千乐渠道的用户id
+     * @return
+     */
+    @GetMapping("/getQianleUser")
+    public List<Integer> getQianleUser() {
+        return userService.getQianleUser();
+    }
+
+    /**
+     * 插入ht_hjh_user_auth表
+     * @param hjhUserAuthRequest
+     */
+    @RequestMapping("/insertHjhUserAuth")
+    public int insertHjhUserAuth(@RequestBody HjhUserAuthRequest hjhUserAuthRequest) {
+        logger.info("insertHjhUserAuth:" + JSONObject.toJSONString(hjhUserAuthRequest));
+        HjhUserAuth hjhUserAuth = new HjhUserAuth();
+        BeanUtils.copyProperties(hjhUserAuthRequest,hjhUserAuth);
+        return userService.insertSelective(hjhUserAuth);
+    }
+    /**
+     * 更新ht_hjh_user_auth表
+     * @param hjhUserAuthRequest
+     */
+    @RequestMapping("/updateHjhUserAuth")
+    public int updateHjhUserAuth(@RequestBody HjhUserAuthRequest hjhUserAuthRequest) {
+        logger.info("updateHjhUserAuth:" + JSONObject.toJSONString(hjhUserAuthRequest));
+        HjhUserAuth hjhUserAuth = new HjhUserAuth();
+        BeanUtils.copyProperties(hjhUserAuthRequest,hjhUserAuth);
+        return userService.updateByPrimaryKeySelective(hjhUserAuth);
+    }
+    /**
+     * 更新 ht_hjh_user_auth_log 表
+     * @param hjhUserAuthLogRequest
+     */
+    @RequestMapping("/updateHjhUserAuthLog")
+    public int updateHjhUserAuthLog(@RequestBody HjhUserAuthLogRequest hjhUserAuthLogRequest) {
+        logger.info("updateHjhUserAuthLog:" + JSONObject.toJSONString(hjhUserAuthLogRequest));
+        HjhUserAuthLog hjhUserAuth = new HjhUserAuthLog();
+        BeanUtils.copyProperties(hjhUserAuthLogRequest,hjhUserAuth);
+        return userService.updateHjhUserAuthLog(hjhUserAuth);
     }
 }

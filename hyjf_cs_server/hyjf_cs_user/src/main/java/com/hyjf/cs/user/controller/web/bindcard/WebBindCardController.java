@@ -1,13 +1,11 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.ClientConstants;
@@ -23,6 +21,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +52,7 @@ public class WebBindCardController extends BaseUserController {
 	/**
 	 *  我的银行卡页面数据
 	 */
-	@ApiOperation(value = "我的银行卡页面数据", tags = "我的银行卡页面数据")
+	@ApiOperation(value = "我的银行卡页面数据", notes = "我的银行卡页面数据")
 	@PostMapping(value = "/mycard", produces = "application/json; charset=utf-8")
 	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId) {
 		WebResult<Object> result = new WebResult<Object>();
@@ -66,7 +64,7 @@ public class WebBindCardController extends BaseUserController {
 			result.setStatusDesc("用户未登录");
 			return result;
 		}
-		if(!user.isOpenAccount()){
+		if(!user.isBankOpenAccount()){
 			result.setStatus(WebResult.ERROR);
 			result.setStatusDesc("用户未开户");
 			return result;
@@ -85,9 +83,15 @@ public class WebBindCardController extends BaseUserController {
 		BankConfigVO bankConfigVO = bindCardService.getBankConfigById(bankCardVO.getBankId());
 		//已绑卡
 		resultMap.put("bindType", 1);
-		resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
-		resultMap.put("bankname", bankConfigVO.getName());
+		if(bankConfigVO != null){
+            resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
+            resultMap.put("bankname", bankConfigVO.getName());
+        }else{
+            resultMap.put("bankicon", systemConfig.getWebHost() + "/data/upfiles/filetemp/image/bank_log.png");
+            resultMap.put("bankname", StringUtils.isBlank(bankCardVO.getBank())?"":bankCardVO.getBank());
+        }
 		resultMap.put("bankcard", BankCardUtil.getCardNo(bankCardVO.getCardNo()));
+		resultMap.put("bankcardNotEncrypt", bankCardVO.getCardNo());
 		resultMap.put("cardId", bankCardVO.getId());
 
 		result.setData(resultMap);
@@ -115,18 +119,21 @@ public class WebBindCardController extends BaseUserController {
 			result.setStatus(ApiResult.ERROR);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口发生异常", e);
+			return result;
 		}
 
 		if (bankBean == null) {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口失败");
+			return result;
 		}
 
         if(!BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()) && !"JX900651".equals(bankBean.getRetCode())) {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口失败");
+			return result;
         }else {
 			result.setData(bankBean.getSrvAuthCode());
 		}

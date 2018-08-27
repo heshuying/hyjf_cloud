@@ -3,12 +3,9 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wangjun
@@ -17,20 +14,23 @@ import java.util.Map;
 public interface AdminCommonService {
     /**
      * 获取相应paramname数据
+     *
      * @param param
      * @return
      */
-    Map<String, String> getParamNameMap(String param);
+    List<DropDownVO> getParamNameList(String param);
 
     /**
      * 还款方式下拉列表
+     *
      * @return
      */
-    List<BorrowStyleVO> selectBorrowStyleList();
+    List<DropDownVO> selectBorrowStyleList();
 
     /**
-     * 资产来源
+     * 资产来源下拉列表
+     *
      * @return
      */
-    List<HjhInstConfigVO> selectHjhInstConfigList();
+    List<DropDownVO> selectHjhInstConfigList();
 }

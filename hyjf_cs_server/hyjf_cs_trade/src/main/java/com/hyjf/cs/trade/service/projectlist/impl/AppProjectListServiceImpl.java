@@ -27,6 +27,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -111,7 +112,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // ①查询count
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
-        AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
             logger.error("app端查询散标投资列表原子层count异常");
@@ -128,7 +128,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
-                //result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
@@ -225,7 +224,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         jsonObject.put("userValidation", userValidation);
         if (borrow == null) {
-            throw new RuntimeException("");
+            throw new CheckException("标的信息不存在");
         } else {
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
@@ -341,7 +340,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                 }
                 borrowRepayPlanBean.setNumber("第1期");
-                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
                 repayPlanList.add(borrowRepayPlanBean);
             } else {
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);
@@ -1337,11 +1336,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
 
             // 是否是新手0新手 1老手
-            if (userVO.getInvestflag() == 0) {
+          /*  if ( null != userVO.getInvestflag() && userVO.getInvestflag() == 0) {
                 userValidation.put("investflag", true);
             } else {
                 userValidation.put("investflag", false);
-            }
+            }*/
             //0未锁定,1锁定
             if (userVO.getStatus() == 0) {
                 userValidation.put("isAllowed", true);

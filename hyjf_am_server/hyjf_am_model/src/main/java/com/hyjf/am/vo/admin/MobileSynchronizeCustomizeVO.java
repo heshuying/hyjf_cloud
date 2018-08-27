@@ -4,6 +4,8 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,19 +13,23 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: MobileSynchronizeCustomizeVO, v0.1 2018/8/13 11:59
  */
+@ApiModel(value = "手机号同步请求参数")
 public class MobileSynchronizeCustomizeVO extends BaseVO implements Serializable {
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 6455442854066228801L;
 
-    /** 用户ID */
+    @ApiModelProperty(value = "用户ID")
     private String userId;
-    /** 用户名 */
+
+    @ApiModelProperty(value = "用户名")
     private String userName;
-    /** 用户电子账户号 */
+
+    @ApiModelProperty(value = "用户电子账户号")
     private String accountId;
-    /** 手机号 */
+
+    @ApiModelProperty(value = "手机号")
     private String mobile;
 
     public String getUserId() {

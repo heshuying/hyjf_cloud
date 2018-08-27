@@ -22,6 +22,14 @@ public class BorrowFinmanNewChargeVO extends BaseVO implements Serializable {
     private String manChargeTimeType;
 
     private String projectType;
+    /** 项目名称 */
+    private String projectName;
+
+    /** 资产来源 */
+    private String instName;
+
+    /** 产品类型名称 */
+    private String assetTypeName;
 
     private String instCode;
 
@@ -223,5 +231,29 @@ public class BorrowFinmanNewChargeVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getInstName() {
+        return instName;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
+    }
+
+    public String getAssetTypeName() {
+        return assetTypeName;
+    }
+
+    public void setAssetTypeName(String assetTypeName) {
+        this.assetTypeName = assetTypeName;
     }
 }

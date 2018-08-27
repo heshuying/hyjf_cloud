@@ -7,6 +7,9 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
+import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.front.user.UserManagerService;
@@ -19,8 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +39,12 @@ import java.util.Map;
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
 
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
+    @Autowired
+    private SpreadsUserLogMapper spreadsUserLogMapper;
+    @Autowired
+    private EmployeeCustomizeMapper employeeCustomizeMapper;
+    @Autowired
+    private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
 
     /**
      * 根据筛选条件查找会员列表
@@ -380,7 +391,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample example = new UserExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<User> usersList = this.userMapper.selectByExample(example);
-        if (usersList != null && usersList.size() > 0) {
+        if (null!= usersList && usersList.size() > 0) {
             return usersList.get(0);
         }
         return null;
@@ -1098,4 +1109,83 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         return null;
 	}
+
+    /**
+     * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<UserUpdateParamCustomize> queryUserAndDepartment(int userId){
+        List<UserUpdateParamCustomize> userUpdateParamList = userLeaveCustomizeMapper.queryUserAndDepartment(userId);
+        return userUpdateParamList;
+    }
+
+    /**
+     * 获取全部用户信息
+     * @return
+     */
+    @Override
+    public List<User> selectAllUser(){
+        List<User> userList = usersMapper.selectByExample(new UserExample());
+        return userList;
+    }
+
+    /**
+     * 查询此段时间的用户推荐人的修改记录
+     * @param userId
+     * @param repairStartDate
+     * @param repairEndDate
+     * @return
+     */
+    @Override
+    public List<SpreadsUserLog> searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate){
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SpreadsUserLogExample example = new SpreadsUserLogExample();
+        SpreadsUserLogExample.Criteria crt = example.createCriteria();
+        crt.andUserIdEqualTo(userId);
+        if (StringUtils.isNotBlank(repairStartDate) && StringUtils.isNotBlank(repairEndDate)) {
+            String strStart = repairStartDate + " 00:00:00";
+            String strEnd = repairEndDate + " 23:59:59";
+            try {
+                Date start = smp.parse(strStart);
+                Date end = smp.parse(strEnd);
+                crt.andCreateTimeGreaterThanOrEqualTo(start);
+                crt.andCreateTimeLessThanOrEqualTo(end);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        example.setOrderByClause("create_time ASC");
+        List<SpreadsUserLog> SpreadsUsersLogList = spreadsUserLogMapper.selectByExample(example);
+        return SpreadsUsersLogList;
+    }
+
+    /**
+     * 查找员工信息(状态不等于E系列的)
+     * @param userId
+     * @return
+     */
+    @Override
+    public EmployeeCustomize selectEmployeeInfoByUserId(Integer userId){
+        List<EmployeeCustomize> employeeCustomizeList = employeeCustomizeMapper.selectEmployeeInfoByUserId(userId);
+        if(null!=employeeCustomizeList&&employeeCustomizeList.size()>0){
+            return employeeCustomizeList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户id获取离职信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public AdminEmployeeLeaveCustomize selectUserLeaveByUserId(Integer userId){
+        List<AdminEmployeeLeaveCustomize> adminEmployeeLeaveCustomizeList = userLeaveCustomizeMapper.selectUserLeaveByUserId(userId);
+        if(null!=adminEmployeeLeaveCustomizeList&&adminEmployeeLeaveCustomizeList.size()>0){
+            return adminEmployeeLeaveCustomizeList.get(0);
+        }
+        return null;
+    }
 }

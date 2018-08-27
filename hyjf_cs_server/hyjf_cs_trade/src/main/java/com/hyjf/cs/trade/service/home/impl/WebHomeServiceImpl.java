@@ -100,7 +100,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setLoginFlag("1");
             int count = couponUserClient.getUserCouponCount(Integer.valueOf(userId), "0");
             result.setCouponCount(count);
-            if (userVO.getBankOpenAccount() == 1) { // 已开户
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) { // 已开户
                 result.setOpenFlag(CustomConstants.FLAG_OPENACCOUNT_YES);
                 AccountVO accountVO = accountClient.getAccountByUserId(Integer.valueOf(userId));
                 result.setUserInterest(accountVO != null ? (accountVO.getBankInterestSum() != null ? accountVO.getBankInterestSum() : BigDecimal.valueOf(0.00)) : BigDecimal.valueOf(0.00));
@@ -146,7 +146,7 @@ public class WebHomeServiceImpl implements WebHomeService {
 
         TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
-        BigDecimal interestSum = totalInvestAndInterestVO.getTotalInterestAmount() == null ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
+        BigDecimal interestSum = (totalInvestAndInterestVO == null ||totalInvestAndInterestVO.getTotalInterestAmount() == null) ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
         result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());
         //累计上线年数
         Integer yearSum = GetDate.getYearFromDate(PUT_ONLINE_TIME);

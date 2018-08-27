@@ -1,11 +1,15 @@
 package com.hyjf.cs.trade.service.synbalance;
 
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -25,6 +29,7 @@ public interface SynBalanceService extends BaseTradeService {
      * @Version v0.1
      * @Date
      */
+    @Override
     UserVO getUsers(Integer userId);
 
     /**
@@ -57,4 +62,11 @@ public interface SynBalanceService extends BaseTradeService {
      * @Date
      */
     boolean insertAccountDetails(AccountVO accountUser, SynBalanceVO synBalanceBean, String username, String ipAddr);
+
+    /**
+     * 获取数据表中线下充值类型
+     * @return
+     * @Author : huanghui
+     */
+    List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
 }

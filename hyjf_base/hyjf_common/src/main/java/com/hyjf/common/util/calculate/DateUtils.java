@@ -14,10 +14,12 @@ package com.hyjf.common.util.calculate;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * @author b
@@ -352,5 +354,214 @@ public class DateUtils {
 	    long d = c/1000/60/60/24;//天
 	    return d;
     }
+
+	/**
+	 * 获取本周一与当前日期相差天数
+	 * @return
+	 */
+	public static int getMondayPlus() {
+		Calendar cd = Calendar.getInstance();
+		int dayOfWeek = cd.get(Calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 1) {
+			return -6;
+		} else {
+			return 2 - dayOfWeek;
+		}
+	}
+
+	/**
+	 * 获取当前周 周一的日期
+	 * @return
+	 */
+	public static String getCurrentMonday() {
+		int mondayPlus = getMondayPlus();
+		GregorianCalendar currentDate = new GregorianCalendar();
+		currentDate.add(GregorianCalendar.DATE, mondayPlus);
+		Date monday = currentDate.getTime();
+		DateFormat df = DateFormat.getDateInstance();
+		String preMonday = df.format(monday);
+		return preMonday;
+	}
+
+	/**
+	 * 获取当前周 周日的日期
+	 * @return
+	 */
+	public static String getPreviousSunday() {
+		int mondayPlus = getMondayPlus();
+		GregorianCalendar currentDate = new GregorianCalendar();
+		currentDate.add(GregorianCalendar.DATE, mondayPlus +6);
+		Date monday = currentDate.getTime();
+		DateFormat df = DateFormat.getDateInstance();
+		String preMonday = df.format(monday);
+		return preMonday;
+	}
+
+	/**
+	 * 获取当前月开始的日期
+	 * @param date 2018-01-01:当前日日期
+	 * @return 2018-01-01
+	 */
+	public static String getMinMonthDate(String date) {
+		Calendar calendar = Calendar.getInstance();
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			calendar.setTime(dateFormat.parse(date));
+			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+			return dateFormat.format(calendar.getTime());
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取当前月的结束日期
+	 * @param date 2018-01-01:当前日日期
+	 * @return  2018-01-31
+	 */
+	public static String getMaxMonthDate(String date){
+		Calendar calendar = Calendar.getInstance();
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			calendar.setTime(dateFormat.parse(date));
+			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+			return dateFormat.format(calendar.getTime());
+		}  catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取当前年开始日期
+	 * @param date 2018-01-01:当前日日期
+	 * @return 2018-01-01
+	 */
+	public static String getMinYearDate(String date) {
+		Calendar calendar = Calendar.getInstance();
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			calendar.setTime(dateFormat.parse(date));
+			calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMinimum(Calendar.DAY_OF_YEAR));
+			return dateFormat.format(calendar.getTime());
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取当前年结束日期
+	 * @param date 2018-01-01:当前日日期
+	 * @return 2018-12-31
+	 */
+	public static String getMaxYearDate(String date) {
+		Calendar calendar = Calendar.getInstance();
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			calendar.setTime(dateFormat.parse(date));
+			calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
+			return dateFormat.format(calendar.getTime());
+		}  catch (java.text.ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过当前月,获取当前月所在的季度的开始时间
+	 * @param month 07 当前月月份
+	 * @return 2018-07-01
+	 */
+	public static String getCurrentQuarterStartTime(String month) {
+		Calendar calendar = Calendar.getInstance();
+		int currentMonth = Integer.parseInt(month);
+		String now = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (currentMonth >=1 && currentMonth <= 3){
+				calendar.set(Calendar.MONTH, 0);
+			}else if (currentMonth >= 4 && currentMonth <= 6){
+				calendar.set(Calendar.MONTH, 3);
+			}else if (currentMonth >= 7 && currentMonth <= 9){
+				calendar.set(Calendar.MONTH, 6);
+			}else if (currentMonth >= 10 && currentMonth <= 12){
+				calendar.set(Calendar.MONTH, 9);
+			}
+			calendar.set(Calendar.DATE, 1);
+			now = dateFormat.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return now;
+	}
+
+	/**
+	 * 通过当前月,获取当前月所在的季度的结束时间
+	 * @param month 07 当前月月份
+	 * @return 2018-09-30
+	 */
+	public static String getCurrentQuarterEndTime(String month) {
+		Calendar calendar = Calendar.getInstance();
+		int currentMonth = Integer.parseInt(month);
+		String now = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (currentMonth >= 1 && currentMonth <= 3) {
+				calendar.set(Calendar.MONTH, 2);
+				calendar.set(Calendar.DATE, 31);
+			} else if (currentMonth >= 4 && currentMonth <= 6) {
+				calendar.set(Calendar.MONTH, 5);
+				calendar.set(Calendar.DATE, 30);
+			} else if (currentMonth >= 7 && currentMonth <= 9) {
+				calendar.set(Calendar.MONTH, 8);
+				calendar.set(Calendar.DATE, 30);
+			} else if (currentMonth >= 10 && currentMonth <= 12) {
+				calendar.set(Calendar.MONTH, 11);
+				calendar.set(Calendar.DATE, 31);
+			}
+			now = dateFormat.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return now;
+	}
+
+	/**
+	 * 将日期格式化为时间戳
+	 * @param date_str 1970-01-01 00;00;00
+	 * @param format  yyyy-MM-dd HH:mm:ss
+	 * @return 十位时间戳
+	 */
+	public static String date2TimeStamp(String date_str,String format){
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			return String.valueOf(sdf.parse(date_str).getTime()/1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Zhadaojian
+	 * timeEnd比timeStar多的天数
+	 * @param timeStar-秒数
+	 * @param timeEnd-秒数
+	 * @return
+	 */
+	public static long differentDaysByString(String timeEnd,String timeStar) {
+		Long c = 0L;
+		if(StringUtils.isNotBlank(timeStar) && StringUtils.isNotBlank(timeEnd) ){
+			c = Long.valueOf(timeEnd)-Long.valueOf(timeStar);
+		}else if(StringUtils.isBlank(timeStar)){
+			c = Long.valueOf(timeEnd)-GetDate.getNowTime10();
+		}else if(StringUtils.isBlank(timeEnd)){
+			c = GetDate.getNowTime10()-Long.valueOf(timeStar);
+		}
+		long d = c/60/60/24;//天
+		return d;
+	}
 
 }

@@ -6,12 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class ApiSignUtil {
 	
 	/** 汇盈金服公钥文件地址(请求) **/
-//	@Value("${hyjf.req.pub.key}")
-	private static String HYJF_REQ_PUB_KEY_PATH = "";
+
+	private static String HYJF_REQ_PUB_KEY_PATH;
 //	public static final String HYJF_REQ_PUB_KEY_PATH = PropUtils.getSystem("hyjf.req.pub.key");
 
 	/** 汇盈金服私钥文件地址(请求) **/
@@ -37,12 +37,19 @@ public class ApiSignUtil {
 	private static String HYJF_RES_KEY_PASS = "";
 //	public static final String HYJF_RES_KEY_PASS = PropUtils.getSystem("hyjf.res.password");
 
+
+	public static String getHyjfReqPubKeyPath() {
+		return HYJF_REQ_PUB_KEY_PATH;
+	}
+
+	@Value("${hyjf.req.pub.key}")
+	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
+		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+	}
+
 	/**
 	 * RSA方式加签
 	 *
-	 * @param custId
-	 * @param forEncryptionStr
-	 * @param charset
 	 * @return
 	 * @throws Exception
 	 */
@@ -72,8 +79,6 @@ public class ApiSignUtil {
 	/**
 	 * RSA方式验签
 	 *
-	 * @param forEncryptionStr
-	 * @param chkValue
 	 * @return
 	 * @throws Exception
 	 */
@@ -98,9 +103,6 @@ public class ApiSignUtil {
 	/**
 	 * RSA方式加签
 	 *
-	 * @param custId
-	 * @param forEncryptionStr
-	 * @param charset
 	 * @return
 	 * @throws Exception
 	 */
@@ -130,8 +132,6 @@ public class ApiSignUtil {
 	/**
 	 * RSA方式验签
 	 *
-	 * @param forEncryptionStr
-	 * @param chkValue
 	 * @return
 	 * @throws Exception
 	 */

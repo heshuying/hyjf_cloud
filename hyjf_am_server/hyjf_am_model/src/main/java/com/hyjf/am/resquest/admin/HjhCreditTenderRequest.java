@@ -195,7 +195,19 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	 * 隐藏域债转编号
 	 */
 	private String creditNidHidden;
-	
+	/**
+	 * 是否复投承接
+	 */
+	private String tenderType;
+	/**
+	 * 债转服务费
+	 */
+	private String assignServiceFee;
+	/**
+	 * 债转服务费率
+	 */
+	private String assignServiceApr;
+
 	/**
 	 * 构造方法
 	 */
@@ -513,5 +525,29 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 
 	public void setCreditNidHidden(String creditNidHidden) {
 		this.creditNidHidden = creditNidHidden;
+	}
+
+	public String getTenderType() {
+		return tenderType;
+	}
+
+	public void setTenderType(String tenderType) {
+		this.tenderType = tenderType;
+	}
+
+	public String getAssignServiceFee() {
+		return assignServiceFee;
+	}
+
+	public void setAssignServiceFee(String assignServiceFee) {
+		this.assignServiceFee = assignServiceFee;
+	}
+
+	public String getAssignServiceApr() {
+		return assignServiceApr;
+	}
+
+	public void setAssignServiceApr(String assignServiceApr) {
+		this.assignServiceApr = assignServiceApr;
 	}
 }

@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/19.
  */
-@Api(value = "配置中心银行配置--接口切换", tags = "配置中心银行配置--接口切换")
+@Api(tags = "配置中心-银行配置--接口切换")
 @RestController
 @RequestMapping("/hyjf-admin/config/banksetting/bankinterface")
 public class BankInterfaceController extends BaseController {

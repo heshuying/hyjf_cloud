@@ -5,12 +5,14 @@ package com.hyjf.cs.message.mongo.mc;
 
 import java.util.List;
 
-import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import org.springframework.stereotype.Repository;
+
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 
 /**
  * @author fuqiang
@@ -56,9 +58,42 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 		return mongoTemplate.find(query, getEntityClass());
 	}
 
+	/**
+	 *查询模板消息统计报表
+	 * @param request
+	 * @return
+	 */
+	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
+			criteria.and("createTime").gte(request.getStartDateSrch() + " 00:00:00")
+					.lte(request.getEndDateSrch() + " 23:59:59");
+		}
+		if (StringUtils.isNotBlank(request.getMsgTitleSrch())) {
+			criteria.and("msgTitle").is(request.getMsgTitleSrch());
+		}
+		if (StringUtils.isNotBlank(request.getMsgCodeSrch())) {
+			criteria.and("msgCode").is(request.getMsgCodeSrch());
+		}
+		if (StringUtils.isNotBlank(request.getTagIdSrch())) {
+			criteria.and("tagId").is(request.getTagIdSrch());
+		}
+		query.addCriteria(criteria);
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int currPage = request.getCurrPage();
+			int pageSize = request.getPageSize();
+			int limitStart = (currPage - 1) * pageSize;
+			int limitEnd = limitStart + pageSize;
+			query.skip(limitStart).limit(limitEnd);
+		}
+		return mongoTemplate.find(query, getEntityClass());
+	}
+
 	@Override
 	protected Class<MessagePushTemplateStatics> getEntityClass() {
 		return MessagePushTemplateStatics.class;
 	}
+
 
 }

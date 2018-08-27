@@ -2,8 +2,10 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,5 +144,33 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 通过手机号获取设备标识码
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
+		String url = "http://AM-USER/am-user/userInfo/getMobileCodeByNumber/" + mobile;
+		AdminMsgPushCommonCustomizeVO response = restTemplate.getForEntity(url,AdminMsgPushCommonCustomizeVO.class).getBody();
+		return response;
+	}
+
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer countAllUser(){
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/countAll",UserResponse.class).getBody();
+		if (!Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getCount();
 	}
 }

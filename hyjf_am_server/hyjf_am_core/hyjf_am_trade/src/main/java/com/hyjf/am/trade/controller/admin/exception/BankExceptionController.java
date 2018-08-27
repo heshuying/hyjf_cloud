@@ -51,7 +51,7 @@ public class BankExceptionController extends BaseController {
     @Autowired
 	private BankTenderCancelService bankTenderCancelService;
 
-    @RequestMapping("/recharge")
+    @GetMapping("/recharge")
     public void recharge(){
         logger.info("recharge...");
         bankRechargeService.recharge();
@@ -318,7 +318,7 @@ public class BankExceptionController extends BaseController {
 
 	/**
 	 * 获取债转承接信息AssignNid
-	 * @param nid
+	 * @param assignNid
 	 * @return
 	 */
     @GetMapping("/getCreditTenderByAssignNid/{assignNid}")

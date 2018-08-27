@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,12 +14,18 @@ import java.math.BigDecimal;
  * @author: sunpeikai
  * @version: PlatformTransferRequest, v0.1 2018/7/9 15:35
  */
+@ApiModel(value = "发起平台转账请求参数")
 public class PlatformTransferRequest extends BaseVO implements Serializable {
     private static final long serialVersionUID = 1L;
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
+    @ApiModelProperty(value = "用户名")
     private String userName;
+    @ApiModelProperty(value = "交易密码")
     private String password;
+    @ApiModelProperty(value = "转账金额")
     private BigDecimal money;
+    @ApiModelProperty(value = "备注说明")
     private String remark;
 
     public static long getSerialVersionUID() {

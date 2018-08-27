@@ -41,5 +41,36 @@ public interface SmsTemplateService {
      *
      * @param request
      */
-    void insertSmsTemplate(SmsTemplateRequest request);
+    int insertSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 开启短信模板
+     * @param request
+     */
+    Integer updateSmsTemplateStatus(SmsTemplateRequest request);
+
+    /**
+     * 关闭短信模板
+     * @param request
+     */
+    void closeSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 修改短信模版
+     * @param request
+     */
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 查询总条数
+     * @return
+     */
+    int selectCount(SmsTemplateRequest request);
+
+    /**
+     * 根据id查询模板
+     * @param id
+     * @return
+     */
+    SmsTemplate findById(Integer id);
 }

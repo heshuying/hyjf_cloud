@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 import com.hyjf.batch.job.BaseJob;
 
 /**
+ * 消息推送统计定时任务
  * @author fuqiang
  * @version MsgPushStaticsJob, v0.1 2018/6/21 18:14
  */

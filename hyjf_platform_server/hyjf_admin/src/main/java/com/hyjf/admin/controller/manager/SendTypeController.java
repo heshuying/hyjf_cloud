@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author by xiehuili on 2018/8/1.
  */
-@Api(value = "配置中心借款项目配置--发标/复审",tags = "配置中心借款项目配置--发标/复审")
+@Api(tags = "配置中心-借款项目配置--发标/复审")
 @RestController
 @RequestMapping("/hyjf-admin/config/sendtype")
 public class SendTypeController extends BaseController {

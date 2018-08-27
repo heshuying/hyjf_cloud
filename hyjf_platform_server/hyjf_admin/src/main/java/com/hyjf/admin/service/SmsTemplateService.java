@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 
@@ -26,7 +27,7 @@ public interface SmsTemplateService {
 	 * @param request
 	 * @return
 	 */
-	List<SmsTemplateVO> findSmsTemplate(SmsTemplateRequest request);
+	SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 新增短信模版
@@ -34,5 +35,30 @@ public interface SmsTemplateService {
 	 * @param request
 	 * @return
 	 */
-    void insertSmsTemplate(SmsTemplateRequest request);
+    int insertSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 开启短信模板
+	 * @param request
+	 */
+	int updateStatus(SmsTemplateRequest request);
+
+	/**
+	 * 关闭短信模板
+	 * @param request
+	 */
+	void closeAction(SmsTemplateRequest request);
+
+	/**
+	 * 修改短信模版
+	 * @param request
+	 */
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+	/**
+	 * 根据tplcode查询短信模板
+	 * @param request
+	 * @return
+	 */
+	SmsTemplateVO selectSmsTemByTplCode(SmsTemplateRequest request);
 }

@@ -24,9 +24,9 @@ import org.springframework.beans.factory.annotation.Value;
 public class JPush {
     protected static final Logger logger = LoggerFactory.getLogger(JPush.class);
 
-    private static final String appKey = "da091acf1579e500b6d68642";
+    private static final String appKey = "";//"da091acf1579e500b6d68642";
 
-    private static final String masterSecret = "5fab0eee768aa594d4acc999";
+    private static final String masterSecret = "";//"5fab0eee768aa594d4acc999";
 
     private static final String ANDROID_TITLE = "汇盈金服";
 
@@ -46,7 +46,7 @@ public class JPush {
      */
     public static void main(String[] args) {
         // ios用户
-        PushPayload payload = buildPushObject_ios_tag_alert("汇盈金服测试样例1", 1, 1, "0");
+        PushPayload payload = buildPushObject_ios_tag_alert("汇盈金服测试样例1", "1", 1, "0");
         PushResult result = null;
         try {
             result = JPush.getClientInstance().sendPush(payload);
@@ -83,14 +83,13 @@ public class JPush {
      * 根据别名推送消息（推送到个人用）
      * 
      * @param alert 内容
-     * @param title 标题
      * @param msgId 消息ID
      * @param operation 操作指令（例：0打开app）
      * @param msgAction 指令内容
      * @param alias 别名集合
      * @return
      */
-	public static PushPayload buildPushObject_all_alias_alert(String alert, Integer msgId, Integer operation,
+	public static PushPayload buildPushObject_all_alias_alert(String alert, String msgId, Integer operation,
                                                               String msgAction, String... alias) {
 		return PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.alias(alias))
 				.setNotification(
@@ -112,13 +111,12 @@ public class JPush {
     /**
      * 推送安卓用户 消息
      * @param alert 内容
-     * @param title 标题
      * @param msgId 消息ID
      * @param operation 操作指令（例：0打开app）
      * @param msgAction 指令内容
      * @return
      */
-	public static PushPayload buildPushObject_android_tag_alertWithTitle(String alert, Integer msgId, Integer operation,
+	public static PushPayload buildPushObject_android_tag_alertWithTitle(String alert, String msgId, Integer operation,
                                                                          String msgAction) {
 		return PushPayload.newBuilder().setPlatform(Platform.android()).setAudience(Audience.all())
 				.setNotification(Notification.newBuilder()
@@ -134,7 +132,6 @@ public class JPush {
     /**
      * 根据标签推送安卓用户 消息
      * @param alert 内容
-     * @param title 标题
      * @param msgId 消息ID
      * @param operation 操作指令（例：0打开app）
      * @param msgAction 指令内容
@@ -161,7 +158,7 @@ public class JPush {
      * @param msgAction 指令内容
      * @return
      */
-	public static PushPayload buildPushObject_ios_tag_alert(String alert, Integer msgId, Integer operation,
+	public static PushPayload buildPushObject_ios_tag_alert(String alert, String msgId, Integer operation,
                                                             String msgAction) {
 		return PushPayload.newBuilder().setPlatform(Platform.ios()).setAudience(Audience.all())
 				.setNotification(
@@ -206,14 +203,13 @@ public class JPush {
 
     /**
      * 推送 安卓和ios所有用户 平台消息
-     * @param title
      * @param alert 消息内容
      * @param msgId 消息ID
      * @param operation 操作指令（例：0打开app）
      * @param msgAction 指令内容
      * @return
      */
-	public static PushPayload buildPushObject_android_and_ios(String alert, Integer msgId, Integer operation,
+	public static PushPayload buildPushObject_android_and_ios(String alert, String msgId, Integer operation,
                                                               String msgAction) {
 		return PushPayload.newBuilder().setPlatform(Platform.android_ios()).setAudience(Audience.all())
 				.setNotification(
@@ -235,7 +231,6 @@ public class JPush {
     /**
      * 根据标签 推送 安卓和ios所有用户 平台消息
      * @param tag 标签
-     * @param title 标题
      * @param alert 消息内容
      * @param msgId 消息ID
      * @param operation 操作指令（例：0打开app）

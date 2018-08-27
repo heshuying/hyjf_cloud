@@ -3,9 +3,9 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -17,24 +17,36 @@ import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
 import com.hyjf.am.resquest.admin.VipDetailListRequest;
 import com.hyjf.am.resquest.admin.VipManageRequest;
 import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.VipDetailListVO;
 import com.hyjf.am.vo.admin.VipManageVO;
 import com.hyjf.am.vo.admin.VipUpdateGradeListVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * @author yaoyong
  * @version VIPManageController, v0.1 2018/7/2 14:49
  */
-@Api(value = "vip管理", tags = "vip管理")
+@Api(tags = "VIP中心-VIP管理")
 @RestController
 @RequestMapping("/hyjf-admin/vipmanage")
 public class VipManageController extends BaseController {
@@ -45,36 +57,54 @@ public class VipManageController extends BaseController {
     @Autowired
     private VipManageService vipManageService;
 
-    @ApiOperation(value = "vip管理", notes = "vip管理页面初始化")
-    @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject vipManageInit() {
-        JSONObject jsonObject = vipManageService.initVipManage();
-        return jsonObject;
-    }
-
-    @ApiOperation(value = "vip管理", notes = "vip管理列表查询")
+    @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/vipManageList")
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, VipManageRequest vipManageRequest) {
-        VipManageResponse vmr = vipManageService.searchList(vipManageRequest);
-        if (vmr == null) {
+    public AdminResult searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
+        VipManageResponse response = vipManageService.searchList(vipManageRequest);
+        // 用户角色
+        List<ParamNameVO> userRoles = this.vipManageService.getParamNameList("USER_ROLE");
+        // 用户属性
+        List<ParamNameVO> userPropertys = this.vipManageService.getParamNameList("USER_PROPERTY");
+        // 开户状态
+        List<ParamNameVO> accountStatus = this.vipManageService.getParamNameList("ACCOUNT_STATUS");
+        // 用户状态
+        List<ParamNameVO> userStatus = this.vipManageService.getParamNameList("USER_STATUS");
+        // 注册平台
+        List<ParamNameVO> registPlat = this.vipManageService.getParamNameList("CLIENT");
+        // 部门
+        List<OADepartmentCustomizeVO> departmentList = vipManageService.getCrmDepartmentList();
+
+        response.setUserRoles(userRoles);
+        response.setUserPropertys(userPropertys);
+        response.setAccountStatus(accountStatus);
+        response.setUserStatus(userStatus);
+        response.setRegistPlat(registPlat);
+        response.setDepartmentList(departmentList);
+        if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(vmr)) {
-            return new AdminResult<>(FAIL, vmr.getMessage());
-
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount()));
+        return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "vip管理", notes = "vip详情页面")
-    @PostMapping("/vipdetailInit")
+    @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
+    @RequestMapping (value = "/vipdetailInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipDetailListVO>> vipDetailInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public AdminResult vipDetailInit(@RequestParam String userId) {
         VipDetailListRequest vdr = new VipDetailListRequest();
         vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
+        if (!CollectionUtils.isEmpty(vdl.getResultList())) {
+            List<VipDetailListVO> vipDetailListVOS = vdl.getResultList();
+            for (VipDetailListVO vipDetailList : vipDetailListVOS) {
+                String nid = vipDetailList.getTenderNid();
+                BorrowTenderVO borrowTenderVO = vipManageService.getBorrowTenderList(nid);
+                vipDetailList.setAccount(borrowTenderVO.getAccount().toPlainString());
+            }
+        }
         if (vdl == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -82,13 +112,13 @@ public class VipManageController extends BaseController {
             return new AdminResult<>(FAIL, vdl.getMessage());
 
         }
-        return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
+        return new AdminResult<>(vdl);
     }
 
-    @ApiOperation(value = "vip管理", notes = "vip升级详情页面")
-    @PostMapping("/vipupgradeInit")
+    @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
+    @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public AdminResult vipUpdateGradeInit(@RequestParam String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -97,9 +127,8 @@ public class VipManageController extends BaseController {
         }
         if (!Response.isSuccess(vgr)) {
             return new AdminResult<>(FAIL, vgr.getMessage());
-
         }
-        return new AdminResult<ListResult<VipUpdateGradeListVO>>(ListResult.build(vgr.getResultList(), vgr.getCount()));
+        return new AdminResult<>(vgr);
     }
 
 
@@ -113,8 +142,9 @@ public class VipManageController extends BaseController {
      *
      * @throws Exception
      */
-   /* @RequestMapping("/exportvips")
-    public void exportExcel( @RequestBody Map<String, Object> map, HttpServletRequest request,
+    @ApiOperation(value = "导出",notes = "导出")
+    @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
+    public void exportExcel( @RequestBody VipManageRequest vipManageRequest, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "VIP列表";
@@ -129,58 +159,61 @@ public class VipManageController extends BaseController {
         } else {
             fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
         }
-        ;
         // 需要输出的结果列表
-        //封装查询条件
-        Map<String, Object> userMap = new HashMap<String, Object>();
-        String regionName = StringUtils.isNotEmpty(form.getRegionName()) ? form.getRegionName() : null;
-        String branchName = StringUtils.isNotEmpty(form.getBranchName()) ? form.getBranchName() : null;
-        String departmentName = StringUtils.isNotEmpty(form.getDepartmentName()) ? form.getDepartmentName() : null;
-        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-        String realName = StringUtils.isNotEmpty(form.getRealName()) ? form.getRealName() : null;
-        String mobile = StringUtils.isNotEmpty(form.getMobile()) ? form.getMobile() : null;
-        String recommendName = StringUtils.isNotEmpty(form.getRecommendName()) ? form.getRecommendName() : null;
-        String userRole = StringUtils.isNotEmpty(form.getUserRole()) ? form.getUserRole() : null;
-        String userProperty = StringUtils.isNotEmpty(form.getUserProperty()) ? form.getUserProperty() : null;
-        String accountStatusStr = StringUtils.isNotEmpty(form.getAccountStatus()) ? form.getAccountStatus() : null;
-        String userStatusStr = StringUtils.isNotEmpty(form.getUserStatus()) ? form.getUserStatus() : null;
-        String registPlatStr = StringUtils.isNotEmpty(form.getRegistPlat()) ? form.getRegistPlat() : null;
-        String is51Str = StringUtils.isNotEmpty(form.getIs51()) ? form.getIs51() : null;
-        String regTimeStart = StringUtils.isNotEmpty(form.getRegTimeStart()) ? form.getRegTimeStart() : null;
-        String regTimeEnd = StringUtils.isNotEmpty(form.getRegTimeEnd()) ? form.getRegTimeEnd() : null;
-        // 部门
-        String[] list = new String[] {};
-        if (Validator.isNotNull(form.getCombotreeSrch())) {
-            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-                list = form.getCombotreeSrch().split(StringPool.COMMA);
-                form.setCombotreeListSrch(list);
-            } else {
-                list = new String[] { form.getCombotreeSrch() };
-                form.setCombotreeListSrch(list);
-            }
+//        //封装查询条件
+//        Map<String, Object> userMap = new HashMap<String, Object>();
+//        String regionName = StringUtils.isNotEmpty(vipManageRequest.getRegionName()) ? form.getRegionName() : null;
+//        String branchName = StringUtils.isNotEmpty(form.getBranchName()) ? form.getBranchName() : null;
+//        String departmentName = StringUtils.isNotEmpty(form.getDepartmentName()) ? form.getDepartmentName() : null;
+//        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
+//        String realName = StringUtils.isNotEmpty(form.getRealName()) ? form.getRealName() : null;
+//        String mobile = StringUtils.isNotEmpty(form.getMobile()) ? form.getMobile() : null;
+//        String recommendName = StringUtils.isNotEmpty(form.getRecommendName()) ? form.getRecommendName() : null;
+//        String userRole = StringUtils.isNotEmpty(form.getUserRole()) ? form.getUserRole() : null;
+//        String userProperty = StringUtils.isNotEmpty(form.getUserProperty()) ? form.getUserProperty() : null;
+//        String accountStatusStr = StringUtils.isNotEmpty(form.getAccountStatus()) ? form.getAccountStatus() : null;
+//        String userStatusStr = StringUtils.isNotEmpty(form.getUserStatus()) ? form.getUserStatus() : null;
+//        String registPlatStr = StringUtils.isNotEmpty(form.getRegistPlat()) ? form.getRegistPlat() : null;
+//        String is51Str = StringUtils.isNotEmpty(form.getIs51()) ? form.getIs51() : null;
+//        String regTimeStart = StringUtils.isNotEmpty(form.getRegTimeStart()) ? form.getRegTimeStart() : null;
+//        String regTimeEnd = StringUtils.isNotEmpty(form.getRegTimeEnd()) ? form.getRegTimeEnd() : null;
+//        // 部门
+//        String[] list = new String[] {};
+//        if (Validator.isNotNull(form.getCombotreeSrch())) {
+//            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
+//                list = form.getCombotreeSrch().split(StringPool.COMMA);
+//                form.setCombotreeListSrch(list);
+//            } else {
+//                list = new String[] { form.getCombotreeSrch() };
+//                form.setCombotreeListSrch(list);
+//            }
+//        }
+//        String[] combotreeListSrchStr = form.getCombotreeListSrch();
+//        if (form.getRegTimeStart() != null) {
+//            userMap.put("regTimeStart", regTimeStart);
+//        }
+//        if (form.getRegTimeEnd() != null) {
+//            userMap.put("regTimeEnd", regTimeEnd);
+//        }
+//        userMap.put("regionName", regionName);
+//        userMap.put("branchName", branchName);
+//        userMap.put("departmentName", departmentName);
+//        userMap.put("userName", userName);
+//        userMap.put("realName", realName);
+//        userMap.put("mobile", mobile);
+//        userMap.put("recommendName", recommendName);
+//        userMap.put("userRole", userRole);
+//        userMap.put("userProperty", userProperty);
+//        userMap.put("accountStatus", accountStatusStr);
+//        userMap.put("userStatus", userStatusStr);
+//        userMap.put("registPlat", registPlatStr);
+//        userMap.put("is51", is51Str);
+//        userMap.put("combotreeListSrch", combotreeListSrchStr);
+        List<VipManageVO> recordList = new ArrayList<>();
+        VipManageResponse vipManageResponse = vipManageService.searchList(vipManageRequest);
+        if (vipManageResponse != null) {
+            recordList = vipManageResponse.getResultList();
         }
-        String[] combotreeListSrchStr = form.getCombotreeListSrch();
-        if (form.getRegTimeStart() != null) {
-            userMap.put("regTimeStart", regTimeStart);
-        }
-        if (form.getRegTimeEnd() != null) {
-            userMap.put("regTimeEnd", regTimeEnd);
-        }
-        userMap.put("regionName", regionName);
-        userMap.put("branchName", branchName);
-        userMap.put("departmentName", departmentName);
-        userMap.put("userName", userName);
-        userMap.put("realName", realName);
-        userMap.put("mobile", mobile);
-        userMap.put("recommendName", recommendName);
-        userMap.put("userRole", userRole);
-        userMap.put("userProperty", userProperty);
-        userMap.put("accountStatus", accountStatusStr);
-        userMap.put("userStatus", userStatusStr);
-        userMap.put("registPlat", registPlatStr);
-        userMap.put("is51", is51Str);
-        userMap.put("combotreeListSrch", combotreeListSrchStr);
-        List<VipManageVO> recordList = this.vipManageService.getRecordList(userMap, -1, -1);
         String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户名", "姓名", "手机号码","VIP等级","V值","VIP购买时间", "用户角色", "用户属性", "推荐人", "51老用户",
                 "用户状态", "开户状态","会员开通渠道", "注册平台", "注册时间" };
         // 声明一个工作薄
@@ -253,7 +286,7 @@ public class VipManageController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }*/
+    }
     private VipManageRequest setParamRequest(Map<String, Object> map) {
         VipManageRequest request = new VipManageRequest();
         if (null != map && map.size() > 0) {
@@ -286,9 +319,6 @@ public class VipManageController extends BaseController {
             }
             if (map.containsKey("userStatus")) {
                 request.setUserStatus(map.get("userStatus").toString());
-            }
-            if (map.containsKey("is51")) {
-                request.setIs51(map.get("is51").toString());
             }
             if (map.containsKey("limit") && StringUtils.isNotBlank(map.get("limit").toString())) {
                 request.setLimit((Integer) map.get("limit"));

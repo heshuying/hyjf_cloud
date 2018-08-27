@@ -3,13 +3,13 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -19,7 +19,8 @@ import java.util.List;
  * 体验金收益期限还款
  */
 @RestController
-@RequestMapping("batch/couponPeriodRepay")
+@ApiIgnore
+@RequestMapping("/cs-trade/batch/couponPeriodRepay")
 public class CouponRepayController extends BaseTradeController {
     @Autowired
     private CouponRepayService couponRepayService;

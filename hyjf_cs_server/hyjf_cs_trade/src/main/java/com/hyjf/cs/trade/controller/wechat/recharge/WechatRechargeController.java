@@ -5,26 +5,23 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +31,10 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(tags = "wechat端-用户充值接口")
+@Api(tags = "weChat端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/hyjf-wechat/recharge")
+@RequestMapping(value = "/hyjf-wechat/wx/recharge")
 public class WechatRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(WechatRechargeController.class);
@@ -52,25 +49,37 @@ public class WechatRechargeController extends BaseTradeController{
 	/**
 	 * 调用充值接口
 	 * @param request
-	 * @param
-	 * @param mobile
-	 * @param money
 	 * @return
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
-	@PostMapping("/page")
-	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
+	@PostMapping("/recharge")
+	public WeChatResult recharge(@RequestHeader(value = "sign") String sign, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) throws Exception {
 		logger.info("wechat充值服务");
+		WeChatResult result = new WeChatResult();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
-		ModelAndView modelAndView = new ModelAndView();
+		// 交易金额
+		String money = request.getParameter("money");
+		// 用户的手机号
+		String mobile = request.getParameter("mobile");
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/failed/?sign="+sign+"&txAmount="+money;
+		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/success/?sign="+sign+"&txAmount="+money;
+		String bgRetUrl = systemConfig.getWechatHost() + "/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
+		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
+		Map<String,Object> map = new HashMap<>();
 		try {
-			modelAndView = BankCallUtils.callApi(bean);
+			map = BankCallUtils.callApiMap(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
 		}
-		return modelAndView;
+		result.setData(map);
+		return result;
 	}
 
 	/**
@@ -81,8 +90,9 @@ public class WechatRechargeController extends BaseTradeController{
 	 * @Date: 12:40 2018/6/5
 	 * @Return: ModelAndView
 	 */
+/*
 	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
-	@PostMapping("/return")
+	@GetMapping("/return")
 	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
 		logger.info("[wechat页面充值同步回调开始]");
 		ModelAndView modelAndView = new ModelAndView();
@@ -117,6 +127,7 @@ public class WechatRechargeController extends BaseTradeController{
 			return modelAndView;
 		}
 	}
+*/
 
 	/**
 	 * @Author: zhangqingqing

@@ -30,7 +30,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AppEvaluationController, v0.1 2018/7/4 11:19
  */
-@Api(value = "App端-风险测评接口",tags = "App端-风险测评接口（老）")
+@Api(value = "app端-风险测评接口",tags = "app端-风险测评接口（老）")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/financialAdvisor")
@@ -43,7 +43,7 @@ public class AppEvaluationController {
     SystemConfig systemConfig;
 
 
-    @ApiOperation(value = "app用户测评初始化", notes = "用户测评初始化")
+    @ApiOperation(value = "用户测评初始化", notes = "用户测评初始化")
     @PostMapping(value = "/init")
     public ModelAndView init(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("/financialAdvisor/evaluation");

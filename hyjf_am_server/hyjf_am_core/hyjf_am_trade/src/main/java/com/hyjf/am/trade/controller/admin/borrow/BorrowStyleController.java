@@ -6,6 +6,7 @@ import com.hyjf.am.response.admin.AdminBorrowStyleResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowStyleRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleWithBLOBs;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
@@ -42,15 +43,18 @@ public class BorrowStyleController {
         //查询保证金配置条数
         int recordTotal = this.borrowStyleService.getBorrowStyleCount();
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),recordTotal, adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
             //查询记录
-            List<BorrowStyle> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
+            List<BorrowStyleWithBLOBs> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowStyleVO> hicv = CommonUtils.convertBeanList(recordList, BorrowStyleVO.class);
                 response.setResultList(hicv);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
             return response;
         }
         return null;
@@ -64,16 +68,19 @@ public class BorrowStyleController {
         logger.info("还款方式详情页面..." + JSONObject.toJSON(adminRequest));
         AdminBorrowStyleResponse  response =new AdminBorrowStyleResponse();
         if (adminRequest.getId() != null&&adminRequest.getId().intValue() >0) {
-            BorrowStyle record = this.borrowStyleService.searchBorrowStyleInfoById(adminRequest.getId());
+            BorrowStyleWithBLOBs record = this.borrowStyleService.searchBorrowStyleInfoById(adminRequest.getId());
             if(null != record){
                 BorrowStyleVO res = new BorrowStyleVO();
                 BeanUtils.copyProperties(record,res);
                 response.setResult(res);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
             return response;
         }
-        return null;
+       return null;
     }
 
     /**
@@ -84,13 +91,25 @@ public class BorrowStyleController {
     public AdminBorrowStyleResponse insertBorrowStyle(@RequestBody  AdminBorrowStyleRequest adminRequest) {
         logger.info("添加还款方式..." + JSONObject.toJSON(adminRequest));
         AdminBorrowStyleResponse  response =new AdminBorrowStyleResponse();
-        try {
-            this.borrowStyleService.insertBorrowStyle(adminRequest);
+        this.borrowStyleService.insertBorrowStyle(adminRequest);
+        //查询保证金配置条数
+        int recordTotal = this.borrowStyleService.getBorrowStyleCount();
+        if (recordTotal > 0) {
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),recordTotal, adminRequest.getPageSize());
+            //查询记录
+            List<BorrowStyleWithBLOBs> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
+            if(!CollectionUtils.isEmpty(recordList)){
+                List<BorrowStyleVO> hicv = CommonUtils.convertBeanList(recordList, BorrowStyleVO.class);
+                response.setResultList(hicv);
+                response.setRecordTotal(recordTotal);
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
             response.setRtn(Response.SUCCESS);
-        } catch (Exception e) {
-            response.setRtn(Response.FAIL);
+            response.setMessage("查询的数据为空！");
+            return response;
         }
-       return response;
+        return null;
     }
     /**
      * 修改配置中心还款方式
@@ -104,16 +123,19 @@ public class BorrowStyleController {
         //查询保证金配置条数
         int recordTotal = this.borrowStyleService.getBorrowStyleCount();
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),recordTotal, adminRequest.getPageSize());
             //查询记录
-            List<BorrowStyle> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
+            List<BorrowStyleWithBLOBs> recordList =borrowStyleService.selectBorrowStyleListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowStyleVO> hicv = CommonUtils.convertBeanList(recordList, BorrowStyleVO.class);
                 response.setResultList(hicv);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
-            return null;
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
+            return response;
         }
         return null;
     }
@@ -124,35 +146,27 @@ public class BorrowStyleController {
     @RequestMapping("/deleteBorrowStyle")
     public AdminInstConfigListResponse deleteBorrowStyle(@RequestBody Integer id) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
-        try{
-            this.borrowStyleService.deleteBorrowStyleById(id);
-            resp.setRtn("SUCCESS");
-        }catch (Exception e){
-            resp.setRtn("FAIL");
-        }
+        this.borrowStyleService.deleteBorrowStyleById(id);
+        resp.setRtn(Response.SUCCESS);
         return  resp;
     }
     /**
-     * 删除还款方式
+     * 修改还款方式
      * @param id
      */
     @RequestMapping("/modifyBorrowStyle")
     public AdminBorrowStyleResponse modifyBorrowStyle(@RequestBody Integer id) {
         AdminBorrowStyleResponse  response =new AdminBorrowStyleResponse();
-        try{
-            BorrowStyle record =this.borrowStyleService.searchBorrowStyleInfoById(id);
-            if (record.getStatus() == 1) {
-                record.setStatus(0);
-            } else {
-                record.setStatus(1);
-            }
-            AdminBorrowStyleRequest req = new AdminBorrowStyleRequest();
-            BeanUtils.copyProperties(record,req);
-            this.borrowStyleService.updateBorrowStyleById(req);
-            response.setRtn("SUCCESS");
-        }catch (Exception e){
-            response.setRtn("FAIL");
+        BorrowStyleWithBLOBs record =this.borrowStyleService.searchBorrowStyleInfoById(id);
+        if (record.getStatus() == 1) {
+            record.setStatus(0);
+        } else {
+            record.setStatus(1);
         }
+        AdminBorrowStyleRequest req = new AdminBorrowStyleRequest();
+        BeanUtils.copyProperties(record,req);
+        this.borrowStyleService.updateBorrowStyleById(req);
+        response.setRtn(Response.SUCCESS);
         return  response;
     }
     /**

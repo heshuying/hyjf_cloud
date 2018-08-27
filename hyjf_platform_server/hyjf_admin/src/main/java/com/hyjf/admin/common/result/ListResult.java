@@ -3,6 +3,9 @@
  */
 package com.hyjf.admin.common.result;
 
+import com.hyjf.cs.common.util.Page;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
 /**
@@ -11,9 +14,14 @@ import java.util.List;
  */
 public class ListResult<T> {
 
+    @ApiModelProperty(value = "列表数据")
     private List<T> list;
-
+    @ApiModelProperty(value = "数据")
+    private T data;
+    @ApiModelProperty(value = "列表count")
     private int count;
+    @ApiModelProperty(value = "page")
+    private Page page;
 
     public static <T> ListResult<T> build(List<T> list,int count) {
         ListResult<T> result = new ListResult<>();
@@ -36,6 +44,22 @@ public class ListResult<T> {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
     }
 
     @Override

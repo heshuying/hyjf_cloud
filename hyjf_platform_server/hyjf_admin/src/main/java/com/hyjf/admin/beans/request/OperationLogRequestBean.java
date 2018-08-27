@@ -2,6 +2,8 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,24 +11,33 @@ import java.math.BigDecimal;
 /**
  * @author by xiehuili on 2018/7/17.
  */
+@ApiModel(value="操作日志配置",description="操作日志配置")
 public class OperationLogRequestBean extends BasePage implements Serializable {
 
-    // 资产来源
+    @ApiModelProperty(value = " 资产来源")
     String instCodeSrch;
-    // 产品类型
+    @ApiModelProperty(value = "产品类型")
     String assetTypeSrch;
-    // 期限
+    @ApiModelProperty(value = "期限")
     String borrowPeriodSrch;
-    // 修改类型
+    @ApiModelProperty(value = "修改类型")
     String modifyTypeSrch;
-    // 操作人
+    @ApiModelProperty(value = "操作人")
     String userNameSrch;
-    // 操作时间
+    @ApiModelProperty(value = "操作时间")
     String recieveTimeStartSrch;
-    // 操作时间
+    @ApiModelProperty(value = " 操作时间")
     String recieveTimeEndSrch;
-    //状态名称
+    @ApiModelProperty(value = "状态名称")
     String statusName;
+    @ApiModelProperty(value = "机构编号名称")
+    private String instName;
+    @ApiModelProperty(value = "机构产品类型名称")
+    private String assetTypeName;
+    @ApiModelProperty(value = "操作人")
+    private String name;
+    @ApiModelProperty(value = "操作时间字符串")
+    private String createTimeString;
 
     private Integer id;
 
@@ -64,23 +75,6 @@ public class OperationLogRequestBean extends BasePage implements Serializable {
     private Integer updateTime;
 
     private Boolean delFlg;
-
-    /**
-     * 机构编号名称
-     */
-    private String instName;
-    /**
-     * 机构产品类型名称
-     */
-    private String assetTypeName;
-    /**
-     * caozuoren
-     */
-    private String name;
-    /**
-     * 操作时间字符串
-     */
-    private String createTimeString;
 
     public String getInstCodeSrch() {
         return instCodeSrch;

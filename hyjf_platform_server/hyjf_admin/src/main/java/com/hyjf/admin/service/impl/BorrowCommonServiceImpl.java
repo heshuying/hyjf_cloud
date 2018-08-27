@@ -85,13 +85,8 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	}
 
 	@Override
-	public String getBorrowServiceScale(String borrowPeriod, String borrowStyle, Integer projectType,
-			String instCode) {
-		BorrowCommonRequest borrowCommonRequest=new BorrowCommonRequest();
-		borrowCommonRequest.setBorrowPeriod(borrowPeriod);
-		borrowCommonRequest.setBorrowStyle(borrowStyle);
-		borrowCommonRequest.setProjectType(projectType);
-		borrowCommonRequest.setInstCode(instCode);
+	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
+
 		return amTradeClient.getBorrowServiceScale(borrowCommonRequest);
 	}
 
@@ -117,9 +112,9 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 
 
 	@Override
-	public boolean isBorrowUserCACheck(String param, String name) {
+	public boolean isBorrowUserCACheck(String name) {
 	
-		return Response.isSuccess(amUserClient.selectCertificateAuthorityByIdNoName(param, name));
+		return Response.isSuccess(amUserClient.selectCertificateAuthorityByIdNoName( name));
 	}
 
 	@Override
@@ -134,8 +129,8 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return amTradeClient.exportBorrowList(borrowCommonCustomize);
 	}
 
 }

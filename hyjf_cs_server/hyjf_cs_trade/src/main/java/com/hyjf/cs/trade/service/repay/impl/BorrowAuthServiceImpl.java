@@ -67,7 +67,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
             throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
         }
         // 开户校验
-        if(!user.isOpenAccount()){
+        if(!user.isBankOpenAccount()){
             throw  new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 交易密码设置校验

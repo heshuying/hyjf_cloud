@@ -16,12 +16,8 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -32,7 +28,7 @@ import java.util.Map;
 /**
  * @author by xiehuili on 2018/7/30.
  */
-@Api(value = "配置中心借款项目配置---流程配置",tags = "配置中心借款项目配置---流程配置")
+@Api(tags = "配置中心-借款项目配置---流程配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowflow")
 public class BorrowFlowController extends BaseController {
@@ -192,9 +188,8 @@ public class BorrowFlowController extends BaseController {
      * @return 进入资产列表页面
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
-    @RequestMapping("/assetTypeAction")
-    public List<Map<String, Object>> assetTypeAction(HttpServletRequest request, RedirectAttributes attr,
-                                                     String instCode) {
+    @PostMapping("/assetTypeAction/{instCode}")
+    public List<Map<String, Object>> assetTypeAction(@PathVariable String instCode) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
         // 根据资金来源取得产品类型
         List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(instCode);

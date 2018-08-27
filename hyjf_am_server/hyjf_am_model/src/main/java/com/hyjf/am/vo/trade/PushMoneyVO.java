@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,69 +16,104 @@ import java.util.Date;
 public class PushMoneyVO extends BaseVO {
     private Integer id;
 
+    @ApiModelProperty(value = "用户类型：属于什么用户")
     private String type;
 
+    @ApiModelProperty(value = "产品类型：1 汇直投 2 汇计划")
     private Integer projectType;
 
+    @ApiModelProperty(value = "是否发放提成：0 不发放 1 发放")
     private Integer rewardSend;
 
+    @ApiModelProperty(value = "天标")
     private String dayTender;
 
+    @ApiModelProperty(value = "月标")
     private String monthTender;
 
+    @ApiModelProperty(value = "创建人")
     private Integer createBy;
 
+    @ApiModelProperty(value = "修改人")
     private Integer updateBy;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
+    @ApiModelProperty(value = "备注说明")
     private String remark;
-    //项目编号
+
+    @ApiModelProperty(value = "项目编号")
     public String borrowNid;
-    // 项目标题
+
+    @ApiModelProperty(value = "项目标题")
     public String borrowName;
-    // 项目还款方式  = endday 天   !=endday 个月
+
+    @ApiModelProperty(value = "项目还款方式  = endday 天   !=endday 个月")
     public String borrowStyle;
-    // 融资期限
+
+    @ApiModelProperty(value = "融资期限")
     public String borrowPeriod;
-    // 融资金额
+
+    @ApiModelProperty(value = "融资金额")
     public String account;
-    // 提成总额
+
+    @ApiModelProperty(value = "提成总额")
     public String commission;
-    // 放款时间
+
+    @ApiModelProperty(value = "放款时间")
     public String recoverLastTime;
+
+    @ApiModelProperty(value = "放款时间开始")
     public String recoverLastTimeStart;
+
+    @ApiModelProperty(value = "放款时间结束")
     public String recoverLastTimeEnd;
+
     // 提成列表用
-    // 融资期限
+    @ApiModelProperty(value = "融资期限")
     private String rzqx;
-    // 分公司
+
+    @ApiModelProperty(value = "分公司")
     private String regionName;
-    // 分部
+
+    @ApiModelProperty(value = "分部")
     private String branchName;
-    // 团队
+
+    @ApiModelProperty(value = "团队")
     private String departmentName;
-    // 提成人
+
+    @ApiModelProperty(value = "提成人")
     private String username;
-    // 电子账号
+
+    @ApiModelProperty(value = "电子账号")
     private String accountId;
-    // 提成人用户属性0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+
+    @ApiModelProperty(value = "提成人用户属性0=>无主单 1=>有主单 2=>线下员工 3=>线上员工")
     private String attribute;
-    // 是否51老用户，1：是 0：否
+
+    @ApiModelProperty(value = "是否51老用户，1：是 0：否")
     private Integer is51;
-    // 导出用
+
+    @ApiModelProperty(value = "导出用")
     private String is51Name;
-    // 投资人
+
+    @ApiModelProperty(value = "投资人")
     private String usernameTender;
-    // 投资金额
+
+    @ApiModelProperty(value = "投资金额")
     private BigDecimal accountTender;
-    // 状态
+
+    @ApiModelProperty(value = "状态")
     private String statusName;
-    // 投资时间
+
+    @ApiModelProperty(value = "投资时间")
     private String tenderTimeView;
-    // 提成发放时间
+
+    @ApiModelProperty(value = "提成发放时间")
     private String sendTimeView;
 
     public String getBorrowNid() {

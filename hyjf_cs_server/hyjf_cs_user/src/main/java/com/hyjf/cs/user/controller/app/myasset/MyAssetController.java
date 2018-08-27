@@ -12,6 +12,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myasset.MyAssetService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ public class MyAssetController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
+	@ApiOperation(value = "获取我的财富")
 	@RequestMapping(value ="/info", method = RequestMethod.POST)
 	public JSONObject getMyAsset(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("获取我的财富...myasset...info");

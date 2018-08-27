@@ -11,6 +11,7 @@ import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,9 +44,10 @@ public class AppDeleteCardController extends BaseUserController {
      * @return
      */
     @PostMapping("/deleteCard")
+    @ApiOperation(value = "解绑银行卡", notes = "解绑银行卡")
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         JSONObject info = new JSONObject();
-        info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard.do");
+        info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard");
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         String cardNo = request.getParameter("bankNumber");// 银行卡号
 
@@ -104,7 +106,7 @@ public class AppDeleteCardController extends BaseUserController {
                 baseMapBean.set("sign", "");
                 Integer urlType = bindCardService.getBankInterfaceFlagByType("BIND_CARD");
                 baseMapBean.set("urlType", urlType.toString());//绑卡开关 0跳转老接口  1跳转新接口
-                baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/unbind/result/success");
+                baseMapBean.setCallBackAction(systemConfig.AppFrontHost + "/user/bankCard/unbind/result/success");
                 info.put(CustomConstants.APP_STATUS, 0);
                 //info.put(CustomConstants.APP_STATUS_DESC, "恭喜您！您的普通银行卡删除成功");
                 info.put(CustomConstants.APP_STATUS_DESC, "");

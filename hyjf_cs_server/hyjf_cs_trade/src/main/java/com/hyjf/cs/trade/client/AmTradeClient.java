@@ -5,13 +5,17 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -37,11 +41,15 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -400,7 +408,13 @@ public interface AmTradeClient {
      */
     boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
 
-
+    /**
+     * 获取线下充值类型列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
 
     /**
      * 获取项目列表
@@ -1176,7 +1190,7 @@ public interface AmTradeClient {
      * @Param transferExceptionLog
      * @return
      */
-    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+    Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog);
 
     /**
      * 判断用户所处的渠道如果不允许债转，可债转金额为0  start
@@ -1617,4 +1631,82 @@ public interface AmTradeClient {
     RepayBean getRepayBean(Map<String, String> paraMap);
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    /**
+     *根据订单编号取得该订单的还款列表
+     * @param couponTenderNid
+     * @param periodNow
+     * @return
+     */
+    CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow);
+
+    /**
+     *更新优惠券还款
+     * @param cr
+     */
+    boolean updateCouponRecover(CouponRecoverVO cr);
+
+    /**
+     *体验金按收益期限还款
+     * @param request
+     */
+    boolean updateCouponOnlyRecover(CouponRecoverCustomizeRequest request);
+
+    /**
+     * 根据订单号获取汇计划加入明细
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId);
+
+
+    /**
+     * 获取提成配置信息
+     * @param map
+     * @return
+     */
+    Integer getCommisionConfig(HashMap map);
+
+    /**
+     * 获取用户还款计划数据
+     * @param borrowNid
+     * @param nid
+     * @param type
+     * @return
+     */
+    RepayPlanInfoBean getRepayPlanInfo(String borrowNid, String nid, String type);
+
+    /**
+     * 待计算提成加入列表
+     * @return
+     */
+    List<HjhAccedeVO> getAccedesWaitCompute();
+    /**
+     * 提成计算
+     * @param hjhLockVo
+     * @return
+     */
+    Boolean commisionCompute(HjhLockVo hjhLockVo);
+
+    /**
+     * 获取用户散标转让记录详情
+     * @param creditNid
+     * @return
+     */
+    MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
+    
+    /**
+     * 获取投资协议集合BYtenderNid
+     * @param tenderNid
+     * @return
+     */
+    List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid);
+
+    /**
+     * api: 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
 }

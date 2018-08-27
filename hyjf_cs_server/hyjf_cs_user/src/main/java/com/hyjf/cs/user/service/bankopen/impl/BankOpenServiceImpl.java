@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -22,7 +23,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.cs.user.util.ErrorCodeConstant;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -187,11 +188,21 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
 
+        // 失败页面
+        String errorPath = "/user/openError";
+        // 成功页面
+        String successPath = "/user/openSuccess";
+        // 如果是移动端  返回别的url
+        if((ClientConstants.APP_CLIENT+"").equals(openBean.getPlatform())||(ClientConstants.APP_CLIENT_IOS+"").equals(openBean.getPlatform())||(ClientConstants.CLIENT_HEADER_WX+"").equals(openBean.getPlatform())){
+            errorPath = "/user/open/result/fail";
+            successPath = "/user/open/result/success";
+        }
+
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) +"/user/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/user/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = systemConfig.getWebHost()+"/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);

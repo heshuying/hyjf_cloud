@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,33 +13,34 @@ public class FeeConfigRequestBean extends BaseRequest implements Serializable{
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "查询的id")
     private String ids;
-
+    @ApiModelProperty(value = "查询的开始时间")
     private String startCreate;
-
+    @ApiModelProperty(value = "查询的结束时间")
     private String endCreate;
     private Integer id;
-
+    @ApiModelProperty(value = "bankCode")
     private String bankCode;
-
+    @ApiModelProperty(value = "银行名称")
     private String name;
-
+    @ApiModelProperty(value = "个人网银充值")
     private String personalCredit;
-
+    @ApiModelProperty(value = "企业网银充值")
     private String enterpriseCredit;
-
+    @ApiModelProperty(value = "快捷支付充值")
     private String quickPayment;
-
+    @ApiModelProperty(value = "即时提现")
     private String directTakeout;
-
+    @ApiModelProperty(value = "即时提现、千分比")
     private String directTakeoutPercent;
-
+    @ApiModelProperty(value = "快速提现")
     private String quickTakeout;
-
+    @ApiModelProperty(value = "快速提现、千分比")
     private String quickTakeoutPercent;
-
+    @ApiModelProperty(value = "普通提现")
     private String normalTakeout;
-
+    @ApiModelProperty(value = "说明")
     private String remark;
 
     private Integer createUserId;

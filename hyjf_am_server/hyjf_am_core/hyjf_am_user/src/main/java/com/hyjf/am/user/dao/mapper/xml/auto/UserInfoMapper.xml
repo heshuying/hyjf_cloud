@@ -20,6 +20,16 @@
     <result column="borrower_type" property="borrowerType" jdbcType="TINYINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+
+  <resultMap id="BaseResultMapT" type="com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO">
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="package_code" property="packageCode" jdbcType="VARCHAR" />
+    <result column="client" property="client" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="alias" property="alias" jdbcType="VARCHAR" />
+  </resultMap>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -401,4 +411,21 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+
+  <!--  通过手机号获取设备标识码-->
+  <select id="getMobileCodeByNumber" parameterType="java.lang.String" resultMap="BaseResultMapT">
+    SELECT
+			u.user_id,
+			c.sign,
+			c.alias,
+			c.package_code,
+			c.client,
+			u.mobile
+		FROM
+			ht_user u
+		INNER JOIN ht_user_alias c ON u.user_id = c.user_id
+		WHERE
+			u.mobile = #{mobile}
+			limit 1
+  </select>
 </mapper>

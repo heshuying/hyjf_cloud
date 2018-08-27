@@ -2,6 +2,7 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -219,4 +220,22 @@ public interface AmUserClient {
      * @return
      */
     BigDecimal getCumulativeAttrInvest(Integer sourceId);
+
+
+
+
+    /**
+     * 修改短信与邮件是否开启状态
+     * @param userId
+     * @param smsOpenStatus
+     * @param emailOpenStatus
+     * @return
+     */
+    Integer updateStatusByUserId( Integer userId,String smsOpenStatus,String emailOpenStatus);
+
+    /**
+     * 得到千乐渠道用户
+     * @return
+     */
+    List<Integer> getQianleUser();
 }

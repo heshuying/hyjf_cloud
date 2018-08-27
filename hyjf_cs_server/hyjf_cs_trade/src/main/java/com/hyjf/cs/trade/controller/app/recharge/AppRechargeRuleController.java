@@ -9,7 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version AppRechargeRuleController, v0.1 2018/7/25 14:49
  */
-@Api(tags = "app端获取充值规则")
+@Api(tags = "app端-获取充值规则")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-app/user/bank/recharge")
@@ -27,7 +27,7 @@ public class AppRechargeRuleController {
     AppRechargeRuleService appRechargeRuleService;
 
     @ApiOperation(value = "app端获取充值规则", notes = "app端获取充值规则")
-    @PostMapping(value = "/rechargeRule")
+    @GetMapping(value = "/rechargeRule")
     public AppRechargeDescResultBean rechargeRule() {
         return appRechargeRuleService.getRechargeRule();
     }

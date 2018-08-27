@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.dao.model.customize.UserHjhInvistListCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -139,7 +140,7 @@ public class HjhDebtCreditController extends BaseController {
 	/**
 	 * 获取债转承接信息 by AssignOrderId
 	 * by libin
-	 * @param nid
+	 * @param assignOrderId
 	 * @return
 	 */
     @GetMapping("/getHjhDebtCreditTenderByAssignOrderId/{assignOrderId}")
@@ -160,8 +161,10 @@ public class HjhDebtCreditController extends BaseController {
     @PostMapping("/getUserHjhInvestList")
     public HjhUserInvestListResponse getUserHjhInvestList(@RequestBody Map<String,Object> params){
         HjhUserInvestListResponse response = new HjhUserInvestListResponse();
-        List<UserHjhInvistListCustomizeVO> list = hjhDebtCreditService.getUserHjhInvestList(params);
-        response.setResultList(list);
+        List<UserHjhInvistListCustomize> list = hjhDebtCreditService.getUserHjhInvestList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,UserHjhInvistListCustomizeVO.class));
+        }
         return response;
     }
 

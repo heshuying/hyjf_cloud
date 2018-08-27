@@ -42,11 +42,11 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 * 发送验证码
 	 *
 	 * @param request
-	 * @param response
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = " 发送短信验证码",notes = " 发送短信验证码")
-	@PostMapping(value = "/userRegist/sendVerificationCodeAction.do", produces = "application/json; charset=utf-8")
+	@PostMapping(value = "/userRegist/sendVerificationCodeAction.do")
 	public JSONObject sendVerificationCodeAction(@RequestHeader(value = "userId", required = false) Integer userId,HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/sendVerificationCodeAction");

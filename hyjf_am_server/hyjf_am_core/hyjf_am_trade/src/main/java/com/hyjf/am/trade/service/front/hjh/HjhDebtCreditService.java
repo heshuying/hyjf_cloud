@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.dao.model.customize.UserHjhInvistListCustomize;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -63,7 +64,7 @@ public interface HjhDebtCreditService {
 	/**
 	 * 获取债转承接信息 by AssignOrderId
 	 * by libin
-	 * @param nid
+	 * @param assignOrderId
 	 * @return
 	 */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
@@ -72,7 +73,7 @@ public interface HjhDebtCreditService {
      *  查询汇计划的投资记录
      * @date 2018/8/1 14:00
      */
-    List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+    List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String,Object> params);
 
     /**
      * 根据borrowNid和creditStatus查询债转列表

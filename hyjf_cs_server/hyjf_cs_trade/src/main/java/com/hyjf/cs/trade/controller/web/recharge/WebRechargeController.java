@@ -10,6 +10,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "web端-用户充值接口",tags = "web端用户充值接口")
+@Api(value = "web端-用户充值接口",tags = "web端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-web/recharge")
@@ -60,7 +60,7 @@ public class WebRechargeController extends BaseTradeController{
 	 * @Version v0.1
 	 * @Date
 	 */
-	@ApiOperation(value = "web端-获取用户充值信息", notes = "用户充值")
+	@ApiOperation(value = "获取用户充值信息", notes = "用户充值")
 	@PostMapping("/toRecharge")
 	public WebResult<Object> toRecharge(@RequestHeader(value = "userId") Integer userId) {
 		WebViewUserVO user=userRechargeService.getUserFromCache(userId);
@@ -74,7 +74,7 @@ public class WebRechargeController extends BaseTradeController{
 	 * @param
 	 * @return
 	 */
-	@ApiOperation(value = "web端-用户充值", notes = "用户充值")
+	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
 	@RequestLimit(seconds=3)
 	public WebResult<Object> recharge(@RequestHeader(value = "userId") int userId,
@@ -83,7 +83,16 @@ public class WebRechargeController extends BaseTradeController{
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
+
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getWeiFrontHost()+"/user/rechargeError";
+		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
+		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);
@@ -143,7 +152,7 @@ public class WebRechargeController extends BaseTradeController{
 	 * @Version v0.1
 	 * @Date
 	 */
-	@ApiOperation(value = "web端查询充值失败原因", notes = "web端查询充值失败原因")
+	@ApiOperation(value = "查询充值失败原因", notes = "查询充值失败原因")
 	@PostMapping("/seachFiledMess")
 	@ResponseBody
 	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestBody @Valid BankRechargeVO bankRechargeVO) {
@@ -159,7 +168,7 @@ public class WebRechargeController extends BaseTradeController{
 	 * @Version v0.1
 	 * @Date
 	 */
-	@ApiOperation(value = "web端快捷充值限额", notes = "web端快捷充值限额")
+	@ApiOperation(value = "快捷充值限额", notes = "快捷充值限额")
 	@PostMapping("/rechargeQuotaLimit")
 	@ResponseBody
 	public WebResult<Object> rechargeQuotaLimit() {

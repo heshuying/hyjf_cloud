@@ -1,34 +1,35 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/13.
  */
-public class AccountBalanceMonitoringRequestBean {
+public class AccountBalanceMonitoringRequestBean extends BaseRequest {
     /**
      * 此处为属性说明
      */
     private static final long serialVersionUID = -1967959761793508714L;
 
-    /**
-     * ids
-     */
+    @ApiModelProperty(value = "ids")
     private String ids;
 
-    /** 是否更新 */
+    @ApiModelProperty(value = "是否更新 ")
     private boolean isUpdateFlg;
 
-    /** 子账户名称(检索用) */
+    @ApiModelProperty(value = "子账户名称(检索用) ")
     private String subAccountNameSear;
 
-    /** 子账户类型(检索用) */
+    @ApiModelProperty(value = "子账户类型(检索用)")
     private String subAccountTypeSear;
 
-    /** 列表数据JSON */
-    private String balanceDataJson;
+    @ApiModelProperty(value = "列表数据JSON")
+    private List<AccountBalanceMonitoringRequestBean> balanceDataJson;
 
     private Integer id;
 
@@ -96,11 +97,11 @@ public class AccountBalanceMonitoringRequestBean {
         this.subAccountTypeSear = subAccountTypeSear;
     }
 
-    public String getBalanceDataJson() {
+    public List<AccountBalanceMonitoringRequestBean> getBalanceDataJson() {
         return balanceDataJson;
     }
 
-    public void setBalanceDataJson(String balanceDataJson) {
+    public void setBalanceDataJson(List<AccountBalanceMonitoringRequestBean> balanceDataJson) {
         this.balanceDataJson = balanceDataJson;
     }
 

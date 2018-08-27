@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.customertransfer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
@@ -42,7 +43,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-转账管理-用户转账",tags = "资金中心-转账管理-用户转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/customertransfer")
+@RequestMapping(value = "/hyjf-admin/finance/customertransfer")
 public class CustomerTransferController extends BaseController {
 
     @Autowired
@@ -57,14 +58,11 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-查询转账列表",notes = "用户转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public AdminResult transferList(@RequestBody CustomerTransferListRequest request){
-        Map<String,Object> map = new HashMap<>();
+    public AdminResult<ListResult<UserTransferVO>> transferList(@RequestBody CustomerTransferListRequest request){
         Integer count = customerTransferService.getTransferCount(request);
         count = (count == null)?0:count;
-        map.put("count",count);
         List<UserTransferVO> userTransferVOList = customerTransferService.searchUserTransferList(request);
-        map.put("userTransferVOList",userTransferVOList);
-        return new AdminResult(map);
+        return new AdminResult<>(ListResult.build(userTransferVOList,count));
     }
 
     /**
@@ -192,7 +190,6 @@ public class CustomerTransferController extends BaseController {
     public AdminResult searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
-        Map<String,Object> resultMap = new HashMap<>();
         JSONObject jsonObject = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
             jsonObject = customerTransferService.searchBalanceByUsername(outUserName);
@@ -200,11 +197,10 @@ public class CustomerTransferController extends BaseController {
             return new AdminResult(FAIL,"用户账号不能为空");
         }
         if("0".equals(jsonObject.get("status"))){
-            resultMap.put(SUCCESS,jsonObject.get("result"));
+            return new AdminResult(SUCCESS,jsonObject.getString("result"));
         }else{
-            resultMap.put(FAIL,jsonObject.get("result"));
+            return new AdminResult(FAIL,jsonObject.getString("result"));
         }
-        return new AdminResult(resultMap);
     }
 
     /**
