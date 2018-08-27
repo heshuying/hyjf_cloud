@@ -122,7 +122,6 @@ public class UserController extends BaseController {
     public UserResponse findUserByUserId(@PathVariable int userId) {
         logger.info("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
-        int i=1/0;
         User user = userService.findUserByUserId(userId);
         if (user != null) {
             UserVO userVO = new UserVO();
