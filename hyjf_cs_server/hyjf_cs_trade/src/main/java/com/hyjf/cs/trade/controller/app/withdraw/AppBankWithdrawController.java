@@ -431,9 +431,10 @@ public class AppBankWithdrawController extends BaseTradeController {
         String platform = request.getParameter("platform");
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
+        if(null==userVO){
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
+
         if(0==userVO.getIsSetPassword()){
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
