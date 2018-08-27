@@ -4,8 +4,10 @@
 package com.hyjf.am.resquest.message;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -32,7 +34,7 @@ public class MessagePushMsgRequest extends BasePage implements Serializable {
      */
     private String messagesPreSendTimeStr;
 
-    private Integer id;
+    private String id;
 
     private Integer tagId;
 
@@ -82,11 +84,13 @@ public class MessagePushMsgRequest extends BasePage implements Serializable {
 
     private String msgActionUrl3;
 
-    public Integer getId() {
+    private List<MessagePushMsgVO> recordList;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -312,5 +316,13 @@ public class MessagePushMsgRequest extends BasePage implements Serializable {
 
     public void setMessagesPreSendTimeStr(String messagesPreSendTimeStr) {
         this.messagesPreSendTimeStr = messagesPreSendTimeStr;
+    }
+
+    public List<MessagePushMsgVO> getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(List<MessagePushMsgVO> recordList) {
+        this.recordList = recordList;
     }
 }

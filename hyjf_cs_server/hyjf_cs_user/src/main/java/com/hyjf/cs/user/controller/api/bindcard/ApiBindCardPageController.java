@@ -38,7 +38,7 @@ import java.util.Map;
 @Api(value = "api端-绑卡", tags = "api端-绑卡")
 @RestController
 @RequestMapping("/hyjf-api/server/user/bindcardpage")
-public class ApiBindCardController extends BaseUserController {
+public class ApiBindCardPageController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
     @Autowired
@@ -152,7 +152,7 @@ public class ApiBindCardController extends BaseUserController {
      */
     @PostMapping("/bindCardReturn")
     @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
-    public ModelAndView openAccountReturn(HttpServletRequest request, HttpServletResponse response,
+    public ModelAndView pageReturn(HttpServletRequest request, HttpServletResponse response,
                                           @ModelAttribute BankCallBean bean) {
         BindCardPageResultBean repwdResult = new BindCardPageResultBean();
         repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));

@@ -104,7 +104,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getmessagepushmsgbyid/{id}")
-	public MessagePushMsgResponse getMessagePushMsgById (@PathVariable Integer id){
+	public MessagePushMsgResponse getMessagePushMsgById (@PathVariable String id){
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg messagePushMsg = messagePushMsgService.getMessagePushMsgById(id);
 		if (messagePushMsg != null) {
@@ -147,13 +147,15 @@ public class MessagePushMsgController extends BaseController {
 
 	/**
 	 * 删除手动发送短信
-	 * @param recordList
+	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/deletemessagepushmsg/{recordList}")
-	public MessagePushMsgResponse deleteMessagePushMsg(@PathVariable List<Integer> recordList) {
+	@RequestMapping("/deletemessagepushmsg")
+	public MessagePushMsgResponse deleteMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
-		Integer count = messagePushMsgService.deleteMessagePushMsg(recordList);
+		List<MessagePushMsgVO> recordList = request.getRecordList();
+		List<MessagePushMsg> messagePushMsgs = CommonUtils.convertBeanList(recordList,MessagePushMsg.class);
+		Integer count = messagePushMsgService.deleteMessagePushMsg(messagePushMsgs);
 		response.setCount(count);
 		return response;
 	}

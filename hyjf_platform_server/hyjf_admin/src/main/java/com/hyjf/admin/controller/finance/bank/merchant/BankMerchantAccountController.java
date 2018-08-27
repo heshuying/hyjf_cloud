@@ -226,7 +226,7 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "统一参数校验(真正调用圈存和圈提操作之前调用)" ,tags = "统一参数校验(真正调用圈存和圈提操作之前调用)" )
     @ResponseBody
     @PostMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
-    public AdminResult checkAction(Map<String,String> params){
+    public AdminResult checkAction(@RequestBody Map<String,String> params){
         AdminResult adminResult = new AdminResult();
         JSONObject ret = new JSONObject();
         String amount = params.get("amount");
@@ -252,11 +252,11 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "圈存操作" ,tags = "圈存操作" )
     @PostMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
-    public AdminResult toRecharge(Map<String,String> param,HttpServletRequest request){
+    public AdminResult toRecharge(@RequestBody Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
         String amount = param.get("amount");
         String accountCode =  param.get("accountCode");// 交易金额
-        CheckUtil.check(StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,amount) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         if (bankMerchantAccount == null){
             logger.error("没有查询到对应的商户号[{}]",accountCode);
@@ -425,12 +425,13 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "圈提操作" ,tags = "圈提操作" )
     @PostMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
-    public AdminResult withDraw(Map<String,String> param,HttpServletRequest request){
+    public AdminResult withDraw( @RequestBody  Map<String,String> param,HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
         JSONObject result = new JSONObject();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         String accountCode = param.get("accountCode");
         String transAmt = param.get("amount");// 交易金额
+        CheckUtil.check(!StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
         BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
         String forgotPwdUrl="";
         if(bankMerchantAccount.getIsSetPassword()==0){
