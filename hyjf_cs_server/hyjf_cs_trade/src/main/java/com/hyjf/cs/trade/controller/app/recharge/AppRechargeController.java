@@ -98,6 +98,7 @@ public class AppRechargeController extends BaseTradeController{
 	 * @return
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
+	@ResponseBody
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
 	public AppResult<Object> recharge(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "key") String key,
 									  HttpServletRequest request) throws Exception {
