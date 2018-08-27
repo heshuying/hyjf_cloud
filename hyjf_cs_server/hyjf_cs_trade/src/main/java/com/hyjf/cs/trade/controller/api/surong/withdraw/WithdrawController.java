@@ -70,7 +70,7 @@ public class WithdrawController extends BaseController {
     @ApiOperation(value = "获取提现信息", notes = "获取提现信息")
     @PostMapping("/getInfoAction")
     @ResponseBody
-    public JSONObject getCashInfo(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getInfoAction(HttpServletRequest request, HttpServletResponse response) {
         // ---传入参数---
         String getcash = request.getParameter("getcash"); // 提现金额
         Integer userId = Integer.valueOf(request.getParameter("userId")); // 用户ID
@@ -78,8 +78,7 @@ public class WithdrawController extends BaseController {
         logger.info("【获取提现信息   getcash:+" + getcash + " userId:" + userId + "】");
         JSONObject ret = new JSONObject();
         // 金额显示格式
-        DecimalFormat moneyFormat = null;
-        moneyFormat = CustomConstants.DF_FOR_VIEW;
+        DecimalFormat moneyFormat = CustomConstants.DF_FOR_VIEW;
         // 取得用户当前余额
         AccountVO account = rdfWithdrawService.getAccountByUserId(userId);
         if (account == null) {
@@ -101,7 +100,7 @@ public class WithdrawController extends BaseController {
         String isLargeWithdrawal = "0";
         // 取得银行卡信息
         List<BankCardVO> banks = rdfWithdrawService.selectBankCardByUserIdAndStatus(userId, 1);
-        if (banks.size() > 0) {
+        if (banks!=null&&banks.size() > 0) {
             ret.put("bankCnt", banks.size() + "");
             List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
             for (int j = 0; j < banks.size(); j++) {
@@ -153,7 +152,7 @@ public class WithdrawController extends BaseController {
 
     @ApiOperation(value = "提现", notes = "提现")
     @PostMapping(value = "/cash")
-    public ModelAndView hello(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView cash(HttpServletRequest request, HttpServletResponse response){
 
         String errorPage="redirect:"+systemConfig.getFrontHost() +"/user/openSuccess";
         // ---传入参数---

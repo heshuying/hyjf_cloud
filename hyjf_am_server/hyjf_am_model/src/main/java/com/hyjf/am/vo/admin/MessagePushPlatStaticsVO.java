@@ -10,11 +10,13 @@ import com.hyjf.am.vo.BaseVO;
  * @version MessagePushPlatStaticsVO, v0.1 2018/8/14 16:13
  */
 public class MessagePushPlatStaticsVO extends BaseVO {
-    private Integer id;
+    private String id;
 
-    private Integer tagId;
+    private String tagId;
 
-    private Integer staDate;
+    private String tagName;
+
+    private String staDate;
 
     private Integer destinationCount;
 
@@ -36,27 +38,27 @@ public class MessagePushPlatStaticsVO extends BaseVO {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
-    public void setTagId(Integer tagId) {
+    public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
-    public Integer getStaDate() {
+    public String getStaDate() {
         return staDate;
     }
 
-    public void setStaDate(Integer staDate) {
+    public void setStaDate(String staDate) {
         this.staDate = staDate;
     }
 
@@ -130,5 +132,13 @@ public class MessagePushPlatStaticsVO extends BaseVO {
 
     public void setAndroidReadCount(Integer androidReadCount) {
         this.androidReadCount = androidReadCount;
+    }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 }

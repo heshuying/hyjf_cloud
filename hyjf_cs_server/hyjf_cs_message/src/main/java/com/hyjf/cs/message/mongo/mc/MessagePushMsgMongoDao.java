@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
         Criteria criteria = new Criteria();
 
         if (form.getTagId() != null) {
-            criteria.and("tagId").equals(form.getTagId());
+            criteria.and("tagId").is(form.getTagId());
         }
         if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
@@ -44,10 +45,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
-            criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
+            criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
-
-        if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
+        criteria.and("msgDestinationType").is(0);
+       if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
             Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
             criteria.and("sendTime").gte(time);
             if (form.getEndSendTimeSrch() != null) {
@@ -60,10 +61,6 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
                 criteria.and("sendTime").lte(time2);
             }
         }
-
-
-        criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
-
         Query query = new Query(criteria);
         return (int)mongoTemplate.count(query,MessagePushMsg.class);
     }
@@ -74,11 +71,9 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public List<MessagePushMsg> getRecordList(MessagePushNoticesRequest form, Integer offset, Integer limit){
         Criteria criteria = new Criteria();
-        if (StringUtils.isNotEmpty(form.getEndSendTimeSrch())) {
-            criteria.and("msgDestinationType").equals(form.getEndSendTimeSrch());
-        }
+
         if (form.getTagId() != null) {
-            criteria.and("tagId").equals(form.getTagId());
+            criteria.and("tagId").is(form.getTagId());
         }
         if (StringUtils.isNotEmpty(form.getNoticesTitleSrch())) {
             criteria.and("msgTitle").regex(form.getNoticesTitleSrch());
@@ -93,7 +88,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             criteria.and("msgTerminal").regex(form.getNoticesTerminalSrch());
         }
         if (form.getNoticesSendStatusSrch() != null) {
-            criteria.and("msgSendStatus").equals(form.getNoticesSendStatusSrch());
+            criteria.and("msgSendStatus").is(form.getNoticesSendStatusSrch());
         }
         if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
             Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getStartSendTimeSrch());
@@ -108,7 +103,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
                 criteria.and("sendTime").lte(time2);
             }
         }
-        criteria.and("msgDestinationType").equals(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);
+        criteria.and("msgDestinationType").is(0);
         Query query = new Query(criteria);
         query.skip(offset).limit(limit);
         query.with(new Sort(Sort.Direction.DESC, "createTime"));
@@ -122,9 +117,7 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public MessagePushMsg getRecord(MessagePushNoticesRequest request){
         Criteria criteria = new Criteria();
-        if (request.getNoticesSendStatusSrch() != null) {
-            criteria.and("id").equals(request.getId());
-        }
+        criteria.and("id").is(request.getIds());
         Query query = new Query(criteria);
         return mongoTemplate.findOne(query,MessagePushMsg.class);
     }
@@ -135,12 +128,11 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      */
     public void insertRecord(MessagePushNoticesRequest request){
         MessagePushMsg messagePushMsg = CommonUtils.convertBean(request, MessagePushMsg.class);
-        //TODO 未获取用户名
        // AdminSystem users = (AdminSystem) session.getAttribute(CustomConstants.LOGIN_USER_INFO);
         messagePushMsg.setCreateTime(GetDate.getNowTime10());
-       // messagePushMsg.setCreateUserName(users.getUsername());
+        messagePushMsg.setCreateUserName(request.getUserName());
         messagePushMsg.setLastupdateTime(GetDate.getNowTime10());
-        //messagePushMsg.setLastupdateUserName(users.getUsername());
+        messagePushMsg.setLastupdateUserName(request.getUserName());
         mongoTemplate.save(messagePushMsg);
     }
 
@@ -148,10 +140,10 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
      * 删除数据
      * @return
      */
-    public void deleteRecord(Integer id){
+    public void deleteRecord(String id){
         Query query = new Query();
         Criteria criteria = new Criteria();
-        criteria.and("id").equals(id);
+        criteria.and("id").is(id);
         query.addCriteria(criteria);
         this.del(query);
     }
@@ -164,12 +156,30 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
     public void updateRecord(MessagePushMsg record){
         Query query = new Query();
         Criteria criteria = new Criteria();
-        //criteria.and("date").is(hjhPlanCapital.getDate());
-        //criteria.and("planNid").is(hjhPlanCapital.getPlanNid());
+        query.addCriteria(Criteria.where("id").is(record.getId()));
         Update update = new Update();
         update.set("lastupdateTime", GetDate.getNowTime10());
-        //TODO 未获取用户名
-        //update.set("lastupdateUserName", GetDate.getNowTime10());
+        update.set("lastupdateUserName", record.getLastupdateUserName());
+        if(StringUtils.isNotBlank(record.getMsgTitle())){
+            update.set("msgTitle", record.getMsgTitle());
+        }
+        if(StringUtils.isNotBlank(record.getMsgActionUrl())){
+            update.set("msgImageUrl", record.getMsgActionUrl());
+        }
+        if(StringUtils.isNotBlank(record.getMsgContent())){
+            update.set("msgContent", record.getMsgContent());
+        }
+        if(record.getMsgAction()!=null){
+            update.set("msgAction", record.getMsgAction());
+        }
+
+        if(record.getMsgDestinationType()!=null){
+            update.set("msgDestinationType", record.getMsgDestinationType());
+        }
+        if(record.getMsgSendType()!=null){
+            update.set("msgSendType", record.getMsgSendType());
+        }
+        update.set("msgTerminal",record.getMsgTerminal());
         this.update(query, update);
     }
 

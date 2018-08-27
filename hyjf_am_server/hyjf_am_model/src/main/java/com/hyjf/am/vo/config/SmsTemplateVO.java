@@ -10,6 +10,7 @@ import java.util.Date;
  * @version SmsTemplateVO, v0.1 2018/5/4 10:22
  */
 public class SmsTemplateVO extends BaseVO implements Serializable {
+    private Integer id;
 
     private String tplCode;
 
@@ -24,6 +25,14 @@ public class SmsTemplateVO extends BaseVO implements Serializable {
     private String tplContent;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getTplName() {
         return tplName;
@@ -76,7 +85,8 @@ public class SmsTemplateVO extends BaseVO implements Serializable {
     @Override
     public String toString() {
         return "SmsTemplateVO{" +
-                "tplCode='" + tplCode + '\'' +
+                "id=" + id +
+                ", tplCode='" + tplCode + '\'' +
                 ", tplName='" + tplName + '\'' +
                 ", status=" + status +
                 ", createTime=" + createTime +

@@ -5,25 +5,30 @@ package com.hyjf.cs.market.controller.web.aboutus;
 
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalMessageVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.ContentArticleBean;
+import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
+import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +49,11 @@ public class AboutUsController extends BaseController {
 
 	@Autowired
 	private AboutUsService aboutUsService;
+	@Autowired
+    private AppFindService appFindService;
 
 
-	@ApiOperation(value = "信息披露", notes = "关于我们")
+	@ApiOperation(value = "关于我们", notes = "关于我们")
 	@GetMapping("/about")
 	public WebResult<Map<String, Object>> aboutus() {
 		logger.info("web端获取关于我们数据开始...");
@@ -76,7 +83,7 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "信息披露", notes = "合作伙伴")
+	@ApiOperation(value = "合作伙伴", notes = "合作伙伴")
 	@GetMapping("/partners")
 	public WebResult<Map<String, Object>> partners() {
 		logger.info("web端获取合作伙伴数据开始...");
@@ -101,8 +108,8 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "信息披露", notes = "公司历程")
-	@GetMapping("/events")
+	@ApiOperation(value = "公司历程", notes = "公司历程")
+	@GetMapping("/getCompanyProgress")
 	public WebResult<Map<String, Object>> events() {
 		logger.info("web端获取公司历程数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -120,16 +127,20 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "信息披露", notes = "网站公告列表")
-	@GetMapping("/getNoticeListPage")
-	public WebResult<Map<String, Object>> getNoticeListPage() {
+	@ApiOperation(value = "网站公告列表", notes = "网站公告列表")
+	@PostMapping("/getNoticeListPage")
+	public WebResult<Map<String, Object>> getNoticeListPage(@RequestBody BasePage request) {
 		logger.info("web端获取网站公告列表数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
-			List<ContentArticleVO> recordList = aboutUsService.getNoticeListCount();
+			List<ContentArticleVO> recordList = aboutUsService.getNoticeListCount(request);
 			resultMap.put("contentArticleList", recordList);
 			result.setData(resultMap);
+            Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+            int count = appFindService.countContentArticleByType();
+            page.setTotal(count);
+            result.setPage(page);
 			return result;
 		} catch (Exception e) {
 			logger.error("web端获取网站公告列表失败...", e);
@@ -139,8 +150,38 @@ public class AboutUsController extends BaseController {
 		}
 	}
 
-	@ApiOperation(value = "信息披露", notes = "根据id获取网站公告")
-	@GetMapping("/events/{id}")
+	/**
+	 * 根据ID获取公司历程详情
+	 * @param id
+	 * @return
+	 * @Author : huanghui
+	 */
+	@ApiOperation(value = "根据ID获取公司历程详情", notes = "信息披露 - 公司历程")
+	@GetMapping(value = "getEventDetailById/{id}")
+	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable Integer id){
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// ID不 能为空
+		if (id <= 0 || id == null){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+			return result;
+		}
+
+		try {
+			EventVO eventVO = this.aboutUsService.getEventDetailById(id);
+			resultMap.put("eventNotice", eventVO);
+			result.setData(resultMap);
+		}catch (Exception e){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc(WebResult.ERROR_DESC);
+		}
+		return result;
+	}
+
+	@ApiOperation(value = "根据id获取网站公告", notes = "根据id获取网站公告")
+	@GetMapping("/getCompanyNoticeDetail/{id}")
 	public WebResult<Map<String, Object>> getCompanyNoticeDetail(@PathVariable Integer id) {
 		logger.info("web端根据id获取网站公告数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -191,9 +232,10 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
 	@PostMapping("/getKnowReportList")
-	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("3");
-		ContentArticleResponse response = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getKnowReportList(@RequestBody ContentArticleBean request ){
+        ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+        contentArticleRequest.setNoticeType("3");
+		ContentArticleResponse response = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(response.getResultList());
 		Page page = new Page();
 		page.setTotal(response.getRecordTotal());
@@ -210,10 +252,16 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
 	@PostMapping("/getFXReportList")
-	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleRequest request ){
-		request.setNoticeType("101");
-		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(request);
+	public WebResult<List<ContentArticleVO>> getFXReportList(@RequestBody ContentArticleBean request ){
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		contentArticleRequest.setNoticeType("101");
+		ContentArticleResponse homeNoticeList = aboutUsService.getHomeNoticeList(contentArticleRequest);
 		WebResult webResult = new WebResult(homeNoticeList.getResultList());
+		Page page = new Page();
+		page.setTotal(homeNoticeList.getRecordTotal());
+		page.setCurrPage(request.getCurrPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
 		return webResult;
 	}
 
@@ -270,10 +318,9 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
 	@PostMapping("/getSecurityPage")
-	public WebResult<BanksConfigVO>  getSecurityPage(@RequestParam String pageType) {
+	public WebResult<JxBankConfigVO>  getSecurityPage(@RequestParam String pageType) {
 		WebResult webResult=null;
 		if(StringUtils.isBlank(pageType)){
-			// TODO 参数为空转跳页面
 			//modelAndView = new ModelAndView("/contentarticle/bank-page");
 		}else{
 			List<JxBankConfigVO> list = aboutUsService.getBanksList();
@@ -287,6 +334,19 @@ public class AboutUsController extends BaseController {
 			}
 			webResult = new WebResult(list);
 		}
+		return webResult;
+	}
+	@ApiOperation(value = "充值限额", notes = "充值限额")
+	@ResponseBody
+	@GetMapping("/rechargeRule")
+	public WebResult<RechargeDescResultBean> rechargeRule() {
+		WebResult webResult=null;
+		List<JxBankConfigVO> list = aboutUsService.getBanksList();
+		List<RechargeDescResultBean> result = new ArrayList<RechargeDescResultBean>();
+		if (list != null) {
+			result = this.conventBanksConfigToResult(list);
+		}
+		webResult = new WebResult(result);
 		return webResult;
 	}
 
@@ -316,5 +376,91 @@ public class AboutUsController extends BaseController {
 		}
 		webResult = new WebResult(mediaReport);
 		return webResult;
+	}
+
+	/**
+	 * 获取公司动态详情
+	 * @return
+	 */
+	@ApiOperation(value = "获取公司动态详情", notes = "获取公司动态详情")
+	@GetMapping("/getCompanyDynamicsDetail")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsDetail(@RequestParam Integer id) {
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
+		if (mediaReport != null) {
+			if (mediaReport.getContent().contains("../../../..")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+			} else if (mediaReport.getContent().contains("src=\"/")) {
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+			}
+		}
+		webResult = new WebResult(mediaReport);
+		return webResult;
+	}
+
+	/**
+	 * 查询公司动态列表
+	 * @return
+	 */
+	@ApiOperation(value = "查询公司动态列表", notes = "查询公司动态列表")
+	@PostMapping("/getCompanyDynamicsListPage")
+	public WebResult<ContentArticleVO>  getCompanyDynamicsListPage(@RequestBody ContentArticleBean request) {
+		ContentArticleRequest contentArticleRequest = CommonUtils.convertBean(request, ContentArticleRequest.class);
+		WebResult webResult=null;
+		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
+		contentArticleRequest.setNoticeType("20");
+		ContentArticleResponse response = aboutUsService.getCompanyDynamicsListPage(contentArticleRequest);
+		List<ContentArticleVO> companyDynamicsList = response.getResultList();
+		for (ContentArticleVO companyDynamics : companyDynamicsList) {
+			if (companyDynamics.getContent().contains("../../../..")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", webUrl));
+			} else if (companyDynamics.getContent().contains("src=\"/")) {
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
+						"src=\"" + webUrl)
+						+ "//");
+			}
+		}
+		webResult = new WebResult(companyDynamicsList);
+		Page page = new Page();
+		page.setTotal(response.getRecordTotal());
+		page.setCurrPage(request.getCurrPage());
+		page.setPageSize(request.getPageSize());
+		webResult.setPage(page);
+
+
+		return webResult;
+	}
+
+
+	private List<RechargeDescResultBean> conventBanksConfigToResult( List<JxBankConfigVO> configs) {
+		List<RechargeDescResultBean> list = new ArrayList<RechargeDescResultBean>();
+		if (!CollectionUtils.isEmpty(configs)) {
+			//RechargeDescResultBean bean = null;
+			for (JxBankConfigVO config : configs) {
+				RechargeDescResultBean bean = new RechargeDescResultBean();
+				bean.setBankName(config.getBankName());
+				//单卡单日限额
+				if(config.getSingleCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setDay("不限");
+				}else{
+					bean.setDay(String.valueOf(config.getSingleCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单笔限额
+				if(config.getSingleQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setOnce("不限");
+				}else{
+					bean.setOnce(String.valueOf(config.getSingleQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				//单月单卡限额
+				if(config.getMonthCardQuota().compareTo(BigDecimal.ZERO)==0){
+					bean.setMonth("不限");
+				}else{
+					bean.setMonth(String.valueOf(config.getMonthCardQuota().divide(new BigDecimal(10000)))+" 万元");
+				}
+				list.add(bean);
+			}
+		}
+		return list;
 	}
 }

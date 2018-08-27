@@ -80,6 +80,10 @@ public class CallCenterCouponUserCustomize implements Serializable {
     private String readFlag;
 
     private String couponSource;
+    /**
+     * 优惠券来源
+     */
+    private Integer couponSourceNum;
     private String couponContent;
 
     private String appUtmSource;
@@ -312,6 +316,14 @@ public class CallCenterCouponUserCustomize implements Serializable {
 
     public void setCouponSource(String couponSource) {
         this.couponSource = couponSource;
+    }
+
+    public Integer getCouponSourceNum() {
+        return couponSourceNum;
+    }
+
+    public void setCouponSourceNum(Integer couponSourceNum) {
+        this.couponSourceNum = couponSourceNum;
     }
 
     public String getCouponContent() {

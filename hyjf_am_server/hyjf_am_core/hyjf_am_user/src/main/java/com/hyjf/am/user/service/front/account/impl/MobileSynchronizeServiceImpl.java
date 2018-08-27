@@ -7,10 +7,12 @@ import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynch;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.user.service.front.account.MobileSynchronizeService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ import java.util.List;
  */
 @Service
 public class MobileSynchronizeServiceImpl extends BaseServiceImpl implements MobileSynchronizeService {
+
+    @Autowired
+    protected BindCardService bindCardService;
 
     @Override
     public List<AccountMobileSynch> searchAccountMobileSynch(String flag) {

@@ -6,7 +6,7 @@ import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 
 import java.util.List;
 
@@ -90,5 +90,5 @@ public interface UserInfoService extends BaseService{
      * @param mobile
      * @return
      */
-    MessagePushErrorVO getMobileCodeByNumber(String mobile);
+    AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.BankInterfaceCustomizeMapper">
+
+    <sql id="Where_Clause">
+        <where>
+            hybi.`is_delete` = 0
+            <if test="interfaceName != null and interfaceName !='' ">
+                AND hybi.interface_name LIKE CONCAT('%', #{interfaceName}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="BankInterfaceListPOMap" type="com.hyjf.am.config.dao.model.auto.BankInterface">
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="interface_name" property="interfaceName" jdbcType="VARCHAR" />
+        <result column="interface_type" property="interfaceType" jdbcType="VARCHAR" />
+        <result column="interface_status" property="interfaceStatus" jdbcType="INTEGER" />
+        <result column="is_usable" property="isUsable" jdbcType="INTEGER" />
+        <result column="is_delete" property="isDelete" jdbcType="INTEGER" />
+        <result column="is_usable_name" property="isUsableName" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <select id="selectBankInterfaceListByPage" resultMap="BankInterfaceListPOMap" parameterType="Map">
+        SELECT
+        hybi.id,
+        hybi.interface_name,
+        hybi.interface_status ,
+        hybi.is_usable,
+        hybi.is_delete,
+        hybi.is_usable ,
+        DATE_FORMAT(
+        hybi.update_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS update_time
+        FROM
+        ht_bank_interface hybi
+        <include refid="Where_Clause" />
+        ORDER BY hybi.id DESC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="selectBankInterfaceListCount" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(hybi.id)
+        FROM
+        ht_bank_interface hybi
+        <include refid="Where_Clause" />
+    </select>
+
+</mapper>

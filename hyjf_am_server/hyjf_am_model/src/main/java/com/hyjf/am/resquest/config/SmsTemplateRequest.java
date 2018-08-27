@@ -3,21 +3,21 @@
  */
 package com.hyjf.am.resquest.config;
 
+import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.resquest.Request;
-
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fuqiang
  * @version SmsTemplateRequest, v0.1 2018/6/25 10:30
  */
-public class SmsTemplateRequest extends Request implements Serializable {
+public class SmsTemplateRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 7879503023321881843L;
     private Integer id;
 
+    @ApiModelProperty(value = "模板标识")
     private String tplCode;
     @ApiModelProperty(value = "模板名称")
     private String tplName;

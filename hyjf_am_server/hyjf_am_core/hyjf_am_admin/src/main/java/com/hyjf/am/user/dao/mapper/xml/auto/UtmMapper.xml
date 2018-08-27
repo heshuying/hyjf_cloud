@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UtmMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.Utm" >
+    <id column="utm_id" property="utmId" jdbcType="INTEGER" />
+    <result column="utm_source" property="utmSource" jdbcType="VARCHAR" />
+    <result column="source_id" property="sourceId" jdbcType="INTEGER" />
+    <result column="utm_medium" property="utmMedium" jdbcType="VARCHAR" />
+    <result column="utm_term" property="utmTerm" jdbcType="VARCHAR" />
+    <result column="utm_content" property="utmContent" jdbcType="VARCHAR" />
+    <result column="utm_campaign" property="utmCampaign" jdbcType="VARCHAR" />
+    <result column="utm_referrer" property="utmReferrer" jdbcType="INTEGER" />
+    <result column="link_address" property="linkAddress" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    utm_id, utm_source, source_id, utm_medium, utm_term, utm_content, utm_campaign, utm_referrer, 
+    link_address, remark, `status`, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.UtmExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_utm
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_utm
+    where utm_id = #{utmId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_utm
+    where utm_id = #{utmId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UtmExample" >
+    delete from ht_utm
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.Utm" >
+    <selectKey resultType="java.lang.Integer" keyProperty="utmId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_utm (utm_source, source_id, utm_medium, 
+      utm_term, utm_content, utm_campaign, 
+      utm_referrer, link_address, remark, 
+      `status`, create_time, update_time
+      )
+    values (#{utmSource,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, #{utmMedium,jdbcType=VARCHAR}, 
+      #{utmTerm,jdbcType=VARCHAR}, #{utmContent,jdbcType=VARCHAR}, #{utmCampaign,jdbcType=VARCHAR}, 
+      #{utmReferrer,jdbcType=INTEGER}, #{linkAddress,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.Utm" >
+    <selectKey resultType="java.lang.Integer" keyProperty="utmId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_utm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="utmSource != null" >
+        utm_source,
+      </if>
+      <if test="sourceId != null" >
+        source_id,
+      </if>
+      <if test="utmMedium != null" >
+        utm_medium,
+      </if>
+      <if test="utmTerm != null" >
+        utm_term,
+      </if>
+      <if test="utmContent != null" >
+        utm_content,
+      </if>
+      <if test="utmCampaign != null" >
+        utm_campaign,
+      </if>
+      <if test="utmReferrer != null" >
+        utm_referrer,
+      </if>
+      <if test="linkAddress != null" >
+        link_address,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="utmSource != null" >
+        #{utmSource,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="utmMedium != null" >
+        #{utmMedium,jdbcType=VARCHAR},
+      </if>
+      <if test="utmTerm != null" >
+        #{utmTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="utmContent != null" >
+        #{utmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="utmCampaign != null" >
+        #{utmCampaign,jdbcType=VARCHAR},
+      </if>
+      <if test="utmReferrer != null" >
+        #{utmReferrer,jdbcType=INTEGER},
+      </if>
+      <if test="linkAddress != null" >
+        #{linkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UtmExample" resultType="java.lang.Integer" >
+    select count(*) from ht_utm
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_utm
+    <set >
+      <if test="record.utmId != null" >
+        utm_id = #{record.utmId,jdbcType=INTEGER},
+      </if>
+      <if test="record.utmSource != null" >
+        utm_source = #{record.utmSource,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceId != null" >
+        source_id = #{record.sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.utmMedium != null" >
+        utm_medium = #{record.utmMedium,jdbcType=VARCHAR},
+      </if>
+      <if test="record.utmTerm != null" >
+        utm_term = #{record.utmTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.utmContent != null" >
+        utm_content = #{record.utmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.utmCampaign != null" >
+        utm_campaign = #{record.utmCampaign,jdbcType=VARCHAR},
+      </if>
+      <if test="record.utmReferrer != null" >
+        utm_referrer = #{record.utmReferrer,jdbcType=INTEGER},
+      </if>
+      <if test="record.linkAddress != null" >
+        link_address = #{record.linkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_utm
+    set utm_id = #{record.utmId,jdbcType=INTEGER},
+      utm_source = #{record.utmSource,jdbcType=VARCHAR},
+      source_id = #{record.sourceId,jdbcType=INTEGER},
+      utm_medium = #{record.utmMedium,jdbcType=VARCHAR},
+      utm_term = #{record.utmTerm,jdbcType=VARCHAR},
+      utm_content = #{record.utmContent,jdbcType=VARCHAR},
+      utm_campaign = #{record.utmCampaign,jdbcType=VARCHAR},
+      utm_referrer = #{record.utmReferrer,jdbcType=INTEGER},
+      link_address = #{record.linkAddress,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.Utm" >
+    update ht_utm
+    <set >
+      <if test="utmSource != null" >
+        utm_source = #{utmSource,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="utmMedium != null" >
+        utm_medium = #{utmMedium,jdbcType=VARCHAR},
+      </if>
+      <if test="utmTerm != null" >
+        utm_term = #{utmTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="utmContent != null" >
+        utm_content = #{utmContent,jdbcType=VARCHAR},
+      </if>
+      <if test="utmCampaign != null" >
+        utm_campaign = #{utmCampaign,jdbcType=VARCHAR},
+      </if>
+      <if test="utmReferrer != null" >
+        utm_referrer = #{utmReferrer,jdbcType=INTEGER},
+      </if>
+      <if test="linkAddress != null" >
+        link_address = #{linkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where utm_id = #{utmId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.Utm" >
+    update ht_utm
+    set utm_source = #{utmSource,jdbcType=VARCHAR},
+      source_id = #{sourceId,jdbcType=INTEGER},
+      utm_medium = #{utmMedium,jdbcType=VARCHAR},
+      utm_term = #{utmTerm,jdbcType=VARCHAR},
+      utm_content = #{utmContent,jdbcType=VARCHAR},
+      utm_campaign = #{utmCampaign,jdbcType=VARCHAR},
+      utm_referrer = #{utmReferrer,jdbcType=INTEGER},
+      link_address = #{linkAddress,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where utm_id = #{utmId,jdbcType=INTEGER}
+  </update>
+</mapper>

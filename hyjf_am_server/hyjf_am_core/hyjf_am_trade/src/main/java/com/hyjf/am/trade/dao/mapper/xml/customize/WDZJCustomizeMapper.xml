@@ -13,7 +13,7 @@
 		hb.borrow_nid AS projectId,
 		hb.borrow_nid AS userName,
 		hb.borrow_nid,
-		hb.finance_purpose AS title,
+		hbi.finance_purpose AS title,
 		hb.account AS amount,
 		hb.borrow_account_scale AS `schedule`,
 		CONCAT(hb.borrow_apr, '%') AS interestRate,
@@ -56,17 +56,18 @@
 		'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
 		hb.borrow_nid
 		) AS loanUrl,
-		FROM_UNIXTIME(
-		br.addtime,
+		date_format(
+		br.create_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS successTime,
 		0 AS reward
 		FROM
 		ht_borrow_repay br
 		JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+		JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		WHERE
-		br.addtime >= #{timeStart}
-		AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+		AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
 		UNION ALL
 		SELECT
 		tt.projectId,
@@ -92,7 +93,7 @@
 		bc.credit_nid AS projectId,
 		bc.credit_nid AS userName,
 		bc.credit_nid AS borrow_nid,
-		hb.finance_purpose AS title,
+		hbi.finance_purpose AS title,
 		bc.credit_capital AS amount,
 		100 AS `schedule`,
 		CONCAT(bc.bid_apr, '%') AS interestRate,
@@ -106,7 +107,7 @@
 		) AS loanUrl,
 		(
 		SELECT
-		ct.add_time
+		ct.create_time
 		FROM
 		ht_credit_tender ct
 		WHERE
@@ -119,6 +120,7 @@
 		FROM
 		ht_borrow_credit bc
 		INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+		JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		WHERE
 		bc.credit_status = '2'
 		) tt
@@ -150,7 +152,7 @@
 		dc.credit_nid AS projectId,
 		dc.credit_nid AS userName,
 		dc.credit_nid AS borrow_nid,
-		b.finance_purpose AS title,
+		hbi.finance_purpose AS title,
 		dc.credit_capital AS amount,
 		100 AS `schedule`,
 		CONCAT(dc.actual_apr, '%') AS interestRate,
@@ -177,6 +179,7 @@
 		FROM
 		ht_hjh_debt_credit dc
 		INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+		JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
 		INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		WHERE
@@ -197,8 +200,8 @@
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		br.addtime >= #{timeStart}
-	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
 	UNION ALL
 		SELECT
 			tt.projectId
@@ -208,7 +211,7 @@
 					bc.credit_nid AS projectId,
 					bc.credit_nid AS userName,
 					bc.credit_nid AS borrow_nid,
-					hb.finance_purpose AS title,
+					hbi.finance_purpose AS title,
 					bc.credit_capital AS amount,
 					100 AS `schedule`,
 					CONCAT(bc.bid_apr, '%') AS interestRate,
@@ -222,7 +225,7 @@
 					) AS loanUrl,
 					(
 						SELECT
-							ct.add_time
+							ct.create_time
 						FROM
 							ht_credit_tender ct
 						WHERE
@@ -235,6 +238,7 @@
 				FROM
 					ht_borrow_credit bc
 				INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+				JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 				WHERE
 					bc.credit_status = '2'
 			) tt
@@ -250,7 +254,7 @@
 						dc.credit_nid AS projectId,
 						dc.credit_nid AS userName,
 						dc.credit_nid AS borrow_nid,
-						b.finance_purpose AS title,
+						hbi.finance_purpose AS title,
 						dc.credit_capital AS amount,
 						100 AS `schedule`,
 						CONCAT(dc.actual_apr, '%') AS interestRate,
@@ -277,6 +281,7 @@
 					FROM
 						ht_hjh_debt_credit dc
 					INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+					JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
 					INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
 					LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 					WHERE
@@ -294,8 +299,8 @@
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		br.addtime >= #{timeStart}
-	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
 	UNION ALL
 		SELECT
 			tt.amount
@@ -305,7 +310,7 @@
 					bc.credit_nid AS projectId,
 					bc.credit_nid AS userName,
 					bc.credit_nid AS borrow_nid,
-					hb.finance_purpose AS title,
+					hbi.finance_purpose AS title,
 					bc.credit_capital AS amount,
 					100 AS `schedule`,
 					CONCAT(bc.bid_apr, '%') AS interestRate,
@@ -319,7 +324,7 @@
 					) AS loanUrl,
 					(
 						SELECT
-							ct.add_time
+							ct.create_time
 						FROM
 							ht_credit_tender ct
 						WHERE
@@ -332,6 +337,7 @@
 				FROM
 					ht_borrow_credit bc
 				INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+				JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 				WHERE
 					bc.credit_status = '2'
 			) tt
@@ -347,7 +353,7 @@
 						dc.credit_nid AS projectId,
 						dc.credit_nid AS userName,
 						dc.credit_nid AS borrow_nid,
-						b.finance_purpose AS title,
+						hbi.finance_purpose AS title,
 						dc.credit_capital AS amount,
 						100 AS `schedule`,
 						CONCAT(dc.actual_apr, '%') AS interestRate,
@@ -374,6 +380,7 @@
 					FROM
 						ht_hjh_debt_credit dc
 					INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+					JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
 					INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
 					LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 					WHERE
@@ -416,10 +423,7 @@
 			ui.idcard AS subscribeUserName,
 			ct.assign_capital AS amount,
 			ct.assign_capital AS validAmount,
-			FROM_UNIXTIME(
-				ct.add_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS addDate,
+			date_format(ct.create_time, '%Y-%m-%d %H:%i:%s') AS addDate,
 			'1' AS STATUS,
 			0 AS type
 		FROM

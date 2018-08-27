@@ -4,6 +4,8 @@ package com.hyjf.am.user.dao.mapper.customize;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface EmployeeCustomizeMapper {
 
 	/**
@@ -21,4 +23,11 @@ public interface EmployeeCustomizeMapper {
 	 */
 	public Integer queryCuttype(@Param("userId") Integer userId);
 
+
+	/**
+	 * 根据平台userid查询用户信息
+	 * @param userId
+	 * @return
+	 */
+	List<EmployeeCustomize> selectEmployeeInfoByUserId(@Param("userId") Integer userId);
 }

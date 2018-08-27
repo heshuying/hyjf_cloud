@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,6 @@ public class VipManagementController extends BaseController {
     public VipManageResponse getVipList(@RequestBody VipManageRequest request) {
         logger.info("---findVipList by param---  " + JSONObject.toJSON(request));
         VipManageResponse response = new VipManageResponse();
-        String returnCode = Response.FAIL;
         Map<String, Object> mapParam = paramSet(request);
         int count = vipManagementService.countRecord(mapParam);
         Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
@@ -86,7 +84,6 @@ public class VipManagementController extends BaseController {
     @PostMapping("/vipDetailList")
     public VipDetailListResponse getDetailList(@RequestBody VipDetailListRequest request) {
         VipDetailListResponse response = new VipDetailListResponse();
-        String returnCode = Response.FAIL;
         Map<String, Object> mapParam = new HashMap<>();
         mapParam.put("userId", request.getUserId());
         int count = vipManagementService.countDetailRecord(mapParam);
@@ -100,10 +97,14 @@ public class VipManagementController extends BaseController {
                 List<VipDetailListVO> vipDetailListVOS = CommonUtils.convertBeanList(detailListCustomizes, VipDetailListVO.class);
                 response.setResultList(vipDetailListVOS);
                 response.setCount(count);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
+            }else {
+                response.setRtn(Response.FAIL);
             }
+        }else {
+            response.setCount(0);
+            response.setMessage("查询数据为空");
         }
-        response.setRtn(returnCode);
         return response;
     }
 
@@ -126,6 +127,9 @@ public class VipManagementController extends BaseController {
                 response.setCount(count);
                 response.setMessage(Response.SUCCESS_MSG);
             }
+        }else {
+            response.setCount(0);
+            response.setMessage("查询数据为空");
         }
         return response;
     }

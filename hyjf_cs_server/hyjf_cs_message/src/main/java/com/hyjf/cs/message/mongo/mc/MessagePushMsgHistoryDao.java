@@ -1,7 +1,6 @@
 package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -117,8 +116,8 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 * @param msgId
 	 * @return
 	 */
-	public MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId) {
-		Query query = new Query(new Criteria().and("msgId").is(msgId));
+	public MessagePushMsgHistory getMsgPushMsgHistoryById(String msgId) {
+		Query query = new Query(new Criteria().and("id").is(msgId));
 		return mongoTemplate.findOne(query, MessagePushMsgHistory.class);
 	}
 
@@ -137,7 +136,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	public Integer countRecordList(MessagePushHistoryRequest form){
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
-			criteria.and("tagId").equals(form.getHistoryTagIdSrch());
+			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
 		if (StringUtils.isNotEmpty(form.getHistoryTitleSrch())) {
@@ -154,7 +153,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTerminal").regex(form.getHistoryTerminalSrch());
 		}
 		if (form.getHistorySendStatusSrch() != null) {
-			criteria.and("msgSendStatus").equals(form.getHistorySendStatusSrch());
+			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
 		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
 			try {
@@ -173,7 +172,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {
-				criteria.and("msgFirstreadPlat").equals(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
+				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -188,7 +187,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	public List<MessagePushMsgHistory> getRecordList(MessagePushHistoryRequest form,Integer offset,Integer limit){
 		Criteria criteria = new Criteria();
 		if (StringUtils.isNotEmpty(form.getHistoryTagIdSrch())) {
-			criteria.and("tagId").equals(form.getHistoryTagIdSrch());
+			criteria.and("tagId").is(form.getHistoryTagIdSrch());
 
 		}
 		if (StringUtils.isNotEmpty(form.getHistoryTitleSrch())) {
@@ -205,7 +204,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgTerminal").regex(form.getHistoryTerminalSrch());
 		}
 		if (form.getHistorySendStatusSrch() != null) {
-			criteria.and("msgSendStatus").equals(form.getHistorySendStatusSrch());
+			criteria.and("msgSendStatus").is(form.getHistorySendStatusSrch());
 		}
 		if (StringUtils.isNotEmpty(form.getStartSendTimeSrch())) {
 			try {
@@ -223,7 +222,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		if (form.getHistoryFirstReadTerminalSrch() != null) {
 			try {
-				criteria.and("msgFirstreadPlat").equals(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
+				criteria.and("msgFirstreadPlat").is(Integer.parseInt(form.getHistoryFirstReadTerminalSrch()));
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -243,22 +242,23 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		Criteria criteria = new Criteria();
 		Query query = new Query();
 		// 条件查询
-		criteria.and("msgSendStatus").is(2);
 		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
-			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
+			criteria.and("msgTitle").is("%" + request.getMsgTitleSrch() + "%");
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
-			criteria.and("tagIdSrch").is(Integer.valueOf(request.getTagIdSrch()));
+			criteria.and("tagId").is(Integer.valueOf(request.getTagIdSrch()));
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
-			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
+			criteria.and("nsgCode").is(request.getMsgCodeSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("startDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
+			criteria.and("createTime").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
 		}
 		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("endDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+			criteria.and("createTime").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
 		}
+		criteria.and("msgSendStatus").is(2);//发送失败
+
 		query.addCriteria(criteria);
 		return (int) mongoTemplate.count(query, MessagePushMsgHistory.class);
 	}
@@ -272,7 +272,6 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		Criteria criteria = new Criteria();
 		Query query = new Query();
 		// 条件查询
-		criteria.and("msgSendStatus").is(2);
 		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
 			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
 		}
@@ -283,11 +282,12 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("startDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
+			criteria.and("startDateSrch").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
 		}
 		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("endDateSrch").is(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+			criteria.and("endDateSrch").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
 		}
+		criteria.and("msgSendStatus").is(2);//发送失败
 		if (limitStart != -1) {
 			query.skip(limitStart).limit(limitEnd);
 			query.addCriteria(criteria);
@@ -313,7 +313,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	}
 
 
-	public void updateByPrimaryKeySelective(MessagePushErrorVO record) {
+	public void updateByPrimaryKeySelective(MessagePushMsgHistory record) {
 		mongoTemplate.save(record);
 	}
 }

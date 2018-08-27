@@ -5,6 +5,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -37,7 +38,7 @@ import java.util.Map;
 @Api(tags = "weChat端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/hyjf-wechat/recharge")
+@RequestMapping(value = "/hyjf-wechat/wx/recharge")
 public class WechatRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(WechatRechargeController.class);
@@ -52,17 +53,26 @@ public class WechatRechargeController extends BaseTradeController{
 	/**
 	 * 调用充值接口
 	 * @param request
-	 * @param
-	 * @param mobile
-	 * @param money
 	 * @return
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
-	@PostMapping("/page")
-	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
+	@PostMapping("/recharge")
+	public ModelAndView recharge(@RequestHeader(value = "sign") String sign,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) throws Exception {
 		logger.info("wechat充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
+		// 交易金额
+		String money = request.getParameter("money");
+		// 用户的手机号
+		String mobile = request.getParameter("mobile");
+		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
+		// 拼装参数 调用江西银行
+		String retUrl = systemConfig.getWechatHost()+"/hyjf-wechat/wx/recharge/return?sign="+sign+"&txAmount="+money;
+		String bgRetUrl = systemConfig.getWechatHost() + "/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
+		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
+		directRechargeBean.setRetUrl(retUrl);
+		directRechargeBean.setNotifyUrl(bgRetUrl);
+		//directRechargeBean.setSuccessfulUrl(successfulUrl);
+		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			modelAndView = BankCallUtils.callApi(bean);

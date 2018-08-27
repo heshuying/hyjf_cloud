@@ -4,14 +4,17 @@
 package com.hyjf.cs.message.controller.client;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.MessagePushErrorResponse;
+import com.hyjf.am.response.admin.MessagePushHistoryResponse;
+import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +43,10 @@ public class MessagePushErrorController {
      * @return
      */
     @RequestMapping("getRecordCount")
-    private MessagePushErrorResponse getRecordCount(@RequestBody MessagePushErrorRequest request) {
-        MessagePushErrorResponse response = new MessagePushErrorResponse();
+    private MessagePushHistoryResponse getRecordCount(@RequestBody MessagePushErrorRequest request) {
+        MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         Integer recordCount = messagePushErrorService.getRecordCount(request);
-        response.setCount(recordCount);
+        response.setRecordTotal(recordCount);
         return response;
     }
 
@@ -52,13 +55,12 @@ public class MessagePushErrorController {
      *
      * @return
      */
-    @RequestMapping("getRecordListT/{request}/{limitStart}/{limitEnd}")
-    public MessagePushErrorResponse getRecordListT(@PathVariable MessagePushErrorRequest request, @PathVariable int limitStart,
-                                                        @PathVariable int limitEnd) {
-        MessagePushErrorResponse response = new MessagePushErrorResponse();
-        List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, limitStart, limitEnd);
+    @PostMapping("getRecordListT")
+    public MessagePushHistoryResponse getRecordListT(@RequestBody MessagePushErrorRequest request) {
+        MessagePushHistoryResponse response = new MessagePushHistoryResponse();
+        List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, request.getLimitStart(), request.getLimitEnd());
         if (!CollectionUtils.isEmpty(messagePushMsgHistory)){
-            List<MessagePushErrorVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushErrorVO.class);
+            List<MessagePushMsgHistoryVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushMsgHistoryVO.class);
             response.setResultList(messagePushErrorVO);
             return response;
         }
@@ -73,11 +75,11 @@ public class MessagePushErrorController {
      * @return
      */
     @RequestMapping("getTagList")
-    public MessagePushErrorResponse getTagList() {
-        MessagePushErrorResponse response = new MessagePushErrorResponse();
+    public MessagePushTagResponse getTagList() {
+        MessagePushTagResponse response = new MessagePushTagResponse();
         List<MessagePushTag> tagList = messagePushErrorService.getTagList();
         if (!CollectionUtils.isEmpty(tagList)){
-            List<MessagePushErrorVO> messagePushErrorVO = CommonUtils.convertBeanList(tagList, MessagePushErrorVO.class);
+            List<MessagePushTagVO> messagePushErrorVO = CommonUtils.convertBeanList(tagList, MessagePushTagVO.class);
             response.setResultList(messagePushErrorVO);
             return response;
         }
@@ -92,11 +94,11 @@ public class MessagePushErrorController {
      * @return
      */
     @RequestMapping("getRecord/{id}")
-    public MessagePushErrorResponse getRecord(@PathVariable Integer id) {
-        MessagePushErrorResponse response = new MessagePushErrorResponse();
+    public MessagePushHistoryResponse getRecord(@PathVariable Integer id) {
+        MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
         if (msg != null){
-            MessagePushErrorVO messagePushErrorVO = CommonUtils.convertBean(msg, MessagePushErrorVO.class);
+            MessagePushMsgHistoryVO messagePushErrorVO = CommonUtils.convertBean(msg, MessagePushMsgHistoryVO.class);
             response.setResult(messagePushErrorVO);
             return response;
         }
@@ -111,8 +113,10 @@ public class MessagePushErrorController {
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
-    @RequestMapping("sendMessage/{msg}")
-    public void sendMessage(@PathVariable MessagePushErrorVO msg) {
+    @RequestMapping("sendMessage")
+    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) {
+        MessagePushMsgHistory msg = new MessagePushMsgHistory();
+        BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
         messagePushErrorService.sendMessage(msg);
     }
 }

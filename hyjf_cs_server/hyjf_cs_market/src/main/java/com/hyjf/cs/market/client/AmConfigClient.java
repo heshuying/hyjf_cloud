@@ -3,18 +3,18 @@
  */
 package com.hyjf.cs.market.client;
 
-import com.hyjf.am.response.admin.JxBankConfigResponse;
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author fuqiang
@@ -47,7 +47,7 @@ public interface AmConfigClient {
      *
      * @return
      */
-    List<ContentArticleVO> aboutUsClient();
+    List<ContentArticleVO> aboutUsClient(BasePage request);
 
     /**
      * 根据主键ID获取Aricle
@@ -56,6 +56,14 @@ public interface AmConfigClient {
      * @return
      */
     ContentArticleVO getNoticeInfo(Integer id);
+
+    /**
+     * 根据ID获取公司历程详情
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    EventVO getEventDetailById(Integer id);
 
     /**
      * 获取招贤纳士列表
@@ -153,4 +161,11 @@ public interface AmConfigClient {
     int addSubmission(SubmissionsVO submissionsVO);
 
     List<JxBankConfigVO> getBankRecordList();
+
+    /**
+     *获取公司公告列表
+     * @param request
+     * @return
+     */
+    ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request);
 }

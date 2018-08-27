@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.InvitePrizeConfCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.resquest.trade.InvitePrizeConfVO" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="prize_name" property="prizeName" jdbcType="VARCHAR" />
+		<result column="prize_quantity" property="prizeQuantity" jdbcType="INTEGER" />
+		<result column="recommend_quantity" property="recommendQuantity" jdbcType="INTEGER" />
+		<result column="prize_reminder_quantity" property="prizeReminderQuantity" jdbcType="INTEGER" />
+		<result column="prize_group_code" property="prizeGroupCode" jdbcType="VARCHAR" />
+		<result column="prize_type" property="prizeType" jdbcType="TINYINT" />
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="prize_probability" property="prizeProbability" jdbcType="DECIMAL" />
+		<result column="prize_pic_url" property="prizePicUrl" jdbcType="VARCHAR" />
+		<result column="prize_kind" property="prizeKind" jdbcType="TINYINT" />
+		<result column="prize_sort" property="prizeSort" jdbcType="INTEGER" />
+		<result column="prize_status" property="prizeStatus" jdbcType="INTEGER" />
+		<result column="success_message" property="successMessage" jdbcType="VARCHAR" />
+		<result column="prize_apply_time" property="prizeApplyTime" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+		<result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+		<result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    id, prize_name, prize_quantity, recommend_quantity, prize_reminder_quantity, prize_group_code,
+    prize_type, coupon_code, prize_probability, prize_pic_url, prize_kind, prize_sort,
+    prize_status, success_message, prize_apply_time, remark, del_flag, create_user_id,
+    update_user_id, create_time, update_time
+  </sql>
+	<select id="getListByGroupCode" resultMap="BaseResultMap" parameterType="map" >
+		select
+		<include refid="Base_Column_List" />
+		from ht_invite_prize_conf
+		where 1=1
+		<if test="groupCode != null and groupCode != ''" >
+			and prize_group_code = #{groupCode}
+		</if>
+	</select>
+</mapper>

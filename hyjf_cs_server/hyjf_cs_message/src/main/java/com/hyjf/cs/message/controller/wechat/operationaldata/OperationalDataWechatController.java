@@ -55,7 +55,11 @@ public class OperationalDataWechatController {
 		result.put("statusDesc", "成功");
 		try {
 			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
-
+			if(oe==null){
+				result.put("status", "999");
+				result.put("statusDesc", "暂无任何数据");
+				return result;
+			}
 			JSONObject info = new JSONObject();
 
 			info.put("CumulativeTransactionNum", platDataStatisticsService.selectTotalTradeSum());

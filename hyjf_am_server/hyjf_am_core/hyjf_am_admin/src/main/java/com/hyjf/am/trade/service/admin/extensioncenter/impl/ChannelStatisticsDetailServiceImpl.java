@@ -3,16 +3,17 @@
  */
 package com.hyjf.am.trade.service.admin.extensioncenter.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.trade.dao.mapper.customize.ChannelStatisticsDetailCustomizeMapper;
 import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author tanyy

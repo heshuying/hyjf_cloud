@@ -84,7 +84,7 @@ public class UserInfoServer extends CallcenterBaseController {
 	}
 
 	/**
-	 * @param request,response,UserBean
+	 * @param bean
 	 * @Author: wangjun
 	 * @Desc :更新分配客服状态
 	 * @Date: 10:01 2018/6/13
@@ -93,8 +93,7 @@ public class UserInfoServer extends CallcenterBaseController {
 	@ApiOperation(value = "更新分配客服状态", notes = "更新分配客服状态")
 	@ResponseBody
 	@PostMapping(value = "/setServedUsers" ,produces = "application/json; charset=utf-8")
-	public BaseResultBean setServedUsers(HttpServletRequest request, HttpServletResponse response,
-										 @RequestBody JsonBean bean) {
+	public BaseResultBean setServedUsers(@RequestBody JsonBean bean) {
 		BaseResultBean result = new BaseResultBean();
 
 		//参数非空判断

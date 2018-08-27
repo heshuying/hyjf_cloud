@@ -5,12 +5,14 @@ package com.hyjf.admin.controller.finance.accountdetail;
 
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
 import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
@@ -63,19 +65,10 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
-    public AdminResult<List<Map<String,Object>>> userManagerInit() {
+    public AdminResult<List<DropDownVO>> userManagerInit() {
         List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
-        List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>();
-        if(null!=accountTradeVOList&&accountTradeVOList.size()>0){
-            for(AccountTradeVO accountTradeVO:accountTradeVOList){
-                Map<String,Object> mapParam = new HashMap<>();
-                mapParam.put("key",accountTradeVO.getId());
-                mapParam.put("value",accountTradeVO.getName());
-                listMap.add(mapParam);
-            }
-
-        }
-        return new AdminResult<List<Map<String,Object>>>(listMap);
+        List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(accountTradeVOList,"id","name");
+        return new AdminResult<List<DropDownVO>>(dropDownVOList);
     }
 
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
@@ -158,7 +151,6 @@ public class AccountDetailController extends BaseController {
     @PostMapping(value = "/accountdetailDataRepair")
     @ResponseBody
     public AdminResult accountdetailDataRepair() {
-        String strRepayDate = "";
         // 查询出还款后,交易明细有问题的用户ID
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
@@ -168,7 +160,7 @@ public class AccountDetailController extends BaseController {
                 for(AdminAccountDetailDataRepairVO adminAccountDetailDataRepairVO:adminAccountDetailDataRepairVOList){
                     Integer userId = adminAccountDetailDataRepairVO.getUserId();
                     // 查询交易明细最小的id
-                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.accountdetailDataRepair(userId);
+                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.getdetailDataRepair(userId);
                     if(null!=accountdetailDataRepair&& null!=accountdetailDataRepair.getResult()){
                         Integer accountListId = Integer.parseInt(accountdetailDataRepair.getResult().getId());
                         this.repayDataRepair(userId, accountListId);
@@ -236,13 +228,12 @@ public class AccountDetailController extends BaseController {
     /**
      * 导出资金明细列表
      *
-     * @param request
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
-    public void exportAccountsExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
+    public void exportAccountsExcel(HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "资金明细";
 

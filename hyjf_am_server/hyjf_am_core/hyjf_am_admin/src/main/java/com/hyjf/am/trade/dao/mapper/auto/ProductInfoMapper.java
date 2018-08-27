@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.ProductInfo;
 import com.hyjf.am.trade.dao.model.auto.ProductInfoExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface ProductInfoMapper {
     int countByExample(ProductInfoExample example);

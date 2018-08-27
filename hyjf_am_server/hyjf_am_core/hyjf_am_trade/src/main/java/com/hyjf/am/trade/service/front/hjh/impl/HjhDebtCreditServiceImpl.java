@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
+import com.hyjf.am.trade.dao.model.customize.UserHjhInvistListCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -173,7 +174,7 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
 
 
     @Override
-    public List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String, Object> params) {
+    public List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.getUserHjhInvestList(params);
     }
 
@@ -224,8 +225,8 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
      */
     @Override
     public String sumUnderTakeAmountByBorrowNid(String borrowNid) {
-        int sum = borrowCreditCustomizeMapper.sumUnderTakeAmount(borrowNid);
-        return String.valueOf(sum);
+        String sum = borrowCreditCustomizeMapper.sumUnderTakeAmount(borrowNid);
+        return sum;
     }
 
 

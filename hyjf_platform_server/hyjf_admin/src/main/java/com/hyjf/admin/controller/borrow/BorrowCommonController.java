@@ -42,6 +42,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
+import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
@@ -49,7 +50,7 @@ import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
+
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
@@ -73,16 +74,16 @@ import io.swagger.annotations.ApiOperation;
  * @date 2015/07/09 17:00
  */
 
-@Api(value = "借款增加",tags ="借款增加")
+@Api(value = "产品中心-借款增加",tags ="产品中心-借款增加")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/borrowcommon")
 public class BorrowCommonController extends BaseController {
-
 
 	@Autowired
 	private BorrowCommonService borrowCommonService;
 	@Autowired
 	private  CustomerTransferService  customerTransferService;
+
 
 	/**
      * 迁移到详细画面
@@ -121,8 +122,9 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = "插入")
 	@PostMapping("/insertAction")
-	public  AdminResult<BorrowCommonResponse> insertAction(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) throws Exception {
-		
+	public  AdminResult<BorrowCommonResponse> insertAction(@RequestBody  BorrowCommonRequest borrowCommonRequest,HttpServletRequest request) throws Exception {
+		borrowCommonRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
+		borrowCommonRequest.setAdminUsername(this.getUser(request).getUsername());
 		BorrowCommonResponse bcr = borrowCommonService.insertAction(borrowCommonRequest);
 		if(bcr==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -189,8 +191,8 @@ public class BorrowCommonController extends BaseController {
 //	 */
 	@ApiOperation(value = "验证发标金额是否合法")
 	@PostMapping("/isAccountLegal")
-	public AdminResult isAccountLegal(@RequestBody @Valid   String accountM) {
-
+	public AdminResult isAccountLegal(@RequestBody @Valid Map<String, String> accountm) {
+		String accountM=accountm.get("accountM");
 		BigDecimal account = new BigDecimal(accountM);
 		BigDecimal increaseMoney = new BigDecimal("100");
 		if (account.compareTo(increaseMoney) < 0) {
@@ -265,11 +267,11 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 借款预编码是否存在")
 	@PostMapping("/isExistsBorrowPreNidRecord")
-	public AdminResult<Boolean> isExistsBorrowPreNidRecord(@RequestBody @Valid  String borrowPreNid) {
+	public AdminResult<Boolean> isExistsBorrowPreNidRecord(@RequestBody @Valid  Map<String,String> borrowPreNid) {
 //		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 //		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
-		boolean borrowPreNidFlag = borrowCommonService.isExistsBorrowPreNidRecord(borrowPreNid);
+		boolean borrowPreNidFlag = borrowCommonService.isExistsBorrowPreNidRecord(borrowPreNid.get("borrowPreNid"));
 		return new AdminResult<>(borrowPreNidFlag);
 
 	}
@@ -1568,8 +1570,8 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 根据资产编号查询该资产下面的产品类型")
 	@PostMapping("/getProductTypeAction")
-	public AdminResult<BorrowCommonResponse> getProductTypeAction(@RequestBody @Valid   String instCode) {
-		BorrowCommonResponse bcr=borrowCommonService.getProductTypeAction(instCode);
+	public AdminResult<BorrowCommonResponse> getProductTypeAction(@RequestBody @Valid  Map<String, String>  instCode) {
+		BorrowCommonResponse bcr=borrowCommonService.getProductTypeAction(instCode.get("instCode"));
 		return new AdminResult<BorrowCommonResponse>(bcr);
 	}
 
@@ -1581,8 +1583,8 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
 	@PostMapping("/isEntrustedExistsUser")
-	public int isEntrustedExistsUser(@RequestBody @Valid   String userName) {
-		return this.borrowCommonService.isEntrustedExistsUser(userName);
+	public AdminResult<Integer> isEntrustedExistsUser(@RequestBody @Valid   String userName) {
+		return new AdminResult<>(this.borrowCommonService.isEntrustedExistsUser(userName)) ;
 	}
 
 	/**
@@ -1666,26 +1668,52 @@ public class BorrowCommonController extends BaseController {
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
     }
 	/**
+     * 运营记录-原始标的
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "查询借款列表")
+	@PostMapping("/optAction")
+    public AdminResult<BorrowCustomizeResponse>  optAction(@RequestBody @Valid BorrowBeanRequest form) {
+		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
+		if(bcr==null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(bcr)) {
+			return new AdminResult<>(FAIL, bcr.getMessage());
+
+		}
+		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
+		return new AdminResult<BorrowCustomizeResponse>(bcr);
+    }
+	/**
 	 * 导出功能
 	 * 
 	 * @param request
 	 * @param modelAndView
 	 * @param form
 	 */
-	@ApiOperation(value = "下载借款列表")
-	@PostMapping("/downloadBorrowStyleList")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody @Valid BorrowBeanRequest form) throws Exception {
+	@ApiOperation(value = "导出功能")
+	@RequestMapping("/exportOptAction")
+	public void exportOptAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowBeanRequest form) throws Exception {
+		form.setPageSize(-1);
+		form.setCurrPage(-1);
 		// 表格sheet名称
 		String sheetName = "借款列表";
 
-		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
-		List<BorrowCommonCustomizeVO> resultList =null;//=bcr.getResultList();
+		List<BorrowCommonCustomizeVO> resultList = borrowCommonService.exportBorrowList(form);
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName =  URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-
+		//UPD BY LIUSHOUYI 合规检查 START
+		/* 
+		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "项目申请人","项目标题", "借款标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化收益", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
+				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","垫付机构用户名","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" };
+		*/
 		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "用户名", "项目申请人", "项目标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化利率", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
-				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","垫付机构用户名"};
+				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","垫付机构用户名","加息收益率"};
 		// UPD BY LIUSHOUYI 合规检查 END
 		
 		// 声明一个工作薄
@@ -1713,7 +1741,9 @@ public class BorrowCommonController extends BaseController {
 				for (int celLength = 0; celLength < titles.length; celLength++) {
 					BorrowCommonCustomizeVO borrowCommonCustomize = resultList.get(i);
 
+					// 创建相应的单元格
 					Cell cell = row.createCell(celLength);
+
 					if (celLength == 0) {
 						cell.setCellValue(i + 1);
 					}
@@ -1907,32 +1937,15 @@ public class BorrowCommonController extends BaseController {
 						cell.setCellValue(borrowCommonCustomize.getRepayOrgUserName());
 					}
                     // UPD BY LIUSHOUYI 合规检查 END
+					else if (celLength == 43) {
+						if (new BigDecimal(borrowCommonCustomize.getBorrowExtraYield()).compareTo(BigDecimal.ZERO) > 0) {
+							cell.setCellValue(borrowCommonCustomize.getBorrowExtraYield() + "%");
+						}
+					}
 				}
 			}
 		}
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-
 	}
-	/**
-     * 运营记录-原始标的
-     *
-     * @param request
-     * @param form
-     * @return
-     */
-	@ApiOperation(value = "查询借款列表")
-	@PostMapping("/optAction")
-    public AdminResult<BorrowCustomizeResponse>  optAction(@RequestBody @Valid BorrowBeanRequest form) {
-		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
-		if(bcr==null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
-		if (!Response.isSuccess(bcr)) {
-			return new AdminResult<>(FAIL, bcr.getMessage());
-
-		}
-		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
-		return new AdminResult<BorrowCustomizeResponse>(bcr);
-    }
 }

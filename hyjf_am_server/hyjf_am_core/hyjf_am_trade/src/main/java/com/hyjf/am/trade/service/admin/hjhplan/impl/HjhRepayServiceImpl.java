@@ -33,8 +33,9 @@ public class HjhRepayServiceImpl implements HjhRepayService {
 
 
         if (StringUtils.isNotEmpty(repayRequest.getAccedeOrderIdSrch())){
-            BigDecimal accedeOrderId = new BigDecimal(repayRequest.getAccedeOrderIdSrch());
-            criteria.andAccedeAccountEqualTo(accedeOrderId);
+//            BigDecimal accedeOrderId = new BigDecimal(repayRequest.getAccedeOrderIdSrch());
+//            criteria.andAccedeAccountEqualTo(accedeOrderId);
+            criteria.andAccedeOrderIdEqualTo(repayRequest.getAccedeOrderIdSrch());
         }
 
         //清算时间
@@ -75,13 +76,14 @@ public class HjhRepayServiceImpl implements HjhRepayService {
     }
 
     @Override
-    public List<HjhRepay> selectByExample(HjhRepayRequest request) {
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
         HjhRepayExample example = new HjhRepayExample();
         HjhRepayExample.Criteria criteria = example.createCriteria();
 
         if (StringUtils.isNotEmpty(request.getAccedeOrderIdSrch())){
-            BigDecimal accedeOrderId = new BigDecimal(request.getAccedeOrderIdSrch());
-            criteria.andAccedeAccountEqualTo(accedeOrderId);
+//            BigDecimal accedeOrderId = new BigDecimal(request.getAccedeOrderIdSrch());
+//            criteria.andAccedeAccountEqualTo(accedeOrderId);
+            criteria.andAccedeOrderIdEqualTo(request.getAccedeOrderIdSrch());
         }
 
         //清算时间
@@ -119,7 +121,8 @@ public class HjhRepayServiceImpl implements HjhRepayService {
         }
 
         List<HjhRepay> repayList = hjhRepayMapper.selectByExample(example);
-        return repayList;
+        List<HjhRepayVO> repayVOList = CommonUtils.convertBeanList(repayList, HjhRepayVO.class);
+        return repayVOList;
     }
 
     @Override

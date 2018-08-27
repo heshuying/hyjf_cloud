@@ -37,7 +37,7 @@ public class BorrowDataServiceImpl extends BaseServiceImpl implements BorrowData
      * 当日放款总金额
      */
     @Override
-    public String sumBorrowAmount(Map<String, Object> paraMap){
+    public String selectBorrowAmountSum(Map<String, Object> paraMap){
         return wdzjCustomizeMapper.sumBorrowAmount(paraMap);
     }
 

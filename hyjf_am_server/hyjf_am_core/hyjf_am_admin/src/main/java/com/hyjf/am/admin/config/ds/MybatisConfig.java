@@ -1,7 +1,11 @@
 package com.hyjf.am.admin.config.ds;
 
-import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
-import com.hyjf.am.trade.interceptor.SyncAccountInterceptor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -22,13 +26,12 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
+import com.hyjf.common.constants.CommonConstant;
 
 @Configuration
-@MapperScan("com.hyjf.am.trade.dao.mapper")
+@MapperScan("com.hyjf.am.*.dao.mapper")
 @AutoConfigureAfter({ DataSourceAutoConfiguration.class})
 public class MybatisConfig {
 	// private static Logger logger = Logger.getLogger(MybatisConfig.class);
@@ -119,36 +122,37 @@ public class MybatisConfig {
 		factoryBean.setPlugins(new Interceptor[]{syncAccountInterceptor});
 		return factoryBean.getObject();
 	}
-//
-//	/**
-//	 *
-//	 * 配置事务管理器
-//	 *
-//	 */
-//	@Bean(name ="transactionManager")
-//	public DataSourceTransactionManager transactionManager(DynamicDataSource dataSource) throws Exception {
-//		return new DataSourceTransactionManager(dataSource);
-//	}
-//
-//
-//	@Bean
-//    public DefaultPointcutAdvisor defaultPointcutAdvisor(@Qualifier("transactionManager") DataSourceTransactionManager transactionManager){
-//
-//		AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-//		String transactionExecution = "execution(* com.hyjf..*Service.*(..))";
-//        pointcut.setExpression(transactionExecution);
-//        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
-//        advisor.setPointcut(pointcut);
-//
-//        Properties attributes = new Properties();
-//        attributes.setProperty("insert*", "PROPAGATION_REQUIRED,-Exception");
-//        attributes.setProperty("update*", "PROPAGATION_REQUIRED,-Exception");
-//        attributes.setProperty("delete*", "PROPAGATION_REQUIRED,-Exception");
-//
-//        TransactionInterceptor txAdvice = new TransactionInterceptor(transactionManager, attributes);
-//        advisor.setAdvice(txAdvice);
-//
-//        return advisor;
-//    }
+
+	/**
+	 *
+	 * 配置事务管理器
+	 *
+	 */
+	@Bean(name ="transactionManager")
+	public DataSourceTransactionManager transactionManager(DynamicDataSource dataSource) throws Exception {
+		return new DataSourceTransactionManager(dataSource);
+	}
+
+
+	@Bean
+    public DefaultPointcutAdvisor defaultPointcutAdvisor(@Qualifier("transactionManager") DataSourceTransactionManager transactionManager){
+
+		AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+		String transactionExecution = "execution(* com.hyjf..*Service.*(..))";
+        pointcut.setExpression(transactionExecution);
+        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
+        advisor.setPointcut(pointcut);
+        advisor.setOrder(CommonConstant.DATASOURCE_AOP_TRANSACTION);
+
+        Properties attributes = new Properties();
+        attributes.setProperty("insert*", "PROPAGATION_REQUIRED,-Exception");
+        attributes.setProperty("update*", "PROPAGATION_REQUIRED,-Exception");
+        attributes.setProperty("delete*", "PROPAGATION_REQUIRED,-Exception");
+
+        TransactionInterceptor txAdvice = new TransactionInterceptor(transactionManager, attributes);
+        advisor.setAdvice(txAdvice);
+
+        return advisor;
+    }
 	
 }

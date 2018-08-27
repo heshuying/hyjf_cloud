@@ -3,8 +3,10 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.annotation.Cilent;
@@ -157,4 +159,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 	public BigDecimal sumBorrowUserMoneyTopOne() {
 		return null;
 	}
+
+	/**
+	 * 查询千乐散标数据
+	 * @param dataSearchRequest
+	 * @return
+	 */
+    @Override
+    public List<DataSearchCustomizeVO> querySanList(DataSearchRequest dataSearchRequest) {
+        return null;
+    }
 }

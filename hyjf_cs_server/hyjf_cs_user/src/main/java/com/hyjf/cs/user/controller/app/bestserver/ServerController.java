@@ -57,10 +57,10 @@ public class ServerController extends BaseUserController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "获取最优服务器",notes = "获取最优服务器")
+	@ApiOperation(value = "获取最优服务器", notes = "获取最优服务器")
 	@PostMapping("/getBestServerAction")
 	public AppResult getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
-								   @RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
+			@RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		String appKey = "";
@@ -94,7 +94,7 @@ public class ServerController extends BaseUserController {
 					// 保存到Redis中
 					SignValue signValue = new SignValue(initKey);
 					signValue.setVersion(version);
-					RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+					RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(DES.encryptDES_ECB(testServerIp, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
@@ -110,7 +110,7 @@ public class ServerController extends BaseUserController {
 					// 保存到Redis中
 					SignValue signValue = new SignValue(initKey);
 					signValue.setVersion(version);
-					RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+					RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
@@ -134,7 +134,7 @@ public class ServerController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
-	@ApiOperation(value = "获取算法密钥",notes = "获取算法密钥")
+	@ApiOperation(value = "获取算法密钥", notes = "获取算法密钥")
 	@PostMapping("/getKeyAction")
 	public AppResult getKey(@RequestHeader String sign, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
@@ -144,24 +144,24 @@ public class ServerController extends BaseUserController {
 					&& "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
 				String key = "iUq3OGYv";
 				// 保存Key
-				String value = RedisUtils.get(RedisConstants.SIGN+sign);
+				String value = RedisUtils.get(RedisConstants.SIGN + sign);
 				logger.info("value is :{}", value);
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);
 				signValue.setVersion(version);
-				RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue));
+				RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue));
 				resultBean.setKey(DES.encryptDES_ECB(key, signValue.getInitKey()));
 				logger.info("---------获取key的值：key:" + key + "加密key:" + DES.encryptDES_ECB(key, signValue.getInitKey()));
 			} else {
 				String key = GetCode.getRandomCode(8);
 
 				// 保存Key
-				String value = RedisUtils.get(RedisConstants.SIGN+sign);
+				String value = RedisUtils.get(RedisConstants.SIGN + sign);
 				logger.info("value is :{}", value);
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);
 				signValue.setVersion(version);
-				RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue));
+				RedisUtils.set(RedisConstants.SIGN + sign, JSON.toJSONString(signValue));
 
 				resultBean.setKey(DES.encryptDES_ECB(key, signValue.getInitKey()));
 			}

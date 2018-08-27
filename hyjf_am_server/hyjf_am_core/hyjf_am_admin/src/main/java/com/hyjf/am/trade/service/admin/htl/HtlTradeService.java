@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.service.admin.htl;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
-
-import java.util.List;
 
 /**
  * @author: sunpeikai

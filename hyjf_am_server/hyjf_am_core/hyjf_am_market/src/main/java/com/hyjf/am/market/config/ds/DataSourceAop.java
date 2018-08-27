@@ -2,16 +2,17 @@ package com.hyjf.am.market.config.ds;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+
+import com.hyjf.common.constants.CommonConstant;
 
 @Aspect
 @Component
-public class DataSourceAop {
+public class DataSourceAop implements Ordered {
 	
 //	private static final Logger logger = LoggerFactory.getLogger(DataSourceAop.class);
     
-    private final String[] QUERY_PREFIX = {"select","query","count","search","get","find","check"};
-
 //    @Pointcut("execution( * com.hyjf.am.user.service..*.*(..))")
     @Pointcut("execution(* com.hyjf..*Service.*(..))")
     public void serviceAspect() {
@@ -36,12 +37,17 @@ public class DataSourceAop {
     }
 
     private Boolean isQueryMethod(String methodName) {
-        for (String prefix : QUERY_PREFIX) {
+        for (String prefix : CommonConstant.DATASOURCE_QUERY_PREFIX) {
             if (methodName.startsWith(prefix)) {
                 return true;
             }
         }
         return false;
     }
+
+	@Override
+	public int getOrder() {
+		return CommonConstant.DATASOURCE_AOP_DS;
+	}
     
 }

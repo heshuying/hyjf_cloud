@@ -1,0 +1,47 @@
+package com.hyjf.am.config.service;
+
+import java.util.List;
+
+import com.hyjf.am.config.dao.model.auto.AppBorrowImage;
+
+/**
+ * @author lisheng
+ * @version AppBorrowImageService, v0.1 2018/7/12 17:32
+ */
+
+public interface AppBorrowImageService {
+
+    /**
+     * 获取列表
+     *
+     * @return
+     */
+    public List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd);
+
+    /**
+     * 获取单个
+     * @return
+     */
+    public AppBorrowImage getRecord(Integer id);
+
+    /**
+     * 插入
+     *
+     * @param record
+     */
+    public void insertRecord(AppBorrowImage record) throws Exception;
+
+
+    /**
+     * 更新
+     *
+     * @param record
+     */
+    public void updateRecord(AppBorrowImage record) throws Exception;
+
+    /**
+     * 删除
+     *
+     */
+    public boolean deleteRecord(Integer id);
+}

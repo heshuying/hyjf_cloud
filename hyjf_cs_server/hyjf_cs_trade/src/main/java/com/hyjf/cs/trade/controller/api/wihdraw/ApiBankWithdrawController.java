@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(tags = "web端-用户提现接口")
+@Api(tags = "api端-用户提现接口")
 @Controller
 @RequestMapping("/api/withdraw")
 public class ApiBankWithdrawController extends BaseTradeController {

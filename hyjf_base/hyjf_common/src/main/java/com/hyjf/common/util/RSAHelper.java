@@ -100,13 +100,6 @@ public class RSAHelper {
 	/**
 	 * 
 	 * Description:校验数字签名,此方法不会抛出任务异常,成功返回true,失败返回false,要求全部参数不能为空
-	 * 
-	 * @param pubKeyText
-	 *            公钥,base64编码
-	 * @param dataText
-	 *            明文
-	 * @param signTest
-	 *            数字签名的密文,base64编码
 	 * @return 校验成功返回true 失败返回false
 	 */
 	public boolean verify(String dataText, String signText) {

@@ -50,7 +50,7 @@ public interface MsgPushService {
 	 * @param msgId
 	 * @return
 	 */
-	MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId);
+	MessagePushMsgHistory getMsgPushMsgHistoryById(String msgId);
 
 	/**
 	 * 更新历史记录信息

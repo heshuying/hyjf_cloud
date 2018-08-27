@@ -35,6 +35,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- spring boot admin start -->
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
+		<!-- spring boot admin end -->
+
 		<!-- javax.servlet.start -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -33,4 +33,10 @@ public interface SmsCountService {
      * @return
      */
     List<OADepartmentCustomize> queryDepartmentInfo();
+
+    /**
+     * 查询总条数
+     * @return
+     */
+    int selectCount(SmsCountRequest request);
 }

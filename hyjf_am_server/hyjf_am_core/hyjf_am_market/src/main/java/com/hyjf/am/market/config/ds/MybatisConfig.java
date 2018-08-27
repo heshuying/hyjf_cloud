@@ -25,6 +25,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 import com.hyjf.am.market.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.common.constants.CommonConstant;
 
 @Configuration
 @MapperScan("com.hyjf.am.*.dao.mapper")
@@ -57,8 +58,8 @@ public class MybatisConfig {
                                                @Qualifier("readDataSource1") DataSource readDataSource1) {
 
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
-		targetDataSources.put(DbType.WRITE, writeDataSource);
-		targetDataSources.put(DbType.READ1, readDataSource1);
+		targetDataSources.put(DbType.WRITE.name(), writeDataSource);
+		targetDataSources.put(DbType.READ1.name(), readDataSource1);
 
 		// 将数据源的 key 放到数据源上下文的 key 集合中，用于切换时判断数据源是否有效
         DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITE.name());
@@ -110,6 +111,7 @@ public class MybatisConfig {
         pointcut.setExpression(transactionExecution);
         DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
         advisor.setPointcut(pointcut);
+        advisor.setOrder(CommonConstant.DATASOURCE_AOP_TRANSACTION);
         
         Properties attributes = new Properties();
         attributes.setProperty("insert*", "PROPAGATION_REQUIRED,-Exception");

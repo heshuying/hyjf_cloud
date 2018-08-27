@@ -9,7 +9,7 @@ import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -151,7 +151,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	 * @return
 	 */
 	@Override
-	public MessagePushErrorVO getMobileCodeByNumber(String mobile) {
+	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
 		return userInfoMapper.getMobileCodeByNumber(mobile);
 	}
 

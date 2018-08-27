@@ -1,15 +1,14 @@
 package com.hyjf.cs.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bean.AccessToken;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
@@ -22,10 +21,10 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -41,7 +40,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
@@ -56,6 +54,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	public AmConfigClient amConfigClient;
+
+	@Autowired
+	AmDataCollectClient amDataCollectClient;
 
 	@Override
 	public boolean existUser(String mobile) {
@@ -136,6 +137,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 页面绑卡
 			BindCardPageRequestBean bean = (BindCardPageRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getRetUrl() + bean.getForgotPwdUrl() + bean.getNotifyUrl() + bean.getTimestamp();
+		}else if(BaseDefine.METHOD_SERVER_REGISTER.equals(methodName)){
+			// 用户注册
+			UserRegisterRequestBean bean = (UserRegisterRequestBean) paramBean;
+			sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
+			//用户开户
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -266,7 +272,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			return retBean;
 
 		} else {
-			// 保存用户开户日志
+			// 保存用户验证码日志
 			BankSmsLogRequest request = new BankSmsLogRequest();
 			request.setSrvAuthCode(bean.getSrvAuthCode());
 			request.setSrvTxCode(bean.getTxCode());
@@ -505,7 +511,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 
 	/**
-	 * @param token
 	 * @Description 根据token查询user
 	 * @Author sunss
 	 * @Version v0.1
@@ -542,6 +547,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	protected String generatorToken(int userId, String username) {
 		AccessToken accessToken = new AccessToken(userId, username, Instant.now().getEpochSecond());
 		String token = JwtHelper.generatorToken(accessToken);
+		// 1.设置页面30分钟超时 2.jwt无法删除已知非法token,redis可以做到
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + accessToken, userId, 30*60);
 		return token;
 	}
 
@@ -730,5 +737,19 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public String getBankRetMsg(String retCode) {
 		return amConfigClient.getBankRetMsg(retCode);
 	}
+
+	@Override
+	public String getFailedMess(String logOrdId) {
+		//根据ordid获取retcode
+		String retCode = amDataCollectClient.getRetCode(logOrdId);
+		if (retCode==null){
+			return "未知错误";
+		}
+		//根据retCode获取retMsg
+		String retMsg = this.getBankRetMsg(retCode);
+		return retMsg;
+
+	}
+
 
 }

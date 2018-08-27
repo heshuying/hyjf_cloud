@@ -30,4 +30,11 @@ public interface BorrowCreditService {
      * @date 2018/7/10 16:15
      */
     AdminResult getBorrowInfoList(BorrowCreditRequest request);
+
+    /**
+     * 取消转让
+     * @author zhangyk
+     * @date 2018/8/24 16:43
+     */
+    AdminResult cancelCredit(BorrowCreditRequest request);
 }

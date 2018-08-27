@@ -900,4 +900,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
 		return amUserClient.bindThirdUser(userId, bindUniqueId, pid);
 	}
+
+	/**
+	 * 根据身份证查询User
+	 * @auth sunpeikai
+	 * @param idCard 身份证号码
+	 * @return
+	 */
+	@Override
+	public UserVO getUserByIdCard(String idCard) {
+		UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idCard);
+		return amUserClient.findUserById(userInfoVO.getUserId());
+	}
 }

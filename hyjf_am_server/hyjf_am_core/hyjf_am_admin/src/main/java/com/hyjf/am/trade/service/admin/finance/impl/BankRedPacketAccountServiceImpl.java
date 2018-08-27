@@ -3,15 +3,16 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
 import com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author zhangqingqing

@@ -3,18 +3,17 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai

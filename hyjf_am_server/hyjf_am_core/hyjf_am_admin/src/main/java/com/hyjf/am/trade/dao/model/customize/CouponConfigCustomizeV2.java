@@ -11,9 +11,9 @@
 
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.am.trade.dao.model.auto.CouponConfig;
-
 import java.io.Serializable;
+
+import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 
 /**
  * @author Administrator

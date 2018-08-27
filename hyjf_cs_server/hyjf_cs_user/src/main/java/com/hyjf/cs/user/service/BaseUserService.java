@@ -165,4 +165,11 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
     String getBankRetMsg(String retCode);
+
+	/**
+	 * 查询交易密码失败原因
+	 * @param logOrdId
+	 * @return
+	 */
+	String getFailedMess(String logOrdId);
 }

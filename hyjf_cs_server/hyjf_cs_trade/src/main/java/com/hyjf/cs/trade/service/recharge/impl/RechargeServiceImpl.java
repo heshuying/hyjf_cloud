@@ -87,11 +87,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
 
-	@Override
-	public BankCardVO selectBankCardByUserId(Integer userId) {
-		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
-		return bankCard;
-	}
+
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -99,11 +95,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return account;
 	}
 
-	@Override
-	public UserVO getUsers(Integer userId) {
-		UserVO users = amUserClient.findUserById(userId);
-		return users;
-	}
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
@@ -352,7 +343,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	@Override
-	public BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money) throws Exception {
+	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);
@@ -363,13 +354,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		UserInfoVO userInfo = this.getUsersInfoByUserId(userId);
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
-		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+mobile;
-		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
-
-		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setTxAmount(money);
 		directRechargeBean.setIdNo(idNo);
 		directRechargeBean.setName(name);
@@ -378,12 +363,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setUserId(userId);
 		directRechargeBean.setIp(ipAddr);
 		directRechargeBean.setUserName(user.getUsername());
-		directRechargeBean.setRetUrl(retUrl);
-		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setPlatform("0");
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setAccountId(account.getAccount());
-		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		BankCallBean bean = this.insertGetMV(directRechargeBean);
 		return bean;
 	}

@@ -3,7 +3,6 @@ package com.hyjf.admin.controller.manager;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.AccountBalanceMonitoringRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -11,7 +10,6 @@ import com.hyjf.admin.service.AccountBalanceMonitoringService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
 import com.hyjf.am.resquest.admin.AdminAccountBalanceMonitoringRequest;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +25,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-@Api(tags = "配置中心-平台账户配置")
+@Api(tags = "配置中心-平台账户配置--余额监控")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountbalance")
 public class AccountBalanceMonitoringController extends BaseController {
@@ -41,7 +39,7 @@ public class AccountBalanceMonitoringController extends BaseController {
     @ApiOperation(value = "查询配置中心平台账户配置 余额监控", notes = "查询配置中心平台账户配置 余额监控")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringInit(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+    public AdminResult accountBalanceMonitoringInit(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         //可以直接使用
         BeanUtils.copyProperties(requestBean, adminRequest);
@@ -53,13 +51,13 @@ public class AccountBalanceMonitoringController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(response);
     }
 
     @ApiOperation(value = "检索配置中心平台账户配置 余额监控", notes = "检索配置中心平台账户配置 余额监控")
     @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringSearch(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+    public AdminResult accountBalanceMonitoringSearch(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         //可以直接使用
         BeanUtils.copyProperties(requestBean, adminRequest);
@@ -71,13 +69,13 @@ public class AccountBalanceMonitoringController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(response);
     }
 
     @ApiOperation(value = "平台账户配置 余额监控 详情页面", notes = "平台账户配置 余额监控 详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult<MerchantAccountVO> merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+    public AdminResult merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         //可以直接使用
         BeanUtils.copyProperties(requestBean, adminRequest);
@@ -88,13 +86,13 @@ public class AccountBalanceMonitoringController extends BaseController {
         if (!Response.isSuccess(adminResponse)) {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
         }
-        return new AdminResult<MerchantAccountVO>(adminResponse.getResult());
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(adminResponse);
     }
 
     @ApiOperation(value = "平台账户配置 余额监控详情页面", notes = "平台账户配置 余额监控详情页面")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult<MerchantAccountVO> updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
+    public AdminResult updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         BeanUtils.copyProperties(requestBean, adminRequest);
         // 画面传来的值
@@ -113,7 +111,7 @@ public class AccountBalanceMonitoringController extends BaseController {
         if (!Response.isSuccess(adminResponse)) {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
         }
-        return new AdminResult<MerchantAccountVO>(adminResponse.getResult());
+        return new AdminResult<AdminAccountBalanceMonitoringResponse>(adminResponse);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.front.repay;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.RepayBeanResponse;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -162,6 +163,7 @@ public class RepayManageController extends BaseController {
         projectBean.setUserId(String.valueOf(requestBean.getUserId()));
         projectBean.setUsername(requestBean.getUserName());
         projectBean.setRoleId(requestBean.getRoleId());
+        projectBean.setBorrowNid(requestBean.getBorrowNid());
 
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
@@ -249,14 +251,14 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/get_repaybean")
-    public Response<RepayBean> getRepayBean(@RequestBody Map<String,String> paraMap){
-        Response<RepayBean> response = new Response<>();
+    public RepayBean getRepayBean(@RequestBody Map<String,String> paraMap){
         RepayBean repayByTerm = null;
 
         String roleId = paraMap.get("roleId");
         String borrowNid = paraMap.get("borrowNid");
         String userId = paraMap.get("userId");
         boolean isAllRepay = Boolean.valueOf(paraMap.get("isAllRepay"));
+        logger.info("获取计算完的还款Bean开始：{}", paraMap);
 
         try {
             Borrow borrow = repayManageService.getBorrow(borrowNid);
@@ -290,26 +292,21 @@ public class RepayManageController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            response.setRtn(Response.ERROR);
-            response.setMessage("还款数据计算失败");
             logger.error("还款数据计算失败", e);
-            return response;
+            return null;
         }
 
-        response.setResult(repayByTerm);
-        return response;
+        logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
+        return repayByTerm;
     }
 
     /**
      * 获取担保机构批量还款页面数据
      */
     @PostMapping(value = "/get_batch_reapydata")
-    public Response<ProjectBean> getOrgBatchRepayData(@RequestBody BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = new Response<>();
-
+    public ProjectBean getOrgBatchRepayData(@RequestBody BatchRepayDataRequest requestBean) {
         ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(), requestBean.getStartDate(), requestBean.getEndDate());
-        response.setResult(projectBean);
 
-        return response;
+        return projectBean;
     }
 }

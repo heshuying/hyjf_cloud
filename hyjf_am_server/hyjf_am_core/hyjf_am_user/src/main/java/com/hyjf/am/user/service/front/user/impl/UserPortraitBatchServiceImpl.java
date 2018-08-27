@@ -207,7 +207,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
      * 插入用户画像
      * */
     private int insertInformation(UserPortrait userPortrait) {
-        int count = userPortraitMapper.insert(userPortrait);
+        int count = userPortraitMapper.insertSelective(userPortrait);
         return count;
     }
 }

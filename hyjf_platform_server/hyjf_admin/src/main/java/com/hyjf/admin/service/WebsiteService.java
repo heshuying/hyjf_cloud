@@ -15,11 +15,30 @@ import java.util.List;
  */
 public interface WebsiteService {
 
+    /**
+     * 查询交易类型列表
+     * @return
+     */
     List<AccountTradeVO> selectTradeTypes();
 
+    /**
+     * 查询网站收支列表
+     * @param accountWebList
+     * @return
+     */
     AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList);
 
+    /**
+     * 交易金额总计
+     * @param accountWebList
+     * @return
+     */
     String selectBorrowInvestAccount(AccountWebListVO accountWebList);
 
+    /**
+     * 取得公司账户余额
+     * @param companyId
+     * @return
+     */
     double getCompanyYuE(String companyId);
 }

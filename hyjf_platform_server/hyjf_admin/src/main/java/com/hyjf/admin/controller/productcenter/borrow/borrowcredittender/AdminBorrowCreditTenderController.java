@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowcredittender;
 
+import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.BorrowCreditTenderService;
@@ -44,7 +45,7 @@ public class AdminBorrowCreditTenderController {
     @ApiOperation(value = "查看债权人债权信息", notes = "查看债权人债权信息")
     @PostMapping("/getCreditUserInfo")
     @ResponseBody
-    public Object  getCreditUserInfo(HttpServletRequest request){
+    public Object  getCreditUserInfo(@RequestBody BorrowCreditTenderInfoRequest request){
         AdminResult result =  borrowCreditTenderService.getCreditUserInfo(request);
         return result;
     }

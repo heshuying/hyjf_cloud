@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushHistoryService;
@@ -12,6 +13,7 @@ import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -24,7 +26,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +67,9 @@ public class MessagePushNoticesController extends BaseController {
                 return jsonObject;
             }
             prepareDatas(jsonObject);
+            MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
+            List<MessagePushTagVO> resultList = tagList.getResultList();
+            jsonObject.put("noticesPushTags", resultList);
             jsonObject.put("totalCount", prs.getRecordTotal());
             jsonObject.put("list", prs.getResultList());
             jsonObject.put("allPushTagList", allPushTagList.getResultList());
@@ -79,8 +86,13 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "发送列表添加", notes = "发送列表添加")
     @PostMapping(value = "/add")
     @ResponseBody
-    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form) {
+    public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
         try {
+            AdminSystemVO user = getUser(request);
+            if (user != null) {
+                String username = user.getUsername();
+                form.setUserName(username);
+            }
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.insertRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
@@ -111,8 +123,13 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "发送列表修改", notes = "发送列表修改")
     @PostMapping(value = "/update")
     @ResponseBody
-    public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form) {
+    public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
         try {
+            AdminSystemVO user = getUser(request);
+            if (user != null) {
+                String username = user.getUsername();
+                form.setUserName(username);
+            }
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.updateRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
                 return new AdminResult<>(SUCCESS, SUCCESS_DESC);
@@ -138,7 +155,7 @@ public class MessagePushNoticesController extends BaseController {
 
         try {
             if (StringUtils.isNotEmpty(form.getIds())) {
-                MessagePushNoticesResponse response = this.messagePushNoticesService.getRecord(form);
+                    MessagePushNoticesResponse response = this.messagePushNoticesService.getRecord(form);
                 MessagePushMsgVO record = response.getResult();
                 BeanUtils.copyProperties(record, form);
                 // String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
@@ -223,21 +240,16 @@ public class MessagePushNoticesController extends BaseController {
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping(value = "/uploadFile")
     @ResponseBody
-    public JSONObject uploadFile(@RequestParam(value = "iconImg", required = false) MultipartFile iconImg) throws Exception {
-        JSONObject ret = new JSONObject();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String returnMessage = messagePushNoticesService.uploadFile(iconImg);
-            if (!"上传文件成功！".equals(returnMessage)) {
-                ret.put("status", "1");
-                ret.put("statusDesc", returnMessage);
-            } else {
-                ret.put("status", "0");
-                ret.put("statusDesc", returnMessage);
-            }
-            return ret;
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
-            ret.put(FAIL, FAIL_DESC);
-            return ret;
+            return new AdminResult<>(FAIL, FAIL_DESC);
 
         }
     }

@@ -3,24 +3,18 @@
  */
 package com.hyjf.cs.trade.service.newagreement;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.ProtocolTemplateVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
-
-import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * APP端协议Service
@@ -38,16 +32,16 @@ public interface NewAgreementService extends BaseTradeService{
 	
 	/**
 	 * 查询协议表by assignNid(实际上是tenderNID)
-	 * @param assignNid
 	 * @return
 	 */
-	List<TenderAgreementVO> getTenderAgreementByTenderNid(String assignNid);
+	List<TenderAgreementVO> getTenderAgreementByTenderNid(String accedeOrderId);
 	
 	/**
 	 * 查询用户详情
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	UserInfoVO getUsersInfoByUserId(Integer userId);
 	
 	/**
@@ -55,7 +49,8 @@ public interface NewAgreementService extends BaseTradeService{
 	 * @param borrowNid
 	 * @return
 	 */
-	BorrowVO getBorrowByNid(String borrowNid);
+    @Override
+    BorrowVO getBorrowByNid(String borrowNid);
 	
 	/**
 	 * 根据creditNid获取债转信息

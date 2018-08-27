@@ -373,7 +373,7 @@ public class WebPassWordController extends BaseUserController{
     public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
         logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        String retMsg = passWordService.getFiledMess(param.get("logOrdId"));
+        String retMsg = passWordService.getFailedMess(param.get("logOrdId"));
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);

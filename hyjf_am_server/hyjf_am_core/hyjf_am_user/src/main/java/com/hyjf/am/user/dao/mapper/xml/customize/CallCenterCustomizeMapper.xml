@@ -11,6 +11,7 @@
 		<result column="user_role" property="userRole" jdbcType="VARCHAR" />
 		<result column="user_property" property="userProperty" jdbcType="VARCHAR" />
 		<result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
+		<result column="open_account" property="openAccount" jdbcType="VARCHAR" />
 		<result column="bank_open_account" property="bankOpenAccount" jdbcType="VARCHAR" />
 		<result column="bank_open_time" property="bankOpenTime" jdbcType="VARCHAR" />
 		<result column="bank_account" property="bankAccount" jdbcType="VARCHAR" />
@@ -29,7 +30,6 @@
 		<result column="user_type" property="userType" jdbcType="VARCHAR" />
 		<!-- 以上是基本用字段 -->
 		<!-- 以下是详情用字段 -->
-		
 		<result column="role" property="role" jdbcType="INTEGER" />
 		<result column="depart_name" property="departName" jdbcType="VARCHAR" />
 		<result column="regist_pid_name" property="registPidName" jdbcType="VARCHAR" />
@@ -37,8 +37,6 @@
 		<result column="regist_ip" property="registIP" jdbcType="VARCHAR" />
 		<result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
 		<result column="open_account_time" property="openAccountTime" jdbcType="TIMESTAMP" />
-		
-	
 		<result column="em_name" property="emName" jdbcType="VARCHAR" />
 		<result column="em_relation" property="emRealtion" jdbcType="INTEGER" />
 		<result column="em_phone" property="emPhone" jdbcType="VARCHAR" />
@@ -254,6 +252,7 @@
 					hydui.sex,
 					hydui.idcard,
 					concat( province,city,area) as regist_area,
+					hydu.open_account,
 					hydu.open_account AS account_status,
 					hydu.`status` AS user_status,
 					hydu.reg_esb AS regist_plat,
@@ -263,7 +262,8 @@
 					CASE WHEN hydui.attribute = 2 OR hydui.attribute = 3 THEN hydu.user_id ELSE hydsu.spreads_user_id END AS hyd_id,
 					hydui.borrower_type,
 					hydu.bank_open_account bank_open_account,
-					hboa.create_time AS bank_open_time,
+					<!-- hboa.create_time AS bank_open_time, -->
+					DATE_FORMAT(hboa.create_time,'%Y-%m-%d %H:%i:%S') AS bank_open_time,
 					hboa.account AS bank_account
 				FROM
 					ht_user hydu 
@@ -272,10 +272,10 @@
 				LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
 				LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
 				) t
-		LEFT JOIN oa_users ou ON ou.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
-		LEFT JOIN oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN oa_department od3 ON od3.id = od2.parentid
+		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
+		LEFT JOIN ht_r_oa_department od3 ON od3.id = od2.parentid
 		<include refid="Where_Clause" />
 		ORDER BY t.reg_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -291,15 +291,10 @@
 			hydd.`name` AS depart_name,
 			hydup.source_name AS regist_pid_name,
 			hydu.reg_ip AS regist_ip,
-			from_unixtime(
-				hydu.reg_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS regist_time,
-
-			from_unixtime(
-				hydac.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS open_account_time,
+			<!-- from_unixtime(hydu.reg_time,'%Y-%m-%d %H:%i:%s') AS regist_time, -->
+			DATE_FORMAT(hydu.reg_time,'%Y-%m-%d %H:%i:%S') AS regist_time,
+			<!-- from_unixtime(hydac.create_time,'%Y-%m-%d %H:%i:%s') AS open_account_time, -->
+			DATE_FORMAT(hydac.create_time,'%Y-%m-%d %H:%i:%S') AS open_account_time,
 			hyduc.rl_name AS em_name,
 			hyduc.rl_phone AS em_phone,
 			hydu.email,
@@ -330,8 +325,8 @@
 		LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id
 		LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
 		LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
-		LEFT JOIN oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21') 
-		LEFT JOIN oa_department hydd ON hydd.id = oau.departmentid 
+		LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21') 
+		LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
 		WHERE
 		hydu.user_id =#{userId,jdbcType=INTEGER}
 	</select>

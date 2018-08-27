@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -15,6 +16,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -730,7 +732,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserInfoByUserInfo(UserInfoVO userInfoVO) {
-		UserInfoRequest request = null;
+		UserInfoRequest request = new UserInfoRequest();
 		BeanUtils.copyProperties(userInfoVO, request);
 		int result = restTemplate
 				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class)
@@ -2055,6 +2057,225 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getCount();
 		}
 		return 0;
+	}
+
+	/**
+     * 获取用户账户信息byaccountId
+     * @auth libin
+     * @param accountId
+     * @return
+     */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccountId(String accountId) {
+		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据关联关系查询OA表的内容,得到部门的线上线下属性
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserUpdateParamCustomizeResponse queryUserAndDepartment(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/queryUserAndDepartment/" + userId;
+		UserUpdateParamCustomizeResponse response = restTemplate.getForEntity(url, UserUpdateParamCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取所有用户信息
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public UserResponse selectAllUser(){
+		String url = "http://AM-USER/am-user/userManager/selectAllUser";
+		UserResponse response = restTemplate.postForEntity(url,null, UserResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 查询此段时间的用户推荐人的修改记录
+	 * @param userId
+	 * @param repairStartDate
+	 * @param repairEndDate
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public SpreadsUserLogResponse searchSpreadUsersLogByDate(Integer userId, String repairStartDate, String repairEndDate){
+		String url = "http://AM-USER/am-user/userManager/searchSpreadUsersLogByDate/"+userId+"/"+repairStartDate+"/"+repairEndDate;
+		SpreadsUserLogResponse response = restTemplate.postForEntity(url,null, SpreadsUserLogResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 查找员工信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public EmployeeCustomizeResponse selectEmployeeInfoByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectEmployeeInfoByUserId/"+userId;
+		EmployeeCustomizeResponse response = restTemplate.postForEntity(url,null, EmployeeCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 根据用户id获取离职信息
+	 * @param userId
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public AdminEmployeeLeaveCustomizeResponse selectUserLeaveByUserId(Integer userId){
+		String url = "http://AM-USER/am-user/userManager/selectUserLeaveByUserId/"+userId;
+		AdminEmployeeLeaveCustomizeResponse response = restTemplate.postForEntity(url,null, AdminEmployeeLeaveCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 通过手机号和身份证查询掉单信息
+	 *
+	 * @param mobile,idcard
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public List<BankOpenAccountLogVO> bankOpenAccountLogSelect(String mobile,String idcard ) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/bankOpenAccountLogSelect/"+mobile + "/" +idcard;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取掉单用户信息
+	 *
+	 * @param request
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public OpenAccountEnquiryCustomizeVO searchAccountEnquiry(BankOpenAccountLogRequest request) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/searchAccountEnquiry";
+		OpenAccountEnquiryResponse response = restTemplate.postForEntity(url,request, OpenAccountEnquiryResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据订单号查询用户的开户记录
+	 *
+	 * @param orderId
+	 * @return java.util.List<com.hyjf.admin.beans.vo.BankOpenAccountLogVO>
+	 * @author Zha Daojian
+	 * @date 2018/8/21 13:54
+	 **/
+	@Override
+	public BankOpenAccountLogVO selectBankOpenAccountLogByOrderId(String orderId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/selectBankOpenAccountLogByOrderId/"+orderId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 删除用户开户日志
+	 *
+	 * @param userId
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 11:30
+	 **/
+	@Override
+	public Boolean deleteBankOpenAccountLogByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/deleteBankOpenAccountLogByUserId/"+userId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isDeleteFlag();
+		}
+		return false;
+	}
+
+	/**
+	 * 查询返回的电子账号是否已开户
+	 *
+	 * @param accountId
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 13:38
+	 **/
+	@Override
+	public Boolean checkAccountByAccountId(String accountId) {
+		String url = "http://AM-USER/am-user/borrow_openaccountenquiry_exception/checkAccountByAccountId/"+accountId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url,BankOpenAccountLogResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isDeleteFlag();
+		}
+		return false;
+	}
+
+	/**
+	 * 根据userId查询用户渠道信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
+		AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
+				"http://CS-MESSAGE/cs-message/search/getAppChannelStatisticsDetailByUserId/" + userId,
+				AppChannelStatisticsDetailResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 开户更新开户渠道统计开户时间
+	 *
+	 * @param appChannelStatisticsDetailVO
+	 * @return java.lang.Boolean
+	 * @author Zha Daojian
+	 * @date 2018/8/22 13:38
+	 **/
+	@Override
+	public Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO) {
+
+		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
+		BeanUtils.copyProperties(appChannelStatisticsDetailVO, request);
+		Boolean result = restTemplate.postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Boolean.class)
+				.getBody();
+		return result;
 	}
 
 }

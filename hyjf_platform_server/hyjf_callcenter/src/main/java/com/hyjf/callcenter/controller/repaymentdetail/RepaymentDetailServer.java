@@ -37,8 +37,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
             notes = "按照用户名/手机号查询还款明细（直投产品，含承接的债权）")
     @ResponseBody
     @PostMapping(value = "/getHztRepaymentDetailList", produces = "application/json; charset=utf-8")
-    public ResultListBean getHztRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
-                                                    @RequestBody UserBean bean) {
+    public ResultListBean getHztRepaymentDetailList(@RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
 
         //根据用户名或手机号取得用户信息
@@ -92,8 +91,7 @@ public class RepaymentDetailServer extends CallcenterBaseController {
     @ApiOperation(value = "查询还款明细（汇添金）", notes = "按照用户名/手机号查询还款明细（汇添金）")
     @ResponseBody
     @PostMapping(value = "/getHtjRepaymentDetailList", produces = "application/json; charset=utf-8")
-    public ResultListBean getHtjRepaymentDetailList(HttpServletRequest request, HttpServletResponse response,
-                                                    @RequestBody UserBean bean) {
+    public ResultListBean getHtjRepaymentDetailList(@RequestBody UserBean bean) {
         ResultListBean result = new ResultListBean();
 
         //根据用户名或手机号取得用户信息

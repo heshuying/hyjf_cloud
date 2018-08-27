@@ -3,9 +3,11 @@
  */
 package com.hyjf.cs.trade.service.recharge.impl;
 
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.WechatRechargeRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ import java.util.List;
  * @version WechatRechargeRuleServiceImpl, v0.1 2018/7/26 9:25
  */
 @Service
-public class WechatRechargeRuleServiceImpl implements WechatRechargeRuleService {
+public class WechatRechargeRuleServiceImpl extends BaseTradeServiceImpl implements WechatRechargeRuleService {
     @Autowired
     AmConfigClient amConfigClient;
 
@@ -37,6 +39,16 @@ public class WechatRechargeRuleServiceImpl implements WechatRechargeRuleService 
             this.conventBanksConfigToResult(result, jxBankConfigVOList);
         }
         return result;
+    }
+
+    @Override
+    public JxBankConfigVO getBanksConfigByBankId(Integer bankId) {
+        return amConfigClient.getBankNameByBankId(bankId+"");
+    }
+
+    @Override
+    public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
+        return amUserClient.selectCorpOpenAccountRecordByUserId(userId);
     }
 
     /**

@@ -11,14 +11,13 @@ import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.common.http.HtmlUtil;
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author fq
@@ -68,21 +67,20 @@ public class SmsCountServiceImpl implements SmsCountService {
             for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
                 jo = new JSONObject();
 
-                jo.put("id", departmentTreeRecord.getId());
-                jo.put("text", departmentTreeRecord.getName());
-                joAttr = new JSONObject();
-                joAttr.put("id", departmentTreeRecord.getId());
-                joAttr.put("parentid", departmentTreeRecord.getParentid());
-                joAttr.put("parentname", Validator.isNull(topParentDepartmentName) ? "" : topParentDepartmentName);
-                joAttr.put("name", departmentTreeRecord.getName());
-                joAttr.put("listorder", departmentTreeRecord.getListorder());
-                jo.put("li_attr", joAttr);
-                if (Validator.isNotNull(selectedNode) && ArrayUtils.contains(selectedNode, String.valueOf(departmentTreeRecord.getId()))) {
+              /*  jo.put("value", departmentTreeRecord.getId());
+                jo.put("text", departmentTreeRecord.getName());*/
+                jo.put("value", departmentTreeRecord.getId().toString());
+//                jo.put("parentid", departmentTreeRecord.getParentid());
+//                jo.put("parentname", Validator.isNull(topParentDepartmentName) ? "" : topParentDepartmentName);
+                jo.put("title", departmentTreeRecord.getName());
+//                jo.put("listorder", departmentTreeRecord.getListorder());
+                jo.put("key", UUID.randomUUID());
+              /*  if (Validator.isNotNull(selectedNode) && ArrayUtils.contains(selectedNode, String.valueOf(departmentTreeRecord.getId()))) {
                     JSONObject selectObj = new JSONObject();
                     selectObj.put("selected", true);
-                    // selectObj.put("opened", true);
+                     selectObj.put("opened", true);
                     jo.put("state", selectObj);
-                }
+                }*/
 
                 String departmentCd = String.valueOf(departmentTreeRecord.getId());
                 String departmentName = String.valueOf(departmentTreeRecord.getName());

@@ -1,5 +1,12 @@
 package com.hyjf.am.trade.service.admin.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.OperationLogCustomizeMapper;
@@ -10,17 +17,12 @@ import com.hyjf.am.trade.service.admin.OperationLogService;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Service
+
+@Service("tradeOperationLogServiceImpl")
 public class OperationLogServiceImpl implements OperationLogService {
 
     @Autowired
