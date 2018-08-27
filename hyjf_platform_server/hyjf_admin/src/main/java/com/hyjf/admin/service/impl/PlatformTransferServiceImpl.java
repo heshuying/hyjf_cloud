@@ -130,6 +130,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      */
     @Override
     public JSONObject checkTransfer(String userName) {
+        logger.info("entry service:[PlatformTransferServiceImpl]....userName:[{}]",userName);
         JSONObject result = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
         if (userVOList != null && userVOList.size() == 1) {

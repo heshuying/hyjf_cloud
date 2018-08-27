@@ -78,6 +78,7 @@ public class PlatformTransferController extends BaseController {
         if(StringUtils.isNotEmpty(userName)){
             result = platformTransferService.checkTransfer(userName);
         }else{
+            logger.error("getUserInfoByUserName,,,,userName=null");
             result.put("status","99");
             result.put("info","用户账号不能为空");
         }
