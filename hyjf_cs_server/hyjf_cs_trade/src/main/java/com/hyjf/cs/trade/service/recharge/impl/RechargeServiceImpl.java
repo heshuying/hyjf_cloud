@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -502,7 +501,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	public void checkUserMessage(BankCardVO bankCard,Integer userId,String money){
-		ModelAndView modelAndView = new ModelAndView();
 		UserVO users=this.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
