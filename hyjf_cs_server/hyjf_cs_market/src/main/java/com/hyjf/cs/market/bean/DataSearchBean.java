@@ -24,9 +24,10 @@ public class DataSearchBean implements Serializable {
     private int currPage;
     @ApiModelProperty(value = "当前页条数")
     private int pageSize;
-
-
-
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
+    @ApiModelProperty(value = "验证码")
+    private String code;
     public String getAddTimeStart() {
         return addTimeStart;
     }
@@ -82,5 +83,21 @@ public class DataSearchBean implements Serializable {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

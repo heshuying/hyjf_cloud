@@ -31,6 +31,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -883,10 +884,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectByOrdId(String ordId){
-        Integer response = restTemplate
-                .getForEntity(urlBase +"trade/selectByOrdId/"+ordId, Integer.class).getBody();
+        IntegerResponse response = restTemplate
+                .getForEntity(urlBase +"trade/selectByOrdId/"+ordId, IntegerResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResultInt();
         }
         return -1;
     }
@@ -3848,7 +3849,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 获取提成配置信息
-     * @param paramMap
+     * @param map
      * @return
      */
     @Override
@@ -3982,4 +3983,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+
+    /**
+     * 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 14:00
+     */
+    @Override
+    public List<ApiProjectListCustomize> getApiProjectList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/projectlist/api/getBorrowList";
+        ApiProjectListResponse response = restTemplate.postForEntity(url,params,ApiProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

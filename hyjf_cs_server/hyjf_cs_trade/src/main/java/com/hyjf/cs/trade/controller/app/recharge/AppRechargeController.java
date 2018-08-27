@@ -2,6 +2,10 @@ package com.hyjf.cs.trade.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
@@ -64,7 +68,7 @@ public class AppRechargeController extends BaseTradeController{
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
-		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/hyjf-app/bank/user/userDirectRecharge/recharge?";
+		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
 		String token = "";
 		String order = "";
@@ -77,12 +81,7 @@ public class AppRechargeController extends BaseTradeController{
 			token = strEncode(vo.getToken());
 			order = strEncode(vo.getOrder());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
-			sb.append("version=").append(vo.getVersion()).append(CustomConstants.APP_PARM_AND).append("netStatus=").append(vo.getNetStatus()).append(CustomConstants.APP_PARM_AND).append("platform=")
-					.append(vo.getPlatform()).append(CustomConstants.APP_PARM_AND).append("token=").append(token).append(CustomConstants.APP_PARM_AND).append("sign=")
-					.append(vo.getSign()).append(CustomConstants.APP_PARM_AND).append("randomString=").append(vo.getRandomString()).append(CustomConstants.APP_PARM_AND).append("order=")
-					.append(order).append(CustomConstants.APP_PARM_AND).append("platform=").append(strEncode(vo.getPlatform())).append(CustomConstants.APP_PARM_AND)
-					.append("money=").append(vo.getMoney()).append(CustomConstants.APP_PARM_AND).append("cardNo=").append(vo.getCardNo()).append(CustomConstants.APP_PARM_AND).append("code=")
-					.append(vo.getCode()).append("&isMencry=").append("2").append("&mobile=").append(mobile);
+			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
 
 			object.put("rechargeUrl",sb.toString());
 			logger.info("请求充值接口url："+sb.toString());
@@ -104,6 +103,19 @@ public class AppRechargeController extends BaseTradeController{
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
 	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("app充值服务");
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+		UserVO userVO=userRechargeService.getUserByUserId(user.getUserId());
+		if(null==userVO){
+			throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+		}
+
+		if(0==userVO.getIsSetPassword()){
+			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+		}
+		if(userVO.getBankOpenAccount()==0){
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+		}
+		logger.info("user is :{}", JSONObject.toJSONString(user));
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行

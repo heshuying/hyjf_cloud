@@ -65,7 +65,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 汇消费的项目类型编号
 	 */
-	public static String PROJECT_TYPE_HXF = "8";
+	public static int PROJECT_TYPE_HXF = 8;
 	public static JedisPool pool = RedisUtils.getPool();
 
 	/**
@@ -676,7 +676,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 		}
 
-		if (!PROJECT_TYPE_HXF.equals(borrowBean.getProjectType())) {
+		if (PROJECT_TYPE_HXF!=borrowBean.getProjectType()) {
 			// 融资服务费
 			String borrowServiceScale = this.getBorrowServiceScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(),borrowBean.getInstCode(), Integer.valueOf(borrowBean.getBorrowPeriod()));
 			borrow.setServiceFeeRate(borrowServiceScale);
@@ -684,7 +684,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
             borrow.setManageFeeRate(this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
             // 收益差率
             borrow.setDifferentialRate(this.getBorrowReturnScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
-        } else if (PROJECT_TYPE_HXF.equals(borrowBean.getProjectType())) {
+        } else if (PROJECT_TYPE_HXF==borrowBean.getProjectType()) {
 			// 融资服务费
 			borrow.setServiceFeeRate("0.00");
 			JSONObject jsonObject = new JSONObject();
@@ -1299,7 +1299,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setCompanyOrPersonal(borrowBean.getCompanyOrPersonal());
 
 		if (status == 0 && borrowMainNid.equals(borrowNid)) {
-			if (!PROJECT_TYPE_HXF.equals(borrowBean.getProjectType())) {
+			if (PROJECT_TYPE_HXF!=borrowBean.getProjectType()) {
                 // 融资服务费
                 String borrowServiceScale = this.getBorrowServiceScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.valueOf(borrowBean.getBorrowPeriod()));
                 borrow.setServiceFeeRate(borrowServiceScale);
@@ -1307,7 +1307,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                 borrow.setManageFeeRate(this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
                 // 收益差率
                 borrow.setDifferentialRate(this.getBorrowReturnScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
-            } else if (PROJECT_TYPE_HXF.equals(borrowBean.getProjectType())) {
+            } else if (PROJECT_TYPE_HXF==borrowBean.getProjectType()) {
 				// 融资服务费
 				borrow.setServiceFeeRate("0.00");
 				JSONObject jsonObject = new JSONObject();
