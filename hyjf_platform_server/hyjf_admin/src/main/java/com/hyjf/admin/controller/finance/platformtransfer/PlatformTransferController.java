@@ -16,6 +16,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -64,17 +65,21 @@ public class PlatformTransferController extends BaseController {
     /**
      * 根据userName检查是否可以平台转账
      * @auth sunpeikai
-     * @param userName 用户名
+     * @param requestMap 请求参数
      * @return
      */
     @ApiOperation(value = "平台转账-根据username查询用户信息",notes = "平台转账-根据username查询用户信息")
+    @ApiImplicitParam(name = "userName", value = "用户名", required = true, dataType = "String")
     @PostMapping(value = "/getuserinfobyusername")
-    public AdminResult getUserInfoByUserName(@RequestBody String userName){
-        logger.info("userName=[{}]",userName);
+    public AdminResult getUserInfoByUserName(@RequestBody Map<String,String> requestMap){
+        String userName = requestMap.get("userName");
+        logger.info("getuserinfobyusername======userName=[{}]",userName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(userName)){
             result = platformTransferService.checkTransfer(userName);
         }else{
+            logger.error("getUserInfoByUserName,,,,userName=null");
+            result.put("status","99");
             result.put("info","用户账号不能为空");
         }
         if("0".equals(result.get("status"))){
