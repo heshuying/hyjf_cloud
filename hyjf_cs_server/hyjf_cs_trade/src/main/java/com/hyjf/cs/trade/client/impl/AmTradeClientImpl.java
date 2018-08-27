@@ -884,10 +884,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectByOrdId(String ordId){
-        Integer response = restTemplate
-                .getForEntity(urlBase +"trade/selectByOrdId/"+ordId, Integer.class).getBody();
+        IntegerResponse response = restTemplate
+                .getForEntity(urlBase +"trade/selectByOrdId/"+ordId, IntegerResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResultInt();
         }
         return -1;
     }
@@ -3849,7 +3849,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 获取提成配置信息
-     * @param paramMap
+     * @param map
      * @return
      */
     @Override
