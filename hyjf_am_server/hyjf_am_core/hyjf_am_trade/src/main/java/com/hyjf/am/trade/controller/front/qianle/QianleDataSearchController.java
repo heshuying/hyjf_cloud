@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,7 @@ public class QianleDataSearchController {
                     }
                 }
             }
+            response.setMoney(findMoneyData(dataSearchRequest));
             response.setResultList(dataSearchCustomizes);
             response.setCount(total);
         }
@@ -78,6 +81,7 @@ public class QianleDataSearchController {
                     }
                 }
             }
+            response.setMoney(findMoneyData(dataSearchRequest));
             response.setResultList(dataSearchCustomizes);
             response.setCount(total);
         }
@@ -109,6 +113,7 @@ public class QianleDataSearchController {
                     }
                 }
             }
+            response.setMoney(findMoneyData(dataSearchRequest));
             response.setResultList(dataSearchCustomizes);
             response.setCount(total);
         }
@@ -120,9 +125,11 @@ public class QianleDataSearchController {
      * @return
      */
     @RequestMapping(value = "querySanMoney")
-    public Map<String, Object> querySanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
-        return qianleDataSearchService.querySanMoney(dataSearchRequest);
-
+    public DataSearchCustomizeResponse querySanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
+        DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
+        Map<String, Object> money = qianleDataSearchService.querySanMoney(dataSearchRequest);
+        response.setMoney(money);
+        return response;
     }
 
     /**
@@ -130,7 +137,64 @@ public class QianleDataSearchController {
      * @return
      */
     @RequestMapping(value = "queryPlanMoney")
-    public Map<String, Object> queryPlanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
-        return  qianleDataSearchService.queryPlanMoney(dataSearchRequest);
+    public DataSearchCustomizeResponse queryPlanMoney(@RequestBody DataSearchRequest dataSearchRequest) {
+        DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
+        Map<String, Object> money = qianleDataSearchService.queryPlanMoney(dataSearchRequest);
+        response.setMoney(money);
+        return response;
+    }
+
+
+    /**
+     * 查詢千乐金额数据
+     * @return
+     */
+    public Map<String, Object> findMoneyData(DataSearchRequest dataSearchRequest) {
+
+        String type = dataSearchRequest.getType();
+        HashMap<String, Object> req = new HashMap<>();
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> maps = null;
+        Map<String, Object> maps2 = null;
+
+        BigDecimal summoney = new BigDecimal(0);
+        BigDecimal summoney1 = new BigDecimal(0);
+        BigDecimal yearmoney = new BigDecimal(0);
+        BigDecimal yearmoney1 = new BigDecimal(0);
+        BigDecimal commission = new BigDecimal(0);
+        BigDecimal commission1 = new BigDecimal(0);
+
+        if (StringUtils.equals(type,"1")) {
+            maps =qianleDataSearchService.querySanMoney(dataSearchRequest);
+            maps2 =qianleDataSearchService.queryPlanMoney(dataSearchRequest);
+            if (maps != null) {
+                summoney = (BigDecimal) (maps.get("summoney"));
+                yearmoney = (BigDecimal) maps.get("yearmoney");
+                commission = (BigDecimal) maps.get("commission");
+            }
+            if (maps2 != null) {
+                summoney1 = (BigDecimal) maps2.get("summoney");
+                yearmoney1 = (BigDecimal) maps2.get("yearmoney");
+                commission1 = (BigDecimal) maps2.get("commission");
+            }
+            BigDecimal sum = summoney.add(summoney1);
+            BigDecimal year = yearmoney.add(yearmoney1);
+            BigDecimal com = commission.add(commission1);
+            res.put("summoney", sum);
+            res.put("yearmoney", year);
+            res.put("commission", com);
+
+        }else  if (StringUtils.equals(type,"2")) {
+            res =qianleDataSearchService.queryPlanMoney(dataSearchRequest);
+        }else  if (StringUtils.equals(type,"3")) {
+            res =qianleDataSearchService.querySanMoney(dataSearchRequest);
+        }
+        if (res == null) {
+            res=new HashMap<>();
+            res.put("summoney", summoney);
+            res.put("yearmoney", yearmoney);
+            res.put("commission", commission);
+        }
+        return res;
     }
 }

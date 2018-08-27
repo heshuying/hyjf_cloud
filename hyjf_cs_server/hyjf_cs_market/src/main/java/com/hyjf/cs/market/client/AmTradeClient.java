@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.TenderSexCountVO;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -162,4 +163,13 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
+	DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
+
+	DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+
+	Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest);
+
+	Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest);
+
 }

@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -171,5 +172,39 @@ public class AmTradeClientImpl implements AmTradeClient {
     public DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest) {
 		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/querysanlist", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
 	}
+	/**
+	 * 查询千乐计划数据
+	 * @param dataSearchRequest
+	 * @return
+	 */
+	@Override
+	public DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest) {
+		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryPlanList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+	}
+	/**
+	 * 查询千乐全部数据
+	 * @param dataSearchRequest
+	 * @return
+	 */
+	@Override
+	public DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest) {
+		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+	}
+
+	@Override
+	public Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest) {
+		DataSearchCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/querySanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+		return response.getMoney();
+	}
+
+	@Override
+	public Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest) {
+		DataSearchCustomizeResponse response =restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryPlanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+		return response.getMoney();
+	}
+
+
 
 }

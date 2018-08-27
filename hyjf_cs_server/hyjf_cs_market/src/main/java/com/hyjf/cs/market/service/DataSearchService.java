@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lisheng
@@ -13,4 +14,6 @@ import java.util.List;
 
 public interface DataSearchService {
     DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest);
+
+
 }
