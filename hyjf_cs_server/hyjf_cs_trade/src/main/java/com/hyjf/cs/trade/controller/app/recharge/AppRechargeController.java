@@ -10,7 +10,10 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -57,7 +60,7 @@ public class AppRechargeController extends BaseTradeController{
 	 *
 	 * app获取快捷充值地址的数据接口 需要将请求参数拼接到地址上并带回
 	 *
-	 * @author renxingchen
+	 * @author pcc
 	 * @param vo
 	 * @return
 	 */
@@ -70,16 +73,14 @@ public class AppRechargeController extends BaseTradeController{
 		/** 充值接口 */
 		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
-		String token = "";
-		String order = "";
+		String isMencry = vo.getIsMencry();// 版本号
+
 		// 校验数据并拼接回传地址
 		if (Validator.isNull(vo.getMoney())) {
 			object.put("status",CustomConstants.APP_STATUS_FAIL);
 			object.put("statusDesc","请求参数非法");
 		} else {// 拼接充值地址并返回
 			mobile = strEncode(vo.getMobile());
-			token = strEncode(vo.getToken());
-			order = strEncode(vo.getOrder());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
 			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
 
@@ -99,10 +100,22 @@ public class AppRechargeController extends BaseTradeController{
 	 * @param money
 	 * @return
 	 */
+	@ResponseBody
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
-	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
+	public AppResult<Object> recharge(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "key") String key,
+									  HttpServletRequest request, String mobile, String money, String isMencry) throws Exception {
 		logger.info("app充值服务");
+		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
+		AppResult<Object> result = new AppResult<Object>();
+		if(!"1".equals(isMencry)){
+			if (Validator.isNull(key)) {
+				throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
+			}
+			// 解密
+			mobile = DES.decodeValue(key, mobile);
+		}
+		logger.info("充值手机号为["+mobile+"],充值金额:[" + money + "]");
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 		UserVO userVO=userRechargeService.getUserByUserId(user.getUserId());
 		if(null==userVO){
@@ -126,14 +139,18 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
-		ModelAndView modelAndView = new ModelAndView();
+
 		try {
-			modelAndView = BankCallUtils.callApi(bean);
+			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+			result.setData(data);
 		} catch (Exception e) {
+			logger.info("app端充值失败");
 			e.printStackTrace();
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
 		}
-		return modelAndView;
+
+		result.setStatus("000");
+		return result;
 	}
 
 

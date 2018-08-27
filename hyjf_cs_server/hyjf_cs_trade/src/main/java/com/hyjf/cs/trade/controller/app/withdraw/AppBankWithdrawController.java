@@ -452,7 +452,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);
         } catch (Exception e) {
-            logger.info("web端提现失败");
+            logger.info("app端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
@@ -469,6 +469,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiIgnore
+    @ResponseBody
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");

@@ -108,7 +108,7 @@ public class MyProfileController extends BaseUserController {
         }
 
         List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(list);
-        resultBean.setData(lstCoupon);
+        resultBean.setObject(lstCoupon);
         return resultBean;
     }
 
@@ -122,10 +122,11 @@ public class MyProfileController extends BaseUserController {
         List<CouponUserListCustomizeVO> list=new ArrayList<CouponUserListCustomizeVO>();
         DecimalFormat df = new DecimalFormat(",###");
         df.setRoundingMode(RoundingMode.FLOOR);
+
         for (CouponUserForAppCustomizeVO config : configs) {
             CouponUserListCustomizeVO customize=new CouponUserListCustomizeVO();
             customize.setId(config.getId());
-            String[] time=config.getTime().split("-");
+            String[] time=config.getEndTime().split("-");
             customize.setAddTime(time[0]);
             customize.setEndTime(time[1]);
             customize.setContent("1");

@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.front.coupon;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.controller.BaseController;
@@ -11,10 +12,7 @@ import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -91,9 +89,9 @@ public class MyCouponListController extends BaseController {
      * @auther: walter.limeng
      * @date: 2018/7/9
      */
-    @RequestMapping(value = "/getmycouponbypage")
-    public CouponResponse getMyCouponByPage(@RequestBody @Valid MyCouponListRequest requestBean) {
-        CouponResponse responseBean = new CouponResponse();
+    @PostMapping(value = "/getmycouponbypage")
+    public CouponResponseForCoupon getMyCouponByPage(@RequestBody @Valid MyCouponListRequest requestBean) {
+        CouponResponseForCoupon responseBean = new CouponResponseForCoupon();
 
         List<CouponUserForAppCustomizeVO> resultList = myCouponListService.getMyCouponByPage(requestBean);
         responseBean.setResultList(resultList);

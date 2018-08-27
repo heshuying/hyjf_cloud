@@ -62,7 +62,7 @@ public class MessagePushMsgHistory implements Serializable {
 
     private String msgRemark;
 
-    private String sendTime;
+    private Integer sendTime;
 
     private Integer msgDestinationCountIos;
 
@@ -276,11 +276,11 @@ public class MessagePushMsgHistory implements Serializable {
         this.msgRemark = msgRemark == null ? null : msgRemark.trim();
     }
 
-    public String getSendTime() {
+    public Integer getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Integer sendTime) {
         this.sendTime = sendTime;
     }
 

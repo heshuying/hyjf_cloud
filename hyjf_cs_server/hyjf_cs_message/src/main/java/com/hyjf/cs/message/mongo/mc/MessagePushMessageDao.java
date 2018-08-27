@@ -58,7 +58,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
      * @param id
      * @return
      */
-    public MessagePushMsg getMessagePushMsgById(Integer id) {
+    public MessagePushMsg getMessagePushMsgById(String id) {
         Query query = new Query();
         Criteria criteria = new Criteria();
         criteria.and("id").is(id);

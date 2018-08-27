@@ -15,12 +15,12 @@ import java.util.List;
 public interface MessagePushMsgService {
     List<MessagePushMsg> selectMessagePushMsg(MessagePushMsgRequest request);
 
-    MessagePushMsg getMessagePushMsgById(Integer id);
+    MessagePushMsg getMessagePushMsgById(String id);
 
     Integer insertMessagePushMsg(MessagePushMsg msg);
 
     Integer updateMessagePushMsg(MessagePushMsg messagePushMsg);
 
-    Integer deleteMessagePushMsg(List<Integer> recordList);
+    Integer deleteMessagePushMsg(List<MessagePushMsg> recordList);
 
 }
