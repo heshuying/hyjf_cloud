@@ -12,6 +12,7 @@ import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTag;
+import com.hyjf.cs.message.handle.MsgPushHandle;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,9 @@ public class MessagePushErrorController {
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
+
+    @Autowired
+    private MsgPushHandle msgPushHandle;
 
     /**
      * 获取列表记录数
@@ -109,14 +113,14 @@ public class MessagePushErrorController {
 
     /**
      * 推送极光消息
-     * @param msg
+     * @param messagePushMsgHistoryVO
      * @return 成功返回消息id  失败返回 error
      * @author Michael
      */
     @RequestMapping("sendMessage")
-    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) {
+    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
         MessagePushMsgHistory msg = new MessagePushMsgHistory();
         BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
-        messagePushErrorService.sendMessage(msg);
+        msgPushHandle.send(msg);
     }
 }

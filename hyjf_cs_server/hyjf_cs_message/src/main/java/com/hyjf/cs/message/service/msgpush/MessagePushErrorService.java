@@ -41,12 +41,4 @@ public interface MessagePushErrorService {
      * @return
      */
     MessagePushMsgHistory getRecord(Integer id);
-
-    /**
-     * 推送极光消息
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    void sendMessage(MessagePushMsgHistory msg);
 }
