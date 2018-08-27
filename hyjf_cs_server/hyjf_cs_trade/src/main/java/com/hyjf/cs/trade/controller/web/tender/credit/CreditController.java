@@ -35,7 +35,7 @@ public class CreditController {
      */
     @ApiOperation(value = "我要债转列表页 获取参数", notes = "首页 > 账户中心 > 资产管理 > 可转让列表")
     @PostMapping(value = "/creditListInit", produces = "application/json; charset=utf-8")
-    public WebResult getCreditList(@RequestBody MyCreditListRequest request,
+    public WebResult getCreditList(MyCreditListRequest request,
             @RequestHeader(value = "userId",required = false) Integer userId){
         WebResult result =  creditListService.getCreditListData(request,userId);
         return result;

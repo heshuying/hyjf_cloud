@@ -1,62 +1,74 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 public class HjhReInvestDebtRequest extends BasePage implements Serializable {
 
-    /**
-     * 计划订单号(检索)
-     */
-    private String planNidSrch;
+    @ApiModelProperty(value = "计划编号")
+    private String planNid;
 
-    /**
-     * 承接计划编号(检索)
-     */
-    private String assignPlanNidSrch;
+    @ApiModelProperty(value = "日期开始")
+    private String date;
 
-    /**
-     * 承接订单号(检索)
-     */
+    @ApiModelProperty(value = "计划订单号")
     private String assignPlanOrderIdSrch;
 
-    /**
-     * 承接人(检索)
-     */
+    @ApiModelProperty(value = "承接计划编号")
+    private String assignPlanNidSrch;
+
+    @ApiModelProperty(value = "承接订单号")
+    private String assignOrderIdSrch;
+
+    @ApiModelProperty(value = "承接人")
     private String userNameSrch;
 
-    /**
-     * 出让人(检索)
-     */
+    @ApiModelProperty(value = "出让人")
     private String creditUserNameSrch;
 
-    /**
-     * 债转编号(检索)
-     */
+    @ApiModelProperty(value = "债转编号")
     private String creditNidSrch;
 
-    /**
-     * 原项目编号(检索)
-     */
+    @ApiModelProperty(value = "原项目编号")
     private String borrowNidSrch;
 
-    /**
-     * 承接方式(检索)
-     */
-    private String assignTypeSrch;
+    @ApiModelProperty(value = "承接方式")
+    private int assignTypeSrch;
 
-    /**
-     * 还款方式(检索)
-     */
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyleSrch;
 
-    public String getPlanNidSrch() {
-        return planNidSrch;
+
+    /**
+     * 分页变量
+     */
+    private int limitStart = -1;
+    private int limitEnd = -1;
+
+    public String getPlanNid() {
+        return planNid;
     }
 
-    public void setPlanNidSrch(String planNidSrch) {
-        this.planNidSrch = planNidSrch;
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getAssignPlanOrderIdSrch() {
+        return assignPlanOrderIdSrch;
+    }
+
+    public void setAssignPlanOrderIdSrch(String assignPlanOrderIdSrch) {
+        this.assignPlanOrderIdSrch = assignPlanOrderIdSrch;
     }
 
     public String getAssignPlanNidSrch() {
@@ -67,12 +79,12 @@ public class HjhReInvestDebtRequest extends BasePage implements Serializable {
         this.assignPlanNidSrch = assignPlanNidSrch;
     }
 
-    public String getAssignPlanOrderIdSrch() {
-        return assignPlanOrderIdSrch;
+    public String getAssignOrderIdSrch() {
+        return assignOrderIdSrch;
     }
 
-    public void setAssignPlanOrderIdSrch(String assignPlanOrderIdSrch) {
-        this.assignPlanOrderIdSrch = assignPlanOrderIdSrch;
+    public void setAssignOrderIdSrch(String assignOrderIdSrch) {
+        this.assignOrderIdSrch = assignOrderIdSrch;
     }
 
     public String getUserNameSrch() {
@@ -107,11 +119,11 @@ public class HjhReInvestDebtRequest extends BasePage implements Serializable {
         this.borrowNidSrch = borrowNidSrch;
     }
 
-    public String getAssignTypeSrch() {
+    public int getAssignTypeSrch() {
         return assignTypeSrch;
     }
 
-    public void setAssignTypeSrch(String assignTypeSrch) {
+    public void setAssignTypeSrch(int assignTypeSrch) {
         this.assignTypeSrch = assignTypeSrch;
     }
 
@@ -121,5 +133,21 @@ public class HjhReInvestDebtRequest extends BasePage implements Serializable {
 
     public void setBorrowStyleSrch(String borrowStyleSrch) {
         this.borrowStyleSrch = borrowStyleSrch;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

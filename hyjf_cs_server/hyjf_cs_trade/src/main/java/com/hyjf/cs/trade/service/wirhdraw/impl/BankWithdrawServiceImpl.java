@@ -11,6 +11,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -93,7 +94,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }};
 
     @Override
-    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip) {
+    public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl) {
 
 
         //检查用户信息
@@ -102,7 +103,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 取得手续费 默认1
         String fee = this.getWithdrawFee(user.getUserId(), cardNo);
         // 组装发往江西银行参数
-        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee);
+        BankCallBean bean = getCommonBankCallBean(users, platform, channel, transAmt, cardNo, payAllianceCode, fee,retUrl,bgRetUrl,successfulUrl);
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(user.getUserId()));
@@ -753,18 +754,19 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param cardNo
      * @param payAllianceCode
      * @param fee
+     * @param retUrl
+     * @param bgRetUrl
+     * @param successfulUrl
      * @return
      */
-    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee) {
+    private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee, String retUrl, String bgRetUrl, String successfulUrl) {
         String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
-        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawError?logOrdId="+orderId;
-        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
-        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
-                + "&wifee=" + fee;//
+        retUrl = retUrl+"?logOrdId="+orderId;
+        successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;//
         // 路由代码
         String routeCode = "";
         // 调用汇付接口(4.2.2 用户绑卡接口)
@@ -951,7 +953,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }
 
     @Override
-    public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+    public JxBankConfigVO getBanksConfigByBankId(Integer bankId) {
         return amConfigClient.getBankNameByBankId(bankId+"");
     }
 

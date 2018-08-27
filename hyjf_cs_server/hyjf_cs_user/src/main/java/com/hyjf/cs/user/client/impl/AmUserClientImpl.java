@@ -1039,4 +1039,37 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return  null;
 	}
+	/**
+	 * 插入ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int insertHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/insertHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新 ht_hjh_user_auth_log 表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuthLog",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
 }

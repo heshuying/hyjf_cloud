@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.front.repay;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.RepayBeanResponse;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -250,8 +251,7 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/get_repaybean")
-    public Response<RepayBean> getRepayBean(@RequestBody Map<String,String> paraMap){
-        Response<RepayBean> response = new Response<>();
+    public RepayBean getRepayBean(@RequestBody Map<String,String> paraMap){
         RepayBean repayByTerm = null;
 
         String roleId = paraMap.get("roleId");
@@ -292,27 +292,21 @@ public class RepayManageController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            response.setRtn(Response.ERROR);
-            response.setMessage("还款数据计算失败");
             logger.error("还款数据计算失败", e);
-            return response;
+            return null;
         }
 
-        logger.info("计算完的还款bean数据：{}", repayByTerm);
-        response.setResult(repayByTerm);
-        return response;
+        logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
+        return repayByTerm;
     }
 
     /**
      * 获取担保机构批量还款页面数据
      */
     @PostMapping(value = "/get_batch_reapydata")
-    public Response<ProjectBean> getOrgBatchRepayData(@RequestBody BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = new Response<>();
-
+    public ProjectBean getOrgBatchRepayData(@RequestBody BatchRepayDataRequest requestBean) {
         ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(), requestBean.getStartDate(), requestBean.getEndDate());
-        response.setResult(projectBean);
 
-        return response;
+        return projectBean;
     }
 }

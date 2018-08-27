@@ -79,15 +79,17 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "账户信息")
     @PostMapping(value = "init")
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
+        AdminResult result = new AdminResult();
         AdminSystemVO adminSystem = getUser(request);
-        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+  //      CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
         BigDecimal availableBalanceSum = BigDecimal.ZERO;
         // 冻结金额总计
         BigDecimal frostSum = BigDecimal.ZERO;
-        form.setUserId(Integer.parseInt(adminSystem.getId()));
+        //form.setUserId(Integer.parseInt(adminSystem.getId()));
+        form.setUserId(5234);
         BankMerchantAccountResponse response = bankMerchantAccountService.selectBankMerchantAccount(form);
         if(response == null||response.getRecordTotal()==0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -104,20 +106,21 @@ public class BankMerchantAccountController extends BaseController {
         form.setAccountBalanceSum(String.valueOf(accountBalanceSum));
         form.setAvailableBalanceSum(String.valueOf(availableBalanceSum));
         form.setFrostSum(String.valueOf(frostSum));
-        return new AdminResult(form);
+        result.setTotalCount(response.getRecordTotal());
+        result.setData(form);
+        return result;
     }
 
     /**
      * 设置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
     @ApiOperation(value = "设置交易密码")
     @PostMapping(value = "/setPassword")
-    public AdminResult setPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    public AdminResult setPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.setPassword(accountCode);
         return result;
     }
@@ -145,14 +148,13 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 重置交易密码
      *
-     * @param request
+     * @param accountCode
      * @param
      * @return
      */
     @ApiOperation(value = "重置交易密码")
     @PostMapping(value = "/resetPassword")
-    public AdminResult resetPassword(HttpServletRequest request) {
-        String accountCode = request.getParameter("accountCode");
+    public AdminResult resetPassword(String accountCode) {
         AdminResult result = bankMerchantAccountService.resetPassword(accountCode);
         return result;
     }

@@ -3,10 +3,9 @@ package com.hyjf.cs.message.client.impl;
 import java.util.List;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,13 +153,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public MessagePushErrorVO getMobileCodeByNumber(String mobile) {
+	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
 		String url = "http://AM-USER/am-user/userInfo/getMobileCodeByNumber/" + mobile;
-		MessagePushErrorResponse response = restTemplate.getForEntity(url,MessagePushErrorResponse.class).getBody();
-		if (response!=null){
-			return response.getResult();
-		}
-		return null;
+		AdminMsgPushCommonCustomizeVO response = restTemplate.getForEntity(url,AdminMsgPushCommonCustomizeVO.class).getBody();
+		return response;
 	}
 
 

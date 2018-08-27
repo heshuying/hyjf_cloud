@@ -16,11 +16,8 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -230,43 +227,29 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      */
     @Override
     public Integer getRecordCount(MessagePushErrorRequest request) {
-        MessagePushErrorResponse response = restTemplate
+        MessagePushHistoryResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getRecordCount",
-                        request, MessagePushErrorResponse.class).getBody();
+                        request, MessagePushHistoryResponse.class).getBody();
         if (response != null) {
-            return response.getCount();
-        }
-        return null;
-    }
-
-    /**
-     * 获取列表
-     *
-     * @return
-     */
-    @Override
-    public List<MessagePushErrorVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd) {
-        MessagePushErrorResponse response = restTemplate
-                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecordListT"+"/"+request+"/"+limitStart+"/"+limitEnd,
-                                 MessagePushErrorResponse.class);
-        if (response != null) {
-            return response.getResultList();
+            return response.getRecordTotal();
         }
         return null;
     }
 
     /**
      * (条件)查询 APP消息推送 异常处理 列表
-     * @param request
+     *
      * @return
      */
     @Override
-    public MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
-        MessagePushErrorResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getListByConditions",
-                        request, MessagePushErrorResponse.class).getBody();
+    public List<MessagePushMsgHistoryVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd) {
+        request.setLimitStart(limitStart);
+        request.setLimitEnd(limitEnd);
+        MessagePushHistoryResponse response = restTemplate
+                .postForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecordListT/", request,
+                        MessagePushHistoryResponse.class);
         if (response != null) {
-            return response;
+            return response.getResultList();
         }
         return null;
     }
@@ -293,10 +276,10 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      * @return
      */
     @Override
-    public List<MessagePushErrorVO> getTagList() {
-        MessagePushErrorResponse response = restTemplate
+    public List<MessagePushTagVO> getTagList() {
+        MessagePushTagResponse response = restTemplate
                 .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getTagList",
-                        MessagePushErrorResponse.class);
+                        MessagePushTagResponse.class);
         if (response != null) {
             return response.getResultList();
         }
@@ -309,10 +292,10 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      * @return
      */
     @Override
-    public MessagePushErrorVO getRecord(Integer id) {
-        MessagePushErrorResponse response = restTemplate
-                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getTagList"+"/"+id,
-                        MessagePushErrorResponse.class);
+    public MessagePushMsgHistoryVO getRecord(Integer id) {
+        MessagePushHistoryResponse response = restTemplate
+                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecord/" + id,
+                        MessagePushHistoryResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -326,8 +309,8 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      * @author Michael
      */
     @Override
-    public void sendMessage(MessagePushErrorVO msg) {
-        restTemplate.getForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage"+"/"+msg,
+    public void sendMessage(MessagePushMsgHistoryVO msg) {
+        restTemplate.postForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage/", msg,
                         MessagePushErrorResponse.class);
     }
 

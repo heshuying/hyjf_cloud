@@ -9,6 +9,7 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -51,11 +52,13 @@ public interface RegisterService extends BaseUserService {
 
     /**
      * api端注册
+     *
+     * @param userRegisterRequestBean
      * @param registerRequest
      * @param ipAddr
      * @return
      */
-    UserVO apiRegister(RegisterRequest registerRequest, String ipAddr);
+    UserVO apiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr);
 
     /**
      * 融东风注册
@@ -118,4 +121,18 @@ public interface RegisterService extends BaseUserService {
      * @return
      */
     int updateLoginInAction(String userName,String password,String ipAddr);
+
+    /**
+     * 获取账户id
+     * @param userId
+     * @return
+     */
+    String getAccountId(Integer userId);
+
+    /**
+     * 获取授权状态
+     * @param userId
+     * @return
+     */
+    String getAutoInvesStatus(Integer userId);
 }
