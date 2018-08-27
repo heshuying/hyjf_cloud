@@ -68,9 +68,9 @@ public class MessagePushErrorController extends BaseController {
         return jsonObject;
     }
 
-    @PostMapping("/update")
+    @GetMapping("/update")
     @ApiOperation(value = "数据修改 APP消息推送 异常处理", httpMethod = "POST", notes = "数据修改 APP消息推送 异常处理")
-    public JSONObject update(@RequestBody Integer id) {
+    public JSONObject update(@RequestParam("id") String id) {
         // 重发此消息
         MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
         this.messagePushErrorService.sendMessage(msg);

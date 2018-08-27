@@ -301,7 +301,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 	 *
 	 * @return
 	 */
-	public MessagePushMsgHistory getRecord(Integer id) {
+	public MessagePushMsgHistory getRecord(String id) {
 		Criteria criteria = new Criteria();
 		Query query = new Query();
 		// 条件查询
