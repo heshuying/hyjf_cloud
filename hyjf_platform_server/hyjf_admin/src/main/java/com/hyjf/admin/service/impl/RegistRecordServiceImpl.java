@@ -34,17 +34,5 @@ public class RegistRecordServiceImpl implements RegistRecordService {
         return listRgistRecord;
     }
 
-    /**
-     * 获取下拉列表的值
-     * @return
-     */
-    @Override
-    public UserManagerInitResponseBean initRegist(){
-        UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
-        // 注册平台
-        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
-        userManagerInitResponseBean.setRegistPlat(registPlat);
-        return userManagerInitResponseBean;
-    }
 
 }

@@ -19,34 +19,34 @@ import java.util.Map;
 public class BankcardInitCustomizeVO extends BaseVO {
 
 	@ApiModelProperty(value = "是否默认")
-	public  Map<String, String> bankcardType;
+	public  List<DropDownVO> bankcardType;
 	@ApiModelProperty(value = "银行卡属性")
-	public Map<String, String> bankcardProperty;
+	public List<DropDownVO> bankcardProperty;
 
 	@ApiModelProperty(value = "所属银行")
-	private List<BankConfigVO> listBanksConfigVO;
+	private List<DropDownVO> listBanksConfigVO;
 
-	public Map<String, String> getBankcardType() {
+	public List<DropDownVO> getBankcardType() {
 		return bankcardType;
 	}
 
-	public void setBankcardType(Map<String, String> bankcardType) {
+	public void setBankcardType(List<DropDownVO> bankcardType) {
 		this.bankcardType = bankcardType;
 	}
 
-	public Map<String, String> getBankcardProperty() {
+	public List<DropDownVO> getBankcardProperty() {
 		return bankcardProperty;
 	}
 
-	public void setBankcardProperty(Map<String, String> bankcardProperty) {
+	public void setBankcardProperty(List<DropDownVO> bankcardProperty) {
 		this.bankcardProperty = bankcardProperty;
 	}
 
-	public List<BankConfigVO> getListBanksConfigVO() {
+	public List<DropDownVO> getListBanksConfigVO() {
 		return listBanksConfigVO;
 	}
 
-	public void setListBanksConfigVO(List<BankConfigVO> listBanksConfigVO) {
+	public void setListBanksConfigVO(List<DropDownVO> listBanksConfigVO) {
 		this.listBanksConfigVO = listBanksConfigVO;
 	}
 }
