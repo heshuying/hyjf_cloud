@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import cn.jpush.api.utils.StringUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
 import com.hyjf.am.response.admin.MessagePushTagResponse;
@@ -69,12 +70,18 @@ public class MessagePushErrorController {
 
             for (MessagePushMsgHistoryVO message:messagePushErrorVO) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String formatSendTime = simpleDateFormat.format(Long.valueOf(message.getSendTime()));
-                String formatCreateTime = simpleDateFormat.format(Long.valueOf(message.getCreateTime()));
-                String formatLastupdateTime = simpleDateFormat.format(Long.valueOf(message.getLastupdateTime()));
-                message.setSendTime(formatSendTime);
-                message.setCreateTime(formatCreateTime);
-                message.setLastupdateTime(formatLastupdateTime);
+                if (StringUtils.isNotEmpty(message.getSendTime())){
+                    String formatSendTime = simpleDateFormat.format(Long.valueOf(message.getSendTime()));
+                    message.setSendTime(formatSendTime);
+                }
+                if (StringUtils.isNotEmpty(message.getCreateTime())){
+                    String formatCreateTime = simpleDateFormat.format(Long.valueOf(message.getCreateTime()));
+                    message.setCreateTime(formatCreateTime);
+                }
+                if (StringUtils.isNotEmpty(message.getLastupdateTime())){
+                    String formatLastupdateTime = simpleDateFormat.format(Long.valueOf(message.getLastupdateTime()));
+                    message.setLastupdateTime(formatLastupdateTime);
+                }
                 //获得tagName
                 String tagName = messagePushTemplateStaticsService.selectTagName(request.getTagIdSrch());
                 message.setTagName(tagName);
