@@ -379,7 +379,7 @@ public class AppBankWithdrawController extends BaseTradeController {
 
         try {
             /** 充值接口 */
-            String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
+            String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType=" +CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
             String uuid = getUUID();
             RedisUtils.set("widraw"+cardNo, uuid);
             ret.put("status", "0");
@@ -387,7 +387,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", requestStr);
             StringBuffer sbUrl = new StringBuffer();
             sbUrl.append(withdrawUrl);
-            sbUrl.append("?").append("cardNo").append("=").append(cardNo);
+            sbUrl.append("&").append("cardNo").append("=").append(cardNo);
             sbUrl.append("&").append("total").append("=").append(total);
             sbUrl.append("&").append("routeCode").append("=").append(routeCode);
             sbUrl.append("&").append("openCardBankCode").append("=").append(openCardBankCode);

@@ -243,13 +243,13 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		Query query = new Query();
 		// 条件查询
 		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
-			criteria.and("msgTitle").is("%" + request.getMsgTitleSrch() + "%");
+			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
 			criteria.and("tagId").is(request.getTagIdSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
-			criteria.and("nsgCode").is(request.getMsgCodeSrch());
+			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
 			criteria.and("createTime").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
@@ -273,19 +273,19 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		Query query = new Query();
 		// 条件查询
 		if (StringUtils.isNotEmpty(request.getMsgTitleSrch())) {
-			criteria.and("msgTitleSrch").is("%" + request.getMsgTitleSrch() + "%");
+			criteria.and("msgTitle").is(request.getMsgTitleSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getTagIdSrch())){
 			criteria.and("tagId").is(request.getTagIdSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getMsgCodeSrch())){
-			criteria.and("msgCodeSrch").is(request.getMsgCodeSrch());
+			criteria.and("msgCode").is(request.getMsgCodeSrch());
 		}
 		if(StringUtils.isNotEmpty(request.getStartDateSrch())){
-			criteria.and("startDateSrch").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
+			criteria.and("startDate").gte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(request.getStartDateSrch())));
 		}
 		if(StringUtils.isNotEmpty(request.getEndDateSrch())){
-			criteria.and("endDateSrch").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
+			criteria.and("endDate").lte(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(request.getEndDateSrch())));
 		}
 		criteria.and("msgSendStatus").is(2);//发送失败
 		if (limitStart != -1) {
