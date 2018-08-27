@@ -21,11 +21,4 @@ public interface RegistRecordService {
      */
     RegistRecordResponse findRegistRecordList(RegistRcordRequest request);
 
-    /**
-     * 获取下拉列表的值
-     * @return
-     */
-    UserManagerInitResponseBean initRegist();
-
-
 }
