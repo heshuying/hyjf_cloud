@@ -3,10 +3,11 @@
  */
 package com.hyjf.admin.controller.msgpush.error;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.MessagePushErrorRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushErrorService;
+import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.admin.MessagePushTagVO;
@@ -41,44 +42,47 @@ public class MessagePushErrorController extends BaseController {
     @PostMapping("/getListByConditions")
     @ApiParam(required = false, name = "requestBean", value = "查询条件")
     @ApiOperation(value = "(条件)查询 APP消息推送 异常处理 列表", httpMethod = "POST", notes = "(条件)查询 APP消息推送 异常处理 列表")
-    public JSONObject getListByConditions(@RequestBody MessagePushErrorRequestBean requestBean) {
+    public AdminResult getListByConditions(@RequestBody MessagePushErrorRequestBean requestBean) {
         MessagePushErrorRequest request = new MessagePushErrorRequest();
-        BeanUtils.copyProperties(requestBean, request);
-        JSONObject jsonObject = new JSONObject();
-        Integer count = this.messagePushErrorService.getRecordCount(request);
-        if(count > 0){
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
-            request.setPaginator(paginator);
-            List<MessagePushMsgHistoryVO> recordList = this.messagePushErrorService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
-            request.setRecordList(recordList);
-            String fileDomainUrl = UploadFileUtils.getDoPath(FILE_DOMAIN_URL);
-            jsonObject.put("fileDomainUrl", fileDomainUrl);
+        MessagePushErrorResponse response = new MessagePushErrorResponse();
+        try {
+            BeanUtils.copyProperties(requestBean, request);
+            Integer count = this.messagePushErrorService.getRecordCount(request);
+            if(count > 0){
+                Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize() == 0 ? 10 : request.getPageSize());
+                request.setPaginator(paginator);
+                List<MessagePushMsgHistoryVO> recordList = this.messagePushErrorService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
+                request.setRecordList(recordList);
+                String fileDomainUrl = UploadFileUtils.getDoPath(FILE_DOMAIN_URL);
+                response.setFileDomainUrl(fileDomainUrl);
+            }
+            // 标签
+            List<MessagePushTagVO> tagList = this.messagePushErrorService.getTagList();
+            response.setTagList(tagList);
+            // 发送状态
+            List<ParamNameVO> messagesSendStatus = this.messagePushErrorService.getParamNameList("MSG_PUSH_SEND_STATUS");
+            response.setMessagesSendStatus(messagesSendStatus);
+            response.setMsgErrorForm(request);
+            //返回状态
+            response.setCount(count);
+        }catch (Exception e){
+            return new AdminResult(FAIL, FAIL_DESC);
         }
-        // 标签
-        List<MessagePushTagVO> tagList = this.messagePushErrorService.getTagList();
-        jsonObject.put("tagList", tagList);
-        // 发送状态
-        List<ParamNameVO> messagesSendStatus = this.messagePushErrorService.getParamNameList("MSG_PUSH_SEND_STATUS");
-        jsonObject.put("messagesSendStatus", messagesSendStatus);
-        jsonObject.put("msgErrorForm", request);
-        //返回状态
-        jsonObject.put("count", count);
-        jsonObject.put("status", "000");
-        jsonObject.put("statusDesc", "成功");
-        return jsonObject;
+        return new AdminResult(response);
     }
 
-    @GetMapping("/update")
+    @PostMapping("/update")
     @ApiOperation(value = "数据修改 APP消息推送 异常处理", httpMethod = "POST", notes = "数据修改 APP消息推送 异常处理")
-    public JSONObject update(@RequestParam("id") String id) {
-        // 重发此消息
-        MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
-        this.messagePushErrorService.sendMessage(msg);
-        JSONObject jsonObject = new JSONObject();
-        //返回状态
-        jsonObject.put("status", "000");
-        jsonObject.put("statusDesc", "成功");
-        jsonObject.put("RE_LIST_PATH", "redirect:/msgpush/error/init");
-        return jsonObject;
+    public AdminResult update(@RequestParam("id") String id) {
+        MessagePushErrorResponse response = new MessagePushErrorResponse();
+        try {
+            // 重发此消息
+            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(id);
+            //推送极光消息（暂不开启）
+            //this.messagePushErrorService.sendMessage(msg);
+        }catch (Exception e){
+            return new AdminResult(FAIL, FAIL_DESC);
+        }
+        return new AdminResult(response);
     }
 }

@@ -1,7 +1,9 @@
 package com.hyjf.cs.trade.service.projectlist;
 
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
  * api端 业务service
