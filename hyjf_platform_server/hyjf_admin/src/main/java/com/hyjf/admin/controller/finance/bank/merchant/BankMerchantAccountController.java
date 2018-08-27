@@ -608,9 +608,9 @@ public class BankMerchantAccountController extends BaseController {
     @ApiOperation(value = "用户同步余额")
     @ResponseBody
     @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
-    public JSONObject synbalance(HttpServletRequest request) {
+    public JSONObject synbalance(HttpServletRequest request,@RequestBody Map<String,String> param) {
         JSONObject ret = new JSONObject();
-        String accountCode = request.getParameter("accountCode");
+        String accountCode = param.get("accountCode");
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
         // 账户冻结金额
