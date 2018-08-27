@@ -308,8 +308,8 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		if(id != null){
 			criteria.and("id").is(id);
 		}
-		List<MessagePushMsgHistory> list = mongoTemplate.find(query, MessagePushMsgHistory.class);
-		return list.get(0);
+        MessagePushMsgHistory one = mongoTemplate.findOne(query, MessagePushMsgHistory.class);
+		return one;
 	}
 
 
