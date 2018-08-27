@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
@@ -29,6 +31,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -622,5 +625,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 借款人受托支付申请异步回调更新数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Boolean updateTrusteePaySuccess(String borrowNid){
+        String url = "http://AM-TRADE/am-trade/trustee/update/" + borrowNid;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return false;
+    }
 
+    /**
+     * 查询信托白名单
+     *
+     * @param instCode
+     * @param receiptAccountId
+     * @return
+     */
+    @Override
+    public STZHWhiteListVO getSTZHWhiteList(String instCode, String receiptAccountId){
+        String url = "http://AM-TRADE/am-trade/trustee/getSTZHWhiteList/" + instCode + "/" + receiptAccountId;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

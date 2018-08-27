@@ -13,6 +13,7 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -99,12 +100,14 @@ public class AppRechargeController extends BaseTradeController{
 	 * @param money
 	 * @return
 	 */
+	@ResponseBody
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
-	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "key") String key,
-								 HttpServletRequest request, String mobile, String money, String isMencry) throws Exception {
+	public AppResult<Object> recharge(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "key") String key,
+									  HttpServletRequest request, String mobile, String money, String isMencry) throws Exception {
 		logger.info("app充值服务");
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
+		AppResult<Object> result = new AppResult<Object>();
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
 				throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
@@ -136,14 +139,18 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
-		ModelAndView modelAndView = new ModelAndView();
+
 		try {
-			modelAndView = BankCallUtils.callApi(bean);
+			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+			result.setData(data);
 		} catch (Exception e) {
+			logger.info("app端充值失败");
 			e.printStackTrace();
 			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
 		}
-		return modelAndView;
+
+		result.setStatus("000");
+		return result;
 	}
 
 

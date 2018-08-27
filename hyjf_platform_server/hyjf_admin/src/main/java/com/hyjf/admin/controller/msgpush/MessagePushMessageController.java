@@ -149,7 +149,7 @@ public class MessagePushMessageController extends BaseController {
             return new AdminResult<>(response);
         }
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -190,12 +190,16 @@ public class MessagePushMessageController extends BaseController {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
+
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }

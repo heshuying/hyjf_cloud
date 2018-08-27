@@ -5,23 +5,15 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.BankAccountManageClient;
 import com.hyjf.admin.controller.LoginController;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
-import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,26 +43,47 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
     @Autowired
     AmTradeClient amTradeClient;
 
-    @Override
-    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountCount(bankAccountManageRequest);
-    }
-
+    /**
+     * 账户管理页面查询列表
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountInfos(bankAccountManageRequest);
+        return this.amTradeClient.queryAccountInfos(bankAccountManageRequest);
     }
 
+    /**
+     * 资金明细（列表）
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-        return this.amUserClient.queryAccountDetails(bankAccountManageRequest);
+        return this.amTradeClient.queryAccountDetails(bankAccountManageRequest);
     }
 
+    /**
+     * 查询用户是否开户
+     *
+     * @param userId
+     * @return
+     */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
         return this.amUserClient.getBankOpenAccount(userId);
     }
 
+    /**
+     * 更新用户账户信息
+     *
+     * @param userId
+     * @param balance
+     * @param frost
+     * @return
+     */
     @Override
     public Integer updateAccount(Integer userId, BigDecimal balance, BigDecimal frost) {
         AccountVO accountVO = new AccountVO();
@@ -81,14 +93,28 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
         return this.amTradeClient.updateAccountManage(accountVO);
     }
 
+    /**
+     * 线下充值对账
+     *
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Override
     public String updateAccountCheck(Integer userId, String startTime, String endTime) {
-        return this.amTradeClient.updateAccountCheck(userId,startTime,endTime);
+        return this.amTradeClient.updateAccountCheck(userId, startTime, endTime);
     }
 
+    /**
+     * 银行账户管理页面数据条数
+     *
+     * @param request
+     * @return
+     */
     @Override
     public Integer selectAccountInfoCount(BankAccountManageRequest request) {
-        return this.amUserClient.queryAccountCount(request);
+        return this.amTradeClient.queryAccountCount(request);
     }
 
     /**
@@ -101,7 +127,7 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
         // 实际未传任何参数
         HjhCommissionRequest form = new HjhCommissionRequest();
         OADepartmentResponse response = amTradeClient.getCrmDepartmentList(form);
-        if(response != null){
+        if (response != null) {
             return response.getResultList();
         }
         return null;
