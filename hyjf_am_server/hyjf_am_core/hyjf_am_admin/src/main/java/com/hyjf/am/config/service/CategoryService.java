@@ -1,13 +1,13 @@
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.Category;
 import com.hyjf.am.config.dao.model.auto.ContentHelp;
 import com.hyjf.am.resquest.admin.CategoryBeanRequest;
 import com.hyjf.am.resquest.admin.ContentHelpBeanRequest;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
-
-import java.util.List;
 
 /**
  * @Auther: walter.limeng

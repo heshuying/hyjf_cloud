@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspFqzMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="identityAuth" property="identityauth" jdbcType="VARCHAR" />
+    <result column="identityAndPhotoAuth" property="identityandphotoauth" jdbcType="VARCHAR" />
+    <result column="nameWithCardAuth" property="namewithcardauth" jdbcType="VARCHAR" />
+    <result column="nameIdentityCardAuth" property="nameidentitycardauth" jdbcType="VARCHAR" />
+    <result column="degreeCode" property="degreecode" jdbcType="VARCHAR" />
+    <result column="mspApply" property="mspapply" jdbcType="VARCHAR" />
+    <result column="mspContract" property="mspcontract" jdbcType="VARCHAR" />
+    <result column="mspEndContract" property="mspendcontract" jdbcType="VARCHAR" />
+    <result column="mspBlacklist" property="mspblacklist" jdbcType="VARCHAR" />
+    <result column="mspScore" property="mspscore" jdbcType="VARCHAR" />
+    <result column="countRiskBlack" property="countriskblack" jdbcType="VARCHAR" />
+    <result column="mspBlack" property="mspblack" jdbcType="VARCHAR" />
+    <result column="internetBlack" property="internetblack" jdbcType="VARCHAR" />
+    <result column="allwinBlack" property="allwinblack" jdbcType="VARCHAR" />
+    <result column="identityRisk1" property="identityrisk1" jdbcType="VARCHAR" />
+    <result column="identityRisk2" property="identityrisk2" jdbcType="VARCHAR" />
+    <result column="identityRisk3" property="identityrisk3" jdbcType="VARCHAR" />
+    <result column="countIdentityRisk" property="countidentityrisk" jdbcType="VARCHAR" />
+    <result column="phoneRisk1" property="phonerisk1" jdbcType="VARCHAR" />
+    <result column="phoneRisk2" property="phonerisk2" jdbcType="VARCHAR" />
+    <result column="phoneRisk3" property="phonerisk3" jdbcType="VARCHAR" />
+    <result column="phoneRisk4" property="phonerisk4" jdbcType="VARCHAR" />
+    <result column="phoneRisk5" property="phonerisk5" jdbcType="VARCHAR" />
+    <result column="phoneRisk6" property="phonerisk6" jdbcType="VARCHAR" />
+    <result column="phoneRisk7" property="phonerisk7" jdbcType="VARCHAR" />
+    <result column="countPhoneRisk" property="countphonerisk" jdbcType="VARCHAR" />
+    <result column="emailRisk1" property="emailrisk1" jdbcType="VARCHAR" />
+    <result column="emailRisk2" property="emailrisk2" jdbcType="VARCHAR" />
+    <result column="emailRisk3" property="emailrisk3" jdbcType="VARCHAR" />
+    <result column="emailRisk4" property="emailrisk4" jdbcType="VARCHAR" />
+    <result column="emailRisk5" property="emailrisk5" jdbcType="VARCHAR" />
+    <result column="emailRisk6" property="emailrisk6" jdbcType="VARCHAR" />
+    <result column="countEmailRisk" property="countemailrisk" jdbcType="VARCHAR" />
+    <result column="qqRisk1" property="qqrisk1" jdbcType="VARCHAR" />
+    <result column="qqRisk2" property="qqrisk2" jdbcType="VARCHAR" />
+    <result column="qqRisk3" property="qqrisk3" jdbcType="VARCHAR" />
+    <result column="qqRisk4" property="qqrisk4" jdbcType="VARCHAR" />
+    <result column="qqRisk5" property="qqrisk5" jdbcType="VARCHAR" />
+    <result column="countQqRisk" property="countqqrisk" jdbcType="VARCHAR" />
+    <result column="companyRisk1" property="companyrisk1" jdbcType="VARCHAR" />
+    <result column="companyRisk2" property="companyrisk2" jdbcType="VARCHAR" />
+    <result column="countCompanyRisk" property="countcompanyrisk" jdbcType="VARCHAR" />
+    <result column="applyAddressRisk1" property="applyaddressrisk1" jdbcType="VARCHAR" />
+    <result column="countAddressRisk" property="countaddressrisk" jdbcType="VARCHAR" />
+    <result column="queryTimesCode" property="querytimescode" jdbcType="VARCHAR" />
+    <result column="queryTimesInOneYea" property="querytimesinoneyea" jdbcType="VARCHAR" />
+    <result column="queryTimesInSix" property="querytimesinsix" jdbcType="VARCHAR" />
+    <result column="queryTimesInThree" property="querytimesinthree" jdbcType="VARCHAR" />
+    <result column="queryTimesInTwoYear" property="querytimesintwoyear" jdbcType="VARCHAR" />
+    <result column="haveSifa" property="havesifa" jdbcType="VARCHAR" />
+    <result column="sifaCode" property="sifacode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.user.dao.model.auto.MspFqz" extends="BaseResultMap" >
+    <result column="identityPhoto" property="identityphoto" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, identityAuth, identityAndPhotoAuth, nameWithCardAuth, nameIdentityCardAuth, 
+    degreeCode, mspApply, mspContract, mspEndContract, mspBlacklist, mspScore, countRiskBlack, 
+    mspBlack, internetBlack, allwinBlack, identityRisk1, identityRisk2, identityRisk3, 
+    countIdentityRisk, phoneRisk1, phoneRisk2, phoneRisk3, phoneRisk4, phoneRisk5, phoneRisk6, 
+    phoneRisk7, countPhoneRisk, emailRisk1, emailRisk2, emailRisk3, emailRisk4, emailRisk5, 
+    emailRisk6, countEmailRisk, qqRisk1, qqRisk2, qqRisk3, qqRisk4, qqRisk5, countQqRisk, 
+    companyRisk1, companyRisk2, countCompanyRisk, applyAddressRisk1, countAddressRisk, 
+    queryTimesCode, queryTimesInOneYea, queryTimesInSix, queryTimesInThree, queryTimesInTwoYear, 
+    haveSifa, sifaCode
+  </sql>
+  <sql id="Blob_Column_List" >
+    identityPhoto
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.user.dao.model.auto.MspFqzExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_msp_fqz
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspFqzExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_fqz
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_msp_fqz
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_fqz
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspFqzExample" >
+    delete from ht_msp_fqz
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_fqz (apply_id, identityAuth, identityAndPhotoAuth, 
+      nameWithCardAuth, nameIdentityCardAuth, 
+      degreeCode, mspApply, mspContract, 
+      mspEndContract, mspBlacklist, mspScore, 
+      countRiskBlack, mspBlack, internetBlack, 
+      allwinBlack, identityRisk1, identityRisk2, 
+      identityRisk3, countIdentityRisk, phoneRisk1, 
+      phoneRisk2, phoneRisk3, phoneRisk4, 
+      phoneRisk5, phoneRisk6, phoneRisk7, 
+      countPhoneRisk, emailRisk1, emailRisk2, 
+      emailRisk3, emailRisk4, emailRisk5, 
+      emailRisk6, countEmailRisk, qqRisk1, 
+      qqRisk2, qqRisk3, qqRisk4, 
+      qqRisk5, countQqRisk, companyRisk1, 
+      companyRisk2, countCompanyRisk, applyAddressRisk1, 
+      countAddressRisk, queryTimesCode, queryTimesInOneYea, 
+      queryTimesInSix, queryTimesInThree, queryTimesInTwoYear, 
+      haveSifa, sifaCode, identityPhoto
+      )
+    values (#{applyId,jdbcType=VARCHAR}, #{identityauth,jdbcType=VARCHAR}, #{identityandphotoauth,jdbcType=VARCHAR}, 
+      #{namewithcardauth,jdbcType=VARCHAR}, #{nameidentitycardauth,jdbcType=VARCHAR}, 
+      #{degreecode,jdbcType=VARCHAR}, #{mspapply,jdbcType=VARCHAR}, #{mspcontract,jdbcType=VARCHAR}, 
+      #{mspendcontract,jdbcType=VARCHAR}, #{mspblacklist,jdbcType=VARCHAR}, #{mspscore,jdbcType=VARCHAR}, 
+      #{countriskblack,jdbcType=VARCHAR}, #{mspblack,jdbcType=VARCHAR}, #{internetblack,jdbcType=VARCHAR}, 
+      #{allwinblack,jdbcType=VARCHAR}, #{identityrisk1,jdbcType=VARCHAR}, #{identityrisk2,jdbcType=VARCHAR}, 
+      #{identityrisk3,jdbcType=VARCHAR}, #{countidentityrisk,jdbcType=VARCHAR}, #{phonerisk1,jdbcType=VARCHAR}, 
+      #{phonerisk2,jdbcType=VARCHAR}, #{phonerisk3,jdbcType=VARCHAR}, #{phonerisk4,jdbcType=VARCHAR}, 
+      #{phonerisk5,jdbcType=VARCHAR}, #{phonerisk6,jdbcType=VARCHAR}, #{phonerisk7,jdbcType=VARCHAR}, 
+      #{countphonerisk,jdbcType=VARCHAR}, #{emailrisk1,jdbcType=VARCHAR}, #{emailrisk2,jdbcType=VARCHAR}, 
+      #{emailrisk3,jdbcType=VARCHAR}, #{emailrisk4,jdbcType=VARCHAR}, #{emailrisk5,jdbcType=VARCHAR}, 
+      #{emailrisk6,jdbcType=VARCHAR}, #{countemailrisk,jdbcType=VARCHAR}, #{qqrisk1,jdbcType=VARCHAR}, 
+      #{qqrisk2,jdbcType=VARCHAR}, #{qqrisk3,jdbcType=VARCHAR}, #{qqrisk4,jdbcType=VARCHAR}, 
+      #{qqrisk5,jdbcType=VARCHAR}, #{countqqrisk,jdbcType=VARCHAR}, #{companyrisk1,jdbcType=VARCHAR}, 
+      #{companyrisk2,jdbcType=VARCHAR}, #{countcompanyrisk,jdbcType=VARCHAR}, #{applyaddressrisk1,jdbcType=VARCHAR}, 
+      #{countaddressrisk,jdbcType=VARCHAR}, #{querytimescode,jdbcType=VARCHAR}, #{querytimesinoneyea,jdbcType=VARCHAR}, 
+      #{querytimesinsix,jdbcType=VARCHAR}, #{querytimesinthree,jdbcType=VARCHAR}, #{querytimesintwoyear,jdbcType=VARCHAR}, 
+      #{havesifa,jdbcType=VARCHAR}, #{sifacode,jdbcType=VARCHAR}, #{identityphoto,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_fqz
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="identityauth != null" >
+        identityAuth,
+      </if>
+      <if test="identityandphotoauth != null" >
+        identityAndPhotoAuth,
+      </if>
+      <if test="namewithcardauth != null" >
+        nameWithCardAuth,
+      </if>
+      <if test="nameidentitycardauth != null" >
+        nameIdentityCardAuth,
+      </if>
+      <if test="degreecode != null" >
+        degreeCode,
+      </if>
+      <if test="mspapply != null" >
+        mspApply,
+      </if>
+      <if test="mspcontract != null" >
+        mspContract,
+      </if>
+      <if test="mspendcontract != null" >
+        mspEndContract,
+      </if>
+      <if test="mspblacklist != null" >
+        mspBlacklist,
+      </if>
+      <if test="mspscore != null" >
+        mspScore,
+      </if>
+      <if test="countriskblack != null" >
+        countRiskBlack,
+      </if>
+      <if test="mspblack != null" >
+        mspBlack,
+      </if>
+      <if test="internetblack != null" >
+        internetBlack,
+      </if>
+      <if test="allwinblack != null" >
+        allwinBlack,
+      </if>
+      <if test="identityrisk1 != null" >
+        identityRisk1,
+      </if>
+      <if test="identityrisk2 != null" >
+        identityRisk2,
+      </if>
+      <if test="identityrisk3 != null" >
+        identityRisk3,
+      </if>
+      <if test="countidentityrisk != null" >
+        countIdentityRisk,
+      </if>
+      <if test="phonerisk1 != null" >
+        phoneRisk1,
+      </if>
+      <if test="phonerisk2 != null" >
+        phoneRisk2,
+      </if>
+      <if test="phonerisk3 != null" >
+        phoneRisk3,
+      </if>
+      <if test="phonerisk4 != null" >
+        phoneRisk4,
+      </if>
+      <if test="phonerisk5 != null" >
+        phoneRisk5,
+      </if>
+      <if test="phonerisk6 != null" >
+        phoneRisk6,
+      </if>
+      <if test="phonerisk7 != null" >
+        phoneRisk7,
+      </if>
+      <if test="countphonerisk != null" >
+        countPhoneRisk,
+      </if>
+      <if test="emailrisk1 != null" >
+        emailRisk1,
+      </if>
+      <if test="emailrisk2 != null" >
+        emailRisk2,
+      </if>
+      <if test="emailrisk3 != null" >
+        emailRisk3,
+      </if>
+      <if test="emailrisk4 != null" >
+        emailRisk4,
+      </if>
+      <if test="emailrisk5 != null" >
+        emailRisk5,
+      </if>
+      <if test="emailrisk6 != null" >
+        emailRisk6,
+      </if>
+      <if test="countemailrisk != null" >
+        countEmailRisk,
+      </if>
+      <if test="qqrisk1 != null" >
+        qqRisk1,
+      </if>
+      <if test="qqrisk2 != null" >
+        qqRisk2,
+      </if>
+      <if test="qqrisk3 != null" >
+        qqRisk3,
+      </if>
+      <if test="qqrisk4 != null" >
+        qqRisk4,
+      </if>
+      <if test="qqrisk5 != null" >
+        qqRisk5,
+      </if>
+      <if test="countqqrisk != null" >
+        countQqRisk,
+      </if>
+      <if test="companyrisk1 != null" >
+        companyRisk1,
+      </if>
+      <if test="companyrisk2 != null" >
+        companyRisk2,
+      </if>
+      <if test="countcompanyrisk != null" >
+        countCompanyRisk,
+      </if>
+      <if test="applyaddressrisk1 != null" >
+        applyAddressRisk1,
+      </if>
+      <if test="countaddressrisk != null" >
+        countAddressRisk,
+      </if>
+      <if test="querytimescode != null" >
+        queryTimesCode,
+      </if>
+      <if test="querytimesinoneyea != null" >
+        queryTimesInOneYea,
+      </if>
+      <if test="querytimesinsix != null" >
+        queryTimesInSix,
+      </if>
+      <if test="querytimesinthree != null" >
+        queryTimesInThree,
+      </if>
+      <if test="querytimesintwoyear != null" >
+        queryTimesInTwoYear,
+      </if>
+      <if test="havesifa != null" >
+        haveSifa,
+      </if>
+      <if test="sifacode != null" >
+        sifaCode,
+      </if>
+      <if test="identityphoto != null" >
+        identityPhoto,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="identityauth != null" >
+        #{identityauth,jdbcType=VARCHAR},
+      </if>
+      <if test="identityandphotoauth != null" >
+        #{identityandphotoauth,jdbcType=VARCHAR},
+      </if>
+      <if test="namewithcardauth != null" >
+        #{namewithcardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="nameidentitycardauth != null" >
+        #{nameidentitycardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="degreecode != null" >
+        #{degreecode,jdbcType=VARCHAR},
+      </if>
+      <if test="mspapply != null" >
+        #{mspapply,jdbcType=VARCHAR},
+      </if>
+      <if test="mspcontract != null" >
+        #{mspcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="mspendcontract != null" >
+        #{mspendcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="mspblacklist != null" >
+        #{mspblacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="mspscore != null" >
+        #{mspscore,jdbcType=VARCHAR},
+      </if>
+      <if test="countriskblack != null" >
+        #{countriskblack,jdbcType=VARCHAR},
+      </if>
+      <if test="mspblack != null" >
+        #{mspblack,jdbcType=VARCHAR},
+      </if>
+      <if test="internetblack != null" >
+        #{internetblack,jdbcType=VARCHAR},
+      </if>
+      <if test="allwinblack != null" >
+        #{allwinblack,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk1 != null" >
+        #{identityrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk2 != null" >
+        #{identityrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk3 != null" >
+        #{identityrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="countidentityrisk != null" >
+        #{countidentityrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk1 != null" >
+        #{phonerisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk2 != null" >
+        #{phonerisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk3 != null" >
+        #{phonerisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk4 != null" >
+        #{phonerisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk5 != null" >
+        #{phonerisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk6 != null" >
+        #{phonerisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk7 != null" >
+        #{phonerisk7,jdbcType=VARCHAR},
+      </if>
+      <if test="countphonerisk != null" >
+        #{countphonerisk,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk1 != null" >
+        #{emailrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk2 != null" >
+        #{emailrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk3 != null" >
+        #{emailrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk4 != null" >
+        #{emailrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk5 != null" >
+        #{emailrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk6 != null" >
+        #{emailrisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="countemailrisk != null" >
+        #{countemailrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk1 != null" >
+        #{qqrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk2 != null" >
+        #{qqrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk3 != null" >
+        #{qqrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk4 != null" >
+        #{qqrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk5 != null" >
+        #{qqrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="countqqrisk != null" >
+        #{countqqrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="companyrisk1 != null" >
+        #{companyrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="companyrisk2 != null" >
+        #{companyrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="countcompanyrisk != null" >
+        #{countcompanyrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="applyaddressrisk1 != null" >
+        #{applyaddressrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="countaddressrisk != null" >
+        #{countaddressrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimescode != null" >
+        #{querytimescode,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinoneyea != null" >
+        #{querytimesinoneyea,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinsix != null" >
+        #{querytimesinsix,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinthree != null" >
+        #{querytimesinthree,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesintwoyear != null" >
+        #{querytimesintwoyear,jdbcType=VARCHAR},
+      </if>
+      <if test="havesifa != null" >
+        #{havesifa,jdbcType=VARCHAR},
+      </if>
+      <if test="sifacode != null" >
+        #{sifacode,jdbcType=VARCHAR},
+      </if>
+      <if test="identityphoto != null" >
+        #{identityphoto,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspFqzExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_fqz
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_fqz
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityauth != null" >
+        identityAuth = #{record.identityauth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityandphotoauth != null" >
+        identityAndPhotoAuth = #{record.identityandphotoauth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.namewithcardauth != null" >
+        nameWithCardAuth = #{record.namewithcardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nameidentitycardauth != null" >
+        nameIdentityCardAuth = #{record.nameidentitycardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.degreecode != null" >
+        degreeCode = #{record.degreecode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspapply != null" >
+        mspApply = #{record.mspapply,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspcontract != null" >
+        mspContract = #{record.mspcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspendcontract != null" >
+        mspEndContract = #{record.mspendcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspblacklist != null" >
+        mspBlacklist = #{record.mspblacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspscore != null" >
+        mspScore = #{record.mspscore,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countriskblack != null" >
+        countRiskBlack = #{record.countriskblack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mspblack != null" >
+        mspBlack = #{record.mspblack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.internetblack != null" >
+        internetBlack = #{record.internetblack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.allwinblack != null" >
+        allwinBlack = #{record.allwinblack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityrisk1 != null" >
+        identityRisk1 = #{record.identityrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityrisk2 != null" >
+        identityRisk2 = #{record.identityrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityrisk3 != null" >
+        identityRisk3 = #{record.identityrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countidentityrisk != null" >
+        countIdentityRisk = #{record.countidentityrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk1 != null" >
+        phoneRisk1 = #{record.phonerisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk2 != null" >
+        phoneRisk2 = #{record.phonerisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk3 != null" >
+        phoneRisk3 = #{record.phonerisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk4 != null" >
+        phoneRisk4 = #{record.phonerisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk5 != null" >
+        phoneRisk5 = #{record.phonerisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk6 != null" >
+        phoneRisk6 = #{record.phonerisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phonerisk7 != null" >
+        phoneRisk7 = #{record.phonerisk7,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countphonerisk != null" >
+        countPhoneRisk = #{record.countphonerisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk1 != null" >
+        emailRisk1 = #{record.emailrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk2 != null" >
+        emailRisk2 = #{record.emailrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk3 != null" >
+        emailRisk3 = #{record.emailrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk4 != null" >
+        emailRisk4 = #{record.emailrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk5 != null" >
+        emailRisk5 = #{record.emailrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailrisk6 != null" >
+        emailRisk6 = #{record.emailrisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countemailrisk != null" >
+        countEmailRisk = #{record.countemailrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqrisk1 != null" >
+        qqRisk1 = #{record.qqrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqrisk2 != null" >
+        qqRisk2 = #{record.qqrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqrisk3 != null" >
+        qqRisk3 = #{record.qqrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqrisk4 != null" >
+        qqRisk4 = #{record.qqrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqrisk5 != null" >
+        qqRisk5 = #{record.qqrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countqqrisk != null" >
+        countQqRisk = #{record.countqqrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyrisk1 != null" >
+        companyRisk1 = #{record.companyrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyrisk2 != null" >
+        companyRisk2 = #{record.companyrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countcompanyrisk != null" >
+        countCompanyRisk = #{record.countcompanyrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyaddressrisk1 != null" >
+        applyAddressRisk1 = #{record.applyaddressrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countaddressrisk != null" >
+        countAddressRisk = #{record.countaddressrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querytimescode != null" >
+        queryTimesCode = #{record.querytimescode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querytimesinoneyea != null" >
+        queryTimesInOneYea = #{record.querytimesinoneyea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querytimesinsix != null" >
+        queryTimesInSix = #{record.querytimesinsix,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querytimesinthree != null" >
+        queryTimesInThree = #{record.querytimesinthree,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querytimesintwoyear != null" >
+        queryTimesInTwoYear = #{record.querytimesintwoyear,jdbcType=VARCHAR},
+      </if>
+      <if test="record.havesifa != null" >
+        haveSifa = #{record.havesifa,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sifacode != null" >
+        sifaCode = #{record.sifacode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.identityphoto != null" >
+        identityPhoto = #{record.identityphoto,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_msp_fqz
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      identityAuth = #{record.identityauth,jdbcType=VARCHAR},
+      identityAndPhotoAuth = #{record.identityandphotoauth,jdbcType=VARCHAR},
+      nameWithCardAuth = #{record.namewithcardauth,jdbcType=VARCHAR},
+      nameIdentityCardAuth = #{record.nameidentitycardauth,jdbcType=VARCHAR},
+      degreeCode = #{record.degreecode,jdbcType=VARCHAR},
+      mspApply = #{record.mspapply,jdbcType=VARCHAR},
+      mspContract = #{record.mspcontract,jdbcType=VARCHAR},
+      mspEndContract = #{record.mspendcontract,jdbcType=VARCHAR},
+      mspBlacklist = #{record.mspblacklist,jdbcType=VARCHAR},
+      mspScore = #{record.mspscore,jdbcType=VARCHAR},
+      countRiskBlack = #{record.countriskblack,jdbcType=VARCHAR},
+      mspBlack = #{record.mspblack,jdbcType=VARCHAR},
+      internetBlack = #{record.internetblack,jdbcType=VARCHAR},
+      allwinBlack = #{record.allwinblack,jdbcType=VARCHAR},
+      identityRisk1 = #{record.identityrisk1,jdbcType=VARCHAR},
+      identityRisk2 = #{record.identityrisk2,jdbcType=VARCHAR},
+      identityRisk3 = #{record.identityrisk3,jdbcType=VARCHAR},
+      countIdentityRisk = #{record.countidentityrisk,jdbcType=VARCHAR},
+      phoneRisk1 = #{record.phonerisk1,jdbcType=VARCHAR},
+      phoneRisk2 = #{record.phonerisk2,jdbcType=VARCHAR},
+      phoneRisk3 = #{record.phonerisk3,jdbcType=VARCHAR},
+      phoneRisk4 = #{record.phonerisk4,jdbcType=VARCHAR},
+      phoneRisk5 = #{record.phonerisk5,jdbcType=VARCHAR},
+      phoneRisk6 = #{record.phonerisk6,jdbcType=VARCHAR},
+      phoneRisk7 = #{record.phonerisk7,jdbcType=VARCHAR},
+      countPhoneRisk = #{record.countphonerisk,jdbcType=VARCHAR},
+      emailRisk1 = #{record.emailrisk1,jdbcType=VARCHAR},
+      emailRisk2 = #{record.emailrisk2,jdbcType=VARCHAR},
+      emailRisk3 = #{record.emailrisk3,jdbcType=VARCHAR},
+      emailRisk4 = #{record.emailrisk4,jdbcType=VARCHAR},
+      emailRisk5 = #{record.emailrisk5,jdbcType=VARCHAR},
+      emailRisk6 = #{record.emailrisk6,jdbcType=VARCHAR},
+      countEmailRisk = #{record.countemailrisk,jdbcType=VARCHAR},
+      qqRisk1 = #{record.qqrisk1,jdbcType=VARCHAR},
+      qqRisk2 = #{record.qqrisk2,jdbcType=VARCHAR},
+      qqRisk3 = #{record.qqrisk3,jdbcType=VARCHAR},
+      qqRisk4 = #{record.qqrisk4,jdbcType=VARCHAR},
+      qqRisk5 = #{record.qqrisk5,jdbcType=VARCHAR},
+      countQqRisk = #{record.countqqrisk,jdbcType=VARCHAR},
+      companyRisk1 = #{record.companyrisk1,jdbcType=VARCHAR},
+      companyRisk2 = #{record.companyrisk2,jdbcType=VARCHAR},
+      countCompanyRisk = #{record.countcompanyrisk,jdbcType=VARCHAR},
+      applyAddressRisk1 = #{record.applyaddressrisk1,jdbcType=VARCHAR},
+      countAddressRisk = #{record.countaddressrisk,jdbcType=VARCHAR},
+      queryTimesCode = #{record.querytimescode,jdbcType=VARCHAR},
+      queryTimesInOneYea = #{record.querytimesinoneyea,jdbcType=VARCHAR},
+      queryTimesInSix = #{record.querytimesinsix,jdbcType=VARCHAR},
+      queryTimesInThree = #{record.querytimesinthree,jdbcType=VARCHAR},
+      queryTimesInTwoYear = #{record.querytimesintwoyear,jdbcType=VARCHAR},
+      haveSifa = #{record.havesifa,jdbcType=VARCHAR},
+      sifaCode = #{record.sifacode,jdbcType=VARCHAR},
+      identityPhoto = #{record.identityphoto,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_fqz
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      identityAuth = #{record.identityauth,jdbcType=VARCHAR},
+      identityAndPhotoAuth = #{record.identityandphotoauth,jdbcType=VARCHAR},
+      nameWithCardAuth = #{record.namewithcardauth,jdbcType=VARCHAR},
+      nameIdentityCardAuth = #{record.nameidentitycardauth,jdbcType=VARCHAR},
+      degreeCode = #{record.degreecode,jdbcType=VARCHAR},
+      mspApply = #{record.mspapply,jdbcType=VARCHAR},
+      mspContract = #{record.mspcontract,jdbcType=VARCHAR},
+      mspEndContract = #{record.mspendcontract,jdbcType=VARCHAR},
+      mspBlacklist = #{record.mspblacklist,jdbcType=VARCHAR},
+      mspScore = #{record.mspscore,jdbcType=VARCHAR},
+      countRiskBlack = #{record.countriskblack,jdbcType=VARCHAR},
+      mspBlack = #{record.mspblack,jdbcType=VARCHAR},
+      internetBlack = #{record.internetblack,jdbcType=VARCHAR},
+      allwinBlack = #{record.allwinblack,jdbcType=VARCHAR},
+      identityRisk1 = #{record.identityrisk1,jdbcType=VARCHAR},
+      identityRisk2 = #{record.identityrisk2,jdbcType=VARCHAR},
+      identityRisk3 = #{record.identityrisk3,jdbcType=VARCHAR},
+      countIdentityRisk = #{record.countidentityrisk,jdbcType=VARCHAR},
+      phoneRisk1 = #{record.phonerisk1,jdbcType=VARCHAR},
+      phoneRisk2 = #{record.phonerisk2,jdbcType=VARCHAR},
+      phoneRisk3 = #{record.phonerisk3,jdbcType=VARCHAR},
+      phoneRisk4 = #{record.phonerisk4,jdbcType=VARCHAR},
+      phoneRisk5 = #{record.phonerisk5,jdbcType=VARCHAR},
+      phoneRisk6 = #{record.phonerisk6,jdbcType=VARCHAR},
+      phoneRisk7 = #{record.phonerisk7,jdbcType=VARCHAR},
+      countPhoneRisk = #{record.countphonerisk,jdbcType=VARCHAR},
+      emailRisk1 = #{record.emailrisk1,jdbcType=VARCHAR},
+      emailRisk2 = #{record.emailrisk2,jdbcType=VARCHAR},
+      emailRisk3 = #{record.emailrisk3,jdbcType=VARCHAR},
+      emailRisk4 = #{record.emailrisk4,jdbcType=VARCHAR},
+      emailRisk5 = #{record.emailrisk5,jdbcType=VARCHAR},
+      emailRisk6 = #{record.emailrisk6,jdbcType=VARCHAR},
+      countEmailRisk = #{record.countemailrisk,jdbcType=VARCHAR},
+      qqRisk1 = #{record.qqrisk1,jdbcType=VARCHAR},
+      qqRisk2 = #{record.qqrisk2,jdbcType=VARCHAR},
+      qqRisk3 = #{record.qqrisk3,jdbcType=VARCHAR},
+      qqRisk4 = #{record.qqrisk4,jdbcType=VARCHAR},
+      qqRisk5 = #{record.qqrisk5,jdbcType=VARCHAR},
+      countQqRisk = #{record.countqqrisk,jdbcType=VARCHAR},
+      companyRisk1 = #{record.companyrisk1,jdbcType=VARCHAR},
+      companyRisk2 = #{record.companyrisk2,jdbcType=VARCHAR},
+      countCompanyRisk = #{record.countcompanyrisk,jdbcType=VARCHAR},
+      applyAddressRisk1 = #{record.applyaddressrisk1,jdbcType=VARCHAR},
+      countAddressRisk = #{record.countaddressrisk,jdbcType=VARCHAR},
+      queryTimesCode = #{record.querytimescode,jdbcType=VARCHAR},
+      queryTimesInOneYea = #{record.querytimesinoneyea,jdbcType=VARCHAR},
+      queryTimesInSix = #{record.querytimesinsix,jdbcType=VARCHAR},
+      queryTimesInThree = #{record.querytimesinthree,jdbcType=VARCHAR},
+      queryTimesInTwoYear = #{record.querytimesintwoyear,jdbcType=VARCHAR},
+      haveSifa = #{record.havesifa,jdbcType=VARCHAR},
+      sifaCode = #{record.sifacode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    update ht_msp_fqz
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="identityauth != null" >
+        identityAuth = #{identityauth,jdbcType=VARCHAR},
+      </if>
+      <if test="identityandphotoauth != null" >
+        identityAndPhotoAuth = #{identityandphotoauth,jdbcType=VARCHAR},
+      </if>
+      <if test="namewithcardauth != null" >
+        nameWithCardAuth = #{namewithcardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="nameidentitycardauth != null" >
+        nameIdentityCardAuth = #{nameidentitycardauth,jdbcType=VARCHAR},
+      </if>
+      <if test="degreecode != null" >
+        degreeCode = #{degreecode,jdbcType=VARCHAR},
+      </if>
+      <if test="mspapply != null" >
+        mspApply = #{mspapply,jdbcType=VARCHAR},
+      </if>
+      <if test="mspcontract != null" >
+        mspContract = #{mspcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="mspendcontract != null" >
+        mspEndContract = #{mspendcontract,jdbcType=VARCHAR},
+      </if>
+      <if test="mspblacklist != null" >
+        mspBlacklist = #{mspblacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="mspscore != null" >
+        mspScore = #{mspscore,jdbcType=VARCHAR},
+      </if>
+      <if test="countriskblack != null" >
+        countRiskBlack = #{countriskblack,jdbcType=VARCHAR},
+      </if>
+      <if test="mspblack != null" >
+        mspBlack = #{mspblack,jdbcType=VARCHAR},
+      </if>
+      <if test="internetblack != null" >
+        internetBlack = #{internetblack,jdbcType=VARCHAR},
+      </if>
+      <if test="allwinblack != null" >
+        allwinBlack = #{allwinblack,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk1 != null" >
+        identityRisk1 = #{identityrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk2 != null" >
+        identityRisk2 = #{identityrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="identityrisk3 != null" >
+        identityRisk3 = #{identityrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="countidentityrisk != null" >
+        countIdentityRisk = #{countidentityrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk1 != null" >
+        phoneRisk1 = #{phonerisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk2 != null" >
+        phoneRisk2 = #{phonerisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk3 != null" >
+        phoneRisk3 = #{phonerisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk4 != null" >
+        phoneRisk4 = #{phonerisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk5 != null" >
+        phoneRisk5 = #{phonerisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk6 != null" >
+        phoneRisk6 = #{phonerisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="phonerisk7 != null" >
+        phoneRisk7 = #{phonerisk7,jdbcType=VARCHAR},
+      </if>
+      <if test="countphonerisk != null" >
+        countPhoneRisk = #{countphonerisk,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk1 != null" >
+        emailRisk1 = #{emailrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk2 != null" >
+        emailRisk2 = #{emailrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk3 != null" >
+        emailRisk3 = #{emailrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk4 != null" >
+        emailRisk4 = #{emailrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk5 != null" >
+        emailRisk5 = #{emailrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="emailrisk6 != null" >
+        emailRisk6 = #{emailrisk6,jdbcType=VARCHAR},
+      </if>
+      <if test="countemailrisk != null" >
+        countEmailRisk = #{countemailrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk1 != null" >
+        qqRisk1 = #{qqrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk2 != null" >
+        qqRisk2 = #{qqrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk3 != null" >
+        qqRisk3 = #{qqrisk3,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk4 != null" >
+        qqRisk4 = #{qqrisk4,jdbcType=VARCHAR},
+      </if>
+      <if test="qqrisk5 != null" >
+        qqRisk5 = #{qqrisk5,jdbcType=VARCHAR},
+      </if>
+      <if test="countqqrisk != null" >
+        countQqRisk = #{countqqrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="companyrisk1 != null" >
+        companyRisk1 = #{companyrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="companyrisk2 != null" >
+        companyRisk2 = #{companyrisk2,jdbcType=VARCHAR},
+      </if>
+      <if test="countcompanyrisk != null" >
+        countCompanyRisk = #{countcompanyrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="applyaddressrisk1 != null" >
+        applyAddressRisk1 = #{applyaddressrisk1,jdbcType=VARCHAR},
+      </if>
+      <if test="countaddressrisk != null" >
+        countAddressRisk = #{countaddressrisk,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimescode != null" >
+        queryTimesCode = #{querytimescode,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinoneyea != null" >
+        queryTimesInOneYea = #{querytimesinoneyea,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinsix != null" >
+        queryTimesInSix = #{querytimesinsix,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesinthree != null" >
+        queryTimesInThree = #{querytimesinthree,jdbcType=VARCHAR},
+      </if>
+      <if test="querytimesintwoyear != null" >
+        queryTimesInTwoYear = #{querytimesintwoyear,jdbcType=VARCHAR},
+      </if>
+      <if test="havesifa != null" >
+        haveSifa = #{havesifa,jdbcType=VARCHAR},
+      </if>
+      <if test="sifacode != null" >
+        sifaCode = #{sifacode,jdbcType=VARCHAR},
+      </if>
+      <if test="identityphoto != null" >
+        identityPhoto = #{identityphoto,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    update ht_msp_fqz
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      identityAuth = #{identityauth,jdbcType=VARCHAR},
+      identityAndPhotoAuth = #{identityandphotoauth,jdbcType=VARCHAR},
+      nameWithCardAuth = #{namewithcardauth,jdbcType=VARCHAR},
+      nameIdentityCardAuth = #{nameidentitycardauth,jdbcType=VARCHAR},
+      degreeCode = #{degreecode,jdbcType=VARCHAR},
+      mspApply = #{mspapply,jdbcType=VARCHAR},
+      mspContract = #{mspcontract,jdbcType=VARCHAR},
+      mspEndContract = #{mspendcontract,jdbcType=VARCHAR},
+      mspBlacklist = #{mspblacklist,jdbcType=VARCHAR},
+      mspScore = #{mspscore,jdbcType=VARCHAR},
+      countRiskBlack = #{countriskblack,jdbcType=VARCHAR},
+      mspBlack = #{mspblack,jdbcType=VARCHAR},
+      internetBlack = #{internetblack,jdbcType=VARCHAR},
+      allwinBlack = #{allwinblack,jdbcType=VARCHAR},
+      identityRisk1 = #{identityrisk1,jdbcType=VARCHAR},
+      identityRisk2 = #{identityrisk2,jdbcType=VARCHAR},
+      identityRisk3 = #{identityrisk3,jdbcType=VARCHAR},
+      countIdentityRisk = #{countidentityrisk,jdbcType=VARCHAR},
+      phoneRisk1 = #{phonerisk1,jdbcType=VARCHAR},
+      phoneRisk2 = #{phonerisk2,jdbcType=VARCHAR},
+      phoneRisk3 = #{phonerisk3,jdbcType=VARCHAR},
+      phoneRisk4 = #{phonerisk4,jdbcType=VARCHAR},
+      phoneRisk5 = #{phonerisk5,jdbcType=VARCHAR},
+      phoneRisk6 = #{phonerisk6,jdbcType=VARCHAR},
+      phoneRisk7 = #{phonerisk7,jdbcType=VARCHAR},
+      countPhoneRisk = #{countphonerisk,jdbcType=VARCHAR},
+      emailRisk1 = #{emailrisk1,jdbcType=VARCHAR},
+      emailRisk2 = #{emailrisk2,jdbcType=VARCHAR},
+      emailRisk3 = #{emailrisk3,jdbcType=VARCHAR},
+      emailRisk4 = #{emailrisk4,jdbcType=VARCHAR},
+      emailRisk5 = #{emailrisk5,jdbcType=VARCHAR},
+      emailRisk6 = #{emailrisk6,jdbcType=VARCHAR},
+      countEmailRisk = #{countemailrisk,jdbcType=VARCHAR},
+      qqRisk1 = #{qqrisk1,jdbcType=VARCHAR},
+      qqRisk2 = #{qqrisk2,jdbcType=VARCHAR},
+      qqRisk3 = #{qqrisk3,jdbcType=VARCHAR},
+      qqRisk4 = #{qqrisk4,jdbcType=VARCHAR},
+      qqRisk5 = #{qqrisk5,jdbcType=VARCHAR},
+      countQqRisk = #{countqqrisk,jdbcType=VARCHAR},
+      companyRisk1 = #{companyrisk1,jdbcType=VARCHAR},
+      companyRisk2 = #{companyrisk2,jdbcType=VARCHAR},
+      countCompanyRisk = #{countcompanyrisk,jdbcType=VARCHAR},
+      applyAddressRisk1 = #{applyaddressrisk1,jdbcType=VARCHAR},
+      countAddressRisk = #{countaddressrisk,jdbcType=VARCHAR},
+      queryTimesCode = #{querytimescode,jdbcType=VARCHAR},
+      queryTimesInOneYea = #{querytimesinoneyea,jdbcType=VARCHAR},
+      queryTimesInSix = #{querytimesinsix,jdbcType=VARCHAR},
+      queryTimesInThree = #{querytimesinthree,jdbcType=VARCHAR},
+      queryTimesInTwoYear = #{querytimesintwoyear,jdbcType=VARCHAR},
+      haveSifa = #{havesifa,jdbcType=VARCHAR},
+      sifaCode = #{sifacode,jdbcType=VARCHAR},
+      identityPhoto = #{identityphoto,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspFqz" >
+    update ht_msp_fqz
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      identityAuth = #{identityauth,jdbcType=VARCHAR},
+      identityAndPhotoAuth = #{identityandphotoauth,jdbcType=VARCHAR},
+      nameWithCardAuth = #{namewithcardauth,jdbcType=VARCHAR},
+      nameIdentityCardAuth = #{nameidentitycardauth,jdbcType=VARCHAR},
+      degreeCode = #{degreecode,jdbcType=VARCHAR},
+      mspApply = #{mspapply,jdbcType=VARCHAR},
+      mspContract = #{mspcontract,jdbcType=VARCHAR},
+      mspEndContract = #{mspendcontract,jdbcType=VARCHAR},
+      mspBlacklist = #{mspblacklist,jdbcType=VARCHAR},
+      mspScore = #{mspscore,jdbcType=VARCHAR},
+      countRiskBlack = #{countriskblack,jdbcType=VARCHAR},
+      mspBlack = #{mspblack,jdbcType=VARCHAR},
+      internetBlack = #{internetblack,jdbcType=VARCHAR},
+      allwinBlack = #{allwinblack,jdbcType=VARCHAR},
+      identityRisk1 = #{identityrisk1,jdbcType=VARCHAR},
+      identityRisk2 = #{identityrisk2,jdbcType=VARCHAR},
+      identityRisk3 = #{identityrisk3,jdbcType=VARCHAR},
+      countIdentityRisk = #{countidentityrisk,jdbcType=VARCHAR},
+      phoneRisk1 = #{phonerisk1,jdbcType=VARCHAR},
+      phoneRisk2 = #{phonerisk2,jdbcType=VARCHAR},
+      phoneRisk3 = #{phonerisk3,jdbcType=VARCHAR},
+      phoneRisk4 = #{phonerisk4,jdbcType=VARCHAR},
+      phoneRisk5 = #{phonerisk5,jdbcType=VARCHAR},
+      phoneRisk6 = #{phonerisk6,jdbcType=VARCHAR},
+      phoneRisk7 = #{phonerisk7,jdbcType=VARCHAR},
+      countPhoneRisk = #{countphonerisk,jdbcType=VARCHAR},
+      emailRisk1 = #{emailrisk1,jdbcType=VARCHAR},
+      emailRisk2 = #{emailrisk2,jdbcType=VARCHAR},
+      emailRisk3 = #{emailrisk3,jdbcType=VARCHAR},
+      emailRisk4 = #{emailrisk4,jdbcType=VARCHAR},
+      emailRisk5 = #{emailrisk5,jdbcType=VARCHAR},
+      emailRisk6 = #{emailrisk6,jdbcType=VARCHAR},
+      countEmailRisk = #{countemailrisk,jdbcType=VARCHAR},
+      qqRisk1 = #{qqrisk1,jdbcType=VARCHAR},
+      qqRisk2 = #{qqrisk2,jdbcType=VARCHAR},
+      qqRisk3 = #{qqrisk3,jdbcType=VARCHAR},
+      qqRisk4 = #{qqrisk4,jdbcType=VARCHAR},
+      qqRisk5 = #{qqrisk5,jdbcType=VARCHAR},
+      countQqRisk = #{countqqrisk,jdbcType=VARCHAR},
+      companyRisk1 = #{companyrisk1,jdbcType=VARCHAR},
+      companyRisk2 = #{companyrisk2,jdbcType=VARCHAR},
+      countCompanyRisk = #{countcompanyrisk,jdbcType=VARCHAR},
+      applyAddressRisk1 = #{applyaddressrisk1,jdbcType=VARCHAR},
+      countAddressRisk = #{countaddressrisk,jdbcType=VARCHAR},
+      queryTimesCode = #{querytimescode,jdbcType=VARCHAR},
+      queryTimesInOneYea = #{querytimesinoneyea,jdbcType=VARCHAR},
+      queryTimesInSix = #{querytimesinsix,jdbcType=VARCHAR},
+      queryTimesInThree = #{querytimesinthree,jdbcType=VARCHAR},
+      queryTimesInTwoYear = #{querytimesintwoyear,jdbcType=VARCHAR},
+      haveSifa = #{havesifa,jdbcType=VARCHAR},
+      sifaCode = #{sifacode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

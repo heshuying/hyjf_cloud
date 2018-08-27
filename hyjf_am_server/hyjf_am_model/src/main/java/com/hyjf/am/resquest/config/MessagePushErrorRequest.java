@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,6 +38,7 @@ public class MessagePushErrorRequest extends BasePage implements Serializable {
      */
     @ApiModelProperty("消息编码查询")
     private String msgCodeSrch;
+
     /**
      * 时间查询
      */
@@ -166,6 +169,38 @@ public class MessagePushErrorRequest extends BasePage implements Serializable {
 
     @ApiModelProperty("极光推送专业版返回的ID2")
     private String msgJpushZyb2Id;
+
+    @ApiModelProperty("开始页")
+    private int limitStart;
+
+    @ApiModelProperty("结束页")
+    private int limitEnd;
+
+    private List<MessagePushMsgHistoryVO> recordList;
+
+    public List<MessagePushMsgHistoryVO> getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(List<MessagePushMsgHistoryVO> recordList) {
+        this.recordList = recordList;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
 
     public Integer getId() {
         return id;

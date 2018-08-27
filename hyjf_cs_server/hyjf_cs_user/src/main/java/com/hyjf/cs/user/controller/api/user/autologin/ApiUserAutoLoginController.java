@@ -4,14 +4,13 @@
 package com.hyjf.cs.user.controller.api.user.autologin;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.NmcfLoginRequest;
+import com.hyjf.cs.user.bean.NmcfLoginRequestBean;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.util.ApiSignUtil;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author: sunpeikai
@@ -41,7 +39,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
 
     @ApiOperation(value = "获取登录参数",notes = "获取登录参数")
     @PostMapping(value = "/nmcfThirdLogin")
-    public JSONObject nmcfThirdLogin(@RequestBody NmcfLoginRequest request){
+    public JSONObject nmcfThirdLogin(@RequestBody NmcfLoginRequestBean request){
 
         JSONObject result = new JSONObject();
 
@@ -75,6 +73,9 @@ public class ApiUserAutoLoginController extends BaseUserController {
         //TODO:这里还没做
         //WebViewUser webUser = loginService.getWebViewUserByUserId(userId);
         //WebUtils.sessionLogin(request, response, webUser);
+        //loginService.login();
+        WebViewUserVO userVO = loginService.getWebViewUserByUserId(userId);
+        loginService.setToken(userVO);
 
         // 先跳转纳觅传过来的url
         if (request.getRetUrl() != null) {
@@ -109,7 +110,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
      * @param
      * @return
      */
-    private void checkNmcfPostBean(NmcfLoginRequest bean) {
+    private void checkNmcfPostBean(NmcfLoginRequestBean bean) {
         //传入信息验证
         CheckUtil.check(Validator.isNotNull(bean.getTimestamp()), MsgEnum.ERR_OBJECT_REQUIRED, "时间戳");
         CheckUtil.check(Validator.isNotNull(bean.getInstCode()),  MsgEnum.ERR_OBJECT_REQUIRED, "机构编号");
@@ -123,7 +124,7 @@ public class ApiUserAutoLoginController extends BaseUserController {
      * @param
      * @return
      */
-    private int userIdDecrypt(NmcfLoginRequest bean){
+    private int userIdDecrypt(NmcfLoginRequestBean bean){
         // RAC解密
         String str = decrypt(bean.getUserId());
         // 解密结果数字验证

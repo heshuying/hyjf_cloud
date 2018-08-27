@@ -1,10 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 
-import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
-import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
-
 import java.util.List;
+
+import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 
 public interface AutoReqRepayBorrowCustomizeMapper {
 

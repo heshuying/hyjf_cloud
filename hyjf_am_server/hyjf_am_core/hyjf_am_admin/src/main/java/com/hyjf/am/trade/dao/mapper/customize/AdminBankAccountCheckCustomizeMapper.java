@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
-
 import java.util.List;
+
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 
 /**
  * @author PC-LIUSHOUYI

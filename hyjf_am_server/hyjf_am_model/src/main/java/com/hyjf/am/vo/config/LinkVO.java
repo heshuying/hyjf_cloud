@@ -61,6 +61,7 @@ public class LinkVO extends BaseVO {
 
     private Integer registerCapital;
 
+    @ApiModelProperty(value = "合伙人类型")
     private Integer partnerType;
 
     private Integer hits;

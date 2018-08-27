@@ -1860,9 +1860,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayTotal(total.toString());
                     userRepayDetail.setStatus(userRecover.getRecoverStatus().toString());
                     userRepayDetail.setUserId(userRecover.getUserId().toString());
-                    String userName = this.getRUser(userRecover.getUserId()).getUsername();
-                    String userNameStr = userName.substring(0, 1).concat("**");
-                    userRepayDetail.setUserName(userNameStr);
+//   todo 暂时注释掉                 String userName = this.getRUser(userRecover.getUserId()).getUsername();
+//                    String userNameStr = userName.substring(0, 1).concat("**");
+//                    userRepayDetail.setUserName(userNameStr);
                     userRepayDetails.add(userRepayDetail);
                 }
             }
@@ -4097,7 +4097,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public List<BorrowRepayPlan> searchRepayPlan(int userId, String borrowNid) {
         BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
-        borrowRepayPlanCrt.andUserIdEqualTo(userId);
+// todo 暂时注释掉       borrowRepayPlanCrt.andUserIdEqualTo(userId);
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;

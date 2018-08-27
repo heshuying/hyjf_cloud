@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
-
-import java.util.List;
 
 /**
  * @author tanyy

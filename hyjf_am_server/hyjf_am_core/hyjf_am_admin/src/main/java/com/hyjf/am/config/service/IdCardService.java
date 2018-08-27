@@ -1,15 +1,9 @@
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.Category;
-import com.hyjf.am.config.dao.model.auto.ContentHelp;
-import com.hyjf.am.config.dao.model.customize.IdCardCustomize;
-import com.hyjf.am.resquest.admin.CategoryBeanRequest;
-import com.hyjf.am.resquest.admin.ContentHelpBeanRequest;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.trade.OperationReportJobVO;
-
 import java.util.List;
+
+import com.hyjf.am.config.dao.model.customize.IdCardCustomize;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 /**
  * @Auther: walter.tanyy

@@ -54,6 +54,7 @@ public class SystemConfig {
     @Value("${hyjf.bank.instcode}")
     private String BANK_INSTCODE;
 
+    @Value("${admin.front.host}")
     private String adminFrontHost;
 
     public String getAdminFrontHost() {

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.MspTitleMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.MspTitle" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="VARCHAR" />
+    <result column="customerName" property="customername" jdbcType="VARCHAR" />
+    <result column="paperNumber" property="papernumber" jdbcType="VARCHAR" />
+    <result column="reportTime" property="reporttime" jdbcType="VARCHAR" />
+    <result column="wjqCount" property="wjqcount" jdbcType="VARCHAR" />
+    <result column="jqCount" property="jqcount" jdbcType="VARCHAR" />
+    <result column="totalCount" property="totalcount" jdbcType="VARCHAR" />
+    <result column="ewjqCount" property="ewjqcount" jdbcType="VARCHAR" />
+    <result column="ejqCount" property="ejqcount" jdbcType="VARCHAR" />
+    <result column="etotalCount" property="etotalcount" jdbcType="VARCHAR" />
+    <result column="applyingCount" property="applyingcount" jdbcType="VARCHAR" />
+    <result column="applyPassedCount" property="applypassedcount" jdbcType="VARCHAR" />
+    <result column="applyRejectCount" property="applyrejectcount" jdbcType="VARCHAR" />
+    <result column="applyTotalCount" property="applytotalcount" jdbcType="VARCHAR" />
+    <result column="queryCount" property="querycount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, apply_id, customerName, paperNumber, reportTime, wjqCount, jqCount, totalCount, 
+    ewjqCount, ejqCount, etotalCount, applyingCount, applyPassedCount, applyRejectCount, 
+    applyTotalCount, queryCount
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.MspTitleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_msp_title
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_msp_title
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_msp_title
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspTitleExample" >
+    delete from ht_msp_title
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspTitle" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_title (apply_id, customerName, paperNumber, 
+      reportTime, wjqCount, jqCount, 
+      totalCount, ewjqCount, ejqCount, 
+      etotalCount, applyingCount, applyPassedCount, 
+      applyRejectCount, applyTotalCount, queryCount
+      )
+    values (#{applyId,jdbcType=VARCHAR}, #{customername,jdbcType=VARCHAR}, #{papernumber,jdbcType=VARCHAR}, 
+      #{reporttime,jdbcType=VARCHAR}, #{wjqcount,jdbcType=VARCHAR}, #{jqcount,jdbcType=VARCHAR}, 
+      #{totalcount,jdbcType=VARCHAR}, #{ewjqcount,jdbcType=VARCHAR}, #{ejqcount,jdbcType=VARCHAR}, 
+      #{etotalcount,jdbcType=VARCHAR}, #{applyingcount,jdbcType=VARCHAR}, #{applypassedcount,jdbcType=VARCHAR}, 
+      #{applyrejectcount,jdbcType=VARCHAR}, #{applytotalcount,jdbcType=VARCHAR}, #{querycount,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspTitle" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_msp_title
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="customername != null" >
+        customerName,
+      </if>
+      <if test="papernumber != null" >
+        paperNumber,
+      </if>
+      <if test="reporttime != null" >
+        reportTime,
+      </if>
+      <if test="wjqcount != null" >
+        wjqCount,
+      </if>
+      <if test="jqcount != null" >
+        jqCount,
+      </if>
+      <if test="totalcount != null" >
+        totalCount,
+      </if>
+      <if test="ewjqcount != null" >
+        ewjqCount,
+      </if>
+      <if test="ejqcount != null" >
+        ejqCount,
+      </if>
+      <if test="etotalcount != null" >
+        etotalCount,
+      </if>
+      <if test="applyingcount != null" >
+        applyingCount,
+      </if>
+      <if test="applypassedcount != null" >
+        applyPassedCount,
+      </if>
+      <if test="applyrejectcount != null" >
+        applyRejectCount,
+      </if>
+      <if test="applytotalcount != null" >
+        applyTotalCount,
+      </if>
+      <if test="querycount != null" >
+        queryCount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyId != null" >
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="customername != null" >
+        #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="papernumber != null" >
+        #{papernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttime != null" >
+        #{reporttime,jdbcType=VARCHAR},
+      </if>
+      <if test="wjqcount != null" >
+        #{wjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="jqcount != null" >
+        #{jqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="totalcount != null" >
+        #{totalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="ewjqcount != null" >
+        #{ewjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="ejqcount != null" >
+        #{ejqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="etotalcount != null" >
+        #{etotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applyingcount != null" >
+        #{applyingcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applypassedcount != null" >
+        #{applypassedcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applyrejectcount != null" >
+        #{applyrejectcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applytotalcount != null" >
+        #{applytotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="querycount != null" >
+        #{querycount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.MspTitleExample" resultType="java.lang.Integer" >
+    select count(*) from ht_msp_title
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_msp_title
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyId != null" >
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customername != null" >
+        customerName = #{record.customername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.papernumber != null" >
+        paperNumber = #{record.papernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reporttime != null" >
+        reportTime = #{record.reporttime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wjqcount != null" >
+        wjqCount = #{record.wjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jqcount != null" >
+        jqCount = #{record.jqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.totalcount != null" >
+        totalCount = #{record.totalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ewjqcount != null" >
+        ewjqCount = #{record.ewjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ejqcount != null" >
+        ejqCount = #{record.ejqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.etotalcount != null" >
+        etotalCount = #{record.etotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyingcount != null" >
+        applyingCount = #{record.applyingcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applypassedcount != null" >
+        applyPassedCount = #{record.applypassedcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applyrejectcount != null" >
+        applyRejectCount = #{record.applyrejectcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applytotalcount != null" >
+        applyTotalCount = #{record.applytotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.querycount != null" >
+        queryCount = #{record.querycount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_msp_title
+    set id = #{record.id,jdbcType=INTEGER},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      customerName = #{record.customername,jdbcType=VARCHAR},
+      paperNumber = #{record.papernumber,jdbcType=VARCHAR},
+      reportTime = #{record.reporttime,jdbcType=VARCHAR},
+      wjqCount = #{record.wjqcount,jdbcType=VARCHAR},
+      jqCount = #{record.jqcount,jdbcType=VARCHAR},
+      totalCount = #{record.totalcount,jdbcType=VARCHAR},
+      ewjqCount = #{record.ewjqcount,jdbcType=VARCHAR},
+      ejqCount = #{record.ejqcount,jdbcType=VARCHAR},
+      etotalCount = #{record.etotalcount,jdbcType=VARCHAR},
+      applyingCount = #{record.applyingcount,jdbcType=VARCHAR},
+      applyPassedCount = #{record.applypassedcount,jdbcType=VARCHAR},
+      applyRejectCount = #{record.applyrejectcount,jdbcType=VARCHAR},
+      applyTotalCount = #{record.applytotalcount,jdbcType=VARCHAR},
+      queryCount = #{record.querycount,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.MspTitle" >
+    update ht_msp_title
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="customername != null" >
+        customerName = #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="papernumber != null" >
+        paperNumber = #{papernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reporttime != null" >
+        reportTime = #{reporttime,jdbcType=VARCHAR},
+      </if>
+      <if test="wjqcount != null" >
+        wjqCount = #{wjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="jqcount != null" >
+        jqCount = #{jqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="totalcount != null" >
+        totalCount = #{totalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="ewjqcount != null" >
+        ewjqCount = #{ewjqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="ejqcount != null" >
+        ejqCount = #{ejqcount,jdbcType=VARCHAR},
+      </if>
+      <if test="etotalcount != null" >
+        etotalCount = #{etotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applyingcount != null" >
+        applyingCount = #{applyingcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applypassedcount != null" >
+        applyPassedCount = #{applypassedcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applyrejectcount != null" >
+        applyRejectCount = #{applyrejectcount,jdbcType=VARCHAR},
+      </if>
+      <if test="applytotalcount != null" >
+        applyTotalCount = #{applytotalcount,jdbcType=VARCHAR},
+      </if>
+      <if test="querycount != null" >
+        queryCount = #{querycount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.MspTitle" >
+    update ht_msp_title
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      customerName = #{customername,jdbcType=VARCHAR},
+      paperNumber = #{papernumber,jdbcType=VARCHAR},
+      reportTime = #{reporttime,jdbcType=VARCHAR},
+      wjqCount = #{wjqcount,jdbcType=VARCHAR},
+      jqCount = #{jqcount,jdbcType=VARCHAR},
+      totalCount = #{totalcount,jdbcType=VARCHAR},
+      ewjqCount = #{ewjqcount,jdbcType=VARCHAR},
+      ejqCount = #{ejqcount,jdbcType=VARCHAR},
+      etotalCount = #{etotalcount,jdbcType=VARCHAR},
+      applyingCount = #{applyingcount,jdbcType=VARCHAR},
+      applyPassedCount = #{applypassedcount,jdbcType=VARCHAR},
+      applyRejectCount = #{applyrejectcount,jdbcType=VARCHAR},
+      applyTotalCount = #{applytotalcount,jdbcType=VARCHAR},
+      queryCount = #{querycount,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

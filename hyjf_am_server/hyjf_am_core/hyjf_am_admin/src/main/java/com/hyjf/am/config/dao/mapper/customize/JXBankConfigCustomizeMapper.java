@@ -1,9 +1,9 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
-
-import java.util.List;
 
 public interface JXBankConfigCustomizeMapper {
 

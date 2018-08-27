@@ -1,11 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface BankMerchantAccountListCustomizeMapper {
     int countByExample(BankMerchantAccountListExample example);

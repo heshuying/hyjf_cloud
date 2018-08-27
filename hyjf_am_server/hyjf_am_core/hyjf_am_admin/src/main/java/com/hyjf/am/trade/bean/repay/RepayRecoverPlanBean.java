@@ -1,11 +1,11 @@
 package com.hyjf.am.trade.bean.repay;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 
 public class RepayRecoverPlanBean extends BorrowRecoverPlan implements Serializable {
 	private static final long serialVersionUID = 3456910400807898597L;

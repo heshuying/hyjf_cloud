@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * <p>
  * BaseBean
@@ -12,22 +14,24 @@ public class BaseBean {
 	
 	public static final Integer PAGE_STRAT = 0;
 	public static final Integer PAGE_MAXSIZE = 100;
-    /**
-     * mq每条消息的编号
-     */
+
+    @ApiModelProperty(value = "mq每条消息的编号")
     private String mqMsgId;
     /**
      * 随机字符串
      */
+    @ApiModelProperty(value = "随机字符串")
     private String randomString;
     /**
      * 安全码
      */
+    @ApiModelProperty(value = "安全码")
     private String secretKey;
     
     /**
      * 验签
      */
+    @ApiModelProperty(value = "验签")
     private String chkValue;
     
     /**
@@ -43,10 +47,12 @@ public class BaseBean {
     /**
      * 用户编号
      */
+    @ApiModelProperty(value = "用户编号")
     private Integer userId;
     /**
      * 电子账号
      */
+    @ApiModelProperty(value = "电子账号")
     private String accountId;
     
     /**

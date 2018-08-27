@@ -3814,11 +3814,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBeanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-tradet/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return JSON.parseObject(response.getResult(), RepayBean.class);
-        }
-        return null;
+        RepayBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,RepayBean.class).getBody();
+        return response;
     }
 
     /**
@@ -3826,11 +3823,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,Response.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResult();
-        }
-        return null;
+        ProjectBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,ProjectBean.class).getBody();
+//        if (Response.isSuccess(response)){
+////            return JSON.parseObject(response.getResult(), ProjectBean.class);
+////        }
+        return response;
     }
 
     /**
