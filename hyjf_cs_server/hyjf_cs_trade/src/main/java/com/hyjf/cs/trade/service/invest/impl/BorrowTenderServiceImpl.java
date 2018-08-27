@@ -207,6 +207,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         amTradeClient.updateBeforeChinaPnR(request);
         try {
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+            map.forEach((key,value)->{
+                logger.info("key:[{}],value:[{}]",key,value);
+            });
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             result.setData(map);
             return result;

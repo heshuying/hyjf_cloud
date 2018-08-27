@@ -73,6 +73,7 @@ public class ApiUserInfoServiceImpl extends BaseUserServiceImpl implements ApiUs
                 //根据用户ID获取用户账户信息
                 AccountVO account = amTradeClient.getAccount(userId);
                 if (account == null) {
+                    //TODO:这个异常不太对
                     throw new ReturnMessageException(MsgEnum.STATUS_CE000010);
                 }
 
