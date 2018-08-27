@@ -452,7 +452,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);
         } catch (Exception e) {
-            logger.info("web端提现失败");
+            logger.info("app端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
