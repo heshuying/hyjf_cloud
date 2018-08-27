@@ -134,7 +134,7 @@
 		hdpa.commission_status,
 		hdpa.available_invest_account,
 		date_format(hdpa.commission_count_time,'%Y-%c-%d %h:%i:%s') AS commission_count_time,
-		date_format(hdpa.create_time,'%Y-%c-%d %h:%i:%s') AS create_time,
+		hdpa.create_time AS create_time,
 		hdpa.create_time AS add_time_long,
 		hdpa.invite_user_name AS invite_name
 		FROM
@@ -164,7 +164,7 @@
 				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
 			</if>
 			<if test="searchEndDate != null and searchEndDate !='' ">
-				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate}' 23:59:59')
+				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate},' 23:59:59')
 			</if>
 		</where>
 		ORDER BY
