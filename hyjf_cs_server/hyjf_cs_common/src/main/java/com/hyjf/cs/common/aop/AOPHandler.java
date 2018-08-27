@@ -13,6 +13,7 @@ package com.hyjf.cs.common.aop;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.response.Response;
+import com.hyjf.common.exception.AMException;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -21,7 +22,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,13 +32,13 @@ import org.springframework.web.servlet.ModelAndView;
  * @author liubin
  */
 @Aspect
-@Order(1)
+//@Order(1)
 @Component
 public class AOPHandler {
 
 	private	static final Logger logger = LoggerFactory.getLogger(AOPHandler.class);
 
-	@Pointcut("execution(public * com.hyjf.cs..*controller.*(..))")
+	@Pointcut("execution(public * com.hyjf.cs..*Controller.*(..))")
 	public void controllerLog(){}
 
 
@@ -175,15 +176,15 @@ public class AOPHandler {
 	 * @return
 	 * @throws Throwable
 	 */
-	@Around("execution(public org.springframework.web.client.RestTemplate *(..))")
+	@Around("execution(public * org.springframework.web.client.RestTemplate.*(..))")
 	public Object amExceptionHandler(ProceedingJoinPoint pjp) throws Throwable {
 
-		long startTime = System.currentTimeMillis();
-		Response result = null;
+		Object result = null;
 		try {
-			result = (Response) pjp.proceed();
-			if (result.getRtn().equals(Response.ERROR)){
-				throw new Exception(result.getMessage());
+			result = pjp.proceed();
+			Response response = (Response)((ResponseEntity)result).getBody();
+			if (response.getRtn().equals(Response.ERROR)){
+				throw new AMException(response.getMessage());
 			}
 		}catch(Throwable e) {
 			throw e;
