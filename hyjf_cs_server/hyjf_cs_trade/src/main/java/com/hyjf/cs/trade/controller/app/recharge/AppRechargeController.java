@@ -82,8 +82,7 @@ public class AppRechargeController extends BaseTradeController{
 		} else {// 拼接充值地址并返回
 			mobile = strEncode(vo.getMobile());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
-			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
-
+			sb.append("&money=").append(vo.getMoney()).append("&isMencry=").append("2").append("&mobile=").append(mobile);
 			object.put("rechargeUrl",sb.toString());
 			logger.info("请求充值接口url："+sb.toString());
 			object.put("status",CustomConstants.APP_STATUS_SUCCESS);
@@ -109,6 +108,8 @@ public class AppRechargeController extends BaseTradeController{
 		String money = request.getParameter("money");// 交易金额
 		String isMencry = request.getParameter("isMencry");// 版本标识
 		String platform = request.getParameter("platform");// 平台
+		logger.info("mobile is :{}", mobile);
+		logger.info("key is :{}", key);
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
