@@ -266,7 +266,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     // 失败原因
                     String reason = this.getBankRetMsg(bean.getRetCode());
                     accountwithdraw.setReason(reason);
-                    boolean isUpdateFlag = this.amTradeClient.updateAccountwithdrawLog(accountwithdraw) > 0 ? true : false;
+                    boolean isUpdateFlag = this.amTradeClient.updateAccountwithdrawLog(accountwithdraw);
                     if (!isUpdateFlag) {
                         throw new RuntimeException("提现失败后,更新提现记录表失败");
                     }

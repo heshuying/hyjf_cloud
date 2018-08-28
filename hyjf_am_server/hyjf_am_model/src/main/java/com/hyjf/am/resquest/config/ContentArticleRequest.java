@@ -5,6 +5,7 @@ package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,20 +24,27 @@ public class ContentArticleRequest extends BasePage implements Serializable {
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "查询的id")
     private String ids;
 
+    @ApiModelProperty(value = "查询的开始时间")
     private String startCreate;
 
+    @ApiModelProperty(value = "查询的结束时间")
     private String endCreate;
 
     private Integer id;
 
+    @ApiModelProperty(value = "文章分类 2-网站公告，3-网贷知识，5-关于我们，101-风险教育，8-联系我们，20-公司动态")
     private String type;
 
+    @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "状态0关闭，1启用")
     private Integer status;
 
+    @ApiModelProperty(value = "文章作者")
     private String author;
 
     private Integer createBy;
@@ -47,12 +55,16 @@ public class ContentArticleRequest extends BasePage implements Serializable {
 
     private Date updateTime;
 
+    @ApiModelProperty(value = "文章图片")
     private String imgurl;
 
+    @ApiModelProperty(value = "简介")
     private String summary;
 
+    @ApiModelProperty(value = "点击率")
     private Integer click;
 
+    @ApiModelProperty(value = "文章内容")
     private String content;
 
     private String noticeType;
