@@ -87,9 +87,9 @@ public class WebRechargeController extends BaseTradeController{
 
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWeiFrontHost()+"/user/rechargeError";
+		String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/rechargeError";
 		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
-		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
+		String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
