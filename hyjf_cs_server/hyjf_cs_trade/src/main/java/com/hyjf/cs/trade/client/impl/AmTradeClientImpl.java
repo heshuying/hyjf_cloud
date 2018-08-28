@@ -3998,4 +3998,18 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * @param planNid
+     * @param userId
+     * @param money
+     * @param platform
+     * @Description 获取计划可用优惠券
+     * @Author sunss
+     * @Date 2018/8/27 21:05
+     */
+    @Override
+    public JSONObject getHJHProjectUserCoupon(String planNid, Integer userId, String money, String platform) {
+        return null;
+    }
 }

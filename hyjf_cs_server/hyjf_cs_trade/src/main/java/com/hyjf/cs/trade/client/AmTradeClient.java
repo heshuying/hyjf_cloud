@@ -1709,4 +1709,11 @@ public interface AmTradeClient {
      * @date 2018/8/27 13:59
      */
     List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
+
+    /**
+     * @Description 获取计划可用优惠券
+     * @Author sunss
+     * @Date 2018/8/27 21:05
+     */
+    JSONObject getHJHProjectUserCoupon(String planNid, Integer userId, String money, String platform);
 }
