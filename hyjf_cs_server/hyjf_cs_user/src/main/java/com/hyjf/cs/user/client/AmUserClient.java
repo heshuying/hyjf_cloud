@@ -156,7 +156,7 @@ public interface AmUserClient {
 	 * 更新绑定邮箱信息
 	 * @param bean
 	 */
-	void updateBindEmail(BindEmailLogRequest bean);
+	Integer updateBindEmail(BindEmailLogRequest bean);
 
 	/**
 	 * 获取绑定邮箱日志信息表
@@ -169,7 +169,7 @@ public interface AmUserClient {
 	 * 插入绑定邮箱日志信息表
 	 * @param bean
 	 */
-	void insertBindEmailLog(BindEmailLogRequest bean);
+	Integer insertBindEmailLog(BindEmailLogRequest bean);
 
 	/**
 	 * 保存紧急联系人
