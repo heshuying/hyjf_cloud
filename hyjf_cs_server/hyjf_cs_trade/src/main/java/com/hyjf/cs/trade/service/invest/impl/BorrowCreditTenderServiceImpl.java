@@ -258,6 +258,28 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     }
 
     /**
+     * 前端Web页面投资可债转输入投资金额后获取收益
+     *
+     * @param userId
+     * @param creditNid
+     * @param assignCapital
+     * @return
+     */
+    @Override
+    public JSONObject getInterestInfo(int userId, String creditNid, String assignCapital) {
+        TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
+        JSONObject ret = new JSONObject();
+        if (Validator.isNotNull(creditAssign)) {
+            ret.put("creditAssign", creditAssign);
+            ret.put(CustomConstants.RESULT_FLAG, CustomConstants.RESULT_SUCCESS);
+        } else {
+            ret.put(CustomConstants.RESULT_FLAG, CustomConstants.RESULT_FAIL);
+            ret.put(CustomConstants.MSG, "系统异常,请稍后再试!");
+        }
+        return ret;
+    }
+
+    /**
      * 债转成功后操作
      * @param logOrderId
      * @param userId
