@@ -29,6 +29,48 @@
 		<result column="account_id" property="accountId" /><!-- 电子账户 -->
 	</resultMap>
 
+	<resultMap id="AccountRechargeMapResult"
+			   type="com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize">
+		<result column="id" property="id" />
+		<result column="nid" property="nid" /> <!-- 订单id -->
+		<result column="user_id" property="userId" /> <!-- 用户名 -->
+		<result column="roleid" property="roleId" /> <!-- 角色 -->
+		<result column="username" property="username" /> <!-- 用户名 -->
+		<result column="mobile" property="mobile" /> <!-- 手机号 -->
+		<result column="user_attribute" property="userAttribute" /> <!-- 用户属性（当前） -->
+		<result column="user_region_name" property="userRegionName" /> <!-- 用户所属一级分部（当前）-->
+		<result column="user_branch_name" property="userBranchName" /> <!-- 用户所属二级分部（当前） -->
+		<result column="user_department_name" property="userDepartmentName" /> <!-- 用户所属团队（当前） -->
+		<result column="referrer_name" property="referrerName" jdbcType="VARCHAR" /> <!-- 推荐人用户名（当前） -->
+		<result column="referrer_user_id" property="referrerUserId" jdbcType="VARCHAR" /> <!-- 推荐人ID（当前） -->
+		<result column="referrer_true_name" property="referrerTrueName" jdbcType="VARCHAR" /><!-- 推荐人姓名（当前） -->
+		<result column="referrer_region_name" property="referrerRegionName" jdbcType="VARCHAR" /><!-- 推荐人所属一级分部（当前） -->
+		<result column="referrer_branch_name" property="referrerBranchName" jdbcType="VARCHAR" /><!-- 推荐人所属二级分部（当前） -->
+		<result column="referrer_department_name" property="referrerDepartmentName" jdbcType="VARCHAR" /><!-- 推荐人所属团队（当前） -->
+		<result column="bank_name" property="bankName" /> <!-- 充值银行 -->
+		<result column="type" property="type" /> <!-- 充值方式 -->
+		<result column="gate_type" property="gateType" /> <!-- 充值类型 -->
+		<result column="status" property="status" /> <!-- z状态 -->
+		<result column="user_property" property="userProperty" /> <!-- z状态 -->
+		<result column="statusName" property="statusName" /> <!-- 转账状态 -->
+		<result column="money" property="money" /> <!-- 充值金额 -->
+		<result column="balance" property="balance" /> <!-- 可用金额 -->
+		<result column="fee" property="fee" /> <!-- 手续费 -->
+		<result column="dianfuFee" property="dianfuFee" /> <!-- 垫付手续费 -->
+		<!--<result column="fee_from" property="feeFrom" /> &lt;!&ndash; 充值手续费收取方式 &ndash;&gt;-->
+		<result column="client" property="client" /> <!-- 客户端 -->
+		<result column="create_time" property="createTime" /> <!-- 交易时间 -->
+		<result column="outtime" property="outtime" /> <!-- 当前时间减去充值时间，秒数 -->
+		<result column="cardid" property="cardid" /> <!-- 银行卡号 -->
+		<result column="message" property="message" /> <!-- 失败原因 -->
+		<result column="remark" property="remark" /> <!-- 备注-->
+		<result column="bank_seq_no" property="seqNo" /><!-- 交易流水号 -->
+		<result column="tx_date" property="txDate" /><!-- 发送日期 -->
+		<result column="tx_time" property="txTime" /><!-- 发送时间 -->
+		<result column="seq_no" property="bankSeqNo" /><!-- 系统跟踪号 -->
+		<result column="account_id" property="accountId" /><!-- 电子账户 -->
+	</resultMap>
+
 	<select id="getRechargePrice" resultType="DECIMAL" parameterType="list">
 		select sum(money) from ht_account_recharge a
 		left join ht_user_info b on a.user_id = b.user_id
@@ -144,16 +186,21 @@
 		</if>
 	</select>
 
-	<select id="getAccountRechargeList" resultMap="RechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample">
+	<select id="getAccountRechargeList" resultMap="AccountRechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize">
 		SELECT t.user_id,
 		t.username,
+		u.mobile,
 		t.nid,
 		t.gate_type,
 		t.remark,
 		t.money,
 		t.fee,
+		t.dianfuFee,
+-- 		t.fee_from,
+-- 		pna.`name` AS user_property,
 		t.balance,
 		t.payment,
+-- 		t.`status`,
 		t.statusName statusName,
 		t.message,
 		t.client,
@@ -163,56 +210,98 @@
 		t.tx_time,
 		t.seq_no,
 		t.account_id,
-		t.payment AS bank_name
+-- 		t.isBank,
+		t.payment AS bank_name,
+		CASE u.role_id
+		WHEN 1 THEN
+		'投资人'
+		WHEN 2 THEN
+		'借款人'
+		END AS roleid,
+		u.attribute AS user_attribute
+-- 		CASE
+-- 		WHEN u.attribute = '1' THEN
+-- 		`od6`.`name`
+-- 		ELSE
+-- 		`od3`.`name`
+-- 		END `user_region_name`,
+-- 		CASE
+-- 		WHEN u.attribute = '1' THEN
+-- 		`od5`.`name`
+-- 		ELSE
+-- 		`od2`.`name`
+-- 		END `user_branch_name`,
+-- 		CASE
+-- 		WHEN u.attribute = '1' THEN
+-- 		`od4`.`name`
+-- 		ELSE
+-- 		`od`.`name`
+-- 		END `user_department_name`,
+-- 		spu.username AS referrer_name,
+-- 		su.spreads_userid AS referrer_user_id,
+-- 		u.truename AS referrer_true_name,
+-- 		`od6`.`name` AS `referrer_region_name`,
+-- 		`od5`.`name` AS `referrer_branch_name`,
+-- 		`od4`.`name` AS `referrer_department_name`
 		FROM
-		(SELECT
-		r.user_id,
-		r.username,
+		(SELECT r.user_id, r.username,
 		r.nid,
 		r.gate_type,
 		r.remark,
-		r.money,
-		r.fee,
-		r.balance,
-		r.payment,
-		CASE r.`status`
-		WHEN 1 THEN
-		'转账中'
-		WHEN 2 THEN
-		'成功'
-		ELSE
-		'失败'
-		END AS statusName,
-		FROM_UNIXTIME(
-		r.create_time,
-		'%Y-%m-%d %H:%i:%S'
-		) AS create_time,
-		r.client,
-		r.id,
-		r.cardid,
-		r.message,
+		r.money, r.fee,r.fee as dianfuFee, r.balance ,r.payment,
+-- 		pna1.`name` AS status ,
+-- 		pna2.`name` AS isBank ,
+		CASE
+		r.`status` WHEN 1 THEN '转账中' WHEN 2
+		THEN '成功' ELSE '失败' END as
+		statusName ,
+		FROM_UNIXTIME(r.create_time,'%Y-%m-%d %H:%i:%S') as create_time,
+		CASE r.client WHEN 0 THEN 'PC'
+		WHEN 1 THEN '微信' WHEN 2 THEN
+		'android' WHEN
+		3 THEN 'iOS' WHEN 4 THEN '线下充值' ELSE r.client
+		END AS client,
+		r.id, r.cardid,r.message,
 		r.bank_seq_no,
-		DATE_FORMAT(r.tx_date, '%Y-%m-%d') AS tx_date,
-		CONCAT(
-		MID(lpad(r.tx_time, 6, 0), 1, 2),
-		':',
-		MID(lpad(r.tx_time, 6, 0), 3, 2),
-		':',
-		MID(lpad(r.tx_time, 6, 0), 5, 2)
-		) AS tx_time,
+		DATE_FORMAT(r.tx_date,'%Y-%m-%d') as tx_date,
+		CONCAT(MID(lpad(r.tx_time,6,0),1,2),':',MID(lpad(r.tx_time,6,0),3,2),':',MID(lpad(r.tx_time,6,0),5,2)) as tx_time,
 		r.seq_no,
 		r.account_id,
-		UNIX_TIMESTAMP() - r.create_time AS outtime
+		UNIX_TIMESTAMP()-r.create_time as outtime
 		FROM
 		ht_account_recharge r
+		<if test="roleIdSearch != null and roleIdSearch != 0">
+			LEFT JOIN
+			ht_r_user u ON r.user_id= u.user_id
+		</if>
+		<if test="userProperty != null and userProperty != ''">
+			LEFT JOIN
+			ht_r_user u ON r.user_id= u.user_id
+-- 			huiyingdai_users_info ui ON r.user_id= ui.user_id
+		</if>
+-- 		LEFT JOIN hyjf_param_name pna1 ON r.`status` = pna1.name_cd AND pna1.name_class = 'RECHARGE_STATUS'
+-- 		LEFT JOIN hyjf_param_name pna2 ON r.`is_bank` = pna2.name_cd AND pna2.name_class = 'BANK_TYPE'
 		WHERE
-		1 = 1
+		1=1
 		<include refid="where-all-page-condition" />
-		ORDER BY
-		r.id DESC
+		ORDER BY r.id DESC
 		<if test="limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>) t
+		LEFT JOIN ht_r_user u ON t.user_id= u.user_id
+-- 		LEFT JOIN huiyingdai_users_info ui ON t.user_id=ui.user_id
+-- 		LEFT JOIN huiyingdai_spreads_users su ON su.user_id = u.user_id
+-- 		LEFT JOIN huiyingdai_users spu ON spu.user_id = su.spreads_userid
+-- 		LEFT JOIN huiyingdai_users_info ui2 ON ui2.user_id = su.spreads_userid
+-- 		LEFT JOIN hyjf_param_name pna ON cast(ui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
+-- 		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+-- 		LEFT JOIN `hyjf_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
+-- 		LEFT JOIN `hyjf_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
 	</select>
 
 	<select id="getAccountRechargeLists" resultMap="RechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample">
@@ -225,8 +314,7 @@
 		t.money,
 		t.fee,
 		t.dianfuFee,
-		t.fee_from,
-		pna.`name` AS user_property,
+-- 		pna.`name` AS user_property,
 		t.balance,
 		t.payment,
 		t.STATUS,
