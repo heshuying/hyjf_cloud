@@ -95,6 +95,13 @@ public class BankCallController extends BaseController {
                 bean.setSuccessfulUrl(successfulUrl);
                 bean.set(BankCallConstant.PARAM_SUCCESSFUL_URL, successfulUrl);
             }*/
+
+            if (Validator.isNotNull(bean.getSuccessfulUrl())) {
+                String successfulUrl = systemConfig.getCallbackSuccessUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+                        + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId()+ StringPool.AMPERSAND + BankCallConstant.PARAM_ISSUCCESS + StringPool.EQUAL+"1";
+                bean.setSuccessfulUrl(successfulUrl);
+                bean.set(BankCallConstant.PARAM_SUCCESSFUL_URL, successfulUrl);
+            }
             if (Validator.isNotNull(bean.getForgotPwdUrl())) {
                 String forgotPwdUrl = systemConfig.getForgotpwdUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
@@ -122,6 +129,36 @@ public class BankCallController extends BaseController {
             logger.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
         }
         return resultMap;
+    }
+
+
+    /**
+     * 成功页面接收同步返回消息
+     *
+     * @return
+     */
+    @RequestMapping(value = "callPageSuccessReturns")
+    public ModelAndView callPageSuccessReturns(HttpServletRequest request) {
+
+        String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);
+        logger.info("[调用接口结束, 消息类型:" + (logOrderId == null ? "" : logOrderId) + "]");
+        String retUrl="";
+        // 真实的返回URL
+        // 获取主键
+        BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+        if (record != null) {
+            JSONObject jo = new JSONObject();
+            try {
+                jo = JSONObject.parseObject(record.getContent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            retUrl = jo.getString(BankCallConstant.PARAM_SUCCESSFULURL);
+
+        }
+        String redirectUrl="redirect:"+retUrl;
+        logger.info("[调用接口结束, 消息类型:" + (redirectUrl == null ? "" : redirectUrl) + "]");
+        return new ModelAndView(redirectUrl);
     }
 
     /**
