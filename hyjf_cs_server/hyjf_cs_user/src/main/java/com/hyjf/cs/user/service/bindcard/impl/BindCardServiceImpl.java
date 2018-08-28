@@ -272,11 +272,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogUserId(StringUtil.valueOf(userId));
         bean.setLogRemark("用户绑卡增强");
-        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallConstant.TXCODE_CARD_BIND_PLUS);
-        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
-        bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
-        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
         bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
         bean.setAccountId(bankAccount.getAccount());// 存管平台分配的账号
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
