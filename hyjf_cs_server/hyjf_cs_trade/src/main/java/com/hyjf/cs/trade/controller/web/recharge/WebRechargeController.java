@@ -133,7 +133,7 @@ public class WebRechargeController extends BaseTradeController{
 		if (user!=null&&bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
 			// 充值成功
 			if (msg != null && "0".equals(msg.get("error"))) {
-				logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
+				logger.info("web充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
 				result.setMessage("充值成功");
 				result.setStatus(true);
 				return result;
@@ -143,7 +143,7 @@ public class WebRechargeController extends BaseTradeController{
 				return result;
 			}
 		}
-		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
+		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[web用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

@@ -32,17 +32,17 @@
          "account": {
                     <#if datas.data.account??>
                         <#assign account = datas.data.account >
-                     "balance": ${(account.balance)!'0'},
-                  "planAccountWait": ${(account.planAccountWait)?c!'0'},
-                  "planCapitalWait": ${(account.planCapitalWait)?c!'0'},
-                  "planInterestWait": ${(account.planInterestWait)?c!'0'},
-                  "bankTotal": ${(account.bankTotal)?c!'0'},
-                  "bankBalance": ${(account.bankBalance)?c!'0'},
-                  "bankFrost": ${(account.bankFrost)?c!'0'},
-                  "bankInterestSum": ${(account.bankInterestSum)?c!'0'},
-                  "bankAwait": ${(account.bankAwait)?c!'0'},
-                  "bankAwaitCapital": ${(account.bankAwaitCapital)?c!'0'},
-                  "bankAwaitInterest": ${(account.bankAwaitInterest)?c!'0'}
+                    "balance": ${(account.balance)!'0'},
+                  "planAccountWait": ${(account.planAccountWait!0)?c!'0'},
+                  "planCapitalWait": ${(account.planCapitalWait!0)?c},
+                  "planInterestWait": ${(account.planInterestWait!0)?c!'0'},
+                  "bankTotal": ${(account.bankTotal!0)?c},
+                  "bankBalance": ${(account.bankBalance!0)?c!'0'},
+                  "bankFrost": ${(account.bankFrost!0)?c!'0'},
+                  "bankInterestSum": ${(account.bankInterestSum!0)?c!'0'},
+                  "bankAwait": ${(account.bankAwait!0)?c!'0'},
+                  "bankAwaitCapital": ${(account.bankAwaitCapital!0)?c!'0'},
+                  "bankAwaitInterest": ${(account.bankAwaitInterest!0)?c!'0'}
                     <#else >
                     "balance":0,
                   "planAccountWait":0,

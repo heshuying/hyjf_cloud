@@ -4,11 +4,13 @@
 package com.hyjf.am.trade.controller.front.account;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -67,9 +69,9 @@ public class AccountRechargeController extends BaseController {
      * @Author : huanghui
      */
     @RequestMapping(value = "/getAccountRechargeList", method = RequestMethod.POST)
-    public AccountRechargeResponse getAccountRechargeList(@RequestBody AccountRechargeRequest request){
+    public AccountRechargeCustomizeResponse getAccountRechargeList(@RequestBody AccountRechargeRequest request){
 
-        AccountRechargeResponse rechargeResponse =  new AccountRechargeResponse();
+        AccountRechargeCustomizeResponse rechargeResponse =  new AccountRechargeCustomizeResponse();
 
 
         Integer count = this.accountRecharge.getAccountRechargeListCount(request);
@@ -81,7 +83,7 @@ public class AccountRechargeController extends BaseController {
             request.setLimitEnd(paginator.getLimit());
         }
 
-        List<com.hyjf.am.vo.trade.account.AccountRechargeVO> responseList = this.accountRecharge.getAccountRechargeList(request);
+        List<AccountRechargeCustomizeVO> responseList = this.accountRecharge.getAccountRechargeList(request);
 
         if (!CollectionUtils.isEmpty(responseList)){
             rechargeResponse.setResultList(responseList);

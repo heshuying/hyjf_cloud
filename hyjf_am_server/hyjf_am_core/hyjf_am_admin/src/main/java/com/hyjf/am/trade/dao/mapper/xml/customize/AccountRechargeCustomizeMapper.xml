@@ -140,7 +140,7 @@
 		<include refid="where-all-page-condition" />
 	</select>
 
-	<select id="getAccountRechargeList" resultMap="RechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample">
+	<select id="getAccountRechargeListaa" resultMap="RechargeMapResult" parameterType="com.hyjf.am.trade.dao.model.auto.AccountRechargeExample">
 		SELECT t.user_id,
 		t.username,
 		t.nid,

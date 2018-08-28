@@ -64,8 +64,8 @@ public class WxTransPasswordController extends BaseUserController {
         // 异步调用路
         String bgRetUrl = systemConfig.getWeChatHost()  + request.getContextPath() +  "/wx/transpassword/passwordBgreturn?sign=" + sign;
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
+        String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
+        String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
         // 页面同步返回 URL
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
@@ -182,8 +182,8 @@ public class WxTransPasswordController extends BaseUserController {
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
+        String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
+        String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
         // 异步调用路
         String bgRetUrl = systemConfig.getWeChatHost() + request.getContextPath() +  "/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
         bean.setSuccessfulUrl(success);

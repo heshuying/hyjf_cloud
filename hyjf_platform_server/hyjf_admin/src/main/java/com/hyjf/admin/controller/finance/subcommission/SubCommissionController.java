@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -157,7 +158,8 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")
     @PostMapping(value = "/searchdetails")
-    public AdminResult searchDetails(@RequestHeader(value = "userId")Integer userId){
+    public AdminResult searchDetails(HttpServletRequest request){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject result = subCommissionService.searchDetails(userId);
         return new AdminResult(result);
     }
@@ -170,8 +172,9 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣")
     @PostMapping(value = "/subcommission")
-    public AdminResult subCommission(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody SubCommissionRequest request){
-        JSONObject jsonObject = subCommissionService.subCommission(loginUserId,request);
+    public AdminResult subCommission(HttpServletRequest request,@RequestBody SubCommissionRequest subCommissionRequest){
+        Integer loginUserId = Integer.valueOf(getUser(request).getId());
+        JSONObject jsonObject = subCommissionService.subCommission(loginUserId,subCommissionRequest);
         return new AdminResult(jsonObject);
     }
 }

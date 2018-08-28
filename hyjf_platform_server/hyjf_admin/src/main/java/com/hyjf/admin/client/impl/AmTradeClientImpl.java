@@ -12,16 +12,14 @@ import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.AccountRechargeResponse;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhRepayResponse;
-import com.hyjf.am.response.trade.account.AccountListResponse;
-import com.hyjf.am.response.trade.account.AccountResponse;
-import com.hyjf.am.response.trade.account.AccountTradeResponse;
-import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -2203,7 +2201,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2248,7 +2246,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findAssetList", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findAssetList", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2312,7 +2310,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void updateCashDepositeStatus(String assetId, String menuHide) {
-        String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
+        String url = "http://AM-ADMIN/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
         restTemplate.getForEntity(url, String.class).getBody();
 
     }
@@ -3631,8 +3629,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Author : huanghui
      */
     @Override
-    public com.hyjf.am.response.trade.account.AccountRechargeResponse queryRechargeList(AccountRechargeRequest request) {
-        com.hyjf.am.response.trade.account.AccountRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeList/", request, com.hyjf.am.response.trade.account.AccountRechargeResponse.class).getBody();
+    public AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request) {
+        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountrecharge/getAccountRechargeList/", request, AccountRechargeCustomizeResponse.class).getBody();
 
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
