@@ -72,7 +72,7 @@ public class EvalationServiceImpl implements EvalationService {
         UserVO userVO = new UserVO();
         if (StringUtils.isNotBlank(strUserId)) {
             int userId = Integer.parseInt(strUserId);
-            userVO = evalationClient.searchUserByUserId(userId);
+            userVO = evalationClient.findUserById(userId);
         }
         return userVO;
     }
