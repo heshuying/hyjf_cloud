@@ -1365,6 +1365,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							BigDecimal balance = account.getBankBalance();
 							BigDecimal creditDiscount = new BigDecimal(1).subtract(borrowCredit.getCreditDiscount().divide(new BigDecimal(100)));
 							BigDecimal sum = sellerCapitalWait.multiply(creditDiscount).add(sellerInterestAdvanceWait);
+							logger.info("sum:{}   creditDiscount{}   balance{}",sum,creditDiscount,creditDiscount);
 							BigDecimal max = sellerCapitalWait.multiply(balance).divide(sum, 8, RoundingMode.DOWN);
 							if (max.compareTo(sellerCapitalWait) > 0) {
 								// 全投金额
