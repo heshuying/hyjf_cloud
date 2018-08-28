@@ -135,7 +135,7 @@ public class AppRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/failed";
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
 		String successfulUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/success?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
