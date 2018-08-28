@@ -82,8 +82,8 @@
         hba.fail_amount fail_amount,
         hba.fail_counts fail_counts,
         hba.`status`,
-        hba.create_time,
-        hba.update_time,
+        DATE_FORMAT(hba.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+        DATE_FORMAT(hba.update_time, '%Y-%m-%d %H:%i:%s' ) AS update_time,
         hba.is_repay_org_flag is_repay_org_flag,
         hba.data
         FROM
