@@ -846,7 +846,7 @@
 			SUBSTRING(FORMAT(hydbt.account,4),1,LENGTH(FORMAT(hydbt.account,4))-2) AS account,
 			hydbt.`client` AS client,
 			hydbt.`client` AS client_name,
-			hydbt.create_time AS invest_time
+		    date_format(hydbt.create_time, '%Y-%m-%d %H:%i:%s') AS invest_time
 			FROM ht_borrow_tender hydbt
 			LEFT JOIN ht_r_user hydu ON hydbt.user_id = hydu.user_id
 		<where>

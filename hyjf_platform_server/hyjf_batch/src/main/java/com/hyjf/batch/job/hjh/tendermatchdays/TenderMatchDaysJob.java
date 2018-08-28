@@ -3,6 +3,7 @@
  */
 package com.hyjf.batch.job.hjh.tendermatchdays;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -21,8 +22,8 @@ public class TenderMatchDaysJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("TenderMatchDaysJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", Boolean.class).getBody();
+        BooleanResponse result = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", BooleanResponse.class).getBody();
 
         logger.info("TenderMatchDaysJob execute end...");
     }
