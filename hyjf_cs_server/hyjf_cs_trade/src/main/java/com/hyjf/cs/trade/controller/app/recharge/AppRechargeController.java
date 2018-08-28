@@ -107,8 +107,6 @@ public class AppRechargeController extends BaseTradeController{
 		String money = request.getParameter("money");// 交易金额
 		String isMencry = request.getParameter("isMencry");// 版本标识
 		String platform = request.getParameter("platform");// 平台
-		logger.info("mobile is :{}", mobile);
-		logger.info("key is :{}", key);
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
@@ -134,19 +132,15 @@ public class AppRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/failed";
-		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
-		String successfulUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/success?money="+money;
+		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
+		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+        bgRetUrl=splicingParam(bgRetUrl,request);
+		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_APP);
 		directRechargeBean.setPlatform(platform);
-		logger.info("directRechargeBean is :{}", JSONObject.toJSONString(directRechargeBean));
-		logger.info("userId is :{}", userId);
-		logger.info("ipAddr is :{}", ipAddr);
-		logger.info("mobile is :{}", mobile);
-		logger.info("money is :{}", money);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 
 		try {
@@ -162,8 +156,21 @@ public class AppRechargeController extends BaseTradeController{
 		return result;
 	}
 
+    private String splicingParam(String bgRetUrl, HttpServletRequest request) {
+	    String sign=request.getParameter("sign");
+        String token=request.getParameter("token");
+        StringBuffer sb = new StringBuffer(bgRetUrl);
 
-	/**
+        if(bgRetUrl.indexOf("?")!=-1){
+            sb.append("&sign=").append(sign).append("&token=").append(token);
+        }else{
+            sb.append("?sign=").append(sign).append("&token=").append(token);
+        }
+	    return sb.toString();
+    }
+
+
+    /**
 	 * 页面充值异步回调
 	 * @param request
 	 * @param bean

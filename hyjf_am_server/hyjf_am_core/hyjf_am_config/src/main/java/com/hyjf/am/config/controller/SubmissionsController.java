@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
@@ -88,9 +89,11 @@ public class SubmissionsController {
      * @return
      */
     @PostMapping("/addSubmission")
-    public Integer addSubmission(@RequestBody SubmissionsVO form) {
+    public IntegerResponse addSubmission(@RequestBody SubmissionsVO form) {
+        IntegerResponse response = new IntegerResponse();
         Submissions submissions = CommonUtils.convertBean(form, Submissions.class);
-        return submissionsService.addSubmission(submissions);
+        response.setResultInt(submissionsService.addSubmission(submissions));
+        return response;
     }
 
 }

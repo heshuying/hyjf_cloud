@@ -445,7 +445,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String ip=CustomUtil.getIpAddr(request);
         // 调用汇付接口(提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
-        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
+        String bgRetUrl = systemConfig.getAppHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
         try {

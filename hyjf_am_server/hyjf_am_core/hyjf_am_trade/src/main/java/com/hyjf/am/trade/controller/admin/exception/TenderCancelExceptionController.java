@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.BorrowTenderTmpResponse;
@@ -135,5 +136,27 @@ public class TenderCancelExceptionController extends BaseController {
     public Integer insertFreezeHistory(@PathVariable Integer id){
         return tenderCancelExceptionService.deleteBorrowTenderTmpById(id);
     }
-
+    
+    /**
+     * 根据nid删除BorrowTenderTmp
+     * @auth libin
+     * @param nid
+     * @return
+     */
+    @ApiOperation(value = "根据nid删除BorrowTenderTmp", notes = "根据nid删除BorrowTenderTmp")
+    @GetMapping(value = "/deleteBorrowTenderTmp/{orgOrderId}")
+    public IntegerResponse deleteBorrowTenderTmp(@PathVariable String orgOrderId){
+        return new IntegerResponse(tenderCancelExceptionService.deleteBorrowTenderTmp(orgOrderId));
+    }
+    
+    /**
+     * 根据userId，borrowNid，orderId删除BorrowTenderTmp
+     * @auth libin
+     * @return
+     */
+    @ApiOperation(value = "根据userId，borrowNid，orderId删除BorrowTenderTmp", notes = "根据userId，borrowNid，orderId删除BorrowTenderTmp")
+    @GetMapping(value = "/deleteBorrowTenderTmpByParam/{userId}/{borrowNid}/{orderId}")
+    public IntegerResponse deleteBorrowTenderTmpByParam(@PathVariable int userId, @PathVariable String borrowNid, @PathVariable String orderId){
+    	return new IntegerResponse(tenderCancelExceptionService.deleteBorrowTenderTmpByParam(userId,borrowNid,orderId));
+    }
 }

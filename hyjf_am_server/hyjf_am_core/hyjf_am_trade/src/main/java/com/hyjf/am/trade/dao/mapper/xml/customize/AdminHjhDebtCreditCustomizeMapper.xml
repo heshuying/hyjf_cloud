@@ -136,7 +136,7 @@
         dc.credit_income AS account_receive,
         dc.credit_status,
         dc.repay_status,
-        dc.create_time AS liquidates_time,
+        DATE_FORMAT( dc.create_time, '%Y-%m-%d %H:%i:%s' ) AS liquidates_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,
         dc.liquidates_period,

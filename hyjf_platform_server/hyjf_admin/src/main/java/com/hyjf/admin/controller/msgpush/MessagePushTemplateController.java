@@ -25,10 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -179,8 +176,8 @@ public class MessagePushTemplateController extends BaseController {
     }
 
     @ApiOperation(value = "删除模板", notes = "删除模板")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(String ids) {
+    @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    public AdminResult deleteAction(@PathVariable String ids) {
         if (ids == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -195,8 +192,8 @@ public class MessagePushTemplateController extends BaseController {
 
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
-    @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
-    public AdminResult updateStatus(Integer id) {
+    @RequestMapping(value = "/statusAction/{id}", method = RequestMethod.GET)
+    public AdminResult updateStatus(@PathVariable Integer id) {
         if (id != null) {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
             MessagePushTemplateVO record = response.getResult();
