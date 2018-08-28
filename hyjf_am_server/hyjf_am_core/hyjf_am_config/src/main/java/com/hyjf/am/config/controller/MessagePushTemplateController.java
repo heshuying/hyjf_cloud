@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -157,6 +158,7 @@ public class MessagePushTemplateController {
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
         messagePushTemplate.setTagId(Integer.parseInt(templateVO.getTagId()));
+        messagePushTemplate.setCreateTime(GetDate.getDate());
         Integer result = templateServcie.insertMessagePushTemplate(messagePushTemplate);
         response.setCount(result);
         return response;
@@ -173,6 +175,7 @@ public class MessagePushTemplateController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(request, messagePushTemplate);
+        messagePushTemplate.setUpdateTime(GetDate.getDate());
         Integer result = templateServcie.updateAction(messagePushTemplate);
         if (result > 0) {
             response.setCount(result);

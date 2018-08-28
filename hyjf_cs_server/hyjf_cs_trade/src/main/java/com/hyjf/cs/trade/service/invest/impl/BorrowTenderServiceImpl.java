@@ -260,6 +260,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(account);
         String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrow.getBorrowNid());
+        logger.info("标的号{}  项目剩余redis:{}  取值为{}",borrow.getBorrowNid(),balance,RedisConstants.BORROW_NID+borrow.getBorrowNid());
         // 您来晚了，下次再来抢吧
         if (StringUtils.isEmpty(balance)) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
