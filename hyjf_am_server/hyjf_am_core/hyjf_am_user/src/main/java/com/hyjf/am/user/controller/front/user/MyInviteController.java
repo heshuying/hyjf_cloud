@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.user;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.MyInviteListResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -46,9 +47,10 @@ public class MyInviteController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/myInviteCount", method = RequestMethod.POST)
-    public Integer myInviteCount(@RequestBody @Valid MyInviteListRequest requestBean) {
-        MyInviteListResponse responseBean = new MyInviteListResponse();
-
-        return myInviteService.countMyInviteList(requestBean.getUserId());
+    public IntegerResponse myInviteCount(@RequestBody @Valid MyInviteListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer count = myInviteService.countMyInviteList(requestBean.getUserId());
+        responseBean.setResultInt(count);
+        return responseBean;
     }
 }

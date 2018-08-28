@@ -805,7 +805,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String retUrl = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/failed?sign="+sign+"&logOrdId="+bean.getLogOrderId();
         String success = systemConfig.getWeiFrontHost() + "/user/setting/authorization/result/success?sign="+sign;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost() + "/user/autoplus";
+        String bgRetUrl = systemConfig.getWeChatHost() + "/hyjf-wechat/wx/user/autoplus/";
         String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
 
         if (type == 1) {

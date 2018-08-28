@@ -2203,7 +2203,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2248,7 +2248,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findAssetList", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findAssetList", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2312,7 +2312,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void updateCashDepositeStatus(String assetId, String menuHide) {
-        String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
+        String url = "http://AM-ADMIN/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
         restTemplate.getForEntity(url, String.class).getBody();
 
     }
