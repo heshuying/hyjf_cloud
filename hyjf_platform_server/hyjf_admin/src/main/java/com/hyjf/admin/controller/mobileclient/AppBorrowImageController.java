@@ -33,7 +33,7 @@ import java.util.LinkedList;
  */
 @Api(tags = "admin移动客户端-产品图片")
 @RestController
-@RequestMapping("app/maintenance/borrowimage")
+@RequestMapping("/hyjf-admin/app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired

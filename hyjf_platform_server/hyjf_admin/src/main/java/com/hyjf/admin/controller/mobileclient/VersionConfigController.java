@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(tags = "admin移动客户端-版本管理")
 @RestController
-@RequestMapping("config/versionconfig")
+@RequestMapping("/hyjf-admin/config/versionconfig")
 public class VersionConfigController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
 

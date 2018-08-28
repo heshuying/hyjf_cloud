@@ -40,7 +40,7 @@ import java.util.Map;
  */
 @Api(tags = "admin移动客户端-意见反馈")
 @RestController
-@RequestMapping("/submissions")
+@RequestMapping("/hyjf-admin/submissions")
 public class SubmissionsController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
 

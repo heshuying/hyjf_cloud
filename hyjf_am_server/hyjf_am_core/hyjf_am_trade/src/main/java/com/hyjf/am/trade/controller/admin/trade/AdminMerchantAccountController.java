@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
@@ -123,16 +124,20 @@ public class AdminMerchantAccountController {
      * @return
      */
     @RequestMapping("/countAccountListInfoBySubAccountName")
-    public int countAccountListInfoBySubAccountName(@RequestBody HashMap<String,String> map){
-        return merchantAccountService.countAccountListInfoBySubAccountName(map);
+    public IntegerResponse countAccountListInfoBySubAccountName(@RequestBody HashMap<String,String> map){
+        IntegerResponse response= new IntegerResponse();
+        response.setResultInt(merchantAccountService.countAccountListInfoBySubAccountName(map));
+        return response;
     }
     /**
      * 根据子账户代号检索
      * @return
      */
     @RequestMapping("/countAccountListInfoBySubAccountCode")
-    public int countAccountListInfoBySubAccountCode(@RequestBody HashMap<String,String> map){
-        return merchantAccountService.countAccountListInfoBySubAccountCode(map);
+    public IntegerResponse countAccountListInfoBySubAccountCode(@RequestBody HashMap<String,String> map){
+        IntegerResponse response= new IntegerResponse();
+        response.setResultInt(merchantAccountService.countAccountListInfoBySubAccountCode(map));
+        return response;
     }
 
 

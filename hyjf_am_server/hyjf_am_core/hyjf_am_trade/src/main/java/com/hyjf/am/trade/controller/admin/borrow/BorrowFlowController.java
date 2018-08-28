@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.response.admin.HjhAssetTypeResponse;
@@ -73,8 +74,11 @@ public class BorrowFlowController {
      * @return
      */
     @RequestMapping("/countRecordByPK/{instCode}/{assetType}")
-    public int countRecordByPK(@PathVariable String instCode, @PathVariable Integer assetType){
-        return borrowFlowService.countRecordByPK(instCode,assetType);
+    public IntegerResponse countRecordByPK(@PathVariable String instCode, @PathVariable Integer assetType){
+        IntegerResponse response=new IntegerResponse();
+        int count =borrowFlowService.countRecordByPK(instCode,assetType);
+        response.setResultInt(count);
+        return response;
     }
     /**
      * 根据资金来源查询产品类型

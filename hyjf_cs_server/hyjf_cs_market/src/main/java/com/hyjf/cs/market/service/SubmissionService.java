@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.service;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.config.SubmissionsVO;
 
 /**
@@ -12,6 +13,6 @@ public interface SubmissionService {
      * 添加意见反馈
      * @return
      */
-    int addSubmission(SubmissionsVO submissions);
+    IntegerResponse addSubmission(SubmissionsVO submissions);
 
 }
