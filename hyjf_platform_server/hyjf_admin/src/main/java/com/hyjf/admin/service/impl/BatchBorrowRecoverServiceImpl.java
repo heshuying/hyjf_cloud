@@ -282,7 +282,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }
