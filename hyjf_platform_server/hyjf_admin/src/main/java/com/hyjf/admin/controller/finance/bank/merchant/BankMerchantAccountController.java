@@ -114,14 +114,14 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 设置交易密码
      *
-     * @param accountCode
+     * @param param
      * @param
      * @return
      */
     @ApiOperation(value = "设置交易密码")
     @PostMapping(value = "/setPassword")
-    public AdminResult setPassword(String accountCode) {
-        AdminResult result = bankMerchantAccountService.setPassword(accountCode);
+    public AdminResult setPassword(@RequestBody Map<String,String> param) {
+        AdminResult result = bankMerchantAccountService.setPassword(param.get("accountCode"));
         return result;
     }
 
@@ -148,14 +148,14 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 重置交易密码
      *
-     * @param accountCode
+     * @param param
      * @param
      * @return
      */
     @ApiOperation(value = "重置交易密码")
     @PostMapping(value = "/resetPassword")
-    public AdminResult resetPassword(String accountCode) {
-        AdminResult result = bankMerchantAccountService.resetPassword(accountCode);
+    public AdminResult resetPassword(@RequestBody Map<String,String> param) {
+        AdminResult result = bankMerchantAccountService.resetPassword(param.get("accountCode"));
         return result;
     }
 
@@ -696,7 +696,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "发红包")
     @PostMapping(value = "/redPocketSendAction")
-    public AdminResult redPocketSendAction(HttpServletRequest request, @ModelAttribute RedPocketBean form) {
+    public AdminResult redPocketSendAction(HttpServletRequest request, @RequestBody RedPocketBean form) {
         AdminResult result = new AdminResult();
         // 查询商户子账户余额
         String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();

@@ -11,23 +11,23 @@
 package com.hyjf.pay.lib.chinapnr;
 
 import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.PnrApi;
 import com.hyjf.pay.lib.PnrApiBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author GOGTZ-T
  */
 
+@Component
 public class ChinaPnrApiImpl implements PnrApi {
     private static Logger log = LoggerFactory.getLogger(ChinaPnrApiImpl.class);
     /** THIS_CLASS */
@@ -53,6 +53,28 @@ public class ChinaPnrApiImpl implements PnrApi {
     @Value("${hyjf.chinapnr.url}")
     private String chinapnrUrl;
 
+    public ChinaPnrApiImpl() {
+        // 版本号
+        if (Validator.isNull(_version)) {
+            _version = get_version();
+            // _version ="20";
+        }
+
+        // 商户客户号
+        if (Validator.isNull(_merCustId)) {
+            _merCustId = get_merCustId();
+        }
+
+        // 商户子账户号
+        if (Validator.isNull(_merAcctId)) {
+            _merAcctId = get_merAcctId();
+        }
+
+        // 商户后台回调地址
+        if (Validator.isNull(_bgRetUrl)) {
+            _bgRetUrl = get_bgRetUrl();
+        }
+    }
     /**
      * 调用汇付天下API接口
      *
@@ -1700,4 +1722,35 @@ public class ChinaPnrApiImpl implements PnrApi {
         return ret;
     }
 
+    public String get_version() {
+        return _version;
+    }
+
+    public void set_version(String _version) {
+        this._version = _version;
+    }
+
+    public String get_merCustId() {
+        return _merCustId;
+    }
+
+    public void set_merCustId(String _merCustId) {
+        this._merCustId = _merCustId;
+    }
+
+    public String get_merAcctId() {
+        return _merAcctId;
+    }
+
+    public void set_merAcctId(String _merAcctId) {
+        this._merAcctId = _merAcctId;
+    }
+
+    public String get_bgRetUrl() {
+        return _bgRetUrl;
+    }
+
+    public void set_bgRetUrl(String _bgRetUrl) {
+        this._bgRetUrl = _bgRetUrl;
+    }
 }
