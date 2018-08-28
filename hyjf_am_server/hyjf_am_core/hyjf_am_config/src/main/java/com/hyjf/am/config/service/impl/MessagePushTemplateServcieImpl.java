@@ -3,9 +3,14 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.am.config.dao.mapper.auto.MessagePushTemplateMapper;
+import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
+import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
+import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -13,14 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.config.dao.mapper.auto.MessagePushTemplateMapper;
-import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
-import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
-import com.hyjf.am.config.service.MessagePushTemplateServcie;
-import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.util.CustomConstants;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -83,10 +81,10 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 	}
 
 	@Override
-	public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
+	public int insertMsgPushTemplate(MsgPushTemplateRequest request) {
 		MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
 		BeanUtils.copyProperties(request, messagePushTemplate);
-		templateMapper.insert(messagePushTemplate);
+		return templateMapper.insert(messagePushTemplate);
 	}
 
 	@Override

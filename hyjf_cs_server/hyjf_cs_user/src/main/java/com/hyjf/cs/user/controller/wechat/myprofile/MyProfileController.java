@@ -12,7 +12,6 @@ import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
-import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
@@ -20,7 +19,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -41,8 +43,6 @@ public class MyProfileController extends BaseUserController {
 
     @Autowired
     private MyProfileService myProfileService;
-    @Autowired
-    private RequestUtil requestUtil;
     @Autowired
     private SystemConfig systemConfig;
 
@@ -92,9 +92,9 @@ public class MyProfileController extends BaseUserController {
      */
     @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
-    public WeChatResult getCouponList(HttpServletRequest request) {
+    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId) {
         WeChatResult resultBean = new WeChatResult();
-        Integer userId = requestUtil.getRequestUserId(request);
+
         if (userId==null){
             resultBean.setStatus(BaseResult.FAIL);
             resultBean.setStatusDesc("用户未登录!");
@@ -102,13 +102,14 @@ public class MyProfileController extends BaseUserController {
         }
         List<CouponUserForAppCustomizeVO> list = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
         if (CollectionUtils.isEmpty(list)){
-            resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("获取用户优惠券数据失败!");
+            resultBean.setStatus(BaseResult.SUCCESS);
+            resultBean.setStatusDesc(BaseResult.SUCCESS_DESC);
+            resultBean.setObject(list);
             return resultBean;
         }
 
         List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(list);
-        resultBean.setData(lstCoupon);
+        resultBean.setObject(lstCoupon);
         return resultBean;
     }
 
@@ -122,10 +123,11 @@ public class MyProfileController extends BaseUserController {
         List<CouponUserListCustomizeVO> list=new ArrayList<CouponUserListCustomizeVO>();
         DecimalFormat df = new DecimalFormat(",###");
         df.setRoundingMode(RoundingMode.FLOOR);
+
         for (CouponUserForAppCustomizeVO config : configs) {
             CouponUserListCustomizeVO customize=new CouponUserListCustomizeVO();
             customize.setId(config.getId());
-            String[] time=config.getTime().split("-");
+            String[] time=config.getEndTime().split("-");
             customize.setAddTime(time[0]);
             customize.setEndTime(time[1]);
             customize.setContent("1");

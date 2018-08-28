@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.util;
 
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
+import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,6 @@ public class SignUtil {
         if (StringUtils.isEmpty(instCode)) {
             return false;
         }
-
         if (Objects.equals("/push", methodName)) {
             // 个人资产推送--校验接口
             PushRequestBean requestBean = (PushRequestBean) paramBean;
@@ -42,14 +42,17 @@ public class SignUtil {
         } else if(Objects.equals("/synbalance", methodName)){
             SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
             sign =  bean.getAccountId()+bean.getInstCode() + bean.getTimestamp();
-        }else if (Objects.equals("/pushcompany", methodName)) {
+        } else if (Objects.equals("/pushcompany", methodName)) {
             // 企业资产推送--校验接口
             PushRequestBean bean = (PushRequestBean) paramBean;
             Long timestamp = bean.getTimestamp();
             Integer assetType = bean.getAssetType();
             sign = timestamp + instCode + assetType;
+        } else if(Objects.equals("/tender", methodName)){
+        	//自动投资
+        	AutoTenderRequestBean bean = (AutoTenderRequestBean) paramBean;
+        	sign = bean.getInstCode() + bean.getAccountId() + bean.getBorrowNid() + bean.getTimestamp();
         }
-
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
 }

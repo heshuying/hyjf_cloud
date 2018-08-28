@@ -3,16 +3,11 @@
  */
 package com.hyjf.am.user.controller.admin.finance;
 
-import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -21,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
@@ -39,33 +32,6 @@ public class BankAccountManageController extends BaseController {
 
     /**
      * @Author: liushouyi
-     * @Desc :查询总件数
-     */
-    @ApiOperation(value = "银行账户管理查询总件数")
-    @PostMapping("/queryAccountCount")
-    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        Integer count = bankAccountManageService.queryAccountCount(bankAccountManageRequest);
-        return count;
-    }
-
-    /**
-     * @Author: liushouyi
-     * @Desc :查询列表数据
-     */
-    @ApiOperation(value = "银行账户管理查询列表")
-    @PostMapping("/queryAccountInfos")
-    public BankAccountManageCustomizeResponse queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        BankAccountManageCustomizeResponse response = new BankAccountManageCustomizeResponse();
-        List<BankAccountManageCustomize> bankAccountManageCustomizes = bankAccountManageService.queryAccountInfos(bankAccountManageRequest);
-        if (null!=bankAccountManageCustomizes&&bankAccountManageCustomizes.size()>0) {
-            List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(bankAccountManageCustomizes,BankAccountManageCustomizeVO.class);
-            response.setResultList(bankAccountManageCustomizeVOS);
-        }
-        return response;
-    }
-
-    /**
-     * @Author: liushouyi
      * @Desc :查询列表数据
      */
     @ApiOperation(value = "银行账户管理查询列表")
@@ -73,9 +39,9 @@ public class BankAccountManageController extends BaseController {
     public BankOpenAccountResponse getBankOpenAccount(@PathVariable Integer userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         BankOpenAccount bankOpenAccount = bankAccountManageService.getBankOpenAccount(userId);
-        if (null!=bankOpenAccount) {
+        if (null != bankOpenAccount) {
             BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
-            BeanUtils.copyProperties(bankOpenAccountVO,bankOpenAccount);
+            BeanUtils.copyProperties(bankOpenAccountVO, bankOpenAccount);
             response.setResult(bankOpenAccountVO);
         }
         return response;

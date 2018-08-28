@@ -16,6 +16,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,17 +66,21 @@ public class PlatformTransferController extends BaseController {
     /**
      * 根据userName检查是否可以平台转账
      * @auth sunpeikai
-     * @param userName 用户名
+     * @param requestMap 请求参数
      * @return
      */
     @ApiOperation(value = "平台转账-根据username查询用户信息",notes = "平台转账-根据username查询用户信息")
+    @ApiImplicitParam(name = "userName", value = "用户名", required = true, dataType = "String")
     @PostMapping(value = "/getuserinfobyusername")
-    public AdminResult getUserInfoByUserName(@RequestBody String userName){
-        logger.info("userName=[{}]",userName);
+    public AdminResult getUserInfoByUserName(@RequestBody Map<String,String> requestMap){
+        String userName = requestMap.get("userName");
+        logger.info("getuserinfobyusername======userName=[{}]",userName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(userName)){
             result = platformTransferService.checkTransfer(userName);
         }else{
+            logger.error("getUserInfoByUserName,,,,userName=null");
+            result.put("status","99");
             result.put("info","用户账号不能为空");
         }
         if("0".equals(result.get("status"))){
@@ -82,6 +88,17 @@ public class PlatformTransferController extends BaseController {
         }else{
             return new AdminResult(FAIL,result.getString("info"));
         }
+    }
+
+    @ApiOperation(value = "平台转账-查询商户账户余额",notes = "平台转账-查询商户账户余额")
+    @PostMapping(value = "/tohandrecharge")
+    public AdminResult toHandRecharge(HttpServletRequest request){
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        logger.info("toHandRecharge=========userId:[{}]",userId);
+        BigDecimal balance = platformTransferService.getAccountBalance(userId);
+        Map<String,BigDecimal> map = new HashMap<>();
+        map.put("balance",balance);
+        return new AdminResult(map);
     }
 
     /**
@@ -92,7 +109,8 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账",notes = "平台转账")
     @PostMapping(value = "/handrecharge")
-    public AdminResult handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+    public AdminResult handRecharge(HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject result = platformTransferService.handRecharge(userId,request,platformTransferRequest);
         if("0".equals(result.get("status"))){
             return new AdminResult(SUCCESS,result.getString("result"));

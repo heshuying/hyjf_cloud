@@ -238,7 +238,41 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 List<BatchBorrowRepayBankInfoVO> bankInfoVOList = getRepayDetailList(results);
             }
         }
-        return null;
+        List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
+        String subPacks;
+        //TODO 银行环境不通，测试数据，环境顺畅后删除
+        subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
+                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
+                "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +
+                "\"6212461890000001181\",\"authCode\":\"20161211125545497983\",\"productId\":\"HJD180300000017\"," +
+                "\"orderId\":\"15205656009951111618\",\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":" +
+                "\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\",\"authCode\":" +
+                "\"20161211150447498941\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656010081711674\"," +
+                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"}," +
+                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211105946497425\",\"productId\":" +
+                "\"HJD180300000017\",\"orderId\":\"15205656010301111941\",\"failMsg\":\"\",\"txState\":\"S\"," +
+                "\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\"," +
+                "\"authCode\":\"20161211125546497987\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656011151111709\"," +
+                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}," +
+                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211125547497991\"," +
+                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656012191111568\",\"failMsg\":" +
+                "\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}]";
+        if (StringUtils.isNotBlank(subPacks)) {
+            JSONArray loanDetails = JSONObject.parseArray(subPacks);
+            for (int j = 0; j < loanDetails.size(); j++) {
+                JSONObject loanDetail = loanDetails.getJSONObject(j);
+                BatchBorrowRepayBankInfoVO info = new BatchBorrowRepayBankInfoVO();
+                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
+                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
+                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
+                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));// 操作金额
+                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
+                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
+                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
+                detailList.add(info);
+            }
+        }
+        return detailList;
     }
 
     /**
@@ -248,7 +282,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }
@@ -261,9 +295,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         jsonObject.put("status",SUCCESS);
         //批次状态
         Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
+        List<DropDownVO> paramMapList = ConvertUtils.convertParamMapToDropDown(paramNameMap);
         if(paramNameMap != null && paramNameMap.size() > 0){
             jsonObject.put("批次状态列表","recoverStatusList");
-            jsonObject.put("recoverStatusList",paramNameMap);
+            jsonObject.put("recoverStatusList",paramMapList);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取转让状态列表失败！");

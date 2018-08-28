@@ -10,7 +10,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myproject.MyProjectService;
-import com.hyjf.cs.user.util.RequestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -32,8 +31,6 @@ public class MyProjectController extends BaseUserController {
     @Autowired
     private MyProjectService myProjectService;
 
-    @Autowired
-    private RequestUtil requestUtil;
     /**
      * 查询我的资产-散标
      * @param request

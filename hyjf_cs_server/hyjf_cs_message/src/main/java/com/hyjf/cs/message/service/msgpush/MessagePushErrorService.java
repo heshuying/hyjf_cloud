@@ -40,5 +40,5 @@ public interface MessagePushErrorService {
      *
      * @return
      */
-    MessagePushMsgHistory getRecord(Integer id);
+    MessagePushMsgHistory getRecord(String id);
 }

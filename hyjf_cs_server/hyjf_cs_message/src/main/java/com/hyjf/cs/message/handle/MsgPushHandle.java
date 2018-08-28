@@ -309,7 +309,7 @@ public class MsgPushHandle {
 		return histories;
 	}
 
-	@Value("hyjf.env.test")
+	@Value("${hyjf.env.test}")
 	private boolean HYJF_ENV_TEST;
 
 	/**
@@ -490,7 +490,7 @@ public class MsgPushHandle {
 		if (StringUtils.isNotEmpty(msgId) || StringUtils.isNotEmpty(msgProId) || StringUtils.isNotEmpty(msgZNBID)
 				|| StringUtils.isNotEmpty(msgYXBID) || StringUtils.isNotEmpty(msgZYBID)
 				|| StringUtils.isNotEmpty(msgZZBID) || StringUtils.isNotEmpty(msgTESTID)) {
-			msg.setSendTime(GetDate.getNowTime10() + "");
+			msg.setSendTime(GetDate.getNowTime10());
 			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
 			msg.setMsgJpushId(msgId);
 			msg.setMsgJpushProId(msgProId);
@@ -507,7 +507,7 @@ public class MsgPushHandle {
 			logger.info("发送消息成功：msgZZBID: " + msgZZBID);
 			logger.info("发送消息成功：msgTESTID: " + msgTESTID);
 		} else {
-			msg.setSendTime(GetDate.getNowTime10() + "");
+			msg.setSendTime(GetDate.getNowTime10());
 			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_2);
 			msg.setMsgRemark(errorMsg);
 			logger.info("发送消息失败：" + errorMsg);

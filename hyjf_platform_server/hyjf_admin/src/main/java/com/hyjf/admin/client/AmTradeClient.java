@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -1825,7 +1826,7 @@ public interface AmTradeClient {
      * @return
      * @Author : huanghui
      */
-    AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+    AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
      * 更新充值状态
@@ -2707,7 +2708,31 @@ public interface AmTradeClient {
      * @auth nxl
      */
     NifaReportLogResponse selectNifaReportLogList(NifaReportLogRequest request);
-    
+
+    /**
+     * 行账户管理页面查询件数
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest);
+
+    /**
+     * 账户管理页面查询列表
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
+
+    /**
+     * 资金明细（列表）
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest);
+
 	/**
 	 * 传参查询承接债转表列总计
 	 * @auth libin

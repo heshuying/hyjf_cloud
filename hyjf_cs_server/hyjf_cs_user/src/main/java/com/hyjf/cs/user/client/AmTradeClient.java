@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -284,4 +285,20 @@ public interface AmTradeClient {
      * @return List<CouponUserForAppCustomizeVO>
      */
     List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * 借款人受托支付申请异步回调更新数据
+     * @param borrowNid
+     * @return
+     */
+    Boolean updateTrusteePaySuccess(String borrowNid);
+
+    /**
+     * 查询信托白名单
+     *
+     * @param instCode
+     * @param receiptAccountId
+     * @return
+     */
+    STZHWhiteListVO getSTZHWhiteList(String instCode, String receiptAccountId);
 }

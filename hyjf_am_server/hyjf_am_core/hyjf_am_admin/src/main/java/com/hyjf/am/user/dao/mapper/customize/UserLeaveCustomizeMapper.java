@@ -5,6 +5,7 @@ package com.hyjf.am.user.dao.mapper.customize;
 
 import java.util.List;
 
+import com.hyjf.am.user.dao.model.customize.AdminEmployeeLeaveCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import com.hyjf.am.user.dao.model.auto.User;
@@ -41,4 +42,10 @@ public interface UserLeaveCustomizeMapper {
      * @return
      */
     List<User> queryEmployeeById(@Param("userId") Integer userId);
+    /**
+     * 根据用户id查找离职信息
+     * @param userId
+     * @return
+     */
+    List<AdminEmployeeLeaveCustomize> selectUserLeaveByUserId(@Param("userId") Integer userId);
 }

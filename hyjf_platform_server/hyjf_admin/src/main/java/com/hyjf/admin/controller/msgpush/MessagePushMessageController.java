@@ -4,8 +4,6 @@
 package com.hyjf.admin.controller.msgpush;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
@@ -21,8 +19,6 @@ import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.util.GetMessageIdUtil;
@@ -33,13 +29,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -149,7 +140,9 @@ public class MessagePushMessageController extends BaseController {
             return new AdminResult<>(response);
         }
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
+        String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
+        templateVO.setMsgTerminal(msgTerminal);
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -190,12 +183,16 @@ public class MessagePushMessageController extends BaseController {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
+
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
@@ -222,14 +219,14 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
-                        templateRequest.setSendTime(time);
+                        templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
                     }
                 } catch (Exception e) {
                 }
             }
         } else {
             templateRequest.setPreSendTime(null);
-            templateRequest.setSendTime(GetDate.getNowTime10());
+            templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
 
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
@@ -238,9 +235,9 @@ public class MessagePushMessageController extends BaseController {
 
 
     @ApiOperation(value = "删除手动发送消息", notes = "删除手动发送消息")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(@RequestParam String ids) {
-        if (ids == null) {
+    @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    public AdminResult deleteAction(@PathVariable String ids) {
+        if (StringUtils.isBlank(ids)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         String msgIds[] = ids.split(",");

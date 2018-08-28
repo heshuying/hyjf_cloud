@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.repay;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.BankRepayFreezeLogResponse;
 import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -31,8 +32,8 @@ public class BankRepayFreezeLogController extends BaseController {
      * @return
      */
     @RequestMapping("/add")
-    public Integer addFreezeLog(@RequestBody BankRepayFreezeLogRequest requestBean){
-        return  bankRepayFreezeLogService.insertRepayFreezeLog(requestBean);
+    public IntegerResponse addFreezeLog(@RequestBody BankRepayFreezeLogRequest requestBean){
+        return  new IntegerResponse(bankRepayFreezeLogService.insertRepayFreezeLog(requestBean));
     }
 
     /**
@@ -41,12 +42,12 @@ public class BankRepayFreezeLogController extends BaseController {
      * @return
      */
     @RequestMapping("/deleteby_orderid/{orderId}")
-    public Integer deleteFreezeLogByOrderId(@PathVariable String orderId){
+    public IntegerResponse deleteFreezeLogByOrderId(@PathVariable String orderId){
         if(StringUtils.isBlank(orderId)){
-            return 0;
+            return new IntegerResponse(0);
         }
 
-        return bankRepayFreezeLogService.deleteFreezeLogsByOrderId(orderId);
+        return new IntegerResponse(bankRepayFreezeLogService.deleteFreezeLogsByOrderId(orderId));
     }
 
     /**
@@ -55,8 +56,8 @@ public class BankRepayFreezeLogController extends BaseController {
      * @date: 2018/7/11
      */
     @RequestMapping("/deleteby_id/{id}")
-    public Integer deleteFreezeLogById(Integer id) {
-        return bankRepayFreezeLogService.deleteFreezeLogById(id);
+    public IntegerResponse deleteFreezeLogById(Integer id) {
+        return new IntegerResponse(bankRepayFreezeLogService.deleteFreezeLogById(id));
     }
 
     /**
@@ -110,7 +111,7 @@ public class BankRepayFreezeLogController extends BaseController {
      * @return
      */
     @RequestMapping("/get_logvalid_all_count")
-    public Integer getFreezeLogValidAllCount() {
-        return bankRepayFreezeLogService.getFreezeLogValidAllCount();
+    public IntegerResponse getFreezeLogValidAllCount() {
+        return new IntegerResponse(bankRepayFreezeLogService.getFreezeLogValidAllCount());
     }
 }

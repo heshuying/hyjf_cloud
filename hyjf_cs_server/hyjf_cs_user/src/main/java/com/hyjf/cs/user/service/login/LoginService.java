@@ -8,6 +8,8 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.BaseUserService;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -95,4 +97,6 @@ public interface LoginService extends BaseUserService {
 	 * @return
 	 */
 	UserVO getUserByIdCard(String idCard);
+
+	Map<String, String> updateLoginInAction(String userName, String password, String ipAddr);
 }

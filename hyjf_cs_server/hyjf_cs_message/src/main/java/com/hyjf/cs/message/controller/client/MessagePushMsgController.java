@@ -125,6 +125,8 @@ public class MessagePushMsgController extends BaseController {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg msg = new MessagePushMsg();
 		BeanUtils.copyProperties(msgVO,msg);
+		msg.setCreateTime(GetDate.getNowTime10());
+		msg.setSendTime(GetDate.strYYYYMMDD2Timestamp2(msgVO.getSendTime()));
 		Integer count = messagePushMsgService.insertMessagePushMsg(msg);
 		response.setCount(count);
 		return response;
@@ -140,6 +142,9 @@ public class MessagePushMsgController extends BaseController {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg messagePushMsg = new MessagePushMsg();
 		BeanUtils.copyProperties(request,messagePushMsg);
+		messagePushMsg.setLastupdateTime(GetDate.getNowTime10());
+		String msgTerminal[] = request.getMsgTerminal().split(",");
+		messagePushMsg.setMsgTerminal(msgTerminal);
 		Integer count = messagePushMsgService.updateMessagePushMsg(messagePushMsg);
 		response.setCount(count);
 		return response;

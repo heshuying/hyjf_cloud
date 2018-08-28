@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,146 +17,105 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
 
     private static final long serialVersionUID = 8232003216593277079L;
 
-    /**
-     * 部门名称
-     */
+    @ApiModelProperty(value = "部门名称")
     private String departmentName;
-    /**
-     * 创建时间 起始
-     */
+
+    @ApiModelProperty(value = "创建时间 起始")
     private String startDate;
-    /**
-     * 创建时间 结束
-     */
+
+    @ApiModelProperty(value = "创建时间 结束")
     private String endDate;
-    /**
-     * 交易类型
-     */
-    private String tradeTypeSrch;
-    private String userNameSrch;
-    private String typeSearch;
+
     private Integer limitStart;
 
     private Integer limitEnd;
 
-    /**
-     * 备注查询
-     */
-    private String remarkSrch;
-
-    /**
-     * account_list 主键
-     */
+    @ApiModelProperty(value = "account_list 主键")
     private Integer id;
-    /**
-     * 用户id
-     */
+
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
-    /**
-     * 用户名
-     */
+
+    @ApiModelProperty(value = "用户名")
     private String username;
-    /**
-     * 推荐人
-     */
+
+    @ApiModelProperty(value = "推荐人")
     private String referrerName;
     /**
      * 推荐组
      */
+    @ApiModelProperty(value = "推荐组")
     private String referrerGroup;
-    /**
-     * 订单号
-     */
+
+    @ApiModelProperty(value = "订单号")
     private String nid;
-    /**
-     * 操作类型
-     */
+
+    @ApiModelProperty(value = "操作类型")
     private String type;
-    /**
-     * 交易类型
-     */
+
+    @ApiModelProperty(value = "交易类型")
     private String tradeType;
 
-    /**
-     * 操作金额
-     */
+    @ApiModelProperty(value = "操作金额")
     private BigDecimal amount;
 
     /**
      * 可用余额
      */
+    @ApiModelProperty(value = "可用余额")
     private BigDecimal balance;
     /**
      * 冻结金额
      */
+    @ApiModelProperty(value = "冻结金额")
     private BigDecimal frost;
 
     /**
      * 汇添金可用余额
      */
+    @ApiModelProperty(value = "可用余额")
     private BigDecimal planBalance;
 
     /**
      * 汇添金冻结金额
      */
+    @ApiModelProperty(value = "冻结金额")
     private BigDecimal planFrost;
-    /**
-     * 备注
-     */
+
+    @ApiModelProperty(value = "备注")
     private String remark;
-    /**
-     * 交易时间
-     */
+
+    @ApiModelProperty(value = "交易时间")
     private String createTime;
 
-    /**
-     * 账户类型是否银行存管
-     */
+    @ApiModelProperty(value = "账户类型是否银行存管")
     private String isBank;
 
-    /**
-     * 电子账号
-     */
+    @ApiModelProperty(value = "电子账号")
     private String accountId;
 
-    /**
-     * 交易流水号
-     */
+    @ApiModelProperty(value = "交易流水号")
     private String seqNo;
 
-    /**
-     * 银行总资产
-     */
+    @ApiModelProperty(value = "银行总资产")
     private String bankTotal;
 
-    /**
-     * 银行存管余额
-     */
+    @ApiModelProperty(value = "银行存管余额")
     private BigDecimal bankBalance;
 
-    /**
-     * 银行存管冻结金额
-     */
+    @ApiModelProperty(value = "银行存管冻结金额")
     private BigDecimal bankFrost;
 
-    /**
-     * 对账状态
-     */
+    @ApiModelProperty(value = "对账状态")
     private String checkStatus;
 
-    /**
-     * 交易状态
-     */
+    @ApiModelProperty(value = "交易状态")
     private String tradeStatus;
 
-    /**
-     * 对账开始时间
-     */
+    @ApiModelProperty(value = "对账开始时间")
     private String startTime;
 
-    /**
-     * 对账结束时间
-     */
+    @ApiModelProperty(value = "对账结束时间")
     private String endTime;
 
     public String getDepartmentName() {
@@ -182,14 +142,6 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
         this.endDate = endDate;
     }
 
-    public String getTypeSearch() {
-        return typeSearch;
-    }
-
-    public void setTypeSearch(String typeSearch) {
-        this.typeSearch = typeSearch;
-    }
-
     public Integer getLimitStart() {
         return limitStart;
     }
@@ -204,14 +156,6 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
-    }
-
-    public String getRemarkSrch() {
-        return remarkSrch;
-    }
-
-    public void setRemarkSrch(String remarkSrch) {
-        this.remarkSrch = remarkSrch;
     }
 
     public Integer getId() {
@@ -396,22 +340,6 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
-    }
-
-    public String getTradeTypeSrch() {
-        return tradeTypeSrch;
-    }
-
-    public void setTradeTypeSrch(String tradeTypeSrch) {
-        this.tradeTypeSrch = tradeTypeSrch;
-    }
-
-    public String getUserNameSrch() {
-        return userNameSrch;
-    }
-
-    public void setUserNameSrch(String userNameSrch) {
-        this.userNameSrch = userNameSrch;
     }
 
     public String getStartTime() {

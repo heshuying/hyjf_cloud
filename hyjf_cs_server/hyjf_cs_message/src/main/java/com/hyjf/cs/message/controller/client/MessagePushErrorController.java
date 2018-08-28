@@ -98,7 +98,7 @@ public class MessagePushErrorController {
      * @return
      */
     @RequestMapping("getRecord/{id}")
-    public MessagePushHistoryResponse getRecord(@PathVariable Integer id) {
+    public MessagePushHistoryResponse getRecord(@PathVariable String id) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
         if (msg != null){
@@ -118,9 +118,11 @@ public class MessagePushErrorController {
      * @author Michael
      */
     @RequestMapping("sendMessage")
-    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
+    public Response sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
+        Response response = new Response();
         MessagePushMsgHistory msg = new MessagePushMsgHistory();
         BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
         msgPushHandle.send(msg);
+        return response;
     }
 }
