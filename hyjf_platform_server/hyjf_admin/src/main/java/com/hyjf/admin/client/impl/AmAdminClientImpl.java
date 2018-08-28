@@ -34,7 +34,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public ChannelStatisticsDetailResponse searchAction(ChannelStatisticsDetailRequest request){
         return restTemplate.
-                postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/searchAction", request, ChannelStatisticsDetailResponse.class).getBody();
+                postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/searchaction", request, ChannelStatisticsDetailResponse.class).getBody();
     }
     @Override
     public List<UtmPlatVO> getPCUtm(){

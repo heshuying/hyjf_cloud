@@ -28,6 +28,7 @@ public class ChannelStatisticsDetailServiceImpl implements ChannelStatisticsDeta
     public JSONObject searchAction(ChannelStatisticsDetailRequest request) {
         JSONObject response = new  JSONObject();
         List<ChannelStatisticsDetailVO> list = new ArrayList<>();
+        int total = 0;
         int flag = 0;
         // 查询条件
         // 渠道
@@ -43,16 +44,17 @@ public class ChannelStatisticsDetailServiceImpl implements ChannelStatisticsDeta
             flag = 1;
         }
         IntegerResponse count = this.amAdminClient.countList(request);
-        response.put("count",count);
-        if (count != null && count.getResultInt() > 0) {
+        if (count.getResultInt()!=null&&count.getResultInt() > 0) {
+            total = count.getResultInt();
             Paginator paginator = new Paginator(request.getCurrPage(), count.getResultInt(),request.getPageSize()==0?10:request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
             ChannelStatisticsDetailResponse channelStatisticsDetailResponse = this.amAdminClient.searchAction(request);
             list = channelStatisticsDetailResponse.getResultList();
-            response.put("recordList", list);
         }
+        response.put("count",total);
         response.put("flag", flag);
+        response.put("recordList", list);
         response.put("UtmPlatList", amAdminClient.getPCUtm());
         return response;
     }

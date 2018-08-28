@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.extensioncenter;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.user.UtmRegResponse;
 import com.hyjf.am.user.service.admin.promotion.UtmService;
@@ -47,9 +48,9 @@ public class ChannelStatisticsDetailController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/count")
-	public ChannelStatisticsDetailResponse count(@RequestBody ChannelStatisticsDetailRequest request) {
+	public IntegerResponse count(@RequestBody ChannelStatisticsDetailRequest request) {
 		logger.info("根据条件查询pc统计明细条数......");
-		ChannelStatisticsDetailResponse response = channelStatisticsDetailService.searchAction(request);
+		IntegerResponse response = channelStatisticsDetailService.countList(request);
 		return response;
 	}
 
