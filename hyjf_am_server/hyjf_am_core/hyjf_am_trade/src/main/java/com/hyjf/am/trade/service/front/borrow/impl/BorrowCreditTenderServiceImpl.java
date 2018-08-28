@@ -2,8 +2,10 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
+import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
@@ -23,6 +25,9 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Autowired
     private CreditRepayMapper creditRepayMapper;
+
+    @Autowired
+    private CreditTenderMapper creditTenderMapper;
 
     @Override
     public Integer countBorrowCreditRepay(BorrowCreditRepayAmRequest request) {
@@ -110,4 +115,21 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     }
 
 
+    /**
+     * admin： 用户投资记录数
+     * @author zhangyk
+     * @date 2018/8/28 19:07
+     */
+    @Override
+    public int getBorrowCreditTenderCount4Admin(Map<String, Object> params) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo((Integer) params.get("userId"));
+        cra.andBidNidEqualTo((String) params.get("borrowNid"));
+        cra.andAssignNidEqualTo((String) params.get("assignNid"));
+        cra.andCreditTenderNidEqualTo((String) params.get("creditTenderNid"));
+        cra.andCreditNidEqualTo((String) params.get("creditNid"));
+        int count = creditTenderMapper.countByExample(example);
+        return count;
+    }
 }

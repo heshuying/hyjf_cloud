@@ -4,8 +4,6 @@ import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -50,13 +48,6 @@ public interface BankConfigService {
      */
     public AdminBankConfigResponse deleteBankConfigById(Integer id);
 
-    /**
-     * 上传文件
-     * @param request
-     * @param response
-     * @return
-     */
-    public AdminBankConfigResponse uploadFile(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 保存之前的去重校验

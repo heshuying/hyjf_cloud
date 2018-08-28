@@ -2,8 +2,10 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
+import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.vo.config.AdminSystemVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,6 +57,13 @@ public interface BorrowCreditTenderService {
      * @date 2018/7/13 15:21
      */
     AdminResult getCreditUserInfo(BorrowCreditTenderInfoRequest request);
+
+    /**
+     * pdf签署
+     * @author zhangyk
+     * @date 2018/8/28 16:59
+     */
+    AdminResult  pdfSign(BorrowCreditTenderPDFSignReq request, AdminSystemVO adminSystemVO);
 
 
 }

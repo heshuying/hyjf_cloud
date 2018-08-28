@@ -1,6 +1,6 @@
 package com.hyjf.admin.controller.manager.banksetting;
 
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.BankConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -8,6 +8,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankConfigService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
@@ -21,10 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ public class BankConfigController extends BaseController {
 
     //权限名称
     private static final String PERMISSIONS = "banksetting";
+    @Autowired
+    private MessagePushNoticesService messagePushNoticesService;
     @Autowired
     private BankConfigService bankConfigService;
 
@@ -87,11 +90,10 @@ public class BankConfigController extends BaseController {
         AdminBankConfigRequest request = new AdminBankConfigRequest();
         BeanUtils.copyProperties(bankConfigRequestBean,request);
         AdminBankConfigResponse prs =null;
-        ModelAndView model =new ModelAndView();
         //表单字段校验
-        model = this.validatorFieldCheck(model, request);
-        if (!model.isEmpty()) {
-            return new AdminResult<>(FAIL, "校验失败");
+        String message = this.validatorFieldCheck(request);
+        if (StringUtils.isNotBlank(message)) {
+            return new AdminResult<>(FAIL, message);
         }
         // form.setLogo("1");
         BankConfigVO bank = new BankConfigVO();
@@ -119,13 +121,12 @@ public class BankConfigController extends BaseController {
     public AdminResult updateBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
         AdminBankConfigRequest request = new AdminBankConfigRequest();
         BeanUtils.copyProperties(bankConfigRequestBean,request);
-        ModelAndView model =new ModelAndView();
         //表单字段校验
-        model = this.validatorFieldCheck(model, request);
-        if (!model.isEmpty()) {
-            return new AdminResult<>(FAIL, "校验失败");
+        String message = this.validatorFieldCheck(request);
+        if (StringUtils.isNotBlank(message)) {
+            return new AdminResult<>(FAIL, message);
         }
-        if (!ValidatorFieldCheckUtil.validateRequired(new ModelAndView(), "id", request.getId().toString())) {
+        if (null ==request.getId()) {
             return new AdminResult<>(FAIL, "id不能为空！");
         }
         AdminBankConfigResponse prs =bankConfigService.updateBankConfigRecord(request);
@@ -161,8 +162,16 @@ public class BankConfigController extends BaseController {
     @PostMapping("/uploadFile")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        AdminBankConfigResponse files = bankConfigService.uploadFile(request, response);
-        return new AdminResult<BankConfigVO>(files.getResult());
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
     }
 
     @ApiOperation(value = "银行配置去重校验", notes = "去重校验")
@@ -177,16 +186,23 @@ public class BankConfigController extends BaseController {
     /**
      * 画面校验
      *
-     * @param modelAndView
      * @param form
      */
-    private ModelAndView validatorFieldCheck(ModelAndView modelAndView, AdminBankConfigRequest form) {
+    private String validatorFieldCheck(AdminBankConfigRequest form) {
         // 字段校验(非空判断和长度判断)
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "name", form.getName());
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "name", form.getName(), 50, true);
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "code", form.getCode());
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "code", form.getCode(), 10, true);
-        return modelAndView;
+        if(StringUtils.isBlank(form.getName())){
+            return "name 不能为空！";
+        }
+        if(StringUtils.isNotBlank(form.getName())&&form.getName().length() >50){
+            return "name 长度不能超过50！";
+        }
+        if(StringUtils.isBlank(form.getCode())){
+            return "code 不能为空！";
+        }
+        if(StringUtils.isNotBlank(form.getCode())&&form.getCode().length() >10){
+            return "code 长度不能超过10！";
+        }
+       return "";
 
     }
 }

@@ -53,7 +53,7 @@ public class FeeConfigController extends BaseConfigController{
         //查询手续费配置列表条数
         int recordTotal = this.feeConfigService.getFeeConfigListCount(adminRequest,-1,-1);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             List<FeeConfig> recordList =feeConfigService.getFeeConfigListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -61,7 +61,10 @@ public class FeeConfigController extends BaseConfigController{
                 response.setResultList(hicv);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
             return response;
         }
         return null;
@@ -80,8 +83,9 @@ public class FeeConfigController extends BaseConfigController{
             FeeConfigVO feeConfigVO = CommonUtils.convertBean(record, FeeConfigVO.class);
             response.setResult(feeConfigVO);
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return response;
+        return null;
     }
 
     /**
@@ -91,14 +95,13 @@ public class FeeConfigController extends BaseConfigController{
     @RequestMapping("/insert")
     public AdminFeeConfigResponse insertFeeConfig(@RequestBody AdminFeeConfigRequest adminRequest) {
         AdminFeeConfigResponse  response =new AdminFeeConfigResponse();
-        try{
-            int result =this.feeConfigService.insertFeeConfig(adminRequest);
-            if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-           e.printStackTrace();
+        int result =this.feeConfigService.insertFeeConfig(adminRequest);
+        if(result > 0 ){
+            response.setRtn(Response.SUCCESS);
+            return response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -109,14 +112,13 @@ public class FeeConfigController extends BaseConfigController{
     @RequestMapping("/update")
     public AdminFeeConfigResponse updateFeeConfig(@RequestBody AdminFeeConfigRequest adminRequest) {
         AdminFeeConfigResponse  response =new AdminFeeConfigResponse();
-        try{
-            int result =this.feeConfigService.updateFeeConfig(adminRequest);
-            if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        int result =this.feeConfigService.updateFeeConfig(adminRequest);
+        if(result > 0 ){
+            response.setRtn(Response.SUCCESS);
+            return response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -130,8 +132,9 @@ public class FeeConfigController extends BaseConfigController{
         if(adminRequest.getId() != null){
             this.feeConfigService.deleteFeeConfig(adminRequest.getId());
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return  response;
+     return null;
     }
 
 }

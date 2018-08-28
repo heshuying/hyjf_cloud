@@ -1244,8 +1244,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(BankConfigVO bank, int limitStart, int limitEnd) {
         //查詢所有
-        AdminBankConfigResponse response= restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/selectBankConfigByBankName",
-                bank.getName(), AdminBankConfigResponse.class);
+        AdminBankConfigResponse response= restTemplate.getForObject("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bank.getName(),
+                 AdminBankConfigResponse.class);
         if(response != null){
             return response.getResultList();
         }
@@ -1260,7 +1260,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse selectFeeConfigInfo(AdminFeeConfigRequest adminRequest) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/info",
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/info",
                 adminRequest, AdminFeeConfigResponse.class);
     }
 
@@ -1271,7 +1271,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse insertBankConfigRecord(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/insert",
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/insert",
                 req, AdminFeeConfigResponse.class);
     }
 
@@ -1282,7 +1282,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse updateBankConfigRecord(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/update",
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/update",
                 req, AdminFeeConfigResponse.class);
     }
 
@@ -1293,7 +1293,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/delete",
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeConfig/delete",
                 req, AdminFeeConfigResponse.class);
     }
 
