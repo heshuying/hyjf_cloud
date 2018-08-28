@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.hjh.hjhcheck;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
@@ -65,11 +66,11 @@ public class HjhAlarmController extends BaseController {
      * @return
      */
     @GetMapping("/batch/hjhOpenAccountCheck")
-    private boolean hjhOpenAccountCheck() {
+    private BooleanResponse hjhOpenAccountCheck() {
             logger.info("汇计划各计划开放额度校验预警任务 开始... ");
             // 非线上环境时，不执行该任务
             if(systemConfig.isEnvTest()){
-                return true;
+                return new BooleanResponse(true);
             }
             try {
                 // 取得整个汇计划列表
@@ -113,8 +114,7 @@ public class HjhAlarmController extends BaseController {
                 logger.error("汇计划各计划开放额度校验预警任务 异常！！！ ");
                 e.printStackTrace();
             }
-            logger.info("汇计划各计划开放额度校验预警任务 结束... ");
-        return true;
+        return new BooleanResponse(true);
     }
 
     /**
