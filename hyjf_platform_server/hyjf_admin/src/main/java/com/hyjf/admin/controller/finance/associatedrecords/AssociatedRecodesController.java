@@ -26,9 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -63,8 +61,8 @@ public class AssociatedRecodesController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "导出关联记录列表",notes = "导出关联记录列表")
-    @GetMapping(value = "/associatedrecordlistexport")
-    public void exportAssociatedRecordListExcel(@ModelAttribute AssociatedRecordListRequest request, HttpServletResponse response) throws Exception {
+    @PostMapping(value = "/associatedrecordlistexport")
+    public void exportAssociatedRecordListExcel(@RequestBody AssociatedRecordListRequest request, HttpServletResponse response) throws Exception {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
 

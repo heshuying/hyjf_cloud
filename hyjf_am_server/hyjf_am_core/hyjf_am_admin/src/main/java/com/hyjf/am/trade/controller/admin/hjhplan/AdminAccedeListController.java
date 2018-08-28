@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.response.admin.HjhAccedeSumResponse;
@@ -122,9 +123,9 @@ public class AdminAccedeListController {
 	 * @Desc :更新计划专区表
 	 */
     @RequestMapping("/updateSendStatusByParam")
-    public int updateSendStatusByParam(@RequestBody AccedeListRequest request) {
+    public IntegerResponse updateSendStatusByParam(@RequestBody AccedeListRequest request) {
     	int flg = adminAccedeListService.updateSendStatusByParam(request);
-    	return flg;
+    	return new IntegerResponse(flg);
     }
     
     

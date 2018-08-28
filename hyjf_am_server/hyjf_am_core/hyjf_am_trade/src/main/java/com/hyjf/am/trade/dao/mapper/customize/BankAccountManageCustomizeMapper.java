@@ -15,14 +15,6 @@ import java.util.List;
 public interface BankAccountManageCustomizeMapper {
 
     /**
-     * 行账户管理页面查询件数(条件为空的场合)
-     *
-     * @param bankAccountManageRequest
-     * @return
-     */
-    Integer queryAccountCountAll(BankAccountManageRequest bankAccountManageRequest);
-
-    /**
      * 行账户管理页面查询件数
      *
      * @param bankAccountManageRequest

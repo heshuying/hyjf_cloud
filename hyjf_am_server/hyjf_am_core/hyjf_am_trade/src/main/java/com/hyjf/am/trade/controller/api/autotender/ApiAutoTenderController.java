@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -40,8 +41,8 @@ public class ApiAutoTenderController extends BaseController{
 	 * @throws Exception
 	 */
     @RequestMapping("/updatetenderlog")
-    private Integer updateTenderLog(@RequestBody AutoTenderComboRequest autoTenderComboRequest) {
+    private IntegerResponse updateTenderLog(@RequestBody AutoTenderComboRequest autoTenderComboRequest) {
     	Integer flg = apiAutoTenderService.updateTenderLog(autoTenderComboRequest);
-        return flg;
+        return new IntegerResponse(flg);
     }
 }

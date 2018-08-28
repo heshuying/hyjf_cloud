@@ -128,9 +128,9 @@ public class BindCardController extends BaseController {
 		int userId = request.getUserId();
 		String srvTxCode = request.getSrvTxCode();
 		String srvAuthCode = request.getSrvAuthCode();
+		String smsSeq = request.getSmsSeq();
 
-
-		return bindCardService.updateBankSmsLog(userId, srvTxCode, srvAuthCode);
+		return bindCardService.updateBankSmsLog(userId, srvTxCode, srvAuthCode,smsSeq);
 	}
 
 	/**

@@ -96,8 +96,8 @@ public enum ResultEnum {
     USER_WITHDRAW_005("1008", "您还未开户，请开户后重新操作"), 
     USER_WITHDRAW_006("1009", "银行卡信息不存在，请核实后重新操作"), 
     USER_WITHDRAW_007("1010", "请不要重复操作"),
-    USER_WITHDRAW_008("1011","投资人信息不存在");
-
+    USER_WITHDRAW_008("1011","投资人信息不存在"),
+	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已达上限，请明日再试！");
 
     // 成员变量  
     private String status;

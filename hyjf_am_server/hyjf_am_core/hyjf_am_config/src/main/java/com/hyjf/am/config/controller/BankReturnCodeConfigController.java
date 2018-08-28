@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.service.BankReturnCodeConfigService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
@@ -117,8 +118,11 @@ public class BankReturnCodeConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/isExistsReturnCode")
-    public boolean isExistsReturnCode(@RequestBody  AdminBankRetcodeConfigRequest record){
-        return bankReturnCodeConfigService.isExistsReturnCode(record);
+    public BooleanResponse isExistsReturnCode(@RequestBody  AdminBankRetcodeConfigRequest record){
+        BooleanResponse response= new BooleanResponse();
+        boolean b=bankReturnCodeConfigService.isExistsReturnCode(record);
+        response.setResultBoolean(b);
+        return response;
     }
     /**
      * 根据条件判断该条数据在数据库中是否存在
@@ -126,8 +130,10 @@ public class BankReturnCodeConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/isExistsRecord")
-    public boolean isExistsRecord(@RequestBody AdminBankRetcodeConfigRequest adminRequest){
-        return bankReturnCodeConfigService.isExistsRecord(adminRequest);
+    public BooleanResponse isExistsRecord(@RequestBody AdminBankRetcodeConfigRequest adminRequest){
+        BooleanResponse response= new BooleanResponse();
+        response.setResultBoolean(bankReturnCodeConfigService.isExistsRecord(adminRequest));
+        return response;
     }
 
 

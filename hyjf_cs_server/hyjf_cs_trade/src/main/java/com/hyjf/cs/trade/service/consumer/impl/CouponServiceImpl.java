@@ -21,6 +21,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.*;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CouponClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -51,7 +52,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     private static final Logger logger = LoggerFactory.getLogger(CouponServiceImpl.class);
 
     @Autowired
-    private CouponClient couponClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -101,7 +102,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         // 调用原子层需要
         CouponTenderVO couponTender = new CouponTenderVO();
         int nowTime = GetDate.getNowTime10();
-        CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userId);
+        CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         //汇计划只支持按天和按月
         if (!"endday".equals(borrowStyle)) {
             borrowStyle = "end";
@@ -282,7 +283,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         cu.setUsedFlag(1);
         // 4   修改优惠券用户表状态
         couponTender.setCouponUser(cu);
-        boolean tenderFlag = couponClient.updateCouponTender(couponTender);
+        boolean tenderFlag = amTradeClient.updateCouponTender(couponTender);
         if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -317,7 +318,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "优惠券id为空");
             return result;
         }
-        CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userId);
+        CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         if (couponUser == null) {
             result.put("statusDesc", "当前优惠券不存在或已使用");
             return result;

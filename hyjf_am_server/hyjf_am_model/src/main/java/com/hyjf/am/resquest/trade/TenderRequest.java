@@ -56,6 +56,12 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "投资金额")
     private String account;
 
+    @ApiModelProperty(value = "投资金额App用")
+    private String money;
+
+    @ApiModelProperty(value = "优惠券ID  App用")
+    private String couponId;
+
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -241,5 +247,21 @@ public class TenderRequest extends BaseVO {
 
     public void setAssignCapital(String assignCapital) {
         this.assignCapital = assignCapital;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
     }
 }
