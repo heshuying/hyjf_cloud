@@ -608,7 +608,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response = restTemplate.postForEntity(url, request, AdminTransferExceptionLogResponse.class).getBody();
         return response;
     }
@@ -635,7 +635,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateTransferExceptionLogByUUID(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
         return restTemplate.postForEntity(url, request, Integer.class).getBody();
     }
 
@@ -649,7 +649,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
         TransferExceptionLogResponse response = restTemplate.getForEntity(url, TransferExceptionLogResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -913,7 +913,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean transferAfter(JSONObject jsonObject) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/transferAfter";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/transferAfter";
         return restTemplate.postForEntity(url, jsonObject, Boolean.class).getBody();
     }
 
@@ -932,7 +932,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverVO getCouponRecoverByPrimaryKey(Integer id) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
         CouponRecoverResponse response = restTemplate.getForEntity(url, CouponRecoverResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -949,7 +949,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderCpnVO getCouponTenderInfoByNid(String nid) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
         BorrowTenderCpnResponse response = restTemplate.getForEntity(url, BorrowTenderCpnResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -2322,12 +2322,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /*资产中心 end*/
 
-    /*标签配置中心 start*/
+    /*标签配置中心 start  AM-ADMIN */
     @Override
     public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
         // 复用
         BorrowProjectTypeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2338,7 +2338,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowStyleVO> findBorrowStyleList() {
         // 复用
         BorrowStyleResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2348,7 +2348,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2358,7 +2358,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2368,7 +2368,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2377,7 +2377,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord";
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/insertHjhLabelRecord";
         Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
         if (updateFlag > 0) {
             return updateFlag;
@@ -2387,7 +2387,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/updateHjhLabelRecord";
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/updateHjhLabelRecord";
         Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
         if (updateFlag > 0) {
             return updateFlag;
@@ -2397,14 +2397,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateAllocationRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/updateAllocationRecord";
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/updateAllocationRecord";
         Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
         if (updateFlag > 0) {
             return updateFlag;
         }
         return 0;
     }
-    /*标签配置中心 end*/
+    /*标签配置中心 end  AM-ADMIN*/
 
     /*计划列表 start*/
     @Override

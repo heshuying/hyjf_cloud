@@ -33,5 +33,4 @@ public interface UserInfoMapper {
     int updateByPrimaryKey(UserInfo record);
 
     AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
-
 }
