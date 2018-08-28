@@ -271,7 +271,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 if(StringUtils.isNotBlank(request.getStatus())){
                     user.setStatus(Integer.parseInt(request.getStatus()));
                 }
-                user.setMobile(request.getMobile());
+                if(StringUtils.isNotBlank(request.getMobile())){
+                    user.setMobile(request.getMobile());
+                }
                 int usersUpdateFlag = userMapper.updateByPrimaryKey(user);
                 if (usersUpdateFlag > 0) {
                     logger.info("==================用户表变更保存成功!======");

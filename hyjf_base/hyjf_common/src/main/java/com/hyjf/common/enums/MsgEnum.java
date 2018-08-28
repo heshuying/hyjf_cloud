@@ -133,6 +133,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_BANK_CARD_GET("EAM000301","查询银行卡信息失败"),
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
+	ERR_AMT_RECHARGE("EAM000304","充值失败"),
 
 	//资金-转账相关错误信息ERR_AMT_TRANSFER_
 	ERR_AMT_TRANSFER("EAM000401","转账发生异常"),

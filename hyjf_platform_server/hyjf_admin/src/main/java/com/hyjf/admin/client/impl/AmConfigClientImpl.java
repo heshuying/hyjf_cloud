@@ -1084,26 +1084,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public ContentQualifyResponse searchAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG//am-config/content/contentqualify/searchaction",
+        return restTemplate.postForObject("http://AM-ADMIN//am-config/content/contentqualify/searchaction",
                 requestBean, ContentQualifyResponse.class);
     }
 
     @Override
-    public ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/insertaction", requestBean,
-                ContentQualifyResponse.class);
+    public int insertAction(ContentQualifyRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentqualify/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/updateaction", requestBean,
-                ContentQualifyResponse.class);
+    public int updateAction(ContentQualifyRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentqualify/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public ContentQualifyVO getContentQualifyRecord(Integer id) {
         ContentQualifyResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentqualify/getrecord/" + id, ContentQualifyResponse.class);
+                "http://AM-ADMIN/am-config/content/contentqualify/getrecord/" + id, ContentQualifyResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -1111,9 +1111,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public ContentQualifyResponse deleteContentQualifyById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentqualify/delete/" + id,
-                ContentQualifyResponse.class);
+    public int deleteContentQualifyById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentqualify/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -1406,7 +1406,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<SmsTemplateVO> findSmsAll() {
         SmsTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsTemplate/findAll", SmsTemplateResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/smsTemplate/findAll", SmsTemplateResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResultList();
@@ -1417,14 +1417,14 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public SmsTemplateResponse findSmsTemplate(SmsTemplateRequest request) {
         return restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/smsTemplate/findSmsTemplate", request,
+                .postForEntity("http://AM-ADMIN/am-config/smsTemplate/findSmsTemplate", request,
                         SmsTemplateResponse.class)
                 .getBody();
     }
 
     @Override
     public int insertSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -1882,7 +1882,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
     }
 
     /**
@@ -1894,7 +1894,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsConfigResponse insertSmsConfig(SmsConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/insertSmsConfig", request, SmsConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/insertSmsConfig", request, SmsConfigResponse.class).getBody();
     }
 
     /**
@@ -1906,7 +1906,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsConfigResponse updateSmsConfig(SmsConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig", request, SmsConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/updateSmsConfig", request, SmsConfigResponse.class).getBody();
     }
 
     /**
@@ -1917,7 +1917,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse initSmsNoticeConfig() {
-        return restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/list", SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.getForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/list", SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1929,7 +1929,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse smsNoticeConfigInfo(SmsNoticeConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/info", request, SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/info", request, SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1941,7 +1941,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse insertSmsNoticeConfig(SmsNoticeConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/insert", request, SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/insert", request, SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1953,7 +1953,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse updateSmsNoticeConfig(SmsNoticeConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/update", request, SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/update", request, SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1965,7 +1965,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse closeSmsNoticeConfig(SmsNoticeConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/close", request, SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/close", request, SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1977,7 +1977,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public SmsNoticeConfigResponse openSmsNoticeConfig(SmsNoticeConfigRequest request) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/open", request, SmsNoticeConfigResponse.class).getBody();
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/open", request, SmsNoticeConfigResponse.class).getBody();
     }
 
     /**
@@ -1989,7 +1989,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public Integer onlyName(String name) {
-        return restTemplate.getForEntity("http://AM-CONFIG/am-config/smsNoticeConfig/onlyName/" + name, Integer.class).getBody();
+        return restTemplate.getForEntity("http://AM-ADMIN/am-config/smsNoticeConfig/onlyName/" + name, Integer.class).getBody();
     }
 
     @Override
@@ -2051,17 +2051,12 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int updateStatus(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, IntegerResponse.class).getResultInt();
-    }
-
-    @Override
-    public void closeSmsTemplate(SmsTemplateRequest request) {
-        restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/close_sms_template", request, SmsTemplateResponse.class);
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/open_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override
     public int updateSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, IntegerResponse.class).getResultInt();
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/smsTemplate/update_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -2086,7 +2081,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public SmsTemplateVO findSmsTemById(Integer id) {
         SmsTemplateResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/smsTemplate/find_by_id/" + id, SmsTemplateResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/smsTemplate/find_by_id/" + id, SmsTemplateResponse.class)
                 .getBody();
         if (response != null) {
             return response.getResult();

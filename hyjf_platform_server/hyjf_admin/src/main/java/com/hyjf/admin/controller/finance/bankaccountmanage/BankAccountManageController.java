@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.bankaccountmanage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.BankAccountManageResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -10,6 +11,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -39,6 +41,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -65,15 +68,20 @@ public class BankAccountManageController extends BaseController {
 
         BankAccountManageResponseBean bean = new BankAccountManageResponseBean();
 
-        // 部门下拉框
-        List<OADepartmentCustomizeVO> departmentList = bankAccountManageService.queryDepartmentInfo();
-        bean.setDepartmentList(ConvertUtils.convertListToDropDown(departmentList, "id", "name"));
-        // 会员等级下拉框
-        bean.setVipList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("VIP_GRADE")));
+//        // 部门下拉框
+//        List<OADepartmentCustomizeVO> departmentList = bankAccountManageService.queryDepartmentInfo();
+//        bean.setDepartmentList(ConvertUtils.convertListToDropDown(departmentList, "id", "name"));
+//        // 会员等级下拉框
+//        bean.setVipList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("VIP_GRADE")));
 
         Integer count = bankAccountManageService.selectAccountInfoCount(request);
         count = (count == null) ? 0 : count;
         bean.setTotal(count);
+        //分页参数
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        page.setTotal(count);
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
         if (count > 0) {
             List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVO = bankAccountManageService.queryAccountInfos(request);
             if (bankAccountManageCustomizeVO == null || bankAccountManageCustomizeVO.size() == 0) {
@@ -99,8 +107,6 @@ public class BankAccountManageController extends BaseController {
         String sheetName = "资金明细";
         JSONObject jsonObject = new JSONObject();
         // 取得数据
-        request.setLimitStart(-1);
-        request.setLimitEnd(-1);
         List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountDetails(request);
 
         String fileName = null;
@@ -339,5 +345,38 @@ public class BankAccountManageController extends BaseController {
         }
 
         return ret.toString();
+    }
+
+     /**
+     * 取得部门信息
+     *
+     * @return
+     */
+    @ApiOperation(value = "取得部门信息", notes = "银行账户管理")
+    @GetMapping(value = "/get_crm_department_list")
+    public JSONObject getCrmDepartmentListAction() {
+        // 部门
+        String[] list = new String[]{};
+
+        JSONArray ja = this.bankAccountManageService.getCrmDepartmentList(list);
+        if (ja != null) {
+
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+
+            ja.add(jo);
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            ret.put("status", "000");
+            ret.put("statusDesc", "成功");
+            return ret;
+        }
+        return new JSONObject();
     }
 }

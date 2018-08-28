@@ -868,7 +868,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserPortraitResponse selectRecordList(UserPortraitRequest request) {
 		UserPortraitResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userPortraitManage/findUserPortraitRecord", request,
+				.postForEntity("http://AM-ADMIN/am-user/userPortraitManage/findUserPortraitRecord", request,
 						UserPortraitResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -886,7 +886,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserPortraitVO selectUsersPortraitByUserId(Integer userId) {
 		UserPortraitResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
+				.getForEntity("http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
 						UserPortraitResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -900,7 +900,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserPortrait(UserPortraitRequest request) {
-		int response = restTemplate.postForEntity("http://AM-USER/am-user/userPortraitManage/updateUserPortraitRecord",
+		int response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userPortraitManage/updateUserPortraitRecord",
 				request, Integer.class).getBody();
 		return response;
 	}
@@ -1387,7 +1387,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request) {
-		String url = "http://AM-USER/am-user/userPortraitManage/selectUserPortraitScoreRecordList";
+		String url = "http://AM-ADMIN/am-user/userPortraitManage/selectUserPortraitScoreRecordList";
 		UserPortraitScoreResponse response = restTemplate.postForEntity(url,request,UserPortraitScoreResponse.class).getBody();
 		if (response != null) {
 			response.getResultList();

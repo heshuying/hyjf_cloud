@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
@@ -11,6 +12,8 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
+import com.hyjf.admin.mq.AutoIssueMessageProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BorrowFirstService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
@@ -20,6 +23,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -34,6 +38,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -49,6 +54,9 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
 
     @Autowired
     AmUserClient amUserClient;
+
+    @Autowired
+    AutoIssueMessageProducer autoIssueMessageProducer;
 
     /**
      * 借款初审列表
@@ -199,6 +207,19 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         boolean updateFlag = amTradeClient.updateOntimeRecord(borrowFireRequest);
         if(!updateFlag){
             return new AdminResult(BaseResult.FAIL,"数据更新失败");
+        } else {
+            if (borrowVO.getIsEngineUsed().equals(1) && verifyStatus.equals("4")) {
+                // 成功后到关联计划队列
+                JSONObject params = new JSONObject();
+                params.put("borrowNid", borrowVO.getBorrowNid());
+                try {
+                    //自动关联计划
+                    autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    logger.info("标的编号：" + borrowNid + "-----已发送至自动关联计划MQ");
+                } catch (Exception e){
+                    logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);
+                }
+            }
         }
 
         return new AdminResult();

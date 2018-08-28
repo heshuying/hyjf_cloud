@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
@@ -524,4 +525,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest);
+
+	/**
+	 * 根据用户id和银行卡号查询银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request);
 }

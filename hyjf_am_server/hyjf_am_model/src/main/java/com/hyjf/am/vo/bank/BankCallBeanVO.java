@@ -1,8 +1,12 @@
 package com.hyjf.am.vo.bank;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.TreeMap;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 接收银行数据的bean
@@ -442,8 +446,35 @@ public class BankCallBeanVO extends BaseVO implements Serializable {
     private String successfulUrl;
     // 商户名称
     private String coinstName;
-    
-    public String getRestMsg() {
+
+	/**
+	 * 参数Map
+	 */
+	private TreeMap<String, String> paramMap;
+
+	/**
+	 * 根据Key取得值
+	 *
+	 * @param key
+	 * @return
+	 */
+	public BigDecimal getBigDecimal(String key) {
+		String val = paramMap.get(key);
+		if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
+			return new BigDecimal(val);
+		}
+		return BigDecimal.ZERO;
+	}
+
+	public TreeMap<String, String> getParamMap() {
+		return paramMap;
+	}
+
+	public void setParamMap(TreeMap<String, String> paramMap) {
+		this.paramMap = paramMap;
+	}
+
+	public String getRestMsg() {
         return restMsg;
     }
 
