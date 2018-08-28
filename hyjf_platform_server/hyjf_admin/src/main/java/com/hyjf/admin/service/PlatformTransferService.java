@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -46,4 +47,6 @@ public interface PlatformTransferService {
      * @return
      */
     JSONObject handRecharge(Integer loginUserId,HttpServletRequest request,PlatformTransferRequest platformTransferRequest);
+
+    BigDecimal getAccountBalance(Integer userId);
 }

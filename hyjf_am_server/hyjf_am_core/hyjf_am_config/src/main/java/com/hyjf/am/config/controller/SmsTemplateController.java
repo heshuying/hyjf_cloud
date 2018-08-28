@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.SmsTemplate;
 import com.hyjf.am.config.service.SmsTemplateService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
 import com.hyjf.am.vo.config.SmsTemplateVO;
@@ -95,8 +96,9 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/insertTemplate")
-    public int insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        return smsTemplateService.insertSmsTemplate(request);
+    public IntegerResponse insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        int num = smsTemplateService.insertSmsTemplate(request);
+        return new IntegerResponse(num);
     }
 
     /**
@@ -105,8 +107,9 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/open_sms_template")
-    public int openSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        return smsTemplateService.updateSmsTemplateStatus(request);
+    public IntegerResponse openSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        int num = smsTemplateService.updateSmsTemplateStatus(request);
+        return new IntegerResponse(num);
     }
 
     /**

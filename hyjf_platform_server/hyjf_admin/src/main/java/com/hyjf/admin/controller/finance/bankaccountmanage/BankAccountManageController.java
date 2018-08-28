@@ -4,28 +4,18 @@
 package com.hyjf.admin.controller.finance.bankaccountmanage;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BankAccountManageBean;
-import com.hyjf.admin.beans.vo.DropDownVO;
+import com.hyjf.admin.beans.response.BankAccountManageResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.controller.finance.bank.merchant.redpacket.BankRedPacketAccounttListBean;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.utils.ConvertUtils;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
-import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -44,8 +34,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
@@ -53,23 +46,11 @@ import java.util.*;
  */
 @Api(value = "账户管理(银行)", tags = "资金中心-账户管理(银行)")
 @RestController
-@RequestMapping("/hyjf-admin/bankaccountmanage")
+@RequestMapping("/hyjf-admin/bank_account_manage")
 public class BankAccountManageController extends BaseController {
 
     @Autowired
     BankAccountManageService bankAccountManageService;
-//
-//    @ApiOperation(value = "账户管理页面初始化", notes = "账户管理页面初始化")
-//    @PostMapping(value = "/bankaccountmanageinit")
-//    @ResponseBody
-//    public AdminResult<List<DropDownVO>> bankAccountManageInit() {
-//        List<OADepartmentCustomizeVO> departmentList = bankAccountManageService.queryDepartmentInfo();
-//        AdminResult<List<DropDownVO>> listMap = new AdminResult<>();
-//        listMap.setData(ConvertUtils.convertListToDropDown(departmentList,"id","name"));
-//
-//
-//        return new AdminResult<>();
-//    }
 
     /**
      * 银行账户管理页面
@@ -78,69 +59,31 @@ public class BankAccountManageController extends BaseController {
      * @return
      */
     @ApiOperation(value = "账户管理明细", notes = "银行账户管理")
-    @PostMapping(value = "/init")
+    @PostMapping(value = "/search")
     @ResponseBody
-    public AdminResult<BankAccountManageBean> init(@RequestBody BankAccountManageRequest request) {
-        Map<String, Object> result = new HashMap<>();
+    public AdminResult<BankAccountManageResponseBean> search(@RequestBody BankAccountManageRequest request) {
 
-        BankAccountManageBean bean = new BankAccountManageBean();
+        BankAccountManageResponseBean bean = new BankAccountManageResponseBean();
 
         // 部门下拉框
         List<OADepartmentCustomizeVO> departmentList = bankAccountManageService.queryDepartmentInfo();
-        bean.setDepartmentList(ConvertUtils.convertListToDropDown(departmentList,"id","name"));
+        bean.setDepartmentList(ConvertUtils.convertListToDropDown(departmentList, "id", "name"));
         // 会员等级下拉框
         bean.setVipList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("VIP_GRADE")));
 
         Integer count = bankAccountManageService.selectAccountInfoCount(request);
-        count = (count == null)?0:count;
-        result.put("count",count);
-        List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVO = bankAccountManageService.queryAccountInfos(request);
-        if (bankAccountManageCustomizeVO ==null || bankAccountManageCustomizeVO.size() == 0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        count = (count == null) ? 0 : count;
+        bean.setTotal(count);
+        if (count > 0) {
+            List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVO = bankAccountManageService.queryAccountInfos(request);
+            if (bankAccountManageCustomizeVO == null || bankAccountManageCustomizeVO.size() == 0) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            List<BankAccountManageCustomizeVO> recordList = bankAccountManageCustomizeVO;
+            bean.setRecordList(recordList);
         }
-        List<BankAccountManageCustomizeVO> recordList = bankAccountManageCustomizeVO;
-        result.put("recordList", recordList);
-        return new AdminResult(result);
+        return new AdminResult(bean);
     }
-
-//    /**
-//     * 拼装查询参数
-//     *
-//     * @param form
-//     * @return
-//     */
-//    private BankAccountManageRequest setRequese(BankAccountManageBean form) {
-//        BankAccountManageRequest bankAccountManageRequest = new BankAccountManageRequest();
-//        if (null != form) {
-//            // 用户名
-//            if (StringUtils.isNotBlank(form.getUserNameSrch())) {
-//                bankAccountManageRequest.setUserNameSrch(form.getUserNameSrch());
-//            }
-//            // 部门
-//            if (StringUtils.isNotBlank(form.getCombotreeSrch())) {
-//                bankAccountManageRequest.setCombotreeSrch(form.getCombotreeSrch());
-//            }
-//            // 部门
-////            if (mapParam.containsKey("combotreeListSrch")) {
-////                bankAccountManageRequest.setCombotreeListSrch(mapParam.get("combotreeListSrch").toString());
-////            }
-//            // 产品类型
-//            if (StringUtils.isNotBlank(form.getAccountSrch())) {
-//                bankAccountManageRequest.setAccountSrch(form.getAccountSrch());
-//            }
-//            // 产品类型
-//            if (StringUtils.isNotBlank(form.getVipSrch())) {
-//                bankAccountManageRequest.setVipSrch(form.getVipSrch());
-//            }
-//            if (form.getLimitStart() && StringUtils.isNotBlank(mapParam.get("limitStart").toString())) {
-//                bankAccountManageRequest.setLimitStart(Integer.parseInt(mapParam.get("limitStart").toString()));
-//            }
-//            if (form.getLimitEnd() && StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-//                bankAccountManageRequest.setLimitEnd(Integer.parseInt(mapParam.get("limitEnd").toString()));
-//            }
-//        }
-//        return bankAccountManageRequest;
-//    }
 
     /**
      * 导出资金明细列表
@@ -150,7 +93,7 @@ public class BankAccountManageController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "导出资金明细列表", notes = "银行账户管理")
-    @PostMapping("/exportaccountdetailexcel")
+    @PostMapping("/export_account_detail_excel")
     public void exportAccountDetailExcel(@RequestBody BankAccountManageRequest request, HttpServletResponse response) {
         // 表格sheet名称
         String sheetName = "资金明细";
@@ -160,7 +103,13 @@ public class BankAccountManageController extends BaseController {
         request.setLimitEnd(-1);
         List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountDetails(request);
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = null;
+        try {
+            fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.error("转码错误....", e);
+        }
 
         String[] titles = new String[]{"序号", "明细ID", "用户名", "推荐人", "推荐组", "订单号", "操作类型", "交易类型", "操作金额", "可用余额", "冻结金额", "备注说明", "时间"};
         // 声明一个工作薄
@@ -256,18 +205,18 @@ public class BankAccountManageController extends BaseController {
      * 更新
      *
      * @param request
-     * @param form
+     * @param userIdStr
      * @return
      */
     @ApiOperation(value = "更新账户余额", notes = "银行账户管理")
     @ResponseBody
-    @PostMapping("/updateBalanceAction")
-    public String updateBalanceAction(HttpServletRequest request, @RequestBody BankAccountManageCustomizeVO form) {
+    @PostMapping("/update_balance_action/{userIdStr}")
+    public String updateBalanceAction(HttpServletRequest request, @PathVariable String userIdStr) {
 
         JSONObject ret = new JSONObject();
 
         // 用户ID
-        Integer userId = GetterUtil.getInteger(form.getUserId());
+        Integer userId = GetterUtil.getInteger(userIdStr);
         if (Validator.isNull(userId)) {
             ret.put("status", "error");
             ret.put("result", "更新发生错误,请重新操作!");
@@ -369,7 +318,7 @@ public class BankAccountManageController extends BaseController {
      */
     @ApiOperation(value = "开始线下充值对账", notes = "银行账户管理")
     @ResponseBody
-    @PostMapping("/startAccountCheckAction")
+    @PostMapping("/start_account_check_action")
     public String bankAccountCheckAction(HttpServletRequest request, @RequestBody BankAccountManageCustomizeVO form) {
         Integer userId = form.getUserId();
         JSONObject ret = new JSONObject();

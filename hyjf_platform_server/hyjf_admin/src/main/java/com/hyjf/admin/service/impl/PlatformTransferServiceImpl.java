@@ -130,6 +130,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      */
     @Override
     public JSONObject checkTransfer(String userName) {
+        logger.info("entry service:[PlatformTransferServiceImpl]....userName:[{}]",userName);
         JSONObject result = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
         if (userVOList != null && userVOList.size() == 1) {
@@ -261,7 +262,12 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         return result;
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public BigDecimal getAccountBalance(Integer userId) {
+        BigDecimal balance = getBankBalance(userId,BANK_MERRP_ACCOUNT);
+        return balance;
+    }
+
     public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;

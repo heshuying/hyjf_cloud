@@ -2,6 +2,7 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.BankConfigResponse;
@@ -1335,13 +1336,13 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public int insertMailTemplate(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public int updateMailTemplate(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -1360,7 +1361,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/insertMsgPushTemplate", request,
+        restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/insertMsgPushTemplate", IntegerResponse.class,
                 Object.class);
     }
 
@@ -1406,7 +1407,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int insertSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -1983,7 +1984,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public int openAction(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_status", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -2033,7 +2034,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int updateStatus(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override

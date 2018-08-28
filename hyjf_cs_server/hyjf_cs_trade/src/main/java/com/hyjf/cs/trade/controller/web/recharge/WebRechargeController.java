@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
@@ -92,6 +93,8 @@ public class WebRechargeController extends BaseTradeController{
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
