@@ -1,7 +1,9 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditListResultBean;
@@ -15,6 +17,8 @@ import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
@@ -35,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BorrowCreditServiceImpl implements BorrowCreditService {
@@ -251,6 +256,22 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         String creditUserId = credit.getCreditUserId();
         // TODO: 2018/8/24  发送apppush 待完成  zyk
 
+        return result;
+    }
+
+
+    /**
+     * 获取转让状态下拉选列表
+     * @author zhangyk
+     * @date 2018/8/28 13:48
+     */
+    @Override
+    public AdminResult getCreditStatusList() {
+        AdminResult result = new AdminResult();
+        String key = RedisConstants.CACHE_PARAM_NAME + CustomConstants.CREDIT_STATUS;
+        Map<String, String> creditStatusMap = RedisUtils.hgetall(key);
+        List<DropDownVO> list =  ConvertUtils.convertParamMapToDropDown(creditStatusMap);
+        result.setData(list);
         return result;
     }
 }

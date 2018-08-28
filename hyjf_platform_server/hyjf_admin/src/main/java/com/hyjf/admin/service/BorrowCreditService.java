@@ -37,4 +37,11 @@ public interface BorrowCreditService {
      * @date 2018/8/24 16:43
      */
     AdminResult cancelCredit(BorrowCreditRequest request);
+
+    /**
+     * 获取转让状态下拉选列表
+     * @author zhangyk
+     * @date 2018/8/28 13:47
+     */
+    AdminResult getCreditStatusList();
 }
