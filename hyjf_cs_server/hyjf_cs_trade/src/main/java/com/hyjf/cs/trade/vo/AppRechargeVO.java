@@ -12,6 +12,7 @@ public class AppRechargeVO extends AppBaseBean{
     private String code;
 
     private String mobile;
+    private String isMencry;
 
     public String getMoney() {
         return money;
@@ -43,5 +44,13 @@ public class AppRechargeVO extends AppBaseBean{
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getIsMencry() {
+        return isMencry;
+    }
+
+    public void setIsMencry(String isMencry) {
+        this.isMencry = isMencry;
     }
 }

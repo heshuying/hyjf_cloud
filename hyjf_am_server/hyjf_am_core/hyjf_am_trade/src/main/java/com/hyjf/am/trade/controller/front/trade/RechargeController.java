@@ -1,15 +1,12 @@
 package com.hyjf.am.trade.controller.front.trade;
 
-import com.hyjf.am.trade.controller.BaseController;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
@@ -18,8 +15,10 @@ import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.trade.RechargeService;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xiasq
@@ -109,10 +108,10 @@ public class RechargeController extends BaseController {
     }
 
     @GetMapping("/selectByOrdId/{ordId}")
-    public int selectByOrdId(@PathVariable String ordId){
+    public IntegerResponse selectByOrdId(@PathVariable String ordId){
         logger.info("selectByOrdId...param is :{}", JSONObject.toJSONString(ordId));
         int ret = this.rechargeService.selectByOrdId(ordId);
-        return ret;
+        return new IntegerResponse(ret);
     }
 
     @PostMapping("/insertSelectiveBank")

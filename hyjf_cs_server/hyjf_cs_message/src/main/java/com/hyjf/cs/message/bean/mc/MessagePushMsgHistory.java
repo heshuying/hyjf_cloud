@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class MessagePushMsgHistory implements Serializable {
     private String id;
 
-    private String tagId;
+    private Integer tagId;
 
     private String tagCode;
 
@@ -62,7 +62,7 @@ public class MessagePushMsgHistory implements Serializable {
 
     private String msgRemark;
 
-    private String sendTime;
+    private Integer sendTime;
 
     private Integer msgDestinationCountIos;
 
@@ -92,11 +92,11 @@ public class MessagePushMsgHistory implements Serializable {
         this.id = id;
     }
 
-    public String getTagId() {
+    public Integer getTagId() {
         return tagId;
     }
 
-    public void setTagId(String tagId) {
+    public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }
 
@@ -276,11 +276,11 @@ public class MessagePushMsgHistory implements Serializable {
         this.msgRemark = msgRemark == null ? null : msgRemark.trim();
     }
 
-    public String getSendTime() {
+    public Integer getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Integer sendTime) {
         this.sendTime = sendTime;
     }
 

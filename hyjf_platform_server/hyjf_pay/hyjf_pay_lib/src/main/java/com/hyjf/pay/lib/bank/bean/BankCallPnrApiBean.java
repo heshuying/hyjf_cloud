@@ -260,11 +260,11 @@ public class BankCallPnrApiBean implements Serializable {
 				// 得到方法名
 				String fName = f.getName();
 				try {
-					// 方法名是get开头的话
+					// 方法名是get开头的话 log开头的属性
 					if (StringUtils.isNotBlank(fName) && !(fName.length() > 3 && "log".equals(fName.substring(0, 3)))) {
-						// 参数方法获取
+						// 获取get方法后面的内容
 						String paramName = fName.substring(0, 1).toUpperCase() + fName.substring(1, fName.length());
-						// 取得结果
+						// 获取get方法
 						Method getMethod = c.getMethod(BankCallConstant.GET + paramName);
 						if (getMethod != null) {
 							Object result = getMethod.invoke(obj);
