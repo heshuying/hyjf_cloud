@@ -2279,7 +2279,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询记录总数   AM-ADMIN
+     * 查询记录总数   AM-ADMIN 自测
      *
      * @param request
      * @return 查询详情
