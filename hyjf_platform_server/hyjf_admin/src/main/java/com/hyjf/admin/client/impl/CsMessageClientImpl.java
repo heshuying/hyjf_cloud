@@ -311,7 +311,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     @Override
     public void sendMessage(MessagePushMsgHistoryVO msg) {
         restTemplate.postForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage/", msg,
-                        MessagePushErrorResponse.class);
+                Response.class);
     }
 
     /**

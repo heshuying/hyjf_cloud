@@ -767,7 +767,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @date: 2018/6/20
 	 */
 	@Override
-	public void insertEmailBindLog(UserBindEmailLog log) {
+	public Integer insertEmailBindLog(UserBindEmailLog log) {
 		// 将之前的邮件失效
 		UserBindEmailLogExample example = new UserBindEmailLogExample();
 		example.createCriteria().andUserIdEqualTo(log.getUserId()).andUserEmailStatusEqualTo(UserConstant.EMAIL_ACTIVE_STATUS_1);
@@ -782,7 +782,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		log.setCreateTime(new Date());
 		log.setEmailActiveUrlDeadtime(GetDate.getSomeDayBeforeOrAfter(new Date(), 1));
 		log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_1);
-		userBindEmailLogMapper.insertSelective(log);
+		return userBindEmailLogMapper.insertSelective(log);
 	}
 
 	/**
@@ -808,19 +808,21 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 * @date: 2018/6/20
 	 */
 	@Override
-	public void updateBindEmail(Integer userId, String email) {
+	public Integer updateBindEmail(Integer userId, String email) {
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(userId);
 		List<User> usersList = userMapper.selectByExample(example);
 		User u = usersList.get(0);
 		u.setEmail(email);
-		userMapper.updateByPrimaryKeySelective(u);
+		int result = userMapper.updateByPrimaryKeySelective(u);
 		
 		UserBindEmailLog log = this.getUserBindEmail(userId);
 		if(log != null) {
 			log.setUserEmailStatus(UserConstant.EMAIL_ACTIVE_STATUS_2);
 			userBindEmailLogMapper.updateByPrimaryKey(log);
 		}
+
+		return result;
 	}
 
 	@Override

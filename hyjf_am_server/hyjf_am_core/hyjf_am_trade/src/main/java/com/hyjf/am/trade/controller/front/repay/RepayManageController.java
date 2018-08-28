@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.RepayBeanResponse;
 import com.hyjf.am.response.trade.RepayListResponse;
@@ -94,10 +96,11 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/repaycount")
-    public Integer repayCount(@RequestBody @Valid RepayListRequest requestBean) {
-        RepayListResponse responseBean = new RepayListResponse();
+    public IntegerResponse repayCount(@RequestBody @Valid RepayListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
         Integer result = repayManageService.selectRepayCount(requestBean);
-        return result;
+        responseBean.setResultInt(result);
+        return responseBean;
     }
 
     /**
@@ -120,10 +123,11 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/orgrepaycount")
-    public Integer orgRepayCount(@RequestBody @Valid RepayListRequest requestBean) {
-        RepayListResponse responseBean = new RepayListResponse();
+    public IntegerResponse orgRepayCount(@RequestBody @Valid RepayListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
         Integer result = repayManageService.selectOrgRepayCount(requestBean);
-        return result;
+        responseBean.setResultInt(result);
+        return responseBean;
     }
 
     /**
@@ -146,10 +150,11 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/orgrepayedcount")
-    public Integer orgRepayedCount(@RequestBody @Valid RepayListRequest requestBean) {
-        RepayListResponse responseBean = new RepayListResponse();
+    public IntegerResponse orgRepayedCount(@RequestBody @Valid RepayListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
         Integer result = repayManageService.selectOrgRepayedCount(requestBean);
-        return result;
+        responseBean.setResultInt(result);
+        return responseBean;
     }
 
     /**
@@ -181,11 +186,11 @@ public class RepayManageController extends BaseController {
      * @date: 2018/7/10
      */
     @RequestMapping(value = "/update")
-    public Boolean updateRepayMoney(@RequestBody @Valid RepayRequestUpdateRequest requestBean){
+    public BooleanResponse updateRepayMoney(@RequestBody @Valid RepayRequestUpdateRequest requestBean){
         logger.info("还款申请更新开始，repuestBean: " + JSON.toJSONString(requestBean));
 
         if (requestBean == null || StringUtils.isBlank(requestBean.getRepayBeanData()) || StringUtils.isBlank(requestBean.getBankCallBeanData())){
-            return false;
+            return new BooleanResponse(false);
         }
 
         // 更新相关数据库表
@@ -194,10 +199,10 @@ public class RepayManageController extends BaseController {
             BankCallBean bankCallBean = JSON.parseObject(requestBean.getBankCallBeanData(), BankCallBean.class);
 
             boolean result = repayManageService.updateRepayMoney(repayBean, bankCallBean, requestBean.isAllRepay());
-            return result;
+            return new BooleanResponse(result);
         } catch (Exception e) {
             logger.error("还款申请更新数据库失败", e);
-            return false;
+            return new BooleanResponse(false);
         }
     }
 

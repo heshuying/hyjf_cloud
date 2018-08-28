@@ -107,14 +107,14 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.hyjf.am.trade.AmTradeApplication</mainClass>
+					<mainClass>com.hyjf.am.AmAdminApplication</mainClass>
 					<requiresUnpack>
 						<dependency>
 							<groupId>org.apache.axis2</groupId>
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-am-trade</finalName>
+					<finalName>hyjf-am-admin</finalName>
 				</configuration>
 			</plugin>
 			<plugin>

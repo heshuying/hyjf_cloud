@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.productcenter.hjhcredit;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -41,10 +42,12 @@ public class AdminHjhDebtCreditController extends BaseController{
      */
     @ApiOperation(value = "转让列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(@RequestBody HjhDebtCreditListRequest request) {
+    public IntegerResponse getListTotal(@RequestBody HjhDebtCreditListRequest request) {
         Map map = ConvertUtils.convertObjectToMap(request);
         Integer count = adminHjhDebtCreditService.getListTotal(map);
-        return count;
+        IntegerResponse integerResponse = new IntegerResponse();
+        integerResponse.setResultInt(count);
+        return integerResponse;
     }
 
     @ApiOperation(value = "转让列表查询")
@@ -52,7 +55,7 @@ public class AdminHjhDebtCreditController extends BaseController{
     public HjhDebtCreditReponse getList(@RequestBody HjhDebtCreditListRequest request){
 
         HjhDebtCreditReponse reponse = new HjhDebtCreditReponse();
-        Integer total = getListTotal(request);
+        Integer total = getListTotal(request).getResultInt();
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
         if(request.getPageSize() ==0){
             paginator = new Paginator(request.getCurrPage(), total);

@@ -67,13 +67,12 @@ public class AppRechargeController extends BaseTradeController{
 	@ResponseBody
 	@PostMapping(value = "/user/bank/recharge/getRechargeUrl")
 	@ApiOperation(value = "获取用户充值信息", notes = "获取用户充值信息")
-	public JSONObject getRechargeUrl(AppRechargeVO vo) {
+	public JSONObject getRechargeUrl(AppRechargeVO vo, @RequestHeader(value = "key") String key) {
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
 		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
-		String isMencry = vo.getIsMencry();// 版本号
 
 		// 校验数据并拼接回传地址
 		if (Validator.isNull(vo.getMoney())) {
@@ -82,8 +81,7 @@ public class AppRechargeController extends BaseTradeController{
 		} else {// 拼接充值地址并返回
 			mobile = strEncode(vo.getMobile());
 			StringBuffer sb = new StringBuffer(RECHARGE_URL);
-			sb.append("&money=").append(vo.getMoney()).append("&mobile=").append(mobile);
-
+			sb.append("&money=").append(vo.getMoney()).append("&isMencry=").append("2").append("&mobile=").append(mobile);
 			object.put("rechargeUrl",sb.toString());
 			logger.info("请求充值接口url："+sb.toString());
 			object.put("status",CustomConstants.APP_STATUS_SUCCESS);
@@ -109,6 +107,8 @@ public class AppRechargeController extends BaseTradeController{
 		String money = request.getParameter("money");// 交易金额
 		String isMencry = request.getParameter("isMencry");// 版本标识
 		String platform = request.getParameter("platform");// 平台
+		logger.info("mobile is :{}", mobile);
+		logger.info("key is :{}", key);
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
@@ -135,7 +135,7 @@ public class AppRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/failed";
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
 		String successfulUrl = systemConfig.getAppFrontHost()+"/user/bank/recharge/result/success?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
