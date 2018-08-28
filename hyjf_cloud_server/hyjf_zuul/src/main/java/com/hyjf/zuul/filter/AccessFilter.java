@@ -166,6 +166,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			//prefix = API_VISIT_URL;
+			//to do nothing
 		} else {
 			logger.error("error channel...");
 			// 不对其进行路由
