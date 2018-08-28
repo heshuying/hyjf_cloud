@@ -2378,31 +2378,31 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
         String url = "http://AM-ADMIN/am-trade/hjhLabel/insertHjhLabelRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
 
     @Override
     public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
         String url = "http://AM-ADMIN/am-trade/hjhLabel/updateHjhLabelRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
 
     @Override
     public int updateAllocationRecord(HjhLabelInfoRequest request) {
         String url = "http://AM-ADMIN/am-trade/hjhLabel/updateAllocationRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
     /*标签配置中心 end  AM-ADMIN*/
 
