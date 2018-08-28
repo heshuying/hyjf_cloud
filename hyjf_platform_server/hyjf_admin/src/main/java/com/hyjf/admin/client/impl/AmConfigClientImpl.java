@@ -2044,7 +2044,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int updateSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override

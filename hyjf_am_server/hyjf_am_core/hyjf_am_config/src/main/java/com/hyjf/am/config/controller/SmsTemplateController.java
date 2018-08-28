@@ -128,8 +128,9 @@ public class SmsTemplateController extends BaseConfigController{
      * @param request
      */
     @RequestMapping("/update_sms_template")
-    public int updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
-        return smsTemplateService.updateSmsTemplate(request);
+    public IntegerResponse updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
+        int num = smsTemplateService.updateSmsTemplate(request);
+        return new IntegerResponse(num);
     }
 
     @RequestMapping("/find_by_id/{id}")
