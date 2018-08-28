@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankRechargeService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
@@ -25,10 +24,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
@@ -100,7 +96,7 @@ public class BankRechargeController extends BaseController {
     public AdminResult insertBankRechargeConfig(@RequestBody  AdminBankRechargeConfigRequest adminRequest)  {
         ModelAndView modelAndView = new ModelAndView();
         // 调用校验
-        if (validatorFieldCheck(modelAndView, adminRequest) != null) {
+        if (StringUtils.isNotBlank(validatorFieldCheck(adminRequest))) {
             // 失败返回
             return new AdminResult<>(FAIL, "校验字段填写为空或长度太长，不符合要求!");
         }
@@ -120,12 +116,12 @@ public class BankRechargeController extends BaseController {
     public AdminResult updateBankRechargeConfig(@RequestBody AdminBankRechargeConfigRequest adminRequest)  {
         ModelAndView modelAndView = new ModelAndView();
         // 调用校验
-        if (validatorFieldCheck(modelAndView, adminRequest) != null) {
+        if (StringUtils.isNotBlank(validatorFieldCheck(adminRequest))) {
             // 失败返回
             return new AdminResult<>(FAIL, "校验字段填写为空或长度太长，不符合要求 !");
         }
         // // 根据id更新
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "id", String.valueOf(adminRequest.getId()))) {
+        if (StringUtils.isBlank(String.valueOf(adminRequest.getId()))) {
             return new AdminResult<>(FAIL, "id字段不能为空！");
         }
         AdminBankRechargeConfigResponse prs = bankRechargeService.updateBankRechargeConfig(adminRequest);
@@ -161,9 +157,9 @@ public class BankRechargeController extends BaseController {
      *
      */
     @ApiOperation(value = "快捷充值限额导出", notes = "快捷充值限额导出")
-    @PostMapping("/exportAction")
+    @GetMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletResponse response ,@RequestBody AdminBankRechargeConfigRequest adminRequest) throws Exception {
+    public void exportAction(HttpServletResponse response ) throws Exception {
         // 表格sheet名称
         String sheetName = "快捷充值限额配置";
         BankRechargeLimitConfigVO bankRecharge = new BankRechargeLimitConfigVO();
@@ -261,24 +257,17 @@ public class BankRechargeController extends BaseController {
     /**
      * 调用校验表单方法
      *
-     * @param modelAndView
      * @param form
      * @return
      */
-    private ModelAndView validatorFieldCheck(ModelAndView modelAndView, AdminBankRechargeConfigRequest form) {
+    private String validatorFieldCheck(AdminBankRechargeConfigRequest form) {
         // 字段校验(非空判断和长度判断)
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "bankId", form.getBankId().toString())) {
-            return modelAndView;
+        if (null == form.getBankId()||(StringUtils.isNotBlank(String.valueOf(form.getBankId()))&&String.valueOf(form.getBankId()).length()>11)) {
+            return "bankId 不能为空且长度不能超过11位！";
         }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "bankId", String.valueOf(form.getBankId()), 11, true)) {
-            return modelAndView;
+        if (null == form.getSingleQuota()||(StringUtils.isNotBlank(String.valueOf(form.getSingleQuota()))&&String.valueOf(form.getSingleQuota()).length()>13)) {
+            return "singleQuota 不能为空且长度不能超过13位！";
         }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "singleQuota", String.valueOf(form.getSingleQuota()))) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "singleQuota", String.valueOf(form.getSingleQuota()), 13, true)) {
-            return modelAndView;
-        }
-        return null;
+        return "";
     }
 }
