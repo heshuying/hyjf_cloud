@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -92,9 +93,9 @@ public class MyProfileController extends BaseUserController {
      */
     @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
-    public WeChatResult getCouponList(HttpServletRequest request) {
+    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader Integer userId) {
         WeChatResult resultBean = new WeChatResult();
-        Integer userId = requestUtil.getRequestUserId(request);
+
         if (userId==null){
             resultBean.setStatus(BaseResult.FAIL);
             resultBean.setStatusDesc("用户未登录!");
