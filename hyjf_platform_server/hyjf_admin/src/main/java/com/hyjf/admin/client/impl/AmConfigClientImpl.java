@@ -990,26 +990,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public ContentEnvironmentResponse searchAction(ContentEnvironmentRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentenvironment/searchaction",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentenvironment/searchaction",
                 requestBean, ContentEnvironmentResponse.class);
     }
 
     @Override
-    public ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentenvironment/insertaction",
-                requestBean, ContentEnvironmentResponse.class);
+    public int insertAction(ContentEnvironmentRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentenvironment/insertaction",
+                requestBean, IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentenvironment/updateaction",
-                requestBean, ContentEnvironmentResponse.class);
+    public int updateAction(ContentEnvironmentRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentenvironment/updateaction",
+                requestBean, IntegerResponse.class).getResultInt();
     }
 
     @Override
     public ContentEnvironmentVO getRecord(Integer id) {
         ContentEnvironmentResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentenvironment/getrecord/" + id,
+                "http://AM-ADMIN/am-config/content/contentenvironment/getrecord/" + id,
                 ContentEnvironmentResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1018,9 +1018,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public ContentEnvironmentResponse deleteContentEnvironmentById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentenvironment/delete/" + id,
-                ContentEnvironmentResponse.class);
+    public int deleteContentEnvironmentById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentenvironment/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override

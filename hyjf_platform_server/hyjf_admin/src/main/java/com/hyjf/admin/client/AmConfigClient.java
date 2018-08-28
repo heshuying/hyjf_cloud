@@ -587,7 +587,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean);
+	int insertAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 修改内容管理-办公环境
@@ -595,7 +595,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean);
+	int updateAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 根据id查询内容管理-办公环境
@@ -611,7 +611,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentEnvironmentResponse deleteContentEnvironmentById(Integer id);
+	int deleteContentEnvironmentById(Integer id);
 
 	/**
 	 * 根据条件查询着路页管理列表
