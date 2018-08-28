@@ -608,7 +608,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response = restTemplate.postForEntity(url, request, AdminTransferExceptionLogResponse.class).getBody();
         return response;
     }
@@ -635,7 +635,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateTransferExceptionLogByUUID(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
         return restTemplate.postForEntity(url, request, Integer.class).getBody();
     }
 
@@ -649,7 +649,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
         TransferExceptionLogResponse response = restTemplate.getForEntity(url, TransferExceptionLogResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -913,7 +913,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean transferAfter(JSONObject jsonObject) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/transferAfter";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/transferAfter";
         return restTemplate.postForEntity(url, jsonObject, Boolean.class).getBody();
     }
 
@@ -932,7 +932,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverVO getCouponRecoverByPrimaryKey(Integer id) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
         CouponRecoverResponse response = restTemplate.getForEntity(url, CouponRecoverResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -949,7 +949,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderCpnVO getCouponTenderInfoByNid(String nid) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
         BorrowTenderCpnResponse response = restTemplate.getForEntity(url, BorrowTenderCpnResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -1545,7 +1545,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> selectInstConfigAll() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2199,7 +2199,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     /*资产中心 start*/
 
     /**
-     * 获取资金来源
+     * 获取资金来源   AM-ADMIN
      *
      * @param
      * @return List<HjhInstConfigVO>
@@ -2216,7 +2216,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 产品类型下拉联动
+     * 产品类型下拉联动   AM-ADMIN
      *
      * @param instCodeSrch
      * @return List<HjhAssetTypeVO>
@@ -2224,7 +2224,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch) {
         HjhAssetTypeResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2244,7 +2244,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询资产列表
+     * 查询资产列表  AM-ADMIN
      *
      * @param request
      * @return
@@ -2262,14 +2262,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询详情
+     * 查询详情  AM-ADMIN
      *
      * @return 查询详情
      */
     @Override
     public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
         AssetDetailCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findDetailById", assetListRequest,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findDetailById", assetListRequest,
                         AssetDetailCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2279,7 +2279,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询记录总数
+     * 查询记录总数   AM-ADMIN 自测
      *
      * @param request
      * @return 查询详情
@@ -2287,7 +2287,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getRecordCount(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findRecordCount", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findRecordCount", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2297,7 +2297,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询列总计
+     * 查询列总计  AM-ADMIN
      *
      * @param request
      * @return 查询详情
@@ -2305,7 +2305,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BigDecimal sumAccount(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/sumAccount", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/sumAccount", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2322,12 +2322,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /*资产中心 end*/
 
-    /*标签配置中心 start*/
+    /*标签配置中心 start  AM-ADMIN */
     @Override
     public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
         // 复用
         BorrowProjectTypeResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2338,7 +2338,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowStyleVO> findBorrowStyleList() {
         // 复用
         BorrowStyleResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2348,7 +2348,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2358,7 +2358,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2368,7 +2368,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request) {
         HjhLabelCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2377,40 +2377,40 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/insertHjhLabelRecord";
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
 
     @Override
     public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/updateHjhLabelRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/updateHjhLabelRecord";
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
 
     @Override
     public int updateAllocationRecord(HjhLabelInfoRequest request) {
-        String url = "http://AM-TRADE/am-trade/hjhLabel/updateAllocationRecord";
-        Integer updateFlag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        if (updateFlag > 0) {
-            return updateFlag;
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/updateAllocationRecord";
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
         }
-        return 0;
+        return updateFlag.getResultInt().intValue();
     }
-    /*标签配置中心 end*/
+    /*标签配置中心 end  AM-ADMIN*/
 
-    /*计划列表 start*/
+    /*计划列表 start AM-ADMIN*/
     @Override
     public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2420,7 +2420,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanSumVO getCalcSumByParam(PlanListRequest form) {
         HjhPlanSumResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getCalcSumByParam", form, HjhPlanSumResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getCalcSumByParam", form, HjhPlanSumResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2430,7 +2430,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form) {
         HjhPlanDetailResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanDetailByPlanNid", form, HjhPlanDetailResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getHjhPlanDetailByPlanNid", form, HjhPlanDetailResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2440,7 +2440,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2450,7 +2450,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2460,7 +2460,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2470,7 +2470,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2479,42 +2479,41 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public boolean isExistsRecord(String planNid) {
-        String url = "http://AM-TRADE/am-trade/planList/isExistsRecord/" + planNid;
-        boolean Flag = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/isExistsRecord/" + planNid;
+        BooleanResponse Flag = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return Flag.getResultBoolean();
     }
 
     @Override
     public int countByPlanName(String planName) {
-        String url = "http://AM-TRADE/am-trade/planList/countByPlanName/" + planName;
-        Integer count = restTemplate.getForEntity(url, Integer.class).getBody();
-        return count;
+        String url = "http://AM-ADMIN/am-trade/planList/countByPlanName/" + planName;
+        IntegerResponse count = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return count.getResultInt().intValue();
     }
 
     @Override
     public int isLockPeriodExist(String lockPeriod, String borrowStyle, String isMonth) {
-        String url = "http://AM-TRADE/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
-        Integer count = restTemplate.getForEntity(url, Integer.class).getBody();
-        return count;
+        String url = "http://AM-ADMIN/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
+        IntegerResponse count = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return count.getResultInt().intValue();
     }
 
     @Override
     public int updateRecord(PlanListRequest form) {
-        String url = "http://AM-TRADE/am-trade/planList/updateRecord";
-        Integer Flag = restTemplate.postForEntity(url, form, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/updateRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, form, IntegerResponse.class).getBody();
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public int insertRecord(PlanListRequest form) {
-        String url = "http://AM-TRADE/am-trade/planList/insertRecord";
-        Integer Flag = restTemplate.postForEntity(url, form, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/insertRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, form, IntegerResponse.class).getBody();
+        return Flag.getResultInt().intValue();
     }
-    /*计划列表 end*/
+    /*计划列表 end  AM-ADMIN*/
 
-    /*加入明细 start*/
-
+    /*加入明细 start AM-ADMIN*/
     /**
      * 检索加入明细列表
      *
@@ -2525,7 +2524,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccedeListResponse getAccedeListByParam(AccedeListRequest form) {
         AccedeListResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParam", form, AccedeListResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParam", form, AccedeListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2535,7 +2534,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form) {
         AccedeListResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParamWithoutPage", form, AccedeListResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamWithoutPage", form, AccedeListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2545,7 +2544,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form) {
         HjhAccedeSumResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getCalcSumByParam", form, HjhAccedeSumResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getCalcSumByParam", form, HjhAccedeSumResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2556,7 +2555,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
         // 原 selectTenderAgreementByNid 方法返回的是 List<CurrentHoldObligatoryRightListCustomizeVO> 不能共用，换新方法
     	/*String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/" + planOrderId;*/
-    	String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
+    	String url = "http://AM-ADMIN/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
         TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2566,27 +2565,30 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateSendStatusByParam(AccedeListRequest request) {
-        String url = "http://AM-TRADE/am-trade/accedeList/updateSendStatusByParam";
-        Integer Flag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/accedeList/updateSendStatusByParam";
+        IntegerResponse Flag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
         UserHjhInvistDetailResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/selectUserHjhInvistDetail", request, UserHjhInvistDetailResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/selectUserHjhInvistDetail", request, UserHjhInvistDetailResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;
     }
-    /*加入明细 end*/
+    /*加入明细 end  AM-ADMIN*/
 
-    /*承接记录 start*/
+    /*承接记录 start AM-ADMIN*/
     @Override
     public HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form) {
         HjhCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParam", form, HjhCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/getHjhCreditTenderListByParam", form, HjhCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2596,7 +2598,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form) {
         HjhCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParamWithOutPage", form, HjhCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/getHjhCreditTenderListByParamWithOutPage", form, HjhCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2606,13 +2608,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form) {
         HjhDebtCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/selectHjhCreditTenderRecord", form, HjhDebtCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/selectHjhCreditTenderRecord", form, HjhDebtCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;
     }
-    /*承接记录 end*/
+    /*承接记录 end AM-ADMIN*/
 
     /*计划引擎 start*/
 

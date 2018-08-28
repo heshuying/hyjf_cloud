@@ -36,7 +36,7 @@ public class AdminBorrowCreditTenderController {
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
     @PostMapping("/exportData")
     @ResponseBody
-    public void exportBorrowCreditTender( BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void exportBorrowCreditTender( @RequestBody BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         borrowCreditTenderService.exportCreditTenderList(request,response);
     }
 

@@ -3,6 +3,7 @@
  */
 package com.hyjf.batch.job.hjh.hjhplanswitch;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -20,8 +21,8 @@ public class HjhPlanJoinOffJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("HjhPlanJoinOffJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOff", Boolean.class).getBody();
+        BooleanResponse result = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOff", BooleanResponse.class).getBody();
 
         logger.info("HjhPlanJoinOffJob execute end...");
     }
