@@ -4,6 +4,8 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,15 +15,15 @@ import java.util.Date;
  */
 public class ContentEnvironmentRequestBean extends BaseRequest {
 	private Integer id;
-
+    @ApiModelProperty(value = "名称")
 	private String name;
 
 	private String imgUrl;
-
+	@ApiModelProperty(value = "图片类型 0:横图 1:竖图")
 	private Integer imgType;
-
+    @ApiModelProperty(value = "排序")
 	private Integer orderId;
-
+	@ApiModelProperty(value = "状态 0:关闭 1:启用")
 	private Integer status;
 
 	private String describe;
@@ -122,5 +124,30 @@ public class ContentEnvironmentRequestBean extends BaseRequest {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	/** 开始时间 */
+	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String startTime;
+	/** 结束时间 */
+	@ApiModelProperty(value = "结束时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String endTime;
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 }
