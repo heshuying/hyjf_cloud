@@ -123,7 +123,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 	 * @return
 	 */
 	@Override
-	public boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode) {
+	public boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode,String smsSeq) {
 		Date nowDate = new Date();
 		User user = userMapper.selectByPrimaryKey(userId);
 		BankSmsAuthCodeExample example = new BankSmsAuthCodeExample();
@@ -132,6 +132,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 		if (smsAuthCodeList != null && smsAuthCodeList.size() == 1) {
 			BankSmsAuthCode smsAuthCode = smsAuthCodeList.get(0);
 			smsAuthCode.setSrvAuthCode(srvAuthCode);
+			smsAuthCode.setSmsSeq(smsSeq);
 			smsAuthCode.setUpdateTime(nowDate);
 			smsAuthCode.setUpdateUserId(userId);
 			smsAuthCode.setUpdateUserName(user.getUsername());
@@ -147,6 +148,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 			smsAuthCode.setUserId(userId);
 			smsAuthCode.setSrvTxCode(srvTxCode);
 			smsAuthCode.setSrvAuthCode(srvAuthCode);
+			smsAuthCode.setSmsSeq(smsSeq);
 			smsAuthCode.setStatus(1);
 			smsAuthCode.setCreateTime(nowDate);
 			smsAuthCode.setCreateUserId(userId);

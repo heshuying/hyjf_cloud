@@ -117,7 +117,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getInstcode(), "http://CS-TRADE",
+				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
 						systemConfig.getAopAccesskey());
 			}
 			if (channel.equals(BankCallConstant.CHANNEL_WEI)) {

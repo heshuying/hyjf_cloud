@@ -9,8 +9,12 @@ package com.hyjf.am.resquest.user;
  */
 public class BankSmsLogRequest {
     private Integer userId;
+    // 请求类型
     private String srvTxCode;
+    // 银行卡号
     private String srvAuthCode;
+    // 短信序列号
+    private String smsSeq;
 
     public Integer getUserId() {
         return userId;
@@ -34,5 +38,13 @@ public class BankSmsLogRequest {
 
     public void setSrvAuthCode(String srvAuthCode) {
         this.srvAuthCode = srvAuthCode;
+    }
+
+    public String getSmsSeq() {
+        return smsSeq;
+    }
+
+    public void setSmsSeq(String smsSeq) {
+        this.smsSeq = smsSeq;
     }
 }
