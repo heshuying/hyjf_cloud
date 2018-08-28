@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecover;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
@@ -13,10 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,9 +38,11 @@ public class AdminBatchBorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
+    public IntegerResponse getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
         Integer count = batchBorrowRecoverService.getListTotal(request);
-        return count;
+        IntegerResponse integerResponse = new IntegerResponse();
+        integerResponse.setResultInt(count);
+        return integerResponse;
     }
 
     @ApiOperation(value = "放款列表查询")
@@ -50,7 +50,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
-        Integer total = getListTotal(request);
+        Integer total = getListTotal(request).getResultInt();
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
         if(request.getPageSize() ==0){
             paginator = new Paginator(request.getCurrPage(), total);
@@ -81,8 +81,8 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     }
 
     @ApiOperation(value = "根据id获取放款任务")
-    @PostMapping("/getRecoverApicronByID")
-    public BorrowApicronResponse getRecoverApicronByID(@RequestBody String id){
+    @GetMapping("/getRecoverApicronByID/{id}")
+    public BorrowApicronResponse getRecoverApicronByID(@PathVariable String id){
 
         BorrowApicronResponse reponse = new BorrowApicronResponse();
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);

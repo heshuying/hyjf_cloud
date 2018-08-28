@@ -39,9 +39,6 @@ public class CustomizeMapper extends AutoMapper {
     protected UserCustomizeMapper userCustomizeMapper;
 
     @Autowired
-    protected BankAccountManageCustomizeMapper bankAccountManageCustomizeMapper;
-
-    @Autowired
     protected BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
 
     @Autowired

@@ -444,15 +444,15 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         // 调用汇付接口(提现)
-        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawError";
+        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
         String bgRetUrl = systemConfig.getWebHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
-        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
+        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);
         } catch (Exception e) {
-            logger.info("web端提现失败");
+            logger.info("app端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
@@ -469,6 +469,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiIgnore
+    @ResponseBody
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");

@@ -5,7 +5,6 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public interface MessagePushTemplateServcie {
      *
      * @param request
      */
-    void insertMsgPushTemplate(MsgPushTemplateRequest request);
+    int insertMsgPushTemplate(MsgPushTemplateRequest request);
 
     /**
      * 获取查询模板条数

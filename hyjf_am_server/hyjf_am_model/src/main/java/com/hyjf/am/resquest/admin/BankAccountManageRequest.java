@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -13,27 +15,20 @@ public class BankAccountManageRequest implements Serializable {
 
     private static final long serialVersionUID = -8745040452862245048L;
 
-    /**
-     * 用户名
-     */
+
+    @ApiModelProperty(value = "用户名查询")
     private String userNameSrch;
-    /**
-     * 部门
-     */
+
+    @ApiModelProperty(value = "部门查询")
     private String combotreeSrch;
-    /**
-     * 部门
-     */
+
+    @ApiModelProperty(value = "部门拼接(代码将单个部门拼接成list)")
     private String[] combotreeListSrch;
 
-    /**
-     * 电子账号(检索用)
-     */
+    @ApiModelProperty(value = "电子账号(检索用)")
     private String accountSrch;
 
-    /**
-     * 会员等级(检索用)
-     */
+    @ApiModelProperty(value = "会员等级(检索用)")
     private String vipSrch;
 
     /**

@@ -1150,7 +1150,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowApicronResponse getBorrowApicronByID(String id) {
-        String url = tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID" + id;
+        String url = tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID/" + id;
         BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -2203,7 +2203,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2248,7 +2248,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findAssetList", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findAssetList", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2312,7 +2312,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void updateCashDepositeStatus(String assetId, String menuHide) {
-        String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
+        String url = "http://AM-ADMIN/am-trade/assetList/updateCashDepositeStatus/" + assetId + "/" + menuHide;
         restTemplate.getForEntity(url, String.class).getBody();
 
     }
@@ -3876,20 +3876,32 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 更新用户账户信息
+     * @param accountVO
+     * @return
+     */
     @Override
     public Integer updateAccountManage(AccountVO accountVO) {
-        String url = "http://AM-TRADE/am-trade/bankAccountmanage/updateaccount";
+        String url = tradeService + "/bank_account_manage/update_account";
         Integer result = restTemplate.postForEntity(url, accountVO, Integer.class).getBody();
         return result;
     }
 
+    /**
+     * 手动银行对账
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Override
     public String updateAccountCheck(Integer userId, String startTime, String endTime) {
         AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO = new AdminBankAccountCheckCustomizeVO();
         adminBankAccountCheckCustomizeVO.setUserId(userId);
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
-        String url = "http://AM-TRADE/am-trade/bankAccountManage/updateaccountcheck/";
+        String url = tradeService + "/bank_account_manage/update_account_check/";
         String result = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, String.class).getBody();
         if (result != null) {
             return result;
@@ -5628,11 +5640,56 @@ public class AmTradeClientImpl implements AmTradeClient {
         NifaReportLogResponse response = restTemplate.postForEntity(url,request,NifaReportLogResponse.class).getBody();
         return response;
     }
-    
+
+    /**
+     * 行账户管理页面查询件数
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bank_account_manage/query_account_count";
+        Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
+        return result;
+    }
+
+    /**
+     * 账户管理页面查询列表
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bank_account_manage/query_account_infos";
+        BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 资金明细（列表）
+     *
+     * @param bankAccountManageRequest
+     * @return
+     */
+    @Override
+    public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
+        String url = tradeService + "/bank_account_manage/query_account_infos";
+        BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
 	/**
 	 * 传参查询承接债转表列总计
-	 * 
-	 * @param DebtCreditCustomize
+	 *
+	 * @param form
 	 * @return
 	 */
 	@Override
