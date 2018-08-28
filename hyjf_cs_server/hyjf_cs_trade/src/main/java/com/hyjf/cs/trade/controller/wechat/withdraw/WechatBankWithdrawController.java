@@ -69,7 +69,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdraw/result/failed";
-        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/userBankWithdrawBgreturn";
+        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/bgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         Map<String,Object> map = new HashMap<>();
@@ -113,7 +113,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
-    @PostMapping("/userBankWithdrawBgreturn")
+    @PostMapping("/bgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
         logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
