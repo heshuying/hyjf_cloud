@@ -1,8 +1,8 @@
 package com.hyjf.pay.lib.chinapnr;
 
-import java.io.Serializable;
-
 import com.hyjf.pay.lib.PnrApiBean;
+
+import java.io.Serializable;
 
 
 public class ChinapnrBean extends PnrApiBean implements Serializable {
@@ -74,7 +74,7 @@ public class ChinapnrBean extends PnrApiBean implements Serializable {
 
     /** 用户客户号 */
     public String UsrCustId;
-    
+
     /** 用户客户号，定向转账授权 绑定客户号 */
     public String InUsrCustId;
 
@@ -110,7 +110,7 @@ public class ChinapnrBean extends PnrApiBean implements Serializable {
 
     /** 还款本金*/
     public String PrincipalAmt;
-    
+
     /** 还款利息*/
     public String InterestAmt;
 
@@ -281,10 +281,10 @@ public class ChinapnrBean extends PnrApiBean implements Serializable {
 
     /** 取现对账结果串 */
     public String CashReconciliationDtoList;
-    
+
     /** 快捷充值限额信息列表 */
     public String PayQuotaDetails;
-    
+
     //=================标的信息录入接口
     /** 标的信息录入接口-标的名称 */
     public String BidName;
@@ -417,17 +417,17 @@ public class ChinapnrBean extends PnrApiBean implements Serializable {
 
     /** 各功能的页面返回URL */
     private String realRetUrl;
-    
+
     /** 投标计划类型P--部分授权
 				W--完全授权 */
     private String TenderPlanType;
-    
+
     /** 企业开户担保类型 是否担保类型，Y：是 N：否 */
     public String GuarType;
-    
+
     /** 担保企业还款:垫资/代偿对象*/
     public String DzObject;
-    
+
     public String getChkValueStatus() {
         return chkValueStatus;
     }
@@ -1614,4 +1614,3 @@ public class ChinapnrBean extends PnrApiBean implements Serializable {
 		DzObject = dzObject;
 	}
 }
-    
