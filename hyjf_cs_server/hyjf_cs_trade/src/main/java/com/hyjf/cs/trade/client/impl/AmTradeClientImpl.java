@@ -153,8 +153,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer selectMyCouponCount(MyCouponListRequest requestBean) {
         String url = urlBase + "coupon/myCouponCount";
-        Integer result = restTemplate.postForEntity(url, requestBean, Integer.class).getBody();
-        return result;
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -195,8 +198,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean) {
         String url = urlBase + "reward/myRewardTotal";
-        BigDecimal result = restTemplate.postForEntity(url, requestBean, BigDecimal.class).getBody();
-        return result;
+        BigDecimalResponse response = restTemplate.postForEntity(url, requestBean, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
     }
 
     /**
@@ -223,9 +229,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectBorrowAuthCount(BorrowAuthRequest requestBean) {
-        int count = restTemplate
-                .postForEntity(urlBase + "borrowauth/count_auth", requestBean, Integer.class).getBody();
-        return count;
+        IntegerResponse response = restTemplate
+                .postForEntity(urlBase + "borrowauth/count_auth", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -252,9 +261,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectBorrowAuthedCount(BorrowAuthRequest requestBean) {
-        int count = restTemplate
-                .postForEntity(urlBase + "borrowauth/count_authed", requestBean, Integer.class).getBody();
-        return count;
+        IntegerResponse response = restTemplate
+                .postForEntity(urlBase + "borrowauth/count_authed", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -266,7 +278,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateTrusteePaySuccess(String borrowNid) {
         String url = urlBase + "borrowauth/auth_update/" + borrowNid;
-        return restTemplate.getForEntity(url, Integer.class).getBody();
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -2965,7 +2981,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer deleteFreezeLogByOrderId(String orderId) {
         String url = "http://AM-TRADE/am-trade/repayfreezelog/deleteby_orderid/" + orderId;
-        return restTemplate.getForEntity(url, Integer.class).getBody();
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -2976,7 +2996,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer addFreezeLog(BankRepayFreezeLogRequest requestBean) {
         String url = "http://AM-TRADE/am-trade/repayfreezelog/add";
-        return restTemplate.postForEntity(url, requestBean, Integer.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
