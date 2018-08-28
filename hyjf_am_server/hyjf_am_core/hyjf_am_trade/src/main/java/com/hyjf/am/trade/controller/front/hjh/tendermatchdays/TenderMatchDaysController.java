@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh.tendermatchdays;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class TenderMatchDaysController extends BaseController {
      * @return
      */
     @GetMapping("/batch/tenderMatchDays")
-    private boolean tenderMatchDays() {
+    private BooleanResponse tenderMatchDays() {
             logger.info("计算自动投资的匹配期(每日)任务 开始... ");
 
             try {
@@ -40,6 +41,6 @@ public class TenderMatchDaysController extends BaseController {
             }
             logger.info("计算自动投资的匹配期(每日)任务 结束。 ");
 
-        return true;
+        return new BooleanResponse(true);
     }
 }

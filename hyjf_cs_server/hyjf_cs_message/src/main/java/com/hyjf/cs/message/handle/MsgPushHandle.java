@@ -30,6 +30,7 @@ import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.PushPayload;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -167,10 +168,10 @@ public class MsgPushHandle {
 		if (userAliasVO != null) {
 			int msgId = 0;
 			MessagePushMsgHistory history = new MessagePushMsgHistory();
-			history.setCreateTime(GetDate.getNowTime10());
+			history.setCreateTime(GetDate.getNowTime10() + "");
 			history.setCreateUserId(null);
 			history.setCreateUserName("系统自动触发");
-			history.setLastupdateTime(GetDate.getNowTime10());
+			history.setLastupdateTime(GetDate.getNowTime10() + "");
 			history.setLastupdateUserId(null);
 			history.setLastupdateUserName("系统自动触发");
 			history.setMsgAction(messagePushTemplate.getTemplateAction());
@@ -192,7 +193,7 @@ public class MsgPushHandle {
 			history.setMsgUserId(null);
 			history.setSendTime(null);
 			history.setTagCode(messagePushTemplate.getTagCode());
-			history.setTagId(messagePushTemplate.getTagId());
+			history.setTagId(Integer.valueOf(messagePushTemplate.getTagId()));
 			if (userAliasVO.getClient().equals(CustomConstants.CLIENT_ANDROID)) {
 				history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
 				history.setMsgDestinationCountIos(0);// IOS目标推送数
@@ -220,10 +221,10 @@ public class MsgPushHandle {
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人
 			MessagePushMsgHistory history = new MessagePushMsgHistory();
-			history.setCreateTime(message.getCreateTime());
+			history.setCreateTime(message.getCreateTime() + "");
 			history.setCreateUserId(message.getCreateUserId());
 			history.setCreateUserName(message.getCreateUserName());
-			history.setLastupdateTime(GetDate.getNowTime10());
+			history.setLastupdateTime(GetDate.getNowTime10() + "");
 			history.setLastupdateUserId(message.getCreateUserId());
 			history.setLastupdateUserName(message.getCreateUserName());
 			history.setMsgAction(message.getMsgAction());
@@ -245,7 +246,7 @@ public class MsgPushHandle {
 			history.setMsgUserId(null);
 			history.setSendTime(null);
 			history.setTagCode(message.getTagCode());
-			history.setTagId(message.getTagId());
+			history.setTagId(Integer.valueOf(message.getTagId()));
 			history.setMsgDestinationCountAndroid(amUserClient.countAliasByClient(CustomConstants.CLIENT_ANDROID));// 安卓目标推送数
 			history.setMsgDestinationCountIos(amUserClient.countAliasByClient(CustomConstants.CLIENT_IOS));// IOS目标推送数
 			// 插入数据库
@@ -262,10 +263,10 @@ public class MsgPushHandle {
 				if (msgPushCommonList != null && msgPushCommonList.size() != 0) {
 					for (int i = 0; i < msgPushCommonList.size(); i++) {
 						MessagePushMsgHistory history = new MessagePushMsgHistory();
-						history.setCreateTime(message.getCreateTime());
+						history.setCreateTime(message.getCreateTime() + "");
 						history.setCreateUserId(message.getCreateUserId());
 						history.setCreateUserName(message.getCreateUserName());
-						history.setLastupdateTime(GetDate.getNowTime10());
+						history.setLastupdateTime(GetDate.getNowTime10() + "");
 						history.setLastupdateUserId(message.getCreateUserId());
 						history.setLastupdateUserName(message.getCreateUserName());
 						history.setMsgAction(message.getMsgAction());
@@ -287,7 +288,7 @@ public class MsgPushHandle {
 						history.setMsgUserId(null);
 						history.setSendTime(null);
 						history.setTagCode(message.getTagCode());
-						history.setTagId(message.getTagId());
+						history.setTagId(Integer.valueOf(message.getTagId()));
 						if (msgPushCommonList.get(i).getClient().equals(CustomConstants.CLIENT_ANDROID)) {
 							history.setMsgDestinationCountAndroid(1);// 安卓目标推送数
 							history.setMsgDestinationCountIos(0);// IOS目标推送数
@@ -308,6 +309,9 @@ public class MsgPushHandle {
 		return histories;
 	}
 
+	@Value("${hyjf.env.test}")
+	private boolean HYJF_ENV_TEST;
+
 	/**
 	 * 极光推送及更新发送状态
 	 *
@@ -315,6 +319,15 @@ public class MsgPushHandle {
 	 */
 	public void send(MessagePushMsgHistory msg) throws Exception {
 		logger.info("开始推送: msg_id is :{}, msg_content is:{}", msg.getId(), msg.getMsgContent());
+
+		if(HYJF_ENV_TEST){
+			logger.info("测试环境不推送.....");
+			msg.setSendTime(GetDate.getNowTime10());
+			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
+			messagePushMsgHistoryDao.save(msg);
+			return;
+		}
+
 		String msgId = ""; // 极光返回id
 		String msgProId = "";// 新极光返回id
 		String msgZNBID = "";// 周年版返回id

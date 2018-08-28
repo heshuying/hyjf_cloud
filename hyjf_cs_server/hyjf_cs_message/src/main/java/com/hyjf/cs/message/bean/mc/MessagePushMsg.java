@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.bean.mc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -115,10 +116,13 @@ public class MessagePushMsg implements Serializable {
         this.msgContent = msgContent;
     }
 
+    public String[] getMsgTerminal() {
+        return msgTerminal;
+    }
+
     public void setMsgTerminal(String[] msgTerminal) {
         this.msgTerminal = msgTerminal;
     }
-
 
     public Integer getMsgAction() {
         return msgAction;

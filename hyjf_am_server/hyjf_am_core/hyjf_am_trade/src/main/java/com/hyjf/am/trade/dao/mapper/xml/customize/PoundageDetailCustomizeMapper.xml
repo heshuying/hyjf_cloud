@@ -38,8 +38,8 @@
 								AND b.reverify_status &lt;> 0
 							)
 						)
-					AND br.create_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
-					AND br.create_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
+					AND br.create_time >= date_sub(curdate(),interval 1 day)
+					AND br.create_time &lt; curdate()
 					AND bt.invite_department_id IS NOT NULL
 					AND bt.invite_department_id > 0
 					AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
@@ -108,8 +108,8 @@
 								where hpl.type = 1 and if(hpl.source =0,1=1,hpl.source = 2) and hpl.status=0
 							) oatp on oatp.name = ct.invite_user_regionname
 							WHERE
-							 ct.create_time >= UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day))
-							AND ct.create_time &lt; UNIX_TIMESTAMP(curdate())
+							 ct.create_time >= date_sub(curdate(),interval 1 day)
+							AND ct.create_time &lt; curdate()
 							AND ct.invite_user_regionname IS NOT NULL
 							AND ct.invite_user_regionname != ''
 							AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
@@ -185,8 +185,8 @@
 								AND b.reverify_status &lt;> 0
 							)
 						)
-					AND br.create_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
-					AND br.create_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
+					AND br.create_time >= date_sub(curdate(),interval 1 day)
+					AND br.create_time &lt; curdate()
 					AND bt.invite_department_id IS NOT NULL
 					AND bt.invite_department_id > 0
 					AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))

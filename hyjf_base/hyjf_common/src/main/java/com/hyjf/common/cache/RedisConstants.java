@@ -191,6 +191,11 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
+    public static final String USER_TOEKN_KEY = "TOKEN:";
+
+    /**
+     * 用户userId令牌前缀
+     */
     public static final String USERID_KEY = "userId:";
 
     /**

@@ -11,6 +11,7 @@ import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -22,6 +23,7 @@ import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -1747,4 +1749,43 @@ public interface AmTradeClient {
      * @date 2018/8/28 10:33
      **/
     List<ApiBorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoList(ApiBorrowRepaymentInfoRequest request);
+
+    /**
+     * api: 查询标的列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
+
+	/**
+	 *
+	 * 投资预插入
+	 *
+	 * @param borrowNid
+	 * @param orderId
+	 * @param userId
+	 * @param account
+	 * @param ip
+	 * @return
+	 * @author Administrator
+	 * @throws Exception
+	 */
+    boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest);
+
+    /**
+     * 根据id删除BorrowTenderTmp
+     * @auth libin
+     * @param id 主键
+     * @return
+     */
+    Integer deleteBorrowTenderTmp(String orgOrderId);
+
+	/**
+	 * 投资失败,删除投资临时表
+	 * @param borrowNid
+	 * @param userId
+	 * @param orderId
+	 */
+    int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
+
 }

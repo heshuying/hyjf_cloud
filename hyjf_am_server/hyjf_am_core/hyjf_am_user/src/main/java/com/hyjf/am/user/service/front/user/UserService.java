@@ -93,11 +93,11 @@ public interface UserService extends BaseService {
 
 	boolean checkEmailUsed(String email);
 
-	void insertEmailBindLog(UserBindEmailLog log);
+	Integer insertEmailBindLog(UserBindEmailLog log);
 
 	UserBindEmailLog getUserBindEmail(Integer userid);
 
-	void updateBindEmail(Integer userId, String email);
+	Integer updateBindEmail(Integer userId, String email);
 
     UserLoginLog selectByPrimaryKey(Integer userId);
 
@@ -255,4 +255,10 @@ public interface UserService extends BaseService {
 	Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus);
 
 	List<Integer> getQianleUser();
+	/**
+	 * 更新ht_hjh_user_auth_log
+	 * @param hjhUserAuthLog
+	 * @return
+	 */
+	int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog);
 }

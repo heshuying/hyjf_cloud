@@ -3,17 +3,22 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.HjhAccountBalanceService;
 import com.hyjf.cs.message.service.HjhPlanCapitalService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -36,11 +41,10 @@ public class HjhPlanCapitalController extends BaseController {
     private HjhAccountBalanceService hjhAccountBalanceService;
 
     @RequestMapping("/hjhplancapital")
-    public Boolean hjhPlanCapital() {
+    public BooleanResponse hjhPlanCapital() {
             logger.info("汇计划资本预估统计(每日)任务 开始... ");
-
+            Boolean result = false;
             try {
-                Boolean result = false;
                 // 取得当前日期为基准日期
                 Date nowDate = GetDate.stringToDate2(GetDate.dateToString2(new Date()));
                 // 取得前一天日期
@@ -111,8 +115,7 @@ public class HjhPlanCapitalController extends BaseController {
             }
             logger.info("汇计划资本预估统计(每日)任务 结束... ");
 
-
-        return false;
+        return new BooleanResponse(result);
     }
 
     /**
@@ -131,13 +134,26 @@ public class HjhPlanCapitalController extends BaseController {
      * @return
      * @Author : huanghui
      */
-    @RequestMapping(value = "/getPlanCapitalList")
+    @RequestMapping(value = "/getPlanCapitalList", method = RequestMethod.POST)
     public HjhPlanCapitalResponse getPlanCapitalList(@RequestBody  HjhPlanCapitalRequest request){
         HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
 
-        List<HjhPlanCapitalVO> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
-        hjhPlanCapitalResponse.setResultList(recordList);
+        //总计条数
+        Integer count = this.hjhPlanCapitalService.getPlanCapitalCount(request);
 
+        if (request.getCurrPage() > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+
+        List<HjhPlanCapitalVO> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
+
+        if (CollectionUtils.isNotEmpty(recordList)){
+            hjhPlanCapitalResponse.setResultList(recordList);
+            hjhPlanCapitalResponse.setCount(count);
+            hjhPlanCapitalResponse.setRtn(Response.SUCCESS);
+        }
         return hjhPlanCapitalResponse;
     }
 

@@ -164,8 +164,14 @@ public class CommonConstant {
      * 散标投资
      */
     public static final String APP_BANK_REQUEST_TYPE_TENDER = "2";
-    
-    
+    /**
+     * 银行提现
+     */
+    public static final String APP_BANK_REQUEST_TYPE_WITHDRAW = "3";
+    /**
+     * 银行充值
+     */
+    public static final String APP_BANK_REQUEST_TYPE_RECHARGE = "4";
     /**
      * 数据源控制优先级别(值越小优先级越高)，读方法切面
      */

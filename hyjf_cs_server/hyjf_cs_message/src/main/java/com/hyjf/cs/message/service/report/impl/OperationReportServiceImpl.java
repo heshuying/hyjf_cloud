@@ -221,6 +221,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(record.get("limitEnd") != null){
 			query.limit(Integer.valueOf(record.get("limitEnd").toString()));
 		}
+		if (record.get("id") != null) {
+			criteria.and("_id").is(record.get("id").toString());
+		}
 		query.with(new Sort(Sort.Direction.DESC,"createTime"));
 
 		return criteria;

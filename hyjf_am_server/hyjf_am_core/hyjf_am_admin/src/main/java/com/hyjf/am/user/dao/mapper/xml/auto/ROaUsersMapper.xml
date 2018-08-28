@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.ROaUsersMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.ROaUsers" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_login" property="userLogin" jdbcType="VARCHAR" />
+    <result column="user_pass" property="userPass" jdbcType="VARCHAR" />
+    <result column="user_realname" property="userRealname" jdbcType="VARCHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="SMALLINT" />
+    <result column="acc_province" property="accProvince" jdbcType="VARCHAR" />
+    <result column="acc_city" property="accCity" jdbcType="VARCHAR" />
+    <result column="acc_address" property="accAddress" jdbcType="VARCHAR" />
+    <result column="departmentid" property="departmentid" jdbcType="INTEGER" />
+    <result column="positionid" property="positionid" jdbcType="INTEGER" />
+    <result column="level" property="level" jdbcType="SMALLINT" />
+    <result column="temporary" property="temporary" jdbcType="INTEGER" />
+    <result column="rework" property="rework" jdbcType="INTEGER" />
+    <result column="rework_time" property="reworkTime" jdbcType="VARCHAR" />
+    <result column="ispart" property="ispart" jdbcType="CHAR" />
+    <result column="payroll_try" property="payrollTry" jdbcType="INTEGER" />
+    <result column="payroll" property="payroll" jdbcType="INTEGER" />
+    <result column="entrydate" property="entrydate" jdbcType="DATE" />
+    <result column="reference" property="reference" jdbcType="VARCHAR" />
+    <result column="education" property="education" jdbcType="TINYINT" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="specialty" property="specialty" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="CHAR" />
+    <result column="last_login_ip" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="last_login_time" property="lastLoginTime" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="CHAR" />
+    <result column="bank_address" property="bankAddress" jdbcType="VARCHAR" />
+    <result column="bank_user" property="bankUser" jdbcType="VARCHAR" />
+    <result column="bank_num" property="bankNum" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="CHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="hyd_name" property="hydName" jdbcType="VARCHAR" />
+    <result column="hyd_id" property="hydId" jdbcType="INTEGER" />
+    <result column="user_type" property="userType" jdbcType="SMALLINT" />
+    <result column="entry_success_time" property="entrySuccessTime" jdbcType="INTEGER" />
+    <result column="leave_success_time" property="leaveSuccessTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_login, user_pass, user_realname, user_email, idcard, avatar, sex, acc_province, 
+    acc_city, acc_address, departmentid, positionid, `level`, `temporary`, rework, rework_time, 
+    ispart, payroll_try, payroll, entrydate, reference, education, school, specialty, 
+    mobile, last_login_ip, last_login_time, create_time, bank_address, bank_user, bank_num, 
+    user_status, age, hyd_name, hyd_id, user_type, entry_success_time, leave_success_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_r_oa_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_r_oa_users
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_r_oa_users
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsersExample" >
+    delete from ht_r_oa_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsers" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_r_oa_users (user_login, user_pass, user_realname, 
+      user_email, idcard, avatar, 
+      sex, acc_province, acc_city, 
+      acc_address, departmentid, positionid, 
+      `level`, `temporary`, rework, 
+      rework_time, ispart, payroll_try, 
+      payroll, entrydate, reference, 
+      education, school, specialty, 
+      mobile, last_login_ip, last_login_time, 
+      create_time, bank_address, bank_user, 
+      bank_num, user_status, age, 
+      hyd_name, hyd_id, user_type, 
+      entry_success_time, leave_success_time)
+    values (#{userLogin,jdbcType=VARCHAR}, #{userPass,jdbcType=VARCHAR}, #{userRealname,jdbcType=VARCHAR}, 
+      #{userEmail,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=SMALLINT}, #{accProvince,jdbcType=VARCHAR}, #{accCity,jdbcType=VARCHAR}, 
+      #{accAddress,jdbcType=VARCHAR}, #{departmentid,jdbcType=INTEGER}, #{positionid,jdbcType=INTEGER}, 
+      #{level,jdbcType=SMALLINT}, #{temporary,jdbcType=INTEGER}, #{rework,jdbcType=INTEGER}, 
+      #{reworkTime,jdbcType=VARCHAR}, #{ispart,jdbcType=CHAR}, #{payrollTry,jdbcType=INTEGER}, 
+      #{payroll,jdbcType=INTEGER}, #{entrydate,jdbcType=DATE}, #{reference,jdbcType=VARCHAR}, 
+      #{education,jdbcType=TINYINT}, #{school,jdbcType=VARCHAR}, #{specialty,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=CHAR}, #{lastLoginIp,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=CHAR}, 
+      #{createTime,jdbcType=CHAR}, #{bankAddress,jdbcType=VARCHAR}, #{bankUser,jdbcType=VARCHAR}, 
+      #{bankNum,jdbcType=VARCHAR}, #{userStatus,jdbcType=CHAR}, #{age,jdbcType=INTEGER}, 
+      #{hydName,jdbcType=VARCHAR}, #{hydId,jdbcType=INTEGER}, #{userType,jdbcType=SMALLINT}, 
+      #{entrySuccessTime,jdbcType=INTEGER}, #{leaveSuccessTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsers" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_r_oa_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userLogin != null" >
+        user_login,
+      </if>
+      <if test="userPass != null" >
+        user_pass,
+      </if>
+      <if test="userRealname != null" >
+        user_realname,
+      </if>
+      <if test="userEmail != null" >
+        user_email,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="accProvince != null" >
+        acc_province,
+      </if>
+      <if test="accCity != null" >
+        acc_city,
+      </if>
+      <if test="accAddress != null" >
+        acc_address,
+      </if>
+      <if test="departmentid != null" >
+        departmentid,
+      </if>
+      <if test="positionid != null" >
+        positionid,
+      </if>
+      <if test="level != null" >
+        `level`,
+      </if>
+      <if test="temporary != null" >
+        `temporary`,
+      </if>
+      <if test="rework != null" >
+        rework,
+      </if>
+      <if test="reworkTime != null" >
+        rework_time,
+      </if>
+      <if test="ispart != null" >
+        ispart,
+      </if>
+      <if test="payrollTry != null" >
+        payroll_try,
+      </if>
+      <if test="payroll != null" >
+        payroll,
+      </if>
+      <if test="entrydate != null" >
+        entrydate,
+      </if>
+      <if test="reference != null" >
+        reference,
+      </if>
+      <if test="education != null" >
+        education,
+      </if>
+      <if test="school != null" >
+        school,
+      </if>
+      <if test="specialty != null" >
+        specialty,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip,
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="bankAddress != null" >
+        bank_address,
+      </if>
+      <if test="bankUser != null" >
+        bank_user,
+      </if>
+      <if test="bankNum != null" >
+        bank_num,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="hydName != null" >
+        hyd_name,
+      </if>
+      <if test="hydId != null" >
+        hyd_id,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="entrySuccessTime != null" >
+        entry_success_time,
+      </if>
+      <if test="leaveSuccessTime != null" >
+        leave_success_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userLogin != null" >
+        #{userLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null" >
+        #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="accProvince != null" >
+        #{accProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="accCity != null" >
+        #{accCity,jdbcType=VARCHAR},
+      </if>
+      <if test="accAddress != null" >
+        #{accAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=INTEGER},
+      </if>
+      <if test="positionid != null" >
+        #{positionid,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=SMALLINT},
+      </if>
+      <if test="temporary != null" >
+        #{temporary,jdbcType=INTEGER},
+      </if>
+      <if test="rework != null" >
+        #{rework,jdbcType=INTEGER},
+      </if>
+      <if test="reworkTime != null" >
+        #{reworkTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ispart != null" >
+        #{ispart,jdbcType=CHAR},
+      </if>
+      <if test="payrollTry != null" >
+        #{payrollTry,jdbcType=INTEGER},
+      </if>
+      <if test="payroll != null" >
+        #{payroll,jdbcType=INTEGER},
+      </if>
+      <if test="entrydate != null" >
+        #{entrydate,jdbcType=DATE},
+      </if>
+      <if test="reference != null" >
+        #{reference,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null" >
+        #{education,jdbcType=TINYINT},
+      </if>
+      <if test="school != null" >
+        #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="specialty != null" >
+        #{specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="bankAddress != null" >
+        #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bankUser != null" >
+        #{bankUser,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNum != null" >
+        #{bankNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="hydName != null" >
+        #{hydName,jdbcType=VARCHAR},
+      </if>
+      <if test="hydId != null" >
+        #{hydId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=SMALLINT},
+      </if>
+      <if test="entrySuccessTime != null" >
+        #{entrySuccessTime,jdbcType=INTEGER},
+      </if>
+      <if test="leaveSuccessTime != null" >
+        #{leaveSuccessTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsersExample" resultType="java.lang.Integer" >
+    select count(*) from ht_r_oa_users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_r_oa_users
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userLogin != null" >
+        user_login = #{record.userLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPass != null" >
+        user_pass = #{record.userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userRealname != null" >
+        user_realname = #{record.userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userEmail != null" >
+        user_email = #{record.userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idcard != null" >
+        idcard = #{record.idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.avatar != null" >
+        avatar = #{record.avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=SMALLINT},
+      </if>
+      <if test="record.accProvince != null" >
+        acc_province = #{record.accProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accCity != null" >
+        acc_city = #{record.accCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accAddress != null" >
+        acc_address = #{record.accAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentid != null" >
+        departmentid = #{record.departmentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.positionid != null" >
+        positionid = #{record.positionid,jdbcType=INTEGER},
+      </if>
+      <if test="record.level != null" >
+        `level` = #{record.level,jdbcType=SMALLINT},
+      </if>
+      <if test="record.temporary != null" >
+        `temporary` = #{record.temporary,jdbcType=INTEGER},
+      </if>
+      <if test="record.rework != null" >
+        rework = #{record.rework,jdbcType=INTEGER},
+      </if>
+      <if test="record.reworkTime != null" >
+        rework_time = #{record.reworkTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ispart != null" >
+        ispart = #{record.ispart,jdbcType=CHAR},
+      </if>
+      <if test="record.payrollTry != null" >
+        payroll_try = #{record.payrollTry,jdbcType=INTEGER},
+      </if>
+      <if test="record.payroll != null" >
+        payroll = #{record.payroll,jdbcType=INTEGER},
+      </if>
+      <if test="record.entrydate != null" >
+        entrydate = #{record.entrydate,jdbcType=DATE},
+      </if>
+      <if test="record.reference != null" >
+        reference = #{record.reference,jdbcType=VARCHAR},
+      </if>
+      <if test="record.education != null" >
+        education = #{record.education,jdbcType=TINYINT},
+      </if>
+      <if test="record.school != null" >
+        school = #{record.school,jdbcType=VARCHAR},
+      </if>
+      <if test="record.specialty != null" >
+        specialty = #{record.specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=CHAR},
+      </if>
+      <if test="record.lastLoginIp != null" >
+        last_login_ip = #{record.lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastLoginTime != null" >
+        last_login_time = #{record.lastLoginTime,jdbcType=CHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=CHAR},
+      </if>
+      <if test="record.bankAddress != null" >
+        bank_address = #{record.bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankUser != null" >
+        bank_user = #{record.bankUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bankNum != null" >
+        bank_num = #{record.bankNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userStatus != null" >
+        user_status = #{record.userStatus,jdbcType=CHAR},
+      </if>
+      <if test="record.age != null" >
+        age = #{record.age,jdbcType=INTEGER},
+      </if>
+      <if test="record.hydName != null" >
+        hyd_name = #{record.hydName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hydId != null" >
+        hyd_id = #{record.hydId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userType != null" >
+        user_type = #{record.userType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.entrySuccessTime != null" >
+        entry_success_time = #{record.entrySuccessTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.leaveSuccessTime != null" >
+        leave_success_time = #{record.leaveSuccessTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_r_oa_users
+    set id = #{record.id,jdbcType=INTEGER},
+      user_login = #{record.userLogin,jdbcType=VARCHAR},
+      user_pass = #{record.userPass,jdbcType=VARCHAR},
+      user_realname = #{record.userRealname,jdbcType=VARCHAR},
+      user_email = #{record.userEmail,jdbcType=VARCHAR},
+      idcard = #{record.idcard,jdbcType=VARCHAR},
+      avatar = #{record.avatar,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=SMALLINT},
+      acc_province = #{record.accProvince,jdbcType=VARCHAR},
+      acc_city = #{record.accCity,jdbcType=VARCHAR},
+      acc_address = #{record.accAddress,jdbcType=VARCHAR},
+      departmentid = #{record.departmentid,jdbcType=INTEGER},
+      positionid = #{record.positionid,jdbcType=INTEGER},
+      `level` = #{record.level,jdbcType=SMALLINT},
+      `temporary` = #{record.temporary,jdbcType=INTEGER},
+      rework = #{record.rework,jdbcType=INTEGER},
+      rework_time = #{record.reworkTime,jdbcType=VARCHAR},
+      ispart = #{record.ispart,jdbcType=CHAR},
+      payroll_try = #{record.payrollTry,jdbcType=INTEGER},
+      payroll = #{record.payroll,jdbcType=INTEGER},
+      entrydate = #{record.entrydate,jdbcType=DATE},
+      reference = #{record.reference,jdbcType=VARCHAR},
+      education = #{record.education,jdbcType=TINYINT},
+      school = #{record.school,jdbcType=VARCHAR},
+      specialty = #{record.specialty,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      last_login_ip = #{record.lastLoginIp,jdbcType=VARCHAR},
+      last_login_time = #{record.lastLoginTime,jdbcType=CHAR},
+      create_time = #{record.createTime,jdbcType=CHAR},
+      bank_address = #{record.bankAddress,jdbcType=VARCHAR},
+      bank_user = #{record.bankUser,jdbcType=VARCHAR},
+      bank_num = #{record.bankNum,jdbcType=VARCHAR},
+      user_status = #{record.userStatus,jdbcType=CHAR},
+      age = #{record.age,jdbcType=INTEGER},
+      hyd_name = #{record.hydName,jdbcType=VARCHAR},
+      hyd_id = #{record.hydId,jdbcType=INTEGER},
+      user_type = #{record.userType,jdbcType=SMALLINT},
+      entry_success_time = #{record.entrySuccessTime,jdbcType=INTEGER},
+      leave_success_time = #{record.leaveSuccessTime,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsers" >
+    update ht_r_oa_users
+    <set >
+      <if test="userLogin != null" >
+        user_login = #{userLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="userPass != null" >
+        user_pass = #{userPass,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        user_realname = #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="accProvince != null" >
+        acc_province = #{accProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="accCity != null" >
+        acc_city = #{accCity,jdbcType=VARCHAR},
+      </if>
+      <if test="accAddress != null" >
+        acc_address = #{accAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        departmentid = #{departmentid,jdbcType=INTEGER},
+      </if>
+      <if test="positionid != null" >
+        positionid = #{positionid,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        `level` = #{level,jdbcType=SMALLINT},
+      </if>
+      <if test="temporary != null" >
+        `temporary` = #{temporary,jdbcType=INTEGER},
+      </if>
+      <if test="rework != null" >
+        rework = #{rework,jdbcType=INTEGER},
+      </if>
+      <if test="reworkTime != null" >
+        rework_time = #{reworkTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ispart != null" >
+        ispart = #{ispart,jdbcType=CHAR},
+      </if>
+      <if test="payrollTry != null" >
+        payroll_try = #{payrollTry,jdbcType=INTEGER},
+      </if>
+      <if test="payroll != null" >
+        payroll = #{payroll,jdbcType=INTEGER},
+      </if>
+      <if test="entrydate != null" >
+        entrydate = #{entrydate,jdbcType=DATE},
+      </if>
+      <if test="reference != null" >
+        reference = #{reference,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null" >
+        education = #{education,jdbcType=TINYINT},
+      </if>
+      <if test="school != null" >
+        school = #{school,jdbcType=VARCHAR},
+      </if>
+      <if test="specialty != null" >
+        specialty = #{specialty,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=CHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        last_login_time = #{lastLoginTime,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=CHAR},
+      </if>
+      <if test="bankAddress != null" >
+        bank_address = #{bankAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bankUser != null" >
+        bank_user = #{bankUser,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNum != null" >
+        bank_num = #{bankNum,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=CHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="hydName != null" >
+        hyd_name = #{hydName,jdbcType=VARCHAR},
+      </if>
+      <if test="hydId != null" >
+        hyd_id = #{hydId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=SMALLINT},
+      </if>
+      <if test="entrySuccessTime != null" >
+        entry_success_time = #{entrySuccessTime,jdbcType=INTEGER},
+      </if>
+      <if test="leaveSuccessTime != null" >
+        leave_success_time = #{leaveSuccessTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.ROaUsers" >
+    update ht_r_oa_users
+    set user_login = #{userLogin,jdbcType=VARCHAR},
+      user_pass = #{userPass,jdbcType=VARCHAR},
+      user_realname = #{userRealname,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=SMALLINT},
+      acc_province = #{accProvince,jdbcType=VARCHAR},
+      acc_city = #{accCity,jdbcType=VARCHAR},
+      acc_address = #{accAddress,jdbcType=VARCHAR},
+      departmentid = #{departmentid,jdbcType=INTEGER},
+      positionid = #{positionid,jdbcType=INTEGER},
+      `level` = #{level,jdbcType=SMALLINT},
+      `temporary` = #{temporary,jdbcType=INTEGER},
+      rework = #{rework,jdbcType=INTEGER},
+      rework_time = #{reworkTime,jdbcType=VARCHAR},
+      ispart = #{ispart,jdbcType=CHAR},
+      payroll_try = #{payrollTry,jdbcType=INTEGER},
+      payroll = #{payroll,jdbcType=INTEGER},
+      entrydate = #{entrydate,jdbcType=DATE},
+      reference = #{reference,jdbcType=VARCHAR},
+      education = #{education,jdbcType=TINYINT},
+      school = #{school,jdbcType=VARCHAR},
+      specialty = #{specialty,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=CHAR},
+      last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      bank_address = #{bankAddress,jdbcType=VARCHAR},
+      bank_user = #{bankUser,jdbcType=VARCHAR},
+      bank_num = #{bankNum,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=CHAR},
+      age = #{age,jdbcType=INTEGER},
+      hyd_name = #{hydName,jdbcType=VARCHAR},
+      hyd_id = #{hydId,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=SMALLINT},
+      entry_success_time = #{entrySuccessTime,jdbcType=INTEGER},
+      leave_success_time = #{leaveSuccessTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

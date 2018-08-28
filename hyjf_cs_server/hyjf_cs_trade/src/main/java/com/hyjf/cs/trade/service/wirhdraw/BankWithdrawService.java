@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -29,9 +29,12 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param clientPc
      * @param channelPc
      * @param ip
+     * @param retUrl
+     * @param bgRetUrl
+     * @param successfulUrl
      * @return
      */
-    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip);
+    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip, String retUrl, String bgRetUrl, String successfulUrl);
 
     /**
      * 提现银行同步调用数据处理
@@ -71,7 +74,7 @@ public interface BankWithdrawService extends BaseTradeService {
      * 定时任务提现
      * add by jijun 20180621
      */
-    Boolean batchWithdraw();
+    void batchWithdraw();
 
     /**
      * 根据手机号查询用户信息
@@ -138,7 +141,7 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param bankId
      * @return
      */
-    BanksConfigVO getBanksConfigByBankId(Integer bankId);
+    JxBankConfigVO getBanksConfigByBankId(Integer bankId);
     /**
      * 查询用户投资记录
      * @param userId

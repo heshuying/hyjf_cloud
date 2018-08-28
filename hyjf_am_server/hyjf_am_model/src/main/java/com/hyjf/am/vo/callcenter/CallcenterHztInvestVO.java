@@ -16,88 +16,88 @@ public class CallcenterHztInvestVO  extends BaseVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * ½è¿î±àºÅ ¼ìË÷Ìõ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowNidSrch;
 	/**
-	 * ½è¿î±êÌâ ¼ìË÷Ìõ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowNameSrch;
 	/**
-	 * ÓÃ»§Ãû ¼ìË÷Ìõ¼þ
+	 * ï¿½Ã»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String usernameSrch;
 	/**
-	 * ÍÆ¼öÈË ¼ìË÷Ìõ¼þ
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String referrerNameSrch;
 	/**
-	 * »¹¿î·½Ê½ ¼ìË÷Ìõ¼þ
+	 * ï¿½ï¿½ï¿½î·½Ê½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowStyleSrch;
 	/**
-	 * ²Ù×÷Æ½Ì¨ ¼ìË÷Ìõ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½Æ½Ì¨ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String clientSrch;
 	/**
-	 * ÇþµÀ ¼ìË÷Ìõ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String utmIdSrch;
 	/**
-	 * Í¶×ÊÊ±¼ä ¼ìË÷Ìõ¼þ
+	 * Í¶ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String timeStartSrch;
 	/**
-	 * Í¶×ÊÊ±¼ä ¼ìË÷Ìõ¼þ
+	 * Í¶ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String timeEndSrch;
 	/**
-	 * ½è¿î±êÌâ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowName;
 	/**
-	 * ÓÃ»§Ãû
+	 * ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private String username;
 	/**
-	 * ÍÆ¼öÈË
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½
 	 */
 	private String referrerName;
 	/**
-	 * ½è¿î±àºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowNid;
 	/**
-	 * Äê»¯ÀûÂÊ
+	 * ï¿½ê»¯ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowApr;
 	/**
-	 * ½è¿îÆÚÏÞ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowPeriod;
 	/**
-	 * »¹¿î·½Ê½
+	 * ï¿½ï¿½ï¿½î·½Ê½
 	 */
 	private String borrowStyleName;
 	/**
-	 * Í¶×Ê½ð¶î
+	 * Í¶ï¿½Ê½ï¿½ï¿½
 	 */
 	private String account;
 	/**
-	 * ÇþµÀ
+	 * ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String utmSource;
 	/**
-	 * ²Ù×÷Æ½Ì¨
+	 * ï¿½ï¿½ï¿½ï¿½Æ½Ì¨
 	 */
 	private String operatingDeck;
 	/**
-	 * Í¶×ÊÊ±¼ä
+	 * Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String addtime;
 
 	/**
-	 * ½è¿îÈËID
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ID
 	 */
 	private String userId;
 
@@ -106,126 +106,126 @@ public class CallcenterHztInvestVO  extends BaseVO implements Serializable {
 	 */
 	private String nid;
 	/**
-	 * ÊÇ·ñÓÊ¼þ·¢ËÍ1¿ÉÒÔ·¢£¬0²»¿ÉÒÔ·¢
+	 * ï¿½Ç·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½Ô·ï¿½
 	 */
 	private String resendMessage;
 
 	/**
-	 * ÏîÄ¿ÀàÐÍ
+	 * ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String borrowProjectTypeName;
 
 	/**
-	 * Í¶×Ê¶©µ¥ºÅ
+	 * Í¶ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String tenderOrderNum;
 
 	/**
-	 * ¶³½á¶©µ¥ºÅ
+	 * ï¿½ï¿½ï¿½á¶©ï¿½ï¿½ï¿½ï¿½
 	 */
 	private String freezeOrderNum;
 
 	/**
-	 * Í¶×ÊÈËÓÃ»§Ãû
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
 	 */
 	private String tenderUsername;
 
 	/**
-	 * Í¶×ÊÈËÓÃ»§ID
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ID
 	 */
 	private String tenderUserId;
 
 	/**
-	 * ÍÆ¼öÈËID£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerUserId;
 	/**
-	 * ÍÆ¼öÈËID£¨Í¶×ÊÊ±£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½IDï¿½ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String tenderReferrerUserId;
 	/**
-	 * Í¶×ÊÈËÓÃ»§ÊôÐÔ£¨Í¶×ÊÊ±£©
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ô£ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String tenderUserAttribute;
 	/**
-	 * ÍÆ¼öÈËÓÃ»§ÊôÐÔ£¨Í¶×ÊÊ±£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ô£ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String inviteUserAttribute;
 	/**
-	 * ÍÆ¼öÈË£¨Í¶×ÊÊ±£©
+	 * ï¿½Æ¼ï¿½ï¿½Ë£ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String tenderReferrerUsername;
 
 	/**
-	 * Ò»¼¶·Ö²¿£¨Í¶×ÊÊ±£©
+	 * Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String departmentLevel1Name;
 
 	/**
-	 * ¶þ¼¶·Ö²¿£¨Í¶×ÊÊ±£©
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String departmentLevel2Name;
 
 	/**
-	 * ÍÅ¶Ó£¨Í¶×ÊÊ±£©
+	 * ï¿½Å¶Ó£ï¿½Í¶ï¿½ï¿½Ê±ï¿½ï¿½
 	 */
 	private String teamName;
 
 	/**
-	 * Í¶×ÊÈËÓÃ»§ÊôÐÔ£¨µ±Ç°£©
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String tenderUserAttributeNow;
 
 	/**
-	 * Í¶×ÊÈËËùÊôÒ»¼¶·Ö²¿£¨µ±Ç°£©
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String tenderRegionName;
 
 	/**
-	 * Í¶×ÊÈËËùÊô¶þ¼¶·Ö²¿£¨µ±Ç°£©
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String tenderBranchName;
 
 	/**
-	 * Í¶×ÊÈËËùÊôÍÅ¶Ó£¨µ±Ç°£©
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¶Ó£ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String tenderDepartmentName;
 
 	/**
-	 * ÍÆ¼öÈËÐÕÃû£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerTrueName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊôÒ»¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerRegionName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊô¶þ¼¶·Ö²¿£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerBranchName;
 
 	/**
-	 * ÍÆ¼öÈËËùÊôÍÅ¶Ó£¨µ±Ç°£©
+	 * ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¶Ó£ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 	 */
 	private String referrerDepartmentName;
 	/**
-	 * Í¶×ÊÀà±ð 0ÊÖ¶¯Í¶±ê£¬1»òÕß±ðµÄÔ¤Ô¼Í¶±ê
+	 * Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½Ö¶ï¿½Í¶ï¿½ê£¬1ï¿½ï¿½ï¿½ß±ï¿½ï¿½Ô¤Ô¼Í¶ï¿½ï¿½
 	 */
 	private String investType;
 
 	/**
-	 * ¼ìË÷Ìõ¼þ limitStart
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ limitStart
 	 */
 	private int limitStart = -1;
 	/**
-	 * ¼ìË÷Ìõ¼þ limitEnd
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ limitEnd
 	 */
 	private int limitEnd = -1;
 	
 	/**
-	 * ²úÆ·¼ÓÏ¢ÊÕÒæÂÊ
+	 * ï¿½ï¿½Æ·ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private BigDecimal borrowExtraYield;
 	

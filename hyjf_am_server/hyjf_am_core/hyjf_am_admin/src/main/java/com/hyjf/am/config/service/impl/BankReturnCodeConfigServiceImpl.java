@@ -1,5 +1,11 @@
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
@@ -7,12 +13,6 @@ import com.hyjf.am.config.service.BankReturnCodeConfigService;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/17.

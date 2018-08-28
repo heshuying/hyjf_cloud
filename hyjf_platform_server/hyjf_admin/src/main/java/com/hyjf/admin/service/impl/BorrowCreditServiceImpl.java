@@ -1,11 +1,13 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditListResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRequest;
-import com.hyjf.admin.client.AmBorrowCreditClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.service.BorrowCreditService;
@@ -15,7 +17,10 @@ import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.service.BaseClient;
@@ -34,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BorrowCreditServiceImpl implements BorrowCreditService {
@@ -45,10 +51,14 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     @Autowired
     private BaseClient baseClient;
 
+    @Autowired
+    private AmUserClient amUserClient;
+
     public static final Logger logger = LoggerFactory.getLogger(BorrowCreditServiceImpl.class);
 
     /**
      * 查询汇转让数据列表
+     *
      * @author zhangyk
      * @date 2018/7/9 15:12
      */
@@ -56,13 +66,13 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     public AdminResult getBorrowCreditList(BorrowCreditRequest request) {
         AdminResult result = new AdminResult();
         BorrowCreditListResultBean bean = new BorrowCreditListResultBean();
-        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
-        BorrowCreditAmRequest req = CommonUtils.convertBean(request,BorrowCreditAmRequest.class);
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        BorrowCreditAmRequest req = CommonUtils.convertBean(request, BorrowCreditAmRequest.class);
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         Integer count = amTradeClient.getBorrowCreditCount(req);
 
-        if (count != null && count > 0){
+        if (count != null && count > 0) {
             List<BorrowCreditVO> list = amTradeClient.getBorrowCreditList(req);
             BorrowCreditSumVO sumVO = amTradeClient.getBorrwoCreditTotalSum(req);
             bean.setRecordList(list);
@@ -74,24 +84,23 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     }
 
 
-
-
     /**
      * 数据导出
+     *
      * @author zhangyk
      * @date 2018/7/10 14:09
      */
     @Override
     public void exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        BorrowCreditAmRequest req = CommonUtils.convertBean(request,BorrowCreditAmRequest.class);
+        BorrowCreditAmRequest req = CommonUtils.convertBean(request, BorrowCreditAmRequest.class);
 
         String sheetName = "债权转让列表";
-        String[] titles = new String[] { "债转编号", "项目编号", "用户名", "债权本金", "转让本金", "折让率", "转让价格", "已转让金额", "发布时间",
-                "还款时间", "转让状态", "发起平台" };
+        String[] titles = new String[]{"债转编号", "项目编号", "用户名", "债权本金", "转让本金", "折让率", "转让价格", "已转让金额", "发布时间",
+                "还款时间", "转让状态", "发起平台"};
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         List<BorrowCreditVO> list = amTradeClient.getBorrowCreditList(req);
-        exportExcel(sheetName,fileName,titles,list,response);
+        exportExcel(sheetName, fileName, titles, list, response);
     }
 
     @Override
@@ -99,28 +108,28 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         AdminResult result = new AdminResult();
         BorrowCreditInfoResultBean bean = new BorrowCreditInfoResultBean();
         String creditNid = request.getCreditNid();
-        CheckUtil.check(StringUtils.isNotBlank(creditNid),MsgEnum.ERR_OBJECT_REQUIRED, "债转编号");
-        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        CheckUtil.check(StringUtils.isNotBlank(creditNid), MsgEnum.ERR_OBJECT_REQUIRED, "债转编号");
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowCreditAmRequest req = new BorrowCreditAmRequest();
         req.setCreditNid(creditNid);
         //Integer count = amBorrowCreditClient.countBorrowCreditInfo(req);
-        AdminBorrowCreditInfoResponse response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/countBorrowCreditInfo4admin",request,AdminBorrowCreditInfoResponse.class);
+        AdminBorrowCreditInfoResponse response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/countBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
         Integer count = response.getCount();
 
-        if (count == null){
+        if (count == null) {
             logger.error("admin:查询债转详情原子层count异常");
             throw new RuntimeException("admin:查询债转详情原子层count异常");
         }
-        if (count > 0){
+        if (count > 0) {
             req.setLimitStart(page.getOffset());
             req.setLimitEnd(page.getLimit());
             //List<BorrowCreditInfoVO> list = amBorrowCreditClient.searchBorrowCreditInfoList(req);
-            response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/searchBorrowCreditInfo4admin",request,AdminBorrowCreditInfoResponse.class);
+            response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/searchBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
             List<BorrowCreditInfoVO> list = response.getResultList();
 
-            CheckUtil.checkNull(list,"admin:查询债转详情原子层list异常");
+            CheckUtil.checkNull(list, "admin:查询债转详情原子层list异常");
             BorrowCreditInfoSumVO sumVO = amTradeClient.sumBorrowCreditInfoData(req);
-            CheckUtil.checkNull(sumVO,"admin:查询债转详情合计行查询异常");
+            CheckUtil.checkNull(sumVO, "admin:查询债转详情合计行查询异常");
             bean.setTotal(count);
             bean.setRecordList(list);
             bean.setSumCreditInfo(sumVO);
@@ -131,7 +140,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 
 
     // 生成excel
-    private  void  exportExcel(String sheetName, String fileName, String[] titles, List<BorrowCreditVO> resultList,HttpServletResponse response){
+    private void exportExcel(String sheetName, String fileName, String[] titles, List<BorrowCreditVO> resultList, HttpServletResponse response) {
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -205,7 +214,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
                         cell.setCellValue(borrowCommonCustomize.getCreditStatusName());
                     }
                     // 发布平台
-                    else if (celLength == 11){
+                    else if (celLength == 11) {
                         cell.setCellValue(borrowCommonCustomize.getClient());
                     }
                 }
@@ -217,5 +226,52 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     }
 
 
+    /**
+     * 取消转让
+     *
+     * @author zhangyk
+     * @date 2018/8/24 16:43
+     */
+    @Override
+    public AdminResult cancelCredit(BorrowCreditRequest request) {
+        AdminResult result = new AdminResult();
+        String creditNid = request.getCreditNid();
+        CheckUtil.check(StringUtils.isNotBlank(creditNid), MsgEnum.ERR_OBJECT_REQUIRED, "债转编号");
 
+
+        com.hyjf.am.vo.trade.BorrowCreditVO borrowCredit = new com.hyjf.am.vo.trade.BorrowCreditVO();
+        borrowCredit.setCreditNid(Integer.valueOf(creditNid));
+        borrowCredit.setCreditStatus(1);
+        amTradeClient.updateBorrowCredit(borrowCredit);
+
+        BorrowCreditAmRequest req = new BorrowCreditAmRequest();
+        req.setCreditNid(creditNid);
+        List<BorrowCreditVO> list = amTradeClient.getBorrowCreditList(req);
+        BorrowCreditVO credit;
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(list)) {
+            credit = list.get(0);
+        } else {
+            throw new CheckException("没有对应的债转标的");
+        }
+        String creditUserId = credit.getCreditUserId();
+        // TODO: 2018/8/24  发送apppush 待完成  zyk
+
+        return result;
+    }
+
+
+    /**
+     * 获取转让状态下拉选列表
+     * @author zhangyk
+     * @date 2018/8/28 13:48
+     */
+    @Override
+    public AdminResult getCreditStatusList() {
+        AdminResult result = new AdminResult();
+        String key = RedisConstants.CACHE_PARAM_NAME + CustomConstants.CREDIT_STATUS;
+        Map<String, String> creditStatusMap = RedisUtils.hgetall(key);
+        List<DropDownVO> list =  ConvertUtils.convertParamMapToDropDown(creditStatusMap);
+        result.setData(list);
+        return result;
+    }
 }

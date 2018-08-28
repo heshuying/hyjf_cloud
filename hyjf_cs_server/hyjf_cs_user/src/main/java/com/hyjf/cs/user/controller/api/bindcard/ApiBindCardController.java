@@ -1,43 +1,33 @@
 package com.hyjf.cs.user.controller.api.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
-import com.hyjf.cs.user.bean.BindCardPageBean;
-import com.hyjf.cs.user.bean.BindCardPageRequestBean;
-import com.hyjf.cs.user.bean.BindCardPageResultBean;
+import com.hyjf.cs.user.bean.ThirdPartyBankCardPlusResultBean;
+import com.hyjf.cs.user.bean.ThirdPartyBankCardRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
-import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Api端绑卡
+ * 绑卡相关接口
  * @author hesy
- * @version AppBindCardController, v0.1 2018/7/19 9:34
+ * @version ApiBindCardController, v0.1 2018/8/27 15:39
  */
-@Api(value = "api端-绑卡", tags = "api端-绑卡")
+@Api(value = "api端-绑卡(接口)", tags = "api端-绑卡（接口）")
 @RestController
-@RequestMapping("/hyjf-api/server/user/bindcardpage")
+@RequestMapping("/hyjf-api/server/user/bankcard")
 public class ApiBindCardController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
@@ -45,200 +35,88 @@ public class ApiBindCardController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
-     * 用户页面绑卡
+     * 用户绑卡增强发送验证码接口
+     * @param request
+     * @param response
+     * @param bankCardRequestBean
      * @return
-     */
-    @PostMapping("/bind")
-    @ApiOperation(value = "绑卡", notes = "绑卡")
-    public ModelAndView userBindCardPlus(@RequestBody BindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
-        logger.info("请求页面绑卡接口参数" + JSONObject.toJSONString(bankCardRequestBean, true) + "]");
+     *//*
+    @PostMapping("/sendPlusCode")
+    public BaseResultBean sendPlusCode(HttpServletRequest request, HttpServletResponse response, @RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean) {
+        _log.info(bankCardRequestBean.getMobile()+"用户绑卡增强发送验证码接口-----------------------------");
+        _log.info("第三方请求参数："+JSONObject.toJSONString(bankCardRequestBean));
+        ThirdPartyBankCardPlusResultBean ret = new ThirdPartyBankCardPlusResultBean();
 
-        //验证请求参数
         if (Validator.isNull(bankCardRequestBean.getAccountId())||
-                Validator.isNull(bankCardRequestBean.getInstCode())||
-                Validator.isNull(bankCardRequestBean.getRetUrl())||
-                Validator.isNull(bankCardRequestBean.getPlatform())||
-                Validator.isNull(bankCardRequestBean.getForgotPwdUrl())||
-                Validator.isNull(bankCardRequestBean.getChannel())||
-                Validator.isNull(bankCardRequestBean.getNotifyUrl())) {
-            logger.info("-------------------绑卡请求参数非法--------------------");
-            getErrorMV(bankCardRequestBean, modelAndView,ErrorCodeConstant.STATUS_CE000001);
-            bankCardRequestBean.doNotify(bankCardRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数非法"));
-            return modelAndView;
+                Validator.isNull(bankCardRequestBean.getMobile())||
+                Validator.isNull(bankCardRequestBean.getCardNo())||
+                Validator.isNull(bankCardRequestBean.getInstCode())) {
+
+            _log.info("-------------------请求参数非法--------------------");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE000001);
+            ret.setStatusDesc("请求参数非法");
+            return ret;
         }
 
         //验签
-        if(!bindCardService.verifyRequestSign(bankCardRequestBean, "/server/user/bindcardpage/bind")){
-            logger.info("-------------------验签失败！--------------------");
-
-            getErrorMV(bankCardRequestBean, modelAndView,ErrorCodeConstant.STATUS_CE000002);
-            bankCardRequestBean.doNotify(bankCardRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
-            return modelAndView;
+        if(!bindCardService.verifyRequestSign(bankCardRequestBean, "/server/user/bankcard/sendPlusCode")){
+            _log.info("-------------------验签失败！--------------------");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE000002);
+            ret.setStatusDesc("验签失败");
+            return ret;
         }
 
-        Map<String,String> checkMap = bindCardService.checkParamBindCardPageApi(bankCardRequestBean);
-        if(!checkMap.isEmpty()){
-            getErrorMV(bankCardRequestBean, modelAndView,checkMap.get("key"));
-            bankCardRequestBean.doNotify(bankCardRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004, checkMap.get("msg")));
-            return modelAndView;
-        }
 
         //根据账号找出用户ID
-        BankOpenAccountVO bankOpenAccount = bindCardService.getBankOpenAccountByAccount(bankCardRequestBean.getAccountId());
-        UserVO userVO = bindCardService.getUsersById(bankOpenAccount.getUserId());
-        UserInfoVO userInfo = bindCardService.getUserInfo(bankOpenAccount.getUserId());
-
-
-        // 跳转到江西银行天下画面
-        try {
-            // 同步调用路径
-            String retUrl = systemConfig.apiWebUrl + request.getContextPath()
-                    + "/server/user/bindcardpage/bindCardReturn.do?acqRes="
-                    + bankCardRequestBean.getAcqRes()
-                    + "&callback=" + bankCardRequestBean.getRetUrl().replace("#", "*-*-*");
-            // 异步调用路
-            String bgRetUrl = systemConfig.apiWebUrl + request.getContextPath()
-                    + "/server/user/bindcardpage/bindCardReturn.do?phone="+userVO.getMobile()+"&acqRes="
-                    + bankCardRequestBean.getAcqRes() + "&callback=" + bankCardRequestBean.getNotifyUrl().replace("#", "*-*-*");
-
-            // 拼装参数 调用江西银行
-            BindCardPageBean bean = new BindCardPageBean();
-            bean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
-            bean.setChannel(bankCardRequestBean.getChannel());
-            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-            bean.setIdNo(userInfo.getIdcard());
-            bean.setName(userInfo.getTruename());
-            bean.setAccountId(bankOpenAccount.getAccount());
-            bean.setUserIP(GetCilentIP.getIpAddr(request));
-            bean.setUserId(userVO.getUserId());
-            bean.setRetUrl(retUrl);
-            bean.setSuccessfulUrl(retUrl+"&isSuccess=1");
-            bean.setNotifyUrl(bgRetUrl);
-            bean.setForgetPassworedUrl(bankCardRequestBean.getForgotPwdUrl());
-            bean.setPlatform(bankCardRequestBean.getPlatform());
-            modelAndView = bindCardService.getCallbankMV(bean);
-
-            logger.info("绑卡调用页面end");
-            return modelAndView;
-        } catch (Exception e) {
-            logger.info("---调用银行接口失败~!---");
-            e.printStackTrace();
-
-            getErrorMV(bankCardRequestBean, modelAndView,ErrorCodeConstant.STATUS_CE999999);
-            bankCardRequestBean.doNotify(bankCardRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999, "调用银行接口失败"));
-            return modelAndView;
+        BankOpenAccount bankOpenAccount = bindCardService.getBankOpenAccount(bankCardRequestBean.getAccountId());
+        if(bankOpenAccount == null){
+            _log.info("-------------------没有根据电子银行卡找到用户"+bankCardRequestBean.getAccountId()+"！--------------------");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE000004);
+            ret.setStatusDesc("没有根据电子银行卡找到用户");
+            return ret;
         }
-    }
+        Users user = bindCardService.getUsers(bankOpenAccount.getUserId());//用户ID
+        if(user == null){
+            _log.info("---用户不存在汇盈金服账户---");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE000006);
+            ret.setStatusDesc("用户不存在汇盈金服账户");
+            return ret;
+        }
+        if (user.getBankOpenAccount()==0) {
+            _log.info("-------------------没有根据电子银行卡找到用户"+bankCardRequestBean.getAccountId()+"！--------------------");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE000004);
+            ret.setStatusDesc("没有根据电子银行卡找到用户");
+            return ret;
+        }
 
-    private ModelAndView getErrorMV(BindCardPageRequestBean payRequestBean, ModelAndView modelAndView,String status) {
-        BindCardPageResultBean repwdResult = new BindCardPageResultBean();
-        BaseResultBean resultBean = new BaseResultBean();
-        resultBean.setStatusForResponse(status);
-        repwdResult.setCallBackAction(payRequestBean.getRetUrl());
-        repwdResult.set("chkValue", resultBean.getChkValue());
-        repwdResult.set("status", resultBean.getStatus());
-        repwdResult.set("acqRes",payRequestBean.getAcqRes());
-        modelAndView.addObject("callBackForm", repwdResult);
-        return modelAndView;
-    }
 
-    /**
-     * 页面绑卡同步回调
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @PostMapping("/bindCardReturn")
-    @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
-    public ModelAndView openAccountReturn(HttpServletRequest request, HttpServletResponse response,
-                                          @ModelAttribute BankCallBean bean) {
-        BindCardPageResultBean repwdResult = new BindCardPageResultBean();
-        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
-        String frontParams = request.getParameter("frontParams");
-        String isSuccess = request.getParameter("isSuccess");
-        if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
-            JSONObject jsonParm = JSONObject.parseObject(frontParams);
-            if(jsonParm.containsKey("RETCODE")){
-                bean.setRetCode(jsonParm.getString("RETCODE"));
+        // 请求发送短信验证码
+        BankCallBean bean = this.bindCardService.cardBindPlusSendSms(user.getUserId(),PropUtils.getSystem(BankCallConstant.BANK_INSTCODE),
+                BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, bankCardRequestBean.getMobile(), BankCallConstant.CHANNEL_PC,bankCardRequestBean.getCardNo());
+        if (bean == null) {
+            _log.info("-------------------发送短信验证码异常！--------------------");
+            ret.setStatus(ErrorCodeConstant.STATUS_CE999999);
+            ret.setStatusDesc("发送短信验证码异常");
+            return ret;
+        }
+        // 返回失败
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+            if("JX900651".equals(bean.getRetCode())){
+                // 成功返回业务授权码
+                ret.setStatus(ErrorCodeConstant.STATUS_CE999999);
+                ret.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
+                ret.setSrvAuthCode(bean.getSrvAuthCode());
+                return ret;
             }
+            ret.setStatus(BaseResultBean.STATUS_FAIL);
+            ret.setStatusDesc("发送短信验证码失败，失败原因：" + bindCardService.getBankRetMsg(bean.getRetCode()));
+            _log.info("-------------------发送短信验证码失败，失败原因：" + bindCardService.getBankRetMsg(bean.getRetCode())+"--------------------");
+            return ret;
         }
-        bean.convert();
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        logger.info("绑卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");
-
-        if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
-            // 成功
-            modelAndView.addObject("statusDesc", "绑卡成功！");
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-        } else {
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-        }
-        repwdResult.set("acqRes",request.getParameter("acqRes"));
-        modelAndView.addObject("callBackForm", repwdResult);
-        logger.info("绑卡同步回调end");
-        return modelAndView;
-    }
-
-    /**
-     * 页面绑卡异步回调
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @PostMapping("/bindCardBgreturn")
-    @ApiOperation(value = "绑卡异步回调", notes = "绑卡异步回调")
-    public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
-                                   @ModelAttribute BankCallBean bean) {
-        // 上送的异步地址里面有
-        Map<String, String> params = new HashMap<String, String>();
-        BankCallResult result = new BankCallResult();
-        String phone = request.getParameter("phone");
-        logger.info("页面绑卡异步回调start");
-        bean.setMobile(phone);
-        bean.convert();
-        String status = "";
-        String statusDesc = "";
-        int userId = Integer.parseInt(bean.getLogUserId());
-
-        // 绑卡后处理
-        try {
-            // 保存银行卡信息
-            bindCardService.updateAfterBindCard(bean);
-            if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-                params.put("cardNo", bean.getCardNo());
-                params.put("payAllianceCode", bean.getPayAllianceCode());
-                status = ErrorCodeConstant.SUCCESS;
-                statusDesc = "绑卡成功";
-            }else{
-                status = ErrorCodeConstant.SUCCESS;
-                statusDesc = bindCardService.getBankRetMsg(bean.getRetCode());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = ErrorCodeConstant.STATUS_CE999999;
-            statusDesc = "调用银行接口失败";
-        }
-        params.put("accountId", bean.getAccountId());
-        params.put("statusDesc",statusDesc);
-        BaseResultBean resultBean = new BaseResultBean();
-        resultBean.setStatusForResponse(status);
-        params.put("chkValue", resultBean.getChkValue());
-        params.put("acqRes",request.getParameter("acqRes"));
-        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
-        logger.info("页面绑卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
-        result.setStatus(true);
-        return result;
-    }
+        // 成功返回业务授权码
+        ret.setStatus(ErrorCodeConstant.SUCCESS);
+        ret.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
+        ret.setSrvAuthCode(bean.getSrvAuthCode());
+        return ret;
+    }*/
 }

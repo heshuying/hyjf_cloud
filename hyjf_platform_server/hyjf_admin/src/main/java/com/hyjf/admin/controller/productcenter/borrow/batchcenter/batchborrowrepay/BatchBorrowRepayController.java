@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -50,6 +51,16 @@ public class BatchBorrowRepayController extends BaseController{
     @ResponseBody
     public JSONObject batchBorrowRepayInit() {
         JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
+        BatchBorrowRecoverRequest request = new BatchBorrowRecoverRequest();
+        JSONObject borrowRepayList = querybatchBorrowRepayList(request);
+        if(borrowRepayList != null){
+            List<BatchBorrowRecoverVo> listAccountDetail = (List<BatchBorrowRecoverVo>) borrowRepayList.get(LIST);
+            if(listAccountDetail != null && listAccountDetail.size() > 0){
+                jsonObject.put("批次还款列表","listAccountDetail");
+                jsonObject.put("listAccountDetail",listAccountDetail);
+                jsonObject.put("hjhDebtCreditVoListTotal",borrowRepayList.get(TRCORD));
+            }
+        }
         return jsonObject;
     }
 
@@ -76,8 +87,10 @@ public class BatchBorrowRepayController extends BaseController{
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
-    public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody String apicronID) {
+    public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody Map map) {
+
         JSONObject jsonObject;
+        String apicronID = (String) map.get("apicronID");
         List<BatchBorrowRepayBankInfoVO> resultList = batchBorrowRecoverService.queryBatchBorrowRepayBankInfoList(apicronID);
         if (null != resultList) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);

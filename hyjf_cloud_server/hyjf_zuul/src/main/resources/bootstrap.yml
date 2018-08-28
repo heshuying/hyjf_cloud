@@ -43,3 +43,7 @@ hystrix:
             timeoutInMilliseconds: 60000
 logging:
   file: zuul.log
+hyjf:
+   req:
+    pub:
+     key: /hyjfdata/data/hyjfapi_key/

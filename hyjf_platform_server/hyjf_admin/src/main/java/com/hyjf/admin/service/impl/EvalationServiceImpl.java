@@ -4,9 +4,11 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.response.EvalationInitResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.EvalationService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.config.AnswerResponse;
 import com.hyjf.am.response.config.QuestionResponse;
 import com.hyjf.am.response.user.EvalationResultResponse;
@@ -70,7 +72,7 @@ public class EvalationServiceImpl implements EvalationService {
         UserVO userVO = new UserVO();
         if (StringUtils.isNotBlank(strUserId)) {
             int userId = Integer.parseInt(strUserId);
-            userVO = evalationClient.searchUserByUserId(userId);
+            userVO = evalationClient.findUserById(userId);
         }
         return userVO;
     }
@@ -85,16 +87,20 @@ public class EvalationServiceImpl implements EvalationService {
         EvalationInitResponseBean evalationInitResponseBean = new EvalationInitResponseBean();
         // 开户状态
         Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
+        List<DropDownVO> listtAccountStatus = ConvertUtils.convertParamMapToDropDown(accountStatus);
+        evalationInitResponseBean.setAccountStatus(listtAccountStatus);
         // 测评状态
         List<ParamName> evaluationType = createEvaluationType();
+        List<DropDownVO> listEvaluationType = ConvertUtils.convertListToDropDown(evaluationType,"nameCd","name");
         //测评等级
         List<ParamName> evaluationStatus = createEvaluationStatus();
+        List<DropDownVO> listEvaluationStatus = ConvertUtils.convertListToDropDown(evaluationStatus,"nameCd","name");
         // 注册平台
         Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
+        List<DropDownVO> listRegistPlat = ConvertUtils.convertParamMapToDropDown(registPlat);
 
-        evalationInitResponseBean.setAccountStatus(accountStatus);
-        evalationInitResponseBean.setEvaluationType(evaluationType);
-        evalationInitResponseBean.setEvaluationStatus(evaluationStatus);
+        evalationInitResponseBean.setEvaluationType(listEvaluationType);
+        evalationInitResponseBean.setEvaluationStatus(listEvaluationStatus);
         return evalationInitResponseBean;
     }
 
@@ -102,12 +108,15 @@ public class EvalationServiceImpl implements EvalationService {
         List<ParamName> list = new ArrayList<ParamName>();
         ParamName paramName1 = new ParamName();
         paramName1.setNameCd("保守型");
+        paramName1.setName("保守型");
         list.add(paramName1);
         ParamName paramName3 = new ParamName();
         paramName3.setNameCd("稳健型");
+        paramName3.setName("稳健型");
         list.add(paramName3);
         ParamName paramName5 = new ParamName();
         paramName5.setNameCd("激进型");
+        paramName5.setName("激进型");
         list.add(paramName5);
         return list;
     }
@@ -116,12 +125,15 @@ public class EvalationServiceImpl implements EvalationService {
         List<ParamName> list = new ArrayList<ParamName>();
         ParamName paramName1 = new ParamName();
         paramName1.setNameCd("已测评");
+        paramName1.setName("已测评");
         list.add(paramName1);
         ParamName paramName2 = new ParamName();
         paramName2.setNameCd("未测评");
+        paramName2.setName("未测评");
         list.add(paramName2);
         ParamName paramName3 = new ParamName();
         paramName3.setNameCd("已过期");
+        paramName3.setName("已过期");
         list.add(paramName3);
         return list;
     }

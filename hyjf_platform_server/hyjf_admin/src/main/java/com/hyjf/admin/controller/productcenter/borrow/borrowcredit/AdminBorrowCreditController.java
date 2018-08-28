@@ -41,6 +41,11 @@ public class AdminBorrowCreditController {
         return result;
     }
 
+    /**
+     * 债权转让导出
+     * @author zhangyk
+     * @date 2018/8/7 9:36
+     */
     @ApiOperation(value = "债权转让导出", notes = "债权转让导出")
     @PostMapping("/exportData")
     @ResponseBody
@@ -48,6 +53,11 @@ public class AdminBorrowCreditController {
         borrowCreditService.exportBorrowCreditList(request,response);
     }
 
+    /**
+     * 债权转让明细
+     * @author zhangyk
+     * @date 2018/8/7 9:36
+     */
     @ApiOperation(value = "债权转让明细", notes = "债权转让明细")
     @PostMapping("/infoDetail")
     @ResponseBody
@@ -55,5 +65,29 @@ public class AdminBorrowCreditController {
        AdminResult result =  borrowCreditService.getBorrowInfoList(request);
        return result;
     }
+
+    /**
+     * 取消债权转让
+     * @author zhangyk
+     * @date 2018/8/7 9:36
+     */
+    @ApiOperation(value = "取消债权转让", notes = "取消债权转让")
+    @PostMapping("/cancel")
+    @ResponseBody
+    public Object creditCalcel(@RequestBody BorrowCreditRequest request){
+        AdminResult result =  borrowCreditService.cancelCredit(request);
+        return result;
+    }
+
+
+    @ApiOperation(value = "转让状态下拉选" , notes = "转让状态下拉选")
+    @PostMapping("/creditStatusList")
+    @ResponseBody
+    public Object getCreditStatusList(){
+        AdminResult result =  borrowCreditService.getCreditStatusList();
+        return result;
+    }
+
+
 
 }

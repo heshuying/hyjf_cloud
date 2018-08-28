@@ -33,13 +33,13 @@ public class VersionConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/list")
-    public AdminVersionResponse versionConfigInitByPage(AdminVersionRequest adminRequest) {
+    public AdminVersionResponse versionConfigInitByPage(@RequestBody  AdminVersionRequest adminRequest) {
         logger.info("版本配置列表..." + JSONObject.toJSON(adminRequest));
         AdminVersionResponse  response =new AdminVersionResponse();
         //查询版本配置列表条数
         int recordTotal = this.versionConfigService.getVersionConfigCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize()== 0?10:adminRequest.getPageSize());
             //查询记录
             List<Version> recordList =versionConfigService.getVersionConfigListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -47,7 +47,10 @@ public class VersionConfigController extends BaseConfigController{
                 response.setResultList(hicv);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空");
             return response;
         }
         return null;
@@ -68,6 +71,7 @@ public class VersionConfigController extends BaseConfigController{
             return response;
         }
         response.setRtn(Response.FAIL);
+        response.setMessage("查询的数据为空");
         return response;
     }
 
@@ -86,6 +90,7 @@ public class VersionConfigController extends BaseConfigController{
             return resp;
         }
         resp.setRtn(Response.FAIL);
+        resp.setMessage("添加失败！");
         return resp;
     }
 
@@ -104,6 +109,7 @@ public class VersionConfigController extends BaseConfigController{
             return resp;
         }
         resp.setRtn(Response.FAIL);
+        resp.setMessage("修改失败！");
         return resp;
     }
 
@@ -118,7 +124,7 @@ public class VersionConfigController extends BaseConfigController{
             this.versionConfigService.deleteVersionConfig(id);
             resp.setRtn(Response.SUCCESS);
         }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+           e.printStackTrace();
         }
         return  resp;
     }
@@ -128,8 +134,14 @@ public class VersionConfigController extends BaseConfigController{
      * @param map
      */
     @RequestMapping("/validationFeild")
-    public VersionVO validationFeild(@RequestBody Map map) {
-        return  this.versionConfigService.validationFeild(map);
+    public AdminVersionResponse validationFeild(@RequestBody Map map) {
+        AdminVersionResponse response = new AdminVersionResponse();
+        VersionVO vo= this.versionConfigService.validationFeild(map);
+        if(vo != null){
+            response.setResult(vo);
+            return response;
+        }
+        return  null;
     }
 
 

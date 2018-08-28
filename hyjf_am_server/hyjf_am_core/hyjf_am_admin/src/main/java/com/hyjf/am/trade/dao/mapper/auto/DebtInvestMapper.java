@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.trade.dao.model.auto.DebtInvest;
 import com.hyjf.am.trade.dao.model.auto.DebtInvestExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface DebtInvestMapper {
     int countByExample(DebtInvestExample example);

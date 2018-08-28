@@ -46,7 +46,7 @@ public class WebSynBalanceController extends BaseUserController {
         CheckUtil.check(user.getBankOpenAccount()==1, MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO=synBalanceService.getBankOpenAccount(user.getUserId());
-        status= synBalanceService.synBalance(bankOpenAccountVO.getAccount(),systemConfig.getInstcode(),"http://CS-TRADE",systemConfig.getAopAccesskey());
+        status= synBalanceService.synBalance(bankOpenAccountVO.getAccount(),systemConfig.getBankInstcode(),"http://CS-TRADE",systemConfig.getAopAccesskey());
         CheckUtil.check("成功".equals(status.get("statusDesc").toString()), MsgEnum.ERR_OBJECT_GET,"余额");
         //余额数据
         ret.put("info",status.get("bankBalance").toString());

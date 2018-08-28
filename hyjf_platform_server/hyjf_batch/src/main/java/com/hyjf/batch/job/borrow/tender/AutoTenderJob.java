@@ -3,13 +3,12 @@
  */
 package com.hyjf.batch.job.borrow.tender;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 自动投资
@@ -23,8 +22,8 @@ public class AutoTenderJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("AutoTenderJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://CS-TRADE/batch/tender/autotender", Boolean.class).getBody();
+        BooleanResponse result = restTemplate.getForEntity(
+                "http://CS-TRADE/batch/tender/autotender", BooleanResponse.class).getBody();
 
         logger.info("AutoTenderJob execute end...");
     }

@@ -4,11 +4,11 @@
 package com.hyjf.admin.controller.msgpush;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushMsgService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 
@@ -19,8 +19,6 @@ import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.util.GetMessageIdUtil;
@@ -30,17 +28,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -65,6 +55,8 @@ public class MessagePushMessageController extends BaseController {
     private MessagePushTagService messagePushTagService;
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
+    @Autowired
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -135,17 +127,22 @@ public class MessagePushMessageController extends BaseController {
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
 
+        templateRequest.setCreateUserName(username);
+        templateRequest.setCreateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
+        String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
+        templateVO.setMsgTerminal(msgTerminal);
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -186,12 +183,16 @@ public class MessagePushMessageController extends BaseController {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
         String username = user.getUsername();
+
+        templateRequest.setLastupdateUserName(username);
+        templateRequest.setLastupdateUserId(Integer.parseInt(user.getId()));
         // 调用校验
         String message = validatorFieldCheck(templateRequest);
         if (message != null) {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
@@ -218,14 +219,14 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
-                        templateRequest.setSendTime(time);
+                        templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
                     }
                 } catch (Exception e) {
                 }
             }
         } else {
             templateRequest.setPreSendTime(null);
-            templateRequest.setSendTime(GetDate.getNowTime10());
+            templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
 
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
@@ -234,13 +235,21 @@ public class MessagePushMessageController extends BaseController {
 
 
     @ApiOperation(value = "删除手动发送消息", notes = "删除手动发送消息")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(String ids) {
-        if (ids == null) {
+    @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    public AdminResult deleteAction(@PathVariable String ids) {
+        if (StringUtils.isBlank(ids)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        List<Integer> recordList = JSONArray.parseArray(ids, Integer.class);
-        MessagePushMsgResponse response = messagePushMsgService.deleteAction(recordList);
+        String msgIds[] = ids.split(",");
+        List<MessagePushMsgVO> recordList = new ArrayList<>();
+        for (String id : msgIds) {
+            MessagePushMsgResponse msgResponse = messagePushMsgService.getRecord(id);
+            MessagePushMsgVO msgVO = msgResponse.getResult();
+            recordList.add(msgVO);
+        }
+        MessagePushMsgRequest request = new MessagePushMsgRequest();
+        request.setRecordList(recordList);
+        MessagePushMsgResponse response = messagePushMsgService.deleteAction(request);
         if (response.getCount() > 0) {
             return new AdminResult<>(response);
         }
@@ -265,52 +274,17 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        String fileDomainUrl = FILEDOMAINURL;
-        String filePhysicalPath = FILEPHYSICALPATH;
-        String fileUploadTempPath = FILEUPLOADTEMPPATH;
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
-        BorrowCommonImageVO fileMeta = null;
-        LinkedList<BorrowCommonImageVO> files = new LinkedList<BorrowCommonImageVO>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            // 图片上传
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImageVO();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
-        }
-        return JSONObject.toJSONString(files, true);
     }
 
 

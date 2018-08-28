@@ -3,6 +3,14 @@
  */
 package com.hyjf.am.config.service.impl;
 
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.config.dao.mapper.auto.LandingPageMapper;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
 import com.hyjf.am.config.dao.model.auto.LandingPageExample;
@@ -13,13 +21,6 @@ import com.hyjf.am.vo.config.LandingPageVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * @author tanyy

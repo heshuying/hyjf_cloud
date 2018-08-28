@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.manager;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.AccountBalanceMonitoringRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -96,13 +95,13 @@ public class AccountBalanceMonitoringController extends BaseController {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         BeanUtils.copyProperties(requestBean, adminRequest);
         // 画面传来的值
-        List<AccountBalanceMonitoringRequestBean> updateDataList = this.setPageListInfo(requestBean);
+        List<AccountBalanceMonitoringRequestBean> updateDataList = requestBean.getBalanceDataJson();
         // 数据库检索的数据
         List<AccountBalanceMonitoringRequestBean> list = this.accountBalanceMonitoringService.searchMerchantAccountList(adminRequest, -1, -1);
 
-        List<AccountBalanceMonitoringRequestBean> resultList = this.forback(list);
+//        List<AccountBalanceMonitoringRequestBean> resultList = this.forback(list);
         // 判断数据是否更新
-        List<AccountBalanceMonitoringRequestBean> updateList = this.compareResultList(resultList, updateDataList);
+        List<AccountBalanceMonitoringRequestBean> updateList = this.compareResultList(list, updateDataList);
         // 数据更新
         AdminAccountBalanceMonitoringResponse adminResponse = this.accountBalanceMonitoringService.updateMerchantAccountList(updateList);
         if (adminResponse == null) {
@@ -127,7 +126,7 @@ public class AccountBalanceMonitoringController extends BaseController {
             AccountBalanceMonitoringRequestBean oldRecord = oldList.get(i);
             AccountBalanceMonitoringRequestBean newRecord = newList.get(i);
             // 判断数据是否有更新
-            if (oldRecord.getIds().equals(newRecord.getIds())) {
+            if (oldRecord.getId().equals(newRecord.getId())) {
                 Long oldData =
                         oldRecord.getBalanceLowerLimit() == null ? new Long(0) : oldRecord.getBalanceLowerLimit();
                 Long newData =
@@ -167,20 +166,20 @@ public class AccountBalanceMonitoringController extends BaseController {
         return result;
     }
 
-    /**
-     * json数据转换成实体
-     *
-     * @param from
-     * @return
-     */
-    public List<AccountBalanceMonitoringRequestBean> setPageListInfo(AccountBalanceMonitoringRequestBean from) {
-        List<AccountBalanceMonitoringRequestBean> merchantAccountList = new ArrayList<AccountBalanceMonitoringRequestBean>();
-        merchantAccountList = JSONArray.parseArray(from.getBalanceDataJson(), AccountBalanceMonitoringRequestBean.class);
-        for (AccountBalanceMonitoringRequestBean merchantAccount : merchantAccountList) {
-            merchantAccount.setId(Integer.parseInt(merchantAccount.getIds()));
-        }
-        return merchantAccountList;
-    }
+//    /**
+//     * json数据转换成实体
+//     *
+//     * @param from
+//     * @return
+//     */
+//    public List<AccountBalanceMonitoringRequestBean> setPageListInfo(AccountBalanceMonitoringRequestBean from) {
+//        List<AccountBalanceMonitoringRequestBean> merchantAccountList = new ArrayList<AccountBalanceMonitoringRequestBean>();
+//        merchantAccountList = JSONArray.parseArray(from.getBalanceDataJson(), AccountBalanceMonitoringRequestBean.class);
+//        for (AccountBalanceMonitoringRequestBean merchantAccount : merchantAccountList) {
+//            merchantAccount.setId(Integer.parseInt(merchantAccount.getIds()));
+//        }
+//        return merchantAccountList;
+//    }
 
 
 }

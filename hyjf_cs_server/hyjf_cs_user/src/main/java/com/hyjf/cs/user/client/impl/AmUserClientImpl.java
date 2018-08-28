@@ -1,6 +1,8 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -361,9 +363,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean checkEmailUsed(String email) {
-		boolean result = restTemplate
-				.getForEntity(userService+"/user/checkEmailUsed/" + email, boolean.class).getBody();
-		return result;
+		BooleanResponse response = restTemplate
+				.getForEntity(userService+"/user/checkEmailUsed/" + email, BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultBoolean();
+		}
+		return false;
 	}
 	
 	/**
@@ -372,8 +377,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public void insertBindEmailLog(BindEmailLogRequest bean) {
-		restTemplate.postForEntity(userService+"/user/insertBindEmailLog/",  bean, int.class).getBody();
+	public Integer insertBindEmailLog(BindEmailLogRequest bean) {
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/insertBindEmailLog/",  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 	
 	/**
@@ -397,8 +406,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public void updateBindEmail(BindEmailLogRequest bean) {
-		restTemplate.postForEntity(userService+"/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
+	public Integer updateBindEmail(BindEmailLogRequest bean) {
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 	
 	/**
@@ -408,9 +421,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserContract(UsersContractRequest bean) {
-		int result = restTemplate
-				.postForEntity(userService+"/user/updateUserContract/",  bean, int.class).getBody();
-		return result;
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/user/updateUserContract/",  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	/**
@@ -440,12 +456,12 @@ public class AmUserClientImpl implements AmUserClient {
 		if(requestBean == null || requestBean.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", requestBean, Integer.class)
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/updateByUserId", requestBean, IntegerResponse.class)
 				.getBody();
-		if (result == null) {
-			return 0;
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
 		}
-		return result;
+		return 0;
 	}
 	/**
 	 * @Description 根据身份证号查询用户
@@ -811,10 +827,13 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public int selectMyInviteCount(MyInviteListRequest requestBean) {
-		int count = restTemplate
-				.postForEntity(userService+"/invite/myInviteCount", requestBean, Integer.class).getBody();
-		return count;
+	public Integer selectMyInviteCount(MyInviteListRequest requestBean) {
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/invite/myInviteCount", requestBean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	/**
@@ -976,7 +995,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity(userService+"/user/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+				.getForEntity(userService+"/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -1038,5 +1057,38 @@ public class AmUserClientImpl implements AmUserClient {
 			return   response.getResult();
 		}
 		return  null;
+	}
+	/**
+	 * 插入ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int insertHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/insertHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新ht_hjh_user_auth表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuth(HjhUserAuthRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuth",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
+	}
+	/**
+	 * 更新 ht_hjh_user_auth_log 表
+	 * @param hjhUserAuthRequest
+	 * @auth nxl
+	 * @return
+	 */
+	@Override
+	public int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest){
+		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuthLog",hjhUserAuthRequest,Integer.class).getBody();
+		return response;
 	}
 }

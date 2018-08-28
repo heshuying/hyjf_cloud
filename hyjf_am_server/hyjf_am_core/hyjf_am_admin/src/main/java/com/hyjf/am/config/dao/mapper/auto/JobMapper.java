@@ -1,9 +1,11 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.JobExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface JobMapper {
     int countByExample(JobExample example);

@@ -5,6 +5,7 @@ package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -15,14 +16,19 @@ import java.util.Date;
 public class LinkVO extends BaseVO {
     private Integer id;
 
+    @ApiModelProperty(value = "连接类型1友情连接2合作伙伴")
     private Integer type;
 
+    @ApiModelProperty(value = "状态 1启用 2关闭")
     private Integer status;
 
+    @ApiModelProperty(value = "排序")
     private Integer order;
 
+    @ApiModelProperty(value = "网址")
     private String url;
 
+    @ApiModelProperty(value = "网站名称")
     private String webname;
 
     private String summary;
@@ -55,6 +61,7 @@ public class LinkVO extends BaseVO {
 
     private Integer registerCapital;
 
+    @ApiModelProperty(value = "合伙人类型")
     private Integer partnerType;
 
     private Integer hits;
@@ -65,6 +72,7 @@ public class LinkVO extends BaseVO {
 
     private Integer updateUserId;
 
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
     private Date updateTime;

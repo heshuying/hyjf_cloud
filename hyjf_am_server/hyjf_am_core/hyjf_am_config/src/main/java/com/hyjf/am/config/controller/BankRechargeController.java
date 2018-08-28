@@ -129,13 +129,16 @@ public class BankRechargeController  extends BaseConfigController{
      * @param adminRequest
      */
     @RequestMapping("/exportRecordList")
-    public List<BankRechargeLimitConfigVO>  selectExportRecordList(@RequestBody AdminBankRechargeConfigRequest adminRequest) {
+    public AdminBankRechargeConfigResponse  selectExportRecordList(@RequestBody AdminBankRechargeConfigRequest adminRequest) {
+        AdminBankRechargeConfigResponse  response= new AdminBankRechargeConfigResponse();
         List<BankRechargeLimitConfigVO> list=new ArrayList<BankRechargeLimitConfigVO>();
         List<BankRechargeConfig> bankRechargeConfigs = this.bankRechargeService.selectExportRecordList(adminRequest);
         if(!CollectionUtils.isEmpty(bankRechargeConfigs)){
             list = CommonUtils.convertBeanList(bankRechargeConfigs,BankRechargeLimitConfigVO.class);
+            response.setResultList(list);
+            return response;
         }
-        return  list;
+        return  null;
     }
 
     /**

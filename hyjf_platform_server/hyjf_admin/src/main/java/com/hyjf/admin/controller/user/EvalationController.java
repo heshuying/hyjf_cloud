@@ -53,7 +53,7 @@ public class EvalationController extends BaseController {
     @ApiOperation(value = "用户测评列表查询", notes = "用户测评列表查询")
     @PostMapping(value = "/evalationRecord")
     @ResponseBody
-    public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody EvalationRequestBean evalationRequestBean){
+    public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation( @RequestBody EvalationRequestBean evalationRequestBean){
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
         EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
@@ -73,7 +73,7 @@ public class EvalationController extends BaseController {
     @ApiOperation(value = "用户测评结果显示", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")
     @ResponseBody
-    public AdminResult<EvalationDetailResponseBean> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response, @RequestBody String  userId){
+    public AdminResult<EvalationDetailResponseBean> selectEvaluationDetailById(@RequestBody String  userId){
         UserEvalationResultVO userEvalationResultVO = evalationService.selectUserEvalationResultByUserId(userId);
         EvalationDetailResponseBean evalationDetailResponseBean = new EvalationDetailResponseBean();
         UserVO userVO = evalationService.getUserVOByUserId(userId);
@@ -96,5 +96,6 @@ public class EvalationController extends BaseController {
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
+
 
 }

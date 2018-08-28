@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.account;
 
 
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 
 import java.math.BigDecimal;
@@ -44,7 +45,7 @@ public interface AccountRecharge {
      * @return
      * @Author : huanghui
      */
-    List<AccountRechargeVO> getAccountRechargeList(AccountRechargeRequest request);
+    List<AccountRechargeCustomizeVO> getAccountRechargeList(AccountRechargeRequest request);
 
     /**
      * 更新用户充值订单状态

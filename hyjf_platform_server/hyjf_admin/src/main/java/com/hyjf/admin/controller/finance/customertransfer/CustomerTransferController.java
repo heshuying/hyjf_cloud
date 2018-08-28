@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -211,14 +212,15 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
-    public AdminResult addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
+    public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject result = new JSONObject();
-        result = customerTransferService.checkCustomerTransferParam(request);
+        result = customerTransferService.checkCustomerTransferParam(customerTransferRequest);
         if(result != null && "0".equals(result.get("status"))){
             AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
-            request.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
-            request.setCreateUserName(adminSystemVO.getUsername());
-            boolean success = customerTransferService.insertTransfer(request);
+            customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
+            customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
+            boolean success = customerTransferService.insertTransfer(customerTransferRequest);
             if(success){
                 return new AdminResult(SUCCESS,SUCCESS_DESC);
             }

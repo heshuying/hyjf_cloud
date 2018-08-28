@@ -6,6 +6,7 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
 import com.hyjf.am.config.service.MessagePushTagServcie;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
@@ -94,8 +95,9 @@ public class MessagePushTemplateController {
     }
 
     @RequestMapping("/insertMsgPushTemplate")
-    public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
-        templateServcie.insertMsgPushTemplate(request);
+    public IntegerResponse insertMsgPushTemplate(MsgPushTemplateRequest request) {
+        int num = templateServcie.insertMsgPushTemplate(request);
+        return new IntegerResponse(num);
     }
 
     /**
@@ -154,6 +156,7 @@ public class MessagePushTemplateController {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         MessagePushTemplate messagePushTemplate = new MessagePushTemplate();
         BeanUtils.copyProperties(templateVO, messagePushTemplate);
+        messagePushTemplate.setTagId(Integer.parseInt(templateVO.getTagId()));
         Integer result = templateServcie.insertMessagePushTemplate(messagePushTemplate);
         response.setCount(result);
         return response;

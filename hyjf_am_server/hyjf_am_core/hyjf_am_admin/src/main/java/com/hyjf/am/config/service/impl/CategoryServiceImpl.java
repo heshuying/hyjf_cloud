@@ -1,5 +1,15 @@
 package com.hyjf.am.config.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.config.dao.mapper.auto.CategoryMapper;
 import com.hyjf.am.config.dao.mapper.auto.ContentHelpMapper;
 import com.hyjf.am.config.dao.mapper.customize.HelpCustomizeMapper;
@@ -15,14 +25,6 @@ import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Auther: walter.limeng

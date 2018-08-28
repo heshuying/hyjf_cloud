@@ -51,12 +51,14 @@ public enum MsgEnum implements MsgCode {
 	ERR_OBJECT_INVALID("ETY000008","无效的{0}"),//提取通用
 	ERR_OBJECT_UNMATCH("ETY000009","{0}不符合接口要求，请重新传入"),
 	ERR_OBJECT_EXCEED_LIMIT("ETY000010","{0}超出限制长度"),
+	ERR_OBJECT_DECRYPT("ETY000011","{0}解密失败"),
 
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
 	ERR_JSON("ETY000103","传入JSON错误"),
 	ERR_PARAM_NUM("ETY000104", "请求参数不全"),
 	ERR_PARAM("ETY000105", "参数错误，请重试"),
+	ERR_AM_SYSTEM("ETY000198","接口(am)调用发生异常，请联系服务方"),
 	ERR_SYSTEM("ETY000199","接口调用发生异常，请联系服务方"),
 	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
@@ -379,6 +381,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
 	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
+	ERR_BIND_REPEAT("1","重复绑定"),
 	ERR_DIC_NO_MATCH("ENM000001","字典表中没有值={0}的平台"),
 
 	// 枚举终结

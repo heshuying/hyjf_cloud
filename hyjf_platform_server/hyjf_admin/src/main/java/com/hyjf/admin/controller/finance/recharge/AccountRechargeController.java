@@ -9,10 +9,12 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -109,10 +112,10 @@ public class AccountRechargeController extends BaseController {
         rechargeType.put("value", "个人网银充值");
         rechargeType2.put("key", "B2B");
         rechargeType2.put("value", "企业网银充值");
-        rechargeType3.put("key", "B2B");
-        rechargeType3.put("value", "企业网银充值");
-        rechargeType4.put("key", "B2B");
-        rechargeType4.put("value", "企业网银充值");
+        rechargeType3.put("key", "QP");
+        rechargeType3.put("value", "快捷充值");
+        rechargeType4.put("key", "OFFLINE");
+        rechargeType4.put("value", "线下充值");
 
         //map加入List
         rechargeList.add(rechargeType);
@@ -213,15 +216,15 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理列表", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    public AdminResult<ListResult<AccountRechargeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
+    public AdminResult<ListResult<AccountRechargeCustomizeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
         BeanUtils.copyProperties(requestBean, copyRequest);
 
 
         //初始化返回List
-        List<AccountRechargeVO> returnList = null;
-        AccountRechargeResponse rechargeResponse = rechargeService.queryRechargeList(copyRequest);
+        List<AccountRechargeCustomizeVO> returnList = null;
+        AccountRechargeCustomizeResponse rechargeResponse = rechargeService.queryRechargeList(copyRequest);
 
         if (rechargeResponse == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -232,10 +235,10 @@ public class AccountRechargeController extends BaseController {
         }
 
         if (CollectionUtils.isNotEmpty(rechargeResponse.getResultList())){
-            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeVO.class);
-            return new AdminResult<ListResult<AccountRechargeVO>>(ListResult.build(returnList, rechargeResponse.getCount()));
+            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeCustomizeVO.class);
+            return new AdminResult<ListResult<AccountRechargeCustomizeVO>>(ListResult.build(returnList, rechargeResponse.getCount()));
         }else {
-            return new AdminResult<ListResult<AccountRechargeVO>>(ListResult.build(returnList, 0));
+            return new AdminResult<ListResult<AccountRechargeCustomizeVO>>(ListResult.build(returnList, 0));
         }
     }
 
@@ -342,13 +345,13 @@ public class AccountRechargeController extends BaseController {
             accountRechargeRequest.setEndDate(GetDate.getDate("yyyy-MM-dd"));
         }
 
-        List<AccountRechargeVO> returnList = null;
-        AccountRechargeResponse rechargeResponse = this.rechargeService.queryRechargeList(accountRechargeRequest);
+        List<AccountRechargeCustomizeVO> returnList = null;
+        AccountRechargeCustomizeResponse rechargeResponse = this.rechargeService.queryRechargeList(accountRechargeRequest);
 
         if (rechargeResponse.getCount() > 0) {
-            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeVO.class);
+            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeCustomizeVO.class);
         }
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
         // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };
@@ -377,7 +380,8 @@ public class AccountRechargeController extends BaseController {
                 Row row = sheet.createRow(rowNum);
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AccountRechargeVO record = returnList.get(i);
+//                    AccountRechargeVO record = returnList.get(i);
+                    AccountRechargeCustomizeVO record = returnList.get(i);
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
                     if (celLength == 0) {

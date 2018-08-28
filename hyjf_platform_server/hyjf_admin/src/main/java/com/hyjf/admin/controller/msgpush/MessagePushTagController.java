@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.controller.msgpush;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
@@ -15,6 +17,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -44,7 +48,7 @@ public class MessagePushTagController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
     @Autowired
-    private ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -133,7 +137,7 @@ public class MessagePushTagController extends BaseController {
         return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "修改状态", notes = "修改装态")
+    @ApiOperation(value = "修改状态", notes = "修改状态")
     @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
     public AdminResult updateStatus(@RequestParam Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
@@ -160,7 +164,10 @@ public class MessagePushTagController extends BaseController {
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
     public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
-        Integer id = request.getId();
+        Integer id = 0;
+        if (request.getId() != null) {
+            id = request.getId();
+        }
         String tagCode = request.getTagCode();
         MessagePushTagResponse response = messagePushTagService.countByTagCode(id, tagCode);
         if (response == null) {
@@ -170,27 +177,26 @@ public class MessagePushTagController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
+            return new AdminResult(FAIL,response.getMessage());
         }
         return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-
     }
 
     /**

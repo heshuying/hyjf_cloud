@@ -1,11 +1,11 @@
 package com.hyjf.am.trade.bean.repay;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 
 public class RepayRecoverBean extends BorrowRecover implements Serializable {
 

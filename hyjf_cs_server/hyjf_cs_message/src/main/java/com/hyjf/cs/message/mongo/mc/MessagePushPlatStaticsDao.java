@@ -4,9 +4,9 @@
 package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushPlatStatics;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -32,23 +32,21 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
     public List<MessagePushPlatStatics> selectPlatStatics(MessagePushPlatStaticsRequest request) {
         Query query = new Query();
         Criteria criteria = new Criteria();
-        if (request.getStartDateSrch() != null) {
-            Integer startTime = GetDate.dateString2Timestamp(request.getStartDateSrch());
-            criteria.and("createTime").gte(startTime);
+		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
+			criteria.and("staDate").gte(request.getStartDateSrch() + " 00:00:00")
+					.lte(request.getEndDateSrch() + " 23:59:59");
+		}
+        if (StringUtils.isNotBlank(request.getTagIdSrch())) {
+            criteria.and("tagId").is(request.getTagIdSrch());
         }
-        if (request.getEndDateSrch() != null) {
-            Integer endTime = GetDate.dateString2Timestamp(request.getEndDateSrch());
-            criteria.and("createTime").lte(endTime);
-        }
-        if (request.getTagIdSrch() != null) {
-            criteria.and("tagId").regex(request.getTagIdSrch());
-        }
-        int currPage = request.getCurrPage();
-        int pageSize = request.getPageSize();
-        int limitStart = (currPage - 1) * pageSize;
-        int limitEnd = limitStart + pageSize;
         query.addCriteria(criteria);
-        query.skip(limitStart).limit(limitEnd);
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            int currPage = request.getCurrPage();
+            int pageSize = request.getPageSize();
+            int limitStart = (currPage - 1) * pageSize;
+            int limitEnd = limitStart + pageSize;
+            query.skip(limitStart).limit(limitEnd);
+        }
         return mongoTemplate.find(query, getEntityClass());
     }
 }

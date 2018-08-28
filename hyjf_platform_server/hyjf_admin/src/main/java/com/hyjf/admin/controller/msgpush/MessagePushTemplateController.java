@@ -4,9 +4,11 @@
 package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
@@ -23,10 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +45,7 @@ public class MessagePushTemplateController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
     @Autowired
-    private ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
@@ -116,11 +115,13 @@ public class MessagePushTemplateController extends BaseController {
             // 标签类型
             List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
             response.setTemplatePushTags(templatePushTags);
+            response.setMessage(message);
             prepareDatas(response);
             return new AdminResult<>(response);
         }
         MessagePushTemplateVO templateVO = new MessagePushTemplateVO();
-        BeanUtils.copyProperties(request, templateVO);
+        BeanUtils.copyProperties(templateRequest, templateVO);
+        templateVO.setTagId(String.valueOf(templateRequest.getTagId()));
         if (templateRequest.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setTemplateActionUrl("");
         }
@@ -175,8 +176,8 @@ public class MessagePushTemplateController extends BaseController {
     }
 
     @ApiOperation(value = "删除模板", notes = "删除模板")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(String ids) {
+    @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    public AdminResult deleteAction(@PathVariable String ids) {
         if (ids == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -190,9 +191,9 @@ public class MessagePushTemplateController extends BaseController {
     }
 
 
-    @ApiOperation(value = "修改状态", notes = "修改装态")
-    @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
-    public AdminResult updateStatus(Integer id) {
+    @ApiOperation(value = "修改状态", notes = "修改状态")
+    @RequestMapping(value = "/statusAction/{id}", method = RequestMethod.GET)
+    public AdminResult updateStatus(@PathVariable Integer id) {
         if (id != null) {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
             MessagePushTemplateVO record = response.getResult();
@@ -231,9 +232,9 @@ public class MessagePushTemplateController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         if (response.getCount() > 0) {
-            String message = AdminValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            message = message.replace("{label}", "标签编码");
+            String message = "标签重复";
             response.setMessage(message);
+            return new AdminResult(FAIL,response.getMessage());
         }
         return new AdminResult<>(response);
     }
@@ -254,16 +255,14 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        MessagePushTemplateResponse templateResponse = new MessagePushTemplateResponse();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                templateResponse.setUploadFileImagePath(s);
-                return new AdminResult<>(response);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

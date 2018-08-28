@@ -3,14 +3,15 @@
  */
 package com.hyjf.am.trade.controller.admin.extensioncenter;
 
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 
 /**
  * @author tanyy

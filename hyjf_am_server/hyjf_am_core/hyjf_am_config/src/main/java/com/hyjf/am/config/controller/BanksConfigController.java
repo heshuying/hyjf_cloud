@@ -64,6 +64,25 @@ public class BanksConfigController extends BaseConfigController{
     }
 
     /**
+     * 江西银行的银行卡配置表
+     * @param bankId
+     * @return
+     */
+/*
+    @GetMapping("/getJxBankConfigByBankId/{bankId}")
+    public JxBankConfigResponse getJxBankConfigByBankId(@PathVariable Integer bankId){
+        JxBankConfigResponse response = new JxBankConfigResponse();
+        JxBankConfig jxBankConfig = bankConfigService.getJxBankConfigByBankId(bankId);
+        if(null != jxBankConfig){
+            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
+            BeanUtils.copyProperties(jxBankConfig,jxBankConfigVO);
+            response.setResult(jxBankConfigVO);
+        }
+        return response;
+    }
+*/
+
+    /**
      * 获取银行卡配置信息
      * @param code
      * @return
@@ -183,21 +202,25 @@ public class BanksConfigController extends BaseConfigController{
             response.setResultList(listBanksConfig);
             //代表成功
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return response;
+        return null;
     }
 
     /**
      * 获取银行列表(快捷支付卡)
      */
     @RequestMapping("/getBankRecordListByQuickPayment")
-    public List<BankConfigVO> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+    public BankConfigResponse getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+        BankConfigResponse response = new BankConfigResponse();
         List<BankConfigVO> listBanksConfig=null;
         List<BankConfig> listBankConfig = bankConfigService.getBankRecordListByQuickPayment(bankConfigVO);
         if(!CollectionUtils.isEmpty(listBankConfig)){
             listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+            response.setResultList(listBanksConfig);
+            return response;
         }
-        return listBanksConfig;
+        return null;
     }
 
     @GetMapping("/getParamNameList/{nameClass}")
@@ -266,13 +289,18 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/selectBankConfigByBankName")
-    public List<BankConfigVO> selectBankConfigByBankName(@RequestBody String bankName){
+    public AdminBankConfigResponse selectBankConfigByBankName(@RequestBody String bankName){
+        AdminBankConfigResponse response = new AdminBankConfigResponse();
         BankConfigVO bankConfig = new BankConfigVO();
         bankConfig.setName(bankName);
         List<BankConfig> list = bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
-        List<BankConfigVO> res=null;
-        BeanUtils.copyProperties(list,res);
-        return res;
+        if(!CollectionUtils.isEmpty(list)){
+            List<BankConfigVO> res=CommonUtils.convertBeanList(list,BankConfigVO.class);
+            response.setResultList(res);
+            response.setRecordTotal(res.size());
+            return response;
+        }
+        return null;
     }
 
     /**

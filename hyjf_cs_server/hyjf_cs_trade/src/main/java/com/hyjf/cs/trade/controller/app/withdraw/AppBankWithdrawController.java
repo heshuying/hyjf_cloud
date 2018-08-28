@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -10,10 +11,12 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
@@ -162,12 +165,12 @@ public class AppBankWithdrawController extends BaseTradeController {
         BankCardVO bankCard = bankWithdrawService.getBankCardVOByUserId(userId);
         if (bankCard!=null) {
             // 发卡行的名称
-            result.setBank(bankCard.getBank());
+            result.setBank(bankCard.getBank()==null?"":bankCard.getBank());
             // 卡号
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);
             result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
-            BanksConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
+            JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                 result.setLogo(systemConfig.getWebHost() + banksConfig.getBankIcon());
             } else {
@@ -176,6 +179,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             }
 
             BigDecimal feeWithdraw = BigDecimal.ONE;
+
             String feeTemp = bankWithdrawService.getWithdrawFee(userId, cardNo);
             if (StringUtils.isNotEmpty(feeTemp)) {
                 feeWithdraw = new BigDecimal(feeTemp);
@@ -265,10 +269,10 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "APP端-获取提现URL", notes = "获取提现URL")
     @ResponseBody
+    @ApiOperation(value = "APP端-获取提现URL", notes = "获取提现URL")
     @PostMapping("/getCashUrl")
-    public JSONObject getCashUrl(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
+    public JSONObject getCashUrl(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         // 版本号
         String version = request.getParameter("version");
@@ -280,6 +284,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         String randomString = request.getParameter("randomString");
         // 唯一标识
         String sign = request.getParameter("sign");
+        // 获取token
+        String token = request.getParameter("token");
         // order
         String order = request.getParameter("order");
         // card 银行卡号
@@ -288,21 +294,19 @@ public class AppBankWithdrawController extends BaseTradeController {
         String total = request.getParameter("total");
         // 银联行号
         String openCardBankCode = request.getParameter("openCardBankCode");
-        String phoneNumber = request.getParameter("phoneNumber");
-        String smsCodeWithDraw = request.getParameter("smsCodeWithDraw");
-
+        String requestStr="/hyjf-app/bank/user/withdraw/getCashUrl";
         // 检查参数正确性
         if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString)
                 || Validator.isNull(order) || Validator.isNull(cardNo) || Validator.isNull(total) || !CommonUtils.isNumber(total)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
         if (new BigDecimal(total).compareTo(BigDecimal.ONE) <= 0) {
             ret.put("status", "1");
             ret.put("statusDesc", "提现金额需大于1元！");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
 
@@ -313,7 +317,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         if (account == null || new BigDecimal(transAmt).compareTo(account.getBankBalance()) > 0) {
             ret.put("status", "1");
             ret.put("statusDesc", "提现金额大于可用金额，请确认后再次提现。");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
         //可用金额
@@ -335,7 +339,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     if (StringUtils.isNotBlank(transAmt) && new BigDecimal(transAmt).compareTo(availableCash) > 0) {
                         ret.put("status", "1");
                         ret.put("statusDesc", "当天充值资金当天无法提现，请调整取现金额。");
-                        ret.put("request", "/getCashUrl");
+                        ret.put("request", requestStr);
                         return ret;
                     }
                 }
@@ -353,7 +357,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         if ("2".equals(routeCode) && StringUtils.isBlank(openCardBankCode)) {
             ret.put("status", "1");
             ret.put("statusDesc", "大额提现时,开户行号不能为空");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
 
@@ -362,40 +366,31 @@ public class AppBankWithdrawController extends BaseTradeController {
         if (Validator.isNull(key)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
         // 验证Order
         if (!SecretUtil.checkOrder(key, token, randomString, order)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             return ret;
         }
 
         try {
             /** 充值接口 */
-            String withdrawUrl = super.getFrontHost(systemConfig,platform) + "/bank/user/withdraw/userBankWithdraw";
+            String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType=" +CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
             String uuid = getUUID();
             RedisUtils.set("widraw"+cardNo, uuid);
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            ret.put("request", "/getCashUrl");
+            ret.put("request", requestStr);
             StringBuffer sbUrl = new StringBuffer();
             sbUrl.append(withdrawUrl);
-            sbUrl.append("?").append("version").append("=").append(version);
-            sbUrl.append("&").append("netStatus").append("=").append(netStatus);
-            sbUrl.append("&").append("platform").append("=").append(platform);
-            sbUrl.append("&").append("randomString").append("=").append(randomString);
-            sbUrl.append("&").append("sign").append("=").append(sign);
-            sbUrl.append("&").append("token").append("=").append(strEncode(token));
-            sbUrl.append("&").append("order").append("=").append(strEncode(order));
             sbUrl.append("&").append("cardNo").append("=").append(cardNo);
             sbUrl.append("&").append("total").append("=").append(total);
             sbUrl.append("&").append("routeCode").append("=").append(routeCode);
             sbUrl.append("&").append("openCardBankCode").append("=").append(openCardBankCode);
-            sbUrl.append("&").append("phoneNumber").append("=").append(phoneNumber);
-            sbUrl.append("&").append("smsCodeWithDraw").append("=").append(smsCodeWithDraw);
             logger.info("返回提现url为: {}", sbUrl.toString());
             ret.put("url", sbUrl.toString());
         } catch (Exception e) {
@@ -423,34 +418,61 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date  用户提现调用银行页面
      */
+    @ResponseBody
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         logger.info("web端提现接口, userId is :{}", userId);
-        String transAmt = request.getParameter("withdrawmoney");// 交易金额
-        String cardNo = request.getParameter("widCard");// 提现银行卡号
-        String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
+        AppResult<Object> result = new AppResult<Object>();
+        String transAmt = request.getParameter("total");// 交易金额
+        String cardNo = request.getParameter("cardNo");// 提现银行卡号
+        String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
         // 平台
         String platform = request.getParameter("platform");
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null!=userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
-            return  new ModelAndView();
+        if(null==userVO){
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
+
+        if(0==userVO.getIsSetPassword()){
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        }
+        if(userVO.getBankOpenAccount()==0){
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip);
-        ModelAndView modelAndView = new ModelAndView();
+        // (提现)
+        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
+        String bgRetUrl = systemConfig.getAppHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
+        bgRetUrl=splicingParam(bgRetUrl,request);
+        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+            result.setData(data);
         } catch (Exception e) {
             logger.info("app端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
-        return modelAndView;
-    }
 
+        result.setStatus("000");
+        return result;
+    }
+    private String splicingParam(String bgRetUrl, HttpServletRequest request) {
+        String sign=request.getParameter("sign");
+        String token=request.getParameter("token");
+        StringBuffer sb = new StringBuffer(bgRetUrl);
+
+        if(bgRetUrl.indexOf("?")!=-1){
+            sb.append("&sign=").append(sign).append("&token=").append(token);
+        }else{
+            sb.append("?sign=").append(sign).append("&token=").append(token);
+        }
+        return sb.toString();
+    }
     /**
      * 用户银行提现异步回调
      * @Description
@@ -459,6 +481,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiIgnore
+    @ResponseBody
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[app用户银行提现异步回调开始]");

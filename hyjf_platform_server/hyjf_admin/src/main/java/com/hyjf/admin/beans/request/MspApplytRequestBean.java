@@ -47,13 +47,13 @@ public class MspApplytRequestBean extends BasePage {
 		this.endCreate = endCreate;
 	}
 	  private Integer id;
-
+	    @ApiModelProperty(value = "安融id")
 	    private String applyId;
 	    @ApiModelProperty(value = "姓名")
 	    private String name;
 	    @ApiModelProperty(value = "证件号")
 	    private String identityCard;
-
+	    @ApiModelProperty(value = "手机号")
 	    private String mobileNo;
 	    @ApiModelProperty(value = "申请时间")
 	    private String applyDate;
@@ -65,43 +65,43 @@ public class MspApplytRequestBean extends BasePage {
 	    private Integer loanTimeLimit;
 	    @ApiModelProperty(value = "地址")
 	    private String creditAddress;
-
+	    @ApiModelProperty(value = "共享标识0为未共享,1为已共享")
 	    private Integer shareIdentification;
-
+	    @ApiModelProperty(value = "业务类型")
 	    private String serviceType;
-
+	    @ApiModelProperty(value = "未偿还本金")
 	    private BigDecimal unredeemedMoney;
-
+	    @ApiModelProperty(value = "还款状态 01 正常（借款人已按时归还该月还款金额的全部）。提前归还该月应还款金额的全部（但尚未结清），也归入“01 正常”；02 逾期中；03 逾期核销；04 正常结清")
 	    private String repaymentStatus;
-
+	    @ApiModelProperty(value = "逾期总金额")
 	    private BigDecimal overdueAmount;
-
+	    @ApiModelProperty(value = "逾期开始日期")
 	    private String overdueDate;
-
+	    @ApiModelProperty(value = "逾期时长")
 	    private String overdueLength;
-
+	    @ApiModelProperty(value = "逾期原因 01 能力下降；02 恶意拖欠；03 身份欺诈；04 逃逸；05 犯罪入狱；06 疾病；07 死亡；99 其他")
 	    private String overdueReason;
-
+	    @ApiModelProperty(value = "审批结果 01 审批通过；02 审批拒绝；04 重新审批；05 客户取消")
 	    private String approvalResult;
-
+	    @ApiModelProperty(value = "审批日期")
 	    private String approvalDate;
-
+	    @ApiModelProperty(value = "合同开始日期")
 	    private String contractBegin;
-
+	    @ApiModelProperty(value = "合同结束日期")
 	    private String contractEnd;
-
+	    @ApiModelProperty(value = "担保类型A 抵押；B 质押；C 担保；D 信用；E 保证；Y 其他")
 	    private String guaranteeType;
 	    @ApiModelProperty(value = "创建人")
 	    private String createUser;
-
+	    @ApiModelProperty(value = "创建时间")
 	    private Integer createTime;
-
+	    @ApiModelProperty(value = "修改人")
 	    private String updateUser;
-
+	    @ApiModelProperty(value = "修改时间")
 	    private Integer updateTime;
 
 	    private Integer delFlg;
-
+	    @ApiModelProperty(value = "配置Id")
 	    private Integer configureId;
 
 	    public Integer getId() {
