@@ -81,15 +81,14 @@ public class BankMerchantAccountController extends BaseController {
     public AdminResult init(HttpServletRequest request, @RequestBody BankMerchantAccountListRequest form) {
         AdminResult result = new AdminResult();
         AdminSystemVO adminSystem = getUser(request);
-  //      CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+        CheckUtil.check(adminSystem!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         // 账户余额总计
         BigDecimal accountBalanceSum = BigDecimal.ZERO;
         // 可用余额总计
         BigDecimal availableBalanceSum = BigDecimal.ZERO;
         // 冻结金额总计
         BigDecimal frostSum = BigDecimal.ZERO;
-        //form.setUserId(Integer.parseInt(adminSystem.getId()));
-        form.setUserId(5234);
+        form.setUserId(Integer.parseInt(adminSystem.getId()));
         BankMerchantAccountResponse response = bankMerchantAccountService.selectBankMerchantAccount(form);
         if(response == null||response.getRecordTotal()==0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
