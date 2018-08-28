@@ -8,12 +8,10 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
-import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
@@ -21,7 +19,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -42,8 +43,6 @@ public class MyProfileController extends BaseUserController {
 
     @Autowired
     private MyProfileService myProfileService;
-    @Autowired
-    private RequestUtil requestUtil;
     @Autowired
     private SystemConfig systemConfig;
 
@@ -93,7 +92,7 @@ public class MyProfileController extends BaseUserController {
      */
     @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
-    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader Integer userId) {
+    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId) {
         WeChatResult resultBean = new WeChatResult();
 
         if (userId==null){
@@ -104,7 +103,7 @@ public class MyProfileController extends BaseUserController {
         List<CouponUserForAppCustomizeVO> list = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
         if (CollectionUtils.isEmpty(list)){
             resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("获取用户优惠券数据失败!");
+            resultBean.setStatusDesc("获取用户优惠券数据为空!");
             return resultBean;
         }
 

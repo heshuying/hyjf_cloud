@@ -92,7 +92,9 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-查询商户账户余额",notes = "平台转账-查询商户账户余额")
     @PostMapping(value = "/tohandrecharge")
-    public AdminResult toHandRecharge(@RequestHeader(value = "userId")Integer userId){
+    public AdminResult toHandRecharge(HttpServletRequest request){
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        logger.info("toHandRecharge=========userId:[{}]",userId);
         BigDecimal balance = platformTransferService.getAccountBalance(userId);
         Map<String,BigDecimal> map = new HashMap<>();
         map.put("balance",balance);
@@ -107,7 +109,8 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账",notes = "平台转账")
     @PostMapping(value = "/handrecharge")
-    public AdminResult handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+    public AdminResult handRecharge(HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject result = platformTransferService.handRecharge(userId,request,platformTransferRequest);
         if("0".equals(result.get("status"))){
             return new AdminResult(SUCCESS,result.getString("result"));
