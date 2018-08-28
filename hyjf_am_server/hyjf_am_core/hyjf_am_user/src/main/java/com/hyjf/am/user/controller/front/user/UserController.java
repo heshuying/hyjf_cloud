@@ -1,6 +1,8 @@
 package com.hyjf.am.user.controller.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -246,12 +248,12 @@ public class UserController extends BaseController {
      * return
      */
     @RequestMapping("/updateByUserId")
-    public int updateByUserId(@RequestBody User user) {
+    public IntegerResponse updateByUserId(@RequestBody User user) {
         if (user == null || user.getUserId() == null) {
-            return 0;
+            return new IntegerResponse(0);
         }
         logger.info("updatePassWord run...user is :{}", user.toString());
-        return userService.updateUserById(user);
+        return new IntegerResponse(userService.updateUserById(user));
     }
 
     /**
@@ -358,8 +360,8 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/updateUserContract")
-    public int updateUserContract(@RequestBody UsersContractRequest bean) {
-        return userService.updateUserContact(bean);
+    public IntegerResponse updateUserContract(@RequestBody UsersContractRequest bean) {
+        return new IntegerResponse(userService.updateUserContact(bean));
     }
 
     /**
@@ -388,8 +390,8 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/checkEmailUsed/{email}")
-    public boolean checkEmailUsed(@PathVariable String email) {
-        return userService.checkEmailUsed(email);
+    public BooleanResponse checkEmailUsed(@PathVariable String email) {
+        return new BooleanResponse(userService.checkEmailUsed(email));
     }
 
     /**
@@ -398,10 +400,11 @@ public class UserController extends BaseController {
      * @param log
      */
     @RequestMapping("/insertBindEmailLog")
-    public void insertEmailBindLog(@RequestBody BindEmailLogRequest log) {
+    public IntegerResponse insertEmailBindLog(@RequestBody BindEmailLogRequest log) {
         UserBindEmailLog bean = new UserBindEmailLog();
         BeanUtils.copyProperties(log, bean);
         userService.insertEmailBindLog(bean);
+        return new IntegerResponse();
     }
 
     /**
@@ -430,8 +433,8 @@ public class UserController extends BaseController {
      * @param
      */
     @RequestMapping("/updateBindEmail/{userId}/{email}")
-    public void updateBindEmail(@PathVariable Integer userId, @PathVariable String email) {
-        userService.updateBindEmail(userId, email);
+    public IntegerResponse updateBindEmail(@PathVariable Integer userId, @PathVariable String email) {
+        return new IntegerResponse(userService.updateBindEmail(userId, email));
     }
 
     /**
