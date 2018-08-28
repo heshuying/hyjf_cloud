@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -12,20 +13,28 @@ import java.util.Date;
 public class ContentArticleVO extends BaseVO {
     private Integer id;
 
+    @ApiModelProperty(value = "文章分类 2-网站公告，3-网贷知识，5-关于我们，101-风险教育，8-联系我们，20-公司动态")
     private String type;
 
+    @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "状态0关闭，1启用")
     private Integer status;
 
+    @ApiModelProperty(value = "文章作者")
     private String author;
 
+    @ApiModelProperty(value = "文章图片")
     private String imgurl;
 
+    @ApiModelProperty(value = "简介")
     private String summary;
 
+    @ApiModelProperty(value = "点击率")
     private Integer click;
 
+    @ApiModelProperty(value = "文章内容")
     private String content;
 
     private Integer createUserId;
@@ -36,6 +45,7 @@ public class ContentArticleVO extends BaseVO {
 
     private Date updateTime;
 
+    @ApiModelProperty(value = "发表时间")
     private String publishTime;
 
 
