@@ -1084,26 +1084,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public ContentQualifyResponse searchAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG//am-config/content/contentqualify/searchaction",
+        return restTemplate.postForObject("http://AM-ADMIN//am-config/content/contentqualify/searchaction",
                 requestBean, ContentQualifyResponse.class);
     }
 
     @Override
-    public ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/insertaction", requestBean,
-                ContentQualifyResponse.class);
+    public int insertAction(ContentQualifyRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentqualify/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/updateaction", requestBean,
-                ContentQualifyResponse.class);
+    public int updateAction(ContentQualifyRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentqualify/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public ContentQualifyVO getContentQualifyRecord(Integer id) {
         ContentQualifyResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentqualify/getrecord/" + id, ContentQualifyResponse.class);
+                "http://AM-ADMIN/am-config/content/contentqualify/getrecord/" + id, ContentQualifyResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -1111,9 +1111,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public ContentQualifyResponse deleteContentQualifyById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentqualify/delete/" + id,
-                ContentQualifyResponse.class);
+    public int deleteContentQualifyById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentqualify/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override

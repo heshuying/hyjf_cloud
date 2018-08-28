@@ -6,7 +6,7 @@ package com.hyjf.am.config.controller.admin.content;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.ContentQualify;
 import com.hyjf.am.config.service.ContentQualifyService;
-import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.ContentQualifyResponse;
 import com.hyjf.am.resquest.admin.ContentQualifyRequest;
 import com.hyjf.am.vo.config.ContentQualifyVO;
@@ -61,11 +61,9 @@ public class ContentQualifyController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/insertaction")
-	public ContentQualifyResponse insertAction(@RequestBody ContentQualifyRequest request) {
-		ContentQualifyResponse response = new ContentQualifyResponse();
-		contentQualifyService.insertAction(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse insertAction(@RequestBody ContentQualifyRequest request) {
+		int num = contentQualifyService.insertAction(request);
+		return new IntegerResponse(num);
 	}
 
 	/**
@@ -75,11 +73,9 @@ public class ContentQualifyController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/updateaction")
-	public ContentQualifyResponse updateAction(@RequestBody ContentQualifyRequest request) {
-		ContentQualifyResponse response = new ContentQualifyResponse();
-		contentQualifyService.updateAction(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse updateAction(@RequestBody ContentQualifyRequest request) {
+		int num = contentQualifyService.updateAction(request);
+		return new IntegerResponse(num);
 	}
 
 	/**
@@ -95,6 +91,7 @@ public class ContentQualifyController extends BaseConfigController {
 		if (contentQualify != null) {
 			ContentQualifyVO vo = new ContentQualifyVO();
 			BeanUtils.copyProperties(contentQualify, vo);
+			response.setResult(vo);
 		}
 		return response;
 	}
@@ -106,10 +103,8 @@ public class ContentQualifyController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("delete/{id}")
-	public ContentQualifyResponse delete(@PathVariable Integer id) {
-		ContentQualifyResponse response = new ContentQualifyResponse();
-		contentQualifyService.delete(id);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse delete(@PathVariable Integer id) {
+		int num = contentQualifyService.delete(id);
+		return new IntegerResponse(num);
 	}
 }

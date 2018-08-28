@@ -699,7 +699,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean);
+	int insertAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉
@@ -707,7 +707,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean);
+	int updateAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉状态
@@ -723,7 +723,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentQualifyResponse deleteContentQualifyById(Integer id);
+	int deleteContentQualifyById(Integer id);
 
 	/**
 	 * 获取优惠券列表
