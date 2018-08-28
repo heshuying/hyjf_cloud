@@ -4,6 +4,7 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +57,7 @@ public class SiteSettingsController extends BaseConfigController{
     public SiteSettingsResponse update(@RequestBody SitesettingRequest request) {
         logger.info("修改邮件配置开始...");
         SiteSettingsResponse response = new SiteSettingsResponse();
+        request.setUpdateTime(GetDate.getDate());
         siteSettingsService.update(request);
         response.setRtn(AdminResponse.SUCCESS);
         return response;
