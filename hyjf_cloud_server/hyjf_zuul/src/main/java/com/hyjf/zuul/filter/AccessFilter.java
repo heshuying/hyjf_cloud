@@ -127,7 +127,7 @@ public class AccessFilter extends ZuulFilter {
 
 		// 截取访问域名
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
-		String prefix;
+		String prefix = null;
 
 		// 执行不同渠道转发逻辑
 		if (requestUrl.contains(APP_CHANNEL)) {
@@ -165,7 +165,7 @@ public class AccessFilter extends ZuulFilter {
 			ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
-			prefix = API_VISIT_URL;
+			//prefix = API_VISIT_URL;
 		} else {
 			logger.error("error channel...");
 			// 不对其进行路由
