@@ -135,5 +135,27 @@ public class TenderCancelExceptionController extends BaseController {
     public Integer insertFreezeHistory(@PathVariable Integer id){
         return tenderCancelExceptionService.deleteBorrowTenderTmpById(id);
     }
-
+    
+    /**
+     * 根据nid删除BorrowTenderTmp
+     * @auth libin
+     * @param nid
+     * @return
+     */
+    @ApiOperation(value = "根据nid删除BorrowTenderTmp", notes = "根据nid删除BorrowTenderTmp")
+    @GetMapping(value = "/deleteBorrowTenderTmp/{orgOrderId}")
+    public Integer deleteBorrowTenderTmp(@PathVariable String orgOrderId){
+        return tenderCancelExceptionService.deleteBorrowTenderTmp(orgOrderId);
+    }
+    
+    /**
+     * 根据userId，borrowNid，orderId删除BorrowTenderTmp
+     * @auth libin
+     * @return
+     */
+    @ApiOperation(value = "根据userId，borrowNid，orderId删除BorrowTenderTmp", notes = "根据userId，borrowNid，orderId删除BorrowTenderTmp")
+    @GetMapping(value = "/deleteBorrowTenderTmpByParam/{userId}/{borrowNid}/{orderId}")
+    public int deleteBorrowTenderTmpByParam(@PathVariable int userId, @PathVariable String borrowNid, @PathVariable String orderId){
+    	return tenderCancelExceptionService.deleteBorrowTenderTmpByParam(userId,borrowNid,orderId);
+    }
 }
