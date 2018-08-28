@@ -7,7 +7,6 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -1372,12 +1371,6 @@ public interface AmConfigClient {
 	 * @param request
 	 */
     int updateStatus(SmsTemplateRequest request);
-
-	/**
-	 * 关闭短信配置模板
-	 * @param request
-	 */
-	void closeSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 修改短信模版

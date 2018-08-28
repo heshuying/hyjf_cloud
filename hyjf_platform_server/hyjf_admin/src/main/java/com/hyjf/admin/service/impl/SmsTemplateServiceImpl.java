@@ -44,11 +44,6 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 	}
 
 	@Override
-	public void closeAction(SmsTemplateRequest request) {
-		amConfigClient.closeSmsTemplate(request);
-	}
-
-	@Override
 	public int updateSmsTemplate(SmsTemplateRequest request) {
 		return amConfigClient.updateSmsTemplate(request);
 	}

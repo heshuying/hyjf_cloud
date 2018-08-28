@@ -44,12 +44,6 @@ public interface SmsTemplateService {
 	int updateStatus(SmsTemplateRequest request);
 
 	/**
-	 * 关闭短信模板
-	 * @param request
-	 */
-	void closeAction(SmsTemplateRequest request);
-
-	/**
 	 * 修改短信模版
 	 * @param request
 	 */
