@@ -58,7 +58,7 @@ public class BankPoundageAccountController extends BaseController {
         result.put("transStatus",ConvertUtils.convertParamMapToDropDown(status));
         BankMerchantAccountListCustomizeResponse response = bankPoundageAccountService.selectBankMerchantAccountList(request);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(result);
         }
         List<BankMerchantAccountListCustomizeVO> recordList = response.getResultList();
         result.put("recordList",recordList);

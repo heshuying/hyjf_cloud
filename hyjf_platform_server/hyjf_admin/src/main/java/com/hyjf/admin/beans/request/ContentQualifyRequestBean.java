@@ -25,7 +25,7 @@ public class ContentQualifyRequestBean extends BaseRequest implements Serializab
 	private String describe;
 
 	private Integer orderNum;
-	@ApiModelProperty(value = "状态")
+	@ApiModelProperty(value = "状态 0:关闭 1:启用")
 	private Integer status;
 
 	private Integer createUserId;

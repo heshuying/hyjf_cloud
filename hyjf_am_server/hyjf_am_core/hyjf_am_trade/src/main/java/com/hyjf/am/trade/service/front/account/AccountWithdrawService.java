@@ -22,11 +22,11 @@ public interface AccountWithdrawService {
 
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankRequest);
 
-    void updateAccountWithdrawLog(AccountWithdraw accountwithdraw);
+    Integer updateAccountWithdrawLog(AccountWithdraw accountwithdraw);
     
     int updateAccountWithdraw(AccountWithdraw accountWithdraw);
 
-	void selectAndUpdateAccountWithdraw(JSONObject pamaMap) throws Exception;
+    boolean selectAndUpdateAccountWithdraw(JSONObject pamaMap) throws Exception;
 
     int getBorrowTender(Integer userId);
 

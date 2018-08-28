@@ -8,7 +8,6 @@ import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironmentExample;
 import com.hyjf.am.config.service.ContentEnvironmentService;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 		ContentEnvironmentExample example = new ContentEnvironmentExample();
 		ContentEnvironmentExample.Criteria criteria = example.createCriteria();
 		if (StringUtils.isNotBlank(request.getName())) {
-			criteria.andNameLike("%" + request.getName() + "%");
+			criteria.andNameEqualTo(request.getName());
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
@@ -38,11 +37,15 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 		if (request.getImgType() != null) {
 			criteria.andImgTypeEqualTo(request.getImgType());
 		}
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
 		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("update_time");
 		return environmentMapper.selectByExample(example);
