@@ -5507,7 +5507,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowStyleVO> selectCommonBorrowStyleList() {
-        String url = "http://AM-TRADE/am-trade/admin_common/select_borrow_style";
+        String url = "http://AM-ADMIN/am-trade/admin_common/select_borrow_style";
         BorrowStyleResponse response = restTemplate.getForEntity(url, BorrowStyleResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
