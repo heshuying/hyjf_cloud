@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -32,7 +33,7 @@ public class BatchCreditEndController extends BaseTradeController {
     private BatchCreditEndService batchCreditEndService;
 
     @RequestMapping("/batchcreditend")
-    public Boolean batchCreditEnd() {
+    public BooleanResponse batchCreditEnd() {
         logger.info("-----------------批次结束债权请求开始------------------");
         try {
             // 批次结束债权
@@ -42,11 +43,11 @@ public class BatchCreditEndController extends BaseTradeController {
             }else{
                 logger.error("-----------------批次结束债权请求失败---------------");
             }
-            return true;
+            return new BooleanResponse(true);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("-----------------批次结束债权请求失败-------------------");
-            return false;
+            return new BooleanResponse(false);
         }
     }
 

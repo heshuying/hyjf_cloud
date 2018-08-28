@@ -80,7 +80,11 @@ public class AccountRechargeController extends BaseController {
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count);
             request.setLimitStart(paginator.getOffset());
-            request.setLimitEnd(paginator.getLimit());
+            if (request.getPageSize() > 0){
+                request.setLimitEnd(request.getPageSize());
+            }else {
+                request.setLimitEnd(paginator.getLimit());
+            }
         }
 
         List<AccountRechargeCustomizeVO> responseList = this.accountRecharge.getAccountRechargeList(request);

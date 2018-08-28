@@ -62,7 +62,11 @@
 			<artifactId>quartz-jobs</artifactId>
 			<version>2.2.3</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.hyjf</groupId>
+			<artifactId>hyjf_am_model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

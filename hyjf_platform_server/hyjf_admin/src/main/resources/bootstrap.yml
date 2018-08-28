@@ -13,6 +13,7 @@ spring:
 server:
   port: 9093
 
+# spring boot admin 监控的端点
 management:
   endpoints:
     web:

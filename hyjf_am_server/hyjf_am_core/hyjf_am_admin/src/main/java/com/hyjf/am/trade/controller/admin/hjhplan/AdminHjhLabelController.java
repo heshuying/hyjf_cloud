@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
@@ -142,9 +143,9 @@ public class AdminHjhLabelController {
 	 * @Desc :插入标签配置列表
 	 */
 	@RequestMapping("/insertHjhLabelRecord")
-	public int insertHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
+	public IntegerResponse insertHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
 		int update = adminHjhLabelService.insertHjhLabelRecord(request);
-		return update;
+		return new IntegerResponse(update);
 	}
 	
 	/**
@@ -152,9 +153,9 @@ public class AdminHjhLabelController {
 	 * @Desc :更新标签配置列表
 	 */
 	 @RequestMapping("/updateHjhLabelRecord")
-	 public int updateHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
+	 public IntegerResponse updateHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
 		 int update = adminHjhLabelService.updateHjhLabelRecord(request);
-		 return update;
+		 return new IntegerResponse(update);
 	 }
 	 
 	/**
@@ -162,8 +163,8 @@ public class AdminHjhLabelController {
 	 * @Desc :更新标签配置列表
 	 */
 	 @RequestMapping("/updateAllocationRecord")
-	 public int updateAllocationRecord(@RequestBody HjhLabelInfoRequest request) {
+	 public IntegerResponse updateAllocationRecord(@RequestBody HjhLabelInfoRequest request) {
 		 int update = adminHjhLabelService.updateAllocationRecord(request);
-		 return update;
+		 return new IntegerResponse(update);
 	 } 
 }

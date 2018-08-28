@@ -2,8 +2,12 @@ package com.hyjf.am.trade.controller.front.trade;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -15,10 +19,14 @@ import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.trade.RechargeService;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -130,5 +138,53 @@ public class RechargeController extends BaseController {
         return flag;
     }
 
+    /**
+     * 插入充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/insertAccountRecharge")
+    public AccountRechargeResponse insertAccountRecharge(@RequestBody AccountRechargeVO accountRechargeVO){
+        AccountRechargeResponse response = new AccountRechargeResponse();
+        int count = rechargeService.insertAccountRecharge(accountRechargeVO);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
 
+    /**
+     * 根据orderId查询充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/selectAccountRechargeByOrderId/{orderId}")
+    public AccountRechargeResponse selectAccountRechargeByOrderId(@PathVariable String orderId){
+        AccountRechargeResponse response = new AccountRechargeResponse();
+        List<AccountRecharge> accountRechargeList = rechargeService.selectAccountRechargeByOrderId(orderId);
+        if(!CollectionUtils.isEmpty(accountRechargeList)){
+            List<AccountRechargeVO> accountRechargeVOList = CommonUtils.convertBeanList(accountRechargeList,AccountRechargeVO.class);
+            response.setResultList(accountRechargeVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 更新充值的相关信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/handleRechargeInfo")
+    public StringResponse handleRechargeInfo(@RequestBody HandleAccountRechargeRequest request){
+        StringResponse response = new StringResponse();
+        String result = rechargeService.handleRechargeInfo(request);
+        if(!result.isEmpty()){
+            response.setResultStr(result);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }
