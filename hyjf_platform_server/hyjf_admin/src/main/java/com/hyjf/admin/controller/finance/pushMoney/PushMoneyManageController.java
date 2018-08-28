@@ -223,8 +223,8 @@ public class PushMoneyManageController extends BaseController {
      * @return
      */
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
-    @GetMapping(value = "/exportPushMoneyDetailExcelAction")
-    public void exportPushMoneyDetailExcelAction(@ModelAttribute @Valid PushMoneyRequest pushMoneyRequest,HttpServletResponse response){
+    @PostMapping(value = "/exportPushMoneyDetailExcelAction")
+    public void exportPushMoneyDetailExcelAction(@RequestBody @Valid PushMoneyRequest pushMoneyRequest,HttpServletResponse response){
         // currPage<0 为全部,currPage>0 为具体某一页
         pushMoneyRequest.setCurrPage(-1);
 

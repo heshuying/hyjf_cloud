@@ -11,7 +11,9 @@ public class SystemConfig {
     
     @Value("${hyjf.bank.page.callback.url}")
     private String callbackUrl;
-    
+	@Value("${hyjf.bank.page.success.return.url}")
+	private String callbackSuccessUrl;
+
     @Value("${hyjf.bank.page.forgotpwd.url}")
     private String forgotpwdUrl;
     
@@ -197,6 +199,12 @@ public class SystemConfig {
 	public void setBankPrikeyPass(String bankPrikeyPass) {
 		this.bankPrikeyPass = bankPrikeyPass;
 	}
-    
-    
+
+	public String getCallbackSuccessUrl() {
+		return callbackSuccessUrl;
+	}
+
+	public void setCallbackSuccessUrl(String callbackSuccessUrl) {
+		this.callbackSuccessUrl = callbackSuccessUrl;
+	}
 }

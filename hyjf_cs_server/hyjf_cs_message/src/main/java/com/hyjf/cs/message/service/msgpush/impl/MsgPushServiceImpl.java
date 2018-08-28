@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -127,7 +128,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		msgSta.setMsgCode(template.getTemplateCode());
 		msgSta.setMsgTitle(template.getTemplateTitle());
 		msgSta.setTagId(template.getTagId());
-		msgSta.setSendTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(template.getCreateTime()));
+		msgSta.setSendTime(GetDate.date2Str(template.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		msgSta.setAndroidDestinationCount(0);
 		msgSta.setIosDestinationCount(0);
 		msgSta.setAndroidReadCount(0);

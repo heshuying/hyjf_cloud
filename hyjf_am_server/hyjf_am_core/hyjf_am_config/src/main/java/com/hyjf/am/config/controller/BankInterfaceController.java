@@ -53,7 +53,7 @@ public class BankInterfaceController extends BaseConfigController{
         //查询接口切换列表条数
         int recordCount = this.bankInterfaceService.selectBankInterfaceListCount(paraMap);
         if (recordCount >0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordCount);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordCount,adminRequest.getPageSize() == 0? 10:adminRequest.getPageSize());
             paraMap.put("limitStart",paginator.getOffset());
             paraMap.put("limitEnd",paginator.getLimit());
             //查询记录
@@ -72,6 +72,7 @@ public class BankInterfaceController extends BaseConfigController{
                         bankInterfaceVO.get(i).setIsusable("可用");
                     }
                 }
+                response.setFlag(recordCount);
                 response.setResultList(bankInterfaceVO);
                 response.setRtn(Response.SUCCESS);
 //                modelAndView.addObject("pageUrl", request.getRequestURL()+"?"+request.getQueryString());
