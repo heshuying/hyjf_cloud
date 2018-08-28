@@ -2513,8 +2513,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /*计划列表 end  AM-ADMIN*/
 
-    /*加入明细 start*/
-
+    /*加入明细 start AM-ADMIN*/
     /**
      * 检索加入明细列表
      *
@@ -2525,7 +2524,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public AccedeListResponse getAccedeListByParam(AccedeListRequest form) {
         AccedeListResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParam", form, AccedeListResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParam", form, AccedeListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2535,7 +2534,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form) {
         AccedeListResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParamWithoutPage", form, AccedeListResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamWithoutPage", form, AccedeListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2545,7 +2544,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form) {
         HjhAccedeSumResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/getCalcSumByParam", form, HjhAccedeSumResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getCalcSumByParam", form, HjhAccedeSumResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2556,7 +2555,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
         // 原 selectTenderAgreementByNid 方法返回的是 List<CurrentHoldObligatoryRightListCustomizeVO> 不能共用，换新方法
     	/*String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/" + planOrderId;*/
-    	String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
+    	String url = "http://AM-ADMIN/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
         TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2566,21 +2565,24 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateSendStatusByParam(AccedeListRequest request) {
-        String url = "http://AM-TRADE/am-trade/accedeList/updateSendStatusByParam";
-        Integer Flag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/accedeList/updateSendStatusByParam";
+        IntegerResponse Flag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
         UserHjhInvistDetailResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/accedeList/selectUserHjhInvistDetail", request, UserHjhInvistDetailResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/selectUserHjhInvistDetail", request, UserHjhInvistDetailResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;
     }
-    /*加入明细 end*/
+    /*加入明细 end  AM-ADMIN*/
 
     /*承接记录 start*/
     @Override
