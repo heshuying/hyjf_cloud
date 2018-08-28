@@ -23,6 +23,9 @@
         <result column="update_time" property="updateTime" /> <!-- 修改时间  -->
         <result column="is_repay_org_flag" property="isRepayOrgFlag" /> <!-- 是否是担保机构还款(0:否,1:是)  -->
         <result column="data" property="data" /> <!-- 银行回执说明 -->
+        <result column="increase_interest_flag" property="increaseInterestFlag" /> <!-- 是否加息 -->
+        <result column="extra_yield_status" property="extraYieldStatus" /> <!-- 加息放款状态 -->
+        <result column="extra_yield_repay_status" property="extraYieldRepayStatus" /> <!-- 加息还款状态 -->
     </resultMap>
 
     <sql id="Where_Clause">
@@ -91,7 +94,10 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS update_time,
         hba.is_repay_org_flag is_repay_org_flag,
-        hba.data
+        hba.data,
+        b.increase_interest_flag,
+        hba.extra_yield_status,
+        hba.extra_yield_repay_status
         FROM
         ht_borrow_apicron hba
         LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid

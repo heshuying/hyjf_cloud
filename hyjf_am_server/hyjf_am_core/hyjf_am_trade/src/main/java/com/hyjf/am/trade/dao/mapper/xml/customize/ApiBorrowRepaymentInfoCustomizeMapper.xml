@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.trade.dao.mapper.customize.ApiBorrowRepaymentInfoCustomizeMapper">
+	<sql id="Where_Clause_Api">
+		<where>
+			<!-- 借款编号 -->
+			<!-- <if test="borrowNid != null and borrowNid != ''">
+				AND b.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+			</if> -->
+			<!-- 资产编号 -->
+			<if test="assetId != null and assetId != ''">
+				AND plan.asset_id = #{assetId}
+			</if>
+			<!-- 机构编号 -->
+			<if test="instCode != null and instCode != ''">
+				AND plan.inst_code = #{instCode}
+			</if>
+			<!-- 最后还款日 -->
+			<if test="recoverTimeStart != null and recoverTimeStart != ''">
+				AND FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d' ) <![CDATA[>=]]>
+				#{recoverTimeStart}
+			</if>
+			<if test="recoverTimeEnd != null and recoverTimeEnd != ''">
+				AND FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d' ) <![CDATA[<=]]>
+				#{recoverTimeEnd}
+			</if>
+		</where>
+	</sql>
+	<resultMap id="apiSearchBorrowRepaymentInfoListResultMap"
+			   type="com.hyjf.am.trade.dao.model.customize.ApiBorrowRepaymentInfoCustomize">
+		<!-- <result column="nid" property="nid" jdbcType="VARCHAR" /> -->
+		<result column="assetId" property="assetId" jdbcType="VARCHAR" />
+		<result column="borrowNid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="projectTypeName" property="projectTypeName" jdbcType="VARCHAR" />
+		<result column="borrowPeriod" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="borrowApr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="recoverFee" property="recoverFee" jdbcType="VARCHAR" />
+		<result column="borrowAccount" property="borrowAccount" jdbcType="VARCHAR" />
+		<result column="borrowAccountYes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<result column="repayType" property="repayType" jdbcType="VARCHAR" />
+		<result column="manageFeeRate" property="manageFeeRate" jdbcType="VARCHAR" />
+		<result column="accedeOrderId" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="recoverTrueName" property="recoverTrueName" jdbcType="VARCHAR" />
+		<result column="recoverUserName" property="recoverUserName" jdbcType="VARCHAR" />
+		<result column="recoverTotal" property="recoverTotal" jdbcType="VARCHAR" />
+		<result column="recoverCapital" property="recoverCapital" jdbcType="VARCHAR" />
+		<result column="recoverInterest" property="recoverInterest" jdbcType="VARCHAR" />
+		<result column="serviceRate" property="serviceRate" jdbcType="VARCHAR" />
+		<result column="serviceFee" property="serviceFee" jdbcType="VARCHAR" />
+		<result column="recoverSumTotal" property="recoverSumTotal" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="apiSearchBorrowRepaymentInfoList" resultMap="apiSearchBorrowRepaymentInfoListResultMap"
+			parameterType="com.hyjf.am.resquest.trade.ApiBorrowRepaymentInfoRequest">
+		SELECT
+		plan.asset_id As assetId,
+		br.borrow_nid AS borrowNid,
+		bpt.borrow_name AS projectTypeName,
+		b.borrow_Period AS borrowPeriod,
+		b.borrow_Apr AS borrowApr,
+		br.recover_fee AS recoverFee,
+		br.nid AS accedeOrderId,
+		b.account AS borrowAccount,
+		b.borrow_account_yes AS borrowAccountYes,
+		b.manage_fee_rate As manageFeeRate,
+		bs.name AS repayType,
+		ui.truename AS recoverTrueName,
+		u2.username AS recoverUserName,
+		t.account AS recoverTotal,
+		br.recover_capital AS recoverCapital,
+		br.recover_interest AS recoverInterest,
+		'' As serviceRate,
+		'' As serviceFee,
+		'' As recoverSumTotal
+		FROM
+		huiyingdai_borrow AS b
+		INNER JOIN huiyingdai_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+		LEFT JOIN huiyingdai_borrow_style AS bs on b.borrow_style=bs.nid
+		LEFT join huiyingdai_borrow_tender AS t on br.tender_id=t.id
+		LEFT JOIN huiyingdai_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN huiyingdai_users AS u1 ON br.borrow_userid = u1.user_id
+		LEFT JOIN huiyingdai_users AS u2 ON br.user_id = u2.user_id
+		LEFT JOIN huiyingdai_users_info ui ON u2.user_id = ui.user_id
+		LEFT JOIN huiyingdai_spreads_users su ON su.user_id = u2.user_id
+		LEFT JOIN huiyingdai_users spu ON spu.user_id = su.spreads_userid
+		LEFT JOIN huiyingdai_users_info ui2 ON ui2.user_id = su.spreads_userid
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.hyd_id = br.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+		LEFT JOIN `hyjf_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
+		LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+		LEFT JOIN hyjf_hjh_plan_asset plan ON plan.borrow_nid = b.borrow_nid
+		<include refid="Where_Clause_Api" />
+		ORDER BY
+		br.recover_time desc
+		<if test="limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>

@@ -2,18 +2,6 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
-import com.hyjf.am.trade.dao.mapper.customize.AppProjectListCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AppTenderCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhAccedeCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.OntimeTenderCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.TzjCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.CouponUserCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowAuthCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.RepayManageCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.HjhAccountBalanceCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BorrowTenderInfoCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.WDZJCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -207,5 +195,8 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;
+
+	@Autowired
+	protected ApiBorrowRepaymentInfoCustomizeMapper apiBorrowRepaymentInfoCustomizeMapper;
 
 }
