@@ -1062,7 +1062,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int getWithdrawRecordCount(WithdrawBeanRequest request) {
         String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordCount";
-        return restTemplate.postForEntity(url, request, Integer.class).getBody();
+        return restTemplate.postForEntity(url, request, IntegerResponse.class).getBody().getResultInt();
     }
 
     /**

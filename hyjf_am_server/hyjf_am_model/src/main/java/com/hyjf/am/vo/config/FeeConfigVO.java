@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 
@@ -39,14 +40,14 @@ public class FeeConfigVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-    private List<BankConfigVO> bankConfig;
-    public List<BankConfigVO> getBankConfig() {
-        return bankConfig;
-    }
+//    private List<BankConfigVO> bankConfig;
+//    public List<BankConfigVO> getBankConfig() {
+//        return bankConfig;
+//    }
 
-    public void setBankConfig(List<BankConfigVO> bankConfig) {
-        this.bankConfig = bankConfig;
-    }
+//    public void setBankConfig(List<BankConfigVO> bankConfig) {
+//        this.bankConfig = bankConfig;
+//    }
 
     private static final long serialVersionUID = 1L;
 
@@ -161,7 +162,7 @@ public class FeeConfigVO extends BaseVO implements Serializable {
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -169,7 +170,7 @@ public class FeeConfigVO extends BaseVO implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

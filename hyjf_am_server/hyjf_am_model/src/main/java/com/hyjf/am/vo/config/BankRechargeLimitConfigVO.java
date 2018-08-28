@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.config;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 
@@ -98,7 +99,7 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     public void setCreateBy(Integer createBy) {
         this.createBy = createBy;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -114,7 +115,7 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }

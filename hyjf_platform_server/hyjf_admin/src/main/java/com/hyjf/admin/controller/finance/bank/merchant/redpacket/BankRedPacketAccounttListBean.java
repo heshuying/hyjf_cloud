@@ -16,6 +16,7 @@ import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,12 +66,12 @@ public class BankRedPacketAccounttListBean implements Serializable {
     /**
      * 检索条件 时间开始
      */
-    private String timeStartSrch;
+    private Date timeStartSrch;
 
     /**
      * 检索条件 时间结束
      */
-    private String timeEndSrch;
+    private Date timeEndSrch;
 	
 	/**
 	 * 翻页机能用的隐藏变量
@@ -149,19 +150,19 @@ public class BankRedPacketAccounttListBean implements Serializable {
         this.status = status;
     }
 
-    public String getTimeStartSrch() {
+    public Date getTimeStartSrch() {
         return timeStartSrch;
     }
 
-    public void setTimeStartSrch(String timeStartSrch) {
+    public void setTimeStartSrch(Date timeStartSrch) {
         this.timeStartSrch = timeStartSrch;
     }
 
-    public String getTimeEndSrch() {
+    public Date getTimeEndSrch() {
         return timeEndSrch;
     }
 
-    public void setTimeEndSrch(String timeEndSrch) {
+    public void setTimeEndSrch(Date timeEndSrch) {
         this.timeEndSrch = timeEndSrch;
     }
 
