@@ -504,11 +504,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         Integer accountCount = null;
 
         // 为了优化检索查询，判断参数是否全为空，为空不进行带join count
-        if (checkFormAllBlank(bankAccountManageRequest)) {
-            accountCount = bankAccountManageCustomizeMapper.queryAccountCountAll(bankAccountManageRequest);
-        } else {
-            accountCount = bankAccountManageCustomizeMapper.queryAccountCount(bankAccountManageRequest);
-        }
+        accountCount = bankAccountManageCustomizeMapper.queryAccountCount(bankAccountManageRequest);
         return accountCount;
     }
 

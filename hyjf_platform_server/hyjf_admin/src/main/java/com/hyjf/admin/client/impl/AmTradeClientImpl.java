@@ -10,7 +10,9 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
@@ -3884,8 +3886,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateAccountManage(AccountVO accountVO) {
         String url = tradeService + "/bank_account_manage/update_account";
-        Integer result = restTemplate.postForEntity(url, accountVO, Integer.class).getBody();
-        return result;
+        IntegerResponse response = restTemplate.postForEntity(url, accountVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
     }
 
     /**
@@ -3902,11 +3907,11 @@ public class AmTradeClientImpl implements AmTradeClient {
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
         String url = tradeService + "/bank_account_manage/update_account_check/";
-        String result = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, String.class).getBody();
-        if (result != null) {
-            return result;
+        StringResponse response = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, StringResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
         }
-        return null;
+        return response.getResultStr();
     }
 
     /**
@@ -5650,8 +5655,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
         String url = tradeService + "/bank_account_manage/query_account_count";
-        Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
-        return result;
+        IntegerResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
     }
 
     /**
