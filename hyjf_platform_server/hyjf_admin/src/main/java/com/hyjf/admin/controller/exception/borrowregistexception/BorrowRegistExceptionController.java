@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,14 +86,15 @@ public class BorrowRegistExceptionController extends BaseController {
      * 标的备案异常处理
      * @auth sunpeikai
      * @param request 异常列表筛选检索条件
-     * @param userId admin项目-当前登录用户id
+     * @param  admin项目-当前登录用户id
      * @return
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
     @PostMapping(value = "/borrowregisthandleexception")
-    public AdminResult borrowRegistHandleException(@RequestHeader(value = "userId")Integer userId, @RequestBody BorrowRegistListRequest request){
+    public AdminResult borrowRegistHandleException(HttpServletRequest request, @RequestBody BorrowRegistListRequest borrowRegistListRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();
-        String borrowNid = request.getBorrowNidSrch();
+        String borrowNid = borrowRegistListRequest.getBorrowNidSrch();
         logger.info("borrowRegistHandleException::::::::::userId=[{}],borrowNid=[{}]",userId,borrowNid);
         if(StringUtils.isBlank(borrowNid)){
             return new AdminResult(FAIL,"项目编号为空");

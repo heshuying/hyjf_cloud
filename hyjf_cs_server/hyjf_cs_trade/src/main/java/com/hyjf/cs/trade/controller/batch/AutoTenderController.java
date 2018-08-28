@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
@@ -27,7 +28,7 @@ public class AutoTenderController extends BaseTradeController {
     private AutoTenderService autoTenderService;
 
     @RequestMapping("/autotender")
-    public Boolean AutoTender() {
+    public BooleanResponse AutoTender() {
         logger.info("自动投资任务开始start...");
         boolean flag = false;
 
@@ -35,7 +36,7 @@ public class AutoTenderController extends BaseTradeController {
         List<HjhAccedeVO> hjhAccedes = this.autoTenderService.selectPlanJoinList();
         if (hjhAccedes == null) {
             logger.error("汇计划自动投资任务 结束... （hjhAccedes=null） ");
-            return flag;
+            return new BooleanResponse(flag);
         }
 
         // 循环每笔加入计划订单，进行计划投资
@@ -58,6 +59,6 @@ public class AutoTenderController extends BaseTradeController {
             }
         }
         logger.info("自动投资任务结束end...");
-        return flag;
+        return new BooleanResponse(flag);
     }
 }

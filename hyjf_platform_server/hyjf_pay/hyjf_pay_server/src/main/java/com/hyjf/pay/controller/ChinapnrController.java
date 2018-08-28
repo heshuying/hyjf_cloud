@@ -50,6 +50,11 @@ public class ChinapnrController extends BaseController {
     @Autowired
     SystemConfig systemConfig;
 
+
+    @Autowired
+    ChinaPnrApiImpl chinaPnrApi;
+
+
     /**
      * 调用接口(页面)
      *

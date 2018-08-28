@@ -47,7 +47,11 @@ public class HjhReInvestDebtController {
         if (request.getCurrPage() > 0){
             Paginator paginator = new Paginator(request.getCurrPage(), count);
             request.setLimitStart(paginator.getOffset());
-            request.setLimitEnd(paginator.getLimit());
+            if (request.getPageSize() > 0){
+                request.setLimitEnd(request.getPageSize());
+            }else{
+                request.setLimitEnd(paginator.getLimit());
+            }
         }
 
         // 获取数据列表

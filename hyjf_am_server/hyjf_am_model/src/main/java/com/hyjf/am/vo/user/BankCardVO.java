@@ -32,6 +32,10 @@ public class BankCardVO extends BaseVO implements Serializable {
 
     private Integer status;
 
+	private Integer createUserId;
+
+	private Integer updateUserId;
+
     private Date createTime;
 
     private Date updateTime;
@@ -130,5 +134,21 @@ public class BankCardVO extends BaseVO implements Serializable {
 
 	public void setCardNoNotEncrypt(String cardNoNotEncrypt) {
 		this.cardNoNotEncrypt = cardNoNotEncrypt;
+	}
+
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
 	}
 }

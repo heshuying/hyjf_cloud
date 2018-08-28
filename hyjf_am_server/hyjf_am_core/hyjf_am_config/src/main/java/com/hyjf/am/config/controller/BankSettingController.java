@@ -101,8 +101,13 @@ public class BankSettingController {
         JxBankConfig bc = new JxBankConfig();
         bc.setBankName(adminRequest.getBankName());
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
-        List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-        response.setResultList(jxBankConfigVO);
+        if (CollectionUtils.isNotEmpty(recordList)){
+            List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
+            response.setResultList(jxBankConfigVO);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 

@@ -1,8 +1,12 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BorrowProjectRepayReponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
+import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
@@ -81,8 +85,11 @@ public class BorrowProjectTypeController extends BaseController {
      * @return
      */
     @RequestMapping("/isExistsRecord")
-    public boolean isExistsRecord(@RequestBody BorrowProjectTypeVO record){
-        return borrowProjectTypeService.isExistsRecord(record);
+    public BooleanResponse isExistsRecord(@RequestBody BorrowProjectTypeVO record){
+        BooleanResponse response = new BooleanResponse();
+        Boolean b= borrowProjectTypeService.isExistsRecord(record);
+        response.setResultBoolean(b);
+        return response;
     }
 
     /**
@@ -90,8 +97,14 @@ public class BorrowProjectTypeController extends BaseController {
      * @return
      */
     @RequestMapping("/getRecord")
-    public BorrowProjectTypeVO getRecord(@RequestBody BorrowProjectTypeVO record){
-        return borrowProjectTypeService.getRecord(record);
+    public BorrowProjectTypeResponse getRecord(@RequestBody BorrowProjectTypeVO record){
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        BorrowProjectTypeVO borrowProjectTypeVO= borrowProjectTypeService.getRecord(record);
+        if(null != borrowProjectTypeVO){
+            response.setResult(borrowProjectTypeVO);
+            return response;
+        }
+        return null;
     }
 
     /**
@@ -99,15 +112,27 @@ public class BorrowProjectTypeController extends BaseController {
      * @param str
      */
     @RequestMapping("/selectRepay")
-    public List<BorrowProjectRepayVO> selectRepay(@RequestBody String str){
-        return borrowProjectTypeService.selectRepay(str);
+    public BorrowProjectRepayReponse selectRepay(@RequestBody String str){
+        BorrowProjectRepayReponse repayReponse = new BorrowProjectRepayReponse();
+        List<BorrowProjectRepayVO>  repayVOS =borrowProjectTypeService.selectRepay(str);
+        if(!CollectionUtils.isEmpty(repayVOS)){
+            repayReponse.setResultList(repayVOS);
+            return repayReponse;
+        }
+        return null;
     }
     /**
      * 查询类型表
      */
     @RequestMapping("/selectStyles")
-    public List<BorrowStyleVO> selectStyles(){
-        return borrowProjectTypeService.selectStyles();
+    public BorrowStyleResponse selectStyles(){
+        BorrowStyleResponse response= new BorrowStyleResponse();
+        List<BorrowStyleVO> borrowList =borrowProjectTypeService.selectStyles();
+        if(!CollectionUtils.isEmpty(borrowList)){
+            response.setResultList(borrowList);
+            return response;
+        }
+        return null;
     }
 
     /**
@@ -154,7 +179,10 @@ public class BorrowProjectTypeController extends BaseController {
      * @return
      */
     @RequestMapping("/borrowCdIsExists")
-    public Integer borrowCdIsExists(@RequestBody BorrowProjectTypeRequest request){
-       return borrowProjectTypeService.borrowCdIsExists(request.getBorrowCd());
+    public IntegerResponse borrowCdIsExists(@RequestBody BorrowProjectTypeRequest request){
+        int count = borrowProjectTypeService.borrowCdIsExists(request.getBorrowCd());
+        IntegerResponse response=new IntegerResponse();
+        response.setResultInt(count);
+       return response;
     }
 }

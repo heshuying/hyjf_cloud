@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh.hjhplanswitch;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class HjhPlanSwitchController extends BaseController {
      * @return
      */
     @GetMapping("/batch/hjhPlanJoinOn")
-    private boolean hjhPlanJoinOn() {
+    private BooleanResponse hjhPlanJoinOn() {
         logger.info("定时开启计划任务 开始... ");
 
         try {
@@ -42,7 +43,7 @@ public class HjhPlanSwitchController extends BaseController {
             e.printStackTrace();
         }
         logger.info("定时开启计划任务 结束... ");
-        return true;
+        return new BooleanResponse(true);
     }
 
     /**
@@ -51,7 +52,7 @@ public class HjhPlanSwitchController extends BaseController {
      * @return
      */
     @GetMapping("/batch/hjhPlanJoinOff")
-    private boolean hjhPlanJoinOff() {
+    private BooleanResponse hjhPlanJoinOff() {
         logger.info("定时关闭计划任务 开始... ");
 
         try {
@@ -67,6 +68,6 @@ public class HjhPlanSwitchController extends BaseController {
             e.printStackTrace();
         }
         logger.info("定时关闭计划任务 结束... ");
-        return true;
+        return new BooleanResponse(true);
     }
 }

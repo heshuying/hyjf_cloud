@@ -136,7 +136,7 @@
         dc.credit_income AS account_receive,
         dc.credit_status,
         dc.repay_status,
-        FROM_UNIXTIME(dc.create_time,'%Y-%m-%d %H:%i:%s') AS liquidates_time,
+        DATE_FORMAT( dc.create_time, '%Y-%m-%d %H:%i:%s' ) AS liquidates_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,
         dc.liquidates_period,
@@ -144,10 +144,10 @@
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
         FROM
-        hyjf_hjh_debt_credit dc
-        INNER JOIN huiyingdai_borrow b ON dc.borrow_nid = b.borrow_nid
-        INNER JOIN hyjf_hjh_plan dp ON dp.plan_nid = dc.plan_nid
-        LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style
+        ht_hjh_debt_credit dc
+        INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+        INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
         <include refid="Where_Clause" />
         ORDER BY dc.create_time DESC
         <if  test="limitStart != null and limitEnd != null and limitStart >= 0">

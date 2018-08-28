@@ -1173,6 +1173,20 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params.put("limitEnd", page.getLimit());
             HjhAccedeListResponse res = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL, params, HjhAccedeListResponse.class);
             List<HjhAccedeCustomizeVO> list = res.getResultList();
+            // 查询redis，转化client属性，
+            if (!CollectionUtils.isEmpty(list)){
+                if (!CollectionUtils.isEmpty(list)) {
+                    Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                    if (!CollectionUtils.isEmpty(map)){
+                        for (HjhAccedeCustomizeVO vo : list){
+                            if (StringUtils.isNotBlank(vo.getClient())){
+                                vo.setClient(map.get(vo.getClient()));
+                            }
+                        }
+                    }
+                }
+            }
+            CommonUtils.convertNullToEmptyString(list);
             info.put("planAccedeList", list);
         }
 

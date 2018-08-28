@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * @author nxl
- * @version PaymentAuthPageServiceImpl, v0.1 2018/6/14 14:10
+ * @version RepayAuthServiceImpl, v0.1 2018/6/14 14:10
  * 缴费授权
  */
 @Service

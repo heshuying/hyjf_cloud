@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author xiehuili on 2018/8/13.
  */
-@Api(tags ="配置中心流程配置--费率配置")
+@Api(tags ="配置中心-借款项目配置--费率配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/finmanchargenew")
 public class FinmanChargeNewController extends BaseController {

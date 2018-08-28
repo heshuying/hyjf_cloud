@@ -238,7 +238,41 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 List<BatchBorrowRepayBankInfoVO> bankInfoVOList = getRepayDetailList(results);
             }
         }
-        return null;
+        List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
+        String subPacks;
+        //TODO 银行环境不通，测试数据，环境顺畅后删除
+        subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
+                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
+                "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +
+                "\"6212461890000001181\",\"authCode\":\"20161211125545497983\",\"productId\":\"HJD180300000017\"," +
+                "\"orderId\":\"15205656009951111618\",\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":" +
+                "\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\",\"authCode\":" +
+                "\"20161211150447498941\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656010081711674\"," +
+                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"}," +
+                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211105946497425\",\"productId\":" +
+                "\"HJD180300000017\",\"orderId\":\"15205656010301111941\",\"failMsg\":\"\",\"txState\":\"S\"," +
+                "\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\"," +
+                "\"authCode\":\"20161211125546497987\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656011151111709\"," +
+                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}," +
+                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211125547497991\"," +
+                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656012191111568\",\"failMsg\":" +
+                "\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}]";
+        if (StringUtils.isNotBlank(subPacks)) {
+            JSONArray loanDetails = JSONObject.parseArray(subPacks);
+            for (int j = 0; j < loanDetails.size(); j++) {
+                JSONObject loanDetail = loanDetails.getJSONObject(j);
+                BatchBorrowRepayBankInfoVO info = new BatchBorrowRepayBankInfoVO();
+                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
+                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
+                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
+                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));// 操作金额
+                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
+                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
+                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
+                detailList.add(info);
+            }
+        }
+        return detailList;
     }
 
     /**
@@ -248,7 +282,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }
@@ -261,9 +295,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         jsonObject.put("status",SUCCESS);
         //批次状态
         Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
+        List<DropDownVO> paramMapList = ConvertUtils.convertParamMapToDropDown(paramNameMap);
         if(paramNameMap != null && paramNameMap.size() > 0){
             jsonObject.put("批次状态列表","recoverStatusList");
-            jsonObject.put("recoverStatusList",paramNameMap);
+            jsonObject.put("recoverStatusList",paramMapList);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取转让状态列表失败！");
@@ -334,6 +369,47 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 detailList.add(info);
             }
         }
+        //TODO 测试数据，待删除
+        subPacks = "{\n" +
+                "    \"accountId\" : \"6212461890000001801\",\n" +
+                "    \"acqRes\" : \"\",\n" +
+                "    \"bankCode\" : \"30050000\",\n" +
+                "    \"channel\" : \"000002\",\n" +
+                "    \"feeAmount\" : \"160.00\",\n" +
+                "    \"instCode\" : \"00810001\",\n" +
+                "    \"name\" : \"金子裕\",\n" +
+                "    \"productId\" : \"WDD180503000007\",\n" +
+                "    \"retCode\" : \"00000000\",\n" +
+                "    \"retMsg\" : \"\",\n" +
+                "    \"riskAmount\" : \"0.00\",\n" +
+                "    \"seqNo\" : \"726545\",\n" +
+                "    \"sign\" : \"UafNMcyiZIW9dBFrnBFewvOcvI+SaFG6jXRBq6a37LgG/bQqbnFh1xEeg5zaKemwQ5QtsGi3ETDMhVgG5I0L+lPqCzwsxF4gy+31q0TyN4FbpyGDJ5gLcoghKud+E7UBFRXHjflMH6Vq/bMAY193P9IWdpclQlYFSs1+K3VmXsY=\",\n" +
+                "    \"txAmount\" : \"20000.00\",\n" +
+                "    \"txCode\" : \"autoLendPayQuery\",\n" +
+                "    \"txDate\" : \"20180510\",\n" +
+                "    \"txTime\" : \"104000\",\n" +
+                "    \"version\" : \"10\"\n" +
+                "}";
+        BorrowRecoverBankInfoVo detailLists = new BorrowRecoverBankInfoVo();
+        // 借款人电子账户号
+        detailLists.setForAccountId("6212461890000001801");
+        // 借款人姓名
+        detailLists.setName("金子裕");
+        // 响应代码
+        detailLists.setRetCode("00000000");
+        // 错误描述
+        detailLists.setFileMsg("");
+        // 标的编号
+        detailLists.setProductId("WDD180503000007");
+        // 借款人入账金额
+        detailLists.setTxAmount("20000.00");
+        // 手续费金额
+        detailLists.setFeeAmount("160.00");
+        // 风险准备金
+        detailLists.setRiskAmount("0.00");
+        // 交易状态
+        detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
+        detailList.add(detailLists);
         return detailList;
     }
 }

@@ -93,11 +93,11 @@ public interface UserService extends BaseService {
 
 	boolean checkEmailUsed(String email);
 
-	void insertEmailBindLog(UserBindEmailLog log);
+	Integer insertEmailBindLog(UserBindEmailLog log);
 
 	UserBindEmailLog getUserBindEmail(Integer userid);
 
-	void updateBindEmail(Integer userId, String email);
+	Integer updateBindEmail(Integer userId, String email);
 
     UserLoginLog selectByPrimaryKey(Integer userId);
 

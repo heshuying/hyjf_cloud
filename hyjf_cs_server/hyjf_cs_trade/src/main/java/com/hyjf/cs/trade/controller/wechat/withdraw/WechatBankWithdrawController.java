@@ -9,6 +9,8 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
@@ -21,12 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -37,7 +34,7 @@ import java.util.Map;
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
 @Api(tags = "weChat端-用户提现接口")
-@Controller
+@RestController
 @RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {
 
@@ -56,8 +53,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
+    public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
                                          HttpServletRequest request) {
+        WeChatResult result = new WeChatResult();
         logger.info("weChat端提现接口, userId is :{}", userId);
         String transAmt = request.getParameter("transAmt");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
@@ -65,24 +63,25 @@ public class WechatBankWithdrawController extends BaseTradeController {
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         //是否设置交易密码、是否汇付开户、是否银行开户
-        if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
-            return  new ModelAndView();
-        }
+        CheckUtil.check(null!=userVO,MsgEnum.ERR_USER_NOT_EXISTS);
+        CheckUtil.check(1==userVO.getIsSetPassword(),MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        CheckUtil.check(1==userVO.getBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawError";
-        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
-        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdrawSuccess";
+        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdraw/result/failed";
+        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/bgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_WEI)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
-        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = new HashMap<>();
         try {
-            modelAndView = BankCallUtils.callApi(bean);
+            map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             logger.info("weChat端提现失败");
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
-        return modelAndView;
+        result.setData(map);
+        return result;
     }
 
     /**
@@ -92,7 +91,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
+    /*@ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
     @PostMapping("/userBankWithdrawReturn")
     public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
                                                       @ModelAttribute BankCallBean bean) {
@@ -104,7 +103,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         Map<String, String> result = bankWithdrawService.userBankWithdrawReturn(bean, isSuccess,wifee,withdrawmoney);
         logger.info("[wechat用户银行提现同步回调结束]");
         return result;
-    }
+    }*/
 
     /**
      * 用户银行提现异步回调
@@ -114,7 +113,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
-    @PostMapping("/userBankWithdrawBgreturn")
+    @PostMapping("/bgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
         logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));

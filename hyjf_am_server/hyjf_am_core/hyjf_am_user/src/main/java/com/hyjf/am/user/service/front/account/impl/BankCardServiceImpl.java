@@ -1,11 +1,13 @@
 package com.hyjf.am.user.service.front.account.impl;
 
+import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -40,6 +42,22 @@ public class BankCardServiceImpl extends BaseServiceImpl implements BankCardServ
 			List<BankCard> listBankCard = this.bankCardMapper.selectByExample(bankCardExample);
 			if (listBankCard != null && listBankCard.size() > 0) {
 				return listBankCard.get(0);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public BankCard selectBankCardByUserIdAndCardNo(BankCardRequest request) {
+		Integer userId = request.getUserId();
+		String cardNo = request.getCardNo();
+		if (userId != null && StringUtils.isNotBlank(cardNo)) {
+			// 取得用户银行卡信息
+			BankCardExample bankCardExample = new BankCardExample();
+			bankCardExample.createCriteria().andUserIdEqualTo(userId).andCardNoEqualTo(cardNo).andStatusEqualTo(1);
+			List<BankCard> bankCardList = this.bankCardMapper.selectByExample(bankCardExample);
+			if (!CollectionUtils.isEmpty(bankCardList)) {
+				return bankCardList.get(0);
 			}
 		}
 		return null;

@@ -134,8 +134,14 @@ public class VersionConfigController extends BaseConfigController{
      * @param map
      */
     @RequestMapping("/validationFeild")
-    public VersionVO validationFeild(@RequestBody Map map) {
-        return  this.versionConfigService.validationFeild(map);
+    public AdminVersionResponse validationFeild(@RequestBody Map map) {
+        AdminVersionResponse response = new AdminVersionResponse();
+        VersionVO vo= this.versionConfigService.validationFeild(map);
+        if(vo != null){
+            response.setResult(vo);
+            return response;
+        }
+        return  null;
     }
 
 

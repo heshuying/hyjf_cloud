@@ -62,4 +62,19 @@ public interface TenderCancelExceptionService {
      * @return
      */
     Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
+    
+    /**
+     * 根据nid删除BorrowTenderTmp
+     * @auth libin
+     * @param nid
+     * @return
+     */
+    Integer deleteBorrowTenderTmp(String orgOrderId);
+    
+    /**
+     * 根据userId，borrowNid，orderId删除BorrowTenderTmp
+     * @auth libin
+     * @return
+     */
+    int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
 }

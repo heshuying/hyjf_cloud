@@ -13,6 +13,7 @@ import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -190,7 +192,7 @@ public class HjhReInvestDetailController extends BaseController {
         if (recordList.getCount() > 0) {
             returnList = CommonUtils.convertBeanList(recordList.getResultList(), HjhReInvestDetailVO.class);
         }
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
         String[] titles = new String[] { "序号","计划订单号","计划编号","用户名","推荐人","用户属性","借款编号","年化利率","借款期限","投资金额（元）","还款方式","投资方式","计息时间","投资时间" };
         // 声明一个工作薄

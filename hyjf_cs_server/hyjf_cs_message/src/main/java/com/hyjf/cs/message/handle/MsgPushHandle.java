@@ -309,7 +309,7 @@ public class MsgPushHandle {
 		return histories;
 	}
 
-	@Value("hyjf.env.test")
+	@Value("${hyjf.env.test}")
 	private boolean HYJF_ENV_TEST;
 
 	/**
