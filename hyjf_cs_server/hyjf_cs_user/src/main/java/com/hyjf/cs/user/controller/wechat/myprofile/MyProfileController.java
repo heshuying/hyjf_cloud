@@ -95,7 +95,7 @@ public class MyProfileController extends BaseUserController {
      */
     @ApiOperation(value = "查询优惠券列表", notes = "查询优惠券列表")
     @GetMapping("/couponlist")
-    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader Integer userId) {
+    public WeChatResult getCouponList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId) {
         WeChatResult resultBean = new WeChatResult();
 
         if (userId==null){
