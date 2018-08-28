@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.hjh;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.Map;
@@ -29,4 +30,11 @@ public interface HjhTenderService extends BaseTradeService {
      * @return
      */
     WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender);
+
+    /**
+     * App端获取计划投资信息
+     * @param tender
+     * @return
+     */
+    AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
 }

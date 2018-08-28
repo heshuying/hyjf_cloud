@@ -1710,11 +1710,11 @@ public interface AmTradeClient {
      * @date 2018/8/27 13:59
      */
     List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
-    
+
 	/**
-	 * 
+	 *
 	 * 投资预插入
-	 * 
+	 *
 	 * @param borrowNid
 	 * @param orderId
 	 * @param userId
@@ -1725,7 +1725,7 @@ public interface AmTradeClient {
 	 * @throws Exception
 	 */
     boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest);
-    
+
     /**
      * 根据id删除BorrowTenderTmp
      * @auth libin
@@ -1733,7 +1733,7 @@ public interface AmTradeClient {
      * @return
      */
     Integer deleteBorrowTenderTmp(String orgOrderId);
-    
+
 	/**
 	 * 投资失败,删除投资临时表
 	 * @param borrowNid
@@ -1741,4 +1741,5 @@ public interface AmTradeClient {
 	 * @param orderId
 	 */
     int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
+
 }
