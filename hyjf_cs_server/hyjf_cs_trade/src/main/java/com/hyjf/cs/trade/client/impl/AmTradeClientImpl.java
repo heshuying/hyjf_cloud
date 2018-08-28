@@ -22,6 +22,7 @@ import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -4034,4 +4035,41 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+    
+	/**
+	 * 
+	 * 投资预插入
+	 * 
+	 * @param borrowNid
+	 * @param orderId
+	 * @param userId
+	 * @param account
+	 * @param ip
+	 * @return
+	 * @author libin
+	 * @throws Exception
+	 */
+	@Override
+	public boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest) {
+	    Integer result = restTemplate
+	            .postForEntity("http://AM-TRADE/am-trade/autotender/updatetenderlog", autoTenderComboRequest, Integer.class).getBody();
+	    if (result != null) {
+	        return result == 0 ? false : true;
+	    }
+		return false;
+	}
+	
+	@Override
+	public Integer deleteBorrowTenderTmp(String orgOrderId) {
+		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmp/" + orgOrderId;
+		Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
+		return response;
+	}
+	
+	@Override
+	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
+		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
+		int response = restTemplate.getForEntity(url, Integer.class).getBody();
+		return response;
+	}
 }
