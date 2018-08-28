@@ -1096,7 +1096,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findAccountRecordList", request,
+				.postForEntity("http://AM-ADMIN/am-user/bankOpenAccountRecord/findAccountRecordList", request,
 						BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1115,7 +1115,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findBankAccountRecordList", request,
+				.postForEntity("http://AM-ADMIN/am-user/bankOpenAccountRecord/findBankAccountRecordList", request,
 						BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1134,7 +1134,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankCardManagerResponse selectBankCardList(BankCardManagerRequest request) {
 		BankCardManagerResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistHF", request,
+				.postForEntity("http://AM-ADMIN/am-user/bankCardManager/bankcardlistHF", request,
 						BankCardManagerResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1152,7 +1152,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankCardManagerResponse selectNewBankCardList(BankCardManagerRequest request) {
 		BankCardManagerResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistJX", request,
+				.postForEntity("http://AM-ADMIN/am-user/bankCardManager/bankcardlistJX", request,
 						BankCardManagerResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1171,7 +1171,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request) {
 		BankCardLogResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample", request,
+				.postForEntity("http://AM-ADMIN/am-user/bankCardManager/selectBankCardLogByExample", request,
 						BankCardLogResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
