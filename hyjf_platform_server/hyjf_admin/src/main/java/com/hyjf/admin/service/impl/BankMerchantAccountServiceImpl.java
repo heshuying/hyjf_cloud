@@ -187,8 +187,8 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
      // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步地址  是否跳转到前端页面
-        String retUrl = systemConfig.getAdminFrontHost() +"/admin/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getAdminFrontHost() +"/admin/openSuccess";
+        String retUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/failed"+"?logOrdId="+bean.getLogOrderId();
+        String successUrl = systemConfig.getAdminFrontHost() +"/user/setting/bankPassword/result/success";
         // 异步调用路
         String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
                 + "/resetPasswordBgreturn";

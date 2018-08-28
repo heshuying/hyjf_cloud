@@ -364,7 +364,8 @@ public class PushMoneyManageController extends BaseController {
 
     @ApiOperation(value = "发提成",notes = "发提成")
     @PostMapping(value = "/confirmPushMoneyAction")
-    public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest,@RequestHeader(value = "userId")Integer userId){
+    public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
         AdminResult result = new AdminResult();
         Integer id = pushMoneyRequest.getId();
         JSONObject jsonObject = pushMoneyManageService.pushMoney(request,id,userId);

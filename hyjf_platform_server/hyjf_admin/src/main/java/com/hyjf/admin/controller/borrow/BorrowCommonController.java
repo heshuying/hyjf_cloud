@@ -749,7 +749,17 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 20){//车牌号
 							resultMap.put("number", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 21){//房产类型
-							resultMap.put("housesType", this.getValue(hssfRow.getCell(1)));
+							if(this.getValue(hssfRow.getCell(1)).equals("住宅") ){
+								resultMap.put("housesType", "1");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("房产")){
+								resultMap.put("housesType", "2");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("土地")){
+								resultMap.put("housesType", "3");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("工业用房")){
+								resultMap.put("housesType", "4");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("工业用地")){
+								resultMap.put("housesType", "5");
+							}
 						}else if(rowNum == 22){//建筑面积
 							resultMap.put("housesArea", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 23){//资产数量
@@ -759,7 +769,11 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 25){//资产所属
 							resultMap.put("housesBelong", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 26){//借款类型
-							resultMap.put("companyOrPersonal", this.getValue(hssfRow.getCell(1)));
+							if(this.getValue(hssfRow.getCell(1)).equals("个人")) {
+								resultMap.put("companyOrPersonal","1");
+							}else {
+								resultMap.put("companyOrPersonal","2");
+							}
 						}else if(rowNum == 27){//融资主体
 							resultMap.put("comName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 28){//法人
@@ -801,8 +815,22 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 42){//岗位职业
 							resultMap.put("position", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 43){//性别
+							if( this.getValue(hssfRow.getCell(1)).equals("男")) {
+								resultMap.put("sex", "1");
+							}else{
+								resultMap.put("sex", "2");
+							}
 							resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 44){//婚姻状况
+							if( this.getValue(hssfRow.getCell(1)).equals("已婚") ){
+								resultMap.put("merry", "1");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("未婚")){
+								resultMap.put("merry", "2");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("离异")){
+								resultMap.put("merry", "3");
+							}else if(this.getValue(hssfRow.getCell(1)).equals("丧偶") ){
+								resultMap.put("merry", "4");
+							}
 							resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 45){//工作城市
 							resultMap.put("location_c", this.getValue(hssfRow.getCell(1)));

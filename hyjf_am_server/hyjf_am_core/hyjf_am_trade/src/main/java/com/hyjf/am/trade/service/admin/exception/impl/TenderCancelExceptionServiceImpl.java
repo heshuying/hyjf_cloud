@@ -135,4 +135,23 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
         example.setOrderByClause("id");
         return example;
     }
+
+	@Override
+	public Integer deleteBorrowTenderTmp(String orgOrderId) {
+		BorrowTenderTmpExample example =  new BorrowTenderTmpExample();
+		example.createCriteria().andNidEqualTo(orgOrderId);
+		int flg = this.borrowTenderTmpMapper.deleteByExample(example);
+		return flg;
+	}
+
+	@Override
+	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
+		BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
+		BorrowTenderTmpExample.Criteria criteria1 = borrowTenderTmpExample.createCriteria();
+		criteria1.andNidEqualTo(orderId);
+		criteria1.andUserIdEqualTo(userId);
+		criteria1.andBorrowNidEqualTo(borrowNid);
+		int flg = this.borrowTenderTmpMapper.deleteByExample(borrowTenderTmpExample);
+		return flg;
+	}
 }

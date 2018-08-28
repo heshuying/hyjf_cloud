@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,12 +82,13 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "投资撤销异常处理", notes = "投资撤销异常处理")
     @PostMapping(value = "/handletendercancelexception")
-    public AdminResult handleTenderCancelException(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody TenderCancelExceptionRequest request){
+    public AdminResult handleTenderCancelException(HttpServletRequest request, @RequestBody TenderCancelExceptionRequest tenderCancelExceptionRequest){
+        Integer loginUserId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();
-        if (StringUtils.isEmpty(request.getOrderId())) {
+        if (StringUtils.isEmpty(tenderCancelExceptionRequest.getOrderId())) {
             return new AdminResult<>(FAIL,"参数错误，请稍后再试！");
         }else{
-            jsonObject = tenderCancelExceptionService.handleTenderCancelException(request,loginUserId);
+            jsonObject = tenderCancelExceptionService.handleTenderCancelException(tenderCancelExceptionRequest,loginUserId);
         }
         if("success".equals(jsonObject.getString("status"))){
             return new AdminResult(SUCCESS,jsonObject.getString("result"));

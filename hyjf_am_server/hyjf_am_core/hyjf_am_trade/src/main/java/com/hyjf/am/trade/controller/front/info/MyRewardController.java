@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.info;
 
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -59,7 +60,10 @@ public class MyRewardController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/myRewardTotal", method = RequestMethod.POST)
-    public BigDecimal myRewardTotal(@RequestBody @Valid MyInviteListRequest requestBean) {
-        return myRewardService.sumMyRewardTotal(requestBean.getUserId());
+    public BigDecimalResponse myRewardTotal(@RequestBody @Valid MyInviteListRequest requestBean) {
+        BigDecimalResponse responseBean = new BigDecimalResponse();
+        BigDecimal value = myRewardService.sumMyRewardTotal(requestBean.getUserId());
+        responseBean.setResultDec(value);
+        return responseBean;
     }
 }

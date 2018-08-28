@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.finance.recharge;
 
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -31,7 +32,7 @@ public interface AccountRechargeService extends BaseService {
      * @param request
      * @return
      */
-     AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+    AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
      * 更新充值状态

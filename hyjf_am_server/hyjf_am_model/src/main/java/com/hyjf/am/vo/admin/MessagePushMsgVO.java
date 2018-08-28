@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * @author lisheng
  * @version MessagePushMsgVO, v0.1 2018/8/14 16:21

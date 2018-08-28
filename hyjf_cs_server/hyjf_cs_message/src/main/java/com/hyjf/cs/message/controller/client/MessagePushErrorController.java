@@ -118,9 +118,11 @@ public class MessagePushErrorController {
      * @author Michael
      */
     @RequestMapping("sendMessage")
-    public void sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
+    public Response sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
+        Response response = new Response();
         MessagePushMsgHistory msg = new MessagePushMsgHistory();
         BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
         msgPushHandle.send(msg);
+        return response;
     }
 }

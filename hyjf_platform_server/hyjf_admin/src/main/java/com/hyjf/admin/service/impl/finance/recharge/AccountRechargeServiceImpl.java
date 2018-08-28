@@ -4,6 +4,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -36,8 +37,8 @@ public class AccountRechargeServiceImpl extends BaseServiceImpl implements Accou
     }
 
     @Override
-    public AccountRechargeResponse queryRechargeList(AccountRechargeRequest request) {
-        AccountRechargeResponse response = amTradeClient.queryRechargeList(request);
+    public AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request) {
+        AccountRechargeCustomizeResponse response = amTradeClient.queryRechargeList(request);
         return response;
     }
 

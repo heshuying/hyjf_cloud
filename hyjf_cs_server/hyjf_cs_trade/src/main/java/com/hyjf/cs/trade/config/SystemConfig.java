@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
-
+    @Value("${hyjf.app.host}")
+    public String appHost;
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
 
@@ -448,4 +449,11 @@ public class SystemConfig {
         this.couponAccesskey = couponAccesskey;
     }
 
+    public String getAppHost() {
+        return appHost;
+    }
+
+    public void setAppHost(String appHost) {
+        this.appHost = appHost;
+    }
 }

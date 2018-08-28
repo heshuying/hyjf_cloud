@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.service.admin.OperationLogService;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +28,15 @@ public class OperationLogController {
      * @return
      */
     @RequestMapping("/getHjhAssetType")
-    public List<HjhAssetTypeVO> getHjhAssetType() {
+    public AdminOperationLogResponse getHjhAssetType() {
+        AdminOperationLogResponse response = new AdminOperationLogResponse();
         //查询版本配置列表条数
-        return this.operationLogService.getHjhAssetType();
+        List<HjhAssetTypeVO> list = this.operationLogService.getHjhAssetType();
+        if(!CollectionUtils.isEmpty(list)){
+            response.setHjhAssetTypes(list);
+            return response;
+        }
+        return null;
     }
     /**
      * 查询 资产来源 instCode 和 assetType的值AdminOperationLogResponse
