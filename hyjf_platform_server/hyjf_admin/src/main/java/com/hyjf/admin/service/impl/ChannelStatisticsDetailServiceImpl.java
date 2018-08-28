@@ -1,22 +1,16 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.ChannelStatisticsDetailService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
