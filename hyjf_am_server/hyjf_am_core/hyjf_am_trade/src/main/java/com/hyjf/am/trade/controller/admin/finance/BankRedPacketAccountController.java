@@ -12,6 +12,7 @@ import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,7 @@ public class BankRedPacketAccountController {
     BankRedPacketAccountService bankRedPacketAccountService;
 
     @RequestMapping(value = "/selectBankMerchantAccountList")
-    public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest form){
+    public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(@RequestBody BankRedPacketAccountListRequest form){
         BankMerchantAccountListCustomizeResponse response = new BankMerchantAccountListCustomizeResponse();
         int count = bankRedPacketAccountService.queryRecordTotal(form);
         if (count>0){

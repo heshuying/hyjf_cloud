@@ -5,6 +5,7 @@ package com.hyjf.am.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.service.front.crm.CrmDepartmentService;
 import com.hyjf.am.vo.user.CrmDepartmentVO;
@@ -64,57 +65,32 @@ public class CrmOaDepartmentConsumer extends Consumer {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
 
-            // --> 消息检查
             MessageExt msg = list.get(0);
-            if(msg == null || msg.getBody() == null){
-                logger.error("【操作资金crm oa department对象】接收到的消息为null");
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            if (msg.getTopic().equals(MQConstant.CRM_OA_DEPARTMENT_TOPIC)) {
+                logger.info("CrmOaDepartmentMQConsumer 收到消息【{}】", new String(msg.getBody()));
+                String msgBody = new String(msg.getBody());
+                logger.info("【操作资金crm oa user对象】接收到的消息：" + msgBody);
+
+                ROaDepartmentExample rOaDepartmentExample = null;
+                    rOaDepartmentExample = JSONObject.parseObject(msgBody, ROaDepartmentExample.class);
+                    if (msg.getTags() != null && msg.getTags().equals(OPERATION_ADD)) {
+
+                        logger.info("----------------------添加部门消息处理结束------------------------");
+
+                    } else if (msg.getTags() != null && msg.getTags().equals(OPERATION_UPDATE)) {
+
+                        logger.info("----------------------更新部门消息处理结束！------------------------");
+                    } else if (msg.getTags() != null && msg.getTags().equals(OPERATION_DELETE)) {
+                        // 调岗
+
+                        logger.info("----------------------删除部门消息处理结束------------------------");
+
+                    }
             }
 
-            // --> 消息转换
-            String msgBody = new String(msg.getBody());
-            logger.info("【操作资金crm oa department对象】接收到的消息：" + msgBody);
-
-            CrmDepartmentVO oaDepartmentVO = null;
-            try {
-                oaDepartmentVO = JSONObject.parseObject(msgBody, CrmDepartmentVO.class);
-                if(oaDepartmentVO == null){
-                    logger.info("解析为空：" + msgBody);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                }
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-            }
-            try {
-                // 操作数据库
-                doOperation(oaDepartmentVO);
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } catch (Exception e){
-                e.printStackTrace();
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-            }
+            // 如果没有return success ，consumer会重新消费该消息，直到return success
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 
-    /**
-     * 操作数据库
-     * @param oaDepartmentVO
-     */
-    private void doOperation(CrmDepartmentVO oaDepartmentVO) throws Exception {
-        String operation = oaDepartmentVO.getOperation();
-        if(StringUtils.isEmpty(operation)){
-            throw new Exception("传入参数错误，operation为空");
-        }
-        ROaDepartment department = CommonUtils.convertBean(oaDepartmentVO,ROaDepartment.class);
-        if(OPERATION_UPDATE.equals(operation)){
-            crmDepartmentService.update(department);
-        } else if(OPERATION_ADD.equals(operation)){
-            crmDepartmentService.insert(department);
-        }else if(OPERATION_DELETE.equals(operation)){
-            crmDepartmentService.delete(department);
-        }else{
-            throw new Exception("传入参数错误，operation错误");
-        }
-    }
 }

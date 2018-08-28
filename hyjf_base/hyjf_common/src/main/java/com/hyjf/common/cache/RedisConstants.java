@@ -164,7 +164,7 @@ public class RedisConstants {
     /**
      * borrowNid
      */
-    public static final String BORROW_NID = "borrow_nid:";
+    public static final String BORROW_NID = "BORROW_NID:";
     /**
      * wechat sign
      */
