@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -12,6 +13,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -24,10 +27,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,16 +51,27 @@ public class ChannelStatisticsDetailController extends BaseController {
 
     @ApiOperation(value = "PC统计明细", notes = "PC统计明细列表")
     @PostMapping("/searchaction")
-    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest request) {
+    public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest,HttpServletRequest request) {
         logger.info("PC统计明细查询开始......");
-        ChannelStatisticsDetailResponse response = channelStatisticsDetailService.searchAction(request);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        AdminResult adminResult = new AdminResult();
+        AdminSystemVO user = getUser(request);
+        String userId = user.getId();
+        // 根据用户Id查询渠道账号管理
+        AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
+        if(StringUtils.isNotEmpty(userId)){
+             adminUtmReadPermissions = this.channelStatisticsDetailService.selectAdminUtmReadPermissions(Integer.valueOf(userId));
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
+        if (adminUtmReadPermissions != null) {
+            channelStatisticsDetailRequest.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
         }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+        JSONObject json = channelStatisticsDetailService.searchAction(channelStatisticsDetailRequest);
+        if (json.get("recordList") == null) {
+            adminResult.setStatus(FAIL);
+            adminResult.setStatusDesc(FAIL_DESC);
+        }
+        List<ChannelStatisticsDetailVO> recordList = (List<ChannelStatisticsDetailVO>)json.get("recordList");
+        adminResult.setData(json);
+        return adminResult;
 
     }
 
@@ -79,8 +90,8 @@ public class ChannelStatisticsDetailController extends BaseController {
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
-        ChannelStatisticsDetailResponse channelStatisticsDetailResponse = channelStatisticsDetailService.searchAction(form);
-        List<ChannelStatisticsDetailVO> recordList = channelStatisticsDetailResponse.getResultList();
+        JSONObject json = channelStatisticsDetailService.searchAction(form);
+        List<ChannelStatisticsDetailVO> recordList = (List<ChannelStatisticsDetailVO>)json.get("recordList");
         // 列头
         String[] titles = new String[]{"序号", "推广链接ID", "渠道", "用户ID", "用户名", "性别", "注册时间", "开户时间", "首次投资时间", "首投项目类型", "首投项目期限", "首投金额", "累计投资金额"};
 // 声明一个工作薄
