@@ -240,6 +240,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         }
         List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
         String subPacks;
+        //TODO 银行环境不通，测试数据，环境顺畅后删除
         subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
                 "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
                 "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +
