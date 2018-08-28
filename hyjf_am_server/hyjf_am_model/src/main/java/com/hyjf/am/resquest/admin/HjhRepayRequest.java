@@ -54,6 +54,24 @@ public class HjhRepayRequest extends BasePage implements Serializable {
      */
     private String actulRepayTimeEnd;
 
+    /**
+     * 检索条件 计划状态 全部；0 发起中；1
+     * 待审核；2审核不通过；3待开放；4募集中；5募集完成；6锁定中；7清算中；8清算完成，9还款，10还款中，11还款完成
+     */
+    private String planStatusSrch;
+
+    /**
+     * 检索条件 最迟应还款日期开始
+     */
+    private String repayTimeLastStart;
+
+    /**
+     * 检索条件 最迟应还款日期结束
+     */
+    private String repayTimeLastEnd;
+
+    private String refereeNameSrch;
+
     private Integer limitStart = -1;
 
     private Integer limitEnd = -1;
@@ -160,5 +178,37 @@ public class HjhRepayRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getPlanStatusSrch() {
+        return planStatusSrch;
+    }
+
+    public void setPlanStatusSrch(String planStatusSrch) {
+        this.planStatusSrch = planStatusSrch;
+    }
+
+    public String getRepayTimeLastStart() {
+        return repayTimeLastStart;
+    }
+
+    public void setRepayTimeLastStart(String repayTimeLastStart) {
+        this.repayTimeLastStart = repayTimeLastStart;
+    }
+
+    public String getRepayTimeLastEnd() {
+        return repayTimeLastEnd;
+    }
+
+    public void setRepayTimeLastEnd(String repayTimeLastEnd) {
+        this.repayTimeLastEnd = repayTimeLastEnd;
+    }
+
+    public String getRefereeNameSrch() {
+        return refereeNameSrch;
+    }
+
+    public void setRefereeNameSrch(String refereeNameSrch) {
+        this.refereeNameSrch = refereeNameSrch;
     }
 }
