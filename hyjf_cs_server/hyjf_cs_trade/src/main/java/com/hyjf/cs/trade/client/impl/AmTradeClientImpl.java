@@ -3837,10 +3837,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
         String url = "http://AM-TRADE/am-trade/repay/repay_detail";
-        String response = restTemplate.postForEntity(url,requestBean,String.class).getBody();
+        StringResponse response = restTemplate.postForEntity(url,requestBean,StringResponse.class).getBody();
 
-        if (!StringUtils.isBlank(response)) {
-            return JSON.parseObject(response);
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr());
         }
         return null;
     }
@@ -3852,8 +3852,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,RepayBean.class).getBody();
-        return response;
+        StringResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr(),RepayBean.class);
+        }
+        return null;
     }
 
     /**
@@ -3861,11 +3864,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        ProjectBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,ProjectBean.class).getBody();
-//        if (Response.isSuccess(response)){
-////            return JSON.parseObject(response.getResult(), ProjectBean.class);
-////        }
-        return response;
+        StringResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr(),ProjectBean.class);
+        }
+        return null;
     }
 
     /**
