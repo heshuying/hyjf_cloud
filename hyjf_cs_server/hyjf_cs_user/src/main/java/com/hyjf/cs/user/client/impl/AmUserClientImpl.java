@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -811,10 +812,13 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public int selectMyInviteCount(MyInviteListRequest requestBean) {
-		int count = restTemplate
-				.postForEntity(userService+"/invite/myInviteCount", requestBean, Integer.class).getBody();
-		return count;
+	public Integer selectMyInviteCount(MyInviteListRequest requestBean) {
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/invite/myInviteCount", requestBean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	/**
