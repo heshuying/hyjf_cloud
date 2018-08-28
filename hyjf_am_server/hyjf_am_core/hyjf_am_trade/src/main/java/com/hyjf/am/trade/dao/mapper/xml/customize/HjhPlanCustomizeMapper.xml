@@ -654,7 +654,7 @@ ORDER BY
 		dpa.user_name
 		END userName,
 		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accedeAccount,
-		dpa.create_time as accedeTime,
+		date_format(dpa.create_time, '%Y-%m-%d %H:%i:%s') as accedeTime,
 		-- IFNULL(hui.vip_id,0) vip_id,
 		-- hui.vip_value,
 		 dpa.client
@@ -1078,7 +1078,7 @@ ORDER BY
 		WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天')
 		ELSE CONCAT(hb.borrow_period, '个月')
 		END AS borrow_period,
-		hbt.create_tiem as addtime,
+		date_format(hbt.create_time , '%Y-%m-%d %H:%i:%s') as addtime,
 
 		CASE
 		WHEN hb.borrow_style = 'endday' or hb.borrow_style = 'end' or hb.borrow_style = 'endmonth'

@@ -4038,11 +4038,11 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-    
+
 	/**
-	 * 
+	 *
 	 * 投资预插入
-	 * 
+	 *
 	 * @param borrowNid
 	 * @param orderId
 	 * @param userId
@@ -4061,7 +4061,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	    }
 		return false;
 	}
-	
+
     /**
 	 * 根据nid删除BorrowTenderTmp
 	 * @auth libin
@@ -4077,7 +4077,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
 		return response.getResultInt().intValue();
 	}
-	
+
     /**
 	 * 根据userId，borrowNid，orderId删除BorrowTenderTmp
 	 * @auth libin

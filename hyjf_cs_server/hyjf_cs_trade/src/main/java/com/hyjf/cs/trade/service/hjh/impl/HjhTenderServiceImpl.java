@@ -4,14 +4,18 @@
 package com.hyjf.cs.trade.service.hjh.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -21,14 +25,12 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -37,6 +39,7 @@ import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
 import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.collections.map.HashedMap;
@@ -45,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -66,6 +70,8 @@ import java.util.UUID;
 @Service
 public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTenderService {
     private static final Logger logger = LoggerFactory.getLogger(HjhTenderServiceImpl.class);
+    /** 历史回报文字描述常量 */
+    public static final String PROSPECTIVE_EARNINGS = "历史回报 ";
 
     @Autowired
     private AmUserClient amUserClient;
@@ -81,6 +87,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private UtmRegProducer utmRegProducer;
     @Autowired
     private HjhCouponTenderProducer hjhCouponTenderProducer;
+    @Autowired
+    private AppCouponService appCouponService;
 
 
     /**
@@ -254,6 +262,304 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         WebResult<TenderInfoResult> result = new WebResult<TenderInfoResult>();
         result.setData(investInfo);
         return result;
+    }
+
+    /**
+     * App端获取计划投资信息
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender) {
+        String money = tender.getMoney();
+        String platform = tender.getPlatform();
+        String couponId = tender.getCouponId();
+        String planNid = tender.getBorrowNid();
+        AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
+        if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
+            resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
+        }
+
+        // 查询计划信息  传入borrowNid
+        resultVo.setStandardValues(CustomConstants.TENDER_THRESHOLD);
+        // 根据项目标号获取相应的计划信息
+        HjhPlanVO plan = amTradeClient.getPlanByNid(planNid);
+        if (null == plan) {
+            // 计划不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
+        }
+        resultVo.setBorrowApr(plan.getExpectApr()+"%");
+        PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
+        resultVo.setPaymentOfInterest("0" + "元");
+        // 获取用户最优优惠券
+        CouponUserVO couponConfig = null;
+        if (null != planDetail) {
+            resultVo.setBorrowNid(planNid);
+            // -设置  开放额度剩余金额
+            String borrowAccountWait = "0";
+            if (planDetail.getAvailableInvestAccount() != null) {
+                borrowAccountWait =  CommonUtils.formatAmount(null, planDetail.getAvailableInvestAccount());
+            }
+            borrowAccountWait = borrowAccountWait.replaceAll(",", "");
+            // 开放额度剩余金额
+            resultVo.setBorrowAccountWait(borrowAccountWait);
+            String initMoney = "0";
+            // -设置 最小投资金额(起投金额)-->计算最后一笔投资
+            if (planDetail.getDebtMinInvestment() != null) {
+                initMoney = new BigDecimal(planDetail.getDebtMinInvestment()).intValue()+"";
+            }
+            resultVo.setInitMoney(initMoney);
+            // -设置优惠券
+            logger.info("HJH couponId is:{}, borrowNid is :{}", couponId, planNid);
+            JSONObject userCoupon = appCouponService.getPlanCoupon( tender.getUserId(),planNid, money,
+                    platform);
+            if (couponId == null || "".equals(couponId) || couponId.length() == 0) {
+                // 不用获取最优优惠券了
+                //couponConfig = planService.getUserOptimalCoupon(couponId, borrowNid, userId, money, platform);
+            } else {
+                // 如果已经有了优惠券  判断优惠券是否可用appCouponService.getPlanCoupon(userId,borrowNid,money,platform);
+                if (isHjhCouponAvailable(couponId, userCoupon)) {
+                    couponConfig = amTradeClient.getCouponUser(Integer.parseInt(couponId),tender.getUserId() );
+                }
+            }
+            logger.info("优惠券信息couponConfig: {}", JSONObject.toJSONString(couponConfig));
+            if("-1".equals(couponId)){
+                couponConfig = null;
+            }
+            // 刚加载页面并且可投小于起投
+            if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(borrowAccountWait).compareTo(new BigDecimal(planDetail.getDebtMinInvestment())) < 1) {
+                money = new BigDecimal(borrowAccountWait).intValue() + "";
+            }
+            if (money.contains(",")) {
+                money = money.replace(",", "");
+            }
+
+            BigDecimal earnings = new BigDecimal("0");
+            // 计算收益
+            if ((!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0)) {
+                // 这里有个坑，如果计划剩余可投小于用户投资金额，那么计算收益需要用计划剩余可投计算，不能使用用户投资金额计算收益
+                logger.info("计划剩余可投: {}", borrowAccountWait);
+                logger.info("用户投资金额: {}", money);
+                //if (new BigDecimal(borrowAccountWait).compareTo(new BigDecimal(money)) < 0) {
+                //	logger.info("计划剩余可投小于用户投资金额,收益按照计划剩余可投计算...");
+                //	earnings = planService.setProspectiveEarnings(resultVo,couponConfig, borrowNid,userId,platform,borrowAccountWait);
+                //} else {
+                logger.info("计划剩余可投大于用户投资金额,收益按照用户投资金额计算...");
+                earnings = getProspectiveEarnings(plan,resultVo,couponConfig, planNid,tender.getUserId(),platform,money);
+                //}
+            }
+            logger.info("本金投资计算出的收益是: {}", earnings);
+
+            // 设置优惠券
+            resultVo.setCapitalInterest("");
+            resultVo.setConfirmCouponDescribe("未使用优惠券");
+            resultVo.setRealAmount("");
+            resultVo.setCouponType("");
+            JSONObject counts =  userCoupon;
+            String couponAvailableCount = "0";
+            if(counts.containsKey("availableCouponListCount")){
+                couponAvailableCount = counts.getString("availableCouponListCount");
+            }
+            if (couponConfig != null) {
+                if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 1) {
+                    resultVo.setCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
+                    resultVo.setConfirmCouponDescribe("体验金: " + couponConfig.getCouponQuota() + "元");
+                    resultVo.setCouponType("体验金");
+                }
+                if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 2) {
+                    resultVo.setCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
+                    resultVo.setConfirmCouponDescribe("加息券: " + couponConfig.getCouponQuota() + "%");
+                    resultVo.setCouponType("加息券");
+
+                }
+                if (couponConfig != null && couponConfig.getId() > 0 && couponConfig.getCouponType() == 3) {
+                    resultVo.setCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
+                    resultVo.setConfirmCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
+                    resultVo.setCouponType("代金券");
+                    resultVo.setRealAmount("实际投资 " + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())) + "元");
+
+                }
+                resultVo.setCouponName(couponConfig.getCouponName());
+                resultVo.setCouponQuota(couponConfig.getCouponQuota().toString());
+                resultVo.setEndTime(couponConfig.getAddTime() + "-" + couponConfig.getEndTime());
+                resultVo.setIsThereCoupon("1");
+                resultVo.setCouponId(couponConfig.getId()+"");
+                resultVo.setIsUsedCoupon("1");
+
+                logger.info("开始计算优惠券收益....");
+                String calculateIncomeCapital = "";
+                if (new BigDecimal(borrowAccountWait).compareTo(new BigDecimal(money)) < 0) {
+                    logger.info("同样，计划剩余可投小于用户投资金额,收益按照计划剩余可投计算...");
+                    calculateIncomeCapital = borrowAccountWait;
+                } else {
+                    logger.info("同样，计划剩余可投大于用户投资金额,收益按照用户投资金额计算...");
+                    calculateIncomeCapital = money;
+                }
+                logger.info("优惠券金额按照{}计算....", calculateIncomeCapital);
+                BigDecimal couponInterest = BigDecimal.ZERO;
+                if (couponConfig != null) {
+                    if (couponConfig.getCouponType() == 1) {
+                        couponInterest = couponService.getInterestDj(couponConfig.getCouponQuota(), couponConfig.getCouponProfitTime().intValue(), plan.getExpectApr());
+                    } else {
+                        couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponConfig.getCouponType(), plan.getExpectApr(), couponConfig.getCouponQuota(), money, plan.getLockPeriod());
+                    }
+                }
+                logger.info("优惠券历史回报计算结果couResult: {}", couponInterest);
+
+                resultVo.setCapitalInterest(couponConfig + "元");
+                // 优惠券历史回报
+                // 历史回报
+                BigDecimal borrowInterest = earnings.add(couponInterest);
+
+                //备注
+                resultVo.setDesc("历史年回报率:  "+plan.getExpectApr()+"%      历史回报:  " + borrowInterest+"元");
+                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
+
+                resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest) + "元");
+                resultVo.setInterest(CommonUtils.formatAmount(null, borrowInterest));
+            }else{
+                // 没有可用优惠券
+                resultVo.setIsThereCoupon("0");
+                resultVo.setCouponDescribe("暂无可用");
+                resultVo.setCouponName("");
+                resultVo.setCouponQuota("");
+                resultVo.setEndTime("");
+                resultVo.setCouponId("-1");
+
+                if(!"0".equals(userCoupon.getString("availableCouponListCount"))){
+                    resultVo.setIsThereCoupon("1");
+                    resultVo.setCouponDescribe("请选择");
+                }else if ("0".equals(userCoupon.getString("availableCouponListCount")) && !"0".equals(userCoupon.getString("notAvailableCouponListCount"))) {
+                    resultVo.setIsThereCoupon("1");
+                    resultVo.setCouponDescribe("暂无可用");
+                }else {
+                    resultVo.setIsThereCoupon("0");
+                    resultVo.setCouponDescribe("无可用");
+                }
+
+                resultVo.setDesc("历史年回报率: "+plan.getExpectApr()+"%      历史回报: " + earnings +"元");
+                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
+                resultVo.setProspectiveEarnings(earnings + "元");
+            }
+            // 可用优惠券数量
+            resultVo.setCouponAvailableCount(couponAvailableCount);
+            resultVo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(null, money) + "元");
+            // -设置 用户余额
+            AccountVO account = amTradeClient.getAccount(tender.getUserId());
+            BigDecimal balance = account.getBankBalance();
+            resultVo.setBalance(CommonUtils.formatAmount(null, balance));
+            resultVo.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+            resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+            // 起投金额
+            resultVo.setInitMoney(plan.getMinInvestment().intValue()+"");
+            // 递增金额
+            resultVo.setIncreaseMoney(plan.getInvestmentIncrement().intValue()+"");
+            resultVo.setInvestmentDescription(resultVo.getInitMoney() + "元起投," + resultVo.getIncreaseMoney() + "元递增");
+            // 开放额度剩余金额
+            resultVo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+            BigDecimal tmpmoney = balance.subtract(plan.getMinInvestment()).divide(plan.getInvestmentIncrement(), 0, BigDecimal.ROUND_DOWN)
+                    .multiply(plan.getInvestmentIncrement()).add(plan.getMinInvestment());
+            if (balance.subtract(plan.getMinInvestment()).compareTo(new BigDecimal("0")) < 0) {
+                // 可用余额<起投金额 时 investAllMoney 传 -1
+                // 全投金额
+                resultVo.setInvestAllMoney("-1");
+            } else {
+                String borrowAccountWaitStr = resultVo.getBorrowAccountWait().replace(",", "");
+                if (plan.getMaxInvestment().compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                    if(balance.compareTo(plan.getMaxInvestment())<0){
+                        resultVo.setInvestAllMoney(balance + "");
+                    }else{
+                        resultVo.setInvestAllMoney(plan.getMaxInvestment() + "");
+                    }
+                } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                    // 全投金额
+                    if(balance.compareTo(tmpmoney)<0){
+                        resultVo.setInvestAllMoney(balance + "");
+                    }else{
+                        resultVo.setInvestAllMoney(tmpmoney + "");
+                    }
+                    resultVo.setInvestAllMoney(tmpmoney + "");
+                } else {
+                    // 全投金额
+                    resultVo.setInvestAllMoney(resultVo.getBorrowAccountWait() + "");
+                }
+            }
+            resultVo.setAnnotation("");
+        } else {
+            logger.info("=================HJH borrow is null! =============");
+            resultVo.setStatusDesc(CustomConstants.APP_STATUS_DESC_FAIL);
+        }
+
+        return resultVo;
+    }
+
+    /**
+     * 计算预期收益
+     * @param resultVo
+     * @param couponConfig
+     * @param planNid
+     * @param userId
+     * @param platform
+     * @param money
+     * @return
+     */
+    private BigDecimal getProspectiveEarnings(HjhPlanVO plan,AppInvestInfoResultVO resultVo, CouponUserVO couponConfig, String planNid, Integer userId, String platform, String money) {
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        BigDecimal earnings = new BigDecimal("0");
+        if (null != plan) {
+            // 如果投资金额不为空
+            if (!StringUtils.isBlank(money) && (new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0)
+                    || !(StringUtils.isEmpty(money) && couponConfig != null && couponConfig.getCouponType() == 1
+                    && couponConfig.getAddFlg() == 1)) {
+                // 收益率
+                BigDecimal borrowApr = plan.getExpectApr();
+                // 周期
+                Integer borrowPeriod = plan.getLockPeriod();
+                // 还款方式
+                String borrowStyle = plan.getBorrowStyle();//endday
+
+                if (StringUtils.isNotEmpty(borrowStyle)) {
+                    if (StringUtils.equals("endday", borrowStyle)){
+                        // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
+                        earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+                    } else {
+                        // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                        earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+                    }
+                    resultVo.setBorrowInterest(PROSPECTIVE_EARNINGS + df.format(earnings) + "元");
+                    resultVo.setProspectiveEarnings(df.format(earnings) + "元");
+                    resultVo.setInterest(df.format(earnings));
+                }
+            } else {
+                resultVo.setBorrowInterest(PROSPECTIVE_EARNINGS + "0元");
+                resultVo.setProspectiveEarnings(df.format(earnings) + "元");
+                resultVo.setInterest(df.format(earnings));
+            }
+        }
+        return earnings;
+    }
+
+    /**
+     * 检查优惠券可用吗
+     * @param couponId
+     * @param userCoupon
+     * @return
+     */
+    private boolean isHjhCouponAvailable(String couponId, JSONObject userCoupon) {
+        String obj = JSONObject.toJSONString(userCoupon.get("availableCouponList"));
+        List<CouponBeanVo> coupons = JSONArray.parseArray(obj, CouponBeanVo.class);
+        if (!CollectionUtils.isEmpty(coupons)) {
+            for (CouponBeanVo couponBean : coupons) {
+                if (couponBean.getUserCouponId().equals(couponId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

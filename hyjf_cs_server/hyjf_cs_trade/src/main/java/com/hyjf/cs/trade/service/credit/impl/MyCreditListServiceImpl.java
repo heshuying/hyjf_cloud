@@ -134,6 +134,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
+        request.setUserId(userId);
         MyCreditListQueryResponse res = amTradeClient.countMyCreditList(request);
         WebResult webResult = new WebResult();
         if (!Response.isSuccess(res)) {
