@@ -72,7 +72,6 @@ public class CrmOaDepartmentConsumer extends Consumer {
                 logger.info("【操作资金crm oa user对象】接收到的消息：" + msgBody);
 
                 ROaDepartmentExample rOaDepartmentExample = null;
-                try {
                     rOaDepartmentExample = JSONObject.parseObject(msgBody, ROaDepartmentExample.class);
                     if (msg.getTags() != null && msg.getTags().equals(OPERATION_ADD)) {
 
@@ -87,7 +86,6 @@ public class CrmOaDepartmentConsumer extends Consumer {
                         logger.info("----------------------删除部门消息处理结束------------------------");
 
                     }
-                }
             }
 
             // 如果没有return success ，consumer会重新消费该消息，直到return success
