@@ -270,7 +270,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		BankConfig record =new BankConfig();
 		BeanUtils.copyProperties(adminBankConfigRequest,record);
 		record.setUpdateTime(new Date());
-		return bankConfigMapper.insertSelective(record);
+		return bankConfigMapper.updateByPrimaryKeySelective(record);
 
 	}
 
@@ -279,10 +279,10 @@ public class BankConfigServiceImpl implements BankConfigService {
 	 */
 	@Override
 	public void deleteBankConfigById(Integer id){
-		BankConfig record = new BankConfig();
-		record.setId(id);
-//		record.setStatus(1);
-		bankConfigMapper.updateByPrimaryKeySelective(record);
+//		BankConfig record = new BankConfig();
+//		record.setId(id);
+////		record.setStatus(1);
+		bankConfigMapper.deleteByPrimaryKey(id);
 	}
 
 	/**

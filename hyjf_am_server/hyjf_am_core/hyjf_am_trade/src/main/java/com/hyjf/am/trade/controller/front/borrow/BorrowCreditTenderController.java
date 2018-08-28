@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
+import com.hyjf.am.response.trade.CountResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
@@ -161,6 +162,17 @@ public class BorrowCreditTenderController extends BaseController {
         response.setSumData(sum);
         return response;
     }
+
+
+    @PostMapping("/getBorrowCreditTender4Admin")
+    public CountResponse getBorrowCreditTenderCount(@RequestBody Map<String,Object> param){
+        CountResponse response = new CountResponse();
+        int count = borrowCreditTenderService.getBorrowCreditTenderCount4Admin(param);
+        response.setCount(count);
+        return response;
+    }
+
+
 
 
 

@@ -75,4 +75,11 @@ public interface BorrowCreditTenderService {
      * @date 2018/7/12 20:13
      */
     Map<String,Object> getCreditTenderSum(BorrowCreditRepayAmRequest request);
+
+    /**
+     * admin： 用户投资记录数
+     * @author zhangyk
+     * @date 2018/8/28 19:06
+     */
+    int getBorrowCreditTenderCount4Admin(Map<String,Object> params);
 }

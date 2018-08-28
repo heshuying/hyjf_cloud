@@ -968,10 +968,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int insertAccountWithdrawLog(AccountWithdrawVO record) {
-        Integer response = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
+        IntegerResponse response = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, IntegerResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResultInt();
         }
         return 0;
 
@@ -997,10 +997,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
-        int result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, Integer.class).getBody();
-        return result;
+    public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
+        BooleanResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, BooleanResponse.class).getBody();
+        return result.getResultBoolean();
     }
     /**
      * 提现后续操作
@@ -1009,9 +1009,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest) {
-        int result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updatUserBankWithdrawHandler", bankWithdrawBeanRequest, Integer.class).getBody();
-        return result;
+        IntegerResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updatUserBankWithdrawHandler", bankWithdrawBeanRequest, IntegerResponse.class).getBody();
+        return result.getResultInt();
     }
     /**
      * 查询用户标的投资数量
@@ -4042,12 +4042,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 	/**
 	 *
 	 * 投资预插入
-	 *
-	 * @param borrowNid
-	 * @param orderId
-	 * @param userId
-	 * @param account
-	 * @param ip
 	 * @return
 	 * @author libin
 	 * @throws Exception
@@ -4065,7 +4059,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
 	 * 根据nid删除BorrowTenderTmp
 	 * @auth libin
-	 * @param nid
 	 * @return
 	 */
 	@Override

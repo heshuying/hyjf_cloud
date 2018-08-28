@@ -38,15 +38,19 @@ public class BankRechargeController  extends BaseConfigController{
         //查询查询快捷充值列表
         List<BankRechargeConfig> recordList =bankRechargeService.selectBankRechargeByPage(adminRequest,-1, -1);
         if (!CollectionUtils.isEmpty(recordList)) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordList.size());
+            int count =recordList.size();
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0? 10:adminRequest.getPageSize());
             //查询记录
             recordList =bankRechargeService.selectBankRechargeByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BankRechargeLimitConfigVO> bankRechargeLimitConfigVO = CommonUtils.convertBeanList(recordList, BankRechargeLimitConfigVO.class);
                 response.setResultList(bankRechargeLimitConfigVO);
-                response.setRecordTotal(recordList.size());
+                response.setRecordTotal(count);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
             return response;
         }
         return null;
@@ -67,6 +71,7 @@ public class BankRechargeController  extends BaseConfigController{
             response.setRtn(Response.SUCCESS);
         }else{
             response.setRtn(Response.FAIL);
+            response.setMessage("查询的数据为空！");
         }
         return response;
     }
@@ -84,6 +89,7 @@ public class BankRechargeController  extends BaseConfigController{
                 response.setRtn(Response.SUCCESS);
             }else{
                 response.setRtn(Response.FAIL);
+                response.setMessage("添加失败！");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -104,6 +110,7 @@ public class BankRechargeController  extends BaseConfigController{
                 response.setRtn(Response.SUCCESS);
             }else{
                 response.setRtn(Response.FAIL);
+                response.setMessage("修改失败！");
             }
         }catch (Exception e){
             response.setRtn(Response.FAIL);
@@ -121,8 +128,9 @@ public class BankRechargeController  extends BaseConfigController{
         if(adminRequest.getId() != null){
             this.bankRechargeService.deleteBankRecharge(adminRequest.getId());
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return  response;
+        return  null;
     }
     /**
      * 查询快捷充值导出列表
@@ -156,7 +164,8 @@ public class BankRechargeController  extends BaseConfigController{
             BankRechargeConfigVo bankRechargeConfigVo = CommonUtils.convertBean(bankRechargeConfig,BankRechargeConfigVo.class);
             response.setResult(bankRechargeConfigVo);
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return response;
+        return null;
     }
 }
