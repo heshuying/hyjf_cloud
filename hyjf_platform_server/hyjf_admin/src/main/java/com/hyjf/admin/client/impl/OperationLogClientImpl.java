@@ -67,7 +67,11 @@ public class OperationLogClientImpl implements OperationLogClient {
     @Override
     public List<HjhAssetTypeVO> getHjhAssetType(){
         String url = "http://AM-TRADE/am-trade/config/operationlog/getHjhAssetType";
-        return restTemplate.getForEntity(url,List.class).getBody();
+        AdminOperationLogResponse response = restTemplate.getForEntity(url,AdminOperationLogResponse.class).getBody();
+        if(null != response){
+            return response.getHjhAssetTypes();
+        }
+        return null;
     }
 
 }

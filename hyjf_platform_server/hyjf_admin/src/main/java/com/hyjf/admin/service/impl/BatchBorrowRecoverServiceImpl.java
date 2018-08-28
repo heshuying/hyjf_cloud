@@ -282,7 +282,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }
@@ -369,6 +369,47 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 detailList.add(info);
             }
         }
+        //TODO 测试数据，待删除
+        subPacks = "{\n" +
+                "    \"accountId\" : \"6212461890000001801\",\n" +
+                "    \"acqRes\" : \"\",\n" +
+                "    \"bankCode\" : \"30050000\",\n" +
+                "    \"channel\" : \"000002\",\n" +
+                "    \"feeAmount\" : \"160.00\",\n" +
+                "    \"instCode\" : \"00810001\",\n" +
+                "    \"name\" : \"金子裕\",\n" +
+                "    \"productId\" : \"WDD180503000007\",\n" +
+                "    \"retCode\" : \"00000000\",\n" +
+                "    \"retMsg\" : \"\",\n" +
+                "    \"riskAmount\" : \"0.00\",\n" +
+                "    \"seqNo\" : \"726545\",\n" +
+                "    \"sign\" : \"UafNMcyiZIW9dBFrnBFewvOcvI+SaFG6jXRBq6a37LgG/bQqbnFh1xEeg5zaKemwQ5QtsGi3ETDMhVgG5I0L+lPqCzwsxF4gy+31q0TyN4FbpyGDJ5gLcoghKud+E7UBFRXHjflMH6Vq/bMAY193P9IWdpclQlYFSs1+K3VmXsY=\",\n" +
+                "    \"txAmount\" : \"20000.00\",\n" +
+                "    \"txCode\" : \"autoLendPayQuery\",\n" +
+                "    \"txDate\" : \"20180510\",\n" +
+                "    \"txTime\" : \"104000\",\n" +
+                "    \"version\" : \"10\"\n" +
+                "}";
+        BorrowRecoverBankInfoVo detailLists = new BorrowRecoverBankInfoVo();
+        // 借款人电子账户号
+        detailLists.setForAccountId("6212461890000001801");
+        // 借款人姓名
+        detailLists.setName("金子裕");
+        // 响应代码
+        detailLists.setRetCode("00000000");
+        // 错误描述
+        detailLists.setFileMsg("");
+        // 标的编号
+        detailLists.setProductId("WDD180503000007");
+        // 借款人入账金额
+        detailLists.setTxAmount("20000.00");
+        // 手续费金额
+        detailLists.setFeeAmount("160.00");
+        // 风险准备金
+        detailLists.setRiskAmount("0.00");
+        // 交易状态
+        detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
+        detailList.add(detailLists);
         return detailList;
     }
 }

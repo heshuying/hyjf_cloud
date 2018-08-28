@@ -42,7 +42,7 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private String eprovince;
 
-	private String iconUrl;
+	private String iconUrl = "";
 
 	private Date evaluationExpiredTime;
 

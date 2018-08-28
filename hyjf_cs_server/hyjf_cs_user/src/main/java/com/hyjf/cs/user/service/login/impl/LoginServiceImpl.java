@@ -16,6 +16,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -117,7 +119,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getInstcode(), "http://CS-TRADE",
+				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
 						systemConfig.getAopAccesskey());
 			}
 			if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
@@ -912,4 +914,68 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idCard);
 		return amUserClient.findUserById(userInfoVO.getUserId());
 	}
+	 @Override
+	    public Map<String, String> updateLoginInAction(String userName, String password, String ipAddr) {
+		  Map<String, String> r=new HashMap<>();
+		  r.put("stt", "0");
+	        String codeSalt = "";
+	        String passwordDb = "";
+	        Integer userId = null;
+	        String usernameString=null;
+
+	        UserVO u = amUserClient.findUserByUserNameOrMobile(userName);
+	        if (u == null) {
+	        	r.put("stt", "-1");
+	            return r;
+	        } else {
+	        		r.put("userId", u.getUserId().toString());
+	                userId = u.getUserId();
+	                codeSalt = u.getSalt();
+	                passwordDb =u.getPassword();
+	                usernameString=u.getUsername();
+	            if (u.getStatus() == 1) {
+	            	r.put("stt", "-4");
+	                return r;
+	            }
+	        }
+	        
+	  		//1.获取该用户密码错误次数
+	  		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + usernameString);
+	  		//判断密码错误次数是否超限
+	  		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>6) {
+         	r.put("stt", "-5");
+             return r;//密码错误次数已达上限
+	  		}
+	        // 验证用的password
+	        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+	        // 密码正确时
+	        if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
+	            // 更新登录信息
+				amUserClient.updateLoginUser(userId, ipAddr);
+				updateUserByUserId(u);
+				// 1. 登录成功将登陆密码错误次数的key删除
+				RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + usernameString);
+				BankOpenAccountVO account = this.getBankOpenAccount(userId);
+				String accountId = null;
+				if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+					accountId = account.getAccount();
+					this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+							systemConfig.getAopAccesskey());
+				}
+				String sign = SecretUtil.createToken(userId, usernameString, accountId);
+				r.put("sign", sign);
+	            return r;
+	        } else {
+	        	//增加密码错误次数
+	        	RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + usernameString);;//以用户手机号为key
+				//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
+				if((Integer.valueOf(passwordErrorNum)+1) < 6){
+	            	r.put("stt", "-3");
+	                return r;
+				}else{
+	            	r.put("stt", "-5");
+	                return r;//用户当天密码错误次数已达上限
+				}
+	        }
+	    }
 }

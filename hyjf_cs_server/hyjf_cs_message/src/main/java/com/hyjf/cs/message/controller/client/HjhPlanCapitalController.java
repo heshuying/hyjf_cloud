@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
@@ -40,11 +41,10 @@ public class HjhPlanCapitalController extends BaseController {
     private HjhAccountBalanceService hjhAccountBalanceService;
 
     @RequestMapping("/hjhplancapital")
-    public Boolean hjhPlanCapital() {
+    public BooleanResponse hjhPlanCapital() {
             logger.info("汇计划资本预估统计(每日)任务 开始... ");
-
+            Boolean result = false;
             try {
-                Boolean result = false;
                 // 取得当前日期为基准日期
                 Date nowDate = GetDate.stringToDate2(GetDate.dateToString2(new Date()));
                 // 取得前一天日期
@@ -115,8 +115,7 @@ public class HjhPlanCapitalController extends BaseController {
             }
             logger.info("汇计划资本预估统计(每日)任务 结束... ");
 
-
-        return false;
+        return new BooleanResponse(result);
     }
 
     /**

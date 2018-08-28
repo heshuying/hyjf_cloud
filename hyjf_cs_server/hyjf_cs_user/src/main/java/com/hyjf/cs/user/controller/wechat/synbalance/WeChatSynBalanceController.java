@@ -63,7 +63,7 @@ public class WeChatSynBalanceController extends BaseUserController {
         }
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO = synBalanceService.getBankOpenAccount(user.getUserId());
-        JSONObject status = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), systemConfig.getInstcode(), "http://CS-TRADE", systemConfig.getAopAccesskey());
+        JSONObject status = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), systemConfig.getBankInstcode(), "http://CS-TRADE", systemConfig.getAopAccesskey());
         //校验获取余额是否成功
         if ("成功".equals(status.get("statusDesc").toString())) {
             //余额数据
