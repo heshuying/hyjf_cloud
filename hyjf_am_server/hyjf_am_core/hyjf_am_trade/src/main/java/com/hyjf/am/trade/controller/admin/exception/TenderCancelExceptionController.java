@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.BorrowTenderTmpResponse;
@@ -144,8 +145,8 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据nid删除BorrowTenderTmp", notes = "根据nid删除BorrowTenderTmp")
     @GetMapping(value = "/deleteBorrowTenderTmp/{orgOrderId}")
-    public Integer deleteBorrowTenderTmp(@PathVariable String orgOrderId){
-        return tenderCancelExceptionService.deleteBorrowTenderTmp(orgOrderId);
+    public IntegerResponse deleteBorrowTenderTmp(@PathVariable String orgOrderId){
+        return new IntegerResponse(tenderCancelExceptionService.deleteBorrowTenderTmp(orgOrderId));
     }
     
     /**
@@ -155,7 +156,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据userId，borrowNid，orderId删除BorrowTenderTmp", notes = "根据userId，borrowNid，orderId删除BorrowTenderTmp")
     @GetMapping(value = "/deleteBorrowTenderTmpByParam/{userId}/{borrowNid}/{orderId}")
-    public int deleteBorrowTenderTmpByParam(@PathVariable int userId, @PathVariable String borrowNid, @PathVariable String orderId){
-    	return tenderCancelExceptionService.deleteBorrowTenderTmpByParam(userId,borrowNid,orderId);
+    public IntegerResponse deleteBorrowTenderTmpByParam(@PathVariable int userId, @PathVariable String borrowNid, @PathVariable String orderId){
+    	return new IntegerResponse(tenderCancelExceptionService.deleteBorrowTenderTmpByParam(userId,borrowNid,orderId));
     }
 }

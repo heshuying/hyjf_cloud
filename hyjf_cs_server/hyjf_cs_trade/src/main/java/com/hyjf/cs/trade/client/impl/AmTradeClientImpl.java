@@ -4054,25 +4054,42 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 */
 	@Override
 	public boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest) {
-	    Integer result = restTemplate
-	            .postForEntity("http://AM-TRADE/am-trade/autotender/updatetenderlog", autoTenderComboRequest, Integer.class).getBody();
-	    if (result != null) {
-	        return result == 0 ? false : true;
+		IntegerResponse result = restTemplate
+	            .postForEntity("http://AM-TRADE/am-trade/autotender/updatetenderlog", autoTenderComboRequest, IntegerResponse.class).getBody();
+		if (result != null) {
+	        return result.getResultInt().intValue() == 0 ? false : true;
 	    }
 		return false;
 	}
 	
+    /**
+	 * 根据nid删除BorrowTenderTmp
+	 * @auth libin
+	 * @param nid
+	 * @return
+	 */
 	@Override
 	public Integer deleteBorrowTenderTmp(String orgOrderId) {
 		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmp/" + orgOrderId;
-		Integer response = restTemplate.getForEntity(url, Integer.class).getBody();
-		return response;
+		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+		return response.getResultInt().intValue();
 	}
 	
+    /**
+	 * 根据userId，borrowNid，orderId删除BorrowTenderTmp
+	 * @auth libin
+	 * @return
+	 */
 	@Override
 	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
 		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
-		int response = restTemplate.getForEntity(url, Integer.class).getBody();
-		return response;
+		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
 	}
 }
