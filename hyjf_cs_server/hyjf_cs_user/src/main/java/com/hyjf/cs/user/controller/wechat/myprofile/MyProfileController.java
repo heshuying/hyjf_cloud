@@ -12,7 +12,6 @@ import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
-import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
 import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
@@ -44,8 +43,6 @@ public class MyProfileController extends BaseUserController {
 
     @Autowired
     private MyProfileService myProfileService;
-    @Autowired
-    private RequestUtil requestUtil;
     @Autowired
     private SystemConfig systemConfig;
 

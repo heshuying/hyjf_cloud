@@ -10,11 +10,10 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
-import com.hyjf.cs.user.util.RequestUtil;
-import com.hyjf.cs.user.constants.ResultEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,6 @@ public class WeChatSynBalanceController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-    @Autowired
-    RequestUtil requestUtil;
 
     @ApiOperation(value = "我的-刷新", notes = "我的-刷新")
     @PostMapping(value = "/init")
