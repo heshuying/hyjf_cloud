@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowStyleResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
@@ -175,8 +176,11 @@ public class BorrowStyleController {
      * @return
      */
     @RequestMapping("/validatorFieldCheck")
-    public boolean isExistsPermission(BorrowStyle record){
-       return borrowStyleService.isExistsPermission(record);
+    public BooleanResponse isExistsPermission(BorrowStyle record){
+        BooleanResponse response = new BooleanResponse();
+        Boolean b=borrowStyleService.isExistsPermission(record);
+        response.setResultBoolean(b);
+       return response;
     }
 
 }

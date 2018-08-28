@@ -75,12 +75,6 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
-    @Value("${hyjf.bank.instcode}")
-    public String instcode;
-
-    @Value("${hyjf.bank.bankcode}")
-    public String bankcode;
-
     @Value("${file.domain.app.url}")
     public String domainAppUrl;
 
@@ -225,22 +219,6 @@ public class SystemConfig {
 
     public void setApiWebUrl(String apiWebUrl) {
         this.apiWebUrl = apiWebUrl;
-    }
-
-    public String getInstcode() {
-        return instcode;
-    }
-
-    public void setInstcode(String instcode) {
-        this.instcode = instcode;
-    }
-
-    public String getBankcode() {
-        return bankcode;
-    }
-
-    public void setBankcode(String bankcode) {
-        this.bankcode = bankcode;
     }
 
     public String getForgetpassword() {
