@@ -83,7 +83,7 @@ public class WebRechargeController extends BaseTradeController{
 									  @RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
-		String ipAddr = CustomUtil.getIpAddr(request);
+		String ipAddr = CustomUtil.getIpAddr(request) ;
 
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
