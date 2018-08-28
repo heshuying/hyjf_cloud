@@ -25,7 +25,7 @@ public interface BindCardService extends BaseService {
 
 	int insertBindCardLog(BankCardLog bankCardLog);
 	
-	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
+	boolean updateBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode,String smsSeq);
 
 	String selectBankSmsLog(Integer userId, String srvTxCode, String srvAuthCode);
 

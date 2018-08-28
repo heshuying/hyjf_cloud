@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -75,4 +76,12 @@ public interface BankAccountManageService {
      * @return
      */
     List<OADepartmentCustomizeVO> queryDepartmentInfo();
+
+    /**
+     * 获取部门列表
+     *
+     * @param list
+     * @return
+     */
+    JSONArray getCrmDepartmentList(String[] list);
 }

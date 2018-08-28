@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
@@ -83,8 +84,19 @@ public class BorrowCreditTenderController extends BaseTradeController {
     public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
         logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getSuccessResult(userVO.getUserId(),logOrdId);
+        return  borrowTenderService.getSuccessResult(userId,logOrdId);
+    }
+
+    @ApiOperation(value = "前端Web页面投资可债转输入投资金额后获取收益", notes = "前端Web页面投资可债转输入投资金额后获取收益")
+    @PostMapping(value = "/webCreditTenderInterest", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> getInterestInfo(@RequestHeader(value = "userId") int userId,
+                                                         @RequestParam String creditNid,
+                                                         @RequestParam String assignCapital) {
+        logger.info("前端Web页面投资可债转输入投资金额后获取收益，creditNid:{},assignCapital:{}",creditNid,assignCapital);
+        JSONObject json = borrowTenderService.getInterestInfo(userId,creditNid,assignCapital);
+        WebResult result = new WebResult();
+        result.setData(json);
+        return result;
     }
 
 }

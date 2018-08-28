@@ -91,14 +91,6 @@
         <include refid="where-all-page-condition"/>
     </select>
 
-    <select id="queryAccountCountAll" resultType="java.lang.Integer"
-            parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
-		SELECT
-		  count(a.user_id)
-		FROM
-		  ht_account a
-	</select>
-
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
         select t.*,
@@ -166,11 +158,9 @@
         WHERE
         1 = 1
         <include refid="where-all-page-condition"/>
-        <if test="initQuery==0">
-            ORDER BY t.user_id DESC
-            <if test="limitStart >= 0" >
-                LIMIT #{limitStart} , #{limitEnd}
-            </if>
+        ORDER BY t.user_id DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
 

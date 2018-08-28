@@ -69,7 +69,7 @@ public class AppSubmissionController {
         submissions.setPlatformVersion(version);
         submissions.setPhoneType(phoneType);//手机型号
         submissions.setSysVersion(systemVersion);//操作系统版本号
-        int result= this.submissionService.addSubmission(submissions);
+        int result= this.submissionService.addSubmission(submissions).getResultInt();
         if(result==1){
             ret.put("status", "0");
             ret.put("statusDesc", "成功");

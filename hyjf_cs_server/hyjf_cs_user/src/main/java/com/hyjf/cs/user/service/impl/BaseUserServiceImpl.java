@@ -272,6 +272,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvAuthCode(retBean.getSrvAuthCode());
 			request.setSrvTxCode(retBean.getTxCode());
 			request.setUserId(Integer.parseInt(retBean.getLogUserId()));
+			request.setSmsSeq(retBean.getSmsSeq());
 			boolean smsFlag = this.updateAfterSendCode(request);
 			CheckUtil.check(smsFlag, MsgEnum.ERR_CARD_SAVE);
 			return retBean;

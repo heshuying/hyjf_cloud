@@ -49,4 +49,11 @@ public interface ContentQualifyService {
 	 * @param id
 	 */
     void delete(Integer id);
+
+	/**
+	 * 查询符合条件的条数
+	 * @param request
+	 * @return
+	 */
+	int selectCount(ContentQualifyRequest request);
 }

@@ -59,7 +59,11 @@ public class HjhPlanCapitalController {
         if (request.getCurrPage() > 0){
             Paginator paginator = new Paginator(request.getCurrPage(), count);
             request.setLimitStart(paginator.getOffset());
-            request.setLimitEnd(paginator.getLimit());
+            if (request.getPageSize() > 0){
+                request.setLimitEnd(request.getPageSize());
+            }else{
+                request.setLimitEnd(paginator.getLimit());
+            }
         }
 
         List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);

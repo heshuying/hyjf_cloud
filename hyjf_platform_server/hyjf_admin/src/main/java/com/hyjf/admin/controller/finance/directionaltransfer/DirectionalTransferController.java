@@ -23,9 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Api(value = "资金中心-定向转账-定向转账",tags = "资金中心-定向转账-定向转账")
 @RestController
@@ -57,8 +55,8 @@ public class DirectionalTransferController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "导出定向转账列表",notes = "导出定向转账列表")
-    @GetMapping(value = "/directionaltransferlistexport")
-    public void exportDirectionalTransferListExcel(@ModelAttribute DirectionalTransferListRequest request,HttpServletResponse response) throws Exception {
+    @PostMapping(value = "/directionaltransferlistexport")
+    public void exportDirectionalTransferListExcel(@RequestBody DirectionalTransferListRequest request,HttpServletResponse response) throws Exception {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
 

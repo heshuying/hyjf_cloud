@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -180,9 +182,9 @@ public class AdminHjhPlanController {
 	 * @Desc :
 	 */
     @GetMapping(value = "/isExistsRecord/{planNid}")
-    public boolean isExistsRecord(@PathVariable String planNid) {
+    public BooleanResponse isExistsRecord(@PathVariable String planNid) {
     	boolean Flag = adminHjhPlanService.isExistsRecord(planNid);
-    	return Flag;
+    	return new BooleanResponse(Flag);
     }
 	
 	/**
@@ -190,9 +192,9 @@ public class AdminHjhPlanController {
 	 * @Desc :
 	 */
     @GetMapping(value = "/countByPlanName/{planName}")
-    public Integer countByPlanName(@PathVariable String planName) {
+    public IntegerResponse countByPlanName(@PathVariable String planName) {
     	int Flag = adminHjhPlanService.countByPlanName(planName);
-    	return Flag;
+    	return new IntegerResponse(Flag);
     }
     
 	/**
@@ -200,9 +202,9 @@ public class AdminHjhPlanController {
 	 * @Desc :
 	 */
     @GetMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}")
-    public Integer isLockPeriodExist(@PathVariable String lockPeriod, @PathVariable String borrowStyle, @PathVariable String isMonth) {
+    public IntegerResponse isLockPeriodExist(@PathVariable String lockPeriod, @PathVariable String borrowStyle, @PathVariable String isMonth) {
     	int Flag = adminHjhPlanService.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
-    	return Flag;
+    	return new IntegerResponse(Flag);
     }
     
 	/**
@@ -211,9 +213,9 @@ public class AdminHjhPlanController {
 	 * @Desc :更新计划表
 	 */
 	@RequestMapping("/updateRecord")
-	public int updateRecord(@RequestBody PlanListRequest form) throws Exception {
+	public IntegerResponse updateRecord(@RequestBody PlanListRequest form) throws Exception {
 		int flg = adminHjhPlanService.updateRecord(form);
-		return flg;
+		return new IntegerResponse(flg);
 	}
     
 	/**
@@ -222,9 +224,9 @@ public class AdminHjhPlanController {
 	 * @Desc :更新计划表
 	 */
 	@RequestMapping("/insertRecord")
-	public int insertRecord(@RequestBody PlanListRequest form) throws Exception {
+	public IntegerResponse insertRecord(@RequestBody PlanListRequest form) throws Exception {
 		int flg = adminHjhPlanService.insertRecord(form);
-		return flg;
+		return new IntegerResponse(flg);
 	}
 	
 	/**

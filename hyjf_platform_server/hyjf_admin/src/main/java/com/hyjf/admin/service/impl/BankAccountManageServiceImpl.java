@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.controller.LoginController;
@@ -14,6 +16,7 @@ import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.http.HtmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -131,5 +137,59 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 获取部门列表
+     *
+     * @param list
+     * @return
+     */
+    @Override
+    public JSONArray getCrmDepartmentList(String[] list) {
+        List<OADepartmentCustomizeVO> departmentList = amUserClient.queryDepartmentInfo(null);
+
+        Map<String, String> map = new HashMap<String, String>();
+        if (departmentList != null && departmentList.size() > 0) {
+            for (OADepartmentCustomizeVO oaDepartment : departmentList) {
+                map.put(String.valueOf(oaDepartment.getId()), HtmlUtil.unescape(oaDepartment.getName()));
+            }
+        }
+        return treeDepartmentList(departmentList, map, list, "0", "");
+    }
+
+    /**
+     * 部门树形结构
+     *
+     * @param departmentTreeDBList
+     * @param map
+     * @param selectedNode
+     * @param topParentDepartmentCd
+     * @param topParentDepartmentName
+     * @return
+     */
+    private JSONArray treeDepartmentList(List<OADepartmentCustomizeVO> departmentTreeDBList, Map<String, String> map, String[] selectedNode, String topParentDepartmentCd,
+                                         String topParentDepartmentName) {
+        JSONArray ja = new JSONArray();
+        if (departmentTreeDBList != null && departmentTreeDBList.size() > 0) {
+            JSONObject jo = null;
+            for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
+                jo = new JSONObject();
+
+                jo.put("value", departmentTreeRecord.getId().toString());
+                jo.put("title", departmentTreeRecord.getName());
+                jo.put("key", UUID.randomUUID());
+
+                String departmentCd = String.valueOf(departmentTreeRecord.getId());
+                String departmentName = String.valueOf(departmentTreeRecord.getName());
+                String parentDepartmentCd = String.valueOf(departmentTreeRecord.getParentid());
+                if (topParentDepartmentCd.equals(parentDepartmentCd)) {
+                    JSONArray array = treeDepartmentList(departmentTreeDBList, map, selectedNode, departmentCd, departmentName);
+                    jo.put("children", array);
+                    ja.add(jo);
+                }
+            }
+        }
+        return ja;
     }
 }
