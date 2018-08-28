@@ -3126,9 +3126,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int repayCount(RepayListRequest requestBean) {
-        int count = restTemplate
-                .postForEntity( "http://AM-TRADE/am-trade/repay/repaycount", requestBean, Integer.class).getBody();
-        return count;
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/repaycount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -3138,9 +3141,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int orgRepayCount(RepayListRequest requestBean) {
-        int count = restTemplate
-                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepaycount", requestBean, Integer.class).getBody();
-        return count;
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepaycount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -3150,9 +3156,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int orgRepayedCount(RepayListRequest requestBean) {
-        int count = restTemplate
-                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepayedcount", requestBean, Integer.class).getBody();
-        return count;
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepayedcount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -3162,9 +3171,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean){
-        Boolean result = restTemplate
-                .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, Boolean.class).getBody();
-        return result;
+        BooleanResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 
     @Override
