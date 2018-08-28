@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
@@ -362,9 +363,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean checkEmailUsed(String email) {
-		boolean result = restTemplate
-				.getForEntity(userService+"/user/checkEmailUsed/" + email, boolean.class).getBody();
-		return result;
+		BooleanResponse response = restTemplate
+				.getForEntity(userService+"/user/checkEmailUsed/" + email, BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultBoolean();
+		}
+		return false;
 	}
 	
 	/**
@@ -373,8 +377,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public void insertBindEmailLog(BindEmailLogRequest bean) {
-		restTemplate.postForEntity(userService+"/user/insertBindEmailLog/",  bean, int.class).getBody();
+	public Integer insertBindEmailLog(BindEmailLogRequest bean) {
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/insertBindEmailLog/",  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 	
 	/**
@@ -398,8 +406,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public void updateBindEmail(BindEmailLogRequest bean) {
-		restTemplate.postForEntity(userService+"/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, int.class).getBody();
+	public Integer updateBindEmail(BindEmailLogRequest bean) {
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/updateBindEmail/" + bean.getUserId() + "/" + bean.getUserEmail(),  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 	
 	/**
@@ -409,9 +421,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateUserContract(UsersContractRequest bean) {
-		int result = restTemplate
-				.postForEntity(userService+"/user/updateUserContract/",  bean, int.class).getBody();
-		return result;
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/user/updateUserContract/",  bean, IntegerResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	/**
@@ -441,12 +456,12 @@ public class AmUserClientImpl implements AmUserClient {
 		if(requestBean == null || requestBean.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", requestBean, Integer.class)
+		IntegerResponse response = restTemplate.postForEntity(userService+"/user/updateByUserId", requestBean, IntegerResponse.class)
 				.getBody();
-		if (result == null) {
-			return 0;
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
 		}
-		return result;
+		return 0;
 	}
 	/**
 	 * @Description 根据身份证号查询用户

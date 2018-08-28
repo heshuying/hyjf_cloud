@@ -67,13 +67,12 @@ public class AppRechargeController extends BaseTradeController{
 	@ResponseBody
 	@PostMapping(value = "/user/bank/recharge/getRechargeUrl")
 	@ApiOperation(value = "获取用户充值信息", notes = "获取用户充值信息")
-	public JSONObject getRechargeUrl(AppRechargeVO vo) {
+	public JSONObject getRechargeUrl(AppRechargeVO vo, @RequestHeader(value = "key") String key) {
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */
 		String RECHARGE_URL = super.getFrontHost(systemConfig,vo.getPlatform()) + "/public/formsubmit?requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RECHARGE;
 		String mobile = "";
-		String isMencry = vo.getIsMencry();// 版本号
 
 		// 校验数据并拼接回传地址
 		if (Validator.isNull(vo.getMoney())) {
