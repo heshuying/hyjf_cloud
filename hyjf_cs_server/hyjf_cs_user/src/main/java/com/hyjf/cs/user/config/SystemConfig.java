@@ -109,7 +109,16 @@ public class SystemConfig {
     private String publickeyhjs;
     @Value("${privatekey.hjs}")
     private String privatekeyhjs;
+    @Value("${wrb.callback.bind.url}")
+    private String wrncallbackbindurl;
 
+    public String getWrncallbackbindurl() {
+		return wrncallbackbindurl;
+	}
+
+	public void setWrncallbackbindurl(String wrncallbackbindurl) {
+		this.wrncallbackbindurl = wrncallbackbindurl;
+	}
     public String getAppServerHost() {
         return appServerHost;
     }

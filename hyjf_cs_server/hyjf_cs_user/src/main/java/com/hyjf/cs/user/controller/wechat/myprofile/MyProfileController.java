@@ -102,8 +102,9 @@ public class MyProfileController extends BaseUserController {
         }
         List<CouponUserForAppCustomizeVO> list = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
         if (CollectionUtils.isEmpty(list)){
-            resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("获取用户优惠券数据为空!");
+            resultBean.setStatus(BaseResult.SUCCESS);
+            resultBean.setStatusDesc(BaseResult.SUCCESS_DESC);
+            resultBean.setObject(list);
             return resultBean;
         }
 
