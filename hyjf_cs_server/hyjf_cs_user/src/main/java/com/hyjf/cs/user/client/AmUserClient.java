@@ -336,7 +336,7 @@ public interface AmUserClient {
 	 * @param requestBean
 	 * @return
 	 */
-	int selectMyInviteCount(MyInviteListRequest requestBean);
+	Integer selectMyInviteCount(MyInviteListRequest requestBean);
 
     /**
 	 * 查询同步银行卡号
