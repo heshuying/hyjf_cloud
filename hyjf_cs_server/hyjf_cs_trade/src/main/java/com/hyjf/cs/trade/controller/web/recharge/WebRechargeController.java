@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
@@ -92,6 +93,8 @@ public class WebRechargeController extends BaseTradeController{
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -130,7 +133,7 @@ public class WebRechargeController extends BaseTradeController{
 		if (user!=null&&bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
 			// 充值成功
 			if (msg != null && "0".equals(msg.get("error"))) {
-				logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
+				logger.info("web充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
 				result.setMessage("充值成功");
 				result.setStatus(true);
 				return result;
@@ -140,7 +143,7 @@ public class WebRechargeController extends BaseTradeController{
 				return result;
 			}
 		}
-		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
+		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[web用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
 		return result;

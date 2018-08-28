@@ -327,7 +327,8 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
-    public AdminResult checkReAction(@RequestHeader(value = "userId") String userId,@RequestBody String userName) {
+    public AdminResult checkReAction(HttpServletRequest request,@RequestBody String userName) {
+        String userId = getUser(request).getId();
         //校验推荐人
         if (Validator.isNotNull(userId)) {
             if (StringUtils.isNotEmpty(userName)) {
@@ -355,7 +356,8 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(@RequestHeader(value = "userId") String userId,  @RequestBody String mobile) {
+    public AdminResult checkAction(HttpServletRequest request,  @RequestBody String mobile) {
+        String userId = getUser(request).getId();
         // 检查手机号码唯一性
         int cnt = userCenterService.countUserByMobile(Integer.parseInt(userId), mobile);
         if (cnt > 0) {
@@ -526,7 +528,8 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @PostMapping(value = "/serchCompanyInfo")
     @ApiOperation(value = "查询企业开户信息", notes = "查询企业开户信息")
-    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(@RequestHeader(value = "userId") String userId,@RequestBody String accountId) {
+    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(HttpServletRequest request,@RequestBody String accountId) {
+        String userId = getUser(request).getId();
         SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
         if (StringUtils.isBlank(userId)) {
             return new AdminResult<>(FAIL, "请先选择用户再进行操作!");

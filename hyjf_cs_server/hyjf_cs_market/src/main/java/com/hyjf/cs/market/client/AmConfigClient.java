@@ -6,6 +6,7 @@ package com.hyjf.cs.market.client;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -158,7 +159,7 @@ public interface AmConfigClient {
      * @param submissionsVO
      * @return
      */
-    int addSubmission(SubmissionsVO submissionsVO);
+    IntegerResponse addSubmission(SubmissionsVO submissionsVO);
 
     List<JxBankConfigVO> getBankRecordList();
 

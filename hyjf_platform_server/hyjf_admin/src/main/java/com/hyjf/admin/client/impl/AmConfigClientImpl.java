@@ -2,6 +2,8 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.BankConfigResponse;
@@ -564,8 +566,12 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<BankRechargeLimitConfigVO> exportRecordList(BankRechargeLimitConfigVO adminRequest) {
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/exportRecordList", adminRequest, List.class)
+        AdminBankRechargeConfigResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/config/bankrecharge/exportRecordList", adminRequest, AdminBankRechargeConfigResponse.class)
                 .getBody();
+         if(response != null){
+             return response.getResultList();
+         }
+        return null;
     }
 
     /**
@@ -576,8 +582,12 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankRecordList() {
         BankConfigVO bank = new BankConfigVO();
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/getBankRecordListByQuickPayment", bank, List.class)
+        BankConfigResponse response= restTemplate.postForEntity("http://AM-CONFIG/am-config/config/getBankRecordListByQuickPayment", bank, BankConfigResponse.class)
                 .getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**
@@ -650,7 +660,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public boolean isExistsReturnCode(AdminBankRetcodeConfigRequest record) {
         String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsReturnCode";
-        return restTemplate.postForEntity(url, record, boolean.class).getBody();
+        return restTemplate.postForEntity(url, record, BooleanResponse.class).getBody().getResultBoolean();
     }
 
     /**
@@ -662,7 +672,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public boolean isExistsRecord(AdminBankRetcodeConfigRequest adminRequest) {
         String url = "http://AM-CONFIG/am-config/config/bankretcodeconfig/isExistsRecord";
-        return restTemplate.postForEntity(url, adminRequest, boolean.class).getBody();
+        return restTemplate.postForEntity(url, adminRequest, BooleanResponse.class).getBody().getResultBoolean();
     }
 
     /**
@@ -1217,8 +1227,12 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public List<BankConfigVO> getBankConfigList(BankConfigVO bank) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/config/getBankConfigListByStatus",
-                bank, List.class);
+        AdminBankConfigResponse response= restTemplate.postForObject("http://AM-CONFIG/am-config/config/getBankConfigListByStatus",
+                bank, AdminBankConfigResponse.class);
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**
@@ -1230,8 +1244,12 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(BankConfigVO bank, int limitStart, int limitEnd) {
         //查詢所有
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/selectBankConfigByBankName",
-                bank.getName(), List.class);
+        AdminBankConfigResponse response= restTemplate.postForObject("http://AM-CONFIG/am-config/feeconfig/selectBankConfigByBankName",
+                bank.getName(), AdminBankConfigResponse.class);
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 
     /**
@@ -1335,13 +1353,13 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public int insertMailTemplate(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/insertMailTemplate", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public int updateMailTemplate(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_mail_template", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -1360,7 +1378,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
-        restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/insertMsgPushTemplate", request,
+        restTemplate.postForEntity("http://AM-CONFIG/am-config/messagePushTemplate/insertMsgPushTemplate", IntegerResponse.class,
                 Object.class);
     }
 
@@ -1406,7 +1424,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int insertSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/insertTemplate", request, IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -1561,7 +1579,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @return
      */
     @Override
-    public com.hyjf.am.vo.admin.VersionVO getVersionByCode(Integer vid, Integer type, String version) {
+    public VersionVO getVersionByCode(Integer vid, Integer type, String version) {
         String url = "http://AM-CONFIG/am-config/config/versionconfig/validationFeild";
         Map<String, Object> map = new HashMap<String, Object>();
         if (vid != null) {
@@ -1569,9 +1587,9 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         map.put("type", type);
         map.put("version", version);
-        com.hyjf.am.vo.admin.VersionVO response = restTemplate.postForEntity(url, map, VersionVO.class).getBody();
+        AdminVersionResponse response = restTemplate.postForEntity(url, map, AdminVersionResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResult();
         }
         return null;
     }
@@ -1983,7 +2001,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public int openAction(MailTemplateRequest request) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/smsMailTemplate/update_status", request,
-                Integer.class);
+                IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -2033,7 +2051,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int updateStatus(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/open_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -2043,7 +2061,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public int updateSmsTemplate(SmsTemplateRequest request) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, Integer.class);
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/smsTemplate/update_sms_template", request, IntegerResponse.class).getResultInt();
     }
 
     @Override

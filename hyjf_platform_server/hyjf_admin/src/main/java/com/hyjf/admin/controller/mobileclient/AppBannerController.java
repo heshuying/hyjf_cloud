@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(tags = "admin移动客户端-广告管理")
 @RestController
-@RequestMapping("/app/maintenance/banner")
+@RequestMapping("/hyjf-admin/app/maintenance/banner")
 public class AppBannerController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired

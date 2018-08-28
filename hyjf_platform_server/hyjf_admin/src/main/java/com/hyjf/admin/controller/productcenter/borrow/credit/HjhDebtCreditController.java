@@ -72,18 +72,20 @@ public class HjhDebtCreditController extends BaseController{
         }
         //转让状态
         Map<String, String> hjhDebtCreditStatus = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_CREDIT_STATUS);
+        List<DropDownVO> hjhDebtCreditStatusVo = ConvertUtils.convertParamMapToDropDown(hjhDebtCreditStatus);
         if(hjhDebtCreditStatus != null && hjhDebtCreditStatus.size() > 0){
             jsonObject.put("转让状态列表","hjhDebtCreditStatus");
-            jsonObject.put("hjhDebtCreditStatus",hjhDebtCreditStatus);
+            jsonObject.put("hjhDebtCreditStatus",hjhDebtCreditStatusVo);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取转让状态列表失败！");
         }
         //汇计划债转还款状态
         Map<String, String> hjhDebtRepayStatus = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_REPAY_STATUS);
+        List<DropDownVO> hjhDebtRepayStatusVo = ConvertUtils.convertParamMapToDropDown(hjhDebtRepayStatus);
         if(hjhDebtRepayStatus != null && hjhDebtRepayStatus.size() > 0){
             jsonObject.put("还款状态列表","hjhDebtRepayStatus");
-            jsonObject.put("hjhDebtRepayStatus",hjhDebtRepayStatus);
+            jsonObject.put("hjhDebtRepayStatus",hjhDebtRepayStatusVo);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取还款状态列表失败！");

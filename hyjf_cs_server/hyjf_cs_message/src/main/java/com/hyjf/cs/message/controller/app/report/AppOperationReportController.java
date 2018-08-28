@@ -11,10 +11,7 @@ import com.hyjf.cs.message.service.report.OperationReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,8 +40,8 @@ public class AppOperationReportController extends BaseController {
 
 	}
 	@ApiOperation(value = "运营报告明细", notes = "运营报告明细")
-	@GetMapping("/reportInfo/{id}")
-	public JSONObject reportInfo(@PathVariable String id) {
+	@GetMapping("/reportInfo")
+	public JSONObject reportInfo(@RequestParam(value = "id") String id) {
 		JSONObject response = operationReportService.reportInfo(id);
 		return response;
 	}

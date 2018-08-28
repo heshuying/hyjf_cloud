@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.front.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
@@ -79,9 +80,11 @@ public class MyCouponListController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/myCouponCount")
-    public Integer myCouponCount(@RequestBody @Valid MyCouponListRequest requestBean){
-        MyCouponListResponse responseBean = new MyCouponListResponse();
-        return myCouponListService.countUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag());
+    public IntegerResponse myCouponCount(@RequestBody @Valid MyCouponListRequest requestBean){
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer count = myCouponListService.countUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag());
+        responseBean.setResultInt(count);
+        return responseBean;
     }
 
     /**

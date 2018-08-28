@@ -164,7 +164,6 @@ public class MessagePushMsg implements Serializable {
         this.msgSendType = msgSendType;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getPreSendTime() {
         return preSendTime;
     }
@@ -173,7 +172,6 @@ public class MessagePushMsg implements Serializable {
         this.preSendTime = preSendTime;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getSendTime() {
         return sendTime;
     }
@@ -182,7 +180,6 @@ public class MessagePushMsg implements Serializable {
         this.sendTime = sendTime;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getCreateTime() {
         return createTime;
     }
@@ -207,7 +204,6 @@ public class MessagePushMsg implements Serializable {
         this.createUserName = createUserName;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Integer getLastupdateTime() {
         return lastupdateTime;
     }

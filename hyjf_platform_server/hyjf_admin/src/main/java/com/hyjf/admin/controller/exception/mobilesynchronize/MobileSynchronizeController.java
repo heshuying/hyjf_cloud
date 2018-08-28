@@ -4,9 +4,9 @@
 package com.hyjf.admin.controller.exception.mobilesynchronize;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.common.controller.BaseController;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
@@ -15,9 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -43,8 +42,9 @@ public class MobileSynchronizeController extends BaseController {
 
     @ApiOperation(value = "同步手机号",notes = "同步手机号")
     @PostMapping(value = "/modifyAction")
-    public AdminResult modifyAction(@RequestHeader(value = "userId")Integer userId, @RequestBody MobileSynchronizeRequest request){
-        JSONObject jsonObject = mobileSynchronizeService.updateMobile(userId,request);
+    public AdminResult modifyAction(HttpServletRequest request, @RequestBody MobileSynchronizeRequest mobileSynchronizeRequest){
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        JSONObject jsonObject = mobileSynchronizeService.updateMobile(userId,mobileSynchronizeRequest);
         String status = jsonObject.getString("status");
         String statusDesc = jsonObject.getString("result");
         return new AdminResult(status,statusDesc);

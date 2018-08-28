@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.repay;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowAuthResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -34,8 +35,8 @@ public class BorrowAuthController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/count_auth")
-    public Integer selectAuthCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
-        return borrowAuthService.countBorrowNeedAuthRecordTotal(requestBean);
+    public IntegerResponse selectAuthCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
+        return new IntegerResponse(borrowAuthService.countBorrowNeedAuthRecordTotal(requestBean));
     }
 
     /**
@@ -60,8 +61,8 @@ public class BorrowAuthController extends BaseController {
      * @date: 2018/7/6
      */
     @RequestMapping(value = "/count_authed")
-    public Integer selectAuthedCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
-        return borrowAuthService.countBorrowAuthedRecordTotal(requestBean);
+    public IntegerResponse selectAuthedCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
+        return new IntegerResponse(borrowAuthService.countBorrowAuthedRecordTotal(requestBean));
     }
 
     /**
@@ -84,18 +85,18 @@ public class BorrowAuthController extends BaseController {
      * @date: 2018/7/6
      */
     @GetMapping("/auth_update/{borrowNid}")
-    public Integer updateTrusteePaySuccess(@PathVariable String borrowNid){
+    public IntegerResponse updateTrusteePaySuccess(@PathVariable String borrowNid){
         if(StringUtils.isBlank(borrowNid)){
             logger.error("受托支付申请回调更新失败，请求参数不全");
-            return 0;
+            return new IntegerResponse(0);
         }
 
         try {
             borrowAuthService.updateTrusteePaySuccess(borrowNid);
-            return 1;
+            return new IntegerResponse(1);
         } catch (Exception e) {
             logger.error("受托支付申请更新异常", e);
-            return 0;
+            return new IntegerResponse(0);
         }
     }
 

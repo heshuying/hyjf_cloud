@@ -6,6 +6,7 @@ import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -1710,10 +1711,35 @@ public interface AmTradeClient {
      */
     List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
 
+	/**
+	 *
+	 * 投资预插入
+	 *
+	 * @param borrowNid
+	 * @param orderId
+	 * @param userId
+	 * @param account
+	 * @param ip
+	 * @return
+	 * @author Administrator
+	 * @throws Exception
+	 */
+    boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest);
+
     /**
-     * @Description 获取计划可用优惠券
-     * @Author sunss
-     * @Date 2018/8/27 21:05
+     * 根据id删除BorrowTenderTmp
+     * @auth libin
+     * @param id 主键
+     * @return
      */
-    JSONObject getHJHProjectUserCoupon(String planNid, Integer userId, String money, String platform);
+    Integer deleteBorrowTenderTmp(String orgOrderId);
+
+	/**
+	 * 投资失败,删除投资临时表
+	 * @param borrowNid
+	 * @param userId
+	 * @param orderId
+	 */
+    int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
+
 }

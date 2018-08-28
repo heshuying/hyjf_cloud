@@ -60,14 +60,16 @@ public class SendTypeController {
      * @return
      */
     @RequestMapping("/info/{sendCd}")
-    public BorrowSendTypeVO selectSendTypeInfo(@PathVariable String sendCd) {
+    public BorrowSendTypeResponse selectSendTypeInfo(@PathVariable String sendCd) {
         logger.info("发标复标详情..." + JSONObject.toJSON(sendCd));
-        BorrowSendTypeVO BorrowSendTypeVO=new BorrowSendTypeVO();
+        BorrowSendTypeResponse response = new BorrowSendTypeResponse();
+        BorrowSendTypeVO borrowSendTypeVO=new BorrowSendTypeVO();
         //查询发标复标详情
         BorrowSendType borrowSendType = this.sendTypeService.selectSendTypeInfo(sendCd);
         if (null != borrowSendType) {
-            BeanUtils.copyProperties(borrowSendType,BorrowSendTypeVO);
-            return BorrowSendTypeVO;
+            BeanUtils.copyProperties(borrowSendType,borrowSendTypeVO);
+            response.setResult(borrowSendTypeVO);
+            return response;
         }
         return null;
     }
