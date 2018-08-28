@@ -8,7 +8,7 @@
  *           Modification History:
  *           Modified by :
  */
-package com.hyjf.pay.lib;
+package com.hyjf.pay.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.chinapnr.MerPriv;
@@ -16,7 +16,6 @@ import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,7 +169,7 @@ public class PnrApiBean implements Serializable {
     public String getChkValueMerged(String... keys) {
         return getChkValueMerged(true, keys);
     }
-
+    
     /**
      * 取得组合后的签名 先MD5加密然后加签
      *
@@ -236,7 +235,7 @@ public class PnrApiBean implements Serializable {
         }
         return chkValue;
     }
-
+    
     /**
      * 取得组合后的签名MD5
      *
@@ -336,7 +335,7 @@ public class PnrApiBean implements Serializable {
             Method getMethod = c.getMethod(ChinaPnrConstant.GET + ChinaPnrConstant.PARAM_MERPRIV);
             Object result = getMethod.invoke(obj);
             if (null != result) {// 如果私有域属性不为空，设置私有域对象
-                result = URLDecoder.decode(result.toString(),"utf-8");
+                result = URLDecoder.decode(result.toString(),"utf-8"); 
                 if (result.toString().contains("{")) {
                     this.setMerPrivPo(JSON.parseObject(result.toString(), MerPriv.class));
                 }
