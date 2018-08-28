@@ -246,12 +246,11 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/updataUserInfo")
-    public int updataUserInfo(@RequestBody UserManagerUpdateRequest request) {
+    public IntegerResponse updataUserInfo(@RequestBody UserManagerUpdateRequest request) {
         logger.info("---updataUserInfo---  " + JSONObject.toJSONString(request));
         IntegerResponse integerResponse = new IntegerResponse();
         int updateUser = userManagerService.updataUserInfo(request);
-        integerResponse.setResultInt(updateUser);
-        return updateUser;
+        return new IntegerResponse(updateUser);
     }
 
     /**

@@ -52,8 +52,6 @@ public class LoanCoverController extends BaseController {
 
     @Autowired
     private LoanCoverService loanCoverService;
-    private static Logger logger = LoggerFactory.getLogger(LoanCoverController.class);
-
 
     /**
      * 获取借款盖章用户列表
@@ -63,7 +61,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "获取借款盖章用户列表", notes = "获取借款盖章用户列表")
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
-    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);

@@ -2,6 +2,7 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import java.util.List;
 
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import com.hyjf.am.user.dao.model.auto.UserInfo;
@@ -31,5 +32,6 @@ public interface UserInfoMapper {
 
     int updateByPrimaryKey(UserInfo record);
 
-    MessagePushErrorVO getMobileCodeByNumber(String mobile);
+    AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
+
 }

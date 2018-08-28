@@ -134,7 +134,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(final int userId) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/user/findById/" + userId, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -493,12 +493,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updataUserInfo(UserManagerUpdateRequest request) {
-		IntegerResponse intUpdFlg = restTemplate
+		IntegerResponse response = restTemplate
 				.postForEntity("http://AM-ADMIN/am-user/userManager/updataUserInfo", request, IntegerResponse.class).getBody();
-		if(null!=intUpdFlg){
-			return intUpdFlg.getResultInt();
+		if (response == null || !Response.isSuccess(response)) {
+			return 0;
 		}
-		return -1;
+		return response.getResultInt().intValue();
 	}
 
 	/**
@@ -954,7 +954,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public RegistRecordResponse findRegistRecordList(RegistRcordRequest request) {
 		RegistRecordResponse response = restTemplate.postForEntity(
-				"http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class).getBody();
+				"http://AM-ADMIN/am-user/registRecord/registRecordList", request, RegistRecordResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -971,7 +971,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request) {
 		LoanCoverUserResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/loanCoverUser/loanCoverUserRecord", request,
+				.postForEntity("http://AM-ADMIN/am-user/loanCoverUser/loanCoverUserRecord", request,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -989,7 +989,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int insertLoanCoverUser(LoanCoverUserRequest request) {
 		int updFlg = restTemplate
-				.postForEntity("http://AM-USER/am-user/loanCoverUser/insertLoanCoverUserRecord", request, Integer.class)
+				.postForEntity("http://AM-ADMIN/am-user/loanCoverUser/insertLoanCoverUserRecord", request, Integer.class)
 				.getBody();
 		return updFlg;
 	}
@@ -1004,7 +1004,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo) {
 		LoanCoverUserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
+				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1024,7 +1024,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public LoanCoverUserResponse selectIsExistsRecordById(String strId) {
 		LoanCoverUserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordById/" + strId,
+				.getForEntity("http://AM-ADMIN/am-user/loanCoverUser/selectIsExistsRecordById/" + strId,
 						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1043,7 +1043,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int updateLoanCoverUserRecord(LoanCoverUserRequest request) {
 		int updFlg = restTemplate
-				.postForEntity("http://AM-USER/am-user/loanCoverUser/updateLoanCoverUserRecord", request, Integer.class)
+				.postForEntity("http://AM-ADMIN/am-user/loanCoverUser/updateLoanCoverUserRecord", request, Integer.class)
 				.getBody();
 		return updFlg;
 	}
@@ -1058,7 +1058,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public EvalationResultResponse selectUserEvalationResultList(EvalationRequest request) {
 		EvalationResultResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request,
+				.postForEntity("http://AM-ADMIN/am-user/evaluationManager/selectUserEvalationResultList", request,
 						EvalationResultResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1077,7 +1077,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserEvalationResultVO selectEvaluationDetailById(String userId) {
 		UserEvalationResultResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/evaluationManager/selectEvaluationDetailById/" + userId,
+				.getForEntity("http://AM-ADMIN/am-user/evaluationManager/selectEvaluationDetailById/" + userId,
 						UserEvalationResultResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1372,7 +1372,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId){
-		String url = "http://AM-USER/am-user/evaluationManager/getUserQuestionInfoById/" + evalationId;
+		String url = "http://AM-ADMIN/am-user/evaluationManager/getUserQuestionInfoById/" + evalationId;
 		UserEvalationQuestionResponse response = restTemplate.getForEntity(url, UserEvalationQuestionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();

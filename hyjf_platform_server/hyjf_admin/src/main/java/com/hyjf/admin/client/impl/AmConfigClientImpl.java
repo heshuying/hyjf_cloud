@@ -1651,7 +1651,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public QuestionResponse getAllQuestion() {
         QuestionResponse mspResponse = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/quesiontAndAnswer/findAllQuestion", QuestionResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/quesiontAndAnswer/findAllQuestion", QuestionResponse.class)
                 .getBody();
         if (mspResponse != null) {
             return mspResponse;
@@ -1667,7 +1667,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public AnswerResponse getAllAnswer() {
         AnswerResponse mspResponse = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/quesiontAndAnswer/findAllAnswer", AnswerResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/quesiontAndAnswer/findAllAnswer", AnswerResponse.class)
                 .getBody();
         if (mspResponse != null) {
             return mspResponse;
