@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -240,8 +241,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 * @return
 	 */
 	@Override
-	public int addSubmission(SubmissionsVO submissionsVO){
-		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
+	public IntegerResponse addSubmission(SubmissionsVO submissionsVO){
+		IntegerResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
 		return response;
 	}
 

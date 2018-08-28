@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.service.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.service.SubmissionService;
@@ -16,7 +17,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     AmConfigClient amConfigClient;
 
     @Override
-    public int addSubmission(SubmissionsVO submissions) {
+    public IntegerResponse addSubmission(SubmissionsVO submissions) {
         return amConfigClient.addSubmission(submissions);
     }
 }
