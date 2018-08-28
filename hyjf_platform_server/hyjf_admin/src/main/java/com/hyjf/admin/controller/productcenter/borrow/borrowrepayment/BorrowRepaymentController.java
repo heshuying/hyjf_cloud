@@ -68,7 +68,7 @@ public class BorrowRepaymentController extends BaseController {
         BorrowRepaymentRequest copyForm=new BorrowRepaymentRequest();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentBean bean = borrowRepaymentService.searchBorrowRepayment(copyForm);
-        List<DropDownVO> repayTypeList = this.adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> repayTypeList =  this.adminCommonService.selectBorrowStyleList();
         bean.setRepayTypeList(repayTypeList);
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentService.selectHjhInstConfigByInstCode("-1");
