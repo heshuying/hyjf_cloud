@@ -21,7 +21,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
 
-  <resultMap id="BaseResultMapT" type="com.hyjf.am.vo.admin.MessagePushErrorVO">
+  <resultMap id="BaseResultMapT" type="com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO">
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="mobile_code" property="mobileCode" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
