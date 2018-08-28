@@ -654,7 +654,7 @@ ORDER BY
 		dpa.user_name
 		END userName,
 		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accedeAccount,
-		dpa.create_time as accedeTime,
+		date_format(dpa.create_time, '%Y-%m-%d %H:%i:%s') as accedeTime,
 		-- IFNULL(hui.vip_id,0) vip_id,
 		-- hui.vip_value,
 		 dpa.client
