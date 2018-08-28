@@ -2584,11 +2584,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /*加入明细 end  AM-ADMIN*/
 
-    /*承接记录 start*/
+    /*承接记录 start AM-ADMIN*/
     @Override
     public HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form) {
         HjhCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParam", form, HjhCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/getHjhCreditTenderListByParam", form, HjhCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2598,7 +2598,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form) {
         HjhCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParamWithOutPage", form, HjhCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/getHjhCreditTenderListByParamWithOutPage", form, HjhCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2608,13 +2608,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form) {
         HjhDebtCreditTenderResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/selectHjhCreditTenderRecord", form, HjhDebtCreditTenderResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/selectHjhCreditTenderRecord", form, HjhDebtCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
         return null;
     }
-    /*承接记录 end*/
+    /*承接记录 end AM-ADMIN*/
 
     /*计划引擎 start*/
 
