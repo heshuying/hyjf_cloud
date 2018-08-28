@@ -2199,7 +2199,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     /*资产中心 start*/
 
     /**
-     * 获取资金来源
+     * 获取资金来源   AM-ADMIN
      *
      * @param
      * @return List<HjhInstConfigVO>
@@ -2216,7 +2216,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 产品类型下拉联动
+     * 产品类型下拉联动   AM-ADMIN
      *
      * @param instCodeSrch
      * @return List<HjhAssetTypeVO>
@@ -2224,7 +2224,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch) {
         HjhAssetTypeResponse response = restTemplate.
-                getForEntity("http://AM-TRADE/am-trade/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
+                getForEntity("http://AM-ADMIN/am-trade/hjhAssetType/selectAssetTypeAll/" + instCodeSrch, HjhAssetTypeResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -2244,7 +2244,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询资产列表
+     * 查询资产列表  AM-ADMIN
      *
      * @param request
      * @return
@@ -2262,14 +2262,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询详情
+     * 查询详情  AM-ADMIN
      *
      * @return 查询详情
      */
     @Override
     public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
         AssetDetailCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findDetailById", assetListRequest,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findDetailById", assetListRequest,
                         AssetDetailCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2279,7 +2279,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询记录总数
+     * 查询记录总数   AM-ADMIN
      *
      * @param request
      * @return 查询详情
@@ -2287,7 +2287,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getRecordCount(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findRecordCount", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/findRecordCount", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -2297,7 +2297,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询列总计
+     * 查询列总计  AM-ADMIN
      *
      * @param request
      * @return 查询详情
@@ -2305,7 +2305,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BigDecimal sumAccount(AssetListRequest request) {
         AssetListCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/sumAccount", request,
+                .postForEntity("http://AM-ADMIN/am-trade/assetList/sumAccount", request,
                         AssetListCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
