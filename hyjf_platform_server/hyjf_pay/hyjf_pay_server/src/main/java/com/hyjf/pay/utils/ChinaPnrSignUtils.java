@@ -8,7 +8,7 @@
  * Modification History:
  * Modified by :
  */
-package com.hyjf.pay.lib.chinapnr.util;
+package com.hyjf.pay.utils;
 
 import chinapnr.SecureLink;
 import com.hyjf.common.util.StringPool;

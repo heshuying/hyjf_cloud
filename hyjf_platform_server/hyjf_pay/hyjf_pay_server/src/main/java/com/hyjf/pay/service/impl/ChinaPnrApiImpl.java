@@ -8,72 +8,70 @@
  *           Modification History:
  *           Modified by :
  */
-package com.hyjf.pay.lib.chinapnr;
+package com.hyjf.pay.service.impl;
 
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.PnrApi;
+import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.PnrApiBean;
+import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
+import com.hyjf.pay.service.PnrApi;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @author GOGTZ-T
  */
-
-@Component
+@Service
 public class ChinaPnrApiImpl implements PnrApi {
+
+    SystemConfig _systemConfig;
+
     private static Logger log = LoggerFactory.getLogger(ChinaPnrApiImpl.class);
     /** THIS_CLASS */
     private static final String THIS_CLASS = ChinaPnrApiImpl.class.getName();
 
     /** 版本号 */
-    @Value("${hyjf.chinapnr.version}")
     private String _version;
 
     /** 商户客户号 */
-    @Value("${hyjf.chinapnr.mercustid}")
     private String _merCustId;
 
     /** 商户子账户号 */
-    @Value("${hyjf.chinapnr.meracctId}")
     private String _merAcctId;
 
     /** 商户后台回调地址 */
-    @Value("${hyjf.chinapnr.callback.url}")
     private String _bgRetUrl;
 
-    /** 汇付天下地址 */
-    @Value("${hyjf.chinapnr.url}")
-    private String chinapnrUrl;
-
-    public ChinaPnrApiImpl() {
+    public ChinaPnrApiImpl(@Qualifier("systemConfig") SystemConfig systemConfig) {
         // 版本号
         if (Validator.isNull(_version)) {
-            _version = get_version();
-            // _version ="20";
+            _version = systemConfig.getVersion();
         }
 
         // 商户客户号
         if (Validator.isNull(_merCustId)) {
-            _merCustId = get_merCustId();
+            _merCustId = systemConfig.getMerCustId();
         }
 
         // 商户子账户号
         if (Validator.isNull(_merAcctId)) {
-            _merAcctId = get_merAcctId();
+            _merAcctId = systemConfig.getMerAcctId();
         }
 
         // 商户后台回调地址
         if (Validator.isNull(_bgRetUrl)) {
-            _bgRetUrl = get_bgRetUrl();
+            _bgRetUrl = systemConfig.getChinapnrCallBack();
         }
+        _systemConfig = systemConfig;
     }
     /**
      * 调用汇付天下API接口
@@ -102,7 +100,8 @@ public class ChinaPnrApiImpl implements PnrApi {
 
         try {
             // 发送请求
-            result = HttpDeal.post(chinapnrUrl, bean.getAllParams());
+            Map<String, String> test = bean.getAllParams();
+            result = HttpDeal.post(_systemConfig.getChinapnrUrl(), bean.getAllParams());
             log.debug("[返回结果:" + result + "]");
         } catch (Exception e) {
             log.error(String.valueOf(e));
