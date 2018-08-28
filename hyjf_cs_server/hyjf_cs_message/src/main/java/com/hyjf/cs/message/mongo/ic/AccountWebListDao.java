@@ -68,11 +68,11 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     public Criteria createCriteria(AccountWebListVO accountWebList){
         Criteria criteria;
         if(null!=accountWebList){
-            criteria = Criteria.where("id").gt(0);
-            if(StringUtils.isNoneBlank(accountWebList.getOrdid())){
+            criteria = Criteria.where("id").gt("0");
+            if(StringUtils.isNotBlank(accountWebList.getOrdid())){
                 criteria = criteria.and("ordid").is(accountWebList.getOrdid());
             }
-            if(StringUtils.isNoneBlank(accountWebList.getBorrowNid())){
+            if(StringUtils.isNotBlank(accountWebList.getBorrowNid())){
                 criteria = criteria.and("borrowNid").is(accountWebList.getBorrowNid());
             }
             if(StringUtils.isNotBlank( accountWebList.getTruenameSearch())){
