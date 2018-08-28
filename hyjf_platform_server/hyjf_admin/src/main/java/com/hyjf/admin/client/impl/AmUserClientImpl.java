@@ -150,7 +150,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO findUsersInfoById(int userId) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/userInfo/findById/" + userId, UserInfoResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -221,7 +221,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		String url = "http://AM-ADMIN/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
 		UserInfoCustomizeResponse response = restTemplate.getForEntity(url, UserInfoCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -239,7 +239,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public SpreadsUserVO searchSpreadsUserByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
+		String url = "http://AM-ADMIN/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
 		SpreadsUserResponse response = restTemplate.getForEntity(url, SpreadsUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -257,7 +257,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
+		String url = "http://AM-ADMIN/am-user/userInfo/selectEmployeeByUserId/" + userId;
 		EmployeeCustomizeResponse response = restTemplate.getForEntity(url, EmployeeCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();

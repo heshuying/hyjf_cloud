@@ -608,7 +608,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response = restTemplate.postForEntity(url, request, AdminTransferExceptionLogResponse.class).getBody();
         return response;
     }
@@ -635,7 +635,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateTransferExceptionLogByUUID(TransferExceptionLogVO request) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
         return restTemplate.postForEntity(url, request, Integer.class).getBody();
     }
 
@@ -649,7 +649,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/" + uuid;
         TransferExceptionLogResponse response = restTemplate.getForEntity(url, TransferExceptionLogResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -913,7 +913,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean transferAfter(JSONObject jsonObject) {
-        String url = "http://AM-TRADE/am-trade/transferExceptionLog/transferAfter";
+        String url = "http://AM-ADMIN/am-trade/transferExceptionLog/transferAfter";
         return restTemplate.postForEntity(url, jsonObject, Boolean.class).getBody();
     }
 
@@ -932,7 +932,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverVO getCouponRecoverByPrimaryKey(Integer id) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponRecoverByPrimaryKey/" + id;
         CouponRecoverResponse response = restTemplate.getForEntity(url, CouponRecoverResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResult();
@@ -949,7 +949,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowTenderCpnVO getCouponTenderInfoByNid(String nid) {
-        String url = "http://AM-TRADE/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
+        String url = "http://AM-ADMIN/am-trade/coupon/getCouponTenderInfoByNid/" + nid;
         BorrowTenderCpnResponse response = restTemplate.getForEntity(url, BorrowTenderCpnResponse.class).getBody();
         if (response != null) {
             return response.getResult();
