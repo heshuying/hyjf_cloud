@@ -2406,11 +2406,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /*标签配置中心 end  AM-ADMIN*/
 
-    /*计划列表 start*/
+    /*计划列表 start AM-ADMIN*/
     @Override
     public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2420,7 +2420,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanSumVO getCalcSumByParam(PlanListRequest form) {
         HjhPlanSumResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getCalcSumByParam", form, HjhPlanSumResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getCalcSumByParam", form, HjhPlanSumResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2430,7 +2430,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form) {
         HjhPlanDetailResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanDetailByPlanNid", form, HjhPlanDetailResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getHjhPlanDetailByPlanNid", form, HjhPlanDetailResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2440,7 +2440,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2450,7 +2450,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2460,7 +2460,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2470,7 +2470,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2479,39 +2479,39 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public boolean isExistsRecord(String planNid) {
-        String url = "http://AM-TRADE/am-trade/planList/isExistsRecord/" + planNid;
-        boolean Flag = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/isExistsRecord/" + planNid;
+        BooleanResponse Flag = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return Flag.getResultBoolean();
     }
 
     @Override
     public int countByPlanName(String planName) {
-        String url = "http://AM-TRADE/am-trade/planList/countByPlanName/" + planName;
-        Integer count = restTemplate.getForEntity(url, Integer.class).getBody();
-        return count;
+        String url = "http://AM-ADMIN/am-trade/planList/countByPlanName/" + planName;
+        IntegerResponse count = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return count.getResultInt().intValue();
     }
 
     @Override
     public int isLockPeriodExist(String lockPeriod, String borrowStyle, String isMonth) {
-        String url = "http://AM-TRADE/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
-        Integer count = restTemplate.getForEntity(url, Integer.class).getBody();
-        return count;
+        String url = "http://AM-ADMIN/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
+        IntegerResponse count = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return count.getResultInt().intValue();
     }
 
     @Override
     public int updateRecord(PlanListRequest form) {
-        String url = "http://AM-TRADE/am-trade/planList/updateRecord";
-        Integer Flag = restTemplate.postForEntity(url, form, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/updateRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, form, IntegerResponse.class).getBody();
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public int insertRecord(PlanListRequest form) {
-        String url = "http://AM-TRADE/am-trade/planList/insertRecord";
-        Integer Flag = restTemplate.postForEntity(url, form, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/planList/insertRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, form, IntegerResponse.class).getBody();
+        return Flag.getResultInt().intValue();
     }
-    /*计划列表 end*/
+    /*计划列表 end  AM-ADMIN*/
 
     /*加入明细 start*/
 
