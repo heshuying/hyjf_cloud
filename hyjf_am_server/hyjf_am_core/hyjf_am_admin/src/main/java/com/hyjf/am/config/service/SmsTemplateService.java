@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.SmsTemplate;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -41,13 +41,13 @@ public interface SmsTemplateService {
      *
      * @param request
      */
-    void insertSmsTemplate(SmsTemplateRequest request);
+    int insertSmsTemplate(SmsTemplateRequest request);
 
     /**
      * 开启短信模板
      * @param request
      */
-    void openSmsTemplate(SmsTemplateRequest request);
+    Integer updateSmsTemplateStatus(SmsTemplateRequest request);
 
     /**
      * 关闭短信模板
@@ -59,5 +59,18 @@ public interface SmsTemplateService {
      * 修改短信模版
      * @param request
      */
-    void updateSmsTemplate(SmsTemplateRequest request);
+    int updateSmsTemplate(SmsTemplateRequest request);
+
+    /**
+     * 查询总条数
+     * @return
+     */
+    int selectCount(SmsTemplateRequest request);
+
+    /**
+     * 根据id查询模板
+     * @param id
+     * @return
+     */
+    SmsTemplate findById(Integer id);
 }

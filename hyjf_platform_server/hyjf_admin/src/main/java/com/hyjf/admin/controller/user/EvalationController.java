@@ -73,7 +73,7 @@ public class EvalationController extends BaseController {
     @ApiOperation(value = "用户测评结果显示", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")
     @ResponseBody
-    public AdminResult<EvalationDetailResponseBean> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response, @RequestBody String  userId){
+    public AdminResult<EvalationDetailResponseBean> selectEvaluationDetailById(@RequestBody String  userId){
         UserEvalationResultVO userEvalationResultVO = evalationService.selectUserEvalationResultByUserId(userId);
         EvalationDetailResponseBean evalationDetailResponseBean = new EvalationDetailResponseBean();
         UserVO userVO = evalationService.getUserVOByUserId(userId);

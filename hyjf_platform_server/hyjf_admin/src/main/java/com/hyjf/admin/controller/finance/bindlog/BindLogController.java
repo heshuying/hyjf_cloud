@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.bindlog;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -26,9 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -64,8 +61,8 @@ public class BindLogController extends BaseController {
      * @return
      */
     @ApiOperation(value = "导出绑定日志列表",notes = "根据筛选条件导出绑定日志list")
-    @GetMapping(value = "/bindloglistexport")
-    public void exportBindLogList(HttpServletResponse response, @ModelAttribute BindLogListRequest request){
+    @PostMapping(value = "/bindloglistexport")
+    public void exportBindLogList(HttpServletResponse response, @RequestBody BindLogListRequest request){
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
 

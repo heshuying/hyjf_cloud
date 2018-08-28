@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.ContentQualify;
 import com.hyjf.am.resquest.admin.ContentQualifyRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,14 +26,14 @@ public interface ContentQualifyService {
 	 *
 	 * @param request
 	 */
-	void insertAction(ContentQualifyRequest request);
+	int insertAction(ContentQualifyRequest request);
 
 	/**
 	 * 修改公司管理-资质荣誉
 	 *
 	 * @param request
 	 */
-	void updateAction(ContentQualifyRequest request);
+	int updateAction(ContentQualifyRequest request);
 
 	/**
 	 * 根据id查询公司管理-资质荣誉
@@ -48,5 +48,12 @@ public interface ContentQualifyService {
 	 *
 	 * @param id
 	 */
-    void delete(Integer id);
+    int delete(Integer id);
+
+	/**
+	 * 查询符合条件的条数
+	 * @param request
+	 * @return
+	 */
+	int selectCount(ContentQualifyRequest request);
 }

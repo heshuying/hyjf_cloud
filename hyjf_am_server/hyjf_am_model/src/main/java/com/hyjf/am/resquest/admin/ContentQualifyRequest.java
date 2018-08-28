@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.hyjf.am.vo.BasePage;
 
 /**
  * @author fuqiang
@@ -114,25 +114,25 @@ public class ContentQualifyRequest extends BasePage implements Serializable {
 	}
 
 	/** 开始时间 */
-	private String startTime;
+	private Date startTime;
 	/** 结束时间 */
-	private String endTime;
+	private Date endTime;
 
 	private static final long serialVersionUID = 1L;
 
-	public String getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 }

@@ -81,6 +81,15 @@ public class BaseController {
 		info.put(LIST, List);
 		return info;
 	}
+	//返回成功带总数带集合的,总数为int型 add by yangchangwei
+	public JSONObject success(Integer recordTotal,List<?> List) {
+		JSONObject info = new JSONObject();
+		info.put(STATUS, SUCCESS);
+		info.put(MSG, "成功");
+		info.put(TRCORD, recordTotal);
+		info.put(LIST, List);
+		return info;
+	}
 
 	//返回失败
 	public JSONObject  fail(String failmsg) {
