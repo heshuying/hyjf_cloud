@@ -127,11 +127,12 @@
         SELECT
         bc.credit_id,
         bc.credit_nid,
+        bc.credit_user_id,
         CASE
-            WHEN bc.client = 1 THEN '微信'
-            WHEN bc.client = 2 THEN 'android'
-            WHEN bc.client = 3 THEN  'ios'
-            WHEN bc.client = 0 THEN  'pc'
+        WHEN bc.client = 1 THEN '微信'
+        WHEN bc.client = 2 THEN 'android'
+        WHEN bc.client = 3 THEN  'ios'
+        WHEN bc.client = 0 THEN  'pc'
         ELSE '其他' END  as client,
         bc.bid_nid,
         u.username,
@@ -141,29 +142,29 @@
         FORMAT(bc.credit_price, 2) AS credit_price,
         bc.credit_capital_assigned,
         CASE
-            WHEN bc.credit_status = '1' THEN '停止'
-            WHEN bc.credit_status = '2' THEN '完全承接'
+        WHEN bc.credit_status = '1' THEN '停止'
+        WHEN bc.credit_status = '2' THEN '完全承接'
         ELSE
         '进行中'
         END AS credit_status_name,
         CASE WHEN bc.repay_status= 0 THEN '未还款'
-            WHEN bc.repay_status = 1 THEN '还款成功'
-            WHEN bc.repay_status = 2 THEN '还款失败'
+        WHEN bc.repay_status = 1 THEN '还款成功'
+        WHEN bc.repay_status = 2 THEN '还款失败'
         ELSE '还款失败' END AS repay_status_name,
         CASE
-            WHEN bc.credit_status = '1' THEN '1'
-            WHEN bc.credit_status = '2' THEN '2'
+        WHEN bc.credit_status = '1' THEN '1'
+        WHEN bc.credit_status = '2' THEN '2'
         ELSE
         CASE
-          WHEN bc.end_time  <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) THEN '1'
+        WHEN bc.end_time  <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) THEN '1'
         ELSE
         '0'
         END
         END AS credit_status,
-         bc.create_time  AS add_time,
+        bc.create_time  AS add_time,
         CASE WHEN b.repay_last_time != 0 AND b.repay_last_time IS NOT NULL THEN FROM_UNIXTIME( b.repay_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS repay_last_time
         FROM
-          ht_borrow_credit bc
+        ht_borrow_credit bc
         INNER JOIN ht_borrow b ON bc.bid_nid = b.borrow_nid
         LEFT JOIN ht_r_user u ON u.user_id = bc.credit_user_id
         <include refid="Where_Clause" />
@@ -176,7 +177,7 @@
 
     <select id="countBorrowCreditList4Admin" parameterType="map" resultType="int">
         SELECT
-          count(bc.credit_id)
+        count(bc.credit_id)
         FROM
         ht_borrow_credit bc
         INNER JOIN ht_borrow b ON bc.bid_nid = b.borrow_nid
@@ -187,10 +188,10 @@
     <select id="getBorrowCreditTotalCount" resultMap="sumBorrowCreditMap"  parameterType="map">
 
         SELECT
-            SUM(bc.credit_capital) AS credit_capital,
-            SUM(bc.credit_capital) AS credit_capital_price,
-            SUM(bc.credit_price) AS credit_price,
-            SUM(bc.credit_capital_assigned) AS credit_capital_assigned
+        SUM(bc.credit_capital) AS credit_capital,
+        SUM(bc.credit_capital) AS credit_capital_price,
+        SUM(bc.credit_price) AS credit_price,
+        SUM(bc.credit_capital_assigned) AS credit_capital_assigned
         FROM
         ht_borrow_credit bc
         INNER JOIN ht_borrow b ON bc.bid_nid = b.borrow_nid
@@ -222,6 +223,7 @@
         <result column="add_time" property="addTime" jdbcType="VARCHAR" />
         <result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
         <result column="client" property="client" jdbcType="VARCHAR" />
+        <result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
     </resultMap>
 
 
@@ -273,7 +275,7 @@
         </where>
     </sql>
 
-     <!--admin:债转详情count-->
+    <!--admin:债转详情count-->
     <select id="countBorrowCreditInfo4Admin" resultType="java.lang.Integer" >
         SELECT
         COUNT(1)
@@ -377,20 +379,20 @@
     <!--admin:债转详情list-->
     <select id="searchBorrowCreditInfo4Admin" resultMap="selectBorrowCreditInfoListMap" >
         SELECT
-            ct.assign_nid ,
-            ct.client ,
-            ct.credit_nid  ,
-            ct.bid_nid  ,
-            ct.user_name ,
-            ct.credit_user_name,
-            FORMAT(ct.assign_capital, 2)          AS assign_capital,
-            FORMAT(bc.credit_discount, 2)         AS credit_discount,
-            FORMAT(ct.assign_capital, 2)          AS assign_capital_price,
-            FORMAT(ct.assign_price, 2)            AS assign_price,
-            FORMAT(ct.assign_interest_advance, 2) AS assign_interest_advance,
-            FORMAT(ct.credit_fee, 2)              AS credit_fee,
-            FORMAT(ct.assign_pay, 2)              AS assign_pay,
-            ct.create_time  AS add_time
+        ct.assign_nid ,
+        ct.client ,
+        ct.credit_nid  ,
+        ct.bid_nid  ,
+        ct.user_name ,
+        ct.credit_user_name,
+        FORMAT(ct.assign_capital, 2)          AS assign_capital,
+        FORMAT(bc.credit_discount, 2)         AS credit_discount,
+        FORMAT(ct.assign_capital, 2)          AS assign_capital_price,
+        FORMAT(ct.assign_price, 2)            AS assign_price,
+        FORMAT(ct.assign_interest_advance, 2) AS assign_interest_advance,
+        FORMAT(ct.credit_fee, 2)              AS credit_fee,
+        FORMAT(ct.assign_pay, 2)              AS assign_pay,
+        ct.create_time  AS add_time
         FROM
         ht_credit_tender ct
         INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
@@ -427,11 +429,11 @@
         WHERE  ct.credit_nid = #{creditNid}
     </select>
 
-    <select id="sumUnderTakeAmount" resultType="int">
+    <select id="sumUnderTakeAmount" resultType="String">
         SELECT
         SUM(hhdct.assign_capital) AS sumAccount
         FROM
-        hyjf_hjh_debt_credit_tender hhdct
+        ht_hjh_debt_credit_tender hhdct
 
         WHERE   hhdct.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 
@@ -444,9 +446,9 @@
         0 as vipLevel,
         SUBSTRING(FORMAT(hhdct.assign_capital,4),1,LENGTH(FORMAT(hhdct.assign_capital,4))-2) AS account,
         hhdct.client AS client,
-        hhdct.create_time  AS undertakeTime
+        date_format( hhdct.create_time,'%Y-%c-%d %H:%i:%s')  AS undertakeTime
         FROM
-        ht_debt_credit_tender hhdct
+        ht_hjh_debt_credit_tender hhdct
         LEFT JOIN ht_r_user hydu ON hhdct.user_id = hydu.user_id
 
         <where>

@@ -72,6 +72,11 @@ public class ListResult<T> {
 
     @Override
     public String toString() {
-        return "ListResult [list=" + list + ", count=" + count + "]";
+        return "ListResult{" +
+                "list=" + list +
+                ", data=" + data +
+                ", count=" + count +
+                ", page=" + page +
+                '}';
     }
 }

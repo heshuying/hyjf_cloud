@@ -258,7 +258,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             BankOpenAccountVO borrowUserAccount = amUserClient.queryBankOpenAccountByUserId(userIdint);
             if (borrowUserAccount == null || StringUtils.isBlank(borrowUserAccount.getAccount())) {
                 logger.info("投资人未开户:" + userId);
-                return "投资人未开户?:" + userId;
+                return "投资人未开户:" + userId;
 
             }
             // 借款人账户
