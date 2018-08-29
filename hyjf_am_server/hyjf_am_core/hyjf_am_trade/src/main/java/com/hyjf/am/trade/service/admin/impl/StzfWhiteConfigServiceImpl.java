@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import java.util.List;
 
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	@Override
 	public void insertSTZHWhiteList(STZHWhiteListRequest request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
-		BeanUtils.copyProperties(request, stzhWhiteList);
+		BeanUtils.copyProperties(request,stzhWhiteList);
+		stzhWhiteList.setApprovalTime(String.valueOf(GetDate.strYYYYMMDD2Timestamp2(stzhWhiteList.getApprovalTime())));
+		stzhWhiteList.setDelFlag(0);
+		stzhWhiteList.setCreateUserId(Integer.parseInt(request.getCreateuser()));
+		stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
 		stzhWhiteListMapper.insert(stzhWhiteList);
 	}
 
@@ -45,6 +50,11 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	public void updateSTZHWhiteList(STZHWhiteListRequest request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
+		stzhWhiteList.setDelFlag(request.getDelFlg());
+		stzhWhiteList.setUpdateTime(GetDate.getDate());
+		stzhWhiteList.setApprovalTime(String.valueOf(GetDate.strYYYYMMDD2Timestamp2(stzhWhiteList.getApprovalTime())));
+        stzhWhiteList.setCreateUserId(Integer.parseInt(request.getCreateuser()));
+        stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
 		stzhWhiteListMapper.updateByPrimaryKey(stzhWhiteList);
 	}
 }

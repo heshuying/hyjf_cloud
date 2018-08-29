@@ -57,9 +57,6 @@ public class CustomizeMapper extends AutoMapper {
     protected ChannelCustomizeMapper channelCustomizeMapper;
 
     @Autowired
-    protected ChannelStatisticsDetailCustomizeMapper channelStatisticsDetailCustomizeMapper;
-
-    @Autowired
     protected EmployeeCustomizeMapper employeeCustomizeMapper;
 
     @Autowired

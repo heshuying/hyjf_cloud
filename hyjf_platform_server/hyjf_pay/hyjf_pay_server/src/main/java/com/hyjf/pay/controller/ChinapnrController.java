@@ -13,13 +13,13 @@ import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.entity.ChinapnrExclusiveLog;
 import com.hyjf.pay.entity.ChinapnrLog;
-import com.hyjf.pay.lib.PnrApi;
 import com.hyjf.pay.lib.PnrApiBean;
-import com.hyjf.pay.lib.chinapnr.ChinaPnrApiImpl;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
 import com.hyjf.pay.service.ChinapnrService;
+import com.hyjf.pay.service.PnrApi;
+import com.hyjf.pay.service.impl.ChinaPnrApiImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +50,11 @@ public class ChinapnrController extends BaseController {
     @Autowired
     SystemConfig systemConfig;
 
+    @Autowired
+    PnrApi api;
 
     @Autowired
     ChinaPnrApiImpl chinaPnrApi;
-
 
     /**
      * 调用接口(页面)
@@ -93,7 +94,7 @@ public class ChinapnrController extends BaseController {
                     ChinapnrUtil.setUUID(bean, id);
                 }
                 // 得到接口API对象
-                PnrApi api = new ChinaPnrApiImpl();
+             //   PnrApi api = new ChinaPnrApiImpl();
                 Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;
                 Object obj = api;
                 // 取得该消息类型对应的bean
@@ -159,7 +160,7 @@ public class ChinapnrController extends BaseController {
             e.printStackTrace();
         }
         // 验签
-        PnrApi api = new ChinaPnrApiImpl();
+        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         try {
             if (bean.getMerPriv() != null) {
@@ -274,7 +275,7 @@ public class ChinapnrController extends BaseController {
             }
         }
         // 验签
-        PnrApi api = new ChinaPnrApiImpl();
+        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         try {
             if (bean.getMerPriv() != null) {
@@ -415,7 +416,7 @@ public class ChinapnrController extends BaseController {
         // 发送状态(1:处理中)
         String status = ChinaPnrConstant.STATUS_SENDING;
         // 验签
-        PnrApi api = new ChinaPnrApiImpl();
+        //PnrApi api = new ChinaPnrApiImpl();
         ChinapnrBean result = api.verifyChinaPnr(bean);
         bean.convert();
         // 检证失败
@@ -491,7 +492,7 @@ public class ChinapnrController extends BaseController {
                 }
                  merPriv = bean.getMerPriv();
                 // 得到接口API对象
-                PnrApi api = new ChinaPnrApiImpl();
+                //PnrApi api = new ChinaPnrApiImpl();
                 Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;
                 Object obj = api;
                 // 取得该消息类型对应的bean
@@ -593,7 +594,7 @@ public class ChinapnrController extends BaseController {
                 cmdId = StringUtils.lowerCase(cmdId.substring(0, 1)).concat(cmdId.substring(1));
             }
             // 得到接口API对象
-            PnrApi api = new ChinaPnrApiImpl();
+           // PnrApi api = new ChinaPnrApiImpl();
             Class<ChinaPnrApiImpl> c = ChinaPnrApiImpl.class;
             Object obj = api;
             // 取得该消息类型对应的bean

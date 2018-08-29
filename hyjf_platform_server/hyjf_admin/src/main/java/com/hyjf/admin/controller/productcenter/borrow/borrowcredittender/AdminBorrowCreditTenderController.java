@@ -4,7 +4,9 @@ import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
@@ -25,10 +27,17 @@ public class AdminBorrowCreditTenderController extends BaseController {
     @Autowired
     private BorrowCreditTenderService borrowCreditTenderService;
 
+    public static final String PERMISSIONS = "credittender";
 
 
+    /**
+     * com.hyjf.admin.manager.borrow.credittender.CreditTenderController.searchAction()
+     * @author zhangyk
+     * @date 2018/8/29 10:17
+     */
     @ApiOperation(value = "承接信息", notes = "承接信息")
     @PostMapping("/getList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     @ResponseBody
     public Object  getBorrowCreditTenderList(@RequestBody BorrowCreditTenderRequest request){
         AdminResult result = borrowCreditTenderService.getCreditTenderList(request);
@@ -38,6 +47,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
 
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
     @PostMapping("/exportData")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
     public void exportBorrowCreditTender( @RequestBody BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         borrowCreditTenderService.exportCreditTenderList(request,response);
@@ -47,6 +57,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
 
     @ApiOperation(value = "查看债权人债权信息", notes = "查看债权人债权信息")
     @PostMapping("/getCreditUserInfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     @ResponseBody
     public Object  getCreditUserInfo(@RequestBody BorrowCreditTenderInfoRequest request){
         AdminResult result =  borrowCreditTenderService.getCreditUserInfo(request);
@@ -56,6 +67,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
 
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdfSign")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
     @ResponseBody
     public Object  pdfSign(@RequestBody BorrowCreditTenderPDFSignReq reqBean,HttpServletRequest req){
         AdminSystemVO adminSystemVO = this.getUser(req);

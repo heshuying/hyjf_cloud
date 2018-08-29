@@ -29,6 +29,11 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 	/**
 	 * 用户Id
 	 */
+	/**
+	 * 渠道id
+	 */
+	private String utmIds;
+
 	private Integer[] userIds;
 
 	private String[] utmIdsSrch;
@@ -91,5 +96,13 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	public void setUtmIdsSrch(String[] utmIdsSrch) {
 		this.utmIdsSrch = utmIdsSrch;
+	}
+
+	public String getUtmIds() {
+		return utmIds;
+	}
+
+	public void setUtmIds(String utmIds) {
+		this.utmIds = utmIds;
 	}
 }

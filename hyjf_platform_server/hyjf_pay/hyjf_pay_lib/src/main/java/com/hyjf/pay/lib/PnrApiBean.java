@@ -170,7 +170,7 @@ public class PnrApiBean implements Serializable {
     public String getChkValueMerged(String... keys) {
         return getChkValueMerged(true, keys);
     }
-    
+
     /**
      * 取得组合后的签名 先MD5加密然后加签
      *
@@ -236,7 +236,7 @@ public class PnrApiBean implements Serializable {
         }
         return chkValue;
     }
-    
+
     /**
      * 取得组合后的签名MD5
      *
@@ -336,7 +336,7 @@ public class PnrApiBean implements Serializable {
             Method getMethod = c.getMethod(ChinaPnrConstant.GET + ChinaPnrConstant.PARAM_MERPRIV);
             Object result = getMethod.invoke(obj);
             if (null != result) {// 如果私有域属性不为空，设置私有域对象
-                result = URLDecoder.decode(result.toString(),"utf-8"); 
+                result = URLDecoder.decode(result.toString(),"utf-8");
                 if (result.toString().contains("{")) {
                     this.setMerPrivPo(JSON.parseObject(result.toString(), MerPriv.class));
                 }
