@@ -1,5 +1,14 @@
 package com.hyjf.cs.message.client.impl;
 
+import java.util.List;
+
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.vo.market.EventsVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.*;
@@ -152,7 +161,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return response;
 	}
 	@Override
-	public int updateAppNewsConfig(UserVO users) {
-		return restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, IntegerResponse.class).getBody().getResultInt();
+	public IntegerResponse updateAppNewsConfig(UserVO users) {
+		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, IntegerResponse.class).getBody();
+		return response;
 	}
 }

@@ -60,7 +60,7 @@ public class ActivityServiceImpl implements ActivityService {
             criteria.andTitleEqualTo(request.getTitle());
         }
         if (request.getStartTime() != null && request.getEndTime() != null) {
-            criteria.andTimeEndEqualTo(request.getStartTime()).andTimeEndEqualTo(request.getEndTime());
+            criteria.andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartTime())).andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndTime()));
         }
         if (request.getStartCreate() != null && request.getEndCreate() != null) {
             criteria.andCreateTimeBetween(GetDate.str2Timestamp(request.getStartCreate()), GetDate.str2Timestamp(request.getEndCreate()));

@@ -1088,7 +1088,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse insertAction(ContentJobRequestBean requestBean);
+	int insertAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-招贤纳士
@@ -1096,7 +1096,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse updateAction(ContentJobRequestBean requestBean);
+	int updateAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 根据id查询公司管理-招贤纳士
@@ -1112,7 +1112,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	JobResponse deleteJobById(Integer id);
+	int deleteJobById(Integer id);
 
 	/**
 	 * 根据条件查询友情链接列表

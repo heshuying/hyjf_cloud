@@ -32,4 +32,9 @@ public interface AdminBorrowRepaymentService {
     int updateBorrowRepayDelayDays(String borrowNid, String delayDays) throws ParseException;
 
     List<AdminBorrowRepaymentCustomize> selectBorrowRepaymentList(BorrowRepaymentRequest request);
+
+    BorrowRepay getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
+
+    BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
+
 }

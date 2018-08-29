@@ -172,6 +172,27 @@ public class CommonConstant {
      * 银行充值
      */
     public static final String APP_BANK_REQUEST_TYPE_RECHARGE = "4";
+
+    /**
+     * 设置交易密码
+     */
+    public static final String APP_BANK_REQUEST_TYPE_SET_PASSWORD = "5";
+
+    /**
+     * 设置交易密码
+     */
+    public static final String APP_BANK_REQUEST_TYPE_RESET_PASSWORD = "6";
+
+    /**
+     * 授权自动投资
+     */
+    public static final String APP_BANK_REQUEST_TYPE_AUTHINVES = "7";
+
+    /**
+     * 授权自动债转
+     */
+    public static final String APP_BANK_REQUEST_TYPE_AUTHCREDIT = "8";
+
     /**
      * 数据源控制优先级别(值越小优先级越高)，读方法切面
      */

@@ -58,6 +58,7 @@ public class BorrowTenderController extends BaseController {
     public BorrowTenderResponse selectBorrowTender(@RequestBody BorrowTenderRequest request){
         BorrowTenderResponse response = new BorrowTenderResponse();
         BorrowTender borrowTender =borrowTenderService.selectBorrowTender(request);
+        logger.info("获取投资成功结果查询数据库："+borrowTender);
         if (Validator.isNotNull(borrowTender)){
             response.setResult(CommonUtils.convertBean(borrowTender,BorrowTenderVO.class));
         }

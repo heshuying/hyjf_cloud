@@ -24,8 +24,9 @@ public class VersionConfigBeanRequest extends VersionVO implements Serializable 
     @ApiModelProperty(value = "版本号")
     private String versionSrh;
     @ApiModelProperty(value = "当前页码")
-    private int currPage;
-
+    private Integer currPage;
+    @ApiModelProperty(value = "每页显示数")
+    private Integer  pageSize;
     public String getIds() {
         return ids;
     }
@@ -50,11 +51,19 @@ public class VersionConfigBeanRequest extends VersionVO implements Serializable 
         this.versionSrh = versionSrh;
     }
 
-    public int getCurrPage() {
+    public Integer getCurrPage() {
         return currPage;
     }
 
-    public void setCurrPage(int currPage) {
+    public void setCurrPage(Integer currPage) {
         this.currPage = currPage;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

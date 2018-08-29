@@ -39,13 +39,6 @@ public class ActivityListServiceImpl implements ActivityListService {
     @Autowired
     private AmConfigClient amConfigClient;
 
-    @Value("${file.domain.url}")
-    private String FILEDOMAILURL;
-    @Value("${file.physical.path}")
-    private String FILEPHYSICALPATH;
-    @Value("${file.upload.activity.img.path}")
-    private String FILEUPLOADTEMPPATH;
-
     @Override
     public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
         return amMarketClient.getRecordList(activityListRequest);
@@ -64,58 +57,6 @@ public class ActivityListServiceImpl implements ActivityListService {
     @Override
     public ActivityListResponse updateActivity(ActivityListRequest activityListRequest) {
         return amMarketClient.updateActivity(activityListRequest);
-    }
-
-    @Override
-    public LinkedList<BorrowCommonImage>  uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-       // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
-        String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
-        String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
-
-        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
-
-        File logoSaveFile = new File(logoRealPathDir);
-        if (!logoSaveFile.exists()) {
-            logoSaveFile.mkdirs();
-        }
-
-        BorrowCommonImage fileMeta = null;
-        LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
-
-        Iterator<String> itr = multipartRequest.getFileNames();
-        MultipartFile multipartFile = null;
-
-        while (itr.hasNext()) {
-            multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(System.currentTimeMillis());
-            String originalFilename = multipartFile.getOriginalFilename();
-            fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-
-            // 文件大小
-            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-
-            fileMeta = new BorrowCommonImage();
-            int index = originalFilename.lastIndexOf(".");
-            if (index != -1) {
-                fileMeta.setImageName(originalFilename.substring(0, index));
-            } else {
-                fileMeta.setImageName(originalFilename);
-            }
-
-            fileMeta.setImageRealName(fileRealName);
-            fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");
-            fileMeta.setImageType(multipartFile.getContentType());
-            fileMeta.setErrorMessage(errorMessage);
-            // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-            files.add(fileMeta);
-        }
-        return files;
     }
 
     @Override

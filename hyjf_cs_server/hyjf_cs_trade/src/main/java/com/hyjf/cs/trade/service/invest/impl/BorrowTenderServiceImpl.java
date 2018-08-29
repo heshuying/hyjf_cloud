@@ -551,6 +551,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("borrowNid",borrow.getBorrowNid());
         data.put("investDesc","恭喜您，投资成功！");
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+        logger.info("获取投资成功结果为:"+borrowTender);
         if(borrowTender!=null){
             // 本金收益  历史回报
             data.put("income",borrowTender.getRecoverAccountWait());
