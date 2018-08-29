@@ -491,6 +491,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             BorrowTenderTmp borrowTenderTmp = list.get(0);
             result = borrowTenderTmp.getRetMsg();
         }
+        logger.info("散标投资获取失败结果：result：{} list.size():{}", result, (list == null ? 0 : list.size()));
         return result;
     }
 

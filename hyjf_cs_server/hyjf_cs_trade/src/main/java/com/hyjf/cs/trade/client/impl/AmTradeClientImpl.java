@@ -1692,9 +1692,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowTenderResult/" + userId + "/" + logOrdId + "/" + borrowNid;
-        String response = restTemplate.getForEntity(url, String.class).getBody();
-        if (response != null) {
-            return response;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultStr();
         }
         return null;
     }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
@@ -284,8 +285,11 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@GetMapping("/getBorrowTenderResult/{userId}/{logOrdId}/{borrowNid}")
-	public String getBorrowTenderResult(@PathVariable Integer userId, @PathVariable String logOrdId, @PathVariable String borrowNid){
-		return borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+	public StringResponse getBorrowTenderResult(@PathVariable Integer userId, @PathVariable String logOrdId, @PathVariable String borrowNid){
+		StringResponse result = new StringResponse();
+		String msg = borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+		result.setResultStr(msg);
+		return result;
 	}
 
 
