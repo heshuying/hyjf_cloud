@@ -94,7 +94,7 @@ public class BorrowTenderController extends BaseTradeController {
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
-        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} ",logOrdId);
+        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} ",logOrdId , borrowNid);
         return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
