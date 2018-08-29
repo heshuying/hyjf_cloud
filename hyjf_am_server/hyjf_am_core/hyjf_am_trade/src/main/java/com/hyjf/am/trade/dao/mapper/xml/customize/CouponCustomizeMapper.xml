@@ -119,7 +119,7 @@
 			cu.id = #{couponGrantId}
 		AND cu.user_id=#{userId}
 		AND cu.del_flag = 0
-		AND cc.del_flg = 0
+		AND cc.del_flag = 0
 	</select>
 
 	<select id="getCouponTenderByTender" resultMap="BorrowTenderCpnResultMap" parameterType="java.util.Map">
