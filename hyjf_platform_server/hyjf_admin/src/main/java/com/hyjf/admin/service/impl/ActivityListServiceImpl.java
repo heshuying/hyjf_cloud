@@ -67,10 +67,11 @@ public class ActivityListServiceImpl implements ActivityListService {
     }
 
     @Override
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public LinkedList<BorrowCommonImage>  uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        JSONObject jsonObject = new JSONObject();
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-
+       // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
         String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
@@ -114,7 +115,7 @@ public class ActivityListServiceImpl implements ActivityListService {
             fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
             files.add(fileMeta);
         }
-        return JSONObject.toJSONString(files, true);
+        return files;
     }
 
     @Override
