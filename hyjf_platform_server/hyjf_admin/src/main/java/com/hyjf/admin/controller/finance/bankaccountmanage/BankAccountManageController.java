@@ -320,16 +320,17 @@ public class BankAccountManageController extends BaseController {
         String endTime = form.getEndTime();
         if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
             ret.put("msg", "开始时间或结束时间不得为空!");
-            ret.put("status", "error");
+            ret.put("status", "1");
             return ret.toString();
         }
         String result = this.bankAccountManageService.updateAccountCheck(userId, startTime, endTime);
 
         if ("success".equals(result)) {
-            ret.put("msg", "success");
+            ret.put("msg", "处理成功");
+            ret.put("status", "0");
         } else {
             ret.put("msg", result);
-            ret.put("status", "error");
+            ret.put("status", "1");
         }
 
         return ret.toString();
