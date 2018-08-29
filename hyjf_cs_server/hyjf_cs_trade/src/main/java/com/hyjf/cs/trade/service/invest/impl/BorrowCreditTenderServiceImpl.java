@@ -120,6 +120,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
+        logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
