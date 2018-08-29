@@ -1418,7 +1418,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public KeyCountResponse searchAction(KeyCountRequest request) {
-		KeyCountResponse response = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/keycount/searchaction",
+		KeyCountResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/keycount/searchaction",
 				request, KeyCountResponse.class);
 		return  response;
 
