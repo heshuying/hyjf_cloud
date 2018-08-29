@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
@@ -224,10 +225,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean updateByPrimaryKeySelective(UserVO user) {
-		Integer result = restTemplate
-				.postForEntity("http://AM-USER/am-user/user/updateByUserId", user, Integer.class).getBody();
+		IntegerResponse result = restTemplate
+				.postForEntity("http://AM-USER/am-user/user/updateByUserId", user, IntegerResponse.class).getBody();
 		if (result != null) {
-			return result == 0 ? false : true;
+			return result.getResultInt() == 0 ? false : true;
 		}
 		return false;
 	}
