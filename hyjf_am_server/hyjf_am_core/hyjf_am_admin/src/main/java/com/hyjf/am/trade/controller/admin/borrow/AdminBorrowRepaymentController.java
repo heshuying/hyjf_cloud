@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.IntegerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -157,14 +158,15 @@ public class AdminBorrowRepaymentController extends BaseController {
     }
 
     // 更新用户的交易明细
-    @RequestMapping(value = "/updateBorrowRepayDelayDays", method = RequestMethod.POST)
-    public int updateBorrowRepayDelayDays(@PathVariable String borrowNid,@PathVariable String delayDays) {
-
+    @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.POST)
+    public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
+        IntegerResponse response=new IntegerResponse();
         try {
-            return adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays);
+            response.setResultInt(adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays));
+            return response;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return 0;
+        return response;
     }
 }
