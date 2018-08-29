@@ -303,7 +303,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         // 债转编号
         String creditNid = request.getCreditNid();
 
-        CheckUtil.check(org.apache.commons.lang3.StringUtils.isAnyBlank(borrowNid, assignNid, creditTenderNid, creditNid), MsgEnum.ERR_OBJECT_REQUIRED, "各项");
+        CheckUtil.check(!org.apache.commons.lang3.StringUtils.isAnyBlank(borrowNid, assignNid, creditTenderNid, creditNid), MsgEnum.ERR_OBJECT_REQUIRED, "各项");
         String borrowUrl = BORROW_URL + borrowNid;
         BorrowResponse response = baseClient.getExe(borrowUrl,BorrowResponse.class);
         BorrowVO borrowVO = response.getResult();
