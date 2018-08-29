@@ -44,7 +44,7 @@ public class AppBorrowImageController {
         List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), -1, -1);
         if (recordList != null) {
             String filePhysicalPath = DOMAIN_URL;
-            Paginator paginator = new Paginator(form.getCurrPage(), recordList.size(), 12);
+            Paginator paginator = new Paginator(form.getCurrPage(), recordList.size(), form.getPageSize());
             recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), paginator.getOffset(), paginator.getLimit());
             List<AppBorrowImageVO> resultList = CommonUtils.convertBeanList(recordList, AppBorrowImageVO.class);
             for (AppBorrowImage appBorrowImage : recordList) {
@@ -65,7 +65,7 @@ public class AppBorrowImageController {
      */
     @PostMapping("/infoAction")
     public AppBorrowImageResponse moveToInfoAction(@RequestBody AppBorrowImageRequest form) {
-        AppBorrowImageResponse response = new AppBorrowImageResponse();
+            AppBorrowImageResponse response = new AppBorrowImageResponse();
         AppBorrowImage record = new AppBorrowImage();
         record.setId(form.getId());
         if (Validator.isNotNull(record.getId())) {
