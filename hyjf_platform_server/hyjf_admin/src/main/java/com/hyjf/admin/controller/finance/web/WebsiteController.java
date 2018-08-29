@@ -19,7 +19,6 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -235,15 +234,14 @@ public class WebsiteController extends BaseController {
      * @param
      * @return
      */
+    @ApiOperation(value = "余额查询",notes = "余额查询")
     @PostMapping(value = "/yueSearchAction")
-    public ApiResult yueSearch() {
-        ApiResult result = new ApiResult();
+    public AdminResult yueSearch() {
         // 取得客户编号
         String companyId = systemConfig.getMerCustId();
         // 取得公司账户余额
         double companyYue = websiteService.getCompanyYuE(companyId);
-        result.setData(companyYue);
-        return result;
+        return new AdminResult(companyYue);
     }
 
 }
