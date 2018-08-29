@@ -24,7 +24,7 @@ import io.swagger.annotations.Api;
  */
 @Api(value = "admin基类",tags ="admin基类")
 @RestController
-public class BaseController {
+public class BaseController extends com.hyjf.cs.common.controller.BaseController {
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";
