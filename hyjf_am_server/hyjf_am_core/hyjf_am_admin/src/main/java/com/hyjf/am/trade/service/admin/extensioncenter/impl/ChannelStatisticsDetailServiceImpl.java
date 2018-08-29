@@ -47,7 +47,7 @@ public class ChannelStatisticsDetailServiceImpl extends BaseServiceImpl implemen
 		return response;
 	}
 	@Override
-	public UtmPlatResponse pcutmList(){
+	public UtmPlatResponse selectPcutmList(){
 		UtmPlatResponse response = new UtmPlatResponse();
 		UtmPlatExample utmPlat = new UtmPlatExample();
 		UtmPlatExample.Criteria cra = utmPlat.createCriteria();

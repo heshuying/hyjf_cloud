@@ -1073,7 +1073,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordList";
+        String url = "http://AM-ADMIN/am-trade/accountWithdraw/getWithdrawRecordList";
         WithdrawCustomizeResponse response = restTemplate.postForEntity(url, request, WithdrawCustomizeResponse.class).getBody();
         return response;
     }
@@ -1813,7 +1813,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountVO getAccountByUserId(int userId) {
-        String url = "http://AM-TRADE/am-trade/account/getAccountByUserId/" + userId;
+        String url = "http://AM-ADMIN/am-trade/account/getAccountByUserId/" + userId;
         AccountResponse response = restTemplate.getForEntity(url, AccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -5008,7 +5008,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public AccountWithdrawVO queryAccountwithdrawByNid(String nid, Integer userId) {
-        String url = "http://AM-TRADE/am-trade/account/queryAccountwithdrawByNid/" + nid + "/" + userId;
+        String url = "http://AM-ADMIN/am-trade/account/queryAccountwithdrawByNid/" + nid + "/" + userId;
         AccountWithdrawResponse response = restTemplate.getForEntity(url, AccountWithdrawResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -5024,13 +5024,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountAfterWithdraw(Map<String, String> param) {
-        String url = "http://AM-TRADE/am-trade/account/updateAccountAfterWithdraw";
+        String url = "http://AM-ADMIN/am-trade/account/updateAccountAfterWithdraw";
         return restTemplate.postForEntity(url, param, Boolean.class).getBody();
     }
 
     @Override
     public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) {
-        String url = "http://AM-TRADE/am-trade/account/updateAccountAfterWithdrawFail/" + userId + "/" + nid;
+        String url = "http://AM-ADMIN/am-trade/account/updateAccountAfterWithdrawFail/" + userId + "/" + nid;
         return restTemplate.getForEntity(url, Boolean.class).getBody();
     }
     
