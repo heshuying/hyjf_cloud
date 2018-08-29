@@ -273,8 +273,7 @@ public class ApiBindCardController extends BaseUserController {
     /**
      * 用户删除银行卡
      */
-    @ResponseBody
-    @RequestMapping("/userDeleteCard")
+    @PostMapping("/userDeleteCard")
     public ThirdPartyDeleteBankCardResultBean deleteCard(@RequestBody ThirdPartyBankCardRequestBean bankCardRequestBean,HttpServletRequest request, HttpServletResponse response) {
         logger.info(bankCardRequestBean.getAccountId()+"用户解除绑定银行卡开始-----------------------------");
         logger.info("第三方请求参数："+JSONObject.toJSONString(bankCardRequestBean));
