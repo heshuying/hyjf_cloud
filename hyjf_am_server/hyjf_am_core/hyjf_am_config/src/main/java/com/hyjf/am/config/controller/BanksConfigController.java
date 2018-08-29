@@ -5,7 +5,6 @@ import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
@@ -251,7 +250,7 @@ public class BanksConfigController extends BaseConfigController{
      * 分页查询银行配置列表
      */
     @RequestMapping("/selectBankConfigListByPage")
-    public AdminBankConfigResponse selectBankConfigListByPage(AdminBankConfigRequest adminRequest){
+    public AdminBankConfigResponse selectBankConfigListByPage(@RequestBody AdminBankConfigRequest adminRequest){
         AdminBankConfigResponse response=new AdminBankConfigResponse();
 
         BankConfigVO vo = new BankConfigVO();
@@ -260,6 +259,7 @@ public class BanksConfigController extends BaseConfigController{
         //查询保证金配置条数
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo,-1,-1);
         if(!CollectionUtils.isEmpty(listBankConfig)){
+            int total=listBankConfig.size();
 //            BeanUtils.copyProperties(listBankConfig,listRes);
 //            for(BanksConfigVO banksConfig : listRes) {
 //                // 不支持快捷支付
@@ -267,7 +267,7 @@ public class BanksConfigController extends BaseConfigController{
 //                    banksConfig.setMonthCardQuota(new BigDecimal(0));
 //                }
 //            }
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(),listBankConfig.size());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),listBankConfig.size(),adminRequest.getPageSize() == 0 ?10:adminRequest.getPageSize() );
 //            BanksConfigVO bc=new BanksConfigVO();
 //            bc.setBankName(adminRequest.getBankName());
 //            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
@@ -275,7 +275,7 @@ public class BanksConfigController extends BaseConfigController{
             if(!CollectionUtils.isEmpty(listBankConfig)){
                 List<BankConfigVO> banksConfigVOList =CommonUtils.convertBeanList(listBankConfig,BankConfigVO.class);
                 response.setResultList(banksConfigVOList);
-                response.setRecordTotal(banksConfigVOList.size());
+                response.setRecordTotal(total);
                 response.setRtn(Response.SUCCESS);
                 return response;
             }
@@ -288,8 +288,8 @@ public class BanksConfigController extends BaseConfigController{
      * @param bankName
      * @return
      */
-    @RequestMapping("/selectBankConfigByBankName")
-    public AdminBankConfigResponse selectBankConfigByBankName(@RequestBody String bankName){
+    @RequestMapping("/selectBankConfigByBankName/{bankName}")
+    public AdminBankConfigResponse selectBankConfigByBankName(@PathVariable String bankName){
         AdminBankConfigResponse response = new AdminBankConfigResponse();
         BankConfigVO bankConfig = new BankConfigVO();
         bankConfig.setName(bankName);
@@ -313,12 +313,11 @@ public class BanksConfigController extends BaseConfigController{
         AdminBankConfigResponse res =new AdminBankConfigResponse();
         int result = bankConfigService.insertBankConfig(adminBankConfigRequest);
         if(result >0){
-            res.setRtn(AdminResponse.SUCCESS);
-            res.setRtn(AdminResponse.SUCCESS_MSG);
+            res.setRtn(Response.SUCCESS);
             return res;
         }
-        res.setRtn(AdminResponse.FAIL);
-        res.setRtn(AdminResponse.FAIL_MSG);
+        res.setRtn(Response.FAIL);
+        res.setMessage(Response.FAIL_MSG);
         return res;
     }
 
@@ -336,6 +335,7 @@ public class BanksConfigController extends BaseConfigController{
             return res;
         }
         res.setRtn(Response.FAIL);
+        res.setMessage(Response.FAIL_MSG);
         return res;
     }
     /**

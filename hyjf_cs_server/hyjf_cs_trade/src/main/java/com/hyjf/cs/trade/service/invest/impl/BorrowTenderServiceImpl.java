@@ -260,6 +260,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(account);
         String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrow.getBorrowNid());
+        logger.info("标的号{}  项目剩余redis:{}  取值为{}",borrow.getBorrowNid(),balance,RedisConstants.BORROW_NID+borrow.getBorrowNid());
         // 您来晚了，下次再来抢吧
         if (StringUtils.isEmpty(balance)) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
@@ -508,15 +509,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     /**
      * 获取投资结果 ---失败
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid) {
+    public WebResult<Map<String, Object>> getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
         WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-        String retMsg = amTradeClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
+        String retMsg = amTradeClient.getBorrowTenderResult(userId,logOrdId,borrowNid);
         Map<String, Object> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);

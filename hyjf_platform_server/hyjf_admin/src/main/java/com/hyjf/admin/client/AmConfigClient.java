@@ -7,7 +7,6 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -588,7 +587,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean);
+	int insertAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 修改内容管理-办公环境
@@ -596,7 +595,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean);
+	int updateAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 根据id查询内容管理-办公环境
@@ -612,7 +611,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentEnvironmentResponse deleteContentEnvironmentById(Integer id);
+	int deleteContentEnvironmentById(Integer id);
 
 	/**
 	 * 根据条件查询着路页管理列表
@@ -700,7 +699,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean);
+	int insertAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉
@@ -708,7 +707,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean);
+	int updateAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉状态
@@ -724,7 +723,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentQualifyResponse deleteContentQualifyById(Integer id);
+	int deleteContentQualifyById(Integer id);
 
 	/**
 	 * 获取优惠券列表
@@ -1372,12 +1371,6 @@ public interface AmConfigClient {
 	 * @param request
 	 */
     int updateStatus(SmsTemplateRequest request);
-
-	/**
-	 * 关闭短信配置模板
-	 * @param request
-	 */
-	void closeSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 修改短信模版

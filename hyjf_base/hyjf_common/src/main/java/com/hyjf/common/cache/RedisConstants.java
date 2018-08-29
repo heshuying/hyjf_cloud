@@ -164,7 +164,7 @@ public class RedisConstants {
     /**
      * borrowNid
      */
-    public static final String BORROW_NID = "borrow_nid:";
+    public static final String BORROW_NID = "BORROW_NID:";
     /**
      * wechat sign
      */
@@ -269,11 +269,11 @@ public class RedisConstants {
 	public static final String PUSH_MONEY_ = "push_money:";
 
 	/**
-	 * 四端平台名称rediskey
+	 * 四端平台名称rediskey(这不是redis前缀, 这是key)
 	 * @author zhangyk
 	 * @date 2018/8/13 9:24
 	 */
-	public static final String CLIENT = "client:";
+	public static final String CLIENT = "CLIENT";
 
     /** 某计划连续开放额度不同次数 */
     public static final String CONT_WARN_OF_HJH_ACCOUNT = "cont_warn_of_hjh_account:";

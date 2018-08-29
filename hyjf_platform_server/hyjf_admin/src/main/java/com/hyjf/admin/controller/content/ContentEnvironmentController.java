@@ -3,20 +3,16 @@
  */
 package com.hyjf.admin.controller.content;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ContentEnvironmentService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentEnvironmentResponse;
-import com.hyjf.am.vo.config.ContentEnvironmentVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 内容管理-办公环境
@@ -33,7 +29,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "内容管理-办公环境列表查询", notes = "内容管理-办公环境列表查询")
 	@PostMapping("/searchaction")
-	public AdminResult<ListResult<ContentEnvironmentVO>> searchAction(
+	public AdminResult searchAction(
 			@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.searchAction(requestBean);
 		if (response == null) {
@@ -42,58 +38,46 @@ public class ContentEnvironmentController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult(response);
 	}
 
 	@ApiOperation(value = "内容管理-办公环境", notes = "内容管理-办公环境")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentEnvironmentRequestBean requestBean) {
-		ContentEnvironmentResponse response = contentEnvironmentService.insertAction(requestBean);
-		if (response == null) {
+		int num = contentEnvironmentService.insertAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改内容管理-办公环境", notes = "修改内容管理-办公环境")
 	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentEnvironmentRequestBean requestBean) {
-		ContentEnvironmentResponse response = contentEnvironmentService.updateAction(requestBean);
-		if (response == null) {
+		int num = contentEnvironmentService.updateAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改内容管理-办公环境状态", notes = "修改内容管理-办公环境状态")
 	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
-		ContentEnvironmentResponse response = contentEnvironmentService.updateStatus(requestBean);
-		if (response == null) {
+		int num = contentEnvironmentService.updateStatus(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "删除内容管理-办公环境", notes = "删除内容管理-办公环境")
 	@GetMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
-		ContentEnvironmentResponse response = contentEnvironmentService.deleteById(id);
-		if (response == null) {
+		int num = contentEnvironmentService.deleteById(id);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 }

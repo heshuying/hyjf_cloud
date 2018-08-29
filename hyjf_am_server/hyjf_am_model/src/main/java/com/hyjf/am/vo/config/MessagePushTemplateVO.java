@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -32,13 +33,13 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
 
     private Integer status;
 
-    private Integer createTime;
+    private Date createTime;
 
     private Integer createUserId;
 
     private String createUserName;
 
-    private Integer lastupdateTime;
+    private Date updateTime;
 
     private Integer lastupdateUserId;
 
@@ -134,11 +135,12 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreateTime() {
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -158,12 +160,13 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
-    public Integer getLastupdateTime() {
-        return lastupdateTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setLastupdateTime(Integer lastupdateTime) {
-        this.lastupdateTime = lastupdateTime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Integer getLastupdateUserId() {
@@ -199,7 +202,7 @@ public class MessagePushTemplateVO extends BaseVO implements Serializable {
                 ", createTime=" + createTime +
                 ", createUserId=" + createUserId +
                 ", createUserName='" + createUserName + '\'' +
-                ", lastupdateTime=" + lastupdateTime +
+                ", lastupdateTime=" + updateTime +
                 ", lastupdateUserId=" + lastupdateUserId +
                 ", lastupdateUserName='" + lastupdateUserName + '\'' +
                 '}';

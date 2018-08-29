@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
@@ -320,10 +321,11 @@ public class BorrowTenderController extends BaseController {
         return response;
     }
     @PostMapping(value = "/updateBorrowTender")
-    public Boolean updateBorrowTender(@RequestBody @Valid BorrowTenderUpdRequest request){
+    public BooleanResponse updateBorrowTender(@RequestBody @Valid BorrowTenderUpdRequest request){
         BorrowTender borrowTender = new BorrowTender();
         BeanUtils.copyProperties(request,borrowTender);
-        return borrowTenderService.updateBorrowTender(borrowTender);
+        boolean bol = borrowTenderService.updateBorrowTender(borrowTender);
+        return new BooleanResponse(bol);
     }
 
 }

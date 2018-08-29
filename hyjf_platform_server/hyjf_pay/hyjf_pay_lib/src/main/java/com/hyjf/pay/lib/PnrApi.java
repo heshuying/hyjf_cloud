@@ -145,7 +145,7 @@ public interface PnrApi {
 	 * @return
 	 */
 	public PnrApiBean creditAssign(PnrApiBean bean);
-	
+
 	/**
 	 * 自动债权转让接口
 	 *
@@ -236,7 +236,7 @@ public interface PnrApi {
 
 	/**
 	 * 标的信息录入接口
-	 * 
+	 *
 	 * @param bean
 	 * @return
 	 */
@@ -244,7 +244,7 @@ public interface PnrApi {
 
 	/**
 	 * 标的信息补录输入接口
-	 * 
+	 *
 	 * @param bean
 	 * @return
 	 */
@@ -252,7 +252,7 @@ public interface PnrApi {
 
 	/**
 	 * 标的审核状态查询接口
-	 * 
+	 *
 	 * @param bean
 	 * @return
 	 */
@@ -265,27 +265,27 @@ public interface PnrApi {
 	 * @return
 	 */
 	public ChinapnrBean verifyChinaPnr(PnrApiBean bean);
-    
+
     /**
-     * 
+     *
      * 企业用户注册
      * @author renxingchen
      * @param bean
      * @return
      */
     public PnrApiBean corpRegister(PnrApiBean bean);
-    
+
     /**
-     * 
+     *
      * 企业用户绑定用户
      * @author renxingchen
      * @param bean
      * @return
      */
     public PnrApiBean direcTrfAuth(PnrApiBean bean);
-     
+
     /**
-     * 
+     *
      * 定向转账
      * @author renxingchen
      * @param bean
@@ -293,20 +293,20 @@ public interface PnrApi {
      */
     public PnrApiBean direcTrf(PnrApiBean bean);
 /**
- * 
+ *
  * @method: autoTender
- * @description: 	预约自动投标		
+ * @description: 	预约自动投标
  *  @param bean
- *  @return 
+ *  @return
  * @return: PnrApiBean
 * @mender: zhouxiaoshuai
  * @date:   2016年8月22日 上午10:59:48
  */
     public	PnrApiBean autoTender(PnrApiBean bean);
-    
-    
+
+
     /**
-     * 
+     *
      * 快捷充值限额信息查询
      * @author renxingchen
      * @param bean

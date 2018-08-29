@@ -25,7 +25,7 @@ public interface ContentEnvironmentService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean);
+	int insertAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 修改内容管理-办公环境
@@ -33,7 +33,7 @@ public interface ContentEnvironmentService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean);
+	int updateAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 修改内容管理-办公环境
@@ -41,7 +41,7 @@ public interface ContentEnvironmentService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse updateStatus(ContentEnvironmentRequestBean requestBean);
+	int updateStatus(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 删除内容管理-办公环境状态
@@ -49,5 +49,5 @@ public interface ContentEnvironmentService {
 	 * @param id
 	 * @return
 	 */
-    ContentEnvironmentResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Api(value = "异常中心-保证金不足",tags = "异常中心-保证金不足")
 @RestController
-@RequestMapping("/exception/cashdepositexception")
+@RequestMapping("/hyjf-admin/exception/cashdepositexception")
 public class CashDepositeController extends BaseController {
 
     @Autowired

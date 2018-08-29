@@ -24,7 +24,7 @@ import io.swagger.annotations.Api;
  */
 @Api(value = "admin基类",tags ="admin基类")
 @RestController
-public class BaseController {
+public class BaseController extends com.hyjf.cs.common.controller.BaseController {
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";
@@ -74,6 +74,15 @@ public class BaseController {
 	}
 	//返回成功带总数带集合的
 	public JSONObject success(String recordTotal,List<?> List) {
+		JSONObject info = new JSONObject();
+		info.put(STATUS, SUCCESS);
+		info.put(MSG, "成功");
+		info.put(TRCORD, recordTotal);
+		info.put(LIST, List);
+		return info;
+	}
+	//返回成功带总数带集合的,总数为int型 add by yangchangwei
+	public JSONObject success(Integer recordTotal,List<?> List) {
 		JSONObject info = new JSONObject();
 		info.put(STATUS, SUCCESS);
 		info.put(MSG, "成功");

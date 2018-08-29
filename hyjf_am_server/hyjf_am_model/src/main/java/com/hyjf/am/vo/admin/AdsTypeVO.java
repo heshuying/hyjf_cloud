@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,16 +11,20 @@ import java.util.Date;
  * @Date: 2018/7/19  17:40
  */
 public class AdsTypeVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "广告位的ID")
     private Integer typeId;
 
+    @ApiModelProperty(value = "广告位")
     private String typeName;
 
     private String code;
 
+    @ApiModelProperty(value = "排序")
     private Integer order;
 
     private String remark;
 
+    @ApiModelProperty(value = "排序")
     private Integer status;
 
     private Integer clientType;

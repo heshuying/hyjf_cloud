@@ -1,7 +1,6 @@
 package com.hyjf.cs.message.mongo.ic;
 
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
 import org.apache.commons.lang3.StringUtils;
@@ -66,13 +65,13 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     }
 
     public Criteria createCriteria(AccountWebListVO accountWebList){
-        Criteria criteria;
+        Criteria criteria = new Criteria();
         if(null!=accountWebList){
-            criteria = Criteria.where("id").gt(0);
-            if(StringUtils.isNoneBlank(accountWebList.getOrdid())){
+            criteria = Criteria.where("id").ne("").ne(null);
+            if(StringUtils.isNotBlank(accountWebList.getOrdid())){
                 criteria = criteria.and("ordid").is(accountWebList.getOrdid());
             }
-            if(StringUtils.isNoneBlank(accountWebList.getBorrowNid())){
+            if(StringUtils.isNotBlank(accountWebList.getBorrowNid())){
                 criteria = criteria.and("borrowNid").is(accountWebList.getBorrowNid());
             }
             if(StringUtils.isNotBlank( accountWebList.getTruenameSearch())){
@@ -103,7 +102,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
                 match(createCriteria(accountWebList)),
                 Aggregation.group("id").sum("amount").as("account")
         );
-        AggregationResults<Integer> ar = mongoTemplate.aggregate(aggregation,"account", Integer.class);
+        AggregationResults<Integer> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Integer.class);
         List<Integer> list = ar.getMappedResults();
         if(list.size() > 0){
             total += list.get(0);
