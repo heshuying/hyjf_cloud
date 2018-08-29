@@ -22,7 +22,7 @@ public class KeyCountServiceImpl extends BaseServiceImpl implements KeyCountServ
 		int count = keyCountCustomMapper.countTotal(request);
 		response.setCount(count);
 		if(count>0){
-			Paginator paginator = new Paginator(request.getCurrPage(), count);
+			Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
 			request.setLimitStart(paginator.getOffset());
 			request.setLimitEnd(paginator.getLimit());
 			List<KeyCountVO> list = keyCountCustomMapper.searchAction(request);
