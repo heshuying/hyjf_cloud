@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;

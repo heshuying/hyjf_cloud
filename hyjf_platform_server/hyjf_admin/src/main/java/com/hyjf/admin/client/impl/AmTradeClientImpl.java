@@ -5849,4 +5849,25 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return result;
     }
+
+    @Override
+    public BorrowRepayVO getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) {
+
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/getBorrowRepayInfo/" + borrowNid + "/" + borrowApr + "/" + borrowStyle;
+        BorrowRepayResponse response = restTemplate.getForEntity(url, BorrowRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/getBorrowRepayPlanInfo/" + borrowNid + "/" + borrowApr + "/" + borrowStyle;
+        BorrowRepayPlanResponse response = restTemplate.getForEntity(url, BorrowRepayPlanResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 }

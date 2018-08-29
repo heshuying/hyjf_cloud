@@ -2809,6 +2809,21 @@ public interface AmTradeClient {
      */
     Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
 
-
+    /**
+     * 单期还款数据
+     * @param borrowNid
+     * @param borrowApr
+     * @param borrowStyle
+     * @return
+     */
+    BorrowRepayVO getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * 多期还款数据
+     * @param borrowNid
+     * @param borrowApr
+     * @param borrowStyle
+     * @return
+     */
+    BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
 }
 

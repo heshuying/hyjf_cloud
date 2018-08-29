@@ -13,6 +13,8 @@
 		<result column="projectNid" property="projectNid" />
 	</resultMap>
 	<select id="selectRecentPaymentList" resultMap="recentPaymentMap" parameterType="java.util.Map">
+
+
 		SELECT t.* FROM (
 		SELECT
 		IFNULL(borrowInfo.project_name, borrow.`borrow_nid`) AS project_name,

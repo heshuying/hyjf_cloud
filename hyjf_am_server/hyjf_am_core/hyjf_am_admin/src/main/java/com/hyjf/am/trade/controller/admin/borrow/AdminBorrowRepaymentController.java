@@ -157,6 +157,47 @@ public class AdminBorrowRepaymentController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "/getBorrowRepayInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
+    public BorrowRepayResponse getBorrowRepayInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
+
+        BorrowRepayResponse response = new BorrowRepayResponse();
+        try{
+            BorrowRepay customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
+            if(customize!=null){
+                BorrowRepayVO vo = CommonUtils.convertBean(customize,BorrowRepayVO.class);
+                response.setResult(vo);
+            }
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/getBorrowRepayPlanInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
+    public BorrowRepayPlanResponse getBorrowRepayPlanInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
+
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        try{
+            BorrowRepayPlan customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
+            if(customize!=null){
+                BorrowRepayPlanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanVO.class);
+                response.setResult(vo);
+            }
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+
     // 更新用户的交易明细
     @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.POST)
     public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
