@@ -1272,7 +1272,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 	@Override
 	public CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr) {
-		String url = "http://AM-USER/am-user/certificate/search";
+		String url = "http://AM-ADMIN/am-user/certificate/search";
 		CertificateAuthorityResponse response = restTemplate
 				.postForEntity(url, aprlr, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
@@ -1283,7 +1283,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
-		String url = "http://AM-USER/am-user/certificate/modifyAction/";
+		String url = "http://AM-ADMIN/am-user/certificate/modifyAction/";
 		CertificateAuthorityResponse response = restTemplate
 				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
@@ -1943,7 +1943,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public CertificateAuthorityResponse getExceptionRecordList(CertificateAuthorityExceptionRequest request) {
-		String url = "http://AM-USER/am-user/certificate/getExceptionRecordList";
+		String url = "http://AM-ADMIN/am-user/certificate/getExceptionRecordList";
 		CertificateAuthorityResponse response = restTemplate
 				.postForEntity(url, request, CertificateAuthorityResponse.class).getBody();
 		if (response != null) {
