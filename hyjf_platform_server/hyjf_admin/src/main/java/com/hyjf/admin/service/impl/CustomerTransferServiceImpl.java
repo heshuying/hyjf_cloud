@@ -192,6 +192,8 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertTransfer(CustomerTransferRequest request) {
+        UserVO userVO = amUserClient.getUserByUserName(request.getOutUserName());
+        request.setOutUserId(userVO.getUserId());
         return amTradeClient.insertUserTransfer(request);
     }
 
