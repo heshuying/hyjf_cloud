@@ -13,7 +13,6 @@ import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.common.file.UploadFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
