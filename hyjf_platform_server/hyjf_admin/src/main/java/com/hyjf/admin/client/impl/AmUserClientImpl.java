@@ -1341,7 +1341,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-		String url = "http://AM-USER/am-user/bankaccountmanage/getbankopenaccount/" + userId;
+		String url = "http://AM-USER/am-user/bank_account_manage/get_bank_open_account/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
