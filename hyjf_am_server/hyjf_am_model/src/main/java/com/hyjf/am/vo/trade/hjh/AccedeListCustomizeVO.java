@@ -83,7 +83,7 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	/**
 	 * 加入时间
 	 */
-	private Date createTime;
+	private String createTime;
 	/**
 	 * 计息时间
 	 */
@@ -422,11 +422,11 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 		this.orderStatus = orderStatus;
 	}
 
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 

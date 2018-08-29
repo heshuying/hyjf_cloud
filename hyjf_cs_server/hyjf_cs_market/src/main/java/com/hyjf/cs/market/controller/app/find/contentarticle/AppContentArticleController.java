@@ -64,7 +64,7 @@ public class AppContentArticleController extends BaseMarketController {
         }
         AppResult appResult = new AppResult<>(response);
         appResult.setStatus("000");
-        appResult.setStatusDesc(Response.SUCCESS_MSG);
+        appResult.setStatusDesc("成功！");
         logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         return appResult;
     }

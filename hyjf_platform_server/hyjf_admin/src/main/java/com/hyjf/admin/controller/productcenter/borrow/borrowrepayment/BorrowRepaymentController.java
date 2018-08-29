@@ -115,11 +115,15 @@ public class BorrowRepaymentController extends BaseController {
             @ApiImplicitParam(name = "repayTime",value = "放款时间")
     })
     public AdminResult<DelayRepayInfoBean> delayRepayAction(HttpServletRequest request ,@RequestBody Map map) {
+        AdminResult<DelayRepayInfoBean>  result=new AdminResult<DelayRepayInfoBean> ();
+        result.setStatus(AdminResult.FAIL);
+        result.setStatusDesc(AdminResult.FAIL_DESC);
         String borrowNid = (String) map.get("borrowNid");
         String delayDays = (String) map.get("delayDays");
         String repayTime = (String) map.get("repayTime");
         DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
-        AdminResult<DelayRepayInfoBean>  result=new AdminResult<DelayRepayInfoBean> ();
+        result.setStatus(AdminResult.SUCCESS);
+        result.setStatusDesc(AdminResult.SUCCESS_DESC);
         result.setData(bean);
         return result;
     }

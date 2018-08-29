@@ -3,16 +3,14 @@ package com.hyjf.cs.message.controller.client;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
-import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
@@ -159,7 +157,13 @@ public class MongoSeachController extends BaseController {
             int recordTotal = recordList.size();
             if (recordTotal > 0) {
                 Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
-                List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), paginator.getLimit());
+                int end = 0;
+                if(recordTotal<paginator.getOffset()*paginator.getLimit()+paginator.getLimit()){
+                    end=recordTotal;
+                }else {
+                    end = paginator.getOffset()*paginator.getLimit()+paginator.getLimit();
+                }
+                List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), end);
                 List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList2, AccountWebListVO.class);
                 response.setResultList(voList);
                 response.setRecordTotal(recordTotal);
@@ -172,7 +176,7 @@ public class MongoSeachController extends BaseController {
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList){
         int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0#.00");
         return df.format(total);
     }
 

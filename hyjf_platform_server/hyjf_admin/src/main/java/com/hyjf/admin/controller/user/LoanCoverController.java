@@ -79,7 +79,7 @@ public class LoanCoverController extends BaseController {
     }
 
     /**
-     * 添加借款盖章用户
+     * 初始化修改借款盖章用户
      *
      * @return
      */

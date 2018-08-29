@@ -4,11 +4,14 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.MyPlanListResultBean;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.myplan.AppMyPlanService;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -41,6 +44,9 @@ public class AppMyPlanController extends BaseTradeController {
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
     @Autowired
     private AppMyPlanService appMyPlanService;
+
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * App端:获取我的散标信息
      * @date 2018/7/2 16:27
@@ -147,7 +153,7 @@ public class AppMyPlanController extends BaseTradeController {
             }
 
             // 项目详情url
-            String hostUrl = "" + "/" + entity.getOrderId() + "?type="
+            String hostUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/plan" + "/" + entity.getOrderId() + "?type="
                     + entity.getType() + "&couponType=" + label;
             // project.setBorrowUrl(CommonUtils.concatReturnUrl(request,
             // hostUrl));

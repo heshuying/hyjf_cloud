@@ -4,9 +4,11 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.math.BigDecimal;
@@ -16,7 +18,7 @@ import java.util.List;
  * @author PC-LIUSHOUYI
  * @version BankAccountManageService, v0.1 2018/6/29 11:54
  */
-public interface BankAccountManageService {
+public interface BankAccountManageService extends BaseService {
 
     /**
      * 账户管理页面查询列表
@@ -84,4 +86,12 @@ public interface BankAccountManageService {
      * @return
      */
     JSONArray getCrmDepartmentList(String[] list);
+
+    /**
+     * 根据用户id获取用户账户信息
+     *
+     * @param userId
+     * @return
+     */
+    AccountVO getAccountByUserId(Integer userId);
 }

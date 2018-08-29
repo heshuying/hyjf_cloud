@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,32 +53,37 @@ public class HjhRepayController {
 
 
         //清算时间
-        if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeStart())){
-            int repayTimeStart = GetDate.getDayEnd10(request.getRepayTimeStart() + " 00:00:00");
-            int repayTimeEnd;
-            if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeEnd())){
-                repayTimeEnd = GetDate.getDayEnd10(request.getRepayTimeEnd() + " 23:59:59");
-            }else {
-                Long logRepayTimeEnd = System.currentTimeMillis()/1000;
-                repayTimeEnd = logRepayTimeEnd.intValue();
+//        if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeStart())){
+//            int repayTimeStart = GetDate.getDayEnd10(request.getRepayTimeStart() + " 00:00:00");
+//            int repayTimeEnd;
+//            if (org.apache.commons.lang3.StringUtils.isNotEmpty(request.getRepayTimeEnd())){
+//                repayTimeEnd = GetDate.getDayEnd10(request.getRepayTimeEnd() + " 23:59:59");
+//            }else {
+//                Long logRepayTimeEnd = System.currentTimeMillis()/1000;
+//                repayTimeEnd = logRepayTimeEnd.intValue();
+//            }
+            if (StringUtils.isNotEmpty(request.getRepayTimeStart())){
+                params.put("repayTimeStart", request.getRepayTimeStart() + " 00:00:00");
+                params.put("repayTimeEnd", request.getRepayTimeEnd() + " 23:59:59");
             }
-            params.put("repayTimeStart", repayTimeStart);
-            params.put("repayTimeEnd", repayTimeEnd);
-        }
+//        }
 
         //实际退出时间
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
-            int actuTimeStart = GetDate.getDayStart10(request.getActulRepayTimeStart() + " 00:00:00");
-            int actuTimeEnd;
-            if (StringUtils.isNotEmpty(request.getActulRepayTimeEnd())){
-                actuTimeEnd = GetDate.getDayEnd10(request.getActulRepayTimeEnd() + "23:59:59");
-            }else {
-                Long logAutuTimeEnd = System.currentTimeMillis() / 1000;
-                actuTimeEnd = logAutuTimeEnd.intValue();
+//        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
+//            int actuTimeStart = GetDate.getDayStart10(request.getActulRepayTimeStart() + " 00:00:00");
+//            int actuTimeEnd;
+//            if (StringUtils.isNotEmpty(request.getActulRepayTimeEnd())){
+//                actuTimeEnd = GetDate.getDayEnd10(request.getActulRepayTimeEnd() + "23:59:59");
+//            }else {
+//                Long logAutuTimeEnd = System.currentTimeMillis() / 1000;
+//                actuTimeEnd = logAutuTimeEnd.intValue();
+//            }
+            if (StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
+                params.put("actulRepayTimeStart", request.getActulRepayTimeStart() + " 00:00:00");
+                params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + "23:59:59");
             }
-            params.put("actulRepayTimeStart", actuTimeStart);
-            params.put("actulRepayTimeEnd", actuTimeEnd);
-        }
+
+//        }
 
         // 查询 总条数
         Integer count = this.hjhRepayService.getRepayCount(params);
@@ -96,9 +102,54 @@ public class HjhRepayController {
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
 
+        // 初始化总计数据
+        BigDecimal sumAccedeAccount = BigDecimal.ZERO;
+        BigDecimal sumRepayInterest = BigDecimal.ZERO;
+        // 汇计划三期 实际收益 总计
+        BigDecimal sumActualRevenue = BigDecimal.ZERO;
+        // 汇计划三期 实际回款 总计
+        BigDecimal sumActualPayTotal = BigDecimal.ZERO;
+        // 汇计划三期 清算服务费 总计
+        BigDecimal sumLqdServiceFee = BigDecimal.ZERO;
+
+        for(int i = 0; i < repayVOList.size(); i++){
+            if (repayVOList.get(i).getAccedeAccount() == null){
+                sumAccedeAccount = BigDecimal.ZERO;
+            }else {
+                sumAccedeAccount = sumAccedeAccount.add(repayVOList.get(i).getAccedeAccount());
+            }
+            if (repayVOList.get(i).getRepayInterest() == null){
+                sumRepayInterest = BigDecimal.ZERO;
+            }else {
+                sumRepayInterest = sumRepayInterest.add(repayVOList.get(i).getRepayInterest());
+            }
+            if (repayVOList.get(i).getActualRevenue() == null){
+                sumActualRevenue = BigDecimal.ZERO;
+            }else {
+                sumActualRevenue = sumActualRevenue.add(repayVOList.get(i).getActualRevenue());
+            }
+            if (repayVOList.get(i).getActualPayTotal() == null){
+                sumActualPayTotal = BigDecimal.ZERO;
+            }else {
+                sumActualPayTotal = sumActualPayTotal.add(repayVOList.get(i).getActualPayTotal());
+            }
+            if (repayVOList.get(i).getLqdServiceFee() == null){
+                sumLqdServiceFee = BigDecimal.ZERO;
+            }else {
+                sumLqdServiceFee = sumLqdServiceFee.add(repayVOList.get(i).getLqdServiceFee());
+            }
+        }
+
         if (!CollectionUtils.isEmpty(repayVOList)){
             response.setResultList(repayVOList);
             response.setCount(count);
+            HjhRepayVO sumHjhRepayVO = new HjhRepayVO();
+            sumHjhRepayVO.setAccedeAccount(sumAccedeAccount);
+            sumHjhRepayVO.setRepayInterest(sumRepayInterest);
+            sumHjhRepayVO.setActualRevenue(sumActualRevenue);
+            sumHjhRepayVO.setActualPayTotal(sumActualPayTotal);
+            sumHjhRepayVO.setLqdServiceFee(sumLqdServiceFee);
+            response.setSumHjhRepayVO(sumHjhRepayVO);
             response.setRtn(Response.SUCCESS);
         }
         return response;
