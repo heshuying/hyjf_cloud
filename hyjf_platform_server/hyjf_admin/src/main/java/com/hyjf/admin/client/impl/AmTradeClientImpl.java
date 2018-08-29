@@ -4902,7 +4902,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
         HjhInstConfigResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode" + instcode,
+                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
                 HjhInstConfigResponse.class);
         if (response != null) {
             return response.getResult();

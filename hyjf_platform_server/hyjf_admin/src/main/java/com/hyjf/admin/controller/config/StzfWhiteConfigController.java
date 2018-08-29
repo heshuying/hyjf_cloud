@@ -52,9 +52,9 @@ public class StzfWhiteConfigController extends BaseController {
 	@ApiOperation(value = "添加受托支付白名单", notes = "添加受托支付白名单")
 	@PostMapping("/insertAction")
 	public AdminResult add(HttpServletRequest request, @RequestBody STZHWhiteListRequestBean requestBean) {
-		AdminSystemVO adminSystemVO = (AdminSystemVO) request.getSession().getAttribute(USER);
-		requestBean.setCreateuser(adminSystemVO.getId());
-		requestBean.setUpdateuser(adminSystemVO.getId());
+		AdminSystemVO adminUser = getUser(request);
+		requestBean.setCreateuser(adminUser.getId());
+		requestBean.setUpdateuser(adminUser.getId());
 		if (requestBean.getInstname() != null) {
 			// 机构编号
 			requestBean.setInstcode(requestBean.getInstname());
@@ -76,9 +76,9 @@ public class StzfWhiteConfigController extends BaseController {
 	@ApiOperation(value = "修改受托支付白名单", notes = "修改受托支付白名单")
 	@PostMapping("/updateAction")
 	public AdminResult updateAction(HttpServletRequest request, @RequestBody STZHWhiteListRequestBean requestBean) {
-		AdminSystemVO adminSystemVO = (AdminSystemVO) request.getSession().getAttribute(USER);
-		requestBean.setCreateuser(adminSystemVO.getId());
-		requestBean.setUpdateuser(adminSystemVO.getId());
+		AdminSystemVO adminUser = getUser(request);
+		requestBean.setCreateuser(adminUser.getId());
+		requestBean.setUpdateuser(adminUser.getId());
 		if (requestBean.getInstname() != null) {
 			// 机构编号
 			requestBean.setInstcode(requestBean.getInstname());
