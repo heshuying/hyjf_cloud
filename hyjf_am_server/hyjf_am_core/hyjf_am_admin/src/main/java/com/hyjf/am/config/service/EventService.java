@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.resquest.admin.EventsRequest;
+
+import java.util.List;
 
 /**
  * 公司记事
@@ -28,14 +28,14 @@ public interface EventService {
 	 *
 	 * @param request
 	 */
-	void insertAction(EventsRequest request);
+	int insertAction(EventsRequest request);
 
 	/**
 	 * 修改公司纪事
 	 *
 	 * @param request
 	 */
-	void updateAction(EventsRequest request);
+	int updateAction(EventsRequest request);
 
 	/**
 	 * 根据id获取公司纪事
@@ -50,7 +50,7 @@ public interface EventService {
 	 *
 	 * @param id
 	 */
-    void deleteById(Integer id);
+    int deleteById(Integer id);
 
 
 	/**
@@ -62,6 +62,10 @@ public interface EventService {
 	 */
 	 List<Event> getEvents(int begin, int end,int year);
 
-
-
+	/**
+	 * 查询符合条件的条数
+	 * @param request
+	 * @return
+	 */
+    int selectCount(EventsRequest request);
 }

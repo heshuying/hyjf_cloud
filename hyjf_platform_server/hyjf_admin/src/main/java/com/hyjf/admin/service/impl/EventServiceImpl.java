@@ -3,16 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmConfigClient;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.beans.request.EventRequestBean;
-import com.hyjf.admin.client.EventClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.EventService;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.vo.config.EventVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author fuqiang
@@ -29,30 +27,27 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public EventResponse insertAction(EventRequestBean requestBean) {
+	public int insertAction(EventRequestBean requestBean) {
 		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
-	public EventResponse updateAction(EventRequestBean requestBean) {
+	public int updateAction(EventRequestBean requestBean) {
 		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
-	public EventResponse updateStatus(EventRequestBean requestBean) {
+	public int updateStatus(EventRequestBean requestBean) {
 		Integer id = requestBean.getId();
 		EventVO record = amConfigClient.getEventRecord(id);
-		if (record.getStatus() == 1) {
-			record.setStatus(0);
-		} else if (record.getStatus() == 0) {
-			record.setStatus(1);
-		}
-		BeanUtils.copyProperties(record, requestBean);
-		return amConfigClient.updateAction(requestBean);
+		EventRequestBean bean = new EventRequestBean();
+		BeanUtils.copyProperties(record, bean);
+		bean.setStatus(requestBean.getStatus());
+		return amConfigClient.updateAction(bean);
 	}
 
 	@Override
-	public EventResponse deleteById(Integer id) {
+	public int deleteById(Integer id) {
 		return amConfigClient.deleteEventById(id);
 	}
 }

@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRepayMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
+import com.hyjf.am.trade.dao.model.customize.HjhRepayCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
@@ -47,7 +48,11 @@ public class HjhRepayServiceImpl extends BaseServiceImpl implements HjhRepayServ
     @Override
     public List<HjhRepayVO> selectByExample(Map<String, Object> params) {
 
-        List<HjhRepay> repayList = hjhPlanRepayCustomizeMapper.exportPlanRepayList(params);
+        List<HjhRepayCustomize> repayList = hjhPlanRepayCustomizeMapper.exportPlanRepayList(params);
+        for (int j = 0; j < repayList.size(); j++) {
+            System.out.println(repayList.get(j).getRepayActualTime());
+            System.out.println(repayList.get(j).getRepayShouldTime());
+        }
         List<HjhRepayVO> repayVOList = CommonUtils.convertBeanList(repayList, HjhRepayVO.class);
         return repayVOList;
     }

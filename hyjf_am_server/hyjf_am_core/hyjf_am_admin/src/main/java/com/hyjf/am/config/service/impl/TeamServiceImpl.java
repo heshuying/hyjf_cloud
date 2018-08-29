@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.TeamMapper;
 import com.hyjf.am.config.dao.model.auto.Team;
 import com.hyjf.am.config.dao.model.auto.TeamExample;
 import com.hyjf.am.config.service.TeamService;
 import com.hyjf.am.resquest.admin.TeamRequest;
-import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -41,33 +40,40 @@ public class TeamServiceImpl implements TeamService {
 	public List<Team> searchAction(TeamRequest request) {
 		TeamExample example = new TeamExample();
 		TeamExample.Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(request.getName())) {
+			criteria.andNameEqualTo(request.getName());
+		}
 		if (StringUtils.isNotBlank(request.getPosition())) {
 			criteria.andPositionEqualTo(request.getPosition());
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
-		if (request.getStartTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
 		}
-		if (request.getEndTime() != null) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
-		return null;
+		return teamMapper.selectByExample(example);
 	}
 
 	@Override
-	public void insertAction(TeamRequest request) {
+	public int insertAction(TeamRequest request) {
 		Team team = new Team();
 		BeanUtils.copyProperties(request, team);
-		teamMapper.insert(team);
+		return teamMapper.insertSelective(team);
 	}
 
 	@Override
-	public void updateAction(TeamRequest request) {
+	public int updateAction(TeamRequest request) {
 		Team team = new Team();
 		BeanUtils.copyProperties(request, team);
-		teamMapper.updateByPrimaryKey(team);
+		return teamMapper.updateByPrimaryKeySelective(team);
 	}
 
 	@Override
@@ -76,7 +82,17 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		teamMapper.deleteByPrimaryKey(id);
+	public int deleteById(Integer id) {
+		return teamMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int selectCount(TeamRequest request) {
+		request.setCurrPage(0);
+		List<Team> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }

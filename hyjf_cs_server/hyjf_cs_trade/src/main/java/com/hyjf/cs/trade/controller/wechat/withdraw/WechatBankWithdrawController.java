@@ -54,7 +54,7 @@ import java.util.Map;
  */
 @Api(tags = "weChat端-用户提现接口")
 @RestController
-@RequestMapping("/hyjf-wechat/withdraw")
+@RequestMapping("/hyjf-wechat/wx/bank/withdraw/")
 public class WechatBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatBankWithdrawController.class);
@@ -78,7 +78,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date  用户提现调用银行页面
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现初始化")
-    @GetMapping("/queryWithdrawInfo")
+    @GetMapping("/queryWithdrawInfo.do")
     @ResponseBody
     public BaseResultBean queryWithdrawInfo(@RequestHeader(value = "userId") Integer userId,
                                             HttpServletRequest request) {
@@ -178,7 +178,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date  用户提现调用银行页面
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
-    @PostMapping("/userBankWithdraw")
+    @PostMapping("/withdraw.do")
     public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
                                          HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
@@ -195,7 +195,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
-        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/bgreturn";
+        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/bgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         Map<String,Object> map = new HashMap<>();
@@ -219,7 +219,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
-    @PostMapping("/bgreturn")
+    @PostMapping("/bgreturn.do")
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[wechat用户银行提现异步回调开始]");
         logger.info("weChat端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
