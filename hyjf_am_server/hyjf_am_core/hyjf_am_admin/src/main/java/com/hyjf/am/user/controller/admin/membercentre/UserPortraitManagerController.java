@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.admin.membercentre;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserPortraitScoreResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
@@ -117,9 +118,9 @@ public class UserPortraitManagerController extends BaseController {
      * 更新记录
      */
     @RequestMapping("/updateUserPortraitRecord")
-    public int updateUserPortraitRecord(@RequestBody @Valid UserPortraitRequest request) {
+    public IntegerResponse updateUserPortraitRecord(@RequestBody @Valid UserPortraitRequest request) {
         int updFlg = userPortraitManagerService.updateUserPortrait(request);
-        return updFlg;
+        return new IntegerResponse(updFlg);
     }
 
     private Map<String, Object> paramToMap(UserPortraitRequest request) {
