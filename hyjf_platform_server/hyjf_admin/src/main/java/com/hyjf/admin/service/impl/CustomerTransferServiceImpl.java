@@ -158,37 +158,16 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public JSONObject checkCustomerTransferParam(CustomerTransferRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        if (StringUtils.isNotEmpty(request.getOutUserName())) {
-            String userName = request.getOutUserName();
-            List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
-            if (userVOList != null && userVOList.size() == 1) {
-                UserVO userVO = userVOList.get(0);
-                List<AccountChinapnrVO> accountChinapnrVOList = amUserClient.searchAccountChinapnrByUserId(userVO.getUserId());
-                if (accountChinapnrVOList != null && accountChinapnrVOList.size() == 1) {
-                    List<AccountVO> accountVOList = amTradeClient.searchAccountByUserId(userVO.getUserId());
-                    if (accountVOList != null && accountVOList.size() == 1) {
-                        jsonObject.put("status", "0");
-                        jsonObject.put("result", "校验参数成功");
-                    } else {
-                        jsonObject.put("status", "error");
-                        jsonObject.put("result", "未查询到正确的余额信息");
-                    }
-                } else {
-                    jsonObject.put("status", "error");
-                    jsonObject.put("result", "用户未开户，无法转账");
-                }
-            } else {
-                jsonObject.put("status", "error");
-                jsonObject.put("result", "未查询到正确的用户信息");
-            }
-        } else {
-            jsonObject.put("status", "error");
-            jsonObject.put("result", "用户名不能为空");
-        }
-        return jsonObject;
+    public void checkCustomerTransferParam(CustomerTransferRequest request) {
+        CheckUtil.check(StringUtils.isNotEmpty(request.getOutUserName()),MsgEnum.ERR_OBJECT_REQUIRED,"用户名");
+        String userName = request.getOutUserName();
+        List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
+        CheckUtil.check(userVOList != null && userVOList.size() == 1,MsgEnum.STATUS_ZT000001);
+        UserVO userVO = userVOList.get(0);
+        List<AccountChinapnrVO> accountChinapnrVOList = amUserClient.searchAccountChinapnrByUserId(userVO.getUserId());
+        CheckUtil.check(accountChinapnrVOList != null && accountChinapnrVOList.size() == 1,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        List<AccountVO> accountVOList = amTradeClient.searchAccountByUserId(userVO.getUserId());
+        CheckUtil.check(accountVOList != null && accountVOList.size() == 1,MsgEnum.ERR_AMT_MONEY);
     }
 
     /**
@@ -213,6 +192,8 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertTransfer(CustomerTransferRequest request) {
+        UserVO userVO = amUserClient.getUserByUserName(request.getOutUserName());
+        request.setOutUserId(userVO.getUserId());
         return amTradeClient.insertUserTransfer(request);
     }
 

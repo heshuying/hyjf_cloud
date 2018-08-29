@@ -108,7 +108,7 @@
 			cu.end_time,
 			cu.used_flag,
 			cu.update_time,
-			cc.add_flg add_flg,
+			cc.add_flag add_flg,
 			cc.coupon_profit_time coupon_profit_time,
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime
@@ -119,7 +119,7 @@
 			cu.id = #{couponGrantId}
 		AND cu.user_id=#{userId}
 		AND cu.del_flag = 0
-		AND cc.del_flg = 0
+		AND cc.del_flag = 0
 	</select>
 
 	<select id="getCouponTenderByTender" resultMap="BorrowTenderCpnResultMap" parameterType="java.util.Map">

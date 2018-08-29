@@ -6,7 +6,7 @@ package com.hyjf.am.config.controller.admin.content;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.service.ContentPartnerService;
-import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.vo.config.LinkVO;
@@ -46,6 +46,9 @@ public class ContentPartnerController extends BaseConfigController {
 			List<LinkVO> voList = CommonUtils.convertBeanList(list, LinkVO.class);
 			response.setResultList(voList);
 		}
+		// 获取符合条件的条数
+		int count = contentPartnerService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 
@@ -56,11 +59,9 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/insertaction")
-	public LinkResponse insertAction(@RequestBody ContentPartnerRequest request) {
-		LinkResponse response = new LinkResponse();
-		contentPartnerService.insertAction(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse insertAction(@RequestBody ContentPartnerRequest request) {
+		int num = contentPartnerService.insertAction(request);
+		return new IntegerResponse(num);
 	}
 
 	/**
@@ -70,11 +71,9 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/updateaction")
-	public LinkResponse updateAction(@RequestBody ContentPartnerRequest request) {
-		LinkResponse response = new LinkResponse();
-		contentPartnerService.updateAction(request);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse updateAction(@RequestBody ContentPartnerRequest request) {
+		int num = contentPartnerService.updateAction(request);
+		return new IntegerResponse(num);
 	}
 
 	/**
@@ -113,10 +112,8 @@ public class ContentPartnerController extends BaseConfigController {
 	}
 
 	@RequestMapping("/delete/{id}")
-	public LinkResponse delete(@PathVariable Integer id) {
-		LinkResponse response = new LinkResponse();
-		contentPartnerService.deleteById(id);
-		response.setRtn(AdminResponse.SUCCESS);
-		return response;
+	public IntegerResponse delete(@PathVariable Integer id) {
+		int num = contentPartnerService.deleteById(id);
+		return new IntegerResponse(num);
 	}
 }

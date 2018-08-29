@@ -1,9 +1,7 @@
 package com.hyjf.cs.trade.service.projectlist;
 
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
-import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
  * api端 业务service
@@ -18,4 +16,11 @@ public interface ApiProjectListService {
      * @date 2018/8/27 10:11
      */
     ApiResult getBorrowList(ApiBorrowReqBean reqBean);
+
+    /**
+     * 查询标的详情
+     * @author zhangyk
+     * @date 2018/8/29 13:45
+     */
+    ApiResult getBorrowDetail(ApiBorrowReqBean reqBean);
 }

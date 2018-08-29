@@ -4,13 +4,13 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: am-trade
   boot:
     admin:
       client:
         url: http://micoserver:18080
-
+  profiles:
+    active: dev
 server:
   port: 8096
 

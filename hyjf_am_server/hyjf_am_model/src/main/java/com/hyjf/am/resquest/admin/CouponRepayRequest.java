@@ -1,5 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -19,46 +21,57 @@ public class CouponRepayRequest implements Serializable {
 	/**
 	 * 借款编号 检索条件
 	 */
+	@ApiModelProperty(value = "借款编号")
 	private String borrowNidSrch;
 	/**
 	 * 借款标题 检索条件
 	 */
+	@ApiModelProperty(value = "借款标题")
 	private String borrowNameSrch;
 	/**
 	 * 用户名 检索条件
 	 */
+	@ApiModelProperty(value = "用户名")
 	private String usernameSrch;
 	/**
 	 * 推荐人 检索条件
 	 */
+	@ApiModelProperty(value = "推荐人")
 	private String referrerNameSrch;
 	/**
 	 * 还款方式 检索条件
 	 */
+	@ApiModelProperty(value = "还款方式")
 	private String borrowStyleSrch;
 	/**
 	 * 操作平台 检索条件
 	 */
+	@ApiModelProperty(value = "操作平台")
 	private String clientSrch;
 	/**
 	 * 渠道 检索条件
 	 */
+	@ApiModelProperty(value = "渠道")
 	private String utmIdSrch;
 	/**
 	 * 投资时间 检索条件
 	 */
+	@ApiModelProperty(value = "投资时间 开始")
 	private String timeStartSrch;
 	/**
 	 * 投资时间 检索条件
 	 */
+	@ApiModelProperty(value = "投资时间 结束")
 	private String timeEndSrch;
 	/**
 	 * 检索条件 limitStart
 	 */
+	@ApiModelProperty(value = "")
 	private int limitStart = -1;
 	/**
 	 * 检索条件 limitEnd
 	 */
+	@ApiModelProperty(value = "")
 	private int limitEnd = -1;
 
 	/**
