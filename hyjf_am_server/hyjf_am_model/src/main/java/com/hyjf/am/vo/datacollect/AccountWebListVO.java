@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.datacollect;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,16 +17,21 @@ public class AccountWebListVO extends BaseVO implements Serializable {
     /**
      * 创建时间 起始
      */
+    @ApiModelProperty(value = "创建时间 起始")
     private String startDate;
     /**创建时间  结束*/
+    @ApiModelProperty(value = "创建时间  结束")
     private String endDate;
-
+    @ApiModelProperty(value = "用户名")
     private String usernameSearch;
+    @ApiModelProperty(value = "真是姓名")
     private String truenameSearch;
     /**收支类型  1：收入  2：支出*/
+    @ApiModelProperty(value = "收支类型")
     private int typeSearche ;
 
     /**交易类型*/
+    @ApiModelProperty(value = "交易类型")
     private String tradeTypeSearch;
 
     /**

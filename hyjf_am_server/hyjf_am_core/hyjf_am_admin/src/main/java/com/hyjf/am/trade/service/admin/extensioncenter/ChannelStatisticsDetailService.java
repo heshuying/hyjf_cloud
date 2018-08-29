@@ -34,5 +34,5 @@ public interface ChannelStatisticsDetailService {
 	 * @param
 	 * @return
 	 */
-	UtmPlatResponse pcutmList();
+	UtmPlatResponse selectPcutmList();
 }

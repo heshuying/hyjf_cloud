@@ -156,4 +156,18 @@ public interface BankWithdrawService extends BaseTradeService {
      */
 
     List<AccountRechargeVO> getRechargeMoney(Integer userId);
+    /**
+     * @Description 查询用户投资记录
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int getBorrowTender(Integer userId );
+    /**
+     * @Description 查询用户的24小时内充值记录
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<AccountRechargeVO> getTodayRecharge(Integer userId);
 }

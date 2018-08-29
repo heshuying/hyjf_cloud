@@ -59,6 +59,6 @@ public class ChannelStatisticsDetailController extends BaseController {
 	 */
 	@PostMapping("/pcutm_list")
 	public UtmPlatResponse pcutmList() {
-		return channelStatisticsDetailService.pcutmList();
+		return channelStatisticsDetailService.selectPcutmList();
 	}
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.IntegerResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,9 +96,9 @@ public class LoanCoverUserManagerController extends BaseController {
      * 保存记录
      */
     @RequestMapping("/insertLoanCoverUserRecord")
-    public int isExistsRecordByIdNo(@RequestBody @Valid LoanCoverUserRequest request){
+    public IntegerResponse isExistsRecordByIdNo(@RequestBody @Valid LoanCoverUserRequest request){
         int intFlg = loanCoverUserManagerService.insertLoanCoverUserRecord(request);
-        return intFlg;
+        return new IntegerResponse(intFlg);
     }
     /**
      * 根据证件号码查找借款主体CA认证记录表
@@ -139,13 +140,12 @@ public class LoanCoverUserManagerController extends BaseController {
      * 更新记录
      */
     @RequestMapping("/updateLoanCoverUserRecord")
-    public int updateLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request){
+    public IntegerResponse updateLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request){
         int updFlg = loanCoverUserManagerService.updateLoanCoverUserRecord(request);
-        return updFlg;
+        return new IntegerResponse(updFlg);
     }
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
-     * @param strIdNo
      * @param tureName
      * @return
      */

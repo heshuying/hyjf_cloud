@@ -270,7 +270,7 @@
 		) AS userName,
 		-- CASE WHEN hui.vip_id IS NOT NULL THEN 1 ELSE 0 END AS is_vip,
 		SUBSTRING(FORMAT(hct.assign_capital,4),1,LENGTH(FORMAT(hct.assign_capital,4))-2) AS assignCapital,
-		hct.create_time AS assignTime,
+		date_format(hct.create_time, '%Y-%m-%d %H:%i:%s') AS assignTime,
 		hct.client AS client
 		FROM
 		ht_credit_tender hct
