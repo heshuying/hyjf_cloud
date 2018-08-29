@@ -991,7 +991,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse insertAction(TeamRequestBean requestBean);
+	int insertAction(TeamRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-团队介绍
@@ -999,7 +999,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse updateAction(TeamRequestBean requestBean);
+	int updateAction(TeamRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-团队介绍
@@ -1015,7 +1015,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	TeamResponse deleteTeamById(Integer id);
+	int deleteTeamById(Integer id);
 
 	/**
 	 * 查询版本设置列表

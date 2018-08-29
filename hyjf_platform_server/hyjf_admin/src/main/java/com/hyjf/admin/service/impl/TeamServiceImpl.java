@@ -3,16 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmConfigClient;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.beans.request.TeamRequestBean;
-import com.hyjf.admin.client.TeamClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.TeamService;
 import com.hyjf.am.response.config.TeamResponse;
 import com.hyjf.am.vo.config.TeamVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author fuqiang
@@ -29,30 +27,27 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
-	public TeamResponse insertAction(TeamRequestBean requestBean) {
+	public int insertAction(TeamRequestBean requestBean) {
 		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
-	public TeamResponse updateAction(TeamRequestBean requestBean) {
+	public int updateAction(TeamRequestBean requestBean) {
 		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
-	public TeamResponse updateStatus(TeamRequestBean requestBean) {
+	public int updateStatus(TeamRequestBean requestBean) {
 		Integer id = requestBean.getId();
 		TeamVO record = amConfigClient.getTeamRecord(id);
-		if (record.getStatus() == 1) {
-			record.setStatus(0);
-		} else if (record.getStatus() == 0) {
-			record.setStatus(1);
-		}
-		BeanUtils.copyProperties(record, requestBean);
+		TeamRequestBean bean = new TeamRequestBean();
+		BeanUtils.copyProperties(record, bean);
+		bean.setStatus(requestBean.getStatus());
 		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
-	public TeamResponse deleteById(Integer id) {
+	public int deleteById(Integer id) {
 		return amConfigClient.deleteTeamById(id);
 	}
 }

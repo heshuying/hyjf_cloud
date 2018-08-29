@@ -1465,25 +1465,25 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public TeamResponse searchAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/searchaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/searchaction", requestBean,
                 TeamResponse.class);
     }
 
     @Override
-    public TeamResponse insertAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/insertaction", requestBean,
-                TeamResponse.class);
+    public int insertAction(TeamRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public TeamResponse updateAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/updateaction", requestBean,
-                TeamResponse.class);
+    public int updateAction(TeamRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public TeamVO getTeamRecord(Integer id) {
-        TeamResponse response = restTemplate.getForObject("http//AM-CONFIG/am-config/team/getrecord/" + id,
+        TeamResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/team/getrecord/" + id,
                 TeamResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1492,8 +1492,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public TeamResponse deleteTeamById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/team/delete/" + id, TeamResponse.class);
+    public int deleteTeamById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/team/delete/" + id, IntegerResponse.class).getResultInt();
     }
 
     /**
