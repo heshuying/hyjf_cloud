@@ -120,9 +120,11 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowNid);
+		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
 		if (borrow != null) {
 			BorrowVO borrowVO = new BorrowVO();
 			BeanUtils.copyProperties(borrow, borrowVO);
+			BeanUtils.copyProperties(borrowInfo,borrowVO);
 			response.setResult(borrowVO);
 		}
 		return response;

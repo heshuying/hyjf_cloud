@@ -136,10 +136,11 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "产品图片:资料上传", notes = "产品图片:资料上传")
     @PostMapping(value = "/uploadFile")
     @ResponseBody
-    public String uploadFile(HttpServletRequest request) throws Exception {
-        //CommonsMultipartResolver commonsMultipartResolver = (CommonsMultipartResolver) request;
-        //CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-       // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
+    public JSONObject uploadFile(HttpServletRequest request) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("statusDesc", SUCCESS_DESC);
+        jsonObject.put("status", SUCCESS);
+
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String fileDomainUrl = DOMAIN_URL;
         String filePhysicalPath = PHYSICAL_PATH;
@@ -180,11 +181,12 @@ public class AppBorrowImageController extends BaseController {
             fileMeta.setImageType(multipartFile.getContentType());
             fileMeta.setErrorMessage(errorMessage);
             // 获取文件路径
-            fileMeta.setImagePath(fileUploadTempPath + fileRealName);
-            fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+            fileMeta.setImagePath(logoRealPathDir + fileRealName);
+            fileMeta.setImageSrc(fileDomainUrl + logoRealPathDir + fileRealName);
             files.add(fileMeta);
         }
-        return JSONObject.toJSONString(files, true);
+        jsonObject.put("data",files);
+        return jsonObject;
     }
 
 

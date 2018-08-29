@@ -15,6 +15,7 @@ import com.hyjf.am.vo.admin.MessagePushTagVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
@@ -99,7 +100,10 @@ public class MessagePushNoticesController extends BaseController {
             } else {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
-        } catch (Exception e) {
+        }catch (ReturnMessageException e){
+            return new AdminResult<>(FAIL, e.getError().getMsg());
+        }
+        catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }

@@ -73,6 +73,10 @@ public class PlatformCountCustomize implements Serializable {
      * 汇计划投资金额
      */
     private String hjhTenderPrice;
+    /**
+     * 汇转让投资金额
+     */
+    private String hzrTenderPrice;
 
     /**
      * 检索条件 时间开始
@@ -374,5 +378,13 @@ public class PlatformCountCustomize implements Serializable {
 
     public void setHjhTenderPrice(String hjhTenderPrice) {
         this.hjhTenderPrice = hjhTenderPrice;
+    }
+
+    public String getHzrTenderPrice() {
+        return hzrTenderPrice;
+    }
+
+    public void setHzrTenderPrice(String hzrTenderPrice) {
+        this.hzrTenderPrice = hzrTenderPrice;
     }
 }
