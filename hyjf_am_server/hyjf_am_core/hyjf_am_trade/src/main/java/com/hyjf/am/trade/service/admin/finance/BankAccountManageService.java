@@ -17,7 +17,7 @@ import java.util.List;
  */
 public interface BankAccountManageService extends BaseService {
     /**
-     * 行账户管理页面查询件数
+     * 更新账户余额
      *
      * @param accountVO
      * @return

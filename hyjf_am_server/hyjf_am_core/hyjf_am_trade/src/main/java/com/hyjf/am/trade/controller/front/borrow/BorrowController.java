@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
@@ -239,12 +241,16 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/insertBeforeTender")
-	public int insertBeforeTender(@RequestBody TenderRequest tenderRequest) {
+	public IntegerResponse insertBeforeTender(@RequestBody TenderRequest tenderRequest) {
+		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.insertBeforeTender(tenderRequest);
-			return 1;
+			result.setResultInt(1);
+			return result;
 		}catch (Exception e){
-			return 0;
+			e.printStackTrace();
+			result.setResultInt(0);
+			return result;
 		}
 	}
 
@@ -254,12 +260,16 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/borrowTender")
-	public int borrowTender(@RequestBody TenderBgVO tenderBg) {
+	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
+		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
-			return 1;
+			result.setResultInt(1);
+			return result;
 		}catch (Exception e){
-			return 0;
+			e.printStackTrace();
+			result.setResultInt(0);
+			return result;
 		}
 	}
 
@@ -284,8 +294,11 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@GetMapping("/getBorrowTenderResult/{userId}/{logOrdId}/{borrowNid}")
-	public String getBorrowTenderResult(@PathVariable Integer userId, @PathVariable String logOrdId, @PathVariable String borrowNid){
-		return borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+	public StringResponse getBorrowTenderResult(@PathVariable Integer userId, @PathVariable String logOrdId, @PathVariable String borrowNid){
+		StringResponse result = new StringResponse();
+		String msg = borrowService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+		result.setResultStr(msg);
+		return result;
 	}
 
 

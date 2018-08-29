@@ -90,6 +90,7 @@ public class ContentPartnerController extends BaseConfigController {
 		if (link != null) {
 			LinkVO vo = new LinkVO();
 			BeanUtils.copyProperties(link, vo);
+			response.setResult(vo);
 		}
 		return response;
 	}

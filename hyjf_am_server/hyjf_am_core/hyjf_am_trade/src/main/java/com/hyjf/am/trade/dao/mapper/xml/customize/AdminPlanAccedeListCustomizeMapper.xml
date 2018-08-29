@@ -153,7 +153,11 @@
 		<result column="viewpdf_url" property="viewpdfUrl"  />
 		<!--脱敏后合同查看地址-->
 		<result column="img_url" property="imgUrl"  />
-		<result column="quit_time" property="quitTime" jdbcType="INTEGER" />
+		
+		
+		<result column="quit_time" property="quitTime" />
+		
+		
 		<!--加入时预期年化率-->
 		<result column="expectApr" property="expectApr"  />
 		<!--计算用加入金额-->
@@ -188,7 +192,7 @@
 				hdpa.accede_order_id,
 				hdpa.user_name,
 				hdpa.client,
-				<!-- hdpa.quit_time, -->
+				hdpa.quit_time,
 				hdpa.plan_nid,
 				hdpa.accede_account,
 				hdpa.already_invest,
@@ -212,10 +216,12 @@
 				<!-- hdpa.available_invest_account, -->
 				FROM_UNIXTIME(
 					hdpa.commission_count_time,
-					'%Y-%m-%d %H:%i'
+					'%Y-%m-%d %H:%i:%s'
 				) AS commission_count_time,
 				<!-- hdpa.create_time AS create_time, -->
-				DATE_FORMAT(hdpa.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+				
+				DATE_FORMAT(hdpa.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,
+				
 				hdpa.create_time AS add_time_long,
 				hdpa.invite_user_name referee_name, 
 				hdpa.invite_user_attribute AS recommend_attr, 
