@@ -5724,7 +5724,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public HjhCreditTenderSumVO getHjhCreditTenderCalcSumByParam(HjhCreditTenderRequest form) {
 	    HjhCreditTenderSumResponse response = restTemplate
-	            .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderCalcSumByParam", form, HjhCreditTenderSumResponse.class).getBody();
+	            .postForEntity("http://AM-ADMIN/am-trade/hjhcredittender/getHjhCreditTenderCalcSumByParam", form, HjhCreditTenderSumResponse.class).getBody();
 	    if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 	        return response.getResult();
 	    }
