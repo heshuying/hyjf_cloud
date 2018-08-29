@@ -138,8 +138,8 @@ public class BorrowRepaymentController extends BaseController {
      * @param request
      * @return 标签配置列表
      */
-    @ApiOperation(value = "延期画面初始化", notes = "延期页面查询初始化")
-    @PostMapping(value = "/initDelayRepayAction")
+    @ApiOperation(value = "还款画面初始化", notes = "还款页面查询初始化")
+    @PostMapping(value = "/initRepayAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ApiImplicitParam(name = "borrowNid",value = "项目编号")
     public AdminResult<RepayInfoBean> moveRepayAction(HttpServletRequest request, @RequestBody Map map) {
