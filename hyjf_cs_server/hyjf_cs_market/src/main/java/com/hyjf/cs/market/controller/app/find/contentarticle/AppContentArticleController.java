@@ -27,7 +27,7 @@ import static com.hyjf.am.bean.result.BaseResult.FAIL_DESC;
  */
 @Api(tags = "app端-APP端文章详情")
 @RestController
-@RequestMapping(value = "/hyjf-app/find/contentArticle")
+@RequestMapping(value = "/hyjf-app/find/contentArticleTrue")
 
 public class AppContentArticleController extends BaseMarketController {
 
