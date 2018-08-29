@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "关键词设计")
 @RestController
-@RequestMapping("/am-user/extensioncenter/keycount")
+@RequestMapping("/am-admin/extensioncenter/keycount")
 public class KeyCountController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(KeyCountController.class);
 	@Resource

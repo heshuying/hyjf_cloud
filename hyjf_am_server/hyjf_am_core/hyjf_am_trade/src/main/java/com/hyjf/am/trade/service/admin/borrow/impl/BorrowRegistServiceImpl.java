@@ -263,15 +263,16 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * @return
      */
     private boolean updateBorrowRegist(Borrow borrow, int status, int registStatus, String currUserId, String currUserName) {
+        Borrow updateBorrow = new Borrow();
         Date nowDate = new Date();
         BorrowExample example = new BorrowExample();
-        example.createCriteria().andIdEqualTo(borrow.getId()).andStatusEqualTo(borrow.getStatus()).andRegistStatusEqualTo(borrow.getRegistStatus());
-        borrow.setRegistStatus(registStatus);
-        borrow.setStatus(status);
-        borrow.setRegistUserId(Integer.parseInt(currUserId));
-        borrow.setRegistUserName(currUserName);
-        borrow.setRegistTime(nowDate);
-        boolean flag = this.borrowMapper.updateByExampleSelective(borrow, example) > 0 ? true : false;
+        example.createCriteria().andIdEqualTo(borrow.getId());
+        updateBorrow.setRegistStatus(registStatus);
+        updateBorrow.setStatus(status);
+        updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
+        updateBorrow.setRegistUserName(currUserName);
+        updateBorrow.setRegistTime(nowDate);
+        boolean flag = this.borrowMapper.updateByExampleSelective(updateBorrow, example) > 0 ? true : false;
         return flag;
     }
 
@@ -285,15 +286,16 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * @return
      */
     private boolean updateEntrustedBorrowRegist(Borrow borrow, int status, int registStatus, String currUserId, String currUserName) {
+        Borrow updateBorrow = new Borrow();
         Date nowDate = new Date();
         BorrowExample example = new BorrowExample();
         example.createCriteria().andIdEqualTo(borrow.getId());
-        borrow.setRegistStatus(registStatus);
-        borrow.setStatus(status);
-        borrow.setRegistUserId(Integer.parseInt(currUserId));
-        borrow.setRegistUserName(currUserName);
-        borrow.setRegistTime(nowDate);
-        boolean flag = this.borrowMapper.updateByExampleSelective(borrow, example) > 0 ? true : false;
+        updateBorrow.setRegistStatus(registStatus);
+        updateBorrow.setStatus(status);
+        updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
+        updateBorrow.setRegistUserName(currUserName);
+        updateBorrow.setRegistTime(nowDate);
+        boolean flag = this.borrowMapper.updateByExampleSelective(updateBorrow, example) > 0 ? true : false;
         return flag;
     }
 }
