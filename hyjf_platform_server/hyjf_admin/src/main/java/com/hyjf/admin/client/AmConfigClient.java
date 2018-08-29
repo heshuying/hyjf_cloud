@@ -659,7 +659,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentPartnerRequestBean requestBean);
+	int insertAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴
@@ -667,7 +667,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentPartnerRequestBean requestBean);
+	int updateAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-合作伙伴
@@ -683,7 +683,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	LinkResponse deleteLinkById(Integer id);
+	int deleteLinkById(Integer id);
 
 	/**
 	 * 公司管理-资质荣誉列表查询
@@ -1120,7 +1120,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse searchAction(ContentLinksRequestBean requestBean);
+	List<LinkVO> searchActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 添加根据条件查询友情链接列表
@@ -1128,7 +1128,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+	LinkResponse insertActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 根据id查询数据
@@ -1144,7 +1144,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentLinksRequestBean requestBean);
+	LinkResponse updateActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 查询配置中心操作日志配置

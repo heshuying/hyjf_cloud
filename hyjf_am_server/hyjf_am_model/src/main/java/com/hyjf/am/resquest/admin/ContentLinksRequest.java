@@ -4,26 +4,57 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.config.LinkVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version ContentLinksRequest, v0.1 2018/7/14 14:36
  */
 public class ContentLinksRequest extends BasePage {
+
+    /**
+     * 前台时间接收
+     */
+    @ApiModelProperty(value = "查询开始时间")
+    private String startCreate;
+
+    @ApiModelProperty(value = "查询结束时间")
+    private String endCreate;
+
+    @ApiModelProperty(value = "状态")
+    private Integer mystatus;
+
+    @ApiModelProperty(value = "网站名称")
+    private String searchWebname;
+
+    private List<LinkVO> recordList;
+
+    public int limitStart = -1;
+
+    public int limitEnd = -1;
+
     private Integer id;
 
+    @ApiModelProperty(value = "连接类型1友情连接2合作伙伴")
     private Integer type;
 
+    @ApiModelProperty(value = "状态 1启用 2关闭")
     private Integer status;
 
+    @ApiModelProperty(value = "排序")
     private Integer order;
 
+    @ApiModelProperty(value = "网址链接")
     private String url;
 
+    @ApiModelProperty(value = "网站名称")
     private String webname;
 
+    @ApiModelProperty(value = "友情连接内容")
     private String summary;
 
     private String summary2;
@@ -32,6 +63,7 @@ public class ContentLinksRequest extends BasePage {
 
     private String operatingProcess;
 
+    @ApiModelProperty(value = "友情连接图片")
     private String logo;
 
     private String province;
@@ -312,5 +344,61 @@ public class ContentLinksRequest extends BasePage {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getStartCreate() {
+        return startCreate;
+    }
+
+    public void setStartCreate(String startCreate) {
+        this.startCreate = startCreate;
+    }
+
+    public String getEndCreate() {
+        return endCreate;
+    }
+
+    public void setEndCreate(String endCreate) {
+        this.endCreate = endCreate;
+    }
+
+    public Integer getMystatus() {
+        return mystatus;
+    }
+
+    public void setMystatus(Integer mystatus) {
+        this.mystatus = mystatus;
+    }
+
+    public String getSearchWebname() {
+        return searchWebname;
+    }
+
+    public void setSearchWebname(String searchWebname) {
+        this.searchWebname = searchWebname;
+    }
+
+    public List<LinkVO> getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(List<LinkVO> recordList) {
+        this.recordList = recordList;
+    }
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

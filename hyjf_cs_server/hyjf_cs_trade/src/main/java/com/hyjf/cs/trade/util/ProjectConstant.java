@@ -130,8 +130,11 @@ public class ProjectConstant {
 
     /*   --------------------------  web端 结束 --------------------------------*/
 
-    /*  -----------------------------api端 开始------------------------------------*/
-    public static final String  API_METHOD_BORROW_LIST = "getBorrowList";
+    /*  ----------------------------- api端 开始------------------------------------*/
+
+    public static final String API_METHOD_BORROW_LIST = "getBorrowList";
+
+    public static final String API_METHOD_BORROW_DETAIL = "getBorrowDetail";
 
     /*  -----------------------------api端 结束------------------------------------*/
 
@@ -154,6 +157,9 @@ public class ProjectConstant {
         if (API_METHOD_BORROW_LIST.equals(methodName)){
             ApiBorrowReqBean bean = (ApiBorrowReqBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowStatus() + bean.getTimestamp();
+        }else if(API_METHOD_BORROW_DETAIL.equals(methodName)){
+            ApiBorrowReqBean bean = (ApiBorrowReqBean) paramBean;
+            sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
         }
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

@@ -236,16 +236,13 @@ public class CustomerTransferController extends BaseController {
     @PostMapping(value = "/addtransfer")
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
-        JSONObject result = new JSONObject();
-        result = customerTransferService.checkCustomerTransferParam(customerTransferRequest);
-        if(result != null && "0".equals(result.get("status"))){
-            AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
-            customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
-            customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
-            boolean success = customerTransferService.insertTransfer(customerTransferRequest);
-            if(success){
-                return new AdminResult(SUCCESS,SUCCESS_DESC);
-            }
+        customerTransferService.checkCustomerTransferParam(customerTransferRequest);
+        AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+        customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
+        customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
+        boolean success = customerTransferService.insertTransfer(customerTransferRequest);
+        if(success){
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
         }
         return new AdminResult(FAIL,FAIL_DESC);
     }

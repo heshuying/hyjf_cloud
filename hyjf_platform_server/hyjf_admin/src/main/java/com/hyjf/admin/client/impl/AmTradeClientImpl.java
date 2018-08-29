@@ -303,7 +303,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(CouponRepayRequest form) {
-        String url = tradeService + "/couponRepayMonitor/CouponRepayMonitorCreatePage";
+        String url = tradeService + "/couponRepayMonitor/couponRepayMonitorCreatePage";
         AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url, form, AdminCouponRepayMonitorCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
