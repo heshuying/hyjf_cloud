@@ -46,7 +46,7 @@ public class BorrowRepayPlanQuitMessageHandle {
             logger.info("--------------计划订单号：" + accedeOrderId + "，开始退出计划！------");
         }
         // 生成任务key 校验并发请求
-        String redisKey = RedisConstants.PLAN_REPAY_TASK + ":" + accedeOrderId;
+        String redisKey = RedisConstants.PLAN_REPAY_TASK + accedeOrderId;
         boolean result = RedisUtils.tranactionSet(redisKey, 300);
         if (!result) {
             RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
@@ -65,7 +65,8 @@ public class BorrowRepayPlanQuitMessageHandle {
             }
         } catch (Exception e) {
             // 消息队列指令不消费
-            logger.error("计划订单号：" + accedeOrderId + "处理失败，计划还款系统异常....",e);
+            logger.error("计划订单号：" + accedeOrderId + "----计划退出/锁定失败....");
+            throw e;
         }
         RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
         RedisUtils.del(redisKey);

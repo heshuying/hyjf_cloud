@@ -958,4 +958,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     public List<AccountRechargeVO> getRechargeMoney(Integer userId) {
         return amTradeClient.getTodayRecharge(userId);
     }
+
+    @Override
+    public int getBorrowTender(Integer userId) {
+        return amTradeClient.getBorrowTender(userId);
+    }
+
+    @Override
+    public List<AccountRechargeVO> getTodayRecharge(Integer userId) {
+        return amTradeClient.getTodayRecharge(userId);
+    }
 }

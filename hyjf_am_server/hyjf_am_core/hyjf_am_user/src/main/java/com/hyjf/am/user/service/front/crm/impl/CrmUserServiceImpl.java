@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.front.crm.impl;
 
 import com.hyjf.am.user.dao.model.auto.ROaUsers;
+import com.hyjf.am.user.dao.model.auto.ROaUsersExample;
 import com.hyjf.am.user.service.front.crm.CrmUserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CrmUserServiceImpl extends BaseServiceImpl implements CrmUserService {
 
-
 	/**
 	 * 修改
 	 *
@@ -22,7 +22,7 @@ public class CrmUserServiceImpl extends BaseServiceImpl implements CrmUserServic
 	 */
 	@Override
 	public Integer update(ROaUsers users) {
-		return rOaUsersMapper.updateByPrimaryKeySelective(users);
+		return rOaUsersMapper.updateByPrimaryKey(users);
 	}
 
 	/**
@@ -43,7 +43,18 @@ public class CrmUserServiceImpl extends BaseServiceImpl implements CrmUserServic
 	 * @return
 	 */
 	@Override
-	public Integer delete(ROaUsers users) {
-		return rOaUsersMapper.deleteByPrimaryKey(users.getId());
+	public Integer delete(Integer users) {
+		return rOaUsersMapper.deleteByPrimaryKey(users);
+	}
+
+	/**
+	 * 修改用户
+	 *
+	 * @param user
+	 * @param example
+	 */
+	@Override
+	public void updateByExample(ROaUsers user, ROaUsersExample example) {
+		rOaUsersMapper.updateByExample(user, example);
 	}
 }

@@ -40,11 +40,11 @@ public class BankAccountManageController extends BaseController {
 
     /**
      * @Author: liushouyi
-     * @Desc :查询总件数
+     * @Desc :更新用户账户信息
      */
-    @ApiOperation(value = "银行账户管理查询总件数")
+    @ApiOperation(value = "银行账户管理更新用户账户信息")
     @PostMapping("/update_account")
-    public IntegerResponse updateAccount(AccountVO accountVO) {
+    public IntegerResponse updateAccount(@RequestBody AccountVO accountVO) {
         return new IntegerResponse(bankAccountManageService.updateAccount(accountVO));
     }
 
@@ -52,9 +52,9 @@ public class BankAccountManageController extends BaseController {
      * @Author: liushouyi
      * @Desc :查询总件数
      */
-    @ApiOperation(value = "银行账户管理查询总件数")
+    @ApiOperation(value = "银行账户管理线下对账")
     @PostMapping("/update_account_check")
-    public StringResponse updateAccountCheck(AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
+    public StringResponse updateAccountCheck(@RequestBody AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
         return new StringResponse(bankAccountManageService.updateAccountCheck(adminBankAccountCheckCustomizeVO));
     }
 
@@ -64,7 +64,7 @@ public class BankAccountManageController extends BaseController {
      */
     @ApiOperation(value = "银行账户管理查询总件数")
     @PostMapping("/query_account_count")
-    public IntegerResponse queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+    public IntegerResponse queryAccountCount(@RequestBody BankAccountManageRequest bankAccountManageRequest) {
         return new IntegerResponse(bankAccountManageService.queryAccountCount(bankAccountManageRequest));
     }
 

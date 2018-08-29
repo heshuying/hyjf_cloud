@@ -49,12 +49,18 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
 
     private static Logger logger = LoggerFactory.getLogger(BankAccountManageServiceImpl.class);
 
-    @Value("hyjf.bank.instcode")
+    @Value("${hyjf.bank.instcode}")
     private String bankInstCode;
 
-    @Value("hyjf.bank.bankcode")
+    @Value("${hyjf.bank.bankcode}")
     private String bankBankCode;
 
+    /**
+     * 更新账户余额
+     *
+     * @param accountVO
+     * @return
+     */
     @Override
     public Integer updateAccount(AccountVO accountVO) {
         Account account = new Account();
@@ -73,6 +79,12 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         return result ? 1 : 0;
     }
 
+    /**
+     * 银行账户管理线下对账
+     *
+     * @param adminBankAccountCheckCustomizeVO
+     * @return
+     */
     @Override
     public String updateAccountCheck(AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
         // 手动银行对账

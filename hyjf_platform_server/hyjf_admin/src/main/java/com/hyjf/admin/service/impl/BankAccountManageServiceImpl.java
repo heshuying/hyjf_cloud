@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.controller.LoginController;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.am.response.admin.OADepartmentResponse;
@@ -34,7 +35,7 @@ import java.util.UUID;
  * @version BankAccountManageServiceImpl, v0.1 2018/6/29 11:54
  */
 @Service
-public class BankAccountManageServiceImpl implements BankAccountManageService {
+public class BankAccountManageServiceImpl extends BaseServiceImpl implements BankAccountManageService {
 
     @Value("${hyjf.bank.instcode}")
     private String bankInstCode;
@@ -156,6 +157,17 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
             }
         }
         return treeDepartmentList(departmentList, map, list, "0", "");
+    }
+
+    /**
+     * 根据用户id获取用户账户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountVO getAccountByUserId(Integer userId) {
+        return this.amTradeClient.getAccountByUserId(userId);
     }
 
     /**

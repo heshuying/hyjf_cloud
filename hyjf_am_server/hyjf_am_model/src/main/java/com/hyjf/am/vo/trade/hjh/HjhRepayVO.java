@@ -49,9 +49,9 @@ public class HjhRepayVO extends BaseVO implements Serializable {
 
     private Integer orderStatus;
 
-    private Integer repayActualTime;
+    private String repayActualTime;
 
-    private Integer repayShouldTime;
+    private String repayShouldTime;
 
     private BigDecimal planRepayCapital;
 
@@ -77,9 +77,9 @@ public class HjhRepayVO extends BaseVO implements Serializable {
 
     private Integer updateUser;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     public Integer getId() {
         return id;
@@ -209,19 +209,19 @@ public class HjhRepayVO extends BaseVO implements Serializable {
         this.orderStatus = orderStatus;
     }
 
-    public Integer getRepayActualTime() {
+    public String getRepayActualTime() {
         return repayActualTime;
     }
 
-    public void setRepayActualTime(Integer repayActualTime) {
+    public void setRepayActualTime(String repayActualTime) {
         this.repayActualTime = repayActualTime;
     }
 
-    public Integer getRepayShouldTime() {
+    public String getRepayShouldTime() {
         return repayShouldTime;
     }
 
-    public void setRepayShouldTime(Integer repayShouldTime) {
+    public void setRepayShouldTime(String repayShouldTime) {
         this.repayShouldTime = repayShouldTime;
     }
 
@@ -321,19 +321,19 @@ public class HjhRepayVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +26,7 @@ import io.swagger.annotations.Api;
  */
 @Api(value = "admin基类",tags ="admin基类")
 @RestController
-public class BaseController {
+public class BaseController extends com.hyjf.cs.common.controller.BaseController {
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	//redis存有用户信息的key
 	public static final String USER="user";
@@ -47,6 +49,9 @@ public class BaseController {
 	public AdminSystemVO getUser(HttpServletRequest request) {
 		AdminSystemVO ar=null;
 		ar=(AdminSystemVO) request.getSession().getAttribute(USER);
+		if(ar == null){
+			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+		}
 		return ar;
 	}
 	//存入session中用户信息

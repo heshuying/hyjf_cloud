@@ -87,8 +87,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid) {
         logger.info("wechat端-请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
+        return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
     @ApiOperation(value = "散标投资获取投资成功结果", notes = "散标投资获取投资成功结果")
