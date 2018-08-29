@@ -1174,26 +1174,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public EventResponse searchAction(EventRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/searchaction",
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentevent/searchaction",
                 requestBean, EventResponse.class);
     }
 
     @Override
-    public EventResponse insertAction(EventRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/insertaction",
-                requestBean, EventResponse.class);
+    public int insertAction(EventRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentevent/insertaction",
+                requestBean, IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public EventResponse updateAction(EventRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/updateaction",
-                requestBean, EventResponse.class);
+    public int updateAction(EventRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentevent/updateaction",
+                requestBean, IntegerResponse.class).getResultInt();
     }
 
     @Override
     public EventVO getEventRecord(Integer id) {
         EventResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentevent/getrecord/" + id,
+                "http://AM-ADMIN/am-config/content/contentevent/getrecord/" + id,
                 EventResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1202,9 +1202,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public EventResponse deleteEventById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/delete/" + id,
-                EventResponse.class);
+    public int deleteEventById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentevent/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -1465,25 +1465,25 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public TeamResponse searchAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/searchaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/searchaction", requestBean,
                 TeamResponse.class);
     }
 
     @Override
-    public TeamResponse insertAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/insertaction", requestBean,
-                TeamResponse.class);
+    public int insertAction(TeamRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public TeamResponse updateAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/updateaction", requestBean,
-                TeamResponse.class);
+    public int updateAction(TeamRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/team/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public TeamVO getTeamRecord(Integer id) {
-        TeamResponse response = restTemplate.getForObject("http//AM-CONFIG/am-config/team/getrecord/" + id,
+        TeamResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/team/getrecord/" + id,
                 TeamResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1492,8 +1492,8 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public TeamResponse deleteTeamById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/team/delete/" + id, TeamResponse.class);
+    public int deleteTeamById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/team/delete/" + id, IntegerResponse.class).getResultInt();
     }
 
     /**
@@ -1710,13 +1710,16 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
+    public List<LinkVO> searchActions(ContentLinksRequest requestBean) {
+        LinkResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
                 LinkResponse.class);
+        response.getResultList();
+
+        return response.getResultList();
     }
 
     @Override
-    public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse insertActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
                 LinkResponse.class);
     }
@@ -1728,7 +1731,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse updateActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
                 LinkResponse.class);
     }

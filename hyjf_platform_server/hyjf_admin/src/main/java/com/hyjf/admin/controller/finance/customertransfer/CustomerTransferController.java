@@ -76,29 +76,20 @@ public class CustomerTransferController extends BaseController {
     }
 
     /**
-     * 转账状态下拉框数据
+     * 获取交易类型和转账状态下拉框数据
      * @auth sunpeikai
      * @param
      * @return
      */
     @ApiOperation(value = "转账状态下拉框数据",notes = "转账状态下拉框数据")
-    @PostMapping(value = "/gettransferstatus")
-    public AdminResult<ListResult<DropDownVO>> getTransferStatus(){
-        List<DropDownVO> dropDownVOList = adminCommonService.getParamNameList("TRANSFER_STATUS");
-        return new AdminResult<>(ListResult.build(dropDownVOList,0));
-    }
-
-    /**
-     * 交易类型下拉框数据
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @ApiOperation(value = "交易类型下拉框数据",notes = "交易类型下拉框数据")
-    @PostMapping(value = "/gettransfertypes")
-    public AdminResult<ListResult<DropDownVO>> getTransferTypes(){
-        List<DropDownVO> dropDownVOList = adminCommonService.getParamNameList("TRANSFER_TYPE");
-        return new AdminResult<>(ListResult.build(dropDownVOList,0));
+    @PostMapping(value = "/getselectordata")
+    public AdminResult getSelectorData(){
+        Map<String,List> data = new HashMap<>();
+        List<DropDownVO> status = adminCommonService.getParamNameList("TRANSFER_STATUS");
+        List<DropDownVO> type = adminCommonService.getParamNameList("TRANSFER_TYPE");
+        data.put("statusData",status);
+        data.put("typeData",type);
+        return new AdminResult(data);
     }
 
     /**
@@ -245,16 +236,13 @@ public class CustomerTransferController extends BaseController {
     @PostMapping(value = "/addtransfer")
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
-        JSONObject result = new JSONObject();
-        result = customerTransferService.checkCustomerTransferParam(customerTransferRequest);
-        if(result != null && "0".equals(result.get("status"))){
-            AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
-            customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
-            customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
-            boolean success = customerTransferService.insertTransfer(customerTransferRequest);
-            if(success){
-                return new AdminResult(SUCCESS,SUCCESS_DESC);
-            }
+        customerTransferService.checkCustomerTransferParam(customerTransferRequest);
+        AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+        customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
+        customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
+        boolean success = customerTransferService.insertTransfer(customerTransferRequest);
+        if(success){
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
         }
         return new AdminResult(FAIL,FAIL_DESC);
     }

@@ -188,7 +188,7 @@
 				hdpa.accede_order_id,
 				hdpa.user_name,
 				hdpa.client,
-				<!-- hdpa.quit_time, -->
+				hdpa.quit_time,
 				hdpa.plan_nid,
 				hdpa.accede_account,
 				hdpa.already_invest,

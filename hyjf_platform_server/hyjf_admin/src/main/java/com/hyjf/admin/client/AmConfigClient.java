@@ -781,7 +781,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse insertAction(EventRequestBean requestBean);
+	int insertAction(EventRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-公司记事
@@ -789,7 +789,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse updateAction(EventRequestBean requestBean);
+	int updateAction(EventRequestBean requestBean);
 
 	/**
 	 * 根据id查找公司管理-公司记事
@@ -805,7 +805,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	EventResponse deleteEventById(Integer id);
+	int deleteEventById(Integer id);
 
 	/**
 	 * 查询手续费配置列表
@@ -991,7 +991,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse insertAction(TeamRequestBean requestBean);
+	int insertAction(TeamRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-团队介绍
@@ -999,7 +999,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse updateAction(TeamRequestBean requestBean);
+	int updateAction(TeamRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-团队介绍
@@ -1015,7 +1015,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	TeamResponse deleteTeamById(Integer id);
+	int deleteTeamById(Integer id);
 
 	/**
 	 * 查询版本设置列表
@@ -1120,7 +1120,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse searchAction(ContentLinksRequestBean requestBean);
+	List<LinkVO> searchActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 添加根据条件查询友情链接列表
@@ -1128,7 +1128,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+	LinkResponse insertActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 根据id查询数据
@@ -1144,7 +1144,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentLinksRequestBean requestBean);
+	LinkResponse updateActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 查询配置中心操作日志配置

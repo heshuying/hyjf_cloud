@@ -193,13 +193,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="+callBean.getLogOrderId()+"&couponGrantId="+request.getCouponGrantId();
 
-        logger.info("投资结果页显示:错误页 -> [{}],成功页 -> [{}]",retUrl,successUrl);
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + request.getCouponGrantId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + request.getCouponGrantId();
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
@@ -208,12 +207,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setNotifyUrl(bgRetUrl);
         callBean.setForgotPwdUrl(forgetPassWoredUrl);
         // 插入记录 tmp表
-        amTradeClient.updateBeforeChinaPnR(request);
+        boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
+        logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            map.forEach((key,value)->{
-                logger.info("key:[{}],value:[{}]",key,value);
-            });
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             result.setData(map);
             return result;

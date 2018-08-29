@@ -154,9 +154,9 @@ public class ChinapnrUtil {
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
-
             // 调用汇付接口
-            String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIBG, bean.getAllParams());
+            String result = restTemplate
+                    .postForEntity(payurl + REQUEST_MAPPING_CALLAPIBG, bean.getAllParams(), String.class).getBody();
             if (StringUtils.isNotEmpty(result)) {
                 jsonObject = JSONObject.parseObject(result);
             }

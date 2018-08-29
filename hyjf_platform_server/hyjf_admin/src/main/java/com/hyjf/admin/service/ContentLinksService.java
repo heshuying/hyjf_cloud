@@ -3,8 +3,8 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.ContentLinksRequestBean;
 import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.resquest.admin.ContentLinksRequest;
 
 /**
  * @author fuqiang
@@ -17,7 +17,7 @@ public interface ContentLinksService {
      * @param requestBean
      * @return
      */
-    LinkResponse searchAction(ContentLinksRequestBean requestBean);
+    LinkResponse searchAction(ContentLinksRequest requestBean);
 
     /**
      * 添加友情链接列表查询
@@ -25,7 +25,7 @@ public interface ContentLinksService {
      * @param requestBean
      * @return
      */
-    LinkResponse insertAction(ContentLinksRequestBean requestBean);
+    LinkResponse insertAction(ContentLinksRequest requestBean);
 
     /**
      * 根据id查询数据
@@ -33,7 +33,7 @@ public interface ContentLinksService {
      * @param requestBean
      * @return
      */
-    LinkResponse infoInfoAction(ContentLinksRequestBean requestBean);
+    LinkResponse infoInfoAction(ContentLinksRequest requestBean);
 
     /**
      * 修改友情链接列表查询
@@ -41,7 +41,7 @@ public interface ContentLinksService {
      * @param requestBean
      * @return
      */
-    LinkResponse updateAction(ContentLinksRequestBean requestBean);
+    LinkResponse updateAction(ContentLinksRequest requestBean);
 
     /**
      * 修改友情链接列表查询状态
@@ -49,7 +49,7 @@ public interface ContentLinksService {
      * @param requestBean
      * @return
      */
-    LinkResponse updateStatus(ContentLinksRequestBean requestBean);
+    LinkResponse updateStatus(ContentLinksRequest requestBean);
 
     /**
      * 根据id删除友情链接列表查询
