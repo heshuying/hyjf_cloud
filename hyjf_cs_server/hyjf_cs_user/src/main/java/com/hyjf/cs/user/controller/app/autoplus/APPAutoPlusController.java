@@ -112,7 +112,7 @@ public class APPAutoPlusController extends BaseUserController {
         if (userAuth != null && userAuth.getAutoInvesStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
-        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?code=" + code + "&srvAuthCode=" + srvAuthCode;
+        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"&code=" + code + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -141,7 +141,7 @@ public class APPAutoPlusController extends BaseUserController {
             result.setStatusDesc("自动投标已授权");
             return result;
         }
-        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHCREDIT+"?code=" + code
+        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHCREDIT+"&code=" + code
                 + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);

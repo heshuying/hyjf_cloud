@@ -311,10 +311,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setUserType(String.valueOf(user.getUserType()));
 			if ("0".equals(result.getSetupPassword())) {
 				//设置交易密码
-				result.setChangeTradePasswordUrl(apphost  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStr(request));
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost()  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStrForm(request));
 			} else {
 				//重置交易密码
-				result.setChangeTradePasswordUrl(apphost +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStr(request));
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStrForm(request));
 			}
 
 			iconUrl = user.getIconUrl();
@@ -796,6 +796,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		sbUrl.append("&").append("order").append("=").append(strEncode(order));
 		return sbUrl.toString();
 	}
+
+    private String packageStrForm(HttpServletRequest request) {
+        StringBuffer sbUrl = new StringBuffer();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        sbUrl.append("&").append("version").append("=").append(version);
+        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+        sbUrl.append("&").append("platform").append("=").append(platform);
+        sbUrl.append("&").append("randomString").append("=").append(randomString);
+        sbUrl.append("&").append("sign").append("=").append(sign);
+        sbUrl.append("&").append("token").append("=").append(strEncode(token));
+        sbUrl.append("&").append("order").append("=").append(strEncode(order));
+        return sbUrl.toString();
+    }
 
 	/**
 	 * 检查是否是新手(未登录或已登录未投资)
