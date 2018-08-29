@@ -25,7 +25,7 @@ public interface ContentPartnerService {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentPartnerRequestBean requestBean);
+	int insertAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴
@@ -33,7 +33,7 @@ public interface ContentPartnerService {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentPartnerRequestBean requestBean);
+	int updateAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴状态
@@ -41,7 +41,7 @@ public interface ContentPartnerService {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateStatus(ContentPartnerRequestBean requestBean);
+	int updateStatus(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 根据id删除公司管理-合作伙伴
@@ -49,5 +49,5 @@ public interface ContentPartnerService {
 	 * @param id
 	 * @return
 	 */
-    LinkResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

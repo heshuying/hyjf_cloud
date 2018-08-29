@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,14 +26,14 @@ public interface ContentPartnerService {
 	 *
 	 * @param request
 	 */
-	void insertAction(ContentPartnerRequest request);
+	int insertAction(ContentPartnerRequest request);
 
 	/**
 	 * 修改公司管理-合作伙伴
 	 *
 	 * @param request
 	 */
-	void updateAction(ContentPartnerRequest request);
+	int updateAction(ContentPartnerRequest request);
 
 	/**
 	 * 根据id查询公司管理-合作伙伴
@@ -56,5 +56,12 @@ public interface ContentPartnerService {
 	 *
 	 * @param id
 	 */
-	void deleteById(Integer id);
+	int deleteById(Integer id);
+
+	/**
+	 * 获取符合条件的条数
+	 * @param request
+	 * @return
+	 */
+    int selectCount(ContentPartnerRequest request);
 }

@@ -37,4 +37,19 @@ public class ApiBorrowController extends BaseTradeController {
         apiResult = apiProjectListService.getBorrowList(reqBean);
         return apiResult;
     }
+
+
+    /**
+     * 查询标的详情
+     * @author zhanyk
+     * 原接口：com.hyjf.api.server.borrowDetail.BorrowDetailServer.getProjectDetail()
+     * @date 2018/8/29 13:46
+     */
+    @ApiOperation(value = "标的详情" , notes = "标的详情")
+    @PostMapping("/getBorrowDetail.do")
+    public ApiResult getBorrowDetail(@RequestBody ApiBorrowReqBean reqBean){
+        ApiResult apiResult = new ApiResult();
+        apiResult = apiProjectListService.getBorrowDetail(reqBean);
+        return apiResult;
+    }
 }

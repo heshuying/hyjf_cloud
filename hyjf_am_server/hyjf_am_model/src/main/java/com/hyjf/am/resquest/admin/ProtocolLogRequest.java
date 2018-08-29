@@ -1,12 +1,14 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 
 /**
  * @author：yinhui
  * @Date: 2018/8/10  14:00
  */
-public class ProtocolLogRequest implements Serializable {
+public class ProtocolLogRequest  extends BasePage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -145,18 +145,18 @@ public class PlanRepayController extends BaseController {
         //初始化返回List
         List<HjhRepayVO> returnList = null;
         // 查询列表
-        HjhRepayResponse hjhRepayList = this.planRepayService.selectHjhRepayList(repayRequest);
-        if (hjhRepayList == null){
+        HjhRepayResponse hjhRepayResponse = this.planRepayService.selectHjhRepayList(repayRequest);
+        if (hjhRepayResponse == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
 
-        if (!Response.isSuccess(hjhRepayList)){
-            return new AdminResult<>(FAIL, hjhRepayList.getMessage());
+        if (!Response.isSuccess(hjhRepayResponse)){
+            return new AdminResult<>(FAIL, hjhRepayResponse.getMessage());
         }
 
-        if (CollectionUtils.isNotEmpty(hjhRepayList.getResultList())){
-            returnList = CommonUtils.convertBeanList(hjhRepayList.getResultList(), HjhRepayVO.class);
-            return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build(returnList, hjhRepayList.getCount()));
+        if (CollectionUtils.isNotEmpty(hjhRepayResponse.getResultList())){
+            returnList = CommonUtils.convertBeanList(hjhRepayResponse.getResultList(), HjhRepayVO.class);
+            return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build2(returnList, hjhRepayResponse.getCount(), hjhRepayResponse.getSumHjhRepayVO()));
         }else {
             return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build(returnList, 0));
         }

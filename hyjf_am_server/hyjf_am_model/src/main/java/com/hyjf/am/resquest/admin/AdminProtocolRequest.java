@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author：yinhui
  * @Date: 2018/8/8  15:49
  */
-public class AdminProtocolRequest  implements Serializable {
+public class AdminProtocolRequest  extends BasePage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

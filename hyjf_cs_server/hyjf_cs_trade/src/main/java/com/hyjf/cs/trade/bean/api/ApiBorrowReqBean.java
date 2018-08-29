@@ -11,11 +11,21 @@ public class ApiBorrowReqBean extends BaseBean {
 
     private String borrowStatus;
 
+    private String borrowNid;
+
     public String getBorrowStatus() {
         return borrowStatus;
     }
 
     public void setBorrowStatus(String borrowStatus) {
         this.borrowStatus = borrowStatus;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

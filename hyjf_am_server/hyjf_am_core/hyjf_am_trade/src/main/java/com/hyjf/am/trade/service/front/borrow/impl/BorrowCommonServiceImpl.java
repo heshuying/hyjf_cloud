@@ -762,6 +762,15 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		
 		BorrowInfoWithBLOBs borrowinfo=new BorrowInfoWithBLOBs();
 		BeanUtils.copyProperties(borrow, borrowinfo);
+		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
+		if("1".equals(borrowBean.getEntrustedFlg())){
+			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
+			borrowinfo.setEntrustedUserId(this.getRUser(borrowBean.getEntrustedUsername().trim()).getUserId());
+		} else {
+			borrowinfo.setEntrustedUserName("");
+			borrowinfo.setEntrustedUserId(0);
+		}
+		borrowinfo.setTrusteePayTime(0);
 		this.borrowInfoMapper.insert(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
