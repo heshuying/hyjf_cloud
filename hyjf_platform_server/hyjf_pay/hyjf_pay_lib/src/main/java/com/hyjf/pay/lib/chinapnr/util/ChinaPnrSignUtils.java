@@ -11,11 +11,8 @@
 package com.hyjf.pay.lib.chinapnr.util;
 
 import chinapnr.SecureLink;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.chinapnr.ChinaPnrApiImpl;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +23,6 @@ public class ChinaPnrSignUtils implements Serializable {
     /** serialVersionUID */
     private static final long serialVersionUID = 3640874934537168392L;
 
-    /** THIS_CLASS */
-    private static final String THIS_CLASS = ChinaPnrApiImpl.class.getName();
-
     /** MD5签名类型 **/
     public static final String SIGN_TYPE_MD5 = "M";
 
@@ -38,7 +32,8 @@ public class ChinaPnrSignUtils implements Serializable {
     /** RSA验证签名成功结果 **/
     public static final int RAS_VERIFY_SIGN_SUCCESS = 0;
 
-    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+    //private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+
 
     /**
      * RSA方式加签
@@ -57,7 +52,9 @@ public class ChinaPnrSignUtils implements Serializable {
         }
         SecureLink sl = new SecureLink();
         log.debug("加签内容:" + forEncryptionStr);
-        int result = sl.SignMsg(paySystemConfig.getChinapnrMerId(), paySystemConfig.getChinapnrPrikey(), forEncryptionStr.getBytes(StringPool.UTF8));
+        int result =sl.SignMsg("530022","/hyjfdata/data/testkey/MerPrK530022.key", forEncryptionStr.getBytes(StringPool.UTF8));
+        //int result =sl.SignMsg(paySystemConfig.getChinapnrMerId(), paySystemConfig.getChinapnrPrikey(), forEncryptionStr.getBytes(StringPool.UTF8));
+
         if (result < 0) {
             // 打印日志
             throw new Exception("加签处理失败![result:" +result+"]");
@@ -75,14 +72,13 @@ public class ChinaPnrSignUtils implements Serializable {
      * @throws Exception
      */
     public static boolean verifyByRSA(String forEncryptionStr, String chkValue) throws Exception {
-        String methodName = "verifyByRSA";
         log.info("检证处理开始");
-
         log.debug("检证内容:" + forEncryptionStr);
         int verifySignResult = -1;
         SecureLink sl = new SecureLink();
         try {
-            verifySignResult = sl.VeriSignMsg(paySystemConfig.getChinapnrPubkey(), forEncryptionStr, chkValue);
+            verifySignResult =sl.VeriSignMsg("/hyjfdata/data/testkey/PgPubk.key", forEncryptionStr, chkValue);
+            //verifySignResult =sl.VeriSignMsg(paySystemConfig.getChinapnrPubkey(), forEncryptionStr, chkValue);
         } catch (Exception e) {
             log.error(String.valueOf(e));
             // 打印日志

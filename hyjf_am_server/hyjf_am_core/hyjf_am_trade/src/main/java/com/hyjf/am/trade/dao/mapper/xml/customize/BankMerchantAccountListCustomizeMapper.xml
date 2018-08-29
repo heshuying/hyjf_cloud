@@ -41,10 +41,10 @@
                   and ${criterion.condition}
                 </when>
                 <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
+                  and hbmal.${criterion.condition} #{criterion.value}
                 </when>
                 <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                  and hbmal.${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
                 <when test="criterion.listValue" >
                   and ${criterion.condition}

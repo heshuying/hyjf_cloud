@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,14 +26,14 @@ public interface ContentEnvironmentService {
 	 *
 	 * @param request
 	 */
-	void insertAction(ContentEnvironmentRequest request);
+	int insertAction(ContentEnvironmentRequest request);
 
 	/**
 	 * 修改内容管理-办公环境
 	 *
 	 * @param request
 	 */
-	void updateAction(ContentEnvironmentRequest request);
+	int updateAction(ContentEnvironmentRequest request);
 
 	/**
 	 * 根据id获取内容管理-办公环境
@@ -48,5 +48,12 @@ public interface ContentEnvironmentService {
 	 *
 	 * @param id
 	 */
-    void deleteById(Integer id);
+    int deleteById(Integer id);
+
+	/**
+	 * 查询满足条件的记录数
+	 * @param request
+	 * @return
+	 */
+	int selectCount(ContentEnvironmentRequest request);
 }

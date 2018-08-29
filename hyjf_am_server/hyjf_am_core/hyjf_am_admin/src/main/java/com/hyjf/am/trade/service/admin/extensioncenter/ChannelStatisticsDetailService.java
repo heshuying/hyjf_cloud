@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.extensioncenter;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 
 /**
@@ -18,5 +20,19 @@ public interface ChannelStatisticsDetailService {
 	 * @return
 	 */
 	ChannelStatisticsDetailResponse searchAction(ChannelStatisticsDetailRequest request);
+	/**
+	 * pc统计明细查询条数
+	 *
+	 * @param request
+	 * @return
+	 */
+	IntegerResponse countList(ChannelStatisticsDetailRequest request);
 
+	/**
+	 * 获取app渠道列表
+	 *
+	 * @param
+	 * @return
+	 */
+	UtmPlatResponse selectPcutmList();
 }

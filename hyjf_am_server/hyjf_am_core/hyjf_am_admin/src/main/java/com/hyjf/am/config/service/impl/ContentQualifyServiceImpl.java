@@ -89,6 +89,9 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 	public int selectCount(ContentQualifyRequest request) {
 		request.setCurrPage(0);
 		List<ContentQualify> list = searchAction(request);
-		return list.size();
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }

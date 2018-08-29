@@ -151,8 +151,8 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
     }
 
     @Override
-    public void updateAccountWithdrawLog(AccountWithdraw accountwithdraw) {
-        accountWithdrawMapper.updateByPrimaryKeySelective(accountwithdraw);
+    public Integer updateAccountWithdrawLog(AccountWithdraw accountwithdraw) {
+        return accountWithdrawMapper.updateByPrimaryKeySelective(accountwithdraw);
     }
 
     /**
@@ -165,7 +165,7 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
 
 
     @Override
-    public void selectAndUpdateAccountWithdraw(JSONObject paraMap) throws Exception {
+    public boolean selectAndUpdateAccountWithdraw(JSONObject paraMap) throws Exception {
 
         // 提现失败,更新处理中订单状态为失败
         AccountWithdrawExample example = new AccountWithdrawExample();
@@ -193,9 +193,10 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
                 if (!isUpdateFlag) {
                     throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + accountWithdraw.getUserId());
                 }
+                return isUpdateFlag;
             }
         }
-
+        return false;
     }
 
     @Override

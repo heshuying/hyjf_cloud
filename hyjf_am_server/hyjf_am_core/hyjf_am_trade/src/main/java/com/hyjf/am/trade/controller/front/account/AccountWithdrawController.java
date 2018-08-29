@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.controller.front.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
@@ -40,12 +42,14 @@ public class AccountWithdrawController extends BaseController {
      * @Date
      */
     @RequestMapping("/insertAccountWithdrawLog")
-    public int insertAccountWithdrawLog(@RequestBody AccountWithdraw accountWithdraw){
+    public IntegerResponse insertAccountWithdrawLog(@RequestBody AccountWithdraw accountWithdraw){
         logger.info("insertAccountWithdrawLog:" + JSONObject.toJSONString(accountWithdraw));
+        IntegerResponse response=new IntegerResponse();
         try {
-            return  accountWithdrawService.insertAccountWithdrawLog(accountWithdraw);
+            response.setResultInt(accountWithdrawService.insertAccountWithdrawLog(accountWithdraw));
+            return  response;
         } catch (Exception e){
-            return 0;
+            return response;
         }
     }
     /**
@@ -99,12 +103,14 @@ public class AccountWithdrawController extends BaseController {
      * @Date
      */
     @RequestMapping("/updatUserBankWithdrawHandler")
-    public int updatUserBankWithdrawHandler(@RequestBody BankWithdrawBeanRequest bankWithdrawBeanRequest){
+    public IntegerResponse updatUserBankWithdrawHandler(@RequestBody BankWithdrawBeanRequest bankWithdrawBeanRequest){
         logger.info("updatUserBankWithdrawHandler:" + JSONObject.toJSONString(bankWithdrawBeanRequest));
+        IntegerResponse response=new IntegerResponse();
         try {
-            return accountWithdrawService.updatUserBankWithdrawHandler(bankWithdrawBeanRequest);
+            response.setResultInt(accountWithdrawService.updatUserBankWithdrawHandler(bankWithdrawBeanRequest));
+            return response;
         } catch (Exception e){
-            return 0;
+            return response;
         }
 
     }
@@ -115,9 +121,11 @@ public class AccountWithdrawController extends BaseController {
      * @Date
      */
     @RequestMapping("/updateAccountWithdrawLog")
-    public void updateAccountWithdrawLog(@RequestBody AccountWithdraw accountwithdraw){
+    public IntegerResponse updateAccountWithdrawLog(@RequestBody AccountWithdraw accountwithdraw){
         logger.info("updateAccountWithdrawLog:" + JSONObject.toJSONString(accountwithdraw));
-        accountWithdrawService.updateAccountWithdrawLog(accountwithdraw);
+        IntegerResponse response=new IntegerResponse();
+        response.setResultInt(accountWithdrawService.updateAccountWithdrawLog(accountwithdraw));
+        return response;
     }
     
     /**
@@ -125,12 +133,15 @@ public class AccountWithdrawController extends BaseController {
      * add by jijun 20180616
      */
     @PostMapping("/updateAccountWithdraw")
-    public boolean updateAccountWithdraw(@RequestBody AccountWithdrawVO accountWithdraw){
+    public BooleanResponse updateAccountWithdraw(@RequestBody AccountWithdrawVO accountWithdraw){
         int count=accountWithdrawService.updateAccountWithdraw(CommonUtils.convertBean(accountWithdraw, AccountWithdraw.class));
+        BooleanResponse response=new BooleanResponse();
         if (count>0) {
-            return true;
+            response.setResultBoolean(true);
+            return response;
         }else{
-            return false;
+            response.setResultBoolean(false);
+            return response;
         }
     }
     
@@ -139,11 +150,14 @@ public class AccountWithdrawController extends BaseController {
 	 * @param pamaMap
 	 */
     @GetMapping("/selectAndUpdateAccountWithdraw")
-    public void selectAndUpdateAccountWithdraw(@RequestBody JSONObject pamaMap){
+    public BooleanResponse selectAndUpdateAccountWithdraw(@RequestBody JSONObject pamaMap){
+        BooleanResponse response=new BooleanResponse();
         try {
-			accountWithdrawService.selectAndUpdateAccountWithdraw(pamaMap);
+            response.setResultBoolean(accountWithdrawService.selectAndUpdateAccountWithdraw(pamaMap));
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
+            return response;
 		}
     }
 
@@ -178,8 +192,10 @@ public class AccountWithdrawController extends BaseController {
      * @return
      */
     @PostMapping("/getWithdrawRecordCount")
-    public int getWithdrawRecordCount(@RequestBody WithdrawBeanRequest request){
-        return accountWithdrawService.getWithdrawRecordCount(request);
+    public IntegerResponse getWithdrawRecordCount(@RequestBody WithdrawBeanRequest request){
+        IntegerResponse response=new IntegerResponse();
+        response.setResultInt(accountWithdrawService.getWithdrawRecordCount(request));
+        return response;
     }
 
     /**
