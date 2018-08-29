@@ -33,7 +33,7 @@
         <result column="update_user" property="updateUser" jdbcType="INTEGER" />
         <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
         <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-       <!-- <result column="recommend_name" property="recommendName" />
+        <result column="recommend_name" property="recommendName" />
         <result column="recommend_attr" property="recommendAttr" />
         <result column="invite_user_name" property="inviteUserName" />
         <result column="invite_user_attributename" property="inviteUserAttributeName" />
@@ -51,7 +51,7 @@
         <result column="lastQuitTime" property="lastQuitTime" />
         <result column="joinTime" property="joinTime" />
         <result column="orderLockTime" property="orderLockTime" />
-        <result column="planName" property="planName" />-->
+        <result column="planName" property="planName" />
     </resultMap>
 
     <sql id="Where_Clause_Repay">
@@ -137,12 +137,12 @@
         THEN
         FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d %H:%i:%s' )
         ELSE
-          "NULL"
+          NULL
         END AS repay_actual_time,
         CASE hhr.repay_should_time
         WHEN NULL
         THEN
-        "NULL"
+        NULL
         ELSE
         FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d %H:%i:%s' )
         END AS repay_should_time,
