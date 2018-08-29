@@ -5,6 +5,7 @@ package com.hyjf.am.user.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.ROaUsers;
+import com.hyjf.am.user.dao.model.auto.ROaUsersExample;
 import com.hyjf.am.user.mq.base.Consumer;
 import com.hyjf.am.user.service.front.crm.CrmUserService;
 import com.hyjf.am.vo.user.CrmUsersVO;
@@ -22,6 +23,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -30,12 +32,13 @@ import java.util.List;
  * @Author sunss
  * @Date 2018/7/26 10:25
  */
+@Component
 public class CrmOaUserConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(CrmOaUserConsumer.class);
-    private static final String OPERATION_ADD = "add";
-    private static final String OPERATION_UPDATE = "update";
-    private static final String OPERATION_DELETE = "delete";
+    private static final String OPERATION_ADD = "TAG_OA_DEPARTMENT_OPERATION_ADD";
+    private static final String OPERATION_UPDATE = "TAG_OA_DEPARTMENT_OPERATION_UPDATE";
+    private static final String OPERATION_DELETE = "TAG_OA_DEPARTMENT_OPERATION_DELETE";
 
     @Autowired
     CrmUserService crmUserService;
@@ -64,58 +67,43 @@ public class CrmOaUserConsumer extends Consumer {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
 
-            // --> 消息检查
             MessageExt msg = list.get(0);
-            if(msg == null || msg.getBody() == null){
-                logger.error("【操作资金crm oa user对象】接收到的消息为null");
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-            }
-
-            // --> 消息转换
             String msgBody = new String(msg.getBody());
-            logger.info("【操作资金crm oa user对象】接收到的消息：" + msgBody);
 
-            CrmUsersVO oaUsersVO = null;
-            try {
-                oaUsersVO = JSONObject.parseObject(msgBody, CrmUsersVO.class);
-                if(oaUsersVO == null){
-                    logger.info("解析为空：" + msgBody);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            if (msg.getTopic().equals(MQConstant.CRM_OA_USER_TOPIC)) {
+                logger.info("【操作user crm oa user对象】接收到的消息：" + msgBody);
+
+                if (msg.getTags() != null && msg.getTags().equals(OPERATION_ADD)) {
+                    ROaUsers users = JSONObject.parseObject(msgBody, ROaUsers.class);
+                    crmUserService.insert(users);
+                    logger.info("----------------------添加用户消息处理结束------------------------");
+                } else if (msg.getTags() != null && msg.getTags().equals(OPERATION_UPDATE)) {
+                    JSONObject date = JSONObject.parseObject(msgBody);
+                    if (date != null) {
+                        if (date.containsKey("type") && date.get("type").equals("complex")) {
+                            // 根据DepartmentExample 修改
+                            JSONObject allParam = JSONObject.parseObject(date.getString("object"));
+                            ROaUsersExample example = JSONObject.parseObject(allParam.getString("example"), ROaUsersExample.class);
+                            ROaUsers user = JSONObject.parseObject(allParam.getString("record"), ROaUsers.class);
+                            crmUserService.updateByExample(user, example);
+                        } else if (date.containsKey("type") && date.get("type").equals("simple")) {
+                            // 根据ID修改
+                            ROaUsers department = JSONObject.parseObject(date.getString("object"), ROaUsers.class);
+                            crmUserService.update(department);
+                        }
+                    }
+                    logger.info("----------------------更新用户消息处理结束！------------------------");
+                } else if (msg.getTags() != null && msg.getTags().equals(OPERATION_DELETE)) {
+                    // 调岗
+                    Integer id = JSONObject.parseObject(msgBody, Integer.class);
+                    crmUserService.delete(id);
+                    logger.info("----------------------删除用户消息处理结束------------------------");
+
                 }
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            try {
-                // 操作数据库
-                doOperation(oaUsersVO);
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } catch (Exception e){
-                e.printStackTrace();
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-            }
-        }
-    }
 
-    /**
-     * 操作数据库
-     * @param oaUsersVO
-     */
-    private void doOperation(CrmUsersVO oaUsersVO) throws Exception {
-        String operation = oaUsersVO.getOperation();
-        if(StringUtils.isEmpty(operation)){
-            throw new Exception("传入参数错误，operation为空");
+            // 如果没有return success ，consumer会重新消费该消息，直到return success
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
-        ROaUsers user = CommonUtils.convertBean(oaUsersVO,ROaUsers.class);
-        if(OPERATION_UPDATE.equals(operation)){
-            crmUserService.update(user);
-        } else if(OPERATION_ADD.equals(operation)){
-            crmUserService.insert(user);
-        }else if(OPERATION_DELETE.equals(operation)){
-            crmUserService.delete(user);
-        }else{
-            throw new Exception("传入参数错误，operation错误");
-        }
-
     }
 }
