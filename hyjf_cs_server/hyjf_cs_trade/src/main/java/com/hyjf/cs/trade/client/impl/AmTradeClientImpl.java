@@ -3894,13 +3894,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getCommisionConfig(HashMap map) {
-        Integer result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateCalculateInvestByPrimaryKey/", map,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
+        IntegerResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/planLockQuit/getCommisionConfig/", map,
+                IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt();
         }
-        return result;
+        return null;
     }
 
     /**
