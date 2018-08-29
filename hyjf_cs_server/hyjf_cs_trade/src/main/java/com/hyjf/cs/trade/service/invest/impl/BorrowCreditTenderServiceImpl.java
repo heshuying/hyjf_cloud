@@ -1221,11 +1221,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         bean.setProductId(creditTenderLog.getBidNid());
         // 忘记密码的跳转URL
         bean.setForgotPwdUrl(systemConfig.getForgetpassword());
-        // TODO: 2018/7/4  前端提供地址
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/openSuccess";
+
+        //错误页
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+        //成功页
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
+
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn";
+        String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn?platform="+request.getPlatform();
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
