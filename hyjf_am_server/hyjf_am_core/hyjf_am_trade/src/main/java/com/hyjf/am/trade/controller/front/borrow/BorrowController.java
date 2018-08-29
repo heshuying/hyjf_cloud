@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
@@ -240,12 +241,16 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/insertBeforeTender")
-	public int insertBeforeTender(@RequestBody TenderRequest tenderRequest) {
+	public IntegerResponse insertBeforeTender(@RequestBody TenderRequest tenderRequest) {
+		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.insertBeforeTender(tenderRequest);
-			return 1;
+			result.setResultInt(1);
+			return result;
 		}catch (Exception e){
-			return 0;
+			e.printStackTrace();
+			result.setResultInt(0);
+			return result;
 		}
 	}
 
@@ -255,12 +260,16 @@ public class BorrowController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/borrowTender")
-	public int borrowTender(@RequestBody TenderBgVO tenderBg) {
+	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
+		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
-			return 1;
+			result.setResultInt(1);
+			return result;
 		}catch (Exception e){
-			return 0;
+			e.printStackTrace();
+			result.setResultInt(0);
+			return result;
 		}
 	}
 

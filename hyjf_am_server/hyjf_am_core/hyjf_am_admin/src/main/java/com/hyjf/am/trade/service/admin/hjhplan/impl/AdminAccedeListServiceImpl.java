@@ -225,7 +225,10 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
 			param.put("investCountsSrch", request.getInvestCountsSrch());
 		}
-		return this.adminPlanAccedeListCustomizeMapper.selectAccedeRecordList(param);
+		
+		List<AccedeListCustomizeVO> list = this.adminPlanAccedeListCustomizeMapper.selectAccedeRecordList(param);
+		
+		return list;
 	}
 
     /**

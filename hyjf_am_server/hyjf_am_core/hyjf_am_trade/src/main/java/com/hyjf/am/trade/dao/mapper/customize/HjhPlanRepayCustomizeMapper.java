@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.dao.model.customize.HjhRepayCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,6 @@ public interface HjhPlanRepayCustomizeMapper {
      * @param param
      * @return
      */
-    List<HjhRepay> exportPlanRepayList(Map<String, Object> param);
+    List<HjhRepayCustomize> exportPlanRepayList(Map<String, Object> param);
 
 }

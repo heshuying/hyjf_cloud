@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HjhPlanRepayCustomizeMapper">
 
-    <resultMap id="planRepayMap" type="com.hyjf.am.trade.dao.model.customize.HjhPlanRepayCustomize" >
+    <resultMap id="planRepayMap" type="com.hyjf.am.trade.dao.model.customize.HjhRepayCustomize" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
         <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
@@ -19,8 +19,8 @@
         <result column="repay_should" property="repayShould" jdbcType="DECIMAL" />
         <result column="repay_actual" property="repayActual" jdbcType="DECIMAL" />
         <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
-        <result column="repay_actual_time" property="repayActualTime" jdbcType="INTEGER" />
-        <result column="repay_should_time" property="repayShouldTime" jdbcType="INTEGER" />
+        <result column="repay_actual_time" property="repayActualTime" />
+        <result column="repay_should_time" property="repayShouldTime" />
         <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
         <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
         <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
@@ -29,11 +29,11 @@
         <result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
         <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
         <result column="create_user" property="createUser" jdbcType="INTEGER" />
-        <result column="create_time" property="createTime" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
         <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-        <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
         <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-        <result column="recommend_name" property="recommendName" />
+       <!-- <result column="recommend_name" property="recommendName" />
         <result column="recommend_attr" property="recommendAttr" />
         <result column="invite_user_name" property="inviteUserName" />
         <result column="invite_user_attributename" property="inviteUserAttributeName" />
@@ -51,7 +51,7 @@
         <result column="lastQuitTime" property="lastQuitTime" />
         <result column="joinTime" property="joinTime" />
         <result column="orderLockTime" property="orderLockTime" />
-        <result column="planName" property="planName" />
+        <result column="planName" property="planName" />-->
     </resultMap>
 
     <sql id="Where_Clause_Repay">
@@ -82,16 +82,16 @@
                 AND hhp.borrow_style = #{borrowStyleSrch}
             </if>
             <if test="repayTimeStart != null and repayTimeStart != ''">
-                AND hhr.repay_should_time >= #{repayTimeStart}
+                AND hhr.repay_should_time >= unix_timestamp(#{repayTimeStart})
             </if>
             <if test="repayTimeEnd != null and repayTimeEnd != ''">
-                AND hhr.repay_should_time <![CDATA[<=]]> #{repayTimeEnd}
+                AND hhr.repay_should_time <![CDATA[<=]]> unix_timestamp(#{repayTimeEnd})
             </if>
             <if test="actulRepayTimeStart != null and actulRepayTimeStart != ''">
-                AND hhr.repay_actual_time >= #{actulRepayTimeStart}
+                AND hhr.repay_actual_time >= unix_timestamp(#{actulRepayTimeStart})
             </if>
             <if test="actulRepayTimeEnd != null and actulRepayTimeEnd != ''">
-                AND hhr.repay_actual_time <![CDATA[<=]]> #{actulRepayTimeEnd}
+                AND hhr.repay_actual_time <![CDATA[<=]]> unix_timestamp(#{actulRepayTimeEnd})
             </if>
         </where>
     </sql>
@@ -131,8 +131,23 @@
         hhr.repay_should,
         hhr.repay_actual,
         hhr.order_status,
-        hhr.repay_actual_time,
-        hhr.repay_should_time,
+        CASE
+        WHEN
+        hhr.repay_actual_time != 0
+        THEN
+        FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d %H:%i:%s' )
+        ELSE
+          "NULL"
+        END AS repay_actual_time,
+        CASE hhr.repay_should_time
+        WHEN NULL
+        THEN
+        "NULL"
+        ELSE
+        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d %H:%i:%s' )
+        END AS repay_should_time,
+--         hhr.repay_actual_time,
+--         hhr.repay_should_time,
         hhr.plan_repay_capital,
         hhr.plan_repay_interest,
         hhr.repay_total,

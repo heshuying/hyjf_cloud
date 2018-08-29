@@ -46,13 +46,15 @@
 			<if test="repayStyle != null and repayStyle != ''">
 				AND bs.nid = #{repayStyle}
 			</if>
-			<!-- 时间 -->
+
+			<!-- 时间  只有am admin改了，am trade 没改-->
 			<if test="assignTimeStart != null and assignTimeStart != ''">
-				AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00'))
+				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{assignTimeStart})
 			</if>
 			<if test="assignTimeEnd != null and assignTimeEnd != ''">
-				AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59'))
+				AND UNIX_TIMESTAMP(ct.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{assignTimeEnd})+86399
 			</if>
+			
 		</where>
 	</sql>
 	
@@ -103,10 +105,13 @@
 			ct.assign_interest_advance,
 			ct.assign_pay,
 			ct.assign_type AS assign_type_name,
-			FROM_UNIXTIME(
+			
+<!-- 			FROM_UNIXTIME(
 				ct.create_time,
 				'%Y-%m-%d %H:%i:%s'
-			) AS assign_time,
+			) AS assign_time, -->
+			DATE_FORMAT(ct.create_time, '%Y-%m-%d %H:%i:%s' ) AS assign_time,
+			
 			CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
  			bc.assign_period,
 		    hta.status AS contractStatus,

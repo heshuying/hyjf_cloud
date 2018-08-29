@@ -1633,10 +1633,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBeforeChinaPnR(TenderRequest request) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        logger.info("散标投资开始插入tmp表");
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt()== 0 ? false : true;
         }
         return false;
     }
@@ -1649,10 +1650,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean borrowTender(TenderBgVO tenderBg) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        logger.info("用户投资散标操作表");
+        IntegerResponse result =  restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt()== 0 ? false : true;
         }
         return false;
     }
