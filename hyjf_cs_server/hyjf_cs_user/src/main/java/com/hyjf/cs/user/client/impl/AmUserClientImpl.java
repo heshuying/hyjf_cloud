@@ -299,12 +299,12 @@ public class AmUserClientImpl implements AmUserClient {
 		if(user == null || user.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", user, Integer.class)
+		IntegerResponse result = restTemplate.postForEntity(userService+"/user/updateByUserId", user, IntegerResponse.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
-		return result;
+		return result.getResultInt();
 	}
 
 	/**

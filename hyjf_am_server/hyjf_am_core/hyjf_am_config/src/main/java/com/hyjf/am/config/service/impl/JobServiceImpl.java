@@ -32,14 +32,18 @@ public class JobServiceImpl implements JobService {
 		if (StringUtils.isNotBlank(request.getOfficeName())) {
 			criteria.andOfficeNameEqualTo(request.getOfficeName());
 		}
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
-		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
-		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+		}
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("create_time DESC");
 		return jobMapper.selectByExample(example);

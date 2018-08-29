@@ -247,7 +247,7 @@
 		END AS lock_period,
 		f.user_id,
 		f.accede_account,
-		f.create_time,AS add_time,
+		date_format(f.create_time, '%Y-%m-%d %H:%i:%s' ) AS add_time,
 		f.wait_captical,
 		f.wait_interest,
 		f.received_total,

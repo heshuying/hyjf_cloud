@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
 import com.hyjf.am.trade.service.admin.RepayCalendarService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;

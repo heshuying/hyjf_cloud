@@ -169,7 +169,7 @@ public class CouponController extends BaseController {
     }
 
     @ApiOperation(value = "获取我的优惠券投资记录")
-    @GetMapping("/getAppMyPlanCouponInfo")
+    @PostMapping("/getAppMyPlanCouponInfo")
     public AppCouponResponse getAppMyPlanCouponInfo(@RequestBody Map<String,Object> params){
         AppCouponResponse response = new AppCouponResponse();
         List<AppCouponCustomizeVO> list = couponService.getAppMyPlanCouponInfo(params);

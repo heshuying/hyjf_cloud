@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
+import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentService;
@@ -11,6 +12,7 @@ import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -22,6 +24,7 @@ import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +124,28 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         bean.setSuccess("success");
         return bean;
     }
+
+    @Override
+    public RepayInfoBean getRepayInfo(String borrowNid) {
+        RepayInfoBean bean=new RepayInfoBean();
+        AdminRepayDelayCustomizeVO repayDelay = this.amTradeClient.selectBorrowInfo(borrowNid);
+        bean.setBorrowRepayInfo(repayDelay);
+        String userId = repayDelay.getUserId();
+        AccountVO account = this.amTradeClient.getAccountByUserId(Integer.getInteger(userId));
+        // 借款人账户余额
+        BigDecimal balance = account.getBankBalance();
+        bean.setBalance(balance);
+        // 单期标
+        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
+            BorrowRepayVO borrowRepay = this.amTradeClient.getBorrowRepayInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            bean.setRepayInfo(borrowRepay);
+        } else {// 多期标
+            BorrowRepayPlanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            bean.setRepayInfo(borrowRepayPlan);
+        }
+        return bean;
+    }
+
     /**
      * 检查半角数字最大长度（无小数点）正整数
      *

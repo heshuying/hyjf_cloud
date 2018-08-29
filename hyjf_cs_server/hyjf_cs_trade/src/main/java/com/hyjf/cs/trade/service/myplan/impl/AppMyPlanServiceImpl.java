@@ -44,6 +44,10 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
 
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
+    private static final String NULL_STR = "待确认";
+
+    private static final String DOUBLE_NULL_STR = "--";
+
     @Autowired
     private BaseClient baseClient;
     /**
@@ -80,7 +84,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         result.setAccedeOrderId(orderId);
         String sign = request.getParameter("sign");
         // 检查参数正确性
-        if (Validator.isNull(sign) || Validator.isNull(couponType) || Validator.isNull(type)
+        if ( Validator.isNull(couponType) || Validator.isNull(type)
                 || Validator.isNull(orderId)) {
             result.setStatus(BaseResultBeanFrontEnd.FAIL);
             result.setStatusDesc(ILLEGAL_PARAMETER_STATUS_DESC);
@@ -288,7 +292,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
-        if ("--".equals(appCouponCustomize.getCountInterestTime())) {
+        if (NULL_STR.equals(appCouponCustomize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(appCouponCustomize.getCountInterestTime())) {
             appCouponCustomize.setPlanPeriod("— —");
         }else {
             Date dateAddTime;
@@ -372,7 +376,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
-        if ("--".equals(customize.getCountInterestTime())) {
+        if (NULL_STR.equals(customize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(customize.getCountInterestTime())) {
             customize.setPlanPeriod("— —");
         }else {
             try {
