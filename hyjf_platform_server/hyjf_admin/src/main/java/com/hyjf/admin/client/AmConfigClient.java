@@ -781,7 +781,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse insertAction(EventRequestBean requestBean);
+	int insertAction(EventRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-公司记事
@@ -789,7 +789,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse updateAction(EventRequestBean requestBean);
+	int updateAction(EventRequestBean requestBean);
 
 	/**
 	 * 根据id查找公司管理-公司记事
@@ -805,7 +805,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	EventResponse deleteEventById(Integer id);
+	int deleteEventById(Integer id);
 
 	/**
 	 * 查询手续费配置列表

@@ -43,7 +43,7 @@ public class TeamServiceImpl implements TeamService {
 		TeamRequestBean bean = new TeamRequestBean();
 		BeanUtils.copyProperties(record, bean);
 		bean.setStatus(requestBean.getStatus());
-		return amConfigClient.updateAction(requestBean);
+		return amConfigClient.updateAction(bean);
 	}
 
 	@Override
