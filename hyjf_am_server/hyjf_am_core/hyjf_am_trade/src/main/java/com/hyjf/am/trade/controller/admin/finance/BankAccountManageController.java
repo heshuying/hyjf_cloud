@@ -52,7 +52,7 @@ public class BankAccountManageController extends BaseController {
      * @Author: liushouyi
      * @Desc :查询总件数
      */
-    @ApiOperation(value = "银行账户管理查询总件数")
+    @ApiOperation(value = "银行账户管理线下对账")
     @PostMapping("/update_account_check")
     public StringResponse updateAccountCheck(@RequestBody AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO) {
         return new StringResponse(bankAccountManageService.updateAccountCheck(adminBankAccountCheckCustomizeVO));
