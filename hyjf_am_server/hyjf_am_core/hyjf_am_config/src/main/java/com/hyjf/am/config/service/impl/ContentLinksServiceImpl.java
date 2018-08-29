@@ -26,6 +26,38 @@ public class ContentLinksServiceImpl implements ContentLinksService {
     @Autowired
     private LinkMapper linkMapper;
 
+    /**
+     * 获取文章列表列表
+     *
+     * @return
+     */
+    @Override
+    public List<Link> getRecordList(ContentLinksRequest bean, int limitStart, int limitEnd) {
+        LinkExample example = new LinkExample();
+
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        LinkExample.Criteria criteria = example.createCriteria();
+        criteria.andTypeEqualTo(bean.getType());
+        // 条件查询
+        if (StringUtils.isNotEmpty(bean.getSearchWebname())) {
+            criteria.andWebnameLike("%" + bean.getSearchWebname() + "%");
+        }
+        if (bean.getStatus() != null) {
+            criteria.andStatusEqualTo(bean.getStatus());
+        }
+        if (StringUtils.isNotEmpty(bean.getStartCreate())) {
+            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp(bean.getStartCreate()));
+        }
+        if (StringUtils.isNotEmpty(bean.getEndCreate())) {
+            criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(bean.getEndCreate()));
+        }
+        example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+        return linkMapper.selectByExample(example);
+    }
+
     @Override
     public List<Link> searchAction(ContentLinksRequest request) {
         LinkExample example = new LinkExample();
@@ -55,8 +87,8 @@ public class ContentLinksServiceImpl implements ContentLinksService {
         BeanUtils.copyProperties(request, record);
         // 友情链接1
         record.setType(1);
-        record.setOrder(record.getOrder().intValue());
-        record.setStatus(record.getStatus().intValue());
+        record.setOrder(request.getOrder().intValue());
+        record.setStatus(request.getStatus().intValue());
         record.setCreateTime(new Date());
         record.setUpdateTime(new Date());
         fillEmpty(record);
@@ -69,8 +101,6 @@ public class ContentLinksServiceImpl implements ContentLinksService {
         BeanUtils.copyProperties(request, record);
         // 友情链接1
         record.setType(1);
-        record.setOrder(record.getOrder().intValue());
-        record.setStatus(record.getStatus().intValue());
         record.setUpdateTime(new Date());
         fillEmpty(record);
         linkMapper.updateByPrimaryKey(record);

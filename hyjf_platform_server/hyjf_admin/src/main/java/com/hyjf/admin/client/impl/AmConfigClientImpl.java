@@ -256,7 +256,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request) {
-        AdminUtmReadPermissionsResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/searchaction",
+        AdminUtmReadPermissionsResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/searchaction",
                 request, AdminUtmReadPermissionsResponse.class);
         return response;
 
@@ -264,26 +264,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/insert",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/insert",
                 requestBean, AdminUtmReadPermissionsResponse.class);
     }
 
     @Override
     public AdminUtmReadPermissionsResponse updateAction(AdminUtmReadPermissionsRequest requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/update",
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/update",
                 requestBean, AdminUtmReadPermissionsResponse.class);
     }
 
 
     @Override
     public AdminUtmReadPermissionsResponse deleteById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/delete/" + id,
+        return restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/delete/" + id,
                 AdminUtmReadPermissionsResponse.class);
     }
 
     @Override
     public AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId) {
-        AdminUtmReadPermissionsResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/getadminutmreadpermissions/" + userId,
+        AdminUtmReadPermissionsResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/getadminutmreadpermissions/" + userId,
                 AdminUtmReadPermissionsResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1050,26 +1050,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public LinkResponse searchAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/searchaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/searchaction", requestBean,
                 LinkResponse.class);
     }
 
     @Override
-    public LinkResponse insertAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/insertaction", requestBean,
-                LinkResponse.class);
+    public int insertAction(ContentPartnerRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public LinkResponse updateAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/updateaction", requestBean,
-                LinkResponse.class);
+    public int updateAction(ContentPartnerRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public LinkVO getLinkRecord(Integer id) {
         LinkResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentpartner/getrecord/" + id, LinkResponse.class);
+                "http://AM-ADMIN/am-config/content/contentpartner/getrecord/" + id, LinkResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -1077,9 +1077,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse deleteLinkById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentpartner/delete/" + id,
-                LinkResponse.class);
+    public int deleteLinkById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentpartner/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
@@ -1710,13 +1710,16 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
+    public List<LinkVO> searchActions(ContentLinksRequest requestBean) {
+        LinkResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
                 LinkResponse.class);
+        response.getResultList();
+
+        return response.getResultList();
     }
 
     @Override
-    public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse insertActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
                 LinkResponse.class);
     }
@@ -1728,7 +1731,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse updateActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
                 LinkResponse.class);
     }

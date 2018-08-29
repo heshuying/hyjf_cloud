@@ -115,48 +115,48 @@ public class PlanRepayController extends BaseController {
         BeanUtils.copyProperties(repayRequestBean, repayRequest);
 
 //        初始化时应默认清算时间不能为空
-        if (StringUtils.isEmpty(repayRequest.getRepayTimeStart()) && StringUtils.isEmpty(repayRequest.getRepayTimeEnd())){
-            return new AdminResult<>(FAIL, "请输入清算开始和结束时间!");
-        }
+//        if (StringUtils.isEmpty(repayRequest.getRepayTimeStart()) && StringUtils.isEmpty(repayRequest.getRepayTimeEnd())){
+//            return new AdminResult<>(FAIL, "请输入清算开始和结束时间!");
+//        }
 
 //        实际退出时间不能为空
-        if (StringUtils.isNotEmpty(repayRequest.getActulRepayTimeStart()) && StringUtils.isNotEmpty(repayRequest.getActulRepayTimeEnd())){
-            return new AdminResult<>(FAIL, "请输入实际退出开始和结束时间!");
-        }
+//        if (StringUtils.isNotEmpty(repayRequest.getActulRepayTimeStart()) && StringUtils.isNotEmpty(repayRequest.getActulRepayTimeEnd())){
+//            return new AdminResult<>(FAIL, "请输入实际退出开始和结束时间!");
+//        }
 
         //防止前端将起始时间传错误.
-        try {
-            Date timeStart = dateFormat.parse(repayRequest.getRepayTimeStart());
-            Date timeEnd = dateFormat.parse(repayRequest.getRepayTimeEnd());
-
-            if (timeStart.getTime() > timeEnd.getTime()){
-                return new AdminResult<>(FAIL, "清算结束时间应大于等于开始时间!");
-            }
+//        try {
+//            Date timeStart = dateFormat.parse(repayRequest.getRepayTimeStart());
+//            Date timeEnd = dateFormat.parse(repayRequest.getRepayTimeEnd());
+//
+//            if (timeStart.getTime() > timeEnd.getTime()){
+//                return new AdminResult<>(FAIL, "清算结束时间应大于等于开始时间!");
+//            }
 
 //            Date actuTimeStart = dateFormat.parse(repayRequest.getActulRepayTimeStart());
 //            Date actuTimeEnd = dateFormat.parse(repayRequest.getActulRepayTimeEnd());
 //            if (actuTimeStart.getTime() > actuTimeEnd.getTime()){
 //                return new AdminResult<>(FAIL, "实际退出结束时间应大于等于开始时间!");
 //            }
-        }catch (ParseException e){
-            return new AdminResult<>(FAIL, e.getMessage());
-        }
+//        }catch (ParseException e){
+//            return new AdminResult<>(FAIL, e.getMessage());
+//        }
 
         //初始化返回List
         List<HjhRepayVO> returnList = null;
         // 查询列表
-        HjhRepayResponse hjhRepayList = this.planRepayService.selectHjhRepayList(repayRequest);
-        if (hjhRepayList == null){
+        HjhRepayResponse hjhRepayResponse = this.planRepayService.selectHjhRepayList(repayRequest);
+        if (hjhRepayResponse == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
 
-        if (!Response.isSuccess(hjhRepayList)){
-            return new AdminResult<>(FAIL, hjhRepayList.getMessage());
+        if (!Response.isSuccess(hjhRepayResponse)){
+            return new AdminResult<>(FAIL, hjhRepayResponse.getMessage());
         }
 
-        if (CollectionUtils.isNotEmpty(hjhRepayList.getResultList())){
-            returnList = CommonUtils.convertBeanList(hjhRepayList.getResultList(), HjhRepayVO.class);
-            return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build(returnList, hjhRepayList.getCount()));
+        if (CollectionUtils.isNotEmpty(hjhRepayResponse.getResultList())){
+            returnList = CommonUtils.convertBeanList(hjhRepayResponse.getResultList(), HjhRepayVO.class);
+            return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build2(returnList, hjhRepayResponse.getCount(), hjhRepayResponse.getSumHjhRepayVO()));
         }else {
             return new AdminResult<ListResult<HjhRepayVO>>(ListResult.build(returnList, 0));
         }
@@ -300,8 +300,7 @@ public class PlanRepayController extends BaseController {
                     }
                     // 计划名称
                     else if (celLength == 3) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getPlanName()) ? StringUtils.EMPTY : planAccedeDetail.getPlanName());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getPlanName()) ? StringUtils.EMPTY : planAccedeDetail.getPlanName());
                     }
                     // 锁定期
                     else if (celLength == 4) {
@@ -319,8 +318,7 @@ public class PlanRepayController extends BaseController {
                     }
                     // 预期年化收益率
                     else if (celLength == 5) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
                     }
                     // 用户名
                     else if (celLength == 6) {
@@ -328,8 +326,7 @@ public class PlanRepayController extends BaseController {
                     }
                     // 投资人用户属性（当前）
                     else if (celLength == 7) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRecommendAttr()) ? StringUtils.EMPTY : planAccedeDetail.getRecommendAttr());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRecommendAttr()) ? StringUtils.EMPTY : planAccedeDetail.getRecommendAttr());
                     }
                     //推荐人用户属性
 /*					else if (celLength == 7) {
@@ -337,23 +334,19 @@ public class PlanRepayController extends BaseController {
 					}*/
                     // 推荐人用户名（当前）
                     else if (celLength == 8) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserName());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserName());
                     }
                     // 推荐人用户部门信息（当前）
                     else if (celLength == 9) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionName());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionName());
                     }
                     // 推荐人用户部门信息（当前）
                     else if (celLength == 10) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchName());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchName());
                     }
                     // 推荐人用户部门信息（当前）
                     else if (celLength == 11) {
-//                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentName());
-                        cell.setCellValue("");
+                        cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentName());
                     }
 /*					// 推荐人用户属性（退出时）
 					else if (celLength == 12) {
@@ -403,25 +396,25 @@ public class PlanRepayController extends BaseController {
 					}*/
                     //还款方式
                     else if(celLength == 16){
-//                        if (planAccedeDetail.getBorrowStyle()  == null) {
+                        if (planAccedeDetail.getBorrowStyle()  == null) {
                             cell.setCellValue("");
-//                        } else {
-//                            if(planAccedeDetail.getBorrowStyle().equals("month")){
-//                                cell.setCellValue("等额本息");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("season")){
-//                                cell.setCellValue("按季还款");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("end")){
-//                                cell.setCellValue("按月计息，到期还本还息");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("endmonth")){
-//                                cell.setCellValue("先息后本");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("endday")){
-//                                cell.setCellValue("按天计息，到期还本还息");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("endmonths")){
-//                                cell.setCellValue("按月付息到期还本");
-//                            }if(planAccedeDetail.getBorrowStyle().equals("principal")){
-//                                cell.setCellValue("等额本金");
-//                            }
-//                        }
+                        } else {
+                            if(planAccedeDetail.getBorrowStyle().equals("month")){
+                                cell.setCellValue("等额本息");
+                            }if(planAccedeDetail.getBorrowStyle().equals("season")){
+                                cell.setCellValue("按季还款");
+                            }if(planAccedeDetail.getBorrowStyle().equals("end")){
+                                cell.setCellValue("按月计息，到期还本还息");
+                            }if(planAccedeDetail.getBorrowStyle().equals("endmonth")){
+                                cell.setCellValue("先息后本");
+                            }if(planAccedeDetail.getBorrowStyle().equals("endday")){
+                                cell.setCellValue("按天计息，到期还本还息");
+                            }if(planAccedeDetail.getBorrowStyle().equals("endmonths")){
+                                cell.setCellValue("按月付息到期还本");
+                            }if(planAccedeDetail.getBorrowStyle().equals("principal")){
+                                cell.setCellValue("等额本金");
+                            }
+                        }
                     }
                     // 订单状态
                     else if (celLength == 17) {
@@ -441,75 +434,75 @@ public class PlanRepayController extends BaseController {
                     }
                     // 计划实际还款时间 (实际退出时间)
                     else if (celLength == 18) {
-                        if (planAccedeDetail.getRepayActualTime()  == null) {
+//                        if (planAccedeDetail.getRepayActualTime()  == null) {
                             cell.setCellValue("");
-                        } else {
-                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getRepayActualTime()));
-                        }
+//                        } else {
+//                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getRepayActualTime()));
+//                        }
                     }
                     // 清算时间
                     else if (celLength == 19) {
-                        if (planAccedeDetail.getRepayShouldTime()  == null) {
+//                        if (planAccedeDetail.getRepayShouldTime()  == null) {
                             cell.setCellValue(0);
-                        } else {
-                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getRepayShouldTime()));
-                        }
+//                        } else {
+//                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getRepayShouldTime()));
+//                        }
                     }
                     // 清算服务费
                     else if (celLength == 20) {
-//                        if (planAccedeDetail.getLqdServiceFee()  == null) {
+                        if (planAccedeDetail.getLqdServiceFee()  == null) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(planAccedeDetail.getLqdServiceFee().toString());
-//                        }
+                        } else {
+                            cell.setCellValue(planAccedeDetail.getLqdServiceFee().toString());
+                        }
                     }
                     // 清算服务费率
                     else if (celLength == 21) {
-//                        if (planAccedeDetail.getLqdServiceApr()  == null) {
+                        if (planAccedeDetail.getLqdServiceApr()  == null) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(planAccedeDetail.getLqdServiceApr().toString());
-//                        }
+                        } else {
+                            cell.setCellValue(planAccedeDetail.getLqdServiceApr().toString());
+                        }
                     }
                     // 投资服务费率
                     else if (celLength == 22) {
-//                        if (planAccedeDetail.getInvestServiceApr()  == null) {
+                        if (planAccedeDetail.getInvestServiceApr()  == null) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(planAccedeDetail.getInvestServiceApr());
-//                        }
+                        } else {
+                            cell.setCellValue(planAccedeDetail.getInvestServiceApr());
+                        }
                     }
                     // 清算进度
                     else if (celLength == 23) {
-//                        if (planAccedeDetail.getLqdProgress()  == null) {
+                        if (planAccedeDetail.getLqdProgress()  == null) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(planAccedeDetail.getLqdProgress());
-//                        }
+                        } else {
+                            cell.setCellValue(planAccedeDetail.getLqdProgress());
+                        }
                     }
                     // 最晚退出时间
                     else if (celLength == 24) {
-//                        if (StringUtils.isEmpty(planAccedeDetail.getLastQuitTime())) {
+                        if (StringUtils.isEmpty(planAccedeDetail.getLastQuitTime())) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(planAccedeDetail.getLastQuitTime());
-//                        }
+                        } else {
+                            cell.setCellValue(planAccedeDetail.getLastQuitTime());
+                        }
                     }
                     // 汇计划加入时间
                     else if (celLength == 25) {
-//                        if (planAccedeDetail.getJoinTime()  == 0) {
+                        if (planAccedeDetail.getJoinTime()  == 0) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getJoinTime()));
-//                        }
+                        } else {
+                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getJoinTime()));
+                        }
                     }
                     // 订单锁定时间 = 加入计划的计息时间
                     else if (celLength == 26) {
-//                        if (planAccedeDetail.getOrderLockTime() == 0) {
+                        if (planAccedeDetail.getOrderLockTime() == 0) {
                             cell.setCellValue(0);
-//                        } else {
-//                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getOrderLockTime()));
-//                        }
+                        } else {
+                            cell.setCellValue(GetDate.timestamptoStrYYYYMMDDHHMMSS(planAccedeDetail.getOrderLockTime()));
+                        }
                     }
                 }
             }
@@ -517,18 +510,6 @@ public class PlanRepayController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 
-    }
-
-    @ApiOperation(value = "还款明细", notes = "订单退出->还款明细")
-    @PostMapping(value = "/repaymentDetails")
-    public AdminResult repaymentDetails(@RequestBody HjhRepayRequestBean repayRequestBean){
-
-        HjhRepayRequest repayRequest = new HjhRepayRequest();
-        BeanUtils.copyProperties(repayRequestBean, repayRequest);
-
-        HjhRepayResponseBean repayResponseBean = planRepayService.selectByAccedeOrderId(repayRequestBean.getAccedeOrderIdSrch());
-
-        return new AdminResult(repayResponseBean);
     }
 
 }

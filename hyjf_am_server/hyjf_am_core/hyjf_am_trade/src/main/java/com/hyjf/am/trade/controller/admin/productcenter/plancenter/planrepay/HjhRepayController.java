@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -101,11 +102,54 @@ public class HjhRepayController {
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
 
+        // 初始化总计数据
+        BigDecimal sumAccedeAccount = BigDecimal.ZERO;
+        BigDecimal sumRepayInterest = BigDecimal.ZERO;
+        // 汇计划三期 实际收益 总计
+        BigDecimal sumActualRevenue = BigDecimal.ZERO;
+        // 汇计划三期 实际回款 总计
+        BigDecimal sumActualPayTotal = BigDecimal.ZERO;
+        // 汇计划三期 清算服务费 总计
+        BigDecimal sumLqdServiceFee = BigDecimal.ZERO;
 
-        
+        for(int i = 0; i < repayVOList.size(); i++){
+            if (repayVOList.get(i).getAccedeAccount() == null){
+                sumAccedeAccount = BigDecimal.ZERO;
+            }else {
+                sumAccedeAccount = sumAccedeAccount.add(repayVOList.get(i).getAccedeAccount());
+            }
+            if (repayVOList.get(i).getRepayInterest() == null){
+                sumRepayInterest = BigDecimal.ZERO;
+            }else {
+                sumRepayInterest = sumRepayInterest.add(repayVOList.get(i).getRepayInterest());
+            }
+            if (repayVOList.get(i).getActualRevenue() == null){
+                sumActualRevenue = BigDecimal.ZERO;
+            }else {
+                sumActualRevenue = sumActualRevenue.add(repayVOList.get(i).getActualRevenue());
+            }
+            if (repayVOList.get(i).getActualPayTotal() == null){
+                sumActualPayTotal = BigDecimal.ZERO;
+            }else {
+                sumActualPayTotal = sumActualPayTotal.add(repayVOList.get(i).getActualPayTotal());
+            }
+            if (repayVOList.get(i).getLqdServiceFee() == null){
+                sumLqdServiceFee = BigDecimal.ZERO;
+            }else {
+                sumLqdServiceFee = sumLqdServiceFee.add(repayVOList.get(i).getLqdServiceFee());
+            }
+        }
+
         if (!CollectionUtils.isEmpty(repayVOList)){
             response.setResultList(repayVOList);
             response.setCount(count);
+            HjhRepayVO sumHjhRepayVO = new HjhRepayVO();
+            sumHjhRepayVO.setAccedeAccount(sumAccedeAccount);
+            sumHjhRepayVO.setRepayInterest(sumRepayInterest);
+            sumHjhRepayVO.setActualRevenue(sumActualRevenue);
+            sumHjhRepayVO.setActualPayTotal(sumActualPayTotal);
+            sumHjhRepayVO.setLqdServiceFee(sumLqdServiceFee);
+            response.setSumHjhRepayVO(sumHjhRepayVO);
             response.setRtn(Response.SUCCESS);
         }
         return response;

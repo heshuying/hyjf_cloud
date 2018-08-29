@@ -10,7 +10,7 @@
 			AND FROM_UNIXTIME( temp.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
 		</if>
 	</sql>
-	
+
 	<sql id="Where_Addtime">
 		<where>
 			<include refid="And_Addtime" />
@@ -27,7 +27,7 @@
 			</if>
 		</where>
 	</sql>
-	
+
 	<sql id="Where_Invest_htj_time">
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
@@ -38,39 +38,87 @@
 			</if>
 		</where>
 	</sql>
-	
+
+	<sql id="Where_add_time">
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( temp.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( temp.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+	</sql>
+
 	<sql id="Select_Clause">
-	SELECT
-		   tender_number.client source_name,
-		   0 AS access_number,
-		   tender_number.tender_number,
-		   recharge_price.recharge_price,
-		   IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount)
-				+ IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount)
-				+ IF(htl_tender_price.amount IS null,0,htl_tender_price.amount)
-				+ IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount) AS tender_price,
-		   hzt_tender_price.amount AS hzt_tender_price,
-		   hxf_tender_price.amount AS hxf_tender_price,
-		   htl_tender_price.amount AS htl_tender_price,
-		   htj_tender_price.amount AS htj_tender_price,
-		   hjh_tender_price.amount AS hjh_tender_price
+		SELECT
+		pn.source_name,
+		0 AS access_number,
+		regist_number.regist_number,
+		account_number.account_number,
+		tender_number.tender_number,
+		recharge_price.recharge_price,
+		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount)
+		+ IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount)
+		+ IF(htl_tender_price.amount IS null,0,htl_tender_price.amount)
+		+ IF(htj_tender_price.amount IS NULL,0,htj_tender_price.amount)
+		+ IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount)
+		+ IF(hzr_tender_price.amount IS NULL,0,hzr_tender_price.amount) AS tender_price,
+		hzt_tender_price.amount AS hzt_tender_price,
+		hxf_tender_price.amount AS hxf_tender_price,
+		htl_tender_price.amount AS htl_tender_price,
+		htj_tender_price.amount AS htj_tender_price,
+		hjh_tender_price.amount AS hjh_tender_price,
+		hzr_tender_price.amount AS hzr_tender_price
 		FROM
+		(
+		SELECT DISTINCT
+		n.name_cd AS client,
+		n.`name` AS source_name
+		FROM
+		ht_param_name n
+		WHERE
+		n.name_class = 'CLIENT'
+		) pn
+
+		LEFT JOIN
+		(
+		SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM ht_user temp
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( temp.reg_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( temp.reg_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+		GROUP BY temp.reg_esb
+		) regist_number ON pn.client = regist_number.client
+
+		LEFT JOIN
+		(
+		SELECT u.account_esb AS client, COUNT(temp.user_id) AS account_number FROM ht_user u INNER JOIN ht_bank_open_account temp ON temp.user_id = u.user_id
+		<include refid="Where_Invest_htj_time" />
+		GROUP BY u.account_esb
+		) account_number ON pn.client = account_number.client
+
+		LEFT JOIN
 		(
 		SELECT t.client AS client, COUNT(DISTINCT t.user_id) tender_number
 		FROM
-			(
-		    	SELECT temp.user_id, temp.client FROM ht_borrow_tender temp
-				<include refid="Where_Addtime" />
-				UNION ALL
-				SELECT temp.user_id, temp.client FROM ht_product_list temp
-		    	<include refid="Where_Invest_time" />
-		    	UNION ALL
-				SELECT temp.user_id, temp.client FROM ht_debt_plan_accede temp
-		    	<include refid="Where_Invest_htj_time" />
-			) t
+		(
+		SELECT temp.user_id, temp.client FROM ht_borrow_tender temp
+		<include refid="Where_Addtime" />
+		UNION ALL
+		SELECT temp.user_id, temp.client FROM ht_product_list temp
+		<include refid="Where_Invest_time" />
+		UNION ALL
+		SELECT temp.user_id, temp.client FROM ht_debt_plan_accede temp
+		<include refid="Where_Invest_htj_time" />
+		) t
 		GROUP BY t.client
-		) tender_number
-		
+		) tender_number ON pn.client = tender_number.client
+
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.money) AS recharge_price FROM ht_account_recharge temp
@@ -78,7 +126,7 @@
 		<include refid="And_Addtime" />
 		GROUP BY temp.client
 		) recharge_price ON pn.client = recharge_price.client
-		
+
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.account) amount
@@ -88,7 +136,7 @@
 		<include refid="Where_Addtime" />
 		GROUP BY temp.client
 		) hzt_tender_price ON pn.client = hzt_tender_price.client
-		
+
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.account) amount
@@ -96,7 +144,7 @@
 		<include refid="Where_Addtime" />
 		GROUP BY temp.client
 		) hxf_tender_price ON pn.client = hxf_tender_price.client
-		
+
 		LEFT JOIN
 		(
 		SELECT temp.client AS client, SUM(temp.amount) amount FROM ht_product_list temp
@@ -111,27 +159,44 @@
 		) htj_tender_price ON pn.client = htj_tender_price.client
 		LEFT JOIN
 		(
+		<!--SELECT temp.client, SUM(temp.accede_account) amount FROM hyjf_hjh_accede temp
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND FROM_UNIXTIME( temp.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND FROM_UNIXTIME( temp.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+		GROUP BY temp.client -->
 		<!-- 汇计划投资金额修改 20180613 mod by nxl-->
 		select  ss.client,sum(sumAcount) amount  from (
-				SELECT  accede.client,sum(temp.account) sumAcount FROM ht_hjh_accede accede
-				inner JOIN ht_borrow_tender temp ON  accede.accede_order_id = temp.accede_order_id
-				<include refid="Where_Addtime" />
-				GROUP BY accede.client
-				union
-				SELECT accede.client, sum(hjhTen.assign_pay) sumAcount  FROM ht_hjh_accede accede
-				INNER  JOIN ht_hjh_debt_credit_tender hjhTen on accede.accede_order_id = hjhTen.assign_plan_order_id
-				<if test="timeStartSrch != null and timeStartSrch != ''">
-					AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
-				</if>
-				<if test="timeEndSrch != null and timeEndSrch != ''">
-					AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
-				</if>
-				GROUP BY accede.client
-			) ss
-			GROUP BY ss.client
+		SELECT  accede.client,sum(temp.account) sumAcount FROM ht_hjh_accede accede
+		inner JOIN ht_borrow_tender temp ON  accede.accede_order_id = temp.accede_order_id
+		<include refid="Where_Addtime" />
+		GROUP BY accede.client
+		union
+		SELECT accede.client, sum(hjhTen.assign_pay) sumAcount  FROM ht_hjh_accede accede
+		INNER  JOIN ht_hjh_debt_credit_tender hjhTen on accede.accede_order_id = hjhTen.assign_plan_order_id
+		<if test="timeStartSrch != null and timeStartSrch != ''">
+			AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+		</if>
+		<if test="timeEndSrch != null and timeEndSrch != ''">
+			AND FROM_UNIXTIME( hjhTen.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+		</if>
+		GROUP BY accede.client
+		) ss
+		GROUP BY ss.client
 		) hjh_tender_price ON pn.client = hjh_tender_price.client
+		LEFT JOIN
+		(
+		<!-- 新增汇转让投资金额 20180817 add by yaoyong -->
+		SELECT temp.client AS client, sum(temp.assign_capital) amount FROM ht_credit_tender temp
+		<include refid="Where_add_time"/>
+		GROUP BY temp.client
+		)hzr_tender_price ON pn.client = hzr_tender_price.client
 	</sql>
-	
+
 	<resultMap id="selectListMap" type="com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize">
 		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
 		<result column="access_number" property="accessNumber" jdbcType="VARCHAR" />
@@ -143,12 +208,13 @@
 		<result column="htl_tender_price" property="htlTenderPrice" jdbcType="VARCHAR" />
 		<result column="htj_tender_price" property="htjTenderPrice" jdbcType="VARCHAR" />
 		<result column="hjh_tender_price" property="hjhTenderPrice" jdbcType="VARCHAR" />
+		<result column="hzr_tender_price" property="hzrTenderPrice" jdbcType="VARCHAR" />
 	</resultMap>
-	
+
 	<select id="selectList" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.admin.PlatformCountRequest">
 		<include refid="Select_Clause" />
-	    <if test="limitStart >= 0" >
-	      LIMIT #{limitStart} , #{limitEnd}
-	    </if>
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 	</select>
 </mapper>
