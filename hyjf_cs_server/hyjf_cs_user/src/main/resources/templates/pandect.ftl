@@ -62,8 +62,7 @@
         "recoverLatestList": [
                 <#if datas.data.recoverLatestList??>
                     <#assign recoverLatestList = datas.data.recoverLatestList >
-                </#if>
-                <#list recoverLatestList as recoverLatest>
+                    <#list recoverLatestList as recoverLatest>
                       {
                         "investDate":"${(recoverLatest.investDate)!''}",
                         "projectName":"${(recoverLatest.projectName)!''}",
@@ -73,7 +72,9 @@
                         "totalWait":"${(recoverLatest.totalWait)!''}"
                     }
                         <#if recoverLatest_has_next>,</#if>
-                </#list>
+                    </#list>
+                </#if>
+
         ]
   }
 </#if>
