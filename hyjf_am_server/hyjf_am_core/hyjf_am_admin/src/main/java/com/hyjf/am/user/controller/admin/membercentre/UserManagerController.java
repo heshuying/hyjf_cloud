@@ -372,7 +372,7 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/queryBankOpenAccountByUserId/{userId}")
-    public BankOpenAccountResponse queryBankOpenAccountByUserId(@Valid int userId) {
+    public BankOpenAccountResponse queryBankOpenAccountByUserId(@PathVariable int userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
         BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserId(userId);
