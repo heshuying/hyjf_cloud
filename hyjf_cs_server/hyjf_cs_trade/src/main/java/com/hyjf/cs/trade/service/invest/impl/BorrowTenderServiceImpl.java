@@ -525,22 +525,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     /**
      * 查询投资成功的结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @param couponGrantId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId) {
         Map<String, Object> data = new HashedMap();
         BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         // 查看tmp表
         BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
         borrowTenderRequest.setBorrowNid(borrowNid);
         borrowTenderRequest.setTenderNid(logOrdId);
-        borrowTenderRequest.setTenderUserId(userVO.getUserId());
+        borrowTenderRequest.setTenderUserId(userId);
         data.put("borrowNid",borrow.getBorrowNid());
+        data.put("investDesc","恭喜您，投资成功！");
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         if(borrowTender!=null){
             // 本金收益  历史回报
@@ -549,9 +550,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("account",borrowTender.getAccount());
 
             // 查询优惠券信息
-            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userVO.getUserId());
+            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
             // 查询优惠券的投资
-            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userVO.getUserId(),borrowNid,borrowTender.getNid(),couponGrantId);
+            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
             data.put("couponQuota",borrowTenderCpn.getAccount());
             data.put("couponType",couponUser.getCouponType());
