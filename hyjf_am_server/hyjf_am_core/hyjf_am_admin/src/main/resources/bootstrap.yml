@@ -4,7 +4,6 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: am-admin
   boot:
     admin:
@@ -13,6 +12,8 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
+  profiles:
+    active: dev
 server:
   port: 8099
 

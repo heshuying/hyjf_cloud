@@ -36,7 +36,6 @@ public class HjhRepayServiceImpl extends BaseServiceImpl implements HjhRepayServ
      */
     @Override
     public Integer getRepayCount(Map<String, Object> params) {
-        System.out.println("Count:" + hjhPlanRepayCustomizeMapper.getListTotal(params));
         return hjhPlanRepayCustomizeMapper.getListTotal(params);
     }
 
@@ -49,10 +48,6 @@ public class HjhRepayServiceImpl extends BaseServiceImpl implements HjhRepayServ
     public List<HjhRepayVO> selectByExample(Map<String, Object> params) {
 
         List<HjhRepayCustomize> repayList = hjhPlanRepayCustomizeMapper.exportPlanRepayList(params);
-        for (int j = 0; j < repayList.size(); j++) {
-            System.out.println(repayList.get(j).getRepayActualTime());
-            System.out.println(repayList.get(j).getRepayShouldTime());
-        }
         List<HjhRepayVO> repayVOList = CommonUtils.convertBeanList(repayList, HjhRepayVO.class);
         return repayVOList;
     }
