@@ -57,5 +57,5 @@ public interface ContentLinksService {
      * @param id
      * @return
      */
-    LinkResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

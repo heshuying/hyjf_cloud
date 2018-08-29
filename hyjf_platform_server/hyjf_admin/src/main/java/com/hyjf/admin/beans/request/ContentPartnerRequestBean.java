@@ -3,9 +3,13 @@
  */
 package com.hyjf.admin.beans.request;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.hyjf.admin.beans.BaseRequest;
 
-import java.util.Date;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fuqiang
@@ -13,17 +17,17 @@ import java.util.Date;
  */
 public class ContentPartnerRequestBean extends BaseRequest {
 	private Integer id;
-
+	@ApiModelProperty(value = "连接类型 1:友情连接 2:合作伙伴")
 	private Integer type;
-
+	@ApiModelProperty(value = "状态 0:关闭 1:开启")
 	private Integer status;
-
+    @ApiModelProperty(value = "排序")
 	private Integer order;
-
+	@ApiModelProperty(value = "官网")
 	private String url;
-
+	@ApiModelProperty(value = "名称")
 	private String webname;
-
+	@ApiModelProperty(value = "内容")
 	private String summary;
 
 	private String summary2;
@@ -31,7 +35,7 @@ public class ContentPartnerRequestBean extends BaseRequest {
 	private String controlMeasures;
 
 	private String operatingProcess;
-
+	@ApiModelProperty(value = "logo地址")
 	private String logo;
 
 	private String province;
@@ -47,13 +51,13 @@ public class ContentPartnerRequestBean extends BaseRequest {
 	private String setupTime;
 
 	private String cooperationTime;
-
+	@ApiModelProperty(value = "logo1地址")
 	private String logo1;
 
 	private String approvalBy;
 
 	private Integer registerCapital;
-
+	@ApiModelProperty(value = "伙伴类别")
 	private Integer partnerType;
 
 	private Integer hits;
@@ -295,23 +299,27 @@ public class ContentPartnerRequestBean extends BaseRequest {
 	}
 
 	/** 开始时间 */
-	private String startTime;
+	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startTime;
 	/** 结束时间 */
-	private String endTime;
+	@ApiModelProperty(value = "结束时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endTime;
 
-	public String getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 

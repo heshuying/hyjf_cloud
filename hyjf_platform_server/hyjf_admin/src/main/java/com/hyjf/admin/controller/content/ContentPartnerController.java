@@ -3,20 +3,21 @@
  */
 package com.hyjf.admin.controller.content;
 
-import com.hyjf.am.response.config.LinkResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ContentPartnerService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.config.LinkVO;
-
+import com.hyjf.am.response.admin.CategoryResponse;
+import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.vo.admin.CategoryVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 合作伙伴type为2
@@ -33,7 +34,7 @@ public class ContentPartnerController extends BaseController {
 
 	@ApiOperation(value = "公司管理-合作伙伴列表查询", notes = "公司管理-合作伙伴列表查询")
 	@PostMapping("/searchaction")
-	public AdminResult<ListResult<LinkVO>> searchAction(@RequestBody ContentPartnerRequestBean requestBean) {
+	public AdminResult searchAction(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.searchAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -41,58 +42,85 @@ public class ContentPartnerController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult(response);
 	}
 
 	@ApiOperation(value = "添加公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentPartnerRequestBean requestBean) {
-		LinkResponse response = contentPartnerService.insertAction(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.insertAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentPartnerRequestBean requestBean) {
-		LinkResponse response = contentPartnerService.updateAction(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.updateAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentPartnerRequestBean requestBean) {
-		LinkResponse response = contentPartnerService.updateStatus(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.updateStatus(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "删除公司管理-合作伙伴", notes = "删除公司管理-合作伙伴")
 	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
-		LinkResponse response = contentPartnerService.deleteById(id);
-		if (response == null) {
+		int num = contentPartnerService.deleteById(id);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+	}
+
+	@ApiOperation(value = "获得伙伴类别", notes = "获得伙伴类别")
+	@GetMapping("/getcategory")
+	private AdminResult putCategoryVO() {
+		List<CategoryVO> CategoryVOList = new ArrayList<CategoryVO>();
+		{
+			CategoryVO CategoryVO = new CategoryVO();
+			CategoryVO.setId(11);
+			CategoryVO.setTitle("法律支持");
+			CategoryVOList.add(CategoryVO);
 		}
-		return new AdminResult<>();
+		{
+			CategoryVO CategoryVO = new CategoryVO();
+			CategoryVO.setId(7);
+			CategoryVO.setTitle("金融机构");
+			CategoryVOList.add(CategoryVO);
+		}
+		{
+			CategoryVO CategoryVO = new CategoryVO();
+			CategoryVO.setId(12);
+			CategoryVO.setTitle("其他");
+			CategoryVOList.add(CategoryVO);
+		}
+		{
+			CategoryVO CategoryVO = new CategoryVO();
+			CategoryVO.setId(10);
+			CategoryVO.setTitle("服务支持");
+			CategoryVOList.add(CategoryVO);
+		}
+		{
+			CategoryVO CategoryVO = new CategoryVO();
+			CategoryVO.setId(8);
+			CategoryVO.setTitle("联系我们");
+			CategoryVOList.add(CategoryVO);
+		}
+		CategoryResponse response = new CategoryResponse();
+			response.setResultList(CategoryVOList);
+		return new AdminResult(response);
 	}
 }

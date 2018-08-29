@@ -74,7 +74,7 @@ public class ContentLinksServiceImpl implements ContentLinksService {
     }
 
     @Override
-    public LinkResponse deleteById(Integer id) {
+    public int deleteById(Integer id) {
         return amConfigClient.deleteLinkById(id);
     }
 }

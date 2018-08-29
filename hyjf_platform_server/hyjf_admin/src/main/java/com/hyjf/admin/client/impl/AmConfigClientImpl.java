@@ -1050,26 +1050,26 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public LinkResponse searchAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/searchaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/searchaction", requestBean,
                 LinkResponse.class);
     }
 
     @Override
-    public LinkResponse insertAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/insertaction", requestBean,
-                LinkResponse.class);
+    public int insertAction(ContentPartnerRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public LinkResponse updateAction(ContentPartnerRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/updateaction", requestBean,
-                LinkResponse.class);
+    public int updateAction(ContentPartnerRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentpartner/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public LinkVO getLinkRecord(Integer id) {
         LinkResponse response = restTemplate.getForObject(
-                "http://AM-CONFIG/am-config/content/contentpartner/getrecord/" + id, LinkResponse.class);
+                "http://AM-ADMIN/am-config/content/contentpartner/getrecord/" + id, LinkResponse.class);
         if (response != null) {
             return response.getResult();
         }
@@ -1077,9 +1077,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse deleteLinkById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentpartner/delete/" + id,
-                LinkResponse.class);
+    public int deleteLinkById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentpartner/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override

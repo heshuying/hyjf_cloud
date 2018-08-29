@@ -659,7 +659,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentPartnerRequestBean requestBean);
+	int insertAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴
@@ -667,7 +667,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentPartnerRequestBean requestBean);
+	int updateAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-合作伙伴
@@ -683,7 +683,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	LinkResponse deleteLinkById(Integer id);
+	int deleteLinkById(Integer id);
 
 	/**
 	 * 公司管理-资质荣誉列表查询

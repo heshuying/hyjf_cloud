@@ -103,14 +103,11 @@ public class ContentLinksController extends BaseController {
     @ApiOperation(value = "删除内容中心-友情链接", notes = "删除内容中心-友情链接")
     @DeleteMapping("/delete/{id}")
     public AdminResult delete(@PathVariable Integer id) {
-        LinkResponse response = contentLinksService.deleteById(id);
-        if (response == null) {
+        int num = contentLinksService.deleteById(id);
+        if (num <= 0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>();
+        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
