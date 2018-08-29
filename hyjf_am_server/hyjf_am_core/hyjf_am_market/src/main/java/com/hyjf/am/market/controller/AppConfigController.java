@@ -44,7 +44,7 @@ public class AppConfigController {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         Integer count = appConfigService.countRecordList(request);
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             List<Ads> recordList = appConfigService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
             List<AdsVO> appBannerVos = CommonUtils.convertBeanList(recordList, AdsVO.class);
             appBannerResponse.setResultList(appBannerVos);

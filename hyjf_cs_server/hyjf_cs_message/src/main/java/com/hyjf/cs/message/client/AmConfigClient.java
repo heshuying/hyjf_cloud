@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.EventsVO;
@@ -73,7 +74,7 @@ public interface AmConfigClient {
 	 * @param users
 	 * @return
 	 */
-    int updateAppNewsConfig(UserVO users);
+	IntegerResponse updateAppNewsConfig(UserVO users);
 
 
 	EventResponse getEvents(int userId, int begin, int end);

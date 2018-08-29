@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.service.news.config;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.user.UserVO;
 
 /**
@@ -15,5 +16,5 @@ public interface AppNewsConfigService {
      * @param users
      * @return
      */
-    int updateAppNewsConfig(UserVO users);
+    IntegerResponse updateAppNewsConfig(UserVO users);
 }
