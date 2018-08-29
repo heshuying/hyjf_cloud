@@ -45,15 +45,12 @@ public class WebBindCardPageController extends BaseUserController{
 
     /**
      * 绑卡接口
-     * @param token
-     * @param request
-     * @return
      */
     @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
     @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
-        WebResult<Object> result = new WebResult<Object>();
+        WebResult<Object> result = new WebResult<>();
 
         WebViewUserVO user = bindCardService.getUserFromCache(userId);
         String userIp = GetCilentIP.getIpAddr(request);
@@ -77,10 +74,6 @@ public class WebBindCardPageController extends BaseUserController{
 
     /**
      * 绑卡异步回调
-     * @param token
-     * @param bean
-     * @param request
-     * @return
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")

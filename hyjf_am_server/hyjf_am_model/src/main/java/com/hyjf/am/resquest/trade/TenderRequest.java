@@ -89,6 +89,11 @@ public class TenderRequest extends BaseVO {
     // 债转用到的---------------
     private String assignCapital;
 
+    /**
+     * 投资人用户名
+     */
+    private String userName;
+
     public String getCreditNid() {
         return creditNid;
     }
@@ -263,5 +268,13 @@ public class TenderRequest extends BaseVO {
 
     public void setCouponId(String couponId) {
         this.couponId = couponId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

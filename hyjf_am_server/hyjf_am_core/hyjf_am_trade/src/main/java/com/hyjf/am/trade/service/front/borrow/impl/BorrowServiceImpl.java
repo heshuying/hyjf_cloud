@@ -178,8 +178,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Override
     public int insertBeforeTender(TenderRequest tenderRequest) {
         Integer userId = tenderRequest.getUserId();
+
+        Borrow borrow = getBorrow(tenderRequest.getBorrowNid());
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
+        temp.setUserName(tenderRequest.getUserName());
         temp.setBorrowNid(tenderRequest.getBorrowNid());
         temp.setNid(tenderRequest.getOrderId());
         temp.setAccount(new BigDecimal(tenderRequest.getAccount()));
@@ -202,6 +205,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         temp.setPeriodStatus(0);
         temp.setWeb(0);*/
         temp.setIsBankTender(1);
+        temp.setStatus(0);
+        temp.setBorrowUserId(borrow.getUserId());
+        temp.setBorrowUserName(borrow.getBorrowUserName());
+        temp.setInviteUserId(0);
         Integer couponGrantId = tenderRequest.getCouponGrantId();
         if (couponGrantId==null) {
             couponGrantId = 0;
@@ -214,6 +221,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
         }
+        logger.info("完成插入temp表");
         BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
         info.setOrdid(tenderRequest.getOrderId());
         Map<String, String> map = new HashMap<String, String>();
@@ -231,6 +239,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             logger.error("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
         }
+        logger.info("完成投资前操作");
         return 1;
     }
 

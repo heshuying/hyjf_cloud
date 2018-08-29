@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.activity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -185,14 +186,13 @@ public class ActivityListController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
-        String file = null;
         try {
-            file = activityListService.uploadFile(request, response);
+            LinkedList<BorrowCommonImage> borrowCommonImages = activityListService.uploadFile(request, response);
+            jsonObject.put("file", borrowCommonImages);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("资料上传失败");
         }
-        jsonObject.put("file", file);
         return jsonObject;
     }
 

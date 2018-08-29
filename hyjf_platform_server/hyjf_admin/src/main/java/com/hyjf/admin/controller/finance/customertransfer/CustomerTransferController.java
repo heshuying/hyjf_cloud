@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.customertransfer;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -235,15 +236,19 @@ public class CustomerTransferController extends BaseController {
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
-        Integer userId = Integer.valueOf(getUser(request).getId());
+        //Integer userId = Integer.valueOf(getUser(request).getId());
         customerTransferService.checkCustomerTransferParam(customerTransferRequest);
-        AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+        //AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+        AdminSystemVO adminSystemVO = getUser(request);
         customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
         customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
+        logger.info("request:[{}]", JSON.toJSONString(customerTransferRequest));
         boolean success = customerTransferService.insertTransfer(customerTransferRequest);
         if(success){
+            logger.info("success");
             return new AdminResult(SUCCESS,SUCCESS_DESC);
         }
+        logger.error("fail");
         return new AdminResult(FAIL,FAIL_DESC);
     }
 

@@ -184,7 +184,7 @@ public class AppMyPlanController extends BaseTradeController {
      * 原接口：com.hyjf.app.user.plan.MyPlanController.getMyPlanDetail()
      */
     @ApiOperation(value = "App端:获取我的计划详情", notes = "App端:获取我的计划详情")
-    @PostMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")
     public MyPlanDetailResultBean getMyPlanList(@RequestParam Integer couponType, @RequestParam String type, @PathVariable String orderId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
         MyPlanDetailResultBean result = appMyPlanService.getMyPlanDetail(couponType,type,orderId,request,userId);
         return  result;
