@@ -44,7 +44,7 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 			ContentEnvironmentRequestBean bean = new ContentEnvironmentRequestBean();
 			BeanUtils.copyProperties(record, bean);
 			bean.setStatus(requestBean.getStatus());
-			return amConfigClient.updateAction(requestBean);
+			return amConfigClient.updateAction(bean);
 		}
 		return 0;
 	}

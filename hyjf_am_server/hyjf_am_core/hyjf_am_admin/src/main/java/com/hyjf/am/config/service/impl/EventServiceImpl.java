@@ -3,13 +3,6 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.EventMapper;
 import com.hyjf.am.config.dao.mapper.customize.ContentEventsCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.Event;
@@ -17,7 +10,12 @@ import com.hyjf.am.config.dao.model.auto.EventExample;
 import com.hyjf.am.config.dao.model.customize.ContentEventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.resquest.admin.EventsRequest;
-import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -34,28 +32,32 @@ public class EventServiceImpl implements EventService {
 	public List<Event> searchAction(EventsRequest request) {
 		EventExample example = new EventExample();
 		EventExample.Criteria criteria = example.createCriteria();
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
 		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("act_time DESC, create_time DESC");
 		return eventMapper.selectByExample(example);
 	}
 
 	@Override
-	public void insertAction(EventsRequest request) {
+	public int insertAction(EventsRequest request) {
 		Event event = new Event();
 		BeanUtils.copyProperties(request, event);
-		eventMapper.insert(event);
+		return eventMapper.insertSelective(event);
 	}
 
 	@Override
-	public void updateAction(EventsRequest request) {
+	public int updateAction(EventsRequest request) {
 		Event event = new Event();
 		BeanUtils.copyProperties(request, event);
-		eventMapper.updateByPrimaryKey(event);
+		return eventMapper.updateByPrimaryKeySelective(event);
 	}
 
 	@Override
@@ -64,8 +66,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		eventMapper.deleteByPrimaryKey(id);
+	public int deleteById(Integer id) {
+		return eventMapper.deleteByPrimaryKey(id);
 	}
 
     @Override
@@ -78,6 +80,15 @@ public class EventServiceImpl implements EventService {
 
     }
 
+	@Override
+	public int selectCount(EventsRequest request) {
+		request.setCurrPage(0);
+		List<Event> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
+	}
 
 
 }
