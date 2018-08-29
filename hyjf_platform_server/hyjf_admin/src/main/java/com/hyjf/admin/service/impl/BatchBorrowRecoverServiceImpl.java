@@ -348,49 +348,34 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
 
     /**
      * 获得批次放款页面需要的展示列表
-     * @param resultBean
+     * @param resultBeans
      * @return
      */
-    private List<BorrowRecoverBankInfoVo> getRecoverDetailList(BankCallBean resultBean) {
+    private List<BorrowRecoverBankInfoVo> getRecoverDetailList(BankCallBean resultBeans) {
         List<BorrowRecoverBankInfoVo> detailList = new ArrayList<>();
-        String subPacks = resultBean.getSubPacks();
-        if (StringUtils.isNotBlank(subPacks)) {
-            JSONArray loanDetails = JSONObject.parseArray(subPacks);
-            for (int j = 0; j < loanDetails.size(); j++) {
-                JSONObject loanDetail = loanDetails.getJSONObject(j);
-                BorrowRecoverBankInfoVo info = new BorrowRecoverBankInfoVo();
-                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
-                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
-                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
-                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT).toString());// 操作金额
-                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
-                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
-                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
-                detailList.add(info);
-            }
+
+        BorrowRecoverBankInfoVo detailLists = new BorrowRecoverBankInfoVo();
+        if (Validator.isNotNull(resultBeans)) {
+            // 借款人电子账户号
+            detailLists.setForAccountId(resultBeans.getAccountId());
+            // 借款人姓名
+            detailLists.setName(resultBeans.getName());
+            // 响应代码
+            detailLists.setRetCode(resultBeans.getRetCode());
+            // 错误描述
+            detailLists.setFileMsg(resultBeans.getRetMsg());
+            // 标的编号
+            detailLists.setProductId(resultBeans.getProductId());
+            // 借款人入账金额
+            detailLists.setTxAmount(resultBeans.getTxAmount());
+            // 手续费金额
+            detailLists.setFeeAmount(resultBeans.getFeeAmount());
+            // 风险准备金
+            detailLists.setRiskAmount(resultBeans.getRiskAmount());
+            // 交易状态
+            detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals(resultBeans.getRetCode()) ? "成功" : "失败");
         }
         //TODO 测试数据，待删除
-        subPacks = "{\n" +
-                "    \"accountId\" : \"6212461890000001801\",\n" +
-                "    \"acqRes\" : \"\",\n" +
-                "    \"bankCode\" : \"30050000\",\n" +
-                "    \"channel\" : \"000002\",\n" +
-                "    \"feeAmount\" : \"160.00\",\n" +
-                "    \"instCode\" : \"00810001\",\n" +
-                "    \"name\" : \"金子裕\",\n" +
-                "    \"productId\" : \"WDD180503000007\",\n" +
-                "    \"retCode\" : \"00000000\",\n" +
-                "    \"retMsg\" : \"\",\n" +
-                "    \"riskAmount\" : \"0.00\",\n" +
-                "    \"seqNo\" : \"726545\",\n" +
-                "    \"sign\" : \"UafNMcyiZIW9dBFrnBFewvOcvI+SaFG6jXRBq6a37LgG/bQqbnFh1xEeg5zaKemwQ5QtsGi3ETDMhVgG5I0L+lPqCzwsxF4gy+31q0TyN4FbpyGDJ5gLcoghKud+E7UBFRXHjflMH6Vq/bMAY193P9IWdpclQlYFSs1+K3VmXsY=\",\n" +
-                "    \"txAmount\" : \"20000.00\",\n" +
-                "    \"txCode\" : \"autoLendPayQuery\",\n" +
-                "    \"txDate\" : \"20180510\",\n" +
-                "    \"txTime\" : \"104000\",\n" +
-                "    \"version\" : \"10\"\n" +
-                "}";
-        BorrowRecoverBankInfoVo detailLists = new BorrowRecoverBankInfoVo();
         // 借款人电子账户号
         detailLists.setForAccountId("6212461890000001801");
         // 借款人姓名
@@ -409,6 +394,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         detailLists.setRiskAmount("0.00");
         // 交易状态
         detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
+
         detailList.add(detailLists);
         return detailList;
     }
