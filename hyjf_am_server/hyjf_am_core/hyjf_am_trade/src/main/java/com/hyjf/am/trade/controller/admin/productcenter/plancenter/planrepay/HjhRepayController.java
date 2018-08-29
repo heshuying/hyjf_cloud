@@ -159,7 +159,6 @@ public class HjhRepayController {
     public HjhRepayResponse hjhRepaymentDetails(@PathVariable String accedeOrderId){
         HjhRepayResponse response = new HjhRepayResponse();
 
-        String returnCode = Response.FAIL;
 
         List<HjhRepayVO> hjhRepayMentDetailList = hjhRepayService.selectByAccedeOrderId(accedeOrderId);
 
