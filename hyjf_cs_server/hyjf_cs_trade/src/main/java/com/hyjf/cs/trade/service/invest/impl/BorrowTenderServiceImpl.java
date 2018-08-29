@@ -129,6 +129,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 查询散标是否存在
         BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
+        borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
+        borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
+        borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
+        borrow.setCanTransactionIos(borrowInfoVO.getCanTransactionIos());
+        borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
+        borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
+        borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
         if (borrow == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
         }
