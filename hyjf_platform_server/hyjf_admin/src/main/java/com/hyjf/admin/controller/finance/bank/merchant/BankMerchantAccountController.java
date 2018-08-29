@@ -91,7 +91,7 @@ public class BankMerchantAccountController extends BaseController {
         form.setUserId(Integer.parseInt(adminSystem.getId()));
         BankMerchantAccountResponse response = bankMerchantAccountService.selectBankMerchantAccount(form);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>();
         }
         List<BankMerchantAccountVO> recordList = response.getResultList();
         // 算统计数据

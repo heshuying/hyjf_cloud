@@ -50,7 +50,7 @@ import java.util.*;
  */
 @Api(value = "异常中心-银行转账异常",tags = "异常中心-银行转账异常")
 @RestController
-@RequestMapping("/exception/transferexception")
+@RequestMapping("/hyjf-admin/exception/transferexception")
 public class AdminTransferExceptionLogController extends BaseController {
 
     /** 用户ID */
