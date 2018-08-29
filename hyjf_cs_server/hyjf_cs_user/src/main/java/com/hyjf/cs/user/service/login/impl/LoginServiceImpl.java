@@ -311,10 +311,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setUserType(String.valueOf(user.getUserType()));
 			if ("0".equals(result.getSetupPassword())) {
 				//设置交易密码
-				result.setChangeTradePasswordUrl(apphost  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStr(request));
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost()  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStr(request));
 			} else {
 				//重置交易密码
-				result.setChangeTradePasswordUrl(apphost +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStr(request));
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStr(request));
 			}
 
 			iconUrl = user.getIconUrl();
