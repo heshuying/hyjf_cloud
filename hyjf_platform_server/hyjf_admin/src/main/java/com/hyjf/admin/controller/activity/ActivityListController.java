@@ -11,6 +11,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
@@ -50,17 +51,8 @@ public class ActivityListController extends BaseController {
 
     @Autowired
     private ActivityListService activityListService;
-
-//    @ApiOperation(value = "页面初始化", notes = "页面初始化")
-//    @PostMapping(value = "/activityListInit")
-//    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-//    public JSONObject activityListInit() {
-//        JSONObject jsonObject = new JSONObject();
-//        logger.info("上传文件url:{}", fileDomainUrl);
-//        String url = UploadFileUtils.getDoPath(fileDomainUrl);
-//        jsonObject.put("url", url);
-//        return jsonObject;
-//    }
+    @Autowired
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "查询列表", notes = "查询列表")
     @PostMapping("/activityRecordList")
@@ -88,34 +80,26 @@ public class ActivityListController extends BaseController {
         List<ActivityListVO> forBack = new ArrayList<ActivityListVO>();
 
         for (ActivityListVO activityList : response.getResultList()) {
-            ActivityListVO request = new ActivityListVO();
-            BeanUtils.copyProperties(activityList, request);
-            request.setId(activityList.getId());
-            request.setTitle(activityList.getTitle());
-            request.setUrlForeground(activityList.getUrlForeground());
             String platform = activityList.getPlatform();
             List<ParamNameVO> paramNames = activityListService.getParamNameList("CLIENT");
             for (ParamNameVO param : paramNames) {
                 platform = platform.replace(param.getNameCd(), param.getName());
             }
-            request.setPlatform(platform);
-            request.setTimeStart(activityList.getTimeStart());
-            request.setTimeEnd(activityList.getTimeEnd());
+            activityList.setPlatform(platform);
             if (activityList.getTimeStart() >= GetDate.getNowTime10()) {
-                request.setStatus("未开始");
+                activityList.setStatus("未开始");
             }
             if (activityList.getTimeEnd() <= GetDate.getNowTime10()) {
-                request.setStatus("已完成");
+                activityList.setStatus("已完成");
             }
             if (activityList.getTimeEnd() >= GetDate.getNowTime10()
                     && activityList.getTimeStart() <= GetDate.getNowTime10()) {
-                request.setStatus("进行中");
+                activityList.setStatus("进行中");
             }
-            request.setStartCreate(activityList.getCreateTime());
-//            if("汇盈F1大师赛".equals(activityList.getTitle())){
-//                request.setIsMayActivity("1");
-//            }
-            forBack.add(request);
+            activityList.setAcStartTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityList.getTimeStart()));
+            activityList.setAcEndTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityList.getTimeEnd()));
+            activityList.setStartCreate(activityList.getCreateTime());
+            forBack.add(activityList);
         }
         return forBack;
     }
@@ -131,7 +115,6 @@ public class ActivityListController extends BaseController {
             response.setMessage(message);
             return new AdminResult<>(FAIL,response.getMessage());
         }
-        //1代表插入成功， 0为失败
         response = activityListService.insertRecord(request);
 
         if (response == null) {
@@ -145,9 +128,9 @@ public class ActivityListController extends BaseController {
 
 
     @ApiOperation(value = "活动修改初始页面", notes = "活动修改初始页面")
-    @RequestMapping(value = "/initUpdateActivity", method = RequestMethod.GET)
+    @RequestMapping(value = "/initUpdateActivity/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
+    public AdminResult<ActivityListVO> initUpdateActivity(@PathVariable Integer id) {
         ActivityListRequest activityListRequest = new ActivityListRequest();
         activityListRequest.setId(id);
         //根据活动id查询活动信息
@@ -158,7 +141,10 @@ public class ActivityListController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ActivityListVO>(response.getResult());
+        ActivityListVO activityListVO = response.getResult();
+        activityListVO.setAcStartTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityListVO.getTimeStart()));
+        activityListVO.setAcEndTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityListVO.getTimeEnd()));
+        return new AdminResult<ActivityListVO>(activityListVO);
     }
 
     @ApiOperation(value = "修改活动信息", notes = "修改活动信息")
@@ -183,23 +169,23 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/uploadFile")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            LinkedList<BorrowCommonImage> borrowCommonImages = activityListService.uploadFile(request, response);
-            jsonObject.put("file", borrowCommonImages);
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("资料上传失败");
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return jsonObject;
     }
 
     @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteAction/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteRecordAction(@RequestParam int id) {
+    public AdminResult deleteRecordAction(@PathVariable int id) {
         ActivityListRequest request = new ActivityListRequest();
         request.setId(id);
         ActivityListResponse response = activityListService.deleteActivity(request);

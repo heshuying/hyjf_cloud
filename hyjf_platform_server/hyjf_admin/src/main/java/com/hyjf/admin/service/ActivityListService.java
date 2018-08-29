@@ -3,8 +3,6 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -12,7 +10,6 @@ import com.hyjf.am.vo.market.ActivityListVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,14 +45,6 @@ public interface ActivityListService {
      * @return
      */
     ActivityListResponse updateActivity(ActivityListRequest activityListRequest);
-
-    /**
-     * 资料上传
-     * @param request
-     * @param response
-     * @return
-     */
-    LinkedList<BorrowCommonImage>  uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     /**
      * 删除活动配置信息

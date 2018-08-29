@@ -4,13 +4,14 @@
 package com.hyjf.am.resquest.market;
 
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author yaoy
  * @version ActivityListRequest, v0.1 2018/6/26 17:03
  */
-public class ActivityListRequest {
+public class ActivityListRequest extends BasePage{
 
     private int id;
 
@@ -18,10 +19,10 @@ public class ActivityListRequest {
     private String title;
 
     @ApiModelProperty(value = "活动开始时间")
-    private Integer startTime;
+    private String startTime;
 
     @ApiModelProperty(value = "活动结束时间")
-    private Integer endTime;
+    private String endTime;
 
     @ApiModelProperty(value = "活动创建开始时间")
     private String startCreate;
@@ -112,19 +113,19 @@ public class ActivityListRequest {
         this.endCreate = endCreate;
     }
 
-    public Integer getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -296,11 +297,4 @@ public class ActivityListRequest {
         this.page = page;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
 }
