@@ -221,6 +221,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
         }
+        logger.info("完成插入temp表");
         BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
         info.setOrdid(tenderRequest.getOrderId());
         Map<String, String> map = new HashMap<String, String>();
@@ -238,6 +239,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             logger.error("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
         }
+        logger.info("完成投资前操作");
         return 1;
     }
 

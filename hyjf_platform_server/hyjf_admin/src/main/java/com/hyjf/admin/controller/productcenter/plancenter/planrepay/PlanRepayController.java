@@ -115,32 +115,32 @@ public class PlanRepayController extends BaseController {
         BeanUtils.copyProperties(repayRequestBean, repayRequest);
 
 //        初始化时应默认清算时间不能为空
-        if (StringUtils.isEmpty(repayRequest.getRepayTimeStart()) && StringUtils.isEmpty(repayRequest.getRepayTimeEnd())){
-            return new AdminResult<>(FAIL, "请输入清算开始和结束时间!");
-        }
+//        if (StringUtils.isEmpty(repayRequest.getRepayTimeStart()) && StringUtils.isEmpty(repayRequest.getRepayTimeEnd())){
+//            return new AdminResult<>(FAIL, "请输入清算开始和结束时间!");
+//        }
 
 //        实际退出时间不能为空
-        if (StringUtils.isNotEmpty(repayRequest.getActulRepayTimeStart()) && StringUtils.isNotEmpty(repayRequest.getActulRepayTimeEnd())){
-            return new AdminResult<>(FAIL, "请输入实际退出开始和结束时间!");
-        }
+//        if (StringUtils.isNotEmpty(repayRequest.getActulRepayTimeStart()) && StringUtils.isNotEmpty(repayRequest.getActulRepayTimeEnd())){
+//            return new AdminResult<>(FAIL, "请输入实际退出开始和结束时间!");
+//        }
 
         //防止前端将起始时间传错误.
-        try {
-            Date timeStart = dateFormat.parse(repayRequest.getRepayTimeStart());
-            Date timeEnd = dateFormat.parse(repayRequest.getRepayTimeEnd());
-
-            if (timeStart.getTime() > timeEnd.getTime()){
-                return new AdminResult<>(FAIL, "清算结束时间应大于等于开始时间!");
-            }
+//        try {
+//            Date timeStart = dateFormat.parse(repayRequest.getRepayTimeStart());
+//            Date timeEnd = dateFormat.parse(repayRequest.getRepayTimeEnd());
+//
+//            if (timeStart.getTime() > timeEnd.getTime()){
+//                return new AdminResult<>(FAIL, "清算结束时间应大于等于开始时间!");
+//            }
 
 //            Date actuTimeStart = dateFormat.parse(repayRequest.getActulRepayTimeStart());
 //            Date actuTimeEnd = dateFormat.parse(repayRequest.getActulRepayTimeEnd());
 //            if (actuTimeStart.getTime() > actuTimeEnd.getTime()){
 //                return new AdminResult<>(FAIL, "实际退出结束时间应大于等于开始时间!");
 //            }
-        }catch (ParseException e){
-            return new AdminResult<>(FAIL, e.getMessage());
-        }
+//        }catch (ParseException e){
+//            return new AdminResult<>(FAIL, e.getMessage());
+//        }
 
         //初始化返回List
         List<HjhRepayVO> returnList = null;
