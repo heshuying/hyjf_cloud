@@ -1,10 +1,12 @@
 package com.hyjf.admin.controller.mobileclient;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.AppBannerRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppBannerResponse;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 
 /**
  * 广告管理
@@ -37,7 +40,7 @@ public class AppBannerController extends BaseController {
     @Autowired
     AppBannerService appBannerService;
     @Autowired
-    ActivityListService activityListService;
+    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
@@ -135,14 +138,14 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> upLoadFile(HttpServletResponse response, HttpServletRequest request) {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
-            String s = activityListService.uploadFile(request, response);
-            if (StringUtils.isNotBlank(s)) {
-                return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-            } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
-            }
+            LinkedList<BorrowCommonImage> borrowCommonImages = messagePushNoticesService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
