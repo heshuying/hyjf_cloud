@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.crm;
 
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 
 /**
  * @Description crm Department表操作
@@ -30,5 +31,11 @@ public interface CrmDepartmentService {
      * @param department
      * @return
      */
-    Integer delete(ROaDepartment department);
+    Integer delete(Integer department);
+
+    /**
+     * 根据DepartmentExample 修改
+     * @param example
+     */
+    void updateByExample(ROaDepartment department , ROaDepartmentExample example);
 }

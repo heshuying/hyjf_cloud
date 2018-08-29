@@ -842,6 +842,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             CreditTenderListResponse res = baseClient.postExe(CREDIT_DETAIL_TENDER_LIST_URL, req, CreditTenderListResponse.class);
             // 查询列表数据
             List<CreditTenderListCustomizeVO> list = res.getResultList();
+            // 查询redis，转化client属性，
+            if (!CollectionUtils.isEmpty(list)) {
+                Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                if (!CollectionUtils.isEmpty(map)){
+                    for (CreditTenderListCustomizeVO vo : list){
+                        if (StringUtils.isNotBlank(vo.getClient())){
+                            vo.setClient(map.get(vo.getClient()));
+                        }
+                    }
+                }
+            }
             CommonUtils.convertNullToEmptyString(list);
             info.put("recordList", list);
             BorrowCreditVO borrowCreditVO = amTradeClient.getBorrowCreditByCreditNid(creditNid);
@@ -1174,14 +1185,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             HjhAccedeListResponse res = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL, params, HjhAccedeListResponse.class);
             List<HjhAccedeCustomizeVO> list = res.getResultList();
             // 查询redis，转化client属性，
-            if (!CollectionUtils.isEmpty(list)){
-                if (!CollectionUtils.isEmpty(list)) {
-                    Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
-                    if (!CollectionUtils.isEmpty(map)){
-                        for (HjhAccedeCustomizeVO vo : list){
-                            if (StringUtils.isNotBlank(vo.getClient())){
-                                vo.setClient(map.get(vo.getClient()));
-                            }
+            if (!CollectionUtils.isEmpty(list)) {
+                Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                if (!CollectionUtils.isEmpty(map)){
+                    for (HjhAccedeCustomizeVO vo : list){
+                        if (StringUtils.isNotBlank(vo.getClient())){
+                            vo.setClient(map.get(vo.getClient()));
                         }
                     }
                 }
@@ -1568,14 +1577,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             totalAccount = amTradeClient.sumUndertakeAccount(borrowNid);
             List<ProjectUndertakeListVO> list = amTradeClient.selectProjectUndertakeList(params);
             // 查询redis，转化client属性，
-            if (!CollectionUtils.isEmpty(list)){
-                if (!CollectionUtils.isEmpty(list)) {
-                    Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
-                    if (!CollectionUtils.isEmpty(map)){
-                        for (ProjectUndertakeListVO vo : list){
-                            if (StringUtils.isNotBlank(vo.getClient())){
-                                vo.setClient(map.get(vo.getClient()));
-                            }
+            if (!CollectionUtils.isEmpty(list)) {
+                Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                if (!CollectionUtils.isEmpty(map)){
+                    for (ProjectUndertakeListVO vo : list){
+                        if (StringUtils.isNotBlank(vo.getClient())){
+                            vo.setClient(map.get(vo.getClient()));
                         }
                     }
                 }

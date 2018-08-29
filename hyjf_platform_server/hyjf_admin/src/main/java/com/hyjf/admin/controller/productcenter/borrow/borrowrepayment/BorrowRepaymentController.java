@@ -22,6 +22,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -38,6 +40,7 @@ import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -68,7 +71,7 @@ public class BorrowRepaymentController extends BaseController {
         BorrowRepaymentRequest copyForm=new BorrowRepaymentRequest();
         BeanUtils.copyProperties(form, copyForm);
         BorrowRepaymentBean bean = borrowRepaymentService.searchBorrowRepayment(copyForm);
-        List<DropDownVO> repayTypeList = this.adminCommonService.selectBorrowStyleList();
+        List<DropDownVO> repayTypeList =  this.adminCommonService.selectBorrowStyleList();
         bean.setRepayTypeList(repayTypeList);
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.borrowRepaymentService.selectHjhInstConfigByInstCode("-1");
@@ -88,9 +91,10 @@ public class BorrowRepaymentController extends BaseController {
     @ApiOperation(value = "延期画面初始化", notes = "延期页面查询初始化")
     @PostMapping(value = "/initDelayRepayAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<DelayRepayInfoBean> initDelayRepayAction(HttpServletRequest request, @PathVariable  String borrowNid) {
-        DelayRepayInfoBean bean= new DelayRepayInfoBean();
-        bean=borrowRepaymentService.getDelayRepayInfo(borrowNid);
+    @ApiImplicitParam(name = "borrowNid",value = "项目编号")
+    public AdminResult<DelayRepayInfoBean> initDelayRepayAction(HttpServletRequest request,@RequestBody Map map) {
+        String borrowNid = (String) map.get("borrowNid");
+        DelayRepayInfoBean bean=borrowRepaymentService.getDelayRepayInfo(borrowNid);
         AdminResult<DelayRepayInfoBean> result=new AdminResult<DelayRepayInfoBean> ();
         result.setData(bean);
         return result;
@@ -105,7 +109,15 @@ public class BorrowRepaymentController extends BaseController {
     @ApiOperation(value = "延期", notes = "延期")
     @PostMapping(value = "/delayRepayAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult<DelayRepayInfoBean> delayRepayAction(HttpServletRequest request, @PathVariable  String borrowNid,@PathVariable  String delayDays,@PathVariable  String repayTime) {
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "borrowNid",value = "项目编号"),
+            @ApiImplicitParam(name = "delayDays",value = "延期天数"),
+            @ApiImplicitParam(name = "repayTime",value = "放款时间")
+    })
+    public AdminResult<DelayRepayInfoBean> delayRepayAction(HttpServletRequest request ,@RequestBody Map map) {
+        String borrowNid = (String) map.get("borrowNid");
+        String delayDays = (String) map.get("delayDays");
+        String repayTime = (String) map.get("repayTime");
         DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
         AdminResult<DelayRepayInfoBean>  result=new AdminResult<DelayRepayInfoBean> ();
         result.setData(bean);

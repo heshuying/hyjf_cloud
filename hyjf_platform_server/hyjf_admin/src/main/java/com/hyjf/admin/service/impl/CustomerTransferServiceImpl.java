@@ -5,12 +5,14 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.MailProducer;
 import com.hyjf.admin.mq.base.MessageContent;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
@@ -25,7 +27,9 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +60,9 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     @Autowired
     MailProducer mailProducer;
 
+    @Autowired
+    private AdminCommonService adminCommonService;
+
     /**
      * 根据筛选条件查询Transfer列表
      *
@@ -77,7 +84,24 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      */
     @Override
     public List<UserTransferVO> searchUserTransferList(CustomerTransferListRequest request) {
-        return amTradeClient.searchUserTransferList(request);
+        List<UserTransferVO> userTransferVOList = amTradeClient.searchUserTransferList(request);
+        for(UserTransferVO userTransferVO:userTransferVOList){
+            List<DropDownVO> status = adminCommonService.getParamNameList("TRANSFER_STATUS");
+            for(DropDownVO dropDownVO:status){
+                if(dropDownVO.getKey().equals(String.valueOf(userTransferVO.getStatus()))){
+                    userTransferVO.setStatusStr(dropDownVO.getValue());
+                }
+            }
+            List<DropDownVO> types = adminCommonService.getParamNameList("TRANSFER_TYPE");
+            for(DropDownVO type:types){
+                if(type.getKey().equals(String.valueOf(userTransferVO.getTransferType()))){
+                    userTransferVO.setTransferTypeStr(type.getValue());
+                }
+            }
+            userTransferVO.setCreateTimeStr(GetDate.dateToString(userTransferVO.getCreateTime()));
+            userTransferVO.setUpdateTimeStr(GetDate.dateToString(userTransferVO.getUpdateTime()));
+        }
+        return userTransferVOList;
     }
 
     /**
@@ -104,8 +128,8 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     public JSONObject searchBalanceByUsername(String userName) {
         JSONObject jsonObject = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
-        logger.info("admin 项目 查询出来的userList.size=[{}]", userVOList.size());
         if (userVOList != null && userVOList.size() == 1) {
+            logger.info("admin 项目 查询出来的userList.size=[{}]", userVOList.size());
             UserVO userVO = userVOList.get(0);
             List<AccountChinapnrVO> accountChinapnrVOList = amUserClient.searchAccountChinapnrByUserId(userVO.getUserId());
             if (accountChinapnrVOList != null && accountChinapnrVOList.size() == 1) {
@@ -115,16 +139,13 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
                     jsonObject.put("status", "0");
                     jsonObject.put("result", accountVO.getBalance().toString());
                 } else {
-                    jsonObject.put("status", "error");
-                    jsonObject.put("result", "未查询到正确的余额信息");
+                    throw new ReturnMessageException(MsgEnum.ERR_AMT_MONEY);
                 }
             } else {
-                jsonObject.put("status", "error");
-                jsonObject.put("result", "用户未开户，无法转账");
+                throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
             }
         } else {
-            jsonObject.put("status", "error");
-            jsonObject.put("result", "未查询到正确的用户信息");
+            throw new ReturnMessageException(MsgEnum.STATUS_ZT000001);
         }
         return jsonObject;
     }

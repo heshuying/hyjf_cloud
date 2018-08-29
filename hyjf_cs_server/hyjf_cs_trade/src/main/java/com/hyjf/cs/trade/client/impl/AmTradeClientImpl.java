@@ -1692,9 +1692,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowTenderResult/" + userId + "/" + logOrdId + "/" + borrowNid;
-        String response = restTemplate.getForEntity(url, String.class).getBody();
-        if (response != null) {
-            return response;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultStr();
         }
         return null;
     }
@@ -3894,13 +3894,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getCommisionConfig(HashMap map) {
-        Integer result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateCalculateInvestByPrimaryKey/", map,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
+        IntegerResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/planLockQuit/getCommisionConfig/", map,
+                IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt();
         }
-        return result;
+        return null;
     }
 
     /**

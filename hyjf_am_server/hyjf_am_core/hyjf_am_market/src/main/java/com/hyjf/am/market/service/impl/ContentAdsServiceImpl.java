@@ -51,9 +51,22 @@ public class ContentAdsServiceImpl implements ContentAdsService {
         int count = countRecordList(request);
         response.setCount(count);
         if(count > 0){
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
             List<Ads> asdList = getRecordList(request,paginator.getOffset(), paginator.getLimit());
+            // 获取广告类型列表
+            List<AdsType> adsTypeList = getAdsTypeList();
             List<AdsVO> recordList = CommonUtils.convertBeanList(asdList, AdsVO.class);
+
+            for(AdsVO dto : recordList){
+
+                for(AdsType adsType : adsTypeList){
+
+                    if(dto.getTypeId().intValue() == adsType.getTypeId().intValue()){
+                        dto.setTypeName(adsType.getTypeName());
+                    }
+                }
+            }
+
             contentAdsBeanVO.setRecordList(recordList);
 
 //            List<AdsTypeVO> towList = CommonUtils.convertBeanList(asdList, AdsTypeVO.class);
