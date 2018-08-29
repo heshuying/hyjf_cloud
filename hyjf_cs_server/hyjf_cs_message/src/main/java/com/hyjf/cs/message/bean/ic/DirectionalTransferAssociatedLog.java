@@ -1,12 +1,20 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
 package com.hyjf.cs.message.bean.ic;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+/**
+ * @author: sunpeikai
+ * @version: DirectionalTransferAssociatedLog, v0.1 2018/8/29 19:30
+ */
+@Document(collection = "ht_directional_transfer_associated_log")
+public class DirectionalTransferAssociatedLog implements Serializable {
 
-@Document(collection = "ht_directional_transfer_associated_records")
-public class DirectionalTransferAssociatedRecords implements Serializable {
     private Integer id;
 
     private String turnOutUsername;
@@ -28,6 +36,8 @@ public class DirectionalTransferAssociatedRecords implements Serializable {
     private Integer associatedState;
 
     private Date associatedTime;
+
+    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -117,5 +127,13 @@ public class DirectionalTransferAssociatedRecords implements Serializable {
 
     public void setAssociatedTime(Date associatedTime) {
         this.associatedTime = associatedTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }
