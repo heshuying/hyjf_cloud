@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
@@ -54,7 +55,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
 	public List<EventVO> getEventsList() {
 		EventResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/content/contentevent/searchaction", null, EventResponse.class);
+				"http://AM-CONFIG/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}

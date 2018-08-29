@@ -4,7 +4,10 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,6 +20,9 @@ public class HandleAccountRechargeRequest {
     // 银行返回错误代码对应的错误信息
     private String errorMsg;
     private String ip;
+    private Map<String, String> params = new HashMap<String, String>();
+    private UserVO userVO;
+    private UserInfoVO userInfoVO;
 
     public BankCallBeanVO getBankCallBeanVO() {
         return bankCallBeanVO;
@@ -42,4 +48,27 @@ public class HandleAccountRechargeRequest {
         this.ip = ip;
     }
 
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
+
+    public UserVO getUserVO() {
+        return userVO;
+    }
+
+    public void setUserVO(UserVO userVO) {
+        this.userVO = userVO;
+    }
+
+    public UserInfoVO getUserInfoVO() {
+        return userInfoVO;
+    }
+
+    public void setUserInfoVO(UserInfoVO userInfoVO) {
+        this.userInfoVO = userInfoVO;
+    }
 }

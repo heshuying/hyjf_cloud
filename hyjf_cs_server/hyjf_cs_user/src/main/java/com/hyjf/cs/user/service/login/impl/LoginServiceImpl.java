@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
@@ -24,9 +25,9 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
-import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -313,9 +310,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
 			result.setUserType(String.valueOf(user.getUserType()));
 			if ("0".equals(result.getSetupPassword())) {
-				result.setChangeTradePasswordUrl(apphost + ClientConstants.SETPASSWORD_ACTION + packageStr(request));
+				//设置交易密码
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost()  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStrForm(request));
 			} else {
-				result.setChangeTradePasswordUrl(apphost + ClientConstants.RESETPASSWORD_ACTION + packageStr(request));
+				//重置交易密码
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStrForm(request));
 			}
 
 			iconUrl = user.getIconUrl();
@@ -558,14 +557,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStr(request));
 			}
 		}
 		{
@@ -748,7 +747,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 自动投标授权URL
 			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ BaseDefine.REQUEST_HOME + ClientConstants.USER_AUTH_INVES_ACTION + ".do?1=1"));
+					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?1=1"));
 			// 缴费授权Url
 			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
@@ -797,6 +796,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		sbUrl.append("&").append("order").append("=").append(strEncode(order));
 		return sbUrl.toString();
 	}
+
+    private String packageStrForm(HttpServletRequest request) {
+        StringBuffer sbUrl = new StringBuffer();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        sbUrl.append("&").append("version").append("=").append(version);
+        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+        sbUrl.append("&").append("platform").append("=").append(platform);
+        sbUrl.append("&").append("randomString").append("=").append(randomString);
+        sbUrl.append("&").append("sign").append("=").append(sign);
+        sbUrl.append("&").append("token").append("=").append(strEncode(token));
+        sbUrl.append("&").append("order").append("=").append(strEncode(order));
+        return sbUrl.toString();
+    }
 
 	/**
 	 * 检查是否是新手(未登录或已登录未投资)

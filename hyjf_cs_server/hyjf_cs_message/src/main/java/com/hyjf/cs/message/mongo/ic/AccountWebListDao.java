@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 
@@ -85,11 +86,11 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
             }
             if (StringUtils.isNotBlank(accountWebList.getStartDate())){
                 Integer begin = GetDate.dateString2Timestamp(accountWebList.getStartDate());
-                criteria = criteria.and("createTime").gte(begin);
+                criteria = criteria.and("createStartTime").gte(begin);
             }
             if (StringUtils.isNotBlank(accountWebList.getEndDate())){
                 Integer end = GetDate.dateString2Timestamp(accountWebList.getEndDate());
-                criteria = criteria.and("createTime").lte(end);
+                criteria = criteria.and("createEndTime").lte(end);
             }
             return criteria;
         }
@@ -100,12 +101,12 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         int total = 0;
         Aggregation aggregation = Aggregation.newAggregation(
                 match(createCriteria(accountWebList)),
-                Aggregation.group("id").sum("amount").as("account")
+                Aggregation.group("id").sum("amount").as("amount")
         );
-        AggregationResults<Integer> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Integer.class);
-        List<Integer> list = ar.getMappedResults();
-        if(list.size() > 0){
-            total += list.get(0);
+        AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
+        List<Map> result = ar.getMappedResults();
+        for (Map<String,Object> map :result) {
+            total += Integer.parseInt(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
         }
         return total;
     }

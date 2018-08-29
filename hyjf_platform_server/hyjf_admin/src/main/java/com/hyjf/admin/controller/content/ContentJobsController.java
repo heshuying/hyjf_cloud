@@ -3,20 +3,16 @@
  */
 package com.hyjf.admin.controller.content;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ContentJobService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.JobResponse;
-import com.hyjf.am.vo.config.JobsVo;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fuqiang
@@ -31,7 +27,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "公司管理-招贤纳士列表查询", notes = "公司管理-招贤纳士列表查询")
 	@PostMapping("/searchaction")
-	public AdminResult<ListResult<JobsVo>> searchAction(@RequestBody ContentJobRequestBean requestBean) {
+	public AdminResult searchAction(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.searchAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -39,58 +35,46 @@ public class ContentJobsController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult(response);
 	}
 
 	@ApiOperation(value = "添加公司管理-招贤纳士", notes = "添加公司管理-招贤纳士")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentJobRequestBean requestBean) {
-		JobResponse response = contentPartnerService.insertAction(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.insertAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentJobRequestBean requestBean) {
-		JobResponse response = contentPartnerService.updateAction(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.updateAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentJobRequestBean requestBean) {
-		JobResponse response = contentPartnerService.updateStatus(requestBean);
-		if (response == null) {
+		int num = contentPartnerService.updateStatus(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "删除公司管理-招贤纳士", notes = "删除公司管理-招贤纳士")
 	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
-		JobResponse response = contentPartnerService.deleteById(id);
-		if (response == null) {
+		int num = contentPartnerService.deleteById(id);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 }

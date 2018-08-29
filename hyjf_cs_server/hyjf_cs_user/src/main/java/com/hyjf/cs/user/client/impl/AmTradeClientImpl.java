@@ -694,7 +694,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 更新充值的相关信息
+     * 更新充值的相关信息(接口调用)
      * @auth sunpeikai
      * @param
      * @return
@@ -702,6 +702,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String handleRechargeInfo(HandleAccountRechargeRequest request) {
         String url = tradeService + "/trade/handleRechargeInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeOnlineInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeOnlineInfo";
         StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultStr();

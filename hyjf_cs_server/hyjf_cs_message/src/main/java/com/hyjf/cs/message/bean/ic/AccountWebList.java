@@ -1,9 +1,8 @@
 package com.hyjf.cs.message.bean.ic;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
 
 /**
  * @author xiasq
@@ -17,7 +16,7 @@ public class AccountWebList implements Serializable {
 
     private String borrowNid;
 
-    private BigDecimal amount;
+    private Double amount;
 
     private Integer type;
 
@@ -41,7 +40,9 @@ public class AccountWebList implements Serializable {
 
     private String note;
 
-    private Integer createTime;
+    private Integer createStartTime;
+
+    private Integer createEndTime;
 
     private String operator;
 
@@ -81,11 +82,11 @@ public class AccountWebList implements Serializable {
         this.borrowNid = borrowNid;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -177,12 +178,20 @@ public class AccountWebList implements Serializable {
         this.note = note;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
+    public Integer getCreateStartTime() {
+        return createStartTime;
     }
 
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
+    public void setCreateStartTime(Integer createStartTime) {
+        this.createStartTime = createStartTime;
+    }
+
+    public Integer getCreateEndTime() {
+        return createEndTime;
+    }
+
+    public void setCreateEndTime(Integer createEndTime) {
+        this.createEndTime = createEndTime;
     }
 
     public String getOperator() {
