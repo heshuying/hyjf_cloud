@@ -65,6 +65,9 @@ public class BorrowCreditTenderVO extends BaseVO implements Serializable {
     /*承接平台*/
     private String client;
 
+    /*原来承接订单号*/
+    private String creditTenderNid;
+
     public String getUserId() {
         return userId;
     }
@@ -207,5 +210,13 @@ public class BorrowCreditTenderVO extends BaseVO implements Serializable {
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public String getCreditTenderNid() {
+        return creditTenderNid;
+    }
+
+    public void setCreditTenderNid(String creditTenderNid) {
+        this.creditTenderNid = creditTenderNid;
     }
 }

@@ -1,21 +1,13 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade.hjh;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
- * @author PC-LIUSHOUYI
- * @version HjhRepayVO, v0.1 2018/6/26 10:02
+ * ht_hjh_repay 自定义实体
+ * @Author : huanghui
  */
-public class HjhRepayVO extends BaseVO implements Serializable {
-
-    private static final long serialVersionUID = -4055933025341268189L;
+public class HjhRepayCustomize implements Serializable {
 
     private Integer id;
 

@@ -177,7 +177,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public int insertBeforeTender(TenderRequest tenderRequest) {
-        Integer userId = tenderRequest.getUser().getUserId();
+        Integer userId = tenderRequest.getUserId();
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
         temp.setBorrowNid(tenderRequest.getBorrowNid());
@@ -206,9 +206,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (couponGrantId==null) {
             couponGrantId = 0;
         }
-        temp.setCouponGrantId(couponGrantId);// 为投资完全掉单优惠券投资时修复做记录
+        // 为投资完全掉单优惠券投资时修复做记录
+        temp.setCouponGrantId(couponGrantId);
+        logger.info("开始插入temp表");
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
+            logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
         }
         BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
@@ -225,6 +228,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         info.setTmpArray(array);
         Boolean tenderTmpInfoFlag = borrowTenderTmpinfoMapper.insertSelective(info) > 0 ? true : false;
         if (!tenderTmpInfoFlag) {
+            logger.error("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
             throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
         }
         return 1;

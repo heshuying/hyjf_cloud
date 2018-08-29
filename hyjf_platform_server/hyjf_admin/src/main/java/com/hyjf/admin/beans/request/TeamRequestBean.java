@@ -3,17 +3,23 @@
  */
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 /**
  * @author fuqiang
  * @version TeamRequestBean, v0.1 2018/7/11 16:37
  */
-public class TeamRequestBean {
+public class TeamRequestBean extends BasePage {
 	private Integer id;
-
+	@ApiModelProperty(value = "姓名")
 	private String name;
-
+	@ApiModelProperty(value = "职位")
 	private String position;
-
+	@ApiModelProperty(value = "状态 0:关闭 1:启用")
 	private String imgurl;
 
 	private String imgappurl;
@@ -111,23 +117,27 @@ public class TeamRequestBean {
 	}
 
 	/** 开始时间 */
-	private String startTime;
+	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startTime;
 	/** 结束时间 */
-	private String endTime;
+	@ApiModelProperty(value = "结束时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endTime;
 
-	public String getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 }

@@ -4,6 +4,8 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,21 +15,21 @@ import java.util.Date;
  */
 public class EventRequestBean extends BaseRequest {
 	private Integer id;
-
+    @ApiModelProperty(value = "记事时间")
 	private String eventTime;
-
+	@ApiModelProperty(value = "记事标题")
 	private String title;
-
+	@ApiModelProperty(value = "记事内容")
 	private String content;
-
+	@ApiModelProperty(value = "记事年份")
 	private Integer eventYear;
-
+	@ApiModelProperty(value = "状态 0:关闭 1:启用")
 	private Integer status;
 
 	private String addAdmin;
 
 	private Integer actTime;
-
+	@ApiModelProperty(value = "上传图片路径")
 	private String thumb;
 
 	private Integer createUserId;
@@ -145,23 +147,27 @@ public class EventRequestBean extends BaseRequest {
 	}
 
 	/** 开始时间 */
-	private String startTime;
+	@ApiModelProperty(value = "开始时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startTime;
 	/** 结束时间 */
-	private String endTime;
+	@ApiModelProperty(value = "结束时间")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endTime;
 
-	public String getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 }
