@@ -105,8 +105,7 @@ public class BorrowTenderController extends BaseTradeController {
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
         logger.info("web端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")

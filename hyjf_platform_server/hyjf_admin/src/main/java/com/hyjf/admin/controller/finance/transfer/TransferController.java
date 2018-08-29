@@ -151,7 +151,7 @@ public class TransferController extends BaseController {
      * @return
      */
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "map", value = "id:转账记录id", required = true, dataType = "Map"),
     })
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
