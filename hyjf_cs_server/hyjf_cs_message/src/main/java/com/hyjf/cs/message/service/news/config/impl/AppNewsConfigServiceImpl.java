@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.service.news.config.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.service.news.config.AppNewsConfigService;
@@ -19,7 +20,7 @@ public class AppNewsConfigServiceImpl implements AppNewsConfigService {
     private AmConfigClient amConfigClient;
 
     @Override
-    public int updateAppNewsConfig(UserVO users) {
+    public IntegerResponse updateAppNewsConfig(UserVO users) {
         return amConfigClient.updateAppNewsConfig(users);
     }
 }
