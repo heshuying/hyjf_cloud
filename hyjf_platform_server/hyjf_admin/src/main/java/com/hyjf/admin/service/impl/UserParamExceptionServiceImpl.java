@@ -72,7 +72,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                     if (userInfo.getAttribute() != 2 && userInfo.getAttribute() != 3) {
                         SpreadsUserVO spreadsUserVO = amUserClient.searchSpreadsUserByUserId(userId);
                         if (null != spreadsUserVO && null != spreadsUserVO.getSpreadsUserId()) {
-                            UserInfoVO parentInfo = amUserClient.selectUsersInfoByUserId(spreadsUserVO.getSpreadsUserId());
+                            UserInfoVO parentInfo =  amUserClient.findUserInfoById(spreadsUserVO.getSpreadsUserId());
                             if (null != parentInfo) {
                                 // 如果该用户的上级不为空
                                 if (Validator.isNotNull(parentInfo) && Validator.isNotNull(parentInfo.getAttribute())) {
