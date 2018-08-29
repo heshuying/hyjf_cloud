@@ -25,7 +25,7 @@ public interface ContentJobService {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse insertAction(ContentJobRequestBean requestBean);
+	int insertAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-招贤纳士
@@ -33,7 +33,7 @@ public interface ContentJobService {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse updateAction(ContentJobRequestBean requestBean);
+	int updateAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-招贤纳士状态
@@ -41,7 +41,7 @@ public interface ContentJobService {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse updateStatus(ContentJobRequestBean requestBean);
+	int updateStatus(ContentJobRequestBean requestBean);
 
 	/**
 	 * 根据id删除招贤纳士
@@ -49,5 +49,5 @@ public interface ContentJobService {
 	 * @param id
 	 * @return
 	 */
-    JobResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

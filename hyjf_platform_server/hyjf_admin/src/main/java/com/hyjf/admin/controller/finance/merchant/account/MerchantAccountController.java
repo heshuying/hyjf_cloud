@@ -45,12 +45,12 @@ public class MerchantAccountController extends BaseController {
         //查询商户配置表相应的账户配置
         MerchantAccountResponse merchantAccounts = merchantAccountService.selectRecordList(request);
         if(merchantAccounts == null||merchantAccounts.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>();
         }
         //更新商户子账户的金额信息
         boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
         if(!flag){
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>();
         }
         if (!Response.isSuccess(merchantAccounts)) {
             return new AdminResult<>(FAIL, merchantAccounts.getMessage());

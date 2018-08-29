@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.resquest.admin.JobRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -26,14 +26,14 @@ public interface JobService {
 	 *
 	 * @param request
 	 */
-	void insertAction(JobRequest request);
+	int insertAction(JobRequest request);
 
 	/**
 	 * 修改公司管理-招贤纳士
 	 *
 	 * @param request
 	 */
-	void updateAction(JobRequest request);
+	int updateAction(JobRequest request);
 
 	/**
 	 * 根据id查询公司管理-招贤纳士
@@ -42,4 +42,18 @@ public interface JobService {
 	 * @return
 	 */
 	Job getRecord(Integer id);
+
+	/**
+	 *查询满足条件的件数
+	 * @param request
+	 * @return
+	 */
+    int selectCount(JobRequest request);
+
+	/**
+	 * 根据id删除
+	 * @param id
+	 * @return
+	 */
+	int delete(Integer id);
 }

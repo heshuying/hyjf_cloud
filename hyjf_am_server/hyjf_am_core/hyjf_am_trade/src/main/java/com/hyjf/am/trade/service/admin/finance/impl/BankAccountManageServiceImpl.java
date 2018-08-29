@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -505,13 +506,20 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
         // 部门
-        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeSrch())) {
-            if (bankAccountManageRequest.getCombotreeSrch().contains(StringPool.COMMA)) {
-                String[] list = bankAccountManageRequest.getCombotreeSrch().split(StringPool.COMMA);
-                bankAccountManageRequest.setCombotreeListSrch(list);
-            } else {
-                bankAccountManageRequest.setCombotreeListSrch(new String[]{bankAccountManageRequest.getCombotreeSrch()});
+        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeListSrch())) {
+
+            String[] combotreeListSrch = bankAccountManageRequest.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
+
+                //将-10086转换为 0 , 0=部门为 ‘其他’
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
+                    if (("-10086").equals(st)) {
+                        combotreeListSrch[i] = "0";
+                    }
+                }
             }
+            bankAccountManageRequest.setCombotreeListSrch(combotreeListSrch);
         }
         Integer accountCount = null;
 
@@ -528,39 +536,25 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      */
     @Override
     public List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-
         // 部门
-        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeSrch())) {
-            if (bankAccountManageRequest.getCombotreeSrch().contains(StringPool.COMMA)) {
-                String[] list = bankAccountManageRequest.getCombotreeSrch().split(StringPool.COMMA);
-                bankAccountManageRequest.setCombotreeListSrch(list);
-            } else {
-                bankAccountManageRequest.setCombotreeListSrch(new String[]{bankAccountManageRequest.getCombotreeSrch()});
+        if (Validator.isNotNull(bankAccountManageRequest.getCombotreeListSrch())) {
+
+            String[] combotreeListSrch = bankAccountManageRequest.getCombotreeListSrch();
+            if (Arrays.asList(combotreeListSrch).contains("-10086")) {
+
+                //将-10086转换为 0 , 0=部门为 ‘其他’
+                for (int i = 0; i < combotreeListSrch.length; i++) {
+                    String st = combotreeListSrch[i];
+                    if (("-10086").equals(st)) {
+                        combotreeListSrch[i] = "0";
+                    }
+                }
             }
+            bankAccountManageRequest.setCombotreeListSrch(combotreeListSrch);
         }
 
-        // 为了优化检索查询，判断参数是否全为空，为空不进行带join count
-        if (checkFormAllBlank(bankAccountManageRequest)) {
-            bankAccountManageRequest.setInitQuery(1);
-        }
         List<BankAccountManageCustomize> accountInfos = bankAccountManageCustomizeMapper.queryAccountInfos(bankAccountManageRequest);
         return accountInfos;
-    }
-
-    /**
-     * 判断查询条件是否为空
-     *
-     * @param bankAccountManageRequest
-     * @return
-     */
-    private boolean checkFormAllBlank(BankAccountManageRequest bankAccountManageRequest) {
-        if (StringUtils.isBlank(bankAccountManageRequest.getUserNameSrch())
-                && StringUtils.isBlank(bankAccountManageRequest.getCombotreeSrch())
-                && StringUtils.isBlank(bankAccountManageRequest.getAccountSrch())
-                && StringUtils.isBlank(bankAccountManageRequest.getVipSrch())) {
-            return true;
-        }
-        return false;
     }
 
     /**

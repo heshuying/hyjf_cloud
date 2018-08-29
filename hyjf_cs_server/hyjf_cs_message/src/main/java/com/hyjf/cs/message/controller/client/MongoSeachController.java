@@ -153,8 +153,8 @@ public class MongoSeachController extends BaseController {
     public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         List<AccountWebList> recordList = accountWebListDao.queryAccountWebList(accountWebList);
+        int recordTotal = recordList.size();
         if (null != recordList) {
-            int recordTotal = recordList.size();
             if (recordTotal > 0) {
                 Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
                 int end = 0;
@@ -166,17 +166,17 @@ public class MongoSeachController extends BaseController {
                 List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), end);
                 List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList2, AccountWebListVO.class);
                 response.setResultList(voList);
-                response.setRecordTotal(recordTotal);
-                response.setRtn(Response.SUCCESS);
             }
         }
+        response.setRecordTotal(recordTotal);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList){
         int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
-        DecimalFormat df = new DecimalFormat("0#.00");
+        DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(total);
     }
 

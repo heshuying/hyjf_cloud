@@ -82,6 +82,7 @@ public class WebsiteController extends BaseController {
         if(response == null||response.getRecordTotal()==0) {
             sumAccount = "0.00";
         }
+        websiteResponse.setTotal(response.getRecordTotal());
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
         websiteResponse.setAccountWebList(response.getResultList());
@@ -105,13 +106,14 @@ public class WebsiteController extends BaseController {
         List<AccountTradeVO> trades= this.websiteService.selectTradeTypes();
         AccountWebListResponse response = websiteService.queryAccountWebList(accountWebList);
         if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
+            return new AdminResult<>();
         }
         //交易金额总计
         String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            sumAccount = "0.00";
         }
+        websiteResponse.setTotal(response.getRecordTotal());
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
         websiteResponse.setAccountWebList(response.getResultList());
