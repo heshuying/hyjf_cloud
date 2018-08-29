@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.trade;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -115,7 +116,7 @@ public class BankReturnCodeConfigVO extends BaseVO implements Serializable  {
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -139,7 +140,7 @@ public class BankReturnCodeConfigVO extends BaseVO implements Serializable  {
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
