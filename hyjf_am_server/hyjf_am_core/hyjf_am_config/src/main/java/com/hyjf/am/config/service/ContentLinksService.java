@@ -13,6 +13,14 @@ import java.util.List;
  * @version ContentLinksService, v0.1 2018/7/14 14:30
  */
 public interface ContentLinksService {
+
+    /**
+     * 获取文章列表列表
+     *
+     * @return
+     */
+    List<Link> getRecordList(ContentLinksRequest bean, int limitStart, int limitEnd);
+
     /**
      * 根据条件查询友情链接
      *

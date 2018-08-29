@@ -1710,13 +1710,16 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
+    public List<LinkVO> searchActions(ContentLinksRequest requestBean) {
+        LinkResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
                 LinkResponse.class);
+        response.getResultList();
+
+        return response.getResultList();
     }
 
     @Override
-    public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse insertActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
                 LinkResponse.class);
     }
@@ -1728,7 +1731,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
+    public LinkResponse updateActions(ContentLinksRequest requestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
                 LinkResponse.class);
     }
