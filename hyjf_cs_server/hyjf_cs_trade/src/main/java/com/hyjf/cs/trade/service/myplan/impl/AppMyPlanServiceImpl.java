@@ -78,7 +78,6 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
      */
     @Override
     public MyPlanDetailResultBean getMyPlanDetail(Integer couponType, String type, String orderId, HttpServletRequest request,String userId) {
-        userId = "5307";
         MyPlanDetailResultBean result = new MyPlanDetailResultBean();
 
         logger.info("request params: orderId is: {}, couponType is: {}", orderId, couponType);
