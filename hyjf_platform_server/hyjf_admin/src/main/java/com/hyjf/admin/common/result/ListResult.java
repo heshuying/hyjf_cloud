@@ -30,6 +30,14 @@ public class ListResult<T> {
         return result;
     }
 
+    public static <T> ListResult<T> build2(List<T> list, int count, T data) {
+        ListResult<T> result = new ListResult<>();
+        result.setCount(count);
+        result.setList(list);
+        result.setData(data);
+        return result;
+    }
+
     public List<T> getList() {
         return list;
     }
