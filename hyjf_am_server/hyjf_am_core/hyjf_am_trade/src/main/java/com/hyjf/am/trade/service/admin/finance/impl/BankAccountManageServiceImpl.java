@@ -55,6 +55,12 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     @Value("hyjf.bank.bankcode")
     private String bankBankCode;
 
+    /**
+     * 更新账户余额
+     *
+     * @param accountVO
+     * @return
+     */
     @Override
     public Integer updateAccount(AccountVO accountVO) {
         Account account = new Account();

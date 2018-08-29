@@ -101,7 +101,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchProjectList(ProjectListRequest request) {
-        // 参数验证 略
+        BorrowProjectListBean resultBean = new BorrowProjectListBean();
 
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
@@ -118,7 +118,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
-        webResult.setData(new ArrayList<>());
+        resultBean.setList(new ArrayList<>());
+        resultBean.setNowTime(GetDate.getNowTime10());
         if (count > 0) {
             List<WebProjectListCsVO> result = new ArrayList<>();
             List<WebProjectListCustomizeVO> list = amTradeClient.searchProjectList(request);
@@ -127,8 +128,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 throw new RuntimeException("查询散标投资列表原子层list数据异常");
             }
             result = CommonUtils.convertBeanList(list, WebProjectListCsVO.class);
-            webResult.setData(result);
+            resultBean.setList(result);
         }
+        webResult.setData(resultBean);
         webResult.setPage(page);
         return webResult;
 
