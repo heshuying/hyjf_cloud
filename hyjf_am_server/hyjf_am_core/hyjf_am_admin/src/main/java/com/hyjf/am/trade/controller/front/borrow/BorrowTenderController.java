@@ -23,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -308,7 +309,7 @@ public class BorrowTenderController extends BaseController {
      * @param repairEndDate
      * @return
      */
-    @GetMapping("/selectBorrowTenderListByDate/{repairStartDate}/{repairStartDate}")
+    @GetMapping("/selectBorrowTenderListByDate/{repairStartDate}/{repairEndDate}")
     public BorrowTenderResponse selectBorrowTenderListByDate(@PathVariable String repairStartDate, @PathVariable String repairEndDate){
         BorrowTenderResponse response = new BorrowTenderResponse();
         response.setRtn(Response.FAIL);

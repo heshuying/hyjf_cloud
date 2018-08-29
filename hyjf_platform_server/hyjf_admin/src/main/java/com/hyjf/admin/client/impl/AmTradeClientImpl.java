@@ -4902,7 +4902,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
         HjhInstConfigResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode" + instcode,
+                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode/" + instcode,
                 HjhInstConfigResponse.class);
         if (response != null) {
             return response.getResult();
@@ -5798,7 +5798,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate){
-        String url = tradeService + "/borrowTender/selectBorrowTenderListByDate/"+repairStartDate+"/"+repairEndDate;
+//        String url = tradeService + "/borrowTender/selectBorrowTenderListByDate/"+repairStartDate+"/"+repairEndDate;
+        String url = "http://AM-ADMIN/am-trade/borrowTender/selectBorrowTenderListByDate/"+repairStartDate+"/"+repairEndDate;
         BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -5812,9 +5813,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Boolean updateBorrowTender(BorrowTenderUpdRequest request){
-        String url = tradeService + "/borrowTender/updateBorrowTender";
-        Boolean response = restTemplate.getForEntity(url, Boolean.class).getBody();
-        return response;
+//        String url = tradeService + "/borrowTender/updateBorrowTender";
+        String url = "http://AM-ADMIN/am-trade/borrowTender/updateBorrowTender";
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
     }
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
