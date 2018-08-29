@@ -154,4 +154,19 @@ public class HjhRepayController {
         }
         return response;
     }
+
+    @RequestMapping(value = "/hjhRepaymentDetails/{accedeOrderId}")
+    public HjhRepayResponse hjhRepaymentDetails(@PathVariable String accedeOrderId){
+        HjhRepayResponse response = new HjhRepayResponse();
+
+        String returnCode = Response.FAIL;
+
+        List<HjhRepayVO> hjhRepayMentDetailList = hjhRepayService.selectByAccedeOrderId(accedeOrderId);
+
+        if (!CollectionUtils.isEmpty(hjhRepayMentDetailList)){
+            List<HjhRepayVO> hjhRepayMentDetailVoList = CommonUtils.convertBeanList(hjhRepayMentDetailList, HjhRepayVO.class);
+            response.setResultList(hjhRepayMentDetailVoList);
+        }
+        return  response;
+    }
 }
