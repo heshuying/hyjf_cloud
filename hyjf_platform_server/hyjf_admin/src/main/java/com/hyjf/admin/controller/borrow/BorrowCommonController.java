@@ -50,7 +50,7 @@ import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
@@ -1685,6 +1685,7 @@ public class BorrowCommonController extends BaseController {
 	@PostMapping("/selectBorrowStyleList")
     public AdminResult<BorrowCustomizeResponse>  init(@RequestBody @Valid BorrowBeanRequest form) {
 		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
+
 		if(bcr==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -1692,7 +1693,17 @@ public class BorrowCommonController extends BaseController {
 			return new AdminResult<>(FAIL, bcr.getMessage());
 
 		}
+		List<BorrowCustomizeVO> vo = bcr.getResultList();
+		List<BorrowCustomizeVO> vo2=new ArrayList<BorrowCustomizeVO>();
+		Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
+		for (BorrowCustomizeVO borrowCustomizeVO : vo) {
+			BorrowCustomizeVO bvo=new BorrowCustomizeVO();
+			bvo=borrowCustomizeVO;
+			bvo.setStatus(map.get(bvo.getStatus()));
+			vo2.add(bvo);
+		}
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
+		bcr.setResultList(vo2);
 		return new AdminResult<BorrowCustomizeResponse>(bcr);
     }
 	/**
