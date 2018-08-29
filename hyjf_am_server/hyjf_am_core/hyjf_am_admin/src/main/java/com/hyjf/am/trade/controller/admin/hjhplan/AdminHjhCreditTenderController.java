@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
+import com.hyjf.am.response.admin.HjhCreditTenderSumResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 import io.swagger.annotations.Api;
@@ -99,5 +101,21 @@ public class AdminHjhCreditTenderController {
         }
         return response;
 	}
+	
+	/**
+	* @Author: libin
+	* @Desc :根据参数获取 HjhCreditTenderSumVO
+	*/
+    @RequestMapping(value = "/getHjhCreditTenderCalcSumByParam", method = RequestMethod.POST)
+    public HjhCreditTenderSumResponse getHjhCreditTenderCalcSumByParam(@RequestBody @Valid HjhCreditTenderRequest request) {
+    	HjhCreditTenderSumResponse response = new HjhCreditTenderSumResponse();
+    	HjhCreditTenderSumVO vo = adminHjhCreditTenderService.getHjhCreditTenderCalcSumByParam(request);
+    	if(vo != null){
+            response.setResult(vo);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+    	}
+    	return response;
+    }
 	
 }

@@ -1,14 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.controller.admin.extensioncenter;
+package com.hyjf.am.trade.controller.admin.extensioncenter;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUtmReadPermissionsService;
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
-import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import io.swagger.annotations.Api;
@@ -25,7 +23,7 @@ import javax.annotation.Resource;
  */
 @Api(value = "渠道帐号管理")
 @RestController
-@RequestMapping("/am-config/extensioncenter/adminutmreadpermissions")
+@RequestMapping("/am-admin/extensioncenter/adminutmreadpermissions")
 public class AdminUtmReadPermissionsController extends BaseConfigController {
 	private Logger logger = LoggerFactory.getLogger(AdminUtmReadPermissionsController.class);
 	@Resource

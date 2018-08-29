@@ -1,10 +1,5 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -12,6 +7,11 @@ import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author pangchengchao
@@ -91,35 +91,43 @@ public interface BorrowCustomizeMapper {
      * @Description  获取待复审项目借款列表add by liushouyi
      * @Date 14:35 2018/7/13
      * @Param
-     * @return 
+     * @return
      */
     List<BorrowWithBLOBs> selectAutoReviewHJHBorrowNidList();
     /**
      * 借款预编码
-     * 
+     *
      * @param borrowCustomize
      * @return
      */
     String getBorrowPreNid(@Param("mmdd") String mmdd);
 
-      /**
-       * 现金贷获取借款预编号
-       * @param mmdd
-       * @return
-       */
+    /**
+     * 现金贷获取借款预编号
+     * @param mmdd
+     * @return
+     */
     String getXJDBorrowPreNid(@Param("mmdd") String mmdd);
-	/**
-	 * 获取借款列表
-	 * 
-	 * @param alllBorrowCustomize
-	 * @return
-	 */
-	List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
-	/**
-	 * COUNT
-	 * 
-	 * @param borrowCustomize
-	 * @return
-	 */
-	Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+    /**
+     * 获取借款列表
+     *
+     * @param alllBorrowCustomize
+     * @return
+     */
+    List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+    /**
+     * COUNT
+     *
+     * @param borrowCustomize
+     * @return
+     */
+    Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+
+    /**
+     * 清算日前一天，查询处于投资中或者复审中的原始标的
+     * @author zhangyk
+     * @date 2018/8/20 16:29
+     */
+    List<BorrowCustomizeVO> selectUnDealBorrowBeforeLiquidate();
+    List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
 }

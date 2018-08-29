@@ -38,7 +38,7 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 		int count = adminUtmReadPermissionsCustomMapper.countAdminUtmReadPermissionsRecord(request);
 		response.setCount(count);
 		if(count>0){
-			Paginator paginator = new Paginator(request.getCurrPage(), count);
+			Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
 			request.setLimitStart(paginator.getOffset());
 			request.setLimitEnd(paginator.getLimit());
 			List<AdminUtmReadPermissionsVO> list = adminUtmReadPermissionsCustomMapper.selectAdminUtmReadPermissionsRecord(request);
@@ -65,8 +65,8 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 		adminUtmReadPermissionsMapper.deleteByPrimaryKey(id);
 	}
 
-    @Override
-    public AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId) {
+	@Override
+	public AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId) {
 		AdminUtmReadPermissionsExample example = new AdminUtmReadPermissionsExample();
 		AdminUtmReadPermissionsExample.Criteria cra = example.createCriteria();
 		cra.andAdminUserIdEqualTo(userId);
@@ -74,7 +74,7 @@ public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissio
 		if (list != null && list.size() > 0) {
 			return CommonUtils.convertBean(list.get(0),AdminUtmReadPermissionsVO.class);
 		}
-        return null;
-    }
+		return null;
+	}
 
 }

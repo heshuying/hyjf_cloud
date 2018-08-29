@@ -1,8 +1,5 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
@@ -10,6 +7,9 @@ import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+
+import java.util.List;
+import java.util.Map;
 
 public interface BorrowCreditCustomizeMapper {
 
@@ -29,7 +29,7 @@ public interface BorrowCreditCustomizeMapper {
 
     BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
 
-    int sumUnderTakeAmount(String borrowNid);
+    String sumUnderTakeAmount(String borrowNid);
 
     List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> map);
 }
