@@ -3018,8 +3018,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateBorrowRepayDelayDays(String borrowNid, String delayDays) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/updateBorrowRepayDelayDays/" + borrowNid + "/" + delayDays;
-        int intUpdFlg = restTemplate.getForEntity(url, Integer.class).getBody();
-        return intUpdFlg;
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return response.getResultInt();
     }
 
     /**
