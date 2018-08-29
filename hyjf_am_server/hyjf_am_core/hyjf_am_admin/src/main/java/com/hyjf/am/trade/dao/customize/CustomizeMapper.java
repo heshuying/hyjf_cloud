@@ -23,7 +23,6 @@ import com.hyjf.am.trade.dao.mapper.customize.AppProjectListCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AppTenderCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AppUserInvestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AssetListServiceCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AutoReqRepayBorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchCenterCustomizeMapper;

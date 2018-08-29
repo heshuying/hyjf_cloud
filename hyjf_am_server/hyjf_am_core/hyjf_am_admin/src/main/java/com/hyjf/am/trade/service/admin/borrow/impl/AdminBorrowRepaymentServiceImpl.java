@@ -5,18 +5,14 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.trade.bean.BorrowWithBLOBs;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoWithBLOBsVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.AdminRepayDelayCustomize;
@@ -47,6 +43,359 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         return this.borrowRepaymentCustomizeMapper.selectBorrowRepaymentList(request);
     }
 
+    @Override
+    public BorrowRepay getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+        BorrowRepayExample example = new BorrowRepayExample();
+        BorrowRepayExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            BorrowRepayBean borrowRepayBean = new BorrowRepayBean();
+            BorrowRepay borrowRepay = list.get(0);
+            BeanUtils.copyProperties(borrowRepay, borrowRepayBean);
+            Date nowDate = new Date();
+            Date date = new Date(Long.valueOf(borrowRepayBean.getRepayTime()) * 1000L);
+            int distanceDays = GetDate.daysBetween(nowDate, date);
+            // 提前还款
+            if (distanceDays >= 0) {
+                // 获取提前还款的阀值
+                String repayAdvanceDay = this.getBorrowConfig("REPAY_ADVANCE_TIME");
+                int advanceDays = distanceDays;
+                // 未大于提前还款的阀值（正常还款）
+                if (advanceDays <= Integer.parseInt(repayAdvanceDay)) {
+                    // 计算正常还款利息
+                    calculateRepay(borrowRepayBean, borrowNid, new BigDecimal(borrowApr), advanceDays);
+                } else {// 大于提前还款阀值（提前还款）
+                    // 计算提前还款利息
+                    calculateRepayAdvance(borrowRepayBean, borrowNid, new BigDecimal(borrowApr), advanceDays);
+                }
+            } else {
+                // 延迟天数
+                int delayDays = borrowRepayBean.getDelayDays().intValue();
+                int lateDays = delayDays + distanceDays;
+                // 用户延期还款（未逾期）
+                if (lateDays >= 0) {
+                    delayDays = -distanceDays;
+                    calculateRepayDelay(borrowRepayBean, borrowNid, new BigDecimal(borrowApr), delayDays);
+                } else {
+                    lateDays = -lateDays;
+                    // 用户逾期还款
+                    calculateRepayLate(borrowRepayBean, borrowNid, new BigDecimal(borrowApr), delayDays, lateDays);
+                }
+            }
+            borrowRepayBean
+                    .setRepayTimeStr(GetDate.getDateMyTimeInMillis(borrowRepayBean.getRepayTime()));
+            // 判断当前期是否在还款
+            BorrowApicronExample exampleBorrowApicron = new BorrowApicronExample();
+            BorrowApicronExample.Criteria crtBorrowApicron = exampleBorrowApicron.createCriteria();
+            crtBorrowApicron.andBorrowNidEqualTo(borrowNid);
+            crtBorrowApicron.andPeriodNowEqualTo(1);
+            crtBorrowApicron.andApiTypeEqualTo(1);
+            List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(exampleBorrowApicron);
+
+            if (borrowApicrons != null && borrowApicrons.size() > 0) {
+                BorrowApicron borrowApicron = borrowApicrons.get(0);
+                if (borrowApicron.getRepayStatus() == null) { // 正在还款当前期
+                    borrowRepayBean.setBorrowStatus("0");
+                } else {// 用户未还款当前期
+                    borrowRepayBean.setBorrowStatus("1");
+                }
+            } else {
+                borrowRepayBean.setBorrowStatus("0");
+            }
+            return borrowRepayBean;
+        }
+        return new BorrowRepayBean();
+    }
+    /**
+     * 统计单期还款用户正常还款的总标
+     *
+     * @param repay
+     * @param borrowNid
+     * @param borrowApr
+     * @param interestDay
+     * @throws ParseException
+     */
+    private void calculateRepay(BorrowRepayBean repay, String borrowNid, BigDecimal borrowApr, int interestDay)
+            throws ParseException {
+        List<BorrowRecover> borrowRecovers = searchBorrowRecover(borrowNid);
+        if (borrowRecovers != null && borrowRecovers.size() > 0) {
+            for (int i = 0; i < borrowRecovers.size(); i++) {
+                borrowRecovers.get(i).setChargeDays(interestDay);
+            }
+            repay.setRecoverList(borrowRecovers);
+        }
+        // 正常还款
+        repay.setRepayAccountAll(repay.getRepayAccount().add(repay.getRepayFee()));
+        repay.setChargeDays(interestDay);
+    }
+
+    /**
+     * 统计单期还款用户提前还款的总标
+     *
+     * @param repay
+     * @param borrowNid
+     * @param borrowApr
+     * @param interestDay
+     * @throws ParseException
+     */
+    private void calculateRepayAdvance(BorrowRepayBean repay, String borrowNid, BigDecimal borrowApr, int interestDay)
+            throws ParseException {
+
+        List<BorrowRecover> borrowRecovers = this.searchBorrowRecover(borrowNid);
+        // 用户实际还款额
+        BigDecimal userAccountTotal = new BigDecimal(0);
+        // 用户提前还款利息
+        BigDecimal repayChargeInterest = new BigDecimal(0);
+        if (borrowRecovers != null && borrowRecovers.size() > 0) {
+            for (int i = 0; i < borrowRecovers.size(); i++) {
+                BorrowRecover borrowRecover = borrowRecovers.get(i);
+                String recoverTime = GetDate
+                        .getDateTimeMyTimeInMillis(borrowRecover.getRecoverTime());
+                String createTime = GetDate.getDateTimeMyTimeInMillis(borrowRecover.getCreateTime());
+                // 获取这两个时间之间有多少天
+                int totalDays = GetDate.daysBetween(createTime, recoverTime);
+                // 获取未还款前用户能够获取的本息和
+                BigDecimal userAccount = borrowRecover.getRecoverAccount();
+                // 获取用户投资项目分期后的投资本金
+                BigDecimal userCapital = borrowRecover.getRecoverCapital();
+                // 计算用户实际获得的本息和
+                BigDecimal userAccountFact = new BigDecimal(0);
+                // 计算用户提前还款减少的的利息
+                BigDecimal userChargeInterest = new BigDecimal(0);
+                // 提前还款不应该大于本次计息时间
+                if (totalDays < interestDay) {
+                    // 计算投资用户实际获得的本息和
+                    userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
+                            borrowApr, totalDays);
+                    // 用户提前还款减少的利息
+                    userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr, totalDays);
+                } else {
+                    // 计算投资用户实际获得的本息和
+                    userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
+                            borrowApr, interestDay);
+                    // 用户提前还款减少的利息
+                    userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr,
+                            interestDay);
+                }
+                borrowRecovers.get(i).setChargeDays(interestDay);
+                borrowRecovers.get(i).setChargeInterest(userChargeInterest);
+                // 统计本息总和
+                userAccountTotal = userAccountTotal.add(userAccountFact);
+                // 统计提前还款减少的利息
+                repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+            }
+            repay.setRecoverList(borrowRecovers);
+        }
+        repay.setRepayAccount(userAccountTotal);
+        repay.setRepayAccountAll(userAccountTotal.add(repay.getRepayFee()));
+        repay.setChargeDays(interestDay);
+        repay.setChargeInterest(repayChargeInterest);
+    }
+
+    @Override
+    public BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+        BorrowRepayPlanExample example = new BorrowRepayPlanExample();
+        BorrowRepayPlanExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        cra.andRepayTypeEqualTo("wait");
+        cra.andRepayStatusEqualTo(0);
+        example.setOrderByClause(" repay_period ASC ");
+        List<BorrowRepayPlan> list = this.borrowRepayPlanMapper.selectByExample(example);
+
+        if (list != null && list.size() > 0) {
+            BorrowRepayPlanBean repayPlanBean = new BorrowRepayPlanBean();
+            BorrowRepayPlan repayPlan = list.get(0);
+            BeanUtils.copyProperties(repayPlan, repayPlanBean);
+            Date nowDate = new Date();
+            Date date = new Date(Long.valueOf(repayPlan.getRepayTime()) * 1000L);
+
+            // 获取实际还款同计划还款时间的时间差
+            int distanceDays = GetDate.daysBetween(nowDate, date);
+            // 提前还款
+            if (distanceDays >= 0) {
+                // 获取提前还款的阀值
+                String repayAdvanceDay = this.getBorrowConfig("REPAY_ADVANCE_TIME");
+                int advanceDays = distanceDays;
+                // 未大于提前还款的阀值（正常还款）
+                if (advanceDays <= Integer.parseInt(repayAdvanceDay)) {
+                    // 计算正常还款利息
+                    calculateRepayPlan(repayPlanBean, borrowNid, new BigDecimal(borrowApr), advanceDays);
+                } else {
+                    // 大于提前还款阀值（提前还款）
+                    String repayTimeStart = null;
+                    // 获取上次提前还款的时间
+                    BorrowRepayPlanExample exampleLast = new BorrowRepayPlanExample();
+                    BorrowRepayPlanExample.Criteria craLast = exampleLast.createCriteria();
+                    craLast.andBorrowNidEqualTo(borrowNid);
+                    craLast.andRepayTypeEqualTo("wait_yes");
+                    craLast.andRepayStatusEqualTo(1);
+                    exampleLast.setOrderByClause(" repay_period DESC ");
+                    List<BorrowRepayPlan> listLast = this.borrowRepayPlanMapper.selectByExample(exampleLast);
+                    if (listLast != null && listLast.size() > 0) {
+                        repayTimeStart = listLast.get(0).getRepayTime()+"";
+                    } else {
+                        repayTimeStart = String.valueOf(repayPlanBean.getCreateTime());
+                    }
+                    calculateRepayPlanAdvance(repayPlanBean, borrowNid, new BigDecimal(borrowApr), advanceDays,
+                            repayTimeStart);
+                }
+            } else {
+                // 延迟天数
+                int delayDays = repayPlan.getDelayDays().intValue();
+                int lateDays = delayDays + distanceDays;
+                // 用户延期还款（未逾期）
+                if (lateDays >= 0) {
+                    delayDays = -distanceDays;
+                    calculateRepayPlanDelay(repayPlanBean, borrowNid, new BigDecimal(borrowApr), delayDays);
+                } else {
+                    // 用户逾期还款
+                    lateDays = -lateDays;
+                    calculateRepayPlanLate(repayPlanBean, borrowNid, new BigDecimal(borrowApr), delayDays, lateDays);
+                }
+            }
+            repayPlanBean
+                    .setRepayTimeStr(GetDate.getDateMyTimeInMillis(repayPlanBean.getRepayTime()));
+            // 如果用户不是还款最后一期
+            int repayPeriod = repayPlanBean.getRepayPeriod();
+            BorrowApicronExample exampleBorrowApicron = new BorrowApicronExample();
+            BorrowApicronExample.Criteria crtBorrowApicron = exampleBorrowApicron.createCriteria();
+            crtBorrowApicron.andBorrowNidEqualTo(borrowNid);
+            crtBorrowApicron.andApiTypeEqualTo(1);
+            crtBorrowApicron.andPeriodNowEqualTo(repayPeriod);
+            List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(exampleBorrowApicron);
+            // 正在还款当前期
+            if (borrowApicrons != null && borrowApicrons.size() > 0) {
+                BorrowApicron borrowApicron = borrowApicrons.get(0);
+                if (borrowApicron.getRepayStatus() == null) {
+                    repayPlanBean.setBorrowStatus("0");
+                } else {
+                    repayPlanBean.setBorrowStatus("1");
+                }
+            } else {// 用户当前期未还款
+                repayPlanBean.setBorrowStatus("0");
+            }
+
+            return repayPlanBean;
+        }
+        return new BorrowRepayPlanBean();
+    }
+    /**
+     * 统计分期还款用户正常还款的总标
+     *
+     * @param borrowRepayPlan
+     * @param borrowNid
+     * @param borrowRepayPlan
+     * @param borrowApr
+     * @param interestDay
+     * @throws ParseException
+     */
+    private BorrowRepayPlanBean calculateRepayPlan(BorrowRepayPlanBean borrowRepayPlan, String borrowNid,
+                                                   BigDecimal borrowApr, int interestDay) throws ParseException {
+
+        List<BorrowRecoverPlan> borrowRecoverPlans = searchBorrowRecoverPlan(borrowNid,
+                borrowRepayPlan.getRepayPeriod());
+        if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
+            borrowRepayPlan.setChargeDays(interestDay);
+            for (int j = 0; j < borrowRecoverPlans.size(); j++) {
+                borrowRecoverPlans.get(j).setChargeDays(interestDay);
+            }
+            borrowRepayPlan.setRepayAccountAll(borrowRepayPlan.getRepayAccount().add(borrowRepayPlan.getRepayFee()));
+            borrowRepayPlan.setRecoverPlanList(borrowRecoverPlans);
+        }
+        return borrowRepayPlan;
+    }
+
+    /**
+     * 统计分期还款用户提前还款的总标
+     *
+     * @param repayTimeStart
+     * @param borrowNid
+     * @param borrowApr
+     * @param repayTimeStart
+     * @return
+     * @throws ParseException
+     */
+    private BorrowRepayPlanBean calculateRepayPlanAdvance(BorrowRepayPlanBean borrowRepayPlan, String borrowNid,
+                                                          BigDecimal borrowApr, int advanceDays, String repayTimeStart) throws ParseException {
+
+        int repayPeriod = borrowRepayPlan.getRepayPeriod();
+        List<BorrowRecoverPlan> borrowRecoverPlans = searchBorrowRecoverPlan(borrowNid, repayPeriod);
+        // 用户实际还款额
+        BigDecimal repayTotal = new BigDecimal(0);
+        // 用户提前还款利息
+        BigDecimal repayChargeInterest = new BigDecimal(0);
+        Borrow borrow = getBorrowByNid(borrowNid);
+        if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
+            for (int i = 0; i < borrowRecoverPlans.size(); i++) {
+                BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(i);
+                String recoverTime = GetDate
+                        .getDateTimeMyTimeInMillis(borrowRecoverPlan.getRecoverTime());
+                String repayStartTime = GetDate.getDateTimeMyTimeInMillis(Integer.parseInt(repayTimeStart));
+                // 获取这两个时间之间有多少天
+                int totalDays = GetDate.daysBetween(repayStartTime, recoverTime);
+                // 获取未还款前用户能够获取的本息和
+                BigDecimal userAccount = borrowRecoverPlan.getRecoverAccount();
+                // 获取用户投资项目分期后的投资本金
+                BigDecimal userCapital = borrowRecoverPlan.getRecoverCapital();
+                // 用户获得的利息
+                // 计算用户实际获得的本息和
+                BigDecimal userAccountFact = new BigDecimal(0);
+                // 计算用户提前还款减少的的利息
+                BigDecimal userChargeInterest = new BigDecimal(0);
+                //利息
+                BigDecimal userInterest = borrowRecoverPlan.getRecoverInterest();
+                // 提前还款不应该大于本次计息时间
+                //TODO 判断是否为先息后本
+                boolean isStyle = CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle());
+                // 提前还款不应该大于本次计息时间
+                if (totalDays < advanceDays) {
+                    // 计算投资用户实际获得的本息和
+                    userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
+                            borrowApr, totalDays);
+
+                    userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr, totalDays);
+
+                } else {
+                    // 计算投资用户实际获得的本息和
+                    userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
+                            borrowApr, advanceDays);
+
+                    userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr,
+                            advanceDays);
+
+                }
+                if(isStyle){
+                    if(advanceDays >= 30){
+                        userChargeInterest = UnnormalRepayUtils.aheadEndMonthRepayChargeInterest(userInterest,totalDays);
+                    }else{
+                        userChargeInterest = UnnormalRepayUtils.aheadEndMonthRepayChargeInterest(userInterest,advanceDays);
+                    }
+                }
+                borrowRecoverPlans.get(i).setChargeDays(advanceDays);
+                borrowRecoverPlans.get(i).setChargeInterest(userChargeInterest);
+                repayTotal = repayTotal.add(userAccountFact);
+                repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+            }
+            borrowRepayPlan.setRecoverPlanList(borrowRecoverPlans);
+        }
+        borrowRepayPlan.setChargeDays(advanceDays);
+        borrowRepayPlan.setChargeInterest(repayChargeInterest);
+        borrowRepayPlan.setRepayAccount(repayTotal);
+        borrowRepayPlan.setRepayAccountAll(repayTotal.add(borrowRepayPlan.getRepayFee()));
+        return borrowRepayPlan;
+    }
+
+    public Borrow getBorrowByNid(String borrowNid) {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list = borrowMapper.selectByExample(example);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
     @Override
     public AdminBorrowRepaymentCustomize sumBorrowRecoverList(BorrowRepaymentRequest request) {
         return this.borrowRepaymentCustomizeMapper.sumBorrowRepayment(request);

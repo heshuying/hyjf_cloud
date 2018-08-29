@@ -21,9 +21,6 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
     private String userNameSrch;
 
     @ApiModelProperty(value = "部门查询")
-    private String combotreeSrch;
-
-    @ApiModelProperty(value = "部门拼接(代码将单个部门拼接成list)")
     private String[] combotreeListSrch;
 
     @ApiModelProperty(value = "电子账号(检索用)")
@@ -46,14 +43,6 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
 
     public void setUserNameSrch(String userNameSrch) {
         this.userNameSrch = userNameSrch;
-    }
-
-    public String getCombotreeSrch() {
-        return combotreeSrch;
-    }
-
-    public void setCombotreeSrch(String combotreeSrch) {
-        this.combotreeSrch = combotreeSrch;
     }
 
     public String[] getCombotreeListSrch() {

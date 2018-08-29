@@ -6,7 +6,7 @@
  * @version: 1.0
  * Created at: 2015年03月24日 下午18:35:00
  * Modification History:
- * Modified by : 
+ * Modified by :
  */
 
 package com.hyjf.am.trade.dao.mapper.customize;
@@ -84,7 +84,7 @@ public interface AssetManageCustomizeMapper {
      * @Description 获取用户当前持有计划列表
      * @Author pangchengchao
      * @Version v0.1
-     * @Date  
+     * @Date
      */
     List<CurrentHoldPlanListCustomize> selectCurrentHoldPlanList(Map<String,Object> params);
     /**

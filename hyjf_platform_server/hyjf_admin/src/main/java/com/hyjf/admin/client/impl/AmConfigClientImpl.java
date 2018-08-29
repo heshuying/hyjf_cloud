@@ -1677,25 +1677,25 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public JobResponse searchAction(ContentJobRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/searchaction", requestBean,
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentjob/searchaction", requestBean,
                 JobResponse.class);
     }
 
     @Override
-    public JobResponse insertAction(ContentJobRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/insertaction", requestBean,
-                JobResponse.class);
+    public int insertAction(ContentJobRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentjob/insertaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
-    public JobResponse updateAction(ContentJobRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/insertaction", requestBean,
-                JobResponse.class);
+    public int updateAction(ContentJobRequestBean requestBean) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-config/content/contentjob/updateaction", requestBean,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
     public JobsVo getJobsRecord(Integer id) {
-        JobResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentjob/getrecord/" + id,
+        JobResponse response = restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentjob/getrecord/" + id,
                 JobResponse.class);
         if (response != null) {
             return response.getResult();
@@ -1704,9 +1704,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public JobResponse deleteJobById(Integer id) {
-        return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentjob/delete/" + id,
-                JobResponse.class);
+    public int deleteJobById(Integer id) {
+        return restTemplate.getForObject("http://AM-ADMIN/am-config/content/contentjob/delete/" + id,
+                IntegerResponse.class).getResultInt();
     }
 
     @Override
