@@ -1017,6 +1017,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         creditTenderLog.setTxTime(Integer.parseInt(bean.getTxTime()));
         creditTenderLog.setSeqNo(Integer.parseInt(bean.getSeqNo()));
         creditTenderLog.setClient(bean.getLogClient());
+        creditTenderLog.setAssignNid(bean.getLogOrderId());
         // 银行请求订单号
         creditTenderLog.setLogOrderId(bean.getLogOrderId());
         // 检查是否能债转  ？？？原来的逻辑不用了1726行CreditServiceImpl
