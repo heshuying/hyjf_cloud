@@ -4,19 +4,26 @@
 package com.hyjf.admin.controller.finance.customertransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,6 +56,8 @@ public class CustomerTransferController extends BaseController {
 
     @Autowired
     private CustomerTransferService customerTransferService;
+    @Autowired
+    private AdminCommonService adminCommonService;
 
 
     /**
@@ -64,6 +73,32 @@ public class CustomerTransferController extends BaseController {
         count = (count == null)?0:count;
         List<UserTransferVO> userTransferVOList = customerTransferService.searchUserTransferList(request);
         return new AdminResult<>(ListResult.build(userTransferVOList,count));
+    }
+
+    /**
+     * 转账状态下拉框数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "转账状态下拉框数据",notes = "转账状态下拉框数据")
+    @PostMapping(value = "/gettransferstatus")
+    public AdminResult<ListResult<DropDownVO>> getTransferStatus(){
+        List<DropDownVO> dropDownVOList = adminCommonService.getParamNameList("TRANSFER_STATUS");
+        return new AdminResult<>(ListResult.build(dropDownVOList,0));
+    }
+
+    /**
+     * 交易类型下拉框数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "交易类型下拉框数据",notes = "交易类型下拉框数据")
+    @PostMapping(value = "/gettransfertypes")
+    public AdminResult<ListResult<DropDownVO>> getTransferTypes(){
+        List<DropDownVO> dropDownVOList = adminCommonService.getParamNameList("TRANSFER_TYPE");
+        return new AdminResult<>(ListResult.build(dropDownVOList,0));
     }
 
     /**
@@ -188,20 +223,16 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
-    public AdminResult searchBalanceByUsername(@RequestBody Map map){
+    public AdminResult<String> searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
         JSONObject jsonObject = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
             jsonObject = customerTransferService.searchBalanceByUsername(outUserName);
         }else{
-            return new AdminResult(FAIL,"用户账号不能为空");
+            CheckUtil.check(false,MsgEnum.ERR_OBJECT_REQUIRED,"用户账号");
         }
-        if("0".equals(jsonObject.get("status"))){
-            return new AdminResult(SUCCESS,jsonObject.getString("result"));
-        }else{
-            return new AdminResult(FAIL,jsonObject.getString("result"));
-        }
+        return new AdminResult<>(jsonObject.getString("result"));
     }
 
     /**

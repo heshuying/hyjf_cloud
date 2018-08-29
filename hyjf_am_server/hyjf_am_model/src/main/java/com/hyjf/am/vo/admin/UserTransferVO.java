@@ -37,8 +37,12 @@ public class UserTransferVO extends BaseVO implements Serializable {
     private Date transferTime;
     @ApiModelProperty(value = "转让状态 0 待转账 1 转帐中 2 转账成功 3 转账失败")
     private Integer status;
+    @ApiModelProperty(value = "转让状态字符串 0 待转账 1 转帐中 2 转账成功 3 转账失败")
+    private String statusStr;
     @ApiModelProperty(value = "转账类型 0 用户转给平台")
     private Integer transferType;
+    @ApiModelProperty(value = "转账类型字符串 0 用户转给平台")
+    private String transferTypeStr;
     @ApiModelProperty(value = "转账说明")
     private String remark;
     @ApiModelProperty(value = "创建人")
@@ -51,8 +55,12 @@ public class UserTransferVO extends BaseVO implements Serializable {
     private Integer updateUserId;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
+    @ApiModelProperty(value = "创建时间字符串")
+    private String createTimeStr;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
+    @ApiModelProperty(value = "更新时间字符串")
+    private String updateTimeStr;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -135,12 +143,28 @@ public class UserTransferVO extends BaseVO implements Serializable {
         this.status = status;
     }
 
+    public String getStatusStr() {
+        return statusStr;
+    }
+
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
+
     public Integer getTransferType() {
         return transferType;
     }
 
     public void setTransferType(Integer transferType) {
         this.transferType = transferType;
+    }
+
+    public String getTransferTypeStr() {
+        return transferTypeStr;
+    }
+
+    public void setTransferTypeStr(String transferTypeStr) {
+        this.transferTypeStr = transferTypeStr;
     }
 
     public String getRemark() {
@@ -191,11 +215,27 @@ public class UserTransferVO extends BaseVO implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }
