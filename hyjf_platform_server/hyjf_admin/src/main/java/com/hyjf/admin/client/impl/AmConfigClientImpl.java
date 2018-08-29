@@ -256,7 +256,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request) {
-        AdminUtmReadPermissionsResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/extensioncenter/adminutmreadpermissions/searchaction",
+        AdminUtmReadPermissionsResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/extensioncenter/adminutmreadpermissions/searchaction",
                 request, AdminUtmReadPermissionsResponse.class);
         return response;
 
