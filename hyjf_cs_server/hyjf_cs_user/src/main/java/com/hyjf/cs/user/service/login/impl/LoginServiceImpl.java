@@ -688,7 +688,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			result.setAnswerUrl(
-					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST));
+					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + "/hyjf-app/riskTest"));
 		}
 
 		{
