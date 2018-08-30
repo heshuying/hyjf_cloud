@@ -1,7 +1,9 @@
 package com.hyjf.am.trade.controller.admin.productcenter.applyagreement;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -14,11 +16,11 @@ import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
+import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -231,6 +233,40 @@ public class ApplyAgreementController extends BaseController {
             voList = CommonUtils.convertBeanList(list, HjhDebtCreditRepayVO.class);
         }
         response.setResultList(voList);
+        return response;
+    }
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+    * @author Zha Daojian
+    * @date 2018/8/23 16:36
+    * @param contractId
+    * @return com.hyjf.am.response.trade.HjhDebtCreditRepayResponse
+    **/
+    @RequestMapping("/selectApplyAgreementInfoByContractId/{contractId}")
+    public ApplyAgreementInfoResponse selectApplyAgreementInfoByContractId(@PathVariable(value = "contractId") String contractId){
+        ApplyAgreementInfoResponse response = new ApplyAgreementInfoResponse();
+        List<ApplyAgreementInfo> list = applyAgreementService.selectApplyAgreementInfoByContractId(contractId);
+        List<ApplyAgreementInfoVO> voList = null;
+        if(!CollectionUtils.isEmpty(list)){
+            voList = CommonUtils.convertBeanList(list, ApplyAgreementInfoVO.class);
+        }
+        response.setResultList(voList);
+        return response;
+    }
+
+    /**
+     * 垫付协议申请明细列表
+     * @auther: Zha Daojian
+     * @date: 2018/8/14 14:19
+     */
+    @RequestMapping("/getApplyAgreementList")
+    public ApplyAgreementInfoResponse saveApplyAgreementInfo(@RequestBody ApplyAgreementInfoRequest request) {
+        ApplyAgreementInfoResponse response = new ApplyAgreementInfoResponse();
+        logger.info("saveApplyAgreementInfo::::::::::");
+        int re = applyAgreementService.saveApplyAgreementInfo(request);
+        response.setRecordTotal(re);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 }
