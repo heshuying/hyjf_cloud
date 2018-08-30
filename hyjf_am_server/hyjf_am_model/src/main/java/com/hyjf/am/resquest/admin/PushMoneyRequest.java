@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -13,7 +12,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author fuqiang
