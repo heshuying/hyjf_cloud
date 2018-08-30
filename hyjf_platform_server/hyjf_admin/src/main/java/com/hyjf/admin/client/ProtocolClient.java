@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
+import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import java.util.List;
@@ -72,4 +73,10 @@ public interface ProtocolClient {
     AdminProtocolResponse deleteProtocolTemplate(AdminProtocolRequest request);
 
     List<ProtocolTemplateVO> getNewInfo();
+
+    ProtocolVersionVO byIdProtocolVersion(Integer id);
+
+    ProtocolTemplateVO byIdTemplateBy(String protocolId);
+
+    int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest);
 }

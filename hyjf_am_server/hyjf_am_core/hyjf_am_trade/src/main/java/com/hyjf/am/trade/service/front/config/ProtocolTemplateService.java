@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
+import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import java.util.List;
@@ -96,4 +97,10 @@ public interface ProtocolTemplateService {
      * @date 2018/7/4 15:38
      */
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
+
+    ProtocolVersionVO byIdProtocolVersion(Integer id);
+
+    ProtocolTemplateVO byIdTemplateBy(String protocolId);
+
+    int updateProtocolVersionSize(ProtocolTemplateVO protocolTemplate);
 }

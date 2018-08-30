@@ -120,6 +120,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
+        logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
@@ -1016,6 +1017,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         creditTenderLog.setTxTime(Integer.parseInt(bean.getTxTime()));
         creditTenderLog.setSeqNo(Integer.parseInt(bean.getSeqNo()));
         creditTenderLog.setClient(bean.getLogClient());
+        creditTenderLog.setAssignNid(bean.getLogOrderId());
         // 银行请求订单号
         creditTenderLog.setLogOrderId(bean.getLogOrderId());
         // 检查是否能债转  ？？？原来的逻辑不用了1726行CreditServiceImpl
@@ -1211,7 +1213,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
-        bean.setTxAmount(DF_COM_VIEW.format(creditAssign.getAssignPay()));
+        bean.setTxAmount(creditAssign.getAssignPay());
         bean.setTxFee(creditTenderLog.getCreditFee() != null ? DF_COM_VIEW.format(creditTenderLog.getCreditFee()) : "0.01");
         bean.setTsfAmount(DF_COM_VIEW.format(creditTenderLog.getAssignCapital()));
         // 对手电子账号:卖出方账号

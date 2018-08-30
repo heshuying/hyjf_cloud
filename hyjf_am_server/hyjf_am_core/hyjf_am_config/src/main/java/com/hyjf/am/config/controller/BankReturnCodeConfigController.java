@@ -42,15 +42,18 @@ public class BankReturnCodeConfigController extends BaseConfigController{
         //查询返回码配置列表条数
         int recordTotal = this.bankReturnCodeConfigService.selectBankRetcodeListCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             List<BankReturnCodeConfig> recordList =bankReturnCodeConfigService.selectBankRetcodeListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BankReturnCodeConfigVO> hicv = CommonUtils.convertBeanList(recordList, BankReturnCodeConfigVO.class);
                 response.setResultList(hicv);
-//                response.setRecordTotal(recordTotal);
+                response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
             return response;
         }
         return null;
@@ -69,8 +72,9 @@ public class BankReturnCodeConfigController extends BaseConfigController{
             BeanUtils.copyProperties(record,vo);
             response.setResult(vo);
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return response;
+        return null;
     }
 
 
@@ -81,17 +85,17 @@ public class BankReturnCodeConfigController extends BaseConfigController{
     @RequestMapping("/insert")
     public BankReturnCodeConfigResponse insertBankReturnCodeConfig(@RequestBody  AdminBankRetcodeConfigRequest req) {
         BankReturnCodeConfigResponse resp = new BankReturnCodeConfigResponse();
-        try{
-            int result =this.bankReturnCodeConfigService.insertBankReturnCodeConfig(req);
-            if(result > 0 ){
-                //分页查询
+        int result =this.bankReturnCodeConfigService.insertBankReturnCodeConfig(req);
+        if(result > 0 ){
+            //分页查询
 //                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("添加失败！");
         return resp;
+
     }
     /**
      * 修改版本配置
@@ -100,16 +104,15 @@ public class BankReturnCodeConfigController extends BaseConfigController{
     @RequestMapping("/update")
     public BankReturnCodeConfigResponse updateBankReturnCodeConfig( @RequestBody AdminBankRetcodeConfigRequest req) {
         BankReturnCodeConfigResponse resp = new BankReturnCodeConfigResponse();
-        try{
-            int result =this.bankReturnCodeConfigService.updateBankReturnCodeConfig(req);
-            if(result > 0 ){
-                //分页查询
+        int result =this.bankReturnCodeConfigService.updateBankReturnCodeConfig(req);
+        if(result > 0 ){
+            //分页查询
 //                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("修改失败！");
         return resp;
     }
     /**
