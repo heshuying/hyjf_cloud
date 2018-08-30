@@ -2,11 +2,9 @@ package com.hyjf.am.trade.service.front.borrow;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
