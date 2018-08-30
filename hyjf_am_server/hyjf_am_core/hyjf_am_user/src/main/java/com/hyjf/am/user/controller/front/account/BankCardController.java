@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.account;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -55,6 +56,23 @@ public class BankCardController extends BaseController {
 	}
 
 	/**
+	 * 根据主键查询银行卡信息
+	 * @auth sunpeikai
+	 * @param id 主键id
+	 * @return
+	 */
+	@GetMapping(value = "/getBankCardById/{id}")
+	public BankCardResponse getBankCardById(@PathVariable Integer id){
+		BankCardResponse response = new BankCardResponse();
+		BankCard card = bankCardService.getBankCardById(id);
+		if (card != null) {
+			response.setResult(CommonUtils.convertBean(card, BankCardVO.class));
+			response.setRtn(Response.SUCCESS);
+		}
+		return response;
+	}
+
+	/**
 	 * 根据用户id和银行卡号查询银行卡信息
 	 * @auth sunpeikai
 	 * @param
@@ -69,6 +87,21 @@ public class BankCardController extends BaseController {
 			response.setResult(bankCardVO);
 			response.setRtn(Response.SUCCESS);
 		}
+		return response;
+	}
+
+	/**
+	 * 更新银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@PostMapping(value = "/updateBankCard")
+	public IntegerResponse updateBankCard(@RequestBody BankCardVO bankCardVO){
+		IntegerResponse response = new IntegerResponse();
+		int count = bankCardService.updateBankCard(bankCardVO);
+		response.setResultInt(count);
+		response.setRtn(Response.SUCCESS);
 		return response;
 	}
 }

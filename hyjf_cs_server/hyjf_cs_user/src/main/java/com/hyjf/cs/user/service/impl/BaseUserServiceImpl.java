@@ -147,6 +147,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			SyncUserInfoRequestBean bean = (SyncUserInfoRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getTimestamp();
 			logger.info("sign is :{}", sign);
+		}else if(BaseDefine.METHOD_SERVER_WITHDRAW.equals(methodName)){
+			// 用户提现
+			UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
+			sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

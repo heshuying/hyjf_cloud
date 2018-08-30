@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.app.*;
@@ -11,12 +12,14 @@ import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
+import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
@@ -25,6 +28,7 @@ import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -721,6 +725,70 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 第三方用户提现
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateBeforeCash(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/updateBeforeCash";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId查询出status=2的账户提现信息
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public AccountWithdrawVO getAccountWithdrawByOrderId(String orderId) {
+        String url = tradeService + "/withdraw/getAccountWithdrawByOrderId/" + orderId;
+        AccountWithdrawResponse response = restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 执行提现后处理
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handlerAfterCash(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/handlerAfterCash";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 查询某用户 id 的提现记录，带分页
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request) {
+        String url = tradeService + "/withdraw/searchAccountWithdrawPaginate";
+        AccountWithdrawResponse response = restTemplate.postForEntity(url,request,AccountWithdrawResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
