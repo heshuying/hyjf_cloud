@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.batch;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.HjhWaitComputeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.service.CommisionComputeService;
@@ -51,8 +52,8 @@ public class HjhCommisionComputeController extends BaseController {
      * @return
      */
     @GetMapping("accedes_waitcompute")
-    public Response getAccedesWaitCompute(){
-        Response<HjhAccedeVO> responseBean = new Response<>();
+    public HjhWaitComputeResponse getAccedesWaitCompute(){
+        HjhWaitComputeResponse responseBean = new HjhWaitComputeResponse();
         List<HjhAccede> resultList = commisionComputeService.selectHasCommisionAccedeList();
         if (!CollectionUtils.isEmpty(resultList)) {
             List<HjhAccedeVO> couponUserVOList = CommonUtils.convertBeanList(resultList,HjhAccedeVO.class);
