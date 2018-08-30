@@ -46,7 +46,7 @@ public class BankJournalController {
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        String status="error";
+        String status="99";
         String statusDesc = "未检索到相应的列表数据";
         if(null!=bankEveList&&bankEveList.size()>0){
             Integer count = bankEveList.size();
