@@ -5,6 +5,7 @@ package com.hyjf.am.response.admin;
 
 import java.util.List;
 
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.bean.admin.BorrowWithBLOBs;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
@@ -20,7 +21,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  * @author dongzeshan
  * @version BorrowFirstCustomizeResponse, v0.1 2018/7/3 15:16
  */
-public class BorrowCommonResponse extends AdminResponse<BorrowCommonVO> {
+public class BorrowCommonResponse extends AdminResponse<BorrowCommonBean> {
 	private List<HjhInstConfigVO> instList;
 	private List<HjhInstConfigVO> instConfigList;
 	private List<BorrowProjectTypeVO> borrowProjectType;
