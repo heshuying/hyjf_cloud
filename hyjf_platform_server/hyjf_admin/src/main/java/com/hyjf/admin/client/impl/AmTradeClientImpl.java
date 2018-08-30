@@ -4652,7 +4652,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form) {
         HjhCommissionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhCommission/selectHjhCommissionList", form,
+                .postForEntity("http://AM-ADMIN/am-trade/hjhCommission/selectHjhCommissionList", form,
                         HjhCommissionResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -4900,7 +4900,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
 		HjhCommissionResponse response = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
+				.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
 						HjhCommissionResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -4934,7 +4934,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
 		TenderCommissionResponse response = restTemplate
-	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
+	            .getForEntity("http://AM-ADMIN/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
 	    if (response != null) {
 	        return response.getResult();
 	    }
@@ -5015,7 +5015,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form) {
 		OADepartmentResponse response = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/getCrmDepartmentList" ,form,
+				.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/getCrmDepartmentList" ,form,
 						OADepartmentResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -5197,7 +5197,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public Integer queryCrmCuttype(Integer userId) {
 		TenderCommissionResponse response = restTemplate
-	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
+	            .getForEntity("http:// AM-ADMIN/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
 	    if (response != null) {
 	        return response.getType();
 	    }
