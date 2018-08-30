@@ -5,6 +5,8 @@ import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.service.front.account.BankCardService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,6 +49,23 @@ public class BankCardServiceImpl extends BaseServiceImpl implements BankCardServ
 		return null;
 	}
 
+	/**
+	 * 根据主键查询银行卡信息
+	 * @auth sunpeikai
+	 * @param id 主键id
+	 * @return
+	 */
+	@Override
+	public BankCard getBankCardById(Integer id) {
+		return bankCardMapper.selectByPrimaryKey(id);
+	}
+
+	/**
+	 * 根据用户id和银行卡号查询银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
 	@Override
 	public BankCard selectBankCardByUserIdAndCardNo(BankCardRequest request) {
 		Integer userId = request.getUserId();
@@ -63,4 +82,15 @@ public class BankCardServiceImpl extends BaseServiceImpl implements BankCardServ
 		return null;
 	}
 
+	/**
+	 * 更新银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int updateBankCard(BankCardVO bankCardVO) {
+		BankCard bankCard = CommonUtils.convertBean(bankCardVO,BankCard.class);
+		return bankCardMapper.updateByPrimaryKey(bankCard);
+	}
 }

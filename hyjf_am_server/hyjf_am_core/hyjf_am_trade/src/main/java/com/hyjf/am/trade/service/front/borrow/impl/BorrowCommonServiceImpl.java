@@ -816,10 +816,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					for (BorrowInfo borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
-						 BeanUtils.copyProperties(borrow,this.getBorrow(borrowNid));
+						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
-						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId);
+						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
 
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
@@ -875,8 +875,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId) throws Exception {
-
+	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId,int infoId) throws Exception {
 		// 插入时间
 		int systemNowDateLong = GetDate.getNowTime10();
 		Date systemNowDate = GetDate.getDate(systemNowDateLong);
@@ -1343,6 +1342,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setId(borrow.getInfoId());
 		BorrowInfo record=new BorrowInfo();
 		BeanUtils.copyProperties(borrow,record);
+		 record.setId(infoId);
 		this.borrowInfoMapper.updateByPrimaryKey(record);
 		// 个人信息
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
@@ -1581,7 +1581,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					|| StringUtils.isNotEmpty(borrowBean.getWtime()) || StringUtils.isNotEmpty(borrowBean.getUserCredit())) {
 
 				BorrowManinfo borrowManinfo = new BorrowManinfo();
-
 				borrowManinfo.setBorrowNid(borrowNid);
 				borrowManinfo.setBorrowPreNid(borrow.getBorrowPreNid());
 				// 姓名
@@ -1811,6 +1810,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				}else{
 					borrowManinfo.setIsPunished("暂无");
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 				this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			} else {
 			    BorrowManinfo borrowManinfo = new BorrowManinfo();
@@ -1908,6 +1908,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				if(borrowBean.getIsPunished() != null ){
 					borrowManinfo.setIsPunished(borrowBean.getIsPunished());
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 			    this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			}
 		} else {
@@ -2432,7 +2433,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowAssetNumber(this.getValue(borrowWithBLOBs.getBorrowAssetNumber()));
 		// 新增协议期限字段
 		// 协议期限
-		borrowBean.setContractPeriod(this.getValue(borrowWithBLOBs.getContractPeriod() + ""));
+		if(borrowWithBLOBs.getContractPeriod()!=null) {
+			borrowBean.setContractPeriod(String.valueOf(borrowWithBLOBs.getContractPeriod()));
+		}
 		// 项目来源
 		borrowBean.setBorrowProjectSource(this.getValue(borrowWithBLOBs.getBorrowProjectSource()));
 		// 起息时间
@@ -2836,6 +2839,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(个人) end */
+				if (StringUtils.isNotEmpty(record.getAddress())) {
+					borrowBean.setAddress(this.getValue(record.getAddress()));
+				} else {
+					borrowBean.setAddress(StringUtils.EMPTY);
+				}
 			}
 		}
 	}

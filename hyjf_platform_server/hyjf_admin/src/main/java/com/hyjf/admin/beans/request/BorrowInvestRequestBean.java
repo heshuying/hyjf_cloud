@@ -56,7 +56,7 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     private String reAuthPassEndTime;
 
     @ApiModelProperty(value = "资产来源")
-    private String InstCodeSrch;
+    private String instCodeSrch;
 
     @ApiModelProperty(value = "产品类型")
     private String productType;
@@ -177,11 +177,11 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     }
 
     public String getInstCodeSrch() {
-        return InstCodeSrch;
+        return instCodeSrch;
     }
 
     public void setInstCodeSrch(String instCodeSrch) {
-        InstCodeSrch = instCodeSrch;
+        this.instCodeSrch = instCodeSrch;
     }
 
     public String getProductType() {

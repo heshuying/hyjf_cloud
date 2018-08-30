@@ -250,13 +250,18 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        // 投资金额
-        data.put("assignCapital",bean.getAssignCapital());
-        // 历史回报
-        data.put("assignInterest",bean.getAssignInterest());
-        WebResult<Map<String, Object>> result = new WebResult();
-        result.setData(data);
-        return result;
+        if(bean!=null){
+            // 投资金额
+            data.put("assignCapital",bean.getAssignCapital());
+            // 历史回报
+            data.put("assignInterest",bean.getAssignInterest());
+            WebResult<Map<String, Object>> result = new WebResult();
+            result.setData(data);
+            return result;
+        }else{
+            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR);
+        }
+
     }
 
     /**

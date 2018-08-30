@@ -30,6 +30,7 @@ public class FeerateModifyLogController {
         if(count > 0){
             response.setRtn(Response.SUCCESS);
             response.setMessage(Response.SUCCESS_MSG);
+            return response;
         }
         return null;
     }
@@ -45,6 +46,7 @@ public class FeerateModifyLogController {
         if(count > 0){
             response.setRtn(Response.SUCCESS);
             response.setMessage(Response.SUCCESS_MSG);
+            return response;
         }
         return null;
     }
@@ -61,6 +63,7 @@ public class FeerateModifyLogController {
         if(count > 0){
             response.setRtn(Response.SUCCESS);
             response.setMessage(Response.SUCCESS_MSG);
+            return response;
         }
         return null;
     }
