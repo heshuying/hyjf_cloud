@@ -190,11 +190,11 @@ public class AccountWebListVO extends BasePage implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -286,14 +286,6 @@ public class AccountWebListVO extends BasePage implements Serializable {
         this.note = note == null ? null : note.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public String getOperator() {
         return operator;
     }
@@ -308,5 +300,21 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public Integer getCreateStartTime() {
+        return createStartTime;
+    }
+
+    public void setCreateStartTime(Integer createStartTime) {
+        this.createStartTime = createStartTime;
+    }
+
+    public Integer getCreateEndTime() {
+        return createEndTime;
+    }
+
+    public void setCreateEndTime(Integer createEndTime) {
+        this.createEndTime = createEndTime;
     }
 }

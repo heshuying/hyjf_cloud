@@ -158,7 +158,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
                 accountWebList.setBorrowNid(borrowNid); // 投资编号
             }
             accountWebList.setUserId(tenderUserId); // 投资者
-            accountWebList.setAmount(recoverAccount); // 优惠券投资受益
+            accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
             accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
             String remark = StringUtils.EMPTY;
             if (currentRecover.getCouponType() == 1) {
@@ -187,7 +187,8 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             }
             accountWebList.setTradeType(tradeType); // 加息券回款
             accountWebList.setRemark(remark); // 投资编号
-            accountWebList.setCreateTime(nowTime);
+            accountWebList.setCreateStartTime(nowTime);
+            accountWebList.setCreateEndTime(nowTime);
             int accountWebListCnt = insertAccountWebList(accountWebList);
             if (accountWebListCnt == 0) {
                 throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
