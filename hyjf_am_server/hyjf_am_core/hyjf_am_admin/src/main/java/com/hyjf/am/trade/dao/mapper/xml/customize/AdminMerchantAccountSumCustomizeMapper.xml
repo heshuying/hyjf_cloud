@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AdminMerchantAccountCustomizeMapper">
+	<resultMap id="MerchantAccountSumMap" type="com.hyjf.am.trade.dao.model.customize.AdminMerchantAccountSumCustomize">
+		<id column="account_balance_sum" property="accountBalanceSum" jdbcType="VARCHAR" />
+		<result column="available_balance_sum" property="availableBalanceSum" jdbcType="VARCHAR" />
+		<result column="frost_sum" property="frostSum" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="searchMerchantAccountSum" resultMap="MerchantAccountSumMap" parameterType="Map">
+		SELECT
+			COALESCE(SUM(account_balance),0.00) AS account_balance_sum,
+			COALESCE(SUM(available_balance),0.00) AS available_balance_sum,
+			COALESCE(SUM(frost),0.00) AS frost_sum
+		FROM
+			ht_merchant_account
+		WHERE
+			sub_account_type <![CDATA[<>]]> 'DEP'
+	</select>
+</mapper>

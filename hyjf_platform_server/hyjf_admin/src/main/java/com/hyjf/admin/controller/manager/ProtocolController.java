@@ -7,8 +7,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -79,9 +79,9 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 添加协议模板")
     @PostMapping("/insertAction")
-    public AdminProtocolResponse insertAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
+    public AdminResult insertAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        AdminSystemVO user = getUser(httpServletRequest);
+//        AdminSystemVO user = getUser(httpServletRequest);
         //TODO 用户ID联调再开放
 //        String userId = user.getId();
         String userId = "1";
@@ -107,19 +107,19 @@ public class ProtocolController extends BaseController{
         RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
 
 
-        return response;
+        return new AdminResult();
     }
 
     /**
-     * 修改协议模板
+     * 修改已经存在的协议模板
      * @param request
      * @return
      */
-    @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 修改协议模板")
+    @ApiOperation(value = "配置中心-协议模板管理 修改协议模板", notes = "配置中心-协议模板管理 修改协议模板")
     @PostMapping("/updateAction")
-    public AdminProtocolResponse updateProtocolTemplate(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
+    public AdminResult updateAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        AdminSystemVO user = getUser(httpServletRequest);
+//        AdminSystemVO user = getUser(httpServletRequest);
         HashMap<String, Object> map = new HashMap<String, Object>();
         //TODO 用户ID联调再开放
 //        String userId = user.getId();
@@ -143,7 +143,43 @@ public class ProtocolController extends BaseController{
         jsonObject.put("displayName",map);
         RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
 
-        return response;
+        return new AdminResult();
+    }
+
+    /**
+     * 修改已经存在的协议模板
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "配置中心-协议模板管理 修改已经存在的协议模板", notes = "配置中心-协议模板管理 修改已经存在的协议模板")
+    @PostMapping("/updateExistProtocol")
+    public AdminResult updateExistProtocol(@RequestBody AdminProtocolVersionRequest request, HttpServletRequest httpServletRequest){
+        AdminProtocolResponse response = new AdminProtocolResponse();
+//        AdminSystemVO user = getUser(httpServletRequest);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        //TODO 用户ID联调再开放
+//        String userId = user.getId();
+        String userId = "1";
+        protocolService.updateExistAction(request,userId);
+
+        //更新redis
+        RedisUtils.del(RedisConstants.PROTOCOL_PARAMS);
+        List<ProtocolTemplateVO> list = protocolService.getNewInfo();
+        JSONObject jsonObject = new JSONObject();
+        //是否在枚举中有定义
+        for (ProtocolTemplateVO p : list) {
+            String protocolType = p.getProtocolType();
+            String alia = ProtocolEnum.getAlias(protocolType);
+            if (alia != null){
+                map.put(alia, p.getDisplayName());
+            }
+        }
+        jsonObject.put("status","000");
+        jsonObject.put("statusDesc","成功");
+        jsonObject.put("displayName",map);
+        RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
+
+        return new AdminResult();
     }
 
     /**
@@ -153,11 +189,12 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 删除协议模板")
     @RequestMapping(value="/deleteAction",method = RequestMethod.DELETE)
-    public AdminProtocolResponse deleteAction(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
+    public AdminResult deleteAction(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
-        AdminSystemVO user = getUser(httpServletRequest);
-        String userId = user.getId();
+//        AdminSystemVO user = getUser(httpServletRequest);
+//        String userId = user.getId();
+        String userId = "1";
         protocolService.deleteProtocolTemplate(request,userId);
 
         //删除redis相应记录
@@ -178,7 +215,7 @@ public class ProtocolController extends BaseController{
         jsonObject.put("displayName",map);
         RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
 
-        return response;
+        return new AdminResult();
     }
 
     /**

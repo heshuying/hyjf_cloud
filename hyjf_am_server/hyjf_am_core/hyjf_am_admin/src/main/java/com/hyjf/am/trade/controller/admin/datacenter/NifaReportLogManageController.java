@@ -14,11 +14,9 @@ import com.hyjf.am.vo.admin.NifaReportLogVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -52,6 +50,24 @@ public class NifaReportLogManageController extends BaseController {
                 response.setRtn(Response.SUCCESS);
                 response.setResultList(nifaFieldDefinitionVOList);
             }
+        }
+        return response;
+    }
+    /**
+     * 根据id查找互金定义
+     * @param logId
+     * @return
+     */
+    @GetMapping(value = "/selectNifaReportLogById/{logId}")
+    public NifaReportLogResponse selectNifaReportLogById(@PathVariable int logId) {
+        logger.info("============根据id查找互金协会报送日志===========参数为"+ logId);
+        NifaReportLogResponse response = new NifaReportLogResponse();
+        NifaReportLog nifaReportLog = nifaReportLogService.selectNifaReportLogById(logId);
+        NifaReportLogVO nifaReportLogVO = new NifaReportLogVO();
+        if(null!=nifaReportLog) {
+            BeanUtils.copyProperties(nifaReportLog,nifaReportLogVO);
+            response.setResult(nifaReportLogVO);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }
