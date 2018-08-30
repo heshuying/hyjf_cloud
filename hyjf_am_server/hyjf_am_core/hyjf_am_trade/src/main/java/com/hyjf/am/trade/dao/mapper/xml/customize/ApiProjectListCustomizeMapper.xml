@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ApiProjectListCustomizeMapper">
-	<resultMap id="InvestListNewMap" type="com.hyjf.am.trade.dao.model.customize.InvestListCustomize">
+	<resultMap id="InvestListNewMap" type="com.hyjf.am.vo.trade.InvestListCustomizeVO">
 		<id column="account" property="accountId"/>
 		<id column="nid" property="nid"/>
 		<id column="borrowNid" property="borrowNid"/>
@@ -36,49 +36,76 @@
 	</resultMap>
 
 	<select id="searchInvestListNew" resultMap="InvestListNewMap" parameterType="Map">
-		SELECT ac.account AS account,bt.nid AS nid,bt.borrow_nid AS borrowNid,CONCAT(b.borrow_apr, '%') borrow_apr,
-			   CASE WHEN b.borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
-			   FORMAT(bt.account, 2) AS amount,bs.`name` AS borrow_style_name, pnai.`name` AS investType,
-		       FROM_UNIXTIME( bt.addtime, '%Y-%m-%d %H:%i:%s' ) AS ADDTIME
-		       ,IFNULL(FROM_UNIXTIME( re.recover_time, '%Y-%m-%d %H:%i:%s' ),'') AS recoverTime
-		       ,IFNULL(re.recover_interest,'') AS recoverInterest,IFNULL(recover_account,'') AS recoverAccount,
-				CASE WHEN bt.recover_account_interest_yes = 0 THEN '' ELSE bt.recover_account_interest_yes END AS recoverAmount,
-				CASE b.status WHEN '4' THEN '1' WHEN '5' THEN '2' ELSE '0'  END AS STATUS,
-				FROM_UNIXTIME(re.create_time, '%Y-%m-%d %H:%i:%s' ) AS interestAt,
-				bt.invite_user_name AS invite_user_name,bt.invite_user_id AS invite_user_id,bt.invite_region_name AS invite_region_name,
-				bt.invite_region_id AS invite_region_id,bt.invite_branch_name AS invite_branch_name,bt.invite_branch_id AS invite_branch_id,
-				bt.invite_department_name AS invite_department_name,bt.invite_department_id AS invite_department_id,
-				pa_tender.`name` AS tender_user_attribute,
-			pa_invite.`name` AS invite_user_attribute,
-			bpt.borrow_class AS project_type,
-			CONCAT("/bank/web/borrow/getBorrowDetail.do?borrowNid=",b.borrow_nid) AS borrow_url,
-			iii.borrow_extra_yield AS borrow_extra_yield,
-			iii.repay_interest AS repay_interest,
-			iii.repay_interest_yes AS repay_interest_yes
-		FROM
-		    huiyingdai_borrow_tender bt
-		  INNER JOIN huiyingdai_borrow b ON bt.borrow_nid = b.borrow_nid
-		  LEFT JOIN hyjf_increase_interest_invest iii ON iii.tender_nid = bt.nid
-		  LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style
-		  LEFT JOIN hyjf_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
-		  LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
-		  LEFT JOIN huiyingdai_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		  LEFT JOIN huiyingdai_borrow_recover re ON bt.id = re.tender_id
-		  LEFT JOIN hyjf_bank_open_account ac ON bt.user_id = ac.user_id
-		  LEFT JOIN hyjf_param_name pa_tender ON pa_tender.name_class = 'USER_PROPERTY' AND pa_tender.name_cd = bt.tender_user_attribute
-		  LEFT JOIN hyjf_param_name pa_invite ON pa_invite.name_class = 'USER_PROPERTY' AND pa_invite.name_cd = bt.invite_user_attribute
-		  WHERE 1=1
+		SELECT
+		bt.user_id as user_id_usr,
+		bt.nid AS nid,
+		bt.borrow_nid AS borrowNid,
+		CONCAT(b.borrow_apr, '%') borrow_apr,
+		CASE WHEN b.borrow_style = 'endday'
+		THEN CONCAT(b.borrow_period, '天')
+		ELSE CONCAT(b.borrow_period, '个月')
+		END borrow_period,
+		FORMAT(bt.account, 2) AS amount,
+		bs.`name` AS borrow_style_name,
+		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- pnai.`name` AS investType,
+		bt.invest_type AS invest_type_rds,
+		FROM_UNIXTIME(bt.create_time, '%Y-%m-%d %H:%i:%s') AS ADDTIME,
+		IFNULL(FROM_UNIXTIME(re.recover_time, '%Y-%m-%d %H:%i:%s'),'') AS recoverTime,
+		IFNULL(re.recover_interest,'') AS recoverInterest,
+		IFNULL(recover_account,'') AS recoverAccount,
+		CASE WHEN bt.recover_account_interest_yes = 0
+		THEN ''
+		ELSE bt.recover_account_interest_yes
+		END AS recoverAmount,
+		CASE b.status
+		WHEN '4'
+		THEN '1'
+		WHEN '5'
+		THEN '2'
+		ELSE '0'
+		END AS STATUS,
+		FROM_UNIXTIME(re.create_time, '%Y-%m-%d %H:%i:%s') AS interestAt,
+		bt.invite_user_name AS invite_user_name,
+		bt.invite_user_id AS invite_user_id,
+		bt.invite_region_name AS invite_region_name,
+		bt.invite_region_id AS invite_region_id,
+		bt.invite_branch_name AS invite_branch_name,
+		bt.invite_branch_id AS invite_branch_id,
+		bt.invite_department_name AS invite_department_name,
+		bt.invite_department_id AS invite_department_id,
+		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- pa_tender.`name` AS tender_user_attribute,
+		bt.tender_user_attribute AS tender_user_attribute_rds,
+		-- 去redis中查找hyjf_param_name对应的KEY和Value（hyjf_param_name迁移时表已删除）
+		-- pa_invite.`name` AS invite_user_attribute,
+		bt.invite_user_attribute AS invite_user_attribute_rds,
+		bpt.borrow_class AS project_type,
+		CONCAT("/bank/web/borrow/getBorrowDetail.do?borrowNid=",b.borrow_nid) AS borrow_url,
+		iii.borrow_extra_yield AS borrow_extra_yield,
+		iii.repay_interest AS repay_interest,
+		iii.repay_interest_yes AS repay_interest_yes
+		FROM	ht_borrow_tender bt
+		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+		INNER JOIN ht_borrow_info o ON bt.borrow_nid = o.borrow_nid
+		LEFT JOIN ht_increase_interest_invest iii ON iii.tender_nid = bt.nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		-- LEFT JOIN hyjf_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
+		-- LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
+		-- LEFT JOIN hyjf_bank_open_account ac ON bt.user_id = ac.user_id
+		-- LEFT JOIN hyjf_param_name pa_tender ON pa_tender.name_class = 'USER_PROPERTY' AND pa_tender.name_cd = bt.tender_user_attribute
+		-- LEFT JOIN hyjf_param_name pa_invite ON pa_invite.name_class = 'USER_PROPERTY' AND pa_invite.name_cd = bt.invite_user_attribute
+		WHERE 1=1
 		  <if test="instCode != null and instCode !=null" >
-			    AND b.inst_code = #{instCode}
+			    AND o.inst_code = #{instCode}
 	      </if>
 		  <if test="startTime != null and startTime != ''">
-				AND bt.addtime <![CDATA[>=]]>  unix_timestamp(#{startTime})
+				AND unix_timestamp(bt.create_time) <![CDATA[>=]]>  unix_timestamp(#{startTime})
 		  </if>
 		  <if test="endTime != null and endTime != ''">
-				AND bt.addtime <![CDATA[<=]]>  unix_timestamp(#{endTime})+86399
-		  </if>
-		  <if test="account != null and account != ''">
-			    AND ac.account = #{account}
+				AND unix_timestamp(bt.create_time) <![CDATA[<=]]>  unix_timestamp(#{endTime})+86399
 		  </if>
 		  <if test="borrowNid != null and borrowNid != ''">
 			    AND bt.borrow_nid = #{borrowNid}

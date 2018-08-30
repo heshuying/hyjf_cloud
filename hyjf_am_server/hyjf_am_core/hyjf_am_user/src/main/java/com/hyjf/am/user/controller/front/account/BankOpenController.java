@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.BankOpenAccountListResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -246,6 +248,36 @@ public class BankOpenController extends BaseController {
 		if(bankOpenAccount != null){
 			BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
 			BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+			response.setResult(bankOpenAccountVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 根据UsetList获取用户账户信息
+	 * @auth wenxin
+	 * @param List<accountId>
+	 * @return
+	 */
+	@RequestMapping("/selectByListId")
+	public BankOpenAccountListResponse selectByListId(@RequestBody @Valid List<Integer> userId) {
+		BankOpenAccountListResponse response = new BankOpenAccountListResponse();
+		List<BankOpenAccount> bankOpenAccount = bankOpenService.selectByListExample(userId);
+		if(bankOpenAccount != null && bankOpenAccount.size() > 0){
+			List<BankOpenAccountVO> bankOpenAccountVO = new ArrayList<BankOpenAccountVO>();
+			BankOpenAccountVO Vo = new BankOpenAccountVO();
+			//BeanUtils.copyProperties(bankOpenAccountVO,bankOpenAccount);
+			for(BankOpenAccount boa :bankOpenAccount){
+				Vo.setAccount(boa.getAccount());
+				Vo.setCreateTime(boa.getCreateTime());
+				Vo.setCreateUserId(boa.getCreateUserId());
+				Vo.setId(boa.getId());
+				Vo.setUpdateUserId(boa.getUpdateUserId());
+				Vo.setUpdateTime(boa.getUpdateTime());
+				Vo.setUserName(boa.getUserName());
+				Vo.setUserId(boa.getUserId());
+				bankOpenAccountVO.add(Vo);
+			}
 			response.setResult(bankOpenAccountVO);
 		}
 		return response;

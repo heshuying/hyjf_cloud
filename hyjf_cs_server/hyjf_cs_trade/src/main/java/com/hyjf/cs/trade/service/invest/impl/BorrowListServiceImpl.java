@@ -11,19 +11,22 @@
 package com.hyjf.cs.trade.service.invest.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.RepayListCustomizeInvestVO;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.service.invest.BorrowListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
-import com.hyjf.cs.trade.util.ProjectConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,10 +63,11 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 		CheckUtil.check(Validator.isNotNull(bean.getStartTime()), MsgEnum.STATUS_CE000001);
 		CheckUtil.check(Validator.isNotNull(bean.getEndTime()), MsgEnum.STATUS_CE000001);
 		logger.info("bean:{}", JSONObject.toJSONString(bean));
-		// 验签
-		CheckUtil.check(ProjectConstant.verifyRequestSign(bean, ProjectConstant.API_METHOD_INVEST_LIST), MsgEnum.ERR_SIGN);
 
-		List<RepayListCustomizeInvestVO> list = searchInvestListNew(bean);
+		// 验签（测试暂时关闭验签）
+		//CheckUtil.check(ProjectConstant.verifyRequestSign(bean, ProjectConstant.API_METHOD_INVEST_LIST), MsgEnum.ERR_SIGN);
+
+		List<InvestListCustomizeVO> list = searchInvestListNew(bean);
 		result.setData(list);
 		return result;
 	}
@@ -74,16 +78,43 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 	 * @author wenxin
 	 * @date 2018/8/27 14:06
 	 */
-	private  List<RepayListCustomizeInvestVO> searchInvestListNew(ApiInvestListReqBean bean){
+	private  List<InvestListCustomizeVO> searchInvestListNew(ApiInvestListReqBean bean){
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("startTime", bean.getStartTime());
 		params.put("endTime", bean.getEndTime());
-		params.put("account", bean.getAccountId());
 		params.put("borrowNid", bean.getBorrowNid());
 		params.put("limitStart",bean.getLimitStart());
 		params.put("limitEnd",bean.getLimitEnd());
-		List<RepayListCustomizeInvestVO> list = amTradeClient.searchInvestListNew(params);
-		return list;
+		//获取投资信息
+		List<InvestListCustomizeVO> InvestList = amTradeClient.searchInvestListNew(params);
+		List<Integer> usr = new ArrayList<Integer>();
+		for (InvestListCustomizeVO vo:InvestList){
+			usr.add(Integer.parseInt(vo.getUser_id_usr().trim()));
+		}
+		//获取accountId
+		List<BankOpenAccountVO>  bankAcList =  amTradeClient.sarchInvestOfBankOpenAccount(usr);
+		for (InvestListCustomizeVO InvestVo:InvestList){
+			for (BankOpenAccountVO BankOpenVo: bankAcList){
+				if(BankOpenVo.getUserId() != null && InvestVo.getUser_id_usr().equals(BankOpenVo.getUserId().toString())){
+					InvestVo.setAccountId(BankOpenVo.getAccount());
+				}
+			}
+		}
+
+		List<InvestListCustomizeVO> InvestListRet = new ArrayList<InvestListCustomizeVO>();
+		//查询条件过滤
+		for(InvestListCustomizeVO InvestVo:InvestList){
+			if(StringUtils.isNotEmpty(bean.getAccountId())){
+				//InvestList.remove(InvestVo);
+				if(InvestVo.getAccountId().equals(bean.getAccountId())){
+					InvestListRet.add(InvestVo);
+				}
+			}else{
+				InvestListRet.addAll(InvestList);
+			}
+		}
+
+		return InvestListRet;
 	}
 
 }

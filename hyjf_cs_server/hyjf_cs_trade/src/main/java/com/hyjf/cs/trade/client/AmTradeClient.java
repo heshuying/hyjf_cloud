@@ -34,11 +34,13 @@ import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
@@ -1710,4 +1712,18 @@ public interface AmTradeClient {
      * @date 2018/8/27 13:59
      */
     List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
+
+    /**
+     * api: 查询投资记录列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<InvestListCustomizeVO> searchInvestListNew(Map<String,Object> params);
+
+    /**
+     * 獲取銀行開戶信息(根据投资信息查询)
+     * @author wenxin
+     * @date 2018/8/27 13:00
+     */
+    List<BankOpenAccountVO> sarchInvestOfBankOpenAccount(List<Integer> userId);
 }

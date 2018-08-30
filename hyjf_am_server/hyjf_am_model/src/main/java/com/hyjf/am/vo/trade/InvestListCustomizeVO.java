@@ -2,7 +2,7 @@ package com.hyjf.am.vo.trade;
 
 import java.io.Serializable;
 
-public class InvestListCustomize implements Serializable{
+public class InvestListCustomizeVO implements Serializable{
 
     /**
      *序列化id

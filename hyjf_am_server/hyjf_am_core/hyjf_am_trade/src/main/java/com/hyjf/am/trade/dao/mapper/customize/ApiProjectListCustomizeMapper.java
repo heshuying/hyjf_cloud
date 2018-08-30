@@ -11,8 +11,7 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.InvestListCustomize;
-
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,6 @@ public interface ApiProjectListCustomizeMapper {
 	 * @param {instCode：机构编号（必填）,startTime:开始时间（必填），endTime:结束时间（必填），account：电子账号（选填），borrowNid：标的编号}
 	 * @return
 	 */
-	List<InvestListCustomize> searchInvestListNew(Map<String, Object> params);
+	List<InvestListCustomizeVO> searchInvestListNew(Map<String, Object> params);
 
 }

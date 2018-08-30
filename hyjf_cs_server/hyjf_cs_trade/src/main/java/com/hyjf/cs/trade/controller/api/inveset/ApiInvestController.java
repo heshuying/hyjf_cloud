@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
-import com.hyjf.am.vo.trade.RepayListCustomizeInvestVO;
 import com.hyjf.cs.trade.service.invest.BorrowListService;
-import java.util.List;
 
 /**
  * api端：标的接口
@@ -35,7 +33,7 @@ public class ApiInvestController extends BaseTradeController {
      * @date 2018/8/27 13:52
      */
     @ApiOperation(value = "查询投资信息的列表", notes = "查询投资信息的列表")
-    @PostMapping("/server/invest/investList.do")
+    @PostMapping("/investList.do")
     public ApiResult investList(@RequestBody ApiInvestListReqBean bean) {
         ApiResult result = new ApiResult();
         // 返回查询结果
