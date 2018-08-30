@@ -4161,4 +4161,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResultInt().intValue();
 	}
+
+	/**
+	 * 根据userId和tenderNid查询投资记录
+	 * @author zhangyk
+	 * @date 2018/8/30 10:49
+	 */
+	@Override
+    public List<BorrowCreditVO> getBorrowCreditListByUserIdAndTenderNid(String tenderNid, String userId) {
+	    String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByUserIdAndTenderNid/"+ userId +"/"+ tenderNid;
+	    BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+	    if (Response.isSuccess(response)){
+	        return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据承接编号查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:06
+     */
+    @Override
+    public String getBorrowCreditTenderServiceFee(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderServiceFee/" +creditNid;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            response.getResultStr();
+        }
+        return null;
+    }
 }

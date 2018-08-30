@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -1786,5 +1787,20 @@ public interface AmTradeClient {
 	 * @param orderId
 	 */
     int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
+
+
+    /**
+     * 根据userId和tenderNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:51
+     */
+    public List<BorrowCreditVO> getBorrowCreditListByUserIdAndTenderNid(String tenderNid, String userId);
+
+    /**
+     * 根据承接编号查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:06
+     */
+    public String getBorrowCreditTenderServiceFee(String creditNid);
 
 }

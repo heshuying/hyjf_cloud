@@ -11,12 +11,7 @@ import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
@@ -76,7 +71,7 @@ import java.util.UUID;
 @Service
 public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements AppMyProjectService {
 
-    public static final String  COUPON_CONFIG_URL = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnByUserIdAndOrderId";
+    public static final String  COUPON_CONFIG_URL = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnByUserIdAndOrderId/";
 
     public static final String BORROW_ACCOUNT_URL = "http://AM-TRADE/am-trade/borrow/getBorrowAccountList";
 
@@ -161,6 +156,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      */
     @Override
     public JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) {
+        userId = "5144";
         CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_BLANK, "标的编号");
         String orderId = request.getParameter("orderId");
         // 优惠券类型，0代表本金投资
@@ -304,7 +300,69 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
         }
-        return null;
+
+        jsonObject.put("projectDetail", detailBeansList);
+        // 4. 转让信息
+        if (orderId != null) {
+            List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId,userId);//projectService.getBorrowList(orderId,userId);
+            JSONArray jsonArray = new JSONArray();
+            if (!CollectionUtils.isEmpty(borrowCreditList)) {
+                for (BorrowCreditVO borrowCredit : borrowCreditList) {
+                    Integer creditNid = borrowCredit.getCreditNid();
+                    JSONObject js = new JSONObject();
+                    js.put("date", GetDate.times10toStrYYYYMMDD(borrowCredit.getAddTime()));
+                    js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
+                    js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
+                    js.put("remainTime", borrowCredit.getCreditTerm());
+                    js.put("realAmount", CommonUtils.formatAmount(borrowCredit.getCreditPrice()));
+                    js.put("hadTransfer", CommonUtils.formatAmount(borrowCredit.getCreditCapitalAssigned()));
+                    String fee = amTradeClient.getBorrowCreditTenderServiceFee(String.valueOf(creditNid));
+                    if (StringUtils.isBlank(fee)) {
+                        fee = "0";
+                    }
+                    js.put("serviceCharge", CommonUtils.formatAmount(fee));
+                    jsonArray.add(js);
+                }
+                jsonObject.put("transferInfo", jsonArray);
+            }else{
+                jsonObject.put("transferInfo", null);
+            }
+        } else {
+            jsonObject.put("transferInfo", null);
+        }
+        //增加返回值，用于前端判断调到那个协议
+        if(borrow.getType().equalsIgnoreCase("13")){
+            //如果是13表示是融通宝，调到融通宝的相关协议
+            jsonObject.put("isPreferred", true);
+            if(borrow.getBorrowPublisher().equalsIgnoreCase("嘉诺")){
+                jsonObject.put("publisher", 2);
+            }else{
+                jsonObject.put("publisher", 1);
+            }
+        }else{
+            //调到居间服务协议
+            jsonObject.put("isPreferred", false);
+        }
+        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(orderId);//居间协议
+        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+            TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+            Integer fddStatus = tenderAgreement.getStatus();
+            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+            //System.out.println("计划详情的接口参数******************1法大大协议状态："+tenderAgreement.getStatus());
+            if(fddStatus.equals(3)){
+                jsonObject.put("fddStatus", 1);
+            }else {
+                //隐藏下载按钮
+                //System.out.println("计划详情的接口参数******************2法大大协议状态：0");
+                jsonObject.put("fddStatus", 0);
+            }
+        }else {
+            //下载老版本协议
+            //System.out.println("计划详情的接口参数******************3法大大协议状态：2");
+            jsonObject.put("fddStatus", 1);;
+        }
+
+        return jsonObject;
     }
 
 
