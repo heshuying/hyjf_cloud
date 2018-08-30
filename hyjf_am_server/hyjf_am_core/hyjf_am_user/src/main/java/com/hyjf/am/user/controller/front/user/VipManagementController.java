@@ -57,9 +57,9 @@ public class VipManagementController extends BaseController {
         VipManageResponse response = new VipManageResponse();
         Map<String, Object> mapParam = paramSet(request);
         int count = vipManagementService.countRecord(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), count);
+        Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), count);
         }
         List<VipManageListCustomize> manageList = vipManagementService.selectUserList(mapParam, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {
@@ -87,9 +87,9 @@ public class VipManagementController extends BaseController {
         Map<String, Object> mapParam = new HashMap<>();
         mapParam.put("userId", request.getUserId());
         int count = vipManagementService.countDetailRecord(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), count);
+        Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), count);
         }
         List<VipDetailListCustomize> detailListCustomizes = vipManagementService.searchDetailList(mapParam, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {
@@ -115,9 +115,9 @@ public class VipManagementController extends BaseController {
         Map<String, Object> mapParam = new HashMap<>();
         mapParam.put("userId", request.getUserId());
         int count = vipManagementService.countUpdateGradeList(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), count);
+        Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), count);
         }
         List<VipUpdateGradeListCustomize> vipUpdateGradeListCustomizes = vipManagementService.searchUpdaeGradeList(mapParam, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {
