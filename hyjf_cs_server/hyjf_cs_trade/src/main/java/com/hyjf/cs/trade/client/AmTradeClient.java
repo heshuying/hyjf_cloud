@@ -1803,4 +1803,11 @@ public interface AmTradeClient {
      */
     public String getBorrowCreditTenderServiceFee(String creditNid);
 
+    /**
+     * 根据creditNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:51
+     */
+    public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid);
+
 }

@@ -560,13 +560,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-            // 查询优惠券的投资
-            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
-            // 优惠券收益
-            data.put("couponQuota",borrowTenderCpn.getAccount());
-            data.put("couponType",couponUser.getCouponType());
-            data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
-            data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+            if(couponUser!=null){
+                // 查询优惠券的投资
+                BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
+                // 优惠券收益
+                if(borrowTenderCpn!=null){
+                    data.put("couponQuota",borrowTenderCpn.getAccount());
+                    data.put("couponType",couponUser.getCouponType());
+                    data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
+                    data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+                }else{
+                    data.put("couponQuota","");
+                    data.put("couponType","");
+                    data.put("couponAll","");
+                    data.put("couponInterest","");
+                }
+            }else{
+                data.put("couponQuota","");
+                data.put("couponType","");
+                data.put("couponAll","");
+                data.put("couponInterest","");
+            }
         }
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);

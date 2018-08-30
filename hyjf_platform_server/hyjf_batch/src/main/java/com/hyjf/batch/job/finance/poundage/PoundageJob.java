@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author wangjun
  * @version PoundageJob, v0.1 2018/6/21 15:40
+ * 手续费分账明细插入定时
  */
 @DisallowConcurrentExecution
 public class PoundageJob extends BaseJob implements Job {

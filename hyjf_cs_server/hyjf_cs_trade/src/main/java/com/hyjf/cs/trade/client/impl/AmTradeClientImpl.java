@@ -2936,7 +2936,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg) {
         String url = "http://AM-TRADE/am-trade/creditTender/updateCreditTenderResult/" + logOrderId+"/"+logUserId+"/"+retCode+"/"+retMsg ;
-        return restTemplate.getForEntity(url, Integer.class).getBody();
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -2948,8 +2952,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public String getFailResult(String logOrdId, Integer userId) {
-        String url = "http://AM-TRADE/am-trade/creditTender/getFaileResult/" + logOrdId+"/"+userId ;
-        return restTemplate.getForEntity(url, String.class).getBody();
+        String url = "http://AM-TRADE/am-trade/creditTender/getFailResult/" + logOrdId+"/"+userId ;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultStr();
+        }
+        return "";
     }
 
     /**
@@ -4189,6 +4197,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
             response.getResultStr();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据tenderNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:49
+     */
+    @Override
+    public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByCreditNid/"+ creditNid;
+        BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

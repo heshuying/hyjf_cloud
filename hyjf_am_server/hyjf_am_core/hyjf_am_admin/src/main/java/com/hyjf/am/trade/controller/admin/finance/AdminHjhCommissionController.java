@@ -33,7 +33,7 @@ import io.swagger.annotations.Api;
 import com.hyjf.common.paginator.Paginator;
 /**
  * @author libin
- * @version AdminHjhCommissionController.java, v0.1 2018年8月7日 下午4:42:18   旧
+ * @version AdminHjhCommissionController.java, v0.1 2018年8月7日 下午4:42:18   
  */
 @Api(value = "汇计划提成列表")
 @RestController

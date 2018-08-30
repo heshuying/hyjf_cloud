@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PoundageServiceImpl extends BaseServiceImpl implements PoundageService {
+    /**
+     * 手续费分账数据插入
+     */
     @Override
     public void insertPoundage() {
         // 插入手续费分账明细数据
