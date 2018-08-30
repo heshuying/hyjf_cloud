@@ -320,10 +320,18 @@ public interface AmTradeClient {
     List<AccountRechargeVO> selectAccountRechargeByOrderId(String orderId);
 
     /**
-     * 更新充值的相关信息
+     * 更新充值的相关信息(接口调用)
      * @auth sunpeikai
      * @param
      * @return
      */
     String handleRechargeInfo(HandleAccountRechargeRequest request);
+
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String handleRechargeOnlineInfo(HandleAccountRechargeRequest request);
 }

@@ -114,10 +114,11 @@ public class AutoTenderExceptionController extends BaseController {
     @ApiOperation(value = "异常处理", notes = "异常处理")
     @PostMapping(value = "/tenderExceptionAction",produces="application/json; charset=utf-8")
     @ResponseBody
-    public AdminResult tenderExceptionAction(HttpServletRequest request,@RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
+    public AdminResult tenderExceptionAction(@RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
         String returnMsg = autoTenderExceptionService.tenderExceptionAction(tenderExceptionSolveRequestBean);
         if(StringUtils.isNotBlank(returnMsg)){
-            return new AdminResult<>(FAIL, returnMsg);
+            AdminResult adminResult = new AdminResult<>(FAIL, returnMsg);
+            return adminResult;
         }
         return new AdminResult<>();
     }

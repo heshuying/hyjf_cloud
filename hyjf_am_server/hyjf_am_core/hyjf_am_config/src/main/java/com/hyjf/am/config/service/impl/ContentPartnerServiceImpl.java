@@ -8,12 +8,10 @@ import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -70,14 +68,16 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	}
 
 	@Override
-	public Link getbyPartnerType(Integer type) {
+	public List<Link> getbyPartnerType(Integer type) {
 		LinkExample example = new LinkExample();
-		example.createCriteria().andPartnerTypeEqualTo(type);
-		List<Link> linkList = linkMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(linkList)) {
-			return linkList.get(0);
+		LinkExample.Criteria criteria = example.createCriteria();
+		criteria.andStatusEqualTo( 1);// 启用状态
+		criteria.andTypeEqualTo(2);// 合作伙伴
+		if (type != null) {
+			criteria.andPartnerTypeEqualTo(type);
 		}
-		return null;
+		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+		return linkMapper.selectByExample(example);
 	}
 
 	@Override

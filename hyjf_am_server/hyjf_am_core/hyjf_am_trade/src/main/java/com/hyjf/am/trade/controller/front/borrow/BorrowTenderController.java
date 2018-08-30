@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
@@ -58,6 +60,7 @@ public class BorrowTenderController extends BaseController {
     public BorrowTenderResponse selectBorrowTender(@RequestBody BorrowTenderRequest request){
         BorrowTenderResponse response = new BorrowTenderResponse();
         BorrowTender borrowTender =borrowTenderService.selectBorrowTender(request);
+        logger.info("获取投资成功结果查询数据库："+borrowTender);
         if (Validator.isNotNull(borrowTender)){
             response.setResult(CommonUtils.convertBean(borrowTender,BorrowTenderVO.class));
         }
@@ -129,9 +132,18 @@ public class BorrowTenderController extends BaseController {
      * @return
      */
     @PostMapping("/save_credit_tender_assign_log")
-    public Integer saveCreditTenderAssignLog(@RequestBody CreditTenderLogVO creditTenderLogVO){
+    public IntegerResponse saveCreditTenderAssignLog(@RequestBody CreditTenderLogVO creditTenderLogVO){
         CreditTenderLog bean = CommonUtils.convertBean(creditTenderLogVO,CreditTenderLog.class);
-        return borrowTenderService.saveCreditTenderAssignLog(bean);
+        logger.info("保存债转数据：{} ",JSONObject.toJSONString(creditTenderLogVO));
+        IntegerResponse response = new IntegerResponse();
+        try {
+            response.setResultInt(borrowTenderService.saveCreditTenderAssignLog(bean));
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setResultInt(0);
+        }
+
+        return response;
     }
 
     /**

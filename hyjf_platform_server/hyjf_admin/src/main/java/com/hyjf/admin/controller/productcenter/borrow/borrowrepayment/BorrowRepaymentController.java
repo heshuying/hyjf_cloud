@@ -2,8 +2,10 @@ package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment;
 
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
+import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentPlanRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
+import com.hyjf.admin.beans.request.RepayRequestBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -18,6 +20,7 @@ import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -38,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +131,26 @@ public class BorrowRepaymentController extends BaseController {
         result.setData(bean);
         return result;
     }
+
+    /**
+     * 迁移到还款画面
+     *
+     * @param request
+     * @return 标签配置列表
+     */
+    @ApiOperation(value = "还款画面初始化", notes = "还款页面查询初始化")
+    @PostMapping(value = "/initRepayAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ApiImplicitParam(name = "borrowNid",value = "项目编号")
+    public AdminResult<RepayInfoBean> moveRepayAction(HttpServletRequest request, @RequestBody Map map) {
+        String borrowNid = (String) map.get("borrowNid");
+        RepayInfoBean bean=borrowRepaymentService.getRepayInfo(borrowNid);
+        AdminResult<RepayInfoBean> result=new AdminResult<RepayInfoBean> ();
+        result.setData(bean);
+        return result;
+    }
+
+
 
     /**
      * @Description 数据导出--还款计划

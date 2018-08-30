@@ -9,6 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
@@ -67,11 +68,14 @@ public class  CsMessageClientImpl  implements CsMessageClient {
      */
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
-        Integer count = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedrecordscount", request, Integer.class)
+        AssociatedRecordListResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedrecordscount", request, AssociatedRecordListResponse.class)
                 .getBody();
-
-        return count;
+        if(Response.isSuccess(response)){
+            String count = String.valueOf(response.getCount());
+            return Integer.valueOf(count);
+        }
+        return 0;
     }
 
     /**
@@ -84,6 +88,41 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
+                .getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的count
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @Override
+    public Integer getDirectionalTransferLogCount(BindLogListRequest request) {
+        BindLogResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedlogcount", request, BindLogResponse.class)
+                .getBody();
+        if(Response.isSuccess(response)){
+            String count = String.valueOf(response.getCount());
+            return Integer.valueOf(count);
+        }
+        return 0;
+    }
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的list
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @Override
+    public List<BindLogVO> searchDirectionalTransferLogList(BindLogListRequest request) {
+        BindLogResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedloglist", request, BindLogResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();

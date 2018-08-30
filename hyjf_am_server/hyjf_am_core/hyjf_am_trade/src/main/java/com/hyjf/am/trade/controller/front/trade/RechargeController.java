@@ -172,7 +172,7 @@ public class RechargeController extends BaseController {
     }
 
     /**
-     * 更新充值的相关信息
+     * 更新充值的相关信息(接口调用)
      * @auth sunpeikai
      * @param
      * @return
@@ -181,6 +181,23 @@ public class RechargeController extends BaseController {
     public StringResponse handleRechargeInfo(@RequestBody HandleAccountRechargeRequest request){
         StringResponse response = new StringResponse();
         String result = rechargeService.handleRechargeInfo(request);
+        if(!result.isEmpty()){
+            response.setResultStr(result);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/handleRechargeOnlineInfo")
+    public StringResponse handleRechargeOnlineInfo(@RequestBody HandleAccountRechargeRequest request){
+        StringResponse response = new StringResponse();
+        String result = rechargeService.handleRechargeOnlineInfo(request);
         if(!result.isEmpty()){
             response.setResultStr(result);
             response.setRtn(Response.SUCCESS);

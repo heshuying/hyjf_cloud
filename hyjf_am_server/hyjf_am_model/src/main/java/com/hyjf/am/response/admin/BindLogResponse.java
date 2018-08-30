@@ -11,4 +11,13 @@ import com.hyjf.am.vo.admin.BindLogVO;
  * @version: BindLogResponse, v0.1 2018/7/5 15:43
  */
 public class BindLogResponse extends Response<BindLogVO> {
+    private long count;
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

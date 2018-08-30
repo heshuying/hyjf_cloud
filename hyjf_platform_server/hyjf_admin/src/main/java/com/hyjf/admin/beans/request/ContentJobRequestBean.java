@@ -4,6 +4,8 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,19 +15,19 @@ import java.util.Date;
  */
 public class ContentJobRequestBean extends BaseRequest {
     private Integer id;
-
+    @ApiModelProperty(value = "职位名称")
     private String officeName;
-
+    @ApiModelProperty(value = "工作城市")
     private String place;
-
+    @ApiModelProperty(value = "状态 0:关闭 1:开启")
     private Integer status;
 
     private String addAdmin;
 
     private Integer order;
-
+    @ApiModelProperty(value = "招聘人数")
     private Integer persons;
-
+    @ApiModelProperty(value = "简历投递邮箱")
     private String email;
 
     private Integer createUserId;
@@ -35,7 +37,7 @@ public class ContentJobRequestBean extends BaseRequest {
     private Date createTime;
 
     private Date updateTime;
-
+    @ApiModelProperty(value = "职位描述")
     private String content;
 
     private static final long serialVersionUID = 1L;
@@ -145,23 +147,27 @@ public class ContentJobRequestBean extends BaseRequest {
     }
 
     /** 开始时间 */
-    private String startTime;
+    @ApiModelProperty(value = "开始时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startTime;
     /** 结束时间 */
-    private String endTime;
+    @ApiModelProperty(value = "结束时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endTime;
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 }
