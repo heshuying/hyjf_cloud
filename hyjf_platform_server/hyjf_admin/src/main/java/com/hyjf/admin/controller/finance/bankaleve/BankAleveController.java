@@ -63,8 +63,8 @@ public class BankAleveController {
             Integer count = bankAleveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankAleveList);
-            jsonObject.put("status", "000");
-            jsonObject.put("statusDesc", "查询银行账务明细成功");
+            status =  "000";
+            statusDesc = "查询银行账务明细成功";
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);

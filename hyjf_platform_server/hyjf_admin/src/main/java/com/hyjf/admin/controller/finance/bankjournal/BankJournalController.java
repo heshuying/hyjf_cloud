@@ -52,8 +52,8 @@ public class BankJournalController {
             Integer count = bankEveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
-            jsonObject.put("status", "000");
-            jsonObject.put("statusDesc", "查询银行交易明细成功");
+            status =  "000";
+            statusDesc = "查询银行交易明细成功";
 
         }
         jsonObject.put("status",status);
