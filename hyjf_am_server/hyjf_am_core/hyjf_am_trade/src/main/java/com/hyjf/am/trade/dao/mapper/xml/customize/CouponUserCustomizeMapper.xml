@@ -493,7 +493,7 @@
 						3
 					) real_tender_money
 				FROM
-					hyjf_coupon_user u
+					ht_coupon_user u
 				LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
 				LEFT JOIN ht_coupon_tender ct ON u.id = ct.coupon_grant_id
 				LEFT JOIN ht_coupon_recover cr ON ct.order_id = cr.tender_id AND cr.recover_period=1

@@ -12,6 +12,7 @@ import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class DataCenterCouponController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getdatacentercouponlist")
-	public DataCenterCouponResponse getDataCenterCouponJXList(DataCenterCouponRequest request) {
+	public DataCenterCouponResponse getDataCenterCouponJXList(@RequestBody DataCenterCouponRequest request) {
 		DataCenterCouponResponse response = new DataCenterCouponResponse();
 		List<DataCenterCouponCustomize> list = couponService.getDataCenterCouponList(request);
 		List<DataCenterCouponCustomizeVO> voList = new ArrayList<>();
