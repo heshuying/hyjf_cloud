@@ -74,6 +74,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.hyjf.am.vo.trade.RepayListCustomizeInvestVO;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -4029,6 +4031,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<ApiProjectListCustomize> getApiProjectList(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/projectlist/api/getBorrowList";
         ApiProjectListResponse response = restTemplate.postForEntity(url,params,ApiProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询投资记录
+     * @author wenxin
+     * @date 2018/8/27 13:00
+     */
+    @Override
+    public List<RepayListCustomizeInvestVO> searchInvestListNew(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/investList/api/getInvestList";
+        ApiInvestResponse response = restTemplate.postForEntity(url,params,ApiInvestResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

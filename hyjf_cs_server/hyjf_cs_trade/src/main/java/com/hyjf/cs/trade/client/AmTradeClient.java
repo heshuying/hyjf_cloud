@@ -34,7 +34,7 @@ import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.RepayListCustomizeInvestVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -47,6 +47,7 @@ import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -1709,4 +1710,11 @@ public interface AmTradeClient {
      * @date 2018/8/27 13:59
      */
     List<ApiProjectListCustomize> getApiProjectList(Map<String,Object> params);
+
+    /**
+     * api: 查询投资记录列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<RepayListCustomizeInvestVO> searchInvestListNew(Map<String,Object> params);
 }

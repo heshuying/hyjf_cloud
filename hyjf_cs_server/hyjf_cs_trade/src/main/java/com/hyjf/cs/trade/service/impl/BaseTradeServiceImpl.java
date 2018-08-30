@@ -227,4 +227,6 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         UserVO users = amUserClient.findUserById(userId);
         return users;
     }
+
+
 }
