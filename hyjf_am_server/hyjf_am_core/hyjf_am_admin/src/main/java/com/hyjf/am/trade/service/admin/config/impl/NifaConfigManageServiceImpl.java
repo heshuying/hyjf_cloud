@@ -6,7 +6,10 @@ package com.hyjf.am.trade.service.admin.config.impl;
 import com.hyjf.am.trade.dao.mapper.auto.NifaContractTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.NifaFieldDefinitionMapper;
 import com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.NifaContractTemplate;
+import com.hyjf.am.trade.dao.model.auto.NifaContractTemplateExample;
+import com.hyjf.am.trade.dao.model.auto.NifaFieldDefinition;
+import com.hyjf.am.trade.dao.model.auto.NifaFieldDefinitionExample;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.config.NifaConfigManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -22,7 +25,7 @@ import java.util.List;
  * @version NifaConfigManageServiceImpl, v0.1 2018/8/15 14:41
  */
 @Service
-public class NifaConfigManageServiceImpl extends BaseServiceImpl implements NifaConfigManageService{
+public class NifaConfigManageServiceImpl extends BaseServiceImpl implements NifaConfigManageService {
     @Autowired
     private NifaFieldDefinitionMapper nifaFieldDefinitionMapper;
     @Autowired
