@@ -65,6 +65,9 @@ public class BankAleveController {
             jsonObject.put("record",bankAleveList);
             status =  "000";
             statusDesc = "查询银行账务明细成功";
+        }else{
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);

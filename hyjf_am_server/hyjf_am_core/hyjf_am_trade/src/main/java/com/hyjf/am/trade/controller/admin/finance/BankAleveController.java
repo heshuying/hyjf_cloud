@@ -10,6 +10,7 @@ import com.hyjf.am.trade.service.admin.finance.BankAleveService;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,7 +70,14 @@ public class BankAleveController extends BaseController {
 	 * @return
 	 */
 	private Map<String, Object> paramSet(BankAleveRequest request) {
+
 		Map<String, Object> mapParam = new HashMap<String, Object>();
+		//电子账号
+		mapParam.put("cardnbr", request.getCardnbr());
+		//系统跟单号
+		mapParam.put("seqno", request.getSeqno());
+		//交易类型
+		mapParam.put("transtype", request.getTranstype());
 		//自动同步用生成订单id
 		mapParam.put("orderId", request.getOrderId());
 		//userid

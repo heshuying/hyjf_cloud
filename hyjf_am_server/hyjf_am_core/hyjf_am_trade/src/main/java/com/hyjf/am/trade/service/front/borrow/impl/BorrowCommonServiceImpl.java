@@ -4491,16 +4491,16 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
+	public com.hyjf.am.bean.admin.BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
 		String borrowNid = borrowBean.getBorrowNid();
 		if (StringUtils.isNotEmpty(borrowNid)) {
-			BorrowWithBLOBs bwb=new BorrowWithBLOBs();
+			com.hyjf.am.bean.admin.BorrowWithBLOBs bwb=new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 			BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
 			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 			return  bwb;
 		}
 		
-		return new BorrowWithBLOBs();
+		return new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 	}
 	
 	
