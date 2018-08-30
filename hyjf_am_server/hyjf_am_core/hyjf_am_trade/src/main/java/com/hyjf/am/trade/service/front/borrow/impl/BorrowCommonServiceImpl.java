@@ -1581,7 +1581,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					|| StringUtils.isNotEmpty(borrowBean.getWtime()) || StringUtils.isNotEmpty(borrowBean.getUserCredit())) {
 
 				BorrowManinfo borrowManinfo = new BorrowManinfo();
-
 				borrowManinfo.setBorrowNid(borrowNid);
 				borrowManinfo.setBorrowPreNid(borrow.getBorrowPreNid());
 				// 姓名
@@ -1908,6 +1907,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				if(borrowBean.getIsPunished() != null ){
 					borrowManinfo.setIsPunished(borrowBean.getIsPunished());
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 			    this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			}
 		} else {
@@ -2432,7 +2432,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowAssetNumber(this.getValue(borrowWithBLOBs.getBorrowAssetNumber()));
 		// 新增协议期限字段
 		// 协议期限
-		borrowBean.setContractPeriod(this.getValue(borrowWithBLOBs.getContractPeriod() + ""));
+		if(borrowWithBLOBs.getContractPeriod()!=null) {
+			borrowBean.setContractPeriod(String.valueOf(borrowWithBLOBs.getContractPeriod()));
+		}
 		// 项目来源
 		borrowBean.setBorrowProjectSource(this.getValue(borrowWithBLOBs.getBorrowProjectSource()));
 		// 起息时间
@@ -2836,6 +2838,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(个人) end */
+				if (StringUtils.isNotEmpty(record.getAddress())) {
+					borrowBean.setAddress(this.getValue(record.getAddress()));
+				} else {
+					borrowBean.setAddress(StringUtils.EMPTY);
+				}
 			}
 		}
 	}
