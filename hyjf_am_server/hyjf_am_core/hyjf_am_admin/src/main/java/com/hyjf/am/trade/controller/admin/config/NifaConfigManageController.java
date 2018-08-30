@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
@@ -22,6 +23,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -69,11 +71,12 @@ public class NifaConfigManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/insertNifaFieldDefinition", method = RequestMethod.POST)
-    public Boolean insertNifaFieldDefinition(@RequestBody @Valid NifaFieldDefinitionAddRequest request) {
+    public BooleanResponse insertNifaFieldDefinition(@RequestBody @Valid NifaFieldDefinitionAddRequest request) {
         logger.info("============添加互金字段定义===========参数为"+ JSONObject.toJSONString(request));
         NifaFieldDefinition nifaFieldDefinition = new NifaFieldDefinition();
         BeanUtils.copyProperties(request, nifaFieldDefinition);
-        return nifaConfigManageService.insertNifaFieldDefinition(nifaFieldDefinition) > 0 ? true : false;
+        boolean instFlg = nifaConfigManageService.insertNifaFieldDefinition(nifaFieldDefinition) > 0 ? true : false;
+        return new BooleanResponse(instFlg);
     }
 
     /**
@@ -86,9 +89,9 @@ public class NifaConfigManageController extends BaseController {
         logger.info("============根据id查找互金定义===========参数为"+ nifaId);
         NifaFieldDefinitionResponse response = new NifaFieldDefinitionResponse();
         NifaFieldDefinition nifaFieldDefinition = nifaConfigManageService.selectFieldDefinitionById(nifaId);
-        NifaFieldDefinitionVO nifaFieldDefinitionVO = null;
+        NifaFieldDefinitionVO nifaFieldDefinitionVO = new NifaFieldDefinitionVO();
         if(null!=nifaFieldDefinition) {
-            BeanUtils.copyProperties(nifaFieldDefinition, nifaFieldDefinitionVO);
+            BeanUtils.copyProperties(nifaFieldDefinition,nifaFieldDefinitionVO);
             response.setResult(nifaFieldDefinitionVO);
             response.setRtn(Response.SUCCESS);
         }
@@ -101,7 +104,7 @@ public class NifaConfigManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/updateNifaFieldDefinition", method = RequestMethod.POST)
-    public Boolean updateNifaFieldDefinition(@RequestBody @Valid NifaFieldDefinitionAddRequest request) {
+    public BooleanResponse updateNifaFieldDefinition(@RequestBody @Valid NifaFieldDefinitionAddRequest request) {
         logger.info("============修改互金字段定义===========参数为"+ JSONObject.toJSONString(request));
         //根据id查找之前的数据
         NifaFieldDefinition nifaFieldDefinition = nifaConfigManageService.selectFieldDefinitionById(String.valueOf(request.getId()));
@@ -110,7 +113,8 @@ public class NifaConfigManageController extends BaseController {
             BeanUtils.copyProperties(request,nifaFieldDefinition);
         }
         BeanUtils.copyProperties(request, nifaFieldDefinition);
-        return nifaConfigManageService.updateNifaFieldDefinition(nifaFieldDefinition) > 0 ? true : false;
+        boolean updFlg = nifaConfigManageService.updateNifaFieldDefinition(nifaFieldDefinition) > 0 ? true : false;
+        return new BooleanResponse(updFlg);
     }
 
 
@@ -120,11 +124,12 @@ public class NifaConfigManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/insertNifaContractTemplate", method = RequestMethod.POST)
-    public Boolean insertNifaContractTemplate(@RequestBody @Valid NifaContractTemplateAddRequest request) {
+    public BooleanResponse insertNifaContractTemplate(@RequestBody @Valid NifaContractTemplateAddRequest request) {
         logger.info("============添加合同模版约定条款===========参数为"+ JSONObject.toJSONString(request));
         NifaContractTemplate nifaContractTemplate = new NifaContractTemplate();
         BeanUtils.copyProperties(request, nifaContractTemplate);
-        return nifaConfigManageService.insertNifaContractTemplate(nifaContractTemplate) > 0 ? true : false;
+        boolean instFlg = nifaConfigManageService.insertNifaContractTemplate(nifaContractTemplate) > 0 ? true : false;
+        return new BooleanResponse(instFlg);
     }
     /**
      * 修改合同模版约定条款表
@@ -132,7 +137,7 @@ public class NifaConfigManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/updateNifaContractTemplate", method = RequestMethod.POST)
-    public Boolean updateNifaContractTemplate(@RequestBody @Valid NifaContractTemplateAddRequest request) {
+    public BooleanResponse updateNifaContractTemplate(@RequestBody @Valid NifaContractTemplateAddRequest request) {
         logger.info("============修改合同模版约定条款表===========参数为"+ JSONObject.toJSONString(request));
         //根据id查找之前的数据
         NifaContractTemplate nifaFieldDefinition = nifaConfigManageService.selelctNifaContractTemplateById(String.valueOf(request.getId()));
@@ -141,7 +146,8 @@ public class NifaConfigManageController extends BaseController {
             BeanUtils.copyProperties(request,nifaFieldDefinition);
         }
         BeanUtils.copyProperties(request, nifaFieldDefinition);
-        return nifaConfigManageService.updateNifaContractTemplate(nifaFieldDefinition) > 0 ? true : false;
+        boolean updFlg = nifaConfigManageService.updateNifaContractTemplate(nifaFieldDefinition) > 0 ? true : false;
+        return new BooleanResponse(updFlg);
     }
 
     /**
@@ -154,7 +160,7 @@ public class NifaConfigManageController extends BaseController {
         logger.info("============根据id查找合同模版约定条款表===========参数为"+ nifaId);
         NifaContractTemplateResponse response = new NifaContractTemplateResponse();
         NifaContractTemplate nifaFieldDefinition = nifaConfigManageService.selelctNifaContractTemplateById(nifaId);
-        NifaContractTemplateVO nifaFieldDefinitionVO = null;
+        NifaContractTemplateVO nifaFieldDefinitionVO = new NifaContractTemplateVO();
         if(null!=nifaFieldDefinition) {
             BeanUtils.copyProperties(nifaFieldDefinition, nifaFieldDefinitionVO);
             response.setResult(nifaFieldDefinitionVO);
@@ -168,9 +174,10 @@ public class NifaConfigManageController extends BaseController {
      * @return
      */
     @GetMapping(value = "/deleteNifaContractTemplateById/{nifaId}")
-    public Boolean deleteNifaContractTemplateById(@PathVariable int nifaId) {
+    public BooleanResponse deleteNifaContractTemplateById(@PathVariable int nifaId) {
         logger.info("============根据id删除合同模版约定条款表===========参数为"+ nifaId);
-        return nifaConfigManageService.deleteNifaContractTemplate(nifaId) > 0 ? true : false;
+        boolean delFlg =nifaConfigManageService.deleteNifaContractTemplate(nifaId) > 0 ? true : false;
+        return new BooleanResponse(delFlg);
     }
     /**
      * 查找合同模板id

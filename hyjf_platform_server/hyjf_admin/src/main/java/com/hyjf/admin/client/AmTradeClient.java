@@ -2831,5 +2831,12 @@ public interface AmTradeClient {
      * @return
      */
     AdminMerchantAccountSumCustomizeVO searchAccountSum();
+    /**
+     * 根据id查找互金协会报送日志
+     * @param logId
+     * @auth nxl
+     * @return
+     */
+    NifaReportLogResponse selectNifaReportLogById(int logId);
 }
 

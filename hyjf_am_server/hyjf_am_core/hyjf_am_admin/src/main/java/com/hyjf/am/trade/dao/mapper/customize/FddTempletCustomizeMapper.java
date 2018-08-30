@@ -18,4 +18,9 @@ public interface FddTempletCustomizeMapper {
      * @return
      */
     List<FddTempletCustomize> selectFddTempletList(FddTempletCustomize request);
+    /**
+     * 查找不再合同模版约定条款表里的协议模板号
+     * @return
+     */
+    List<FddTempletCustomize> selectContractTempId();
 }
