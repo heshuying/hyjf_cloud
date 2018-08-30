@@ -361,6 +361,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             jsonObject.put("fddStatus", 1);;
         }
 
+        jsonObject.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
+        jsonObject.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         return jsonObject;
     }
 
