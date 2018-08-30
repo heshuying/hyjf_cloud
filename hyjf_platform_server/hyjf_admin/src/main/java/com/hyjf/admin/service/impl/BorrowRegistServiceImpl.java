@@ -61,7 +61,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
     public BorrowRegistResponseBean getRegistList(BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistResponseBean borrowRegistResponseBean = new BorrowRegistResponseBean();
         //查询总条数
-        Integer count = amTradeClient.getRegistCount(borrowRegistListRequest);
+        Integer count = amTradeClient.getRegistListCount(borrowRegistListRequest);
         borrowRegistResponseBean.setTotal(count);
         //分页参数
         Page page = Page.initPage(borrowRegistListRequest.getCurrPage(), borrowRegistListRequest.getPageSize());

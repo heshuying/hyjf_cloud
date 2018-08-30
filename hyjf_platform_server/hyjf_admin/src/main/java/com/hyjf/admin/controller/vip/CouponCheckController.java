@@ -67,9 +67,9 @@ public class CouponCheckController extends BaseController {
 
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
-    @GetMapping("/deleteAction")
+    @GetMapping("/deleteAction/{ids}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteCheckList(@RequestParam String ids) {
+    public AdminResult deleteCheckList(@PathVariable String ids) {
         AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
@@ -101,8 +101,8 @@ public class CouponCheckController extends BaseController {
     }
 
     @ApiOperation(value = "下载文件", notes = "下载文件")
-    @GetMapping("/downloadAction")
-    public AdminResult downloadFile(HttpServletResponse response, @RequestParam String id) {
+    @GetMapping("/downloadAction/{id}")
+    public AdminResult downloadFile(HttpServletResponse response, @PathVariable String id) {
         couponCheckService.downloadFile(id, response);
         return new AdminResult<>();
     }
@@ -114,8 +114,8 @@ public class CouponCheckController extends BaseController {
         CouponCheckResponse ccr = new CouponCheckResponse();
         String remark = checkRequest.getRemark();
         boolean results = false;
-//        AdminSystemVO user = getUser(request);
-//        String userId = user.getId();
+        AdminSystemVO user = getUser(request);
+        String userId = user.getId();
         //审核通过
         if (StringUtils.equals(String.valueOf(checkRequest.getStatus()), "2")) {
             String path = checkRequest.getId();
@@ -128,7 +128,7 @@ public class CouponCheckController extends BaseController {
                 checkRequest.setStatus(4);
                 results = couponCheckService.updateCoupon(checkRequest);
                 try {
-                    flag = couponCheckService.batchCheck(checkRequest.getId(), response, "1");
+                    flag = couponCheckService.batchCheck(checkRequest.getId(), response, userId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
