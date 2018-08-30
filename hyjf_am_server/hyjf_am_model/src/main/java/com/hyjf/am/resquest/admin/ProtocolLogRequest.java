@@ -18,9 +18,10 @@ public class ProtocolLogRequest  extends BasePage implements Serializable {
     private int paginatorPage = 1;
 
     /**
-     * 列表画面自定义标签上的用翻页对象：paginator
+     * 分页变量
      */
-    private Paginator paginator;
+    private int limitStart = -1;
+    private int limitEnd = -1;
 
     public int getPaginatorPage() {
         if (paginatorPage == 0) {
@@ -33,11 +34,19 @@ public class ProtocolLogRequest  extends BasePage implements Serializable {
         this.paginatorPage = paginatorPage;
     }
 
-    public Paginator getPaginator() {
-        return paginator;
+    public int getLimitStart() {
+        return limitStart;
     }
 
-    public void setPaginator(Paginator paginator) {
-        this.paginator = paginator;
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

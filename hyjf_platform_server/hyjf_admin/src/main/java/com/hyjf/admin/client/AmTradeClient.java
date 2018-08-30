@@ -36,6 +36,7 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -2809,6 +2810,24 @@ public interface AmTradeClient {
      */
     Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
 
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+    * @author Zha Daojian
+    * @date 2018/8/23 15:38
+    * @param applyAgreementInfoVO
+    * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+    **/
+    ApplyAgreementInfoResponse saveApplyAgreementInfo(ApplyAgreementInfoVO applyAgreementInfoVO);
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     **/
+    ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId);
     /**
      * 单期还款数据
      * @param borrowNid
@@ -2825,5 +2844,18 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
+
+    /**
+     * 统计总数
+     * @return
+     */
+    AdminMerchantAccountSumCustomizeVO searchAccountSum();
+    /**
+     * 根据id查找互金协会报送日志
+     * @param logId
+     * @auth nxl
+     * @return
+     */
+    NifaReportLogResponse selectNifaReportLogById(int logId);
 }
 

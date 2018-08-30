@@ -674,8 +674,6 @@
 		FROM ht_credit_tender ct
 		WHERE hbr.nid = ct.credit_tender_nid
 		) recover_account_all,
-
-
 		hbr.recover_interest_yes -
 		(SELECT IFNULL(SUM(ct.assign_repay_interest),0)
 		FROM ht_credit_tender ct
@@ -1619,6 +1617,7 @@
 		ht_borrow_recover hydbr
 		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        WHERE
 		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
 		AND hydbr.user_id = #{userId,jdbcType=INTEGER}
 		AND hydbr.recover_status = 1
@@ -1858,7 +1857,7 @@
 	<!-- 获取可转让的投资列表 -->
 	<select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
 		SELECT
-		*
+		count(*)
 		FROM
 		ht_borrow_recover hbr
 		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid

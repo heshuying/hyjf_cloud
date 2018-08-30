@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
+import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -109,5 +110,30 @@ public class ProtocolClientImpl implements ProtocolClient {
            vo =  response.getBody().getResultList();
         }
         return vo;
+    }
+
+    @Override
+    public ProtocolVersionVO byIdProtocolVersion(Integer id) {
+        ResponseEntity<Response<ProtocolVersionVO>> response =
+                restTemplate.exchange("http://AM-TRADE/am-trade/protocol/byIdProtocolVersion/"+id, HttpMethod.GET
+                        ,null, new ParameterizedTypeReference<Response<ProtocolVersionVO>>() {});
+
+        return response.getBody().getResult();
+    }
+
+    @Override
+    public ProtocolTemplateVO byIdTemplateBy(String protocolId) {
+        ResponseEntity<Response<ProtocolTemplateVO>> response =
+                restTemplate.exchange("http://AM-TRADE/am-trade/protocol/byIdTemplateBy/"+protocolId,HttpMethod.GET
+                        ,null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
+
+        return response.getBody().getResult();
+    }
+
+    @Override
+    public int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest) {
+        AdminProtocolResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/getProtocolVersionSize",
+                adminProtocolRequest, AdminProtocolResponse.class);
+        return response.getCount();
     }
 }

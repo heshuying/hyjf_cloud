@@ -139,7 +139,7 @@ public class NifaConfigController  extends BaseController
      * @param nifaId
      * @return
      */
-    @ApiOperation(value = "根据id查找互金字段定义", notes = "互金字段定义列表管理列表")
+    @ApiOperation(value = "根据id查找互金字段定义", notes = "根据id查找互金字段定义")
     @PostMapping("/initNifaFieldDefinitionInfo")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<NifaFieldDefinitionCustomizeVO> initNifaFieldDefinitionInfo(@RequestBody String nifaId){

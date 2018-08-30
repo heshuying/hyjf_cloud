@@ -1,17 +1,14 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize;
 import com.hyjf.am.trade.service.admin.productcenter.applyagreement.ApplyAgreementService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -227,5 +224,49 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
             example.setOrderByClause("id ASC");
             List<HjhDebtCreditRepay> creditRepayList = this.hjhDebtCreditRepayMapper.selectByExample(example);
             return creditRepayList;
+    }
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     *
+     * @param contractId
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     **/
+    @Override
+    public List<ApplyAgreementInfo> selectApplyAgreementInfoByContractId(String contractId) {
+        ApplyAgreementInfoExample applyAgreementInfoExample = new ApplyAgreementInfoExample();
+        ApplyAgreementInfoExample.Criteria cra = applyAgreementInfoExample.createCriteria();
+        cra.andContractIdEqualTo(contractId);
+        List<ApplyAgreementInfo> applyAgreementInfoList = this.applyAgreementInfoMapper.selectByExample(applyAgreementInfoExample);
+        return applyAgreementInfoList;
+    }
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+     *
+     * @param request
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     **/
+    @Override
+    public int saveApplyAgreementInfo(ApplyAgreementInfoRequest request) {
+        ApplyAgreementInfo applyAgreementInfo = new ApplyAgreementInfo();
+        CommonUtils.convertBean(request, ApplyAgreementInfo.class);
+        ApplyAgreementInfoExample example = new ApplyAgreementInfoExample();
+        example.createCriteria().andContractIdEqualTo(applyAgreementInfo.getContractId());
+        List<ApplyAgreementInfo> openAccountRecords = this.applyAgreementInfoMapper.selectByExample(example);
+        if(openAccountRecords != null && openAccountRecords.size() > 0){
+            applyAgreementInfo.setId(openAccountRecords.get(0).getId());
+            applyAgreementInfo.setUpdateTime(new Date());
+            applyAgreementInfo.setUpdateTime(openAccountRecords.get(0).getCreateTime());
+            return this.applyAgreementInfoMapper.updateByPrimaryKey(applyAgreementInfo);
+
+        }else {
+            applyAgreementInfo.setCreateTime(new Date());
+            return this.applyAgreementInfoMapper.insert(applyAgreementInfo);
+        }
     }
 }

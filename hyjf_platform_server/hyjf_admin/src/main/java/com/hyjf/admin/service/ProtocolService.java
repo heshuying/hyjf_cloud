@@ -2,6 +2,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,4 +64,6 @@ public interface ProtocolService {
     void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
 
     String uploadFile(HttpServletRequest request, HttpServletResponse response);
+
+    void updateExistAction(AdminProtocolVersionRequest form, String userId);
 }

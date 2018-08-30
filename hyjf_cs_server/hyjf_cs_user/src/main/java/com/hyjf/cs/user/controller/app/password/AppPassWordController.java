@@ -16,7 +16,6 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -119,7 +118,7 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @GetMapping(value = "/hyjf-app/bank/user/transpassword/setPassword")
+    @PostMapping(value = "/hyjf-app/bank/user/transpassword/setPassword")
     public AppResult<Object> setPassword(@RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
         UserVO user = passWordService.checkStatus(token,sign);
@@ -140,6 +139,7 @@ public class AppPassWordController extends BaseUserController {
         bean.setNotifyUrl(bgRetUrl);
         Map<String,Object> data = passWordService.setAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
+        result.setStatus("000");
         return result;
     }
 
@@ -247,10 +247,9 @@ public class AppPassWordController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
-    @GetMapping(value = "/hyjf-app/bank/user/transpassword/resetPassword")
+    @PostMapping(value = "/hyjf-app/bank/user/transpassword/resetPassword")
     public AppResult<Object> resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
-        BaseMapBean baseMapBean=new BaseMapBean();
         UserVO user = passWordService.checkStatus(token,sign);
         int userId = user.getUserId();
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
@@ -269,6 +268,7 @@ public class AppPassWordController extends BaseUserController {
         bean.setNotifyUrl(bgRetUrl);
         Map<String,Object> data = passWordService.resetAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
+        result.setStatus("000");
         return result;
     }
 
