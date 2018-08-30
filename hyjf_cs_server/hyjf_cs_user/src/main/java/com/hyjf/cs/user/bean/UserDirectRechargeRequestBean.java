@@ -3,20 +3,29 @@
  */
 package com.hyjf.cs.user.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author: sunpeikai
  * @version: UserDirectRechargeRequestBean, v0.1 2018/8/28 19:25
  */
+@ApiModel(value = "用户充值请求参数(页面调用)")
 public class UserDirectRechargeRequestBean extends BaseBean {
+    @ApiModelProperty(value = "身份证号码")
     private String idNo;
-    // 用户电子账户号
+    @ApiModelProperty(value = "用户电子账户号")
     private String accountId;
-    // 充值金额
+    @ApiModelProperty(value = "充值金额")
     private String txAmount;
+    @ApiModelProperty(value = "姓名")
     private String name;
+    @ApiModelProperty(value = "手机号")
     private String mobile;
-    private String  channel;
-    private String  cardNo;
+    @ApiModelProperty(value = "渠道")
+    private String channel;
+    @ApiModelProperty(value = "卡号")
+    private String cardNo;
 
     public String getIdNo() {
         return idNo;

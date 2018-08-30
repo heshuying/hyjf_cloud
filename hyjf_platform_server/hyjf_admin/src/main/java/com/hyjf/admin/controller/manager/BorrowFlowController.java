@@ -137,12 +137,13 @@ public class BorrowFlowController extends BaseController {
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "删除流程配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public String deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+    public AdminBorrowFlowResponse deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
         // 数据更新
         this.borrowFlowService.deleteRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
-        return "redirect:" + "/manager/config/borrowflow/init";
+//        return "redirect:" + "/manager/config/borrowflow/init";
+        return resList;
     }
 
     /**
@@ -184,7 +185,6 @@ public class BorrowFlowController extends BaseController {
     /**
      * 下拉联动
      *
-     * @param request
      * @return 进入资产列表页面
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")

@@ -64,6 +64,8 @@ public class FddGenerateContractBean implements Serializable{
     private JSONObject paramter;
     /**垫付协议 -期数*/
     private Integer repayPeriod;
+    /**垫付协议生成标识*/
+    private String teString;
 
     public String getTenderAccountFMT() {
         return tenderAccountFMT;
@@ -316,5 +318,17 @@ public class FddGenerateContractBean implements Serializable{
 
     public void setRepayPeriod(Integer repayPeriod) {
         this.repayPeriod = repayPeriod;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getTeString() {
+        return teString;
+    }
+
+    public void setTeString(String teString) {
+        this.teString = teString;
     }
 }

@@ -139,6 +139,7 @@ public class AppPassWordController extends BaseUserController {
         bean.setNotifyUrl(bgRetUrl);
         Map<String,Object> data = passWordService.setAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
+        result.setStatus("000");
         return result;
     }
 
@@ -267,6 +268,7 @@ public class AppPassWordController extends BaseUserController {
         bean.setNotifyUrl(bgRetUrl);
         Map<String,Object> data = passWordService.resetAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
+        result.setStatus("000");
         return result;
     }
 
