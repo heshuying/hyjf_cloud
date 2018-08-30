@@ -19,6 +19,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.service.invest.BorrowListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
+import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 		logger.info("bean:{}", JSONObject.toJSONString(bean));
 
 		// 验签（测试暂时关闭验签）
-		//CheckUtil.check(ProjectConstant.verifyRequestSign(bean, ProjectConstant.API_METHOD_INVEST_LIST), MsgEnum.ERR_SIGN);
+		CheckUtil.check(ProjectConstant.verifyRequestSign(bean, ProjectConstant.API_METHOD_INVEST_LIST), MsgEnum.ERR_SIGN);
 
 		List<InvestListCustomizeVO> list = searchInvestListNew(bean);
 		result.setData(list);
