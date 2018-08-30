@@ -233,7 +233,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
         String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        data.put("errorMsg",errorMsg);
+        data.put("errorMsg",errorMsg==null?"请联系客服":errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
