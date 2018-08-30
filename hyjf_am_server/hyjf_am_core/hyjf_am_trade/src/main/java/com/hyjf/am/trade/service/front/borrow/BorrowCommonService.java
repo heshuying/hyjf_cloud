@@ -372,7 +372,7 @@ public interface BorrowCommonService extends BaseService {
 	 */
 	//public String uploadAuthen(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	public BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean);
+	public com.hyjf.am.bean.admin.BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean);
 
 	/**
 	 * 判断借款期限是否为0

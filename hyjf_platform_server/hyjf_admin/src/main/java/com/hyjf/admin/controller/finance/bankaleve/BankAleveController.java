@@ -57,14 +57,17 @@ public class BankAleveController {
     public JSONObject getBankaleveList(@RequestBody BankAleveRequest bankAleveRequest){
         JSONObject jsonObject = new JSONObject();
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
-        String status="error";
+        String status="99";
         String statusDesc = "未检索到相应的列表数据";
         if(null!=bankAleveList&&bankAleveList.size()>0){
             Integer count = bankAleveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankAleveList);
-            jsonObject.put("status", "000");
-            jsonObject.put("statusDesc", "查询银行账务明细成功");
+            status =  "000";
+            statusDesc = "查询银行账务明细成功";
+        }else{
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);

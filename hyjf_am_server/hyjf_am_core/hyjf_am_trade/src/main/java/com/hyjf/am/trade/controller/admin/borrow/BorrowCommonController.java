@@ -144,7 +144,7 @@ public class BorrowCommonController extends BaseController {
         }
 
        
-        BorrowWithBLOBs bo = this.borrowCommonService.getRecordById(form);
+        com.hyjf.am.bean.admin.BorrowWithBLOBs bo = this.borrowCommonService.getRecordById(form);
         form.setBorrowIncreaseMoney(bo.getBorrowIncreaseMoney());
         form.setBorrowInterestCoupon(bo.getBorrowInterestCoupon());
         form.setBorrowTasteMoney(bo.getBorrowTasteMoney());
@@ -156,9 +156,9 @@ public class BorrowCommonController extends BaseController {
         if(bo.getEntrustedUserName()!= null){
         	form.setEntrustedUsername(bo.getEntrustedUserName());
         }
-        BorrowCommonVO vo=new BorrowCommonVO();
-        BeanUtils.copyProperties(form, vo);
-        bcr.setResult(vo);
+//        BorrowCommonVO vo=new BorrowCommonVO();
+//        BeanUtils.copyProperties(form, vo);
+        bcr.setBo(bo);;
         return bcr;
     }
 
