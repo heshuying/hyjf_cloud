@@ -1322,8 +1322,7 @@ public interface AmTradeClient {
      * @param withdrawFee
      * @return
      */
-    boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
-                             String withdrawFee);
+    boolean handlerAfterCash(JSONObject params);
 
 
     /**
