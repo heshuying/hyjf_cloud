@@ -31,6 +31,8 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String currentTab;
 
+    private String status;
+
     public Integer getUserId() {
         return userId;
     }
@@ -144,5 +146,13 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setCurrentTab(String currentTab) {
         this.currentTab = currentTab;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
