@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author yaoyong
  * @version VipDetailListRequest, v0.1 2018/7/3 11:54
  */
-public class VipDetailListRequest {
+public class VipDetailListRequest extends BasePage {
      /** vip用户id */
      public String userId;
     /** 投资标的号 */
