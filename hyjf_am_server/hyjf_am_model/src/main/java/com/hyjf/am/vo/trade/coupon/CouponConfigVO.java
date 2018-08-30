@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade.coupon;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -34,7 +35,7 @@ public class CouponConfigVO extends BaseVO implements Serializable {
 
     private Short expirationLengthDay;
 
-    private Integer addFlg;
+    private Integer addFlag;
 
     private String couponSystem;
 
@@ -70,7 +71,7 @@ public class CouponConfigVO extends BaseVO implements Serializable {
 
     private Integer repayTimeConfig;
 
-    private Integer delFlg;
+    private Integer delFlag;
 
     private Integer createUserId;
 
@@ -79,6 +80,10 @@ public class CouponConfigVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+
+    private String expirationdate;
+
+    private String audittime;
 
     private static final long serialVersionUID = 1L;
 
@@ -162,12 +167,12 @@ public class CouponConfigVO extends BaseVO implements Serializable {
         this.expirationLengthDay = expirationLengthDay;
     }
 
-    public Integer getAddFlg() {
-        return addFlg;
+    public Integer getAddFlag() {
+        return addFlag;
     }
 
-    public void setAddFlg(Integer addFlg) {
-        this.addFlg = addFlg;
+    public void setAddFlag(Integer addFlg) {
+        this.addFlag = addFlg;
     }
 
     public String getCouponSystem() {
@@ -306,12 +311,12 @@ public class CouponConfigVO extends BaseVO implements Serializable {
         this.repayTimeConfig = repayTimeConfig;
     }
 
-    public Integer getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Integer delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlg) {
+        this.delFlag = delFlg;
     }
 
     public Integer getCreateUserId() {
@@ -344,5 +349,27 @@ public class CouponConfigVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getExpirationdate() {
+        if (expirationDate != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(expirationDate);
+        }
+        return null;
+    }
+
+    public void setExpirationdate(String expirationdate) {
+        this.expirationdate = expirationdate;
+    }
+
+    public String getAudittime() {
+        if (auditTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(auditTime);
+        }
+        return null;
+    }
+
+    public void setAudittime(String audittime) {
+        this.audittime = audittime;
     }
 }
