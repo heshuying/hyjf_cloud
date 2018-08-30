@@ -4,8 +4,6 @@
 package com.hyjf.admin.controller.msgpush;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
@@ -21,8 +19,6 @@ import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCommonImageVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.util.GetMessageIdUtil;
@@ -31,15 +27,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -50,13 +40,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/hyjf-admin/msgPush/message")
 public class MessagePushMessageController extends BaseController {
-
-    @Value("${file.domain.url}")
-    private String FILEDOMAINURL;
-    @Value("${file.physical.path}")
-    private String FILEPHYSICALPATH;
-    @Value("${file.upload.temp.path}")
-    private String FILEUPLOADTEMPPATH;
 
     @Autowired
     private MessagePushMsgService messagePushMsgService;
@@ -150,6 +133,8 @@ public class MessagePushMessageController extends BaseController {
         }
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
+        String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
+        templateVO.setMsgTerminal(msgTerminal);
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -160,20 +145,20 @@ public class MessagePushMessageController extends BaseController {
             templateVO.setMsgActionUrl(templateRequest.getMsgActionUrl2());
         }
         if (templateRequest.getMsgSendType() == CustomConstants.MSG_PUSH_SEND_TYPE_1) {
-            templateVO.setSendTime(GetDate.timestamptoStrYYYYMMDD(GetDate.getNowTime10()));
+            templateVO.setSendTime(GetDate.getNowTime10());
             if (StringUtils.isNotEmpty(templateRequest.getMessagesPreSendTimeStr())) {
                 try {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateVO.setPreSendTime(time);
-                        templateVO.setSendTime(GetDate.getDateMyTimeInMillis(time));
+                        templateVO.setSendTime(time);
                     }
                 } catch (Exception e) {
                 }
             }
         } else {
             templateVO.setPreSendTime(null);
-            templateVO.setSendTime(GetDate.getDateMyTimeInMillis(GetDate.getNowTime10()));
+            templateVO.setSendTime(GetDate.getNowTime10());
         }
         String msgCode = GetMessageIdUtil.getNewMsgCode(templateVO.getTagCode());
         templateVO.setMsgCode(msgCode);// 设置ID
@@ -226,14 +211,14 @@ public class MessagePushMessageController extends BaseController {
                     Integer time = GetDate.strYYYYMMDDHHMMSS2Timestamp2(templateRequest.getMessagesPreSendTimeStr());
                     if (time != 0) {
                         templateRequest.setPreSendTime(time);
-                        templateRequest.setSendTime(time);
+                        templateRequest.setSendTime(GetDate.strYYYYMMDD2Timestamp2(GetDate.getDateMyTimeInMillis(time)));
                     }
                 } catch (Exception e) {
                 }
             }
         } else {
             templateRequest.setPreSendTime(null);
-            templateRequest.setSendTime(GetDate.getNowTime10());
+            templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
 
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
@@ -242,9 +227,9 @@ public class MessagePushMessageController extends BaseController {
 
 
     @ApiOperation(value = "删除手动发送消息", notes = "删除手动发送消息")
-    @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
-    public AdminResult deleteAction(@RequestParam String ids) {
-        if (ids == null) {
+    @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    public AdminResult deleteAction(@PathVariable String ids) {
+        if (StringUtils.isBlank(ids)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         String msgIds[] = ids.split(",");

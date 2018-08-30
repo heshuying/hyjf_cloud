@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.service.BankReturnCodeConfigService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
@@ -41,15 +42,18 @@ public class BankReturnCodeConfigController extends BaseConfigController{
         //查询返回码配置列表条数
         int recordTotal = this.bankReturnCodeConfigService.selectBankRetcodeListCount(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             List<BankReturnCodeConfig> recordList =bankReturnCodeConfigService.selectBankRetcodeListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BankReturnCodeConfigVO> hicv = CommonUtils.convertBeanList(recordList, BankReturnCodeConfigVO.class);
                 response.setResultList(hicv);
-//                response.setRecordTotal(recordTotal);
+                response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询到的数据为空！");
             return response;
         }
         return null;
@@ -68,8 +72,9 @@ public class BankReturnCodeConfigController extends BaseConfigController{
             BeanUtils.copyProperties(record,vo);
             response.setResult(vo);
             response.setRtn(Response.SUCCESS);
+            return response;
         }
-        return response;
+        return null;
     }
 
 
@@ -80,17 +85,17 @@ public class BankReturnCodeConfigController extends BaseConfigController{
     @RequestMapping("/insert")
     public BankReturnCodeConfigResponse insertBankReturnCodeConfig(@RequestBody  AdminBankRetcodeConfigRequest req) {
         BankReturnCodeConfigResponse resp = new BankReturnCodeConfigResponse();
-        try{
-            int result =this.bankReturnCodeConfigService.insertBankReturnCodeConfig(req);
-            if(result > 0 ){
-                //分页查询
+        int result =this.bankReturnCodeConfigService.insertBankReturnCodeConfig(req);
+        if(result > 0 ){
+            //分页查询
 //                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("添加失败！");
         return resp;
+
     }
     /**
      * 修改版本配置
@@ -99,16 +104,15 @@ public class BankReturnCodeConfigController extends BaseConfigController{
     @RequestMapping("/update")
     public BankReturnCodeConfigResponse updateBankReturnCodeConfig( @RequestBody AdminBankRetcodeConfigRequest req) {
         BankReturnCodeConfigResponse resp = new BankReturnCodeConfigResponse();
-        try{
-            int result =this.bankReturnCodeConfigService.updateBankReturnCodeConfig(req);
-            if(result > 0 ){
-                //分页查询
+        int result =this.bankReturnCodeConfigService.updateBankReturnCodeConfig(req);
+        if(result > 0 ){
+            //分页查询
 //                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
+        resp.setMessage("修改失败！");
         return resp;
     }
     /**
@@ -117,8 +121,11 @@ public class BankReturnCodeConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/isExistsReturnCode")
-    public boolean isExistsReturnCode(@RequestBody  AdminBankRetcodeConfigRequest record){
-        return bankReturnCodeConfigService.isExistsReturnCode(record);
+    public BooleanResponse isExistsReturnCode(@RequestBody  AdminBankRetcodeConfigRequest record){
+        BooleanResponse response= new BooleanResponse();
+        boolean b=bankReturnCodeConfigService.isExistsReturnCode(record);
+        response.setResultBoolean(b);
+        return response;
     }
     /**
      * 根据条件判断该条数据在数据库中是否存在
@@ -126,8 +133,10 @@ public class BankReturnCodeConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/isExistsRecord")
-    public boolean isExistsRecord(@RequestBody AdminBankRetcodeConfigRequest adminRequest){
-        return bankReturnCodeConfigService.isExistsRecord(adminRequest);
+    public BooleanResponse isExistsRecord(@RequestBody AdminBankRetcodeConfigRequest adminRequest){
+        BooleanResponse response= new BooleanResponse();
+        response.setResultBoolean(bankReturnCodeConfigService.isExistsRecord(adminRequest));
+        return response;
     }
 
 

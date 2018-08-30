@@ -443,9 +443,10 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        // 调用汇付接口(提现)
+        // (提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
-        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
+        String bgRetUrl = systemConfig.getAppHost()+"/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
+        bgRetUrl=splicingParam(bgRetUrl,request);
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip,retUrl,bgRetUrl,successfulUrl);
         try {
@@ -460,7 +461,18 @@ public class AppBankWithdrawController extends BaseTradeController {
         result.setStatus("000");
         return result;
     }
+    private String splicingParam(String bgRetUrl, HttpServletRequest request) {
+        String sign=request.getParameter("sign");
+        String token=request.getParameter("token");
+        StringBuffer sb = new StringBuffer(bgRetUrl);
 
+        if(bgRetUrl.indexOf("?")!=-1){
+            sb.append("&sign=").append(sign).append("&token=").append(token);
+        }else{
+            sb.append("?sign=").append(sign).append("&token=").append(token);
+        }
+        return sb.toString();
+    }
     /**
      * 用户银行提现异步回调
      * @Description

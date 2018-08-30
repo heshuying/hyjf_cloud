@@ -133,7 +133,8 @@ public class AppRechargeController extends BaseTradeController{
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
-		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
+        bgRetUrl=splicingParam(bgRetUrl,request);
 		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
@@ -155,8 +156,21 @@ public class AppRechargeController extends BaseTradeController{
 		return result;
 	}
 
+    private String splicingParam(String bgRetUrl, HttpServletRequest request) {
+	    String sign=request.getParameter("sign");
+        String token=request.getParameter("token");
+        StringBuffer sb = new StringBuffer(bgRetUrl);
 
-	/**
+        if(bgRetUrl.indexOf("?")!=-1){
+            sb.append("&sign=").append(sign).append("&token=").append(token);
+        }else{
+            sb.append("?sign=").append(sign).append("&token=").append(token);
+        }
+	    return sb.toString();
+    }
+
+
+    /**
 	 * 页面充值异步回调
 	 * @param request
 	 * @param bean

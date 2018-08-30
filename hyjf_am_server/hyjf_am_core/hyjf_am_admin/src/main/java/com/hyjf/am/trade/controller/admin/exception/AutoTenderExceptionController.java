@@ -113,11 +113,12 @@ public class AutoTenderExceptionController  extends BaseController {
 
     /**
      * 查询计划加入明细临时表
-     * @param mapParam
+     * @param tenderExceptionSolveRequest
      * @return
      */
     @RequestMapping(value = "/selectBorrowJoinList", method = RequestMethod.POST)
-    public HjhPlanBorrowTmpResponse selectBorrowJoinList(Map<String,Object> mapParam){
+    public HjhPlanBorrowTmpResponse selectBorrowJoinList(@RequestBody @Valid TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        Map<String,Object> mapParam = mapTenderExcption(tenderExceptionSolveRequest);
         HjhPlanBorrowTmp hjhPlanBorrowTmp = autoTenderExceptionService.selectBorrowJoinList(mapParam);
         HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO = new HjhPlanBorrowTmpVO();
         HjhPlanBorrowTmpResponse response = new HjhPlanBorrowTmpResponse();

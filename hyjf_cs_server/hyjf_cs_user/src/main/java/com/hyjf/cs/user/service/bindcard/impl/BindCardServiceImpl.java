@@ -272,11 +272,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogUserId(StringUtil.valueOf(userId));
         bean.setLogRemark("用户绑卡增强");
-        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallConstant.TXCODE_CARD_BIND_PLUS);
-        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
-        bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
-        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
         bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
         bean.setAccountId(bankAccount.getAccount());// 存管平台分配的账号
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
@@ -354,6 +350,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		if(count > 0) {
 			return;
 		}
+
+		String cardNo = "";
 		
 		// 同步银行卡信息
 		BankCallBean callBean = new BankCallBean();
@@ -380,8 +378,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				List<BankCardRequest> bankCardList = new ArrayList<BankCardRequest>();
 				for (int j = 0; j < array.size(); j++) {
 					JSONObject obj = array.getJSONObject(j);
+					cardNo = obj.getString("cardNo");
 					// 根据银行卡号查询银行ID
-					String bankId = amConfigClient.queryBankIdByCardNo(obj.getString("cardNo"));
+					String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
 					if(bankId == null) {
 						bankId = "0";
 					}
@@ -393,7 +392,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					bank.setUserId(userId);
 					bank.setUserName(userVO.getUsername());
 					bank.setStatus(1);// 默认都是1
-					bank.setCardNo(obj.getString("cardNo"));
+					bank.setCardNo(cardNo);
 					bank.setBankId(bankId == null ? 0 : Integer.valueOf(bankId));
 					if(bankConfig != null){
 						bank.setBank(bankConfig.getBankName());
@@ -401,7 +400,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					// 银行联号
 					String payAllianceCode = "";
 					// 调用江西银行接口查询银行联号
-					BankCallBean payAllianceCodeQueryBean = this.payAllianceCodeQuery(obj.getString("cardNo"), userId);
+					BankCallBean payAllianceCodeQueryBean = this.payAllianceCodeQuery(cardNo, userId);
 					if (payAllianceCodeQueryBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(payAllianceCodeQueryBean.getRetCode())) {
 						payAllianceCode = payAllianceCodeQueryBean.getPayAllianceCode();
 					}
@@ -428,7 +427,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		
 		// 插入操作记录表
 		LogAcqResBean logAcq = bean.getLogAcqResBean();
-		String bankId = amConfigClient.queryBankIdByCardNo(logAcq.getCardNo());
+		String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
 		if(bankId == null) {
 			bankId = "0";
 		}
@@ -450,7 +449,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		if (!isUpdateFlag) {
 			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 		}
-		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
+		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
         if (retCard != null) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());

@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.front.crm;
 
 
 import com.hyjf.am.user.dao.model.auto.ROaUsers;
+import com.hyjf.am.user.dao.model.auto.ROaUsersExample;
 
 /**
  * @Description crm user表操作
@@ -28,5 +29,12 @@ public interface CrmUserService {
      * @param users
      * @return
      */
-    Integer delete(ROaUsers users);
+    Integer delete(Integer users);
+
+    /**
+     * 修改用户
+     * @param user
+     * @param example
+     */
+    void updateByExample(ROaUsers user, ROaUsersExample example);
 }

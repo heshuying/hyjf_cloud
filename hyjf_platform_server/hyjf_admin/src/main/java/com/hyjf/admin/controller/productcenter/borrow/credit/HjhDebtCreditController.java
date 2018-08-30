@@ -122,7 +122,7 @@ public class HjhDebtCreditController extends BaseController{
             }
             if (null != hjhDebtCreditVoList) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
-                jsonObject = this.success(String.valueOf(recordCount), hjhDebtCreditVoList);
+                jsonObject = this.success(recordCount, hjhDebtCreditVoList);
             } else {
                 jsonObject = this.fail("暂无符合条件数据");
             }

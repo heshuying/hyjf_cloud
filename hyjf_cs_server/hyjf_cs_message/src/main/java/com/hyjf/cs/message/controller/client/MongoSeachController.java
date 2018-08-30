@@ -3,16 +3,17 @@ package com.hyjf.cs.message.controller.client;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
-import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.admin.BindLogResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
@@ -39,6 +40,9 @@ public class MongoSeachController extends BaseController {
 
     @Autowired
     DirectionalTransferAssociatedRecordsDao directionalTransferAssociatedRecordsDao;
+
+    @Autowired
+    DirectionalTransferAssociatedLogDao directionalTransferAssociatedLogDao;
 
     @Autowired
     BankSmsAuthCodeDao bankSmsAuthCodeDao;
@@ -155,24 +159,30 @@ public class MongoSeachController extends BaseController {
     public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         List<AccountWebList> recordList = accountWebListDao.queryAccountWebList(accountWebList);
+        int recordTotal = recordList.size();
         if (null != recordList) {
-            int recordTotal = recordList.size();
             if (recordTotal > 0) {
                 Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
-                List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), paginator.getLimit());
+                int end = 0;
+                if(recordTotal<paginator.getOffset()*paginator.getLimit()+paginator.getLimit()){
+                    end=recordTotal;
+                }else {
+                    end = paginator.getOffset()*paginator.getLimit()+paginator.getLimit();
+                }
+                List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), end);
                 List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList2, AccountWebListVO.class);
                 response.setResultList(voList);
-                response.setRecordTotal(recordTotal);
-                response.setRtn(Response.SUCCESS);
             }
         }
+        response.setRecordTotal(recordTotal);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList){
         int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(total);
     }
 
@@ -211,8 +221,12 @@ public class MongoSeachController extends BaseController {
      * @return
      */
     @PostMapping(value = "/getassociatedrecordscount")
-    public long getDirectionalTransferCount(@RequestBody AssociatedRecordListRequest request){
-        return directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
+    public AssociatedRecordListResponse getDirectionalTransferCount(@RequestBody AssociatedRecordListRequest request){
+        AssociatedRecordListResponse response = new AssociatedRecordListResponse();
+        long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
     }
 
     /**
@@ -227,7 +241,7 @@ public class MongoSeachController extends BaseController {
         Long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count.intValue());
+            Paginator paginator = new Paginator(request.getCurrPage(),count.intValue(),request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
@@ -237,6 +251,47 @@ public class MongoSeachController extends BaseController {
             List<AssociatedRecordListVo> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecords,AssociatedRecordListVo.class);
             response.setRtn(Response.SUCCESS);
             response.setResultList(associatedRecordListVoList);
+        }
+        return response;
+    }
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的count
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @PostMapping(value = "/getassociatedlogcount")
+    public BindLogResponse getDirectionalTransferLogCount(@RequestBody BindLogListRequest request){
+        BindLogResponse response = new BindLogResponse();
+        long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的list
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @PostMapping("/searchassociatedloglist")
+    public BindLogResponse searchDirectionalTransferLogList(@RequestBody BindLogListRequest request){
+        BindLogResponse response = new BindLogResponse();
+        Long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count.intValue(),request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        logger.info("searchDirectionalTransferLogList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
+        List<DirectionalTransferAssociatedLog> directionalTransferAssociatedLogList = directionalTransferAssociatedLogDao.searchDirectionalTransferLogList(request);
+        if(!CollectionUtils.isEmpty(directionalTransferAssociatedLogList)){
+            List<BindLogVO> bindLogVOList = CommonUtils.convertBeanList(directionalTransferAssociatedLogList,BindLogVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(bindLogVOList);
         }
         return response;
     }

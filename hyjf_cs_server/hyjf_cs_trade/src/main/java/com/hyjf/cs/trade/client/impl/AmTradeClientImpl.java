@@ -22,6 +22,7 @@ import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -969,10 +970,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int insertAccountWithdrawLog(AccountWithdrawVO record) {
-        Integer response = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
+        IntegerResponse response = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, IntegerResponse.class).getBody();
         if (response != null) {
-            return response;
+            return response.getResultInt();
         }
         return 0;
 
@@ -998,10 +999,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
-        int result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, Integer.class).getBody();
-        return result;
+    public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
+        BooleanResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, BooleanResponse.class).getBody();
+        return result.getResultBoolean();
     }
     /**
      * 提现后续操作
@@ -1010,9 +1011,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest) {
-        int result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updatUserBankWithdrawHandler", bankWithdrawBeanRequest, Integer.class).getBody();
-        return result;
+        IntegerResponse result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updatUserBankWithdrawHandler", bankWithdrawBeanRequest, IntegerResponse.class).getBody();
+        return result.getResultInt();
     }
     /**
      * 查询用户标的投资数量
@@ -1525,7 +1526,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditTenderAssignLog(CreditTenderLogVO creditTenderLog) {
         String url = "http://AM-TRADE/am-trade/borrowTender/save_credit_tender_assign_log";
-        return restTemplate.postForEntity(url,creditTenderLog,Integer.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url,creditTenderLog,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**
@@ -1634,10 +1639,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateBeforeChinaPnR(TenderRequest request) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        logger.info("散标投资开始插入tmp表");
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt()== 0 ? false : true;
         }
         return false;
     }
@@ -1650,10 +1656,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean borrowTender(TenderBgVO tenderBg) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        logger.info("用户投资散标操作表");
+        IntegerResponse result =  restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt()== 0 ? false : true;
         }
         return false;
     }
@@ -1693,9 +1700,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowTenderResult/" + userId + "/" + logOrdId + "/" + borrowNid;
-        String response = restTemplate.getForEntity(url, String.class).getBody();
-        if (response != null) {
-            return response;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultStr();
         }
         return null;
     }
@@ -3838,10 +3845,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
         String url = "http://AM-TRADE/am-trade/repay/repay_detail";
-        String response = restTemplate.postForEntity(url,requestBean,String.class).getBody();
+        StringResponse response = restTemplate.postForEntity(url,requestBean,StringResponse.class).getBody();
 
-        if (!StringUtils.isBlank(response)) {
-            return JSON.parseObject(response);
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr());
         }
         return null;
     }
@@ -3853,8 +3860,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public RepayBean getRepayBean(Map<String, String> paraMap) {
-        RepayBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,RepayBean.class).getBody();
-        return response;
+        StringResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_repaybean",paraMap,StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr(),RepayBean.class);
+        }
+        return null;
     }
 
     /**
@@ -3862,11 +3872,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
-        ProjectBean response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,ProjectBean.class).getBody();
-//        if (Response.isSuccess(response)){
-////            return JSON.parseObject(response.getResult(), ProjectBean.class);
-////        }
-        return response;
+        StringResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/get_batch_reapydata",requestBean,StringResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return JSON.parseObject(response.getResultStr(),ProjectBean.class);
+        }
+        return null;
     }
 
     /**
@@ -3892,13 +3902,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getCommisionConfig(HashMap map) {
-        Integer result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/batchHjhBorrowRepay/updateCalculateInvestByPrimaryKey/", map,
-                Integer.class).getBody();
-        if (result == null) {
-            return 0;
+        IntegerResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/planLockQuit/getCommisionConfig/", map,
+                IntegerResponse.class).getBody();
+        if (Response.isSuccess(result)) {
+            return result.getResultInt();
         }
-        return result;
+        return null;
     }
 
     /**
@@ -4036,6 +4046,53 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+	/**
+	 *
+	 * 投资预插入
+	 * @return
+	 * @author libin
+	 * @throws Exception
+	 */
+	@Override
+	public boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest) {
+		IntegerResponse result = restTemplate
+	            .postForEntity("http://AM-TRADE/am-trade/autotender/updatetenderlog", autoTenderComboRequest, IntegerResponse.class).getBody();
+		if (result != null) {
+	        return result.getResultInt().intValue() == 0 ? false : true;
+	    }
+		return false;
+	}
+
+    /**
+	 * 根据nid删除BorrowTenderTmp
+	 * @auth libin
+	 * @return
+	 */
+	@Override
+	public Integer deleteBorrowTenderTmp(String orgOrderId) {
+		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmp/" + orgOrderId;
+		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+		return response.getResultInt().intValue();
+	}
+
+    /**
+	 * 根据userId，borrowNid，orderId删除BorrowTenderTmp
+	 * @auth libin
+	 * @return
+	 */
+	@Override
+	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
+		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
+		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+	}
 
     /**
      * 查询投资记录

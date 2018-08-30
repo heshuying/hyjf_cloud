@@ -160,20 +160,4 @@ public class SmsTemplateController extends BaseController {
 		}
 	}
 
-	/*@ApiOperation(value = "关闭短信模版", notes = "关闭短信模版")
-	@PostMapping("/closeAction")
-	public JSONObject closeAction(@RequestBody SmsTemplateRequest request) {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			smsTemplateService.closeAction(request);
-			jsonObject.put("status", "000");
-			jsonObject.put("statusDesc", "关闭短信模版成功");
-			return jsonObject;
-		} catch (Exception e) {
-			logger.error("关闭短信模版失败...", e);
-			jsonObject.put("status", "99");
-			jsonObject.put("statusDesc", "关闭短信模版失败");
-			return jsonObject;
-		}
-	}*/
 }

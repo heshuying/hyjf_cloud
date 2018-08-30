@@ -25,7 +25,7 @@ public interface TeamService {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse insertAction(TeamRequestBean requestBean);
+	int insertAction(TeamRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-团队介绍
@@ -33,7 +33,7 @@ public interface TeamService {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse updateAction(TeamRequestBean requestBean);
+	int updateAction(TeamRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-团队介绍状态
@@ -41,7 +41,7 @@ public interface TeamService {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse updateStatus(TeamRequestBean requestBean);
+	int updateStatus(TeamRequestBean requestBean);
 
 	/**
 	 * 删除公司管理-团队介绍状态
@@ -49,5 +49,5 @@ public interface TeamService {
 	 * @param id
 	 * @return
 	 */
-    TeamResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

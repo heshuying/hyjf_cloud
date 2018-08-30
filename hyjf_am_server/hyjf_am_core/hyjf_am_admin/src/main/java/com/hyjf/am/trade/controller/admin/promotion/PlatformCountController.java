@@ -24,7 +24,7 @@ import com.hyjf.common.util.CommonUtils;
  * @version PlatformCountController, v0.1 2018/8/9 15:22
  */
 @RestController
-@RequestMapping("/am-trade/platform_count")
+@RequestMapping("/am-admin/platform_count")
 public class PlatformCountController extends BaseController {
     @Autowired
     private PlatformCountService platformCountService;

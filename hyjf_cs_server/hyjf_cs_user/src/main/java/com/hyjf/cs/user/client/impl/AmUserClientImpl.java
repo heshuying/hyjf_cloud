@@ -299,12 +299,12 @@ public class AmUserClientImpl implements AmUserClient {
 		if(user == null || user.getUserId() == null){
 			return 0;
 		}
-		Integer result = restTemplate.postForEntity(userService+"/user/updateByUserId", user, Integer.class)
+		IntegerResponse result = restTemplate.postForEntity(userService+"/user/updateByUserId", user, IntegerResponse.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
-		return result;
+		return result.getResultInt();
 	}
 
 	/**
@@ -1090,5 +1090,21 @@ public class AmUserClientImpl implements AmUserClient {
 	public int updateHjhUserAuthLog(HjhUserAuthLogRequest hjhUserAuthRequest){
 		Integer response = restTemplate.postForEntity(userService+"/user/updateHjhUserAuthLog",hjhUserAuthRequest,Integer.class).getBody();
 		return response;
+	}
+
+	/**
+	 * 根据用户id和银行卡号查询银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request) {
+		String url = userService + "/bankCard/selectBankCardByUserIdAndCardNo";
+		BankCardResponse response = restTemplate.postForEntity(url,request,BankCardResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
 	}
 }

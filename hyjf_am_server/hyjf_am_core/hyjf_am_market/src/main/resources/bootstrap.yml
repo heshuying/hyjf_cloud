@@ -4,21 +4,17 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: am-market
   boot:
     admin:
       client:
         url: http://micoserver:18080
-  sleuth:
-    sampler:
-      percentage: 1.0
-#    kafka:
-#      bootstrap-servers: 123.56.216.212:9092
-
+  profiles:
+    active: dev
 server:
   port: 8094
 
+# spring boot admin 监控的端点
 management:
   endpoints:
     web:

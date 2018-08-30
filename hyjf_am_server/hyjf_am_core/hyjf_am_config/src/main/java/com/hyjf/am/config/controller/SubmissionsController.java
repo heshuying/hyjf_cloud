@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
@@ -36,7 +37,7 @@ public class SubmissionsController {
         SubmissionsResponse response = new SubmissionsResponse();
         int count = submissionsService.queryTotal(form);
         if(count>0){
-            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
             List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form,paginator.getOffset(), paginator.getLimit());
             List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
             response.setResultList(list);
@@ -88,9 +89,11 @@ public class SubmissionsController {
      * @return
      */
     @PostMapping("/addSubmission")
-    public Integer addSubmission(@RequestBody SubmissionsVO form) {
+    public IntegerResponse addSubmission(@RequestBody SubmissionsVO form) {
+        IntegerResponse response = new IntegerResponse();
         Submissions submissions = CommonUtils.convertBean(form, Submissions.class);
-        return submissionsService.addSubmission(submissions);
+        response.setResultInt(submissionsService.addSubmission(submissions));
+        return response;
     }
 
 }

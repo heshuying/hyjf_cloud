@@ -7,7 +7,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.FeeConfigService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminFeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -71,7 +69,7 @@ public class FeeConfigController extends BaseController {
             response = this.feeConfigService.selectFeeConfigInfo(request);
             // 设置银行列表
             List<BankConfigVO> bankConfigVOS = feeConfigService.getBankConfigList(new BankConfigVO());
-            response.getResult().setBankConfig(bankConfigVOS);
+            response.setBankConfig(bankConfigVOS);
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -79,7 +77,7 @@ public class FeeConfigController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<FeeConfigVO>(response.getResult()) ;
+        return new AdminResult<AdminFeeConfigResponse>(response) ;
     }
     @ApiOperation(value = "手续费配置添加", notes = "手续费配置添加")
     @PostMapping("/insertAction")
@@ -88,11 +86,10 @@ public class FeeConfigController extends BaseController {
         AdminFeeConfigResponse response = null;
         AdminFeeConfigRequest request = new AdminFeeConfigRequest();
         BeanUtils.copyProperties(feeConfigRequestBean,request);
-        ModelAndView model =new ModelAndView();
         //表单字段校验
-        model = this.validatorFieldCheck(model, request);
-        if (!model.isEmpty()) {
-            return new AdminResult<>(FAIL, "校验失败");
+        String message = this.validatorFieldCheck(request);
+        if (StringUtils.isNotBlank(message)) {
+            return new AdminResult<>(FAIL, message);
         }
         BankConfigVO bank = new BankConfigVO();
         // 设置银行列表
@@ -120,11 +117,10 @@ public class FeeConfigController extends BaseController {
         AdminFeeConfigResponse response = null;
         AdminFeeConfigRequest request = new AdminFeeConfigRequest();
         BeanUtils.copyProperties(feeConfigRequestBean,request);
-        ModelAndView model =new ModelAndView();
         //表单字段校验
-        model = this.validatorFieldCheck(model, request);
-        if (!model.isEmpty()) {
-            return new AdminResult<>(FAIL, "校验失败");
+        String message = this.validatorFieldCheck( request);
+        if (StringUtils.isNotBlank(message)) {
+            return new AdminResult<>(FAIL, message);
         }
         BankConfigVO bank = new BankConfigVO();
         // 设置银行列表
@@ -168,62 +164,32 @@ public class FeeConfigController extends BaseController {
     /**
      * 调用校验表单方法
      *
-     * @param modelAndView
      * @param form
      * @return
      */
-    private ModelAndView validatorFieldCheck(ModelAndView modelAndView, AdminFeeConfigRequest form) {
+    private String validatorFieldCheck(AdminFeeConfigRequest form) {
         // 字段校验(非空判断和长度判断)
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "name", form.getName())) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getName())||(StringUtils.isNotBlank(form.getName())&&form.getName().length()>50)) {
+            return "name不能为空且长度不能超过50！";
         }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "name", form.getName(), 50, true)) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getPersonalCredit())||(StringUtils.isNotBlank(form.getPersonalCredit())&&form.getPersonalCredit().length()>10)) {
+            return "personalCredit不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "personalCredit", form.getPersonalCredit())) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getEnterpriseCredit())||(StringUtils.isNotBlank(form.getEnterpriseCredit())&&form.getEnterpriseCredit().length()>10)) {
+            return "enterpriseCredit不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "personalCredit", form.getPersonalCredit(), 10,
-                true)) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getQuickPayment())||(StringUtils.isNotBlank(form.getQuickPayment())&&form.getQuickPayment().length()>10)) {
+            return "quickPayment不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "enterpriseCredit", form.getEnterpriseCredit())) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getDirectTakeout())||(StringUtils.isNotBlank(form.getDirectTakeout())&&form.getDirectTakeout().length()>10)) {
+            return "directTakeout不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "enterpriseCredit", form.getEnterpriseCredit(), 10,
-                true)) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getQuickTakeout())||(StringUtils.isNotBlank(form.getQuickTakeout())&&form.getQuickTakeout().length()>10)) {
+            return "quickTakeout不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "quickPayment", form.getQuickPayment())) {
-            return modelAndView;
+        if (StringUtils.isBlank(form.getNormalTakeout())||(StringUtils.isNotBlank(form.getNormalTakeout())&&form.getNormalTakeout().length()>10)) {
+            return "normalTakeout不能为空且长度不能超过10！";
         }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "quickPayment", form.getQuickPayment(), 10,
-                true)) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "directTakeout", form.getDirectTakeout())) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "directTakeout", form.getDirectTakeout(), 10,
-                true)) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "quickTakeout", form.getQuickTakeout())) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "quickTakeout", form.getQuickTakeout(), 10,
-                true)) {
-            return modelAndView;
-        }
-        if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "normalTakeout", form.getNormalTakeout())) {
-            return modelAndView;
-        }
-
-        if (!ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "normalTakeout", form.getNormalTakeout(), 10,
-                true)) {
-            return modelAndView;
-        }
-
-        return null;
+        return "";
     }
 }

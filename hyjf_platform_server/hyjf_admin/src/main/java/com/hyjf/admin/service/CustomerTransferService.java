@@ -56,7 +56,7 @@ public interface CustomerTransferService {
      * @param
      * @return
      */
-    JSONObject checkCustomerTransferParam(CustomerTransferRequest request);
+    void checkCustomerTransferParam(CustomerTransferRequest request);
 
     /**
      * 根据header中的userId获取登录admin用户信息

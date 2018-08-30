@@ -6,7 +6,6 @@ package com.hyjf.admin.controller.productcenter.plancenter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccedeListViewRequest;
-import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.beans.vo.AdminAccedeListCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -26,12 +25,10 @@ import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
-import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
@@ -144,6 +141,10 @@ public class AccedeListController extends BaseController{
 				} else {
 					num = accedeListCustomizeVO.getJalreadyInvest().divide(accedeListCustomizeVO.getjAccedeAccount(), 2);
 					accedeListCustomizeVO.setAutoBidProgress(num.multiply(hundred).toString().replace(".00", ""));
+				}
+				
+				if(StringUtils.isNotEmpty(accedeListCustomizeVO.getCreateTime())){
+					accedeListCustomizeVO.setCreateTime(accedeListCustomizeVO.getCreateTime().replace(".0",""));
 				}
 			}
 			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAccedeListCustomizeVO.class);
@@ -592,7 +593,7 @@ public class AccedeListController extends BaseController{
 		} else if("发送状态已修改".equals(msg)){
 			jsonObject.put("result", "操作完成");
 			jsonObject.put("status", "success");
-		}
+		} 
 /*		if (msg == null && "发送状态已修改".equals(msg)) {
 
 		} else if (!"系统异常".equals(msg)) {
@@ -908,7 +909,7 @@ public class AccedeListController extends BaseController{
 			bean.setTenderType(2);
 			bean.setSignDate(accede.getCountInterestTime());
 			bean.setPlanStartDate(accede.getCountInterestTime());
-			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(accede.getQuitTime()));
+			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(Integer.valueOf(accede.getQuitTime())));
 			bean.setTenderInterestFmt(String.valueOf(accede.getWaitTotal()));
 			// 法大大生成合同接口
 			/*this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/

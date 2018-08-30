@@ -42,7 +42,35 @@
 		WHERE ou.hyd_id= #{userId}
 	</select>
 
-
+	<!-- add by nxl-->
+	<select id="selectEmployeeInfoByUserId" resultMap="EmployeeMapResult" parameterType="java.lang.Integer">
+		SELECT DISTINCT
+		u.hyd_id AS user_id,
+		u.hyd_name AS user_name,
+		d3.id AS region_id,
+		d3. NAME AS region_name,
+		d2.id AS branch_id,
+		d2. NAME AS branch_name,
+		d1.id AS department_id,
+		d1. NAME AS department_name
+		FROM
+		ht_r_oa_users u
+		LEFT JOIN ht_r_oa_department d1 ON d1.id = u.departmentid
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		WHERE
+		u.user_status != 'E1'
+		AND u.user_status != 'E11'
+		AND u.user_status != 'E2'
+		AND u.user_status != 'E21'
+		AND u.user_status != 'E3'
+		<if test="userId != null">
+			AND u.hyd_id = #{userId}
+		</if>
+		<if test="userId == null or userId == 0">
+			AND 0=1
+		</if>
+	</select>
 
 
 </mapper>

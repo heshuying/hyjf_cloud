@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.IntegerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -156,15 +157,57 @@ public class AdminBorrowRepaymentController extends BaseController {
         return response;
     }
 
-    // 更新用户的交易明细
-    @RequestMapping(value = "/updateBorrowRepayDelayDays", method = RequestMethod.POST)
-    public int updateBorrowRepayDelayDays(@PathVariable String borrowNid,@PathVariable String delayDays) {
+    @RequestMapping(value = "/getBorrowRepayInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
+    public BorrowRepayResponse getBorrowRepayInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
 
+        BorrowRepayResponse response = new BorrowRepayResponse();
+        try{
+            BorrowRepay customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
+            if(customize!=null){
+                BorrowRepayVO vo = CommonUtils.convertBean(customize,BorrowRepayVO.class);
+                response.setResult(vo);
+            }
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/getBorrowRepayPlanInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
+    public BorrowRepayPlanResponse getBorrowRepayPlanInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
+
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        try{
+            BorrowRepayPlan customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
+            if(customize!=null){
+                BorrowRepayPlanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanVO.class);
+                response.setResult(vo);
+            }
+            return response;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+
+    // 更新用户的交易明细
+    @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.POST)
+    public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
+        IntegerResponse response=new IntegerResponse();
         try {
-            return adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays);
+            response.setResultInt(adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays));
+            return response;
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return 0;
+        return response;
     }
 }

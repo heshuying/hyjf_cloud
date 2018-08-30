@@ -11,11 +11,13 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
@@ -23,9 +25,9 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
-import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +36,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -117,7 +116,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getInstcode(), "http://CS-TRADE",
+				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
 						systemConfig.getAopAccesskey());
 			}
 			if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
@@ -311,9 +310,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
 			result.setUserType(String.valueOf(user.getUserType()));
 			if ("0".equals(result.getSetupPassword())) {
-				result.setChangeTradePasswordUrl(apphost + ClientConstants.SETPASSWORD_ACTION + packageStr(request));
+				//设置交易密码
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost()  +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_SET_PASSWORD + packageStrForm(request));
 			} else {
-				result.setChangeTradePasswordUrl(apphost + ClientConstants.RESETPASSWORD_ACTION + packageStr(request));
+				//重置交易密码
+				result.setChangeTradePasswordUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD + packageStrForm(request));
 			}
 
 			iconUrl = user.getIconUrl();
@@ -556,14 +557,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStr(request));
 			}
 		}
 		{
@@ -746,7 +747,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 自动投标授权URL
 			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ BaseDefine.REQUEST_HOME + ClientConstants.USER_AUTH_INVES_ACTION + ".do?1=1"));
+					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?1=1"));
 			// 缴费授权Url
 			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
@@ -795,6 +796,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		sbUrl.append("&").append("order").append("=").append(strEncode(order));
 		return sbUrl.toString();
 	}
+
+    private String packageStrForm(HttpServletRequest request) {
+        StringBuffer sbUrl = new StringBuffer();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        sbUrl.append("&").append("version").append("=").append(version);
+        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+        sbUrl.append("&").append("platform").append("=").append(platform);
+        sbUrl.append("&").append("randomString").append("=").append(randomString);
+        sbUrl.append("&").append("sign").append("=").append(sign);
+        sbUrl.append("&").append("token").append("=").append(strEncode(token));
+        sbUrl.append("&").append("order").append("=").append(strEncode(order));
+        return sbUrl.toString();
+    }
 
 	/**
 	 * 检查是否是新手(未登录或已登录未投资)
@@ -912,4 +939,68 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idCard);
 		return amUserClient.findUserById(userInfoVO.getUserId());
 	}
+	 @Override
+	    public Map<String, String> updateLoginInAction(String userName, String password, String ipAddr) {
+		  Map<String, String> r=new HashMap<>();
+		  r.put("stt", "0");
+	        String codeSalt = "";
+	        String passwordDb = "";
+	        Integer userId = null;
+	        String usernameString=null;
+
+	        UserVO u = amUserClient.findUserByUserNameOrMobile(userName);
+	        if (u == null) {
+	        	r.put("stt", "-1");
+	            return r;
+	        } else {
+	        		r.put("userId", u.getUserId().toString());
+	                userId = u.getUserId();
+	                codeSalt = u.getSalt();
+	                passwordDb =u.getPassword();
+	                usernameString=u.getUsername();
+	            if (u.getStatus() == 1) {
+	            	r.put("stt", "-4");
+	                return r;
+	            }
+	        }
+	        
+	  		//1.获取该用户密码错误次数
+	  		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + usernameString);
+	  		//判断密码错误次数是否超限
+	  		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>6) {
+         	r.put("stt", "-5");
+             return r;//密码错误次数已达上限
+	  		}
+	        // 验证用的password
+	        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+	        // 密码正确时
+	        if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
+	            // 更新登录信息
+				amUserClient.updateLoginUser(userId, ipAddr);
+				updateUserByUserId(u);
+				// 1. 登录成功将登陆密码错误次数的key删除
+				RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + usernameString);
+				BankOpenAccountVO account = this.getBankOpenAccount(userId);
+				String accountId = null;
+				if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+					accountId = account.getAccount();
+					this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+							systemConfig.getAopAccesskey());
+				}
+				String sign = SecretUtil.createToken(userId, usernameString, accountId);
+				r.put("sign", sign);
+	            return r;
+	        } else {
+	        	//增加密码错误次数
+	        	RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + usernameString);;//以用户手机号为key
+				//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
+				if((Integer.valueOf(passwordErrorNum)+1) < 6){
+	            	r.put("stt", "-3");
+	                return r;
+				}else{
+	            	r.put("stt", "-5");
+	                return r;//用户当天密码错误次数已达上限
+				}
+	        }
+	    }
 }

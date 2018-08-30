@@ -37,22 +37,22 @@ public interface BorrowTenderService extends BaseTradeService {
 
     /**
      * 获取投资
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @return
      */
-    WebResult<Map<String,Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid);
+    WebResult<Map<String,Object>> getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
     /**
      * 查询投资成功的结果
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @param couponGrantId
      * @return
      */
-    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId);
+    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId);
 
     /**
      * 获取投资信息

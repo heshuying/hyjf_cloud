@@ -686,6 +686,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             String fileUploadTempPath = UploadFileUtils.getDoPath(fileHeadPath);
             return imghost + fileUploadTempPath + iconUrl;
         }
-        return iconUrl;
+        return "";
     }
 }

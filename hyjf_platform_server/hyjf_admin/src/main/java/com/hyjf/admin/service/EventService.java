@@ -25,7 +25,7 @@ public interface EventService {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse insertAction(EventRequestBean requestBean);
+	int insertAction(EventRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-公司记事
@@ -33,7 +33,7 @@ public interface EventService {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse updateAction(EventRequestBean requestBean);
+	int updateAction(EventRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-公司记事状态
@@ -41,7 +41,7 @@ public interface EventService {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse updateStatus(EventRequestBean requestBean);
+	int updateStatus(EventRequestBean requestBean);
 
 	/**
 	 * 根据id删除公司管理-公司记事状态
@@ -49,5 +49,5 @@ public interface EventService {
 	 * @param id
 	 * @return
 	 */
-    EventResponse deleteById(Integer id);
+    int deleteById(Integer id);
 }

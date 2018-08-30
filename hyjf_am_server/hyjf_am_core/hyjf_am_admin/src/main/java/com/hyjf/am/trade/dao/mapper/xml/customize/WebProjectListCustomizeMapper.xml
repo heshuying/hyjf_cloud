@@ -74,7 +74,7 @@
         <result column="borrow_schedule" property="borrowSchedule" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="on_time" property="onTime" jdbcType="VARCHAR" />
-        <result column="time" property="time" jdbcType="VARCHAR" />
+        <result column="times" property="time" jdbcType="VARCHAR" />
         <result column="booking_status" property="bookingStatus" jdbcType="INTEGER" />
         <result column="booking_begin_time" property="bookingBeginTime" jdbcType="INTEGER" />
         <result column="booking_end_time" property="bookingEndTime" jdbcType="INTEGER" />

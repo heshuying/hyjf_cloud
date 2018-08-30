@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -1825,7 +1826,7 @@ public interface AmTradeClient {
      * @return
      * @Author : huanghui
      */
-    AccountRechargeResponse queryRechargeList(AccountRechargeRequest request);
+    AccountRechargeCustomizeResponse queryRechargeList(AccountRechargeRequest request);
 
     /**
      * 更新充值状态
@@ -2808,6 +2809,27 @@ public interface AmTradeClient {
      */
     Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
 
+    /**
+     * 单期还款数据
+     * @param borrowNid
+     * @param borrowApr
+     * @param borrowStyle
+     * @return
+     */
+    BorrowRepayVO getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * 多期还款数据
+     * @param borrowNid
+     * @param borrowApr
+     * @param borrowStyle
+     * @return
+     */
+    BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
 
+    /**
+     * 统计总数
+     * @return
+     */
+    AdminMerchantAccountSumCustomizeVO searchAccountSum();
 }
 

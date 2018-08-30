@@ -135,7 +135,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         Integer count = contentArticleCustomizeMapper.countContentArticle(request);
 
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
             //从那条开始
             request.setLimitStart(paginator.getOffset());
             //一页显示几条

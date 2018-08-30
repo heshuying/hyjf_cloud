@@ -151,7 +151,7 @@ public class AppFindController extends BaseMarketController {
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {
         JSONObject ret = new JSONObject();
-        ret.put("status", "0");
+        ret.put("status", "000");
         ret.put("statusDesc", "成功");
         ret.put("topTitle", getTopTitle(type));
         try {

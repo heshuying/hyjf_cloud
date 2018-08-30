@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.front.crm.impl;
 
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
+import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.service.front.crm.CrmDepartmentService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepartmentService {
-
 
     /**
      * 修改
@@ -43,7 +43,17 @@ public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepa
      * @return
      */
     @Override
-    public Integer delete(ROaDepartment department) {
-        return rOaDepartmentMapper.deleteByPrimaryKey(department.getId());
+    public Integer delete(Integer department) {
+        return rOaDepartmentMapper.deleteByPrimaryKey(department);
+    }
+
+    /**
+     * 根据DepartmentExample 修改
+     *
+     * @param example
+     */
+    @Override
+    public void updateByExample(ROaDepartment department, ROaDepartmentExample example) {
+        rOaDepartmentMapper.updateByExample(department, example);
     }
 }

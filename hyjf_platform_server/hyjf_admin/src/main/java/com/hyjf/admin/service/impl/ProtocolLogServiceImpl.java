@@ -34,7 +34,9 @@ public class ProtocolLogServiceImpl implements ProtocolLogService {
         Integer count = client.countRecordLog(request);
         response.setCount(count);
         if (count.intValue()>0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             recordList = client.getProtocolLogVOAll(request);
             response.setResultList(recordList);
         }

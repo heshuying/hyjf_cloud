@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HjhPlanRepayCustomizeMapper">
+
+    <resultMap id="planRepayMap" type="com.hyjf.am.trade.dao.model.customize.HjhRepayCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+        <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+        <result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="user_attribute" property="userAttribute" jdbcType="INTEGER" />
+        <result column="accede_account" property="accedeAccount" jdbcType="DECIMAL" />
+        <result column="repay_interest" property="repayInterest" jdbcType="DECIMAL" />
+        <result column="repay_capital" property="repayCapital" jdbcType="DECIMAL" />
+        <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+        <result column="repay_already" property="repayAlready" jdbcType="DECIMAL" />
+        <result column="repay_wait" property="repayWait" jdbcType="DECIMAL" />
+        <result column="repay_should" property="repayShould" jdbcType="DECIMAL" />
+        <result column="repay_actual" property="repayActual" jdbcType="DECIMAL" />
+        <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
+        <result column="repay_actual_time" property="repayActualTime" />
+        <result column="repay_should_time" property="repayShouldTime" />
+        <result column="plan_repay_capital" property="planRepayCapital" jdbcType="DECIMAL" />
+        <result column="plan_repay_interest" property="planRepayInterest" jdbcType="DECIMAL" />
+        <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
+        <result column="plan_wait_captical" property="planWaitCaptical" jdbcType="DECIMAL" />
+        <result column="plan_wait_interest" property="planWaitInterest" jdbcType="DECIMAL" />
+        <result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
+        <result column="service_fee" property="serviceFee" jdbcType="DECIMAL" />
+        <result column="create_user" property="createUser" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+        <result column="recommend_name" property="recommendName" />
+        <result column="recommend_attr" property="recommendAttr" />
+        <result column="invite_user_name" property="inviteUserName" />
+        <result column="invite_user_attributename" property="inviteUserAttributeName" />
+        <result column="invite_user_regionname" property="inviteUserRegionName" />
+        <result column="invite_user_branchname" property="inviteUserBranchName" />
+        <result column="invite_user_departmentname" property="inviteUserDepartmentName" />
+        <result column="expectApr" property="expectApr" />
+        <result column="inviteUser" property="inviteUser" />
+        <result column="actualRevenue" property="actualRevenue" />
+        <result column="actualPayTotal" property="actualPayTotal" />
+        <result column="lqdServiceFee" property="lqdServiceFee" />
+        <result column="lqdServiceApr" property="lqdServiceApr" />
+        <result column="investServiceApr" property="investServiceApr" />
+        <result column="lqdProgress" property="lqdProgress" />
+        <result column="lastQuitTime" property="lastQuitTime" />
+        <result column="joinTime" property="joinTime" />
+        <result column="orderLockTime" property="orderLockTime" />
+        <result column="planName" property="planName" />
+    </resultMap>
+
+    <sql id="Where_Clause_Repay">
+        <where>
+            1=1
+            <if test="planOrderId != null and planOrderId != ''">
+                AND hhr.accede_order_id LIKE CONCAT('%', #{planOrderId}, '%')
+            </if>
+            <if test="planNidSrch != null and planNidSrch != ''">
+                AND hhr.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND hhr.user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="refereeNameSrch != null and refereeNameSrch != ''">
+                AND hha.invite_user_name LIKE CONCAT('%', #{refereeNameSrch}, '%')
+            </if>
+            <if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
+                AND hhr.lock_period = #{debtLockPeriodSrch}
+            </if>
+            <if test="repayStatus != null">
+                AND hhr.repay_status = #{repayStatus}
+            </if>
+            <if test="orderStatusSrch != null">
+                AND hhr.order_status = #{orderStatusSrch}
+            </if>
+            <if test="borrowStyleSrch != null and borrowStyleSrch != ''">
+                AND hhp.borrow_style = #{borrowStyleSrch}
+            </if>
+            <if test="repayTimeStart != null and repayTimeStart != ''">
+                AND hhr.repay_should_time >= unix_timestamp(#{repayTimeStart})
+            </if>
+            <if test="repayTimeEnd != null and repayTimeEnd != ''">
+                AND hhr.repay_should_time <![CDATA[<=]]> unix_timestamp(#{repayTimeEnd})
+            </if>
+            <if test="actulRepayTimeStart != null and actulRepayTimeStart != ''">
+                AND hhr.repay_actual_time >= unix_timestamp(#{actulRepayTimeStart})
+            </if>
+            <if test="actulRepayTimeEnd != null and actulRepayTimeEnd != ''">
+                AND hhr.repay_actual_time <![CDATA[<=]]> unix_timestamp(#{actulRepayTimeEnd})
+            </if>
+        </where>
+    </sql>
+
+    <select id="getListTotal" resultType="java.lang.Integer" parameterType="com.hyjf.am.trade.dao.model.customize.HjhPlanRepayCustomize">
+        SELECT
+        COUNT(*) as total
+        FROM
+        ht_hjh_repay hhr
+        LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
+        --         LEFT JOIN huiyingdai_spreads_users hydsu ON hhr.user_id = hydsu.user_id
+        --         LEFT JOIN ht_r_users hu ON hydsu.spreads_userid = hu.user_id
+        --         LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+        LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = hhr.plan_nid
+        --         LEFT JOIN hyjf_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
+        --         AND pna.name_class = 'USER_PROPERTY'
+        --         LEFT JOIN hyjf_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
+        --         AND pna_tender.name_class = 'USER_PROPERTY'
+        <include refid="Where_Clause_Repay" />
+    </select>
+
+    <select id="exportPlanRepayList" resultMap="planRepayMap" parameterType="Map">
+        SELECT
+        hhr.id,
+        hhr.accede_order_id,
+        hhr.plan_nid,
+        hhr.lock_period,
+        hhr.user_id,
+        hhr.user_name,
+        hhr.user_attribute,
+        hhr.accede_account,
+        hhr.repay_interest,
+        hhr.repay_capital,
+        hhr.repay_status,
+        hhr.repay_already,
+        hhr.repay_wait,
+        hhr.repay_should,
+        hhr.repay_actual,
+        hhr.order_status,
+        CASE
+        WHEN
+        hhr.repay_actual_time != 0
+        THEN
+        FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d %H:%i:%s' )
+        ELSE
+          NULL
+        END AS repay_actual_time,
+        CASE hhr.repay_should_time
+        WHEN NULL
+        THEN
+        NULL
+        ELSE
+        FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d %H:%i:%s' )
+        END AS repay_should_time,
+--         hhr.repay_actual_time,
+--         hhr.repay_should_time,
+        hhr.plan_repay_capital,
+        hhr.plan_repay_interest,
+        hhr.repay_total,
+        hhr.plan_wait_captical,
+        hhr.plan_wait_interest,
+        hhr.wait_total,
+        hhr.service_fee,
+        hhr.create_user,
+        hhr.create_time,
+        hhr.update_user,
+        hhr.update_time,
+        hha.invite_user_name AS recommend_name,
+--         pna.`name` AS recommend_attr,
+        hha.invite_user_name,
+--         pna_tender.`name` AS invite_user_attributename,
+        hha.invite_user_regionname,
+        hha.invite_user_branchname,
+        hha.invite_user_departmentname,
+        hha.expect_apr AS expectApr,
+        hha.invite_user_name AS inviteUser,
+        hhr.actual_revenue AS actualRevenue,
+        hhr.actual_pay_total AS actualPayTotal,
+        hha.lqd_service_fee AS lqdServiceFee,
+        hha.lqd_service_apr AS lqdServiceApr,
+        hha.invest_service_apr AS investServiceApr,
+        CONCAT(FORMAT(hha.lqd_progress * 100,0),'%') AS lqdProgress,
+        DATE_ADD(FROM_UNIXTIME(hhr.repay_should_time),INTERVAL 3 DAY) AS lastQuitTime,
+        IFNULL(hha.create_time,0) AS joinTime,
+        IFNULL(hha.count_interest_time,0) AS orderLockTime,
+        hhp.plan_name AS planName
+        FROM
+        ht_hjh_repay hhr
+        LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = hhr.accede_order_id
+--         LEFT JOIN huiyingdai_spreads_users hydsu ON hhr.user_id = hydsu.user_id
+--         LEFT JOIN ht_r_users hu ON hydsu.spreads_userid = hu.user_id
+--         LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+        LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = hhr.plan_nid
+--         LEFT JOIN hyjf_param_name pna ON cast(hhr.user_attribute AS CHAR) = pna.name_cd
+--         AND pna.name_class = 'USER_PROPERTY'
+--         LEFT JOIN hyjf_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
+--         AND pna_tender.name_class = 'USER_PROPERTY'
+        <include refid="Where_Clause_Repay" />
+        ORDER BY repay_should_time ASC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+</mapper>

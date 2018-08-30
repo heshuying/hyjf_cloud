@@ -58,7 +58,7 @@ public class ActivityServiceImpl implements ActivityService {
             criteria.andTitleEqualTo(request.getTitle());
         }
         if (request.getStartTime() != null && request.getEndTime() != null) {
-            criteria.andTimeEndEqualTo(request.getStartTime()).andTimeEndEqualTo(request.getEndTime());
+            criteria.andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartTime())).andTimeEndEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndTime()));
         }
         if (request.getStartCreate() != null && request.getEndCreate() != null) {
             criteria.andCreateTimeBetween(GetDate.str2Timestamp(request.getStartCreate()), GetDate.str2Timestamp(request.getEndCreate()));
@@ -119,15 +119,15 @@ public class ActivityServiceImpl implements ActivityService {
      */
     @Override
     public int insertRecord(ActivityList activityList) {
-        activityList.setCreateTime(GetDate.getTimestamp());
-        activityList.setUpdateTime(GetDate.getTimestamp());
+        activityList.setCreateTime(GetDate.getDate());
+        activityList.setUpdateTime(GetDate.getDate());
         int insert = activityListMapper.insertSelective(activityList);
         return insert;
     }
 
     @Override
     public int updateActivity(ActivityList activityList) {
-        activityList.setUpdateTime(GetDate.getTimestamp());
+        activityList.setUpdateTime(GetDate.getDate());
         int update = activityListMapper.updateByPrimaryKey(activityList);
         return update;
     }

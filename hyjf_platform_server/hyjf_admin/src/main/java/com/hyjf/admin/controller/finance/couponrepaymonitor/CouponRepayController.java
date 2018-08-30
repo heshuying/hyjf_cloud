@@ -107,11 +107,12 @@ public class CouponRepayController extends BaseController {
         Map<String,Object> result = new HashMap<>();
         AdminCouponRepayMonitorCustomizeResponse response = couponRepayService.couponRepayMonitorCreatePage(form);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>();
         }
         List<AdminCouponRepayMonitorCustomizeVO> recordList = response.getResultList();
         result.put("recordList", recordList);
         result.put("latestUpdateTime",recordList.get(0).getUpdateTime());
+        result.put("total",response.getRecordTotal());
         List<AdminCouponRepayMonitorCustomizeVO> recordListSum = this.couponRepayService.selectInterestSum(form);
         if(recordListSum != null && !recordListSum.isEmpty() && recordListSum.get(0) != null){
             result.put("interestWaitSum", recordListSum.get(0).getInterestWaitTotalAll());

@@ -3,16 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmConfigClient;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
-import com.hyjf.admin.client.ContentEnvironmentClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.ContentEnvironmentService;
 import com.hyjf.am.response.admin.ContentEnvironmentResponse;
 import com.hyjf.am.vo.config.ContentEnvironmentVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author fuqiang
@@ -29,30 +27,30 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 	}
 
 	@Override
-	public ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean) {
+	public int insertAction(ContentEnvironmentRequestBean requestBean) {
 		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
-	public ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean) {
+	public int updateAction(ContentEnvironmentRequestBean requestBean) {
 		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
-	public ContentEnvironmentResponse updateStatus(ContentEnvironmentRequestBean requestBean) {
-		Integer id = requestBean.getId();
-		ContentEnvironmentVO record = amConfigClient.getRecord(id);
-		if (record.getStatus() == 1) {
-			record.setStatus(0);
-		} else if (record.getStatus() == 0) {
-			record.setStatus(1);
+	public int updateStatus(ContentEnvironmentRequestBean requestBean) {
+		if (requestBean != null && requestBean.getId() != null) {
+			Integer id = requestBean.getId();
+			ContentEnvironmentVO record = amConfigClient.getRecord(id);
+			ContentEnvironmentRequestBean bean = new ContentEnvironmentRequestBean();
+			BeanUtils.copyProperties(record, bean);
+			bean.setStatus(requestBean.getStatus());
+			return amConfigClient.updateAction(bean);
 		}
-		BeanUtils.copyProperties(record, requestBean);
-		return amConfigClient.updateAction(requestBean);
+		return 0;
 	}
 
 	@Override
-	public ContentEnvironmentResponse deleteById(Integer id) {
+	public int deleteById(Integer id) {
 		return amConfigClient.deleteContentEnvironmentById(id);
 	}
 }

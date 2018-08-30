@@ -3,10 +3,12 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
@@ -53,7 +55,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
 	public List<EventVO> getEventsList() {
 		EventResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/content/contentevent/searchaction", null, EventResponse.class);
+				"http://AM-CONFIG/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -240,8 +242,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 * @return
 	 */
 	@Override
-	public int addSubmission(SubmissionsVO submissionsVO){
-		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
+	public IntegerResponse addSubmission(SubmissionsVO submissionsVO){
+		IntegerResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
 		return response;
 	}
 

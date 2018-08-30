@@ -6,6 +6,7 @@ import com.hyjf.admin.client.ProtocolClient;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
@@ -55,7 +56,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         Integer count = client.countRecord(request);
         response.setCount(count);
         if (count.intValue()>0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd( paginator.getLimit());
             recordList = client.getRecordList(request);
@@ -243,6 +244,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             protocolTemplate.setImgUrl(imgUrl);
             //修改协议模板
             protocolTemplateCommonVO.setProtocolTemplateVO(protocolTemplate);
+            listProtocolTemplateCommonVO.add(protocolTemplateCommonVO);
             request.setRecordList(listProtocolTemplateCommonVO);
             client.updateProtocolTemplate(request);
 
@@ -383,5 +385,73 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         }
         return JSONObject.toJSONString(files, flag);
+    }
+
+    /**
+     * 修改已经存在的协议模板
+     *
+     * @return
+     */
+    @Override
+    public void updateExistAction(AdminProtocolVersionRequest form, String userId) {
+        List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
+        ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
+        Integer updateUserId = Integer.parseInt(userId);
+        //通过版本id拿到版本列表
+        ProtocolVersionVO versionList = client.byIdProtocolVersion(form.getId());
+        //查询上一个版本的模版名称
+        ProtocolTemplateVO protocolTemplateList = client.byIdTemplateBy(versionList.getProtocolId());
+        //1.1修改协议模板
+        ProtocolTemplateVO protocolTemplate = new ProtocolTemplateVO();
+        protocolTemplate.setDisplayName(versionList.getDisplayName());
+        protocolTemplate.setRemarks(versionList.getRemarks());
+        protocolTemplate.setProtocolId(versionList.getProtocolId());
+        protocolTemplate.setVersionNumber(versionList.getVersionNumber());
+        protocolTemplate.setProtocolName(protocolTemplateList.getProtocolName());
+        protocolTemplate.setProtocolType(protocolTemplateList.getProtocolType());
+        protocolTemplate.setProtocolUrl(versionList.getProtocolUrl());
+        if(protocolTemplate != null){
+            //获得修改人的id
+            protocolTemplate.setUpdateUserId(updateUserId);
+            String fileDomainUrl = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
+            //将pdf转为图片---参数
+            String pdfPath=protocolTemplate.getProtocolUrl();
+            String savePath=pdfPath.substring(0,pdfPath.lastIndexOf("."));
+            String imgUrl="";
+            //将pdf转为图片
+            List<String> imgs = PdfToHtml.pdftoImg(fileDomainUrl+pdfPath,fileDomainUrl+savePath,PdfToHtml.IMG_TYPE_JPG);
+            if(!CollectionUtils.isEmpty(imgs)){
+                String img =  StringUtils.join(imgs.toArray(),",");
+                imgUrl=savePath+"-"+img;
+            }
+            protocolTemplate.setImgUrl(imgUrl);
+
+            protocolTemplateCommonVO.setProtocolTemplateVO(protocolTemplate);
+//            protocolTemplateMapper.startUseExistProtocol(protocolTemplate);
+            //获取将要启用的版本号和协议模板名称
+            AdminProtocolRequest adminProtocolRequest = new AdminProtocolRequest();
+            adminProtocolRequest.setProtocolTemplateVO(protocolTemplate);
+            int countProtocolVersionSize = client.getProtocolVersionSize(adminProtocolRequest);
+            if(countProtocolVersionSize == 0){
+                //2.31新增协议版本
+                this.insertProtocolVersion(protocolTemplate,updateUserId,protocolTemplateCommonVO);
+            }
+            //3.添加修改协议的日志
+            this.insertProtocolLog(protocolTemplate,1,protocolTemplateCommonVO);
+
+            //发往am里面进行保存
+            listProtocolTemplateCommonVO.add(protocolTemplateCommonVO);
+            adminProtocolRequest.setRecordList(listProtocolTemplateCommonVO);
+            client.insert(adminProtocolRequest);
+
+            //将协议模板放入redis中
+            RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId(),protocolTemplate.getProtocolUrl()+"&"+protocolTemplate.getImgUrl());
+            //获取协议模板前端显示名称对应的别名
+            String alias = ProtocolEnum.getAlias(protocolTemplate.getProtocolType());
+            if(StringUtils.isNotBlank(alias)){
+                RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS+alias,protocolTemplate.getProtocolId());//协议 ID放入redis
+            }
+
+        }
     }
 }

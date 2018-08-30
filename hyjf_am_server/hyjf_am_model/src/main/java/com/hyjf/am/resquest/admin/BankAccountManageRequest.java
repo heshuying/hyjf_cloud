@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * @author PC-LIUSHOUYI
  * @version BankAccountManageRequest, v0.1 2018/6/29 10:17
  */
-public class BankAccountManageRequest implements Serializable {
+public class BankAccountManageRequest extends BasePage implements Serializable {
 
     private static final long serialVersionUID = -8745040452862245048L;
 
@@ -20,9 +21,6 @@ public class BankAccountManageRequest implements Serializable {
     private String userNameSrch;
 
     @ApiModelProperty(value = "部门查询")
-    private String combotreeSrch;
-
-    @ApiModelProperty(value = "部门拼接(代码将单个部门拼接成list)")
     private String[] combotreeListSrch;
 
     @ApiModelProperty(value = "电子账号(检索用)")
@@ -45,14 +43,6 @@ public class BankAccountManageRequest implements Serializable {
 
     public void setUserNameSrch(String userNameSrch) {
         this.userNameSrch = userNameSrch;
-    }
-
-    public String getCombotreeSrch() {
-        return combotreeSrch;
-    }
-
-    public void setCombotreeSrch(String combotreeSrch) {
-        this.combotreeSrch = combotreeSrch;
     }
 
     public String[] getCombotreeListSrch() {

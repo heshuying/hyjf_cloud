@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.protocol;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.response.trade.ProtocolTemplateResponse;
@@ -12,6 +13,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
+import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
@@ -128,9 +130,11 @@ public class ProtocolTemplateController extends BaseController {
      * @return
      */
     @RequestMapping("/getnewinfo")
-    public List<ProtocolTemplateVO> getnewinfo() {
+    public Response getnewinfo() {
+        Response<ProtocolTemplateVO> response = new Response<>();
         List<ProtocolTemplateVO> list = protocolTemplateService.getnewinfo();
-        return list;
+        response.setResultList(list);
+        return response;
     }
 
     /**
@@ -197,6 +201,48 @@ public class ProtocolTemplateController extends BaseController {
         ProtocolLogResponse response = new ProtocolLogResponse();
         List<ProtocolLogVO>  list = this.protocolTemplateService.getProtocolLogVOAll(request);
         response.setResultList(list);
+        return response;
+    }
+
+    /**
+     * 根据id查询
+     *
+     * @return
+     */
+    @RequestMapping("/byIdProtocolVersion/{id}")
+    public Response byIdProtocolVersion(@PathVariable Integer id) {
+
+        Response response = new Response();
+        ProtocolVersionVO vo = this.protocolTemplateService.byIdProtocolVersion(id);
+        response.setResult(vo);
+        return response;
+    }
+
+    /**
+     * 根据id查询
+     *
+     * @return
+     */
+    @RequestMapping("/byIdTemplateBy/{protocolId}")
+    public Response byIdTemplateBy(@PathVariable String protocolId) {
+
+        Response response = new Response();
+        ProtocolTemplateVO vo = this.protocolTemplateService.byIdTemplateBy(protocolId);
+        response.setResult(vo);
+        return response;
+    }
+
+    /**
+     * 根据id查询
+     *
+     * @return
+     */
+    @RequestMapping("/getProtocolVersionSize")
+    public AdminProtocolResponse byIdTemplateBy(@RequestBody AdminProtocolRequest request) {
+
+        AdminProtocolResponse response = new AdminProtocolResponse();
+        int countSize = this.protocolTemplateService.updateProtocolVersionSize(request.getProtocolTemplateVO());
+        response.setCount(countSize);
         return response;
     }
 

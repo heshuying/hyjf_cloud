@@ -1245,6 +1245,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 									sellerInterestAdvanceWait, yearRate, borrow.getBorrowPeriod(), new BigDecimal(lastDays));
 							// 实付金额 承接本金*（1-折价率）+应垫付利息
 							BigDecimal assignPay = assignPrice.add(assignInterestAdvance);
+							logger.info("计算债转收益：assignInterestAdvance {}  assignPay {} ",assignInterestAdvance,assignPay);
 							String assignPayText = assignCapital + "✕(1-" + DF_FOR_VIEW.format(borrowCredit.getCreditDiscount()) + "%)+" + DF_FOR_VIEW.format(assignInterestAdvance) + "="
 									+ DF_FOR_VIEW.format(assignPay) + "元";
 							// 预计收益 承接人债转本息—实付金额 计算投资收益
@@ -1365,6 +1366,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							BigDecimal balance = account.getBankBalance();
 							BigDecimal creditDiscount = new BigDecimal(1).subtract(borrowCredit.getCreditDiscount().divide(new BigDecimal(100)));
 							BigDecimal sum = sellerCapitalWait.multiply(creditDiscount).add(sellerInterestAdvanceWait);
+							logger.info("sum:{}   creditDiscount{}   balance{}",sum,creditDiscount,creditDiscount);
 							BigDecimal max = sellerCapitalWait.multiply(balance).divide(sum, 8, RoundingMode.DOWN);
 							if (max.compareTo(sellerCapitalWait) > 0) {
 								// 全投金额

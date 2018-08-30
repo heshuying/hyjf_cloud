@@ -43,7 +43,9 @@ public class SubmissionsRequest extends SubmissionsCustomizeVO {
     /**
      * 翻页机能用的隐藏变量
      */
-    private int paginatorPage = 1;
+    private Integer currPage ;
+
+    private Integer pageSize;
     /**
      * 列表画面自定义标签上的用翻页对象：paginator
      */
@@ -89,16 +91,6 @@ public class SubmissionsRequest extends SubmissionsCustomizeVO {
         this.sysTypeList = sysTypeList;
     }
 
-    public int getPaginatorPage() {
-        if (this.paginatorPage == 0) {
-            this.paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
 
     public Paginator getPaginator() {
         return paginator;
@@ -116,4 +108,19 @@ public class SubmissionsRequest extends SubmissionsCustomizeVO {
         this.selectedSubId = selectedSubId;
     }
 
+    public Integer getCurrPage() {
+        return currPage;
+    }
+
+    public void setCurrPage(Integer currPage) {
+        this.currPage = currPage;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 }

@@ -7,8 +7,10 @@ import com.hyjf.admin.beans.request.WebBean;
 import com.hyjf.admin.beans.response.WebsiteResponse;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.WebsiteService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
@@ -17,7 +19,6 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +55,9 @@ public class WebsiteController extends BaseController {
     @Autowired
     SystemConfig systemConfig;
 
+    /** 查看权限 */
+    public static final String PERMISSIONS = "web";
+
     /**
      * 网站收支 列表
      * @param
@@ -62,7 +66,7 @@ public class WebsiteController extends BaseController {
      */
     @ApiOperation(value = "网站收支列表",notes = "网站收支列表")
     @PostMapping(value = "/weblist")
-    //View
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody WebBean form) {
         AccountWebListVO accountWebList = new AccountWebListVO();
         BeanUtils.copyProperties(form, accountWebList);
@@ -71,13 +75,14 @@ public class WebsiteController extends BaseController {
         List<AccountTradeVO> trades= this.websiteService.selectTradeTypes();
         AccountWebListResponse response = websiteService.queryAccountWebList(accountWebList);
         if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
+            return new AdminResult<>();
         }
         //交易金额总计
         String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            sumAccount = "0.00";
         }
+        websiteResponse.setTotal(response.getRecordTotal());
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
         websiteResponse.setAccountWebList(response.getResultList());
@@ -101,13 +106,14 @@ public class WebsiteController extends BaseController {
         List<AccountTradeVO> trades= this.websiteService.selectTradeTypes();
         AccountWebListResponse response = websiteService.queryAccountWebList(accountWebList);
         if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
+            return new AdminResult<>();
         }
         //交易金额总计
         String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            sumAccount = "0.00";
         }
+        websiteResponse.setTotal(response.getRecordTotal());
         websiteResponse.setTradeList(trades);
         websiteResponse.setSumAccount(sumAccount);
         websiteResponse.setAccountWebList(response.getResultList());
@@ -230,15 +236,14 @@ public class WebsiteController extends BaseController {
      * @param
      * @return
      */
+    @ApiOperation(value = "余额查询",notes = "余额查询")
     @PostMapping(value = "/yueSearchAction")
-    public ApiResult yueSearch() {
-        ApiResult result = new ApiResult();
+    public AdminResult yueSearch() {
         // 取得客户编号
         String companyId = systemConfig.getMerCustId();
         // 取得公司账户余额
         double companyYue = websiteService.getCompanyYuE(companyId);
-        result.setData(companyYue);
-        return result;
+        return new AdminResult(companyYue);
     }
 
 }

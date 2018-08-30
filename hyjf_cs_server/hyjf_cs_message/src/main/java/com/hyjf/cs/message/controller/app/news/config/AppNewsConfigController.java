@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version AppNewsConfigController, v0.1 2018/7/25 15:25
  */
 @Api(tags = "app端-开关闭推送服务")
+@RestController
 @RequestMapping("/hyjf-app/news/config")
 public class AppNewsConfigController extends BaseController {
 	@Autowired
@@ -65,7 +67,7 @@ public class AppNewsConfigController extends BaseController {
 		users.setUserId(userId);
 		users.setIfReceiveNotice(Integer.valueOf(ifReceiveNotice));
 
-		int result = this.appNewsConfigService.updateAppNewsConfig(users);
+		int result = this.appNewsConfigService.updateAppNewsConfig(users).getResultInt();
 		if (result == 1) {
 			ret.put("status", 0);
 			ret.put("statusDesc", "成功");

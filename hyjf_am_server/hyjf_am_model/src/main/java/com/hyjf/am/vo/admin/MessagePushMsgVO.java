@@ -1,5 +1,8 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.common.util.GetDate;
+
 /**
  * @author lisheng
  * @version MessagePushMsgVO, v0.1 2018/8/14 16:21
@@ -38,7 +41,7 @@ public class MessagePushMsgVO {
 
     private Integer preSendTime;
 
-    private String sendTime;
+    private Integer sendTime;
 
     private Integer createTime;
 
@@ -53,6 +56,14 @@ public class MessagePushMsgVO {
     private String lastupdateUserName;
 
     private String msgDestination;
+
+    private String msgPreSendTime;
+
+    private String msgSendTime;
+
+    private String msgCreateTime;
+
+    private String updateTime;
 
     public String getId() {
         return id;
@@ -166,11 +177,11 @@ public class MessagePushMsgVO {
         this.preSendTime = preSendTime;
     }
 
-    public String getSendTime() {
+    public Integer getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Integer sendTime) {
         this.sendTime = sendTime;
     }
 
@@ -228,5 +239,49 @@ public class MessagePushMsgVO {
 
     public void setMsgDestination(String msgDestination) {
         this.msgDestination = msgDestination;
+    }
+
+    public String getMsgPreSendTime() {
+        if (preSendTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(preSendTime);
+        }
+        return null;
+    }
+
+    public void setMsgPreSendTime(String msgPreSendTime) {
+        this.msgPreSendTime = msgPreSendTime;
+    }
+
+    public String getMsgSendTime() {
+        if (sendTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(sendTime);
+        }
+        return null;
+    }
+
+    public void setMsgSendTime(String msgSendTime) {
+        this.msgSendTime = msgSendTime;
+    }
+
+    public String getMsgCreateTime() {
+        if (createTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(createTime);
+        }
+        return null;
+    }
+
+    public void setMsgCreateTime(String msgCreateTime) {
+        this.msgCreateTime = msgCreateTime;
+    }
+
+    public String getUpdateTime() {
+        if (lastupdateTime != null) {
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(lastupdateTime);
+        }
+        return null;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

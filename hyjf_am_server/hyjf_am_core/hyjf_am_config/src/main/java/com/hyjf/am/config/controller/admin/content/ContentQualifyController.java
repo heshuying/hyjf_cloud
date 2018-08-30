@@ -48,6 +48,9 @@ public class ContentQualifyController extends BaseConfigController {
 			List<ContentQualifyVO> voList = CommonUtils.convertBeanList(list, ContentQualifyVO.class);
 			response.setResultList(voList);
 		}
+		// 查询符合条件的条数
+		int count = contentQualifyService.selectCount(request);
+		response.setCount(count);
 		return response;
 	}
 
