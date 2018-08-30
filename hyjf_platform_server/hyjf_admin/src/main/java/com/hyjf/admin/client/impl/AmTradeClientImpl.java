@@ -1150,7 +1150,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * yangchangwei
-     * 根据Borrownid 获取放款任务表
+     * 根据id 获取放款任务表
      *
      * @param id
      * @return

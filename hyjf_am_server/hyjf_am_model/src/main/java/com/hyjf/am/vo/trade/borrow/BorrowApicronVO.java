@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author ${yaoy}
@@ -29,10 +30,6 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
     private Integer apiType;
 
     private Integer repayStatus;
-
-    private Integer createTime;
-
-    private Integer updateTime;
 
     private Integer periodNow;
 
@@ -62,7 +59,7 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     private Integer txCounts;
 
-    private Byte failTimes;
+    private Integer failTimes;
 
     private Integer sucCounts;
 
@@ -86,7 +83,45 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     private String ordid;
 
+    private Integer isAllrepay;
+
+    private Date createTime;
+
+    private Date updateTime;
+
     private String data;
+
+    public Integer getFailTimes() {
+        return failTimes;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setFailTimes(Integer failTimes) {
+        this.failTimes = failTimes;
+    }
+
+    public Integer getIsAllrepay() {
+        return isAllrepay;
+    }
+
+    public void setIsAllrepay(Integer isAllrepay) {
+        this.isAllrepay = isAllrepay;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -152,22 +187,6 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     public void setRepayStatus(Integer repayStatus) {
         this.repayStatus = repayStatus;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getPeriodNow() {
@@ -280,14 +299,6 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     public void setTxCounts(Integer txCounts) {
         this.txCounts = txCounts;
-    }
-
-    public Byte getFailTimes() {
-        return failTimes;
-    }
-
-    public void setFailTimes(Byte failTimes) {
-        this.failTimes = failTimes;
     }
 
     public Integer getSucCounts() {
