@@ -156,7 +156,6 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      */
     @Override
     public JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) {
-        userId = "5144";
         CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_BLANK, "标的编号");
         String orderId = request.getParameter("orderId");
         // 优惠券类型，0代表本金投资
