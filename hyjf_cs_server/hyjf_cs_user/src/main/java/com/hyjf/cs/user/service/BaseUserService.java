@@ -9,6 +9,7 @@ import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -172,4 +173,18 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	String getFailedMess(String logOrdId);
+
+	/**
+	 * 返回url拼接参数
+	 * @param request
+	 * @return
+	 */
+	String packageStr(HttpServletRequest request);
+
+	/**
+	 * 返回H5 url拼接参数
+	 * @param request
+	 * @return
+	 */
+    String packageStrForm(HttpServletRequest request);
 }

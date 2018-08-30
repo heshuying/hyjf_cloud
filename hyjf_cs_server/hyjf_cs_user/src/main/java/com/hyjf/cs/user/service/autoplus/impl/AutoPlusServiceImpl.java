@@ -421,8 +421,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() + "/user/setting/authorization/result/failed?logOrdId="+bean.getLogOrderId();
-        String success = systemConfig.getAppHost() + "/user/setting/authorization/result/success";
+        String retUrl = systemConfig.getAppHost() + "/user/setting/authorization/result/failed?logOrdId="+bean.getLogOrderId()+"&sign="+sign+"&token="+token;
+        String success = systemConfig.getAppHost() + "/user/setting/authorization/result/success?sign="+sign+"&token="+token;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;

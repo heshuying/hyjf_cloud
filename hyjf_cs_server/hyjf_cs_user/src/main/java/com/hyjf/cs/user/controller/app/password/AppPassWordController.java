@@ -127,11 +127,11 @@ public class AppPassWordController extends BaseUserController {
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+passWordService.packageStrForm(request);
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success"+passWordService.packageStr(request) ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
+                + CommonConstant.RETURN_ASY_PASSWORD_ACTION+passWordService.packageStr(request);
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
@@ -255,11 +255,11 @@ public class AppPassWordController extends BaseUserController {
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+passWordService.packageStrForm(request) ;
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success"+passWordService.packageStr(request) ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION;
+                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+passWordService.packageStr(request);
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
