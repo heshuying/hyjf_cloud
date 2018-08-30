@@ -844,7 +844,7 @@ public class RepayManageController extends BaseTradeController {
                 String retMsg = bean.getRetMsg();
                 logger.info("放款校验回调失败！银行返回信息：" + retMsg);
                 apicron.setData(retMsg);
-                apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为放款校验失败
                 boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, TradeConstant.STATUS_VERIFY_FAIL);
                 if (!apicronResultFlag) {
@@ -904,7 +904,7 @@ public class RepayManageController extends BaseTradeController {
                 String retMsg = bean.getRetMsg();
                 logger.info("放款结果回调失败！银行返回信息：" + retMsg);
                 apicron.setData(retMsg);
-                apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为放款校验失败
                 boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, TradeConstant.STATUS_LOAN_FAIL);
                 if (!apicronResultFlag) {
@@ -927,7 +927,7 @@ public class RepayManageController extends BaseTradeController {
                                 String failMsg = batchResult.getFailMsg();// 失败原因
                                 if (StringUtils.isNotBlank(failMsg)) {
                                     apicron.setData(failMsg);
-                                    apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                                    apicron.setFailTimes((apicron.getFailTimes() + 1));
                                     // 更新任务API状态
                                     boolean apicronResultFlag = this.repayManageService.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
                                     if (apicronResultFlag) {

@@ -86,7 +86,6 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
         BorrowApicronResponse reponse = new BorrowApicronResponse();
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);
-
         BorrowApicronVO result = (BorrowApicronVO)ConvertUtils.convertBeanToObject(apicron,BorrowApicronVO.class);
         reponse.setResult(result);
         return reponse;
