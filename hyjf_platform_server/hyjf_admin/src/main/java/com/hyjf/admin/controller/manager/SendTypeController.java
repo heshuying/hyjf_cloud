@@ -6,7 +6,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SendTypeService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowSendTypeResponse;
 import com.hyjf.am.resquest.admin.BorrowSendTypeRequest;
@@ -15,12 +14,13 @@ import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author by xiehuili on 2018/8/1.
@@ -68,85 +68,100 @@ public class SendTypeController extends BaseController {
     @ApiOperation(value = "添加 发标/复审", notes = "添加 发标/复审")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public BorrowSendTypeResponse insertBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
+    public AdminResult insertBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
-        ModelAndView modelAndView =new ModelAndView();
         // 编号
-        boolean sendCdFlag = ValidatorFieldCheckUtil.validateAlphaAndMaxLength(modelAndView, "sendCd", adminRequest.getSendCd(), 50, true);
+        boolean sendCdFlag = StringUtils.isBlank(adminRequest.getSendCd())||(StringUtils.isNotBlank(adminRequest.getSendCd())&&adminRequest.getSendCd().length()>50);
         if (sendCdFlag) {
             BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
             if (borrowSendTypeVO != null && StringUtils.isNotEmpty(borrowSendTypeVO.getSendCd())) {
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "sendCd", "repeat");
+                response.setRtn(Response.FAIL);
+                response.setMessage("sendCd 重复了！");
+                return new AdminResult<BorrowSendTypeResponse>(response);
             }
         }
         // 画面验证
-        this.validatorFieldCheck(modelAndView, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
+        String message =this.validatorFieldCheck(adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             response.setEnddayMonthList(this.sendTypeService.getParamNameList(CustomConstants.ENDDAY_MONTH));
         }
         // 数据插入
         BorrowSendTypeResponse res =this.sendTypeService.insertBorrowSend(adminRequest);
-        if (!Response.isSuccess(res)) {
-            response.setRtn(Response.FAIL);
-            return response;
+        if(res==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        response.setRtn(Response.SUCCESS);
-        return response;
+        if (!Response.isSuccess(res)) {
+            return new AdminResult<>(FAIL, res.getMessage());
+        }
+        return new AdminResult<>();
     }
 
     @ApiOperation(value = "修改 发标/复审", notes = "修改 发标/复审")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public BorrowSendTypeResponse updateBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
+    public AdminResult updateBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
-        ModelAndView modelAndView =new ModelAndView();
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "sendCd", adminRequest.getSendCd());
+        if(StringUtils.isBlank(adminRequest.getSendCd())){
+            response.setRtn(Response.FAIL);
+            response.setMessage("sendCd 不能为空！");
+            return new AdminResult<BorrowSendTypeResponse>(response);
+        }
         // 画面验证
-        this.validatorFieldCheck(modelAndView, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
+        String message =this.validatorFieldCheck(adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             response.setEnddayMonthList(this.sendTypeService.getParamNameList(CustomConstants.ENDDAY_MONTH));
         }
         // 数据修改
         BorrowSendTypeResponse res =this.sendTypeService.updateBorrowSend(adminRequest);
-        if (!Response.isSuccess(res)) {
-            response.setRtn(Response.FAIL);
-            return response;
+        if(res==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        response.setRtn(Response.SUCCESS);
-        return response;
+        if (!Response.isSuccess(res)) {
+            return new AdminResult<>(FAIL, res.getMessage());
+        }
+        return new AdminResult<>();
     }
 
 
     @ApiOperation(value = "删除 发标/复审", notes = "删除 发标/复审")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public BorrowSendTypeResponse daleteBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
+    public AdminResult daleteBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
         // 数据修改
         BorrowSendTypeResponse response = this.sendTypeService.daleteBorrowSend(adminRequest.getSendCd());
-        if (Response.isSuccess(response)) {
-            response.setRedirectUrl("redirect:/config/sendtype/init" );
-            response.setRtn(Response.SUCCESS);
-            return response;
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        response.setRtn(Response.FAIL);
-        return response;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>();
     }
     /**
      * 画面校验
      *
-     * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, BorrowSendTypeRequest form) {
+    private String validatorFieldCheck(BorrowSendTypeRequest form) {
         // 名称
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "sendName", form.getSendName(), 50, true);
+        if(StringUtils.isBlank(form.getSendName())||(StringUtils.isNotBlank(form.getSendName())&&form.getSendName().length()>50)){
+            return "sendName 不能为空且长度不能超过50！";
+        }
         // 发标时间
-        ValidatorFieldCheckUtil.validateSignlessNum(modelAndView, "afterTime", form.getAfterTime(), 4, true);
+        if(StringUtils.isBlank(form.getAfterTime())||(StringUtils.isNotBlank(form.getAfterTime())&&form.getAfterTime().length()>4)){
+            String value=form.getAfterTime();
+            if(!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0){
+                return "sendName 不能为空且长度小于4位的正整数！";
+            }
+            return "sendName 不能为空且长度不能超过4！";
+        }
         // 备注说明
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", form.getRemark(), 50, true);
-
+        if(StringUtils.isBlank(form.getRemark())||(StringUtils.isNotBlank(form.getRemark())&&form.getRemark().length()>50)){
+            return "sendName 不能为空且长度不能超过4！";
+        }
+        return "";
     }
 
 }

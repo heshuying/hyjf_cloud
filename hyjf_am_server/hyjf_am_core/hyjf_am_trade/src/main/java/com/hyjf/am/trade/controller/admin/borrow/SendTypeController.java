@@ -42,15 +42,18 @@ public class SendTypeController {
         //查询发标复标条数
         List<BorrowSendType> recordList = this.sendTypeService.selectSendTypeListByPage(new BorrowSendType(), -1, -1);
         if (!CollectionUtils.isEmpty(recordList)) {
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size());
+            result.setCount(recordList.size());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
             recordList = this.sendTypeService.selectSendTypeListByPage(new BorrowSendType(),paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowSendTypeVO> configList = CommonUtils.convertBeanList(recordList, BorrowSendTypeVO.class);
                 result.setResultList(configList);
-                result.setCount(recordList.size());
                 result.setRtn(Response.SUCCESS);
+                return result;
             }
+            result.setRtn(Response.SUCCESS);
+            result.setMessage("查询的数据为空！");
             return result;
         }
         return null;
@@ -86,6 +89,7 @@ public class SendTypeController {
             resp.setRtn(Response.SUCCESS);
         }else{
             resp.setRtn(Response.FAIL);
+            resp.setMessage("添加失败！");
         }
         return resp;
     }
@@ -102,6 +106,7 @@ public class SendTypeController {
             resp.setRtn(Response.SUCCESS);
         }else{
             resp.setRtn(Response.FAIL);
+            resp.setMessage("修改失败！");
         }
         return resp;
     }
@@ -118,6 +123,7 @@ public class SendTypeController {
             resp.setRtn(Response.SUCCESS);
         }else{
             resp.setRtn(Response.FAIL);
+            resp.setMessage("删除失败！");
         }
         return resp;
     }

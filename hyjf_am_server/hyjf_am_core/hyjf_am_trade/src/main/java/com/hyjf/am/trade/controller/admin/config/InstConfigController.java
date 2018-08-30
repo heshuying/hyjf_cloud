@@ -136,8 +136,9 @@ public class InstConfigController {
     public AdminInstConfigListResponse updateInstConfig(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
         HjhInstConfig instConfig = null;
+        req.setId(Integer.valueOf(req.getIds()));
         if(req.getId() != null ){
-            instConfig = this.instConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
+            instConfig = this.instConfigService.getInstConfigRecordById(req.getIds());
         }
         int result = instConfigService.updateInstConfigRecordById(req);
         // 更新redis中的可用余额
@@ -249,39 +250,5 @@ public class InstConfigController {
 
         return result;
     }
-//
-//    /**
-//     * 发标额度上限校验
-//     *
-//     * @param request
-//     * @return
-//     */
-//    @ResponseBody
-//    @RequestMapping(value = InstConfigDefine.TOPLIMITCHECH_ACTION, method = RequestMethod.POST)
-//    public String topLimitCheckAction(HttpServletRequest request) {
-//        JSONObject ret = new JSONObject();
-//        String message = ValidatorFieldCheckUtil.getErrorMessage("required", "");
-//        message = message.replace("{label}", "发标额度上限");
-//
-//        String capitalToplimitStr = request.getParameter("param");
-//        String capitalUsedStr = request.getParameter("capitalUsed");
-//        //新增配置instCode
-//        if (StringUtils.isBlank(capitalUsedStr) || "undefined".equals(capitalUsedStr)) {
-//            return ret.toJSONString();
-//        }
-//
-//        if (StringUtils.isNotBlank(capitalToplimitStr)) {
-//            BigDecimal capitalToplimit = new BigDecimal(capitalToplimitStr);
-//            BigDecimal capitalUsed = new BigDecimal(capitalUsedStr);
-//            if (capitalToplimit.compareTo(capitalUsed) < 0) {
-//                message = ValidatorFieldCheckUtil.getErrorMessage("capitalAvailable.not.minus");
-//                ret.put("info", message);
-//                return ret.toString();
-//            }
-//        }
-//        //校验通过正常返回
-//        ret.put("status", "y");
-//        return ret.toJSONString();
-//    }
 
 }
