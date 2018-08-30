@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -224,7 +225,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
-    public void exportPushMoneyDetailExcelAction(@RequestBody @Valid PushMoneyRequest pushMoneyRequest,HttpServletResponse response){
+    public void exportPushMoneyDetailExcelAction(@RequestBody @Valid PushMoneyRequest pushMoneyRequest,HttpServletResponse response) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         pushMoneyRequest.setCurrPage(-1);
 
@@ -248,7 +249,7 @@ public class PushMoneyManageController extends BaseController {
 */
 
         String fileName =
-                sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+                URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles =
                 new String[] { "序号", "项目编号", "融资期限", "分公司", "分部", "团队", "提成人", "电子账号", "用户属性", "投资人", "投资金额", "提成金额",

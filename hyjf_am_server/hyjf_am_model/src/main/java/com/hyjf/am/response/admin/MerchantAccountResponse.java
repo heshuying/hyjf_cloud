@@ -4,8 +4,8 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.admin.AdminMerchantAccountSumCustomizeVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
@@ -18,6 +18,8 @@ public class MerchantAccountResponse extends Response<MerchantAccountVO> {
     //子账号类型
     private List<ParamNameVO> paramNameList;
     private int recordTotal;
+
+    private AdminMerchantAccountSumCustomizeVO accoutSum;
 
     public List<ParamNameVO> getParamNameList() {
         return paramNameList;
@@ -33,5 +35,13 @@ public class MerchantAccountResponse extends Response<MerchantAccountVO> {
 
     public void setRecordTotal(int recordTotal) {
         this.recordTotal = recordTotal;
+    }
+
+    public AdminMerchantAccountSumCustomizeVO getAccoutSum() {
+        return accoutSum;
+    }
+
+    public void setAccoutSum(AdminMerchantAccountSumCustomizeVO accoutSum) {
+        this.accoutSum = accoutSum;
     }
 }

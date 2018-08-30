@@ -10,18 +10,17 @@ import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
-import com.hyjf.am.vo.admin.AdsTypeVO;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
         criteria.andDisplayNameEqualTo(displayName);
         criteria.andStatusEqualTo(1);
         List<ProtocolTemplate> list = protocolTemplateMapper.selectByExample(examplev);
-        if(CollectionUtils.isNotEmpty(list)){
+        if(!CollectionUtils.isEmpty(list)){
         	volist = CommonUtils.convertBeanList(list, ProtocolTemplateVO.class);
         	return volist;
         }
@@ -220,7 +219,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		}
 
 		//新增协议版本
-		if(recordList.getProtocolVersion().size()>0) {
+		if(recordList.getProtocolVersion() != null) {
 			ProtocolVersion protocolVersion = new ProtocolVersion();
 			BeanUtils.copyProperties(recordList.getProtocolVersion().get(0),protocolVersion);
 			protocolVersionMapper.insertSelective(protocolVersion);
@@ -228,7 +227,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		}
 
 		//新增协议日志
-		if(recordList.getProtocolLog().size()>0) {
+		if(recordList.getProtocolLog() != null) {
 			ProtocolLog protocolLog = new ProtocolLog();
 			BeanUtils.copyProperties(recordList.getProtocolLog().get(0),protocolLog);
 			protocolLogMapper.insertSelective(protocolLog);
@@ -348,6 +347,10 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 
 		//查询所有协议
 		ProtocolLogExample example=new ProtocolLogExample();
+		if (request.getLimitEnd() != -1) {
+			example.setLimitStart(request.getLimitStart());
+			example.setLimitEnd(request.getLimitEnd());
+		}
 
 		ProtocolLogExample.Criteria criteria = example.createCriteria();
 		// 条件查询
@@ -361,6 +364,49 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		}
 		return listVO;
 
+	}
+
+	@Override
+	public ProtocolVersionVO byIdProtocolVersion(Integer id){
+		ProtocolVersionVO vo = new ProtocolVersionVO();
+		ProtocolVersion protocolVersion = protocolVersionMapper.selectByPrimaryKey(id);
+		BeanUtils.copyProperties(protocolVersion,vo);
+		return vo;
+	}
+
+	@Override
+	public ProtocolTemplateVO byIdTemplateBy(String protocolId){
+		ProtocolTemplateVO vo = new ProtocolTemplateVO();
+		ProtocolTemplate protocolVersion = protocolTemplateMapper.selectTemplateById(protocolId);
+		BeanUtils.copyProperties(protocolVersion,vo);
+		return vo;
+	}
+
+	@Override
+	public int updateProtocolVersionSize(ProtocolTemplateVO protocolTemplate) {
+		String versionNumber = protocolTemplate.getVersionNumber();
+		//之前的版本的启用状态改成不启用
+		ProtocolVersionExample examplev = new ProtocolVersionExample();
+		ProtocolVersionExample.Criteria criteriav = examplev.createCriteria();
+		criteriav.andProtocolIdEqualTo(protocolTemplate.getProtocolId()).andDisplayFlagEqualTo(1);
+		List<ProtocolVersion> listsv = protocolVersionMapper.selectByExample(examplev);
+		if (!CollectionUtils.isEmpty(listsv)) {
+			ProtocolVersion protocolVersion = listsv.get(0);
+			protocolVersion.setDisplayFlag(0);
+			protocolVersionMapper.updateByPrimaryKey(protocolVersion);
+		}
+		//根据协议模板名称和协议版本号查询版本表
+		ProtocolVersionExample example = new ProtocolVersionExample();
+		ProtocolVersionExample.Criteria criteria = example.createCriteria();
+		criteria.andProtocolIdEqualTo(protocolTemplate.getProtocolId()).andVersionNumberEqualTo(versionNumber);
+		List<ProtocolVersion> lists = protocolVersionMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(lists)) {
+			//2.21 存在，修改协议版本，设置为启用状态，
+			ProtocolVersion protocolVersion = lists.get(0);
+			protocolVersion.setDisplayFlag(1);
+			protocolVersionMapper.updateByPrimaryKey(protocolVersion);
+		}
+		return lists.size();
 	}
 
 }

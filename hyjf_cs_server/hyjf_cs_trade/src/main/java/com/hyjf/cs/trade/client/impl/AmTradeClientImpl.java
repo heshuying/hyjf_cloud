@@ -1524,7 +1524,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditTenderAssignLog(CreditTenderLogVO creditTenderLog) {
         String url = "http://AM-TRADE/am-trade/borrowTender/save_credit_tender_assign_log";
-        return restTemplate.postForEntity(url,creditTenderLog,Integer.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url,creditTenderLog,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**

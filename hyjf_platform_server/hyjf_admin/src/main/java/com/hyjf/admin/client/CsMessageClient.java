@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
@@ -44,6 +45,22 @@ public interface CsMessageClient {
      * @return
      */
     List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的count
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    Integer getDirectionalTransferLogCount(BindLogListRequest request);
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedLog的list
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    List<BindLogVO> searchDirectionalTransferLogList(BindLogListRequest request);
 
     /**
      * 获取错误码

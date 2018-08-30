@@ -31,6 +31,12 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String currentTab;
 
+    private String status;
+
+    private String successStatus;
+
+    private String creditCapitalAssigned;
+
     public Integer getUserId() {
         return userId;
     }
@@ -144,5 +150,29 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setCurrentTab(String currentTab) {
         this.currentTab = currentTab;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSuccessStatus() {
+        return successStatus;
+    }
+
+    public void setSuccessStatus(String successStatus) {
+        this.successStatus = successStatus;
+    }
+
+    public String getCreditCapitalAssigned() {
+        return creditCapitalAssigned;
+    }
+
+    public void setCreditCapitalAssigned(String creditCapitalAssigned) {
+        this.creditCapitalAssigned = creditCapitalAssigned;
     }
 }

@@ -3,11 +3,14 @@
  */
 package com.hyjf.admin.controller.finance.subcommission;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.SubCommissionService;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.vo.admin.SubCommissionVO;
@@ -46,6 +49,9 @@ public class SubCommissionController extends BaseController {
     @Autowired
     private SubCommissionService subCommissionService;
 
+    @Autowired
+    private AdminCommonService adminCommonService;
+
     /**
      * 平台账户分佣
      * @auth sunpeikai
@@ -58,7 +64,21 @@ public class SubCommissionController extends BaseController {
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
+        logger.info(JSON.toJSONString(subCommissionVOList));
         return new AdminResult<>(ListResult.build(subCommissionVOList,count));
+    }
+
+    /**
+     * 获取交易类型和转账状态下拉框数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "转账状态下拉框数据",notes = "转账状态下拉框数据")
+    @PostMapping(value = "/gettransferstatus")
+    public AdminResult<ListResult<DropDownVO>> getSelectorData(){
+        List<DropDownVO> status = adminCommonService.getParamNameList("TRANSFER_STATUS");
+        return new AdminResult<>(ListResult.build(status,0));
     }
 
     /**
@@ -153,7 +173,7 @@ public class SubCommissionController extends BaseController {
     /**
      * 查询发起账户分佣所需的detail信息
      * @auth sunpeikai
-     * @param userId
+     * @param
      * @return
      */
     @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")

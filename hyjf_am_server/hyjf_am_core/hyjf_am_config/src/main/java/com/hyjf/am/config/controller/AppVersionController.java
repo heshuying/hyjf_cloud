@@ -48,7 +48,7 @@ public class AppVersionController {
             List<Version> recordList  = appVersionService.getRecordList(version, paginator.getOffset(), paginator.getLimit());
             List<VersionVO> versionVOS = CommonUtils.convertBeanList(recordList, VersionVO.class);
             response.setResultList(versionVOS);
-            response.setRecordTotal(versionVOS.size());
+            response.setRecordTotal(count);
 
             Map<String, String> versionName = CacheUtil.getParamNameMap("VERSION_NAME");
             Map<String, String> isUpdate = CacheUtil.getParamNameMap("IS_UPDATE");

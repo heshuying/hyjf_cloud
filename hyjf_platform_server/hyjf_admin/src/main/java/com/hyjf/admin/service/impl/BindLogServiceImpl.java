@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BindLogService;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
@@ -21,7 +22,7 @@ import java.util.List;
 public class BindLogServiceImpl extends BaseServiceImpl implements BindLogService {
 
     @Autowired
-    private AmTradeClient amTradeClient;
+    private CsMessageClient csMessageClient;
 
     /**
      * 根据筛选条件查询绑定日志count
@@ -31,7 +32,7 @@ public class BindLogServiceImpl extends BaseServiceImpl implements BindLogServic
      */
     @Override
     public Integer getBindLogCount(BindLogListRequest request) {
-        return amTradeClient.getBindLogCount(request);
+        return csMessageClient.getDirectionalTransferLogCount(request);
     }
 
     /**
@@ -42,6 +43,6 @@ public class BindLogServiceImpl extends BaseServiceImpl implements BindLogServic
      */
     @Override
     public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
-        return amTradeClient.searchBindLogList(request);
+        return csMessageClient.searchDirectionalTransferLogList(request);
     }
 }
