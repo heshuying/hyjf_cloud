@@ -18,6 +18,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.slf4j.Logger;
@@ -85,9 +86,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public BigDecimal getBankBalancePay(Integer userId, String accountId) {
         BigDecimal balance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
-        bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
-        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
-        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
         bean.setAccountId(accountId);// 电子账号
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
@@ -99,12 +98,13 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+                return balance;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new BigDecimal(10000);
+        return new BigDecimal(0);
     }
 
     /**

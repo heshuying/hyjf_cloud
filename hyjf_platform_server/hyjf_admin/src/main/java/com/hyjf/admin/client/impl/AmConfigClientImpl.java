@@ -59,7 +59,8 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public AdminSystemVO getUserInfoById(Integer loginUserId) {
-        String url = "http://AM-CONFIG/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
+//        String url = "http://AM-CONFIG/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
+        String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         AdminSystemResponse response = restTemplate.getForEntity(url, AdminSystemResponse.class).getBody();
         if (response != null) {
             return response.getResult();
