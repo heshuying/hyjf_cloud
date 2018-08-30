@@ -4,9 +4,7 @@
 package com.hyjf.am.trade.service.front.coupon;
 
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
-import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponUserListCustomize;
 
 import java.util.List;
@@ -54,17 +52,5 @@ public interface CouponUserService {
      */
     boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest);
 
-    /**
-     * 获取加息券列表
-     * @param request
-     * @return
-     */
-    List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request);
 
-    /**
-     * 获取加息券列表
-     * @param request
-     * @return
-     */
-    List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request);
 }

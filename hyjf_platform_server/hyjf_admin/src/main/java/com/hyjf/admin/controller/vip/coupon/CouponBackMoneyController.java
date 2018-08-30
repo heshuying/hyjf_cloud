@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author walter.limeng
+ * @author yinhui
  * @version UtmController, v0.1 2018/7/06 15:17
  */
 @Api(value = "VIP管理汇直投/汇计划回款",tags ="VIP管理汇直投/汇计划回款")

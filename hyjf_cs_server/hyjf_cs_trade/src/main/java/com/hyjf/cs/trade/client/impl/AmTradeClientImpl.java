@@ -4200,4 +4200,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     * 根据tenderNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:49
+     */
+    @Override
+    public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByCreditNid/"+ creditNid;
+        BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

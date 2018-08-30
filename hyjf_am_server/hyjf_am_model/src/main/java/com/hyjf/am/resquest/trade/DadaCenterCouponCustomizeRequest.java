@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.resquest.trade;
 
-import java.text.DecimalFormat;
+import java.io.Serializable;
 
 /**
  * @author fq
  * @version DadaCenterCouponCustomizeRequest, v0.1 2018/8/6 16:53
  */
-public class DadaCenterCouponCustomizeRequest {
+public class DadaCenterCouponCustomizeRequest implements Serializable {
     /**
      * serialVersionUID:
      */
@@ -62,39 +62,6 @@ public class DadaCenterCouponCustomizeRequest {
      */
     private int limitEnd = -1;
 
-
-    public String getTimeStartSrch() {
-        return timeStartSrch;
-    }
-
-    public void setTimeStartSrch(String timeStartSrch) {
-        this.timeStartSrch = timeStartSrch;
-    }
-
-    public String getTimeEndSrch() {
-        return timeEndSrch;
-    }
-
-    public void setTimeEndSrch(String timeEndSrch) {
-        this.timeEndSrch = timeEndSrch;
-    }
-
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -125,6 +92,22 @@ public class DadaCenterCouponCustomizeRequest {
 
     public void setExpireNum(String expireNum) {
         this.expireNum = expireNum;
+    }
+
+    public String getUtilizationRate() {
+        return utilizationRate;
+    }
+
+    public void setUtilizationRate(String utilizationRate) {
+        this.utilizationRate = utilizationRate;
+    }
+
+    public String getFailureRate() {
+        return failureRate;
+    }
+
+    public void setFailureRate(String failureRate) {
+        this.failureRate = failureRate;
     }
 
     public String getRecoverInterest() {
@@ -175,30 +158,43 @@ public class DadaCenterCouponCustomizeRequest {
         this.realTenderMoney = realTenderMoney;
     }
 
-    public String getUtilizationRate() {
-        DecimalFormat df   = new DecimalFormat("######0.00");
-
-        return df.format(Double.parseDouble(usedNum)/Double.parseDouble(grantNum)*100)+"%";
-    }
-
-    public void setUtilizationRate(String utilizationRate) {
-        this.utilizationRate = utilizationRate;
-    }
-
-    public String getFailureRate() {
-        DecimalFormat    df   = new DecimalFormat("######0.00");
-        return df.format(Double.parseDouble(expireNum)/Double.parseDouble(grantNum)*100)+"%";
-    }
-
-    public void setFailureRate(String failureRate) {
-        this.failureRate = failureRate;
-    }
-
     public Integer getActivityId() {
         return activityId;
     }
 
     public void setActivityId(Integer activityId) {
         this.activityId = activityId;
+    }
+
+    public String getTimeStartSrch() {
+        return timeStartSrch;
+    }
+
+    public void setTimeStartSrch(String timeStartSrch) {
+        this.timeStartSrch = timeStartSrch;
+    }
+
+    public String getTimeEndSrch() {
+        return timeEndSrch;
+    }
+
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

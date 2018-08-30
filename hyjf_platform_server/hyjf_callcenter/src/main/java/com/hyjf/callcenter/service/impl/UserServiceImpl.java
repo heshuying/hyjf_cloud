@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
 	private AmTradeClient amTradeClient;
 
+	/**
+	 * 根据用户名/手机号查询用户
+	 * @param bean
+	 * @return
+	 */
 	@Override
 	public UserVO getUser(UserBean bean) {
 		return amUserClient.getUser(bean);

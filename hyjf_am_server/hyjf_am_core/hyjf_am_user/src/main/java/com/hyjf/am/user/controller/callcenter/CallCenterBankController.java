@@ -2,6 +2,8 @@
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 package com.hyjf.am.user.controller.callcenter;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.callcenter.CallCenterAccountHuifuResponse;
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
 import com.hyjf.am.response.user.BankCardResponse;
@@ -37,6 +39,11 @@ public class CallCenterBankController extends BaseController{
     @Autowired
     CallCenterBankService callCenterBankService;
 
+    /**
+     * 查询江西银行绑卡
+     * @param userId
+     * @return
+     */
     @RequestMapping("/getTiedCardForBank/{userId}")
     public BankCardResponse getTiedCardOfAccountBank(@PathVariable Integer userId){
         BankCardResponse bankCardResponse = new BankCardResponse();
@@ -48,7 +55,11 @@ public class CallCenterBankController extends BaseController{
         return bankCardResponse;
     }
 
-
+    /**
+     * 查询呼叫中心未分配客服的用户（复投用户筛选）
+     * @param callCenterUserInfoRequest
+     * @return
+     */
     @RequestMapping("/getNoServiceFuTouUsersList")
     public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
         CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
@@ -60,7 +71,11 @@ public class CallCenterBankController extends BaseController{
         return callCenterUserBaseResponse;
     }
 
-
+    /**
+     * 查询呼叫中心未分配客服的用户（流失用户筛选）
+     * @param callCenterUserInfoRequest
+     * @return
+     */
     @RequestMapping("/getNoServiceLiuShiUsersList")
     public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
         CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
@@ -72,7 +87,11 @@ public class CallCenterBankController extends BaseController{
         return callCenterUserBaseResponse;
     }
 
-
+    /**
+     * 查询呼叫中心未分配客服的用户
+     * @param callCenterUserInfoRequest
+     * @return
+     */
     @RequestMapping("/getNoServiceUsersList")
     public CallCenterUserBaseResponse getNoServiceUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
         CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
@@ -84,11 +103,21 @@ public class CallCenterBankController extends BaseController{
         return callCenterUserBaseResponse;
     }
 
+    /**
+     * 更新客服分配状态
+     * @param callCenterServiceUsersRequest
+     * @return
+     */
     @RequestMapping("/executeRecord")
-    public Integer executeRecord(@RequestBody @Valid CallCenterServiceUsersRequest callCenterServiceUsersRequest){
-        return callCenterBankService.updateRecord(callCenterServiceUsersRequest);
+    public IntegerResponse executeRecord(@RequestBody @Valid CallCenterServiceUsersRequest callCenterServiceUsersRequest){
+        return new IntegerResponse(callCenterBankService.updateRecord(callCenterServiceUsersRequest));
     }
 
+    /**
+     * 查询用户基本信息
+     * @param callCenterUserInfoRequest
+     * @return
+     */
     @RequestMapping("/getBasicUsersList")
     public CallCenterUserBaseResponse getBasicUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
         CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
@@ -100,6 +129,11 @@ public class CallCenterBankController extends BaseController{
         return callCenterUserBaseResponse;
     }
 
+    /**
+     * 查询用户详细信息
+     * @param callCenterUserInfoRequest
+     * @return
+     */
     @RequestMapping("/getUserDetailById")
     public CallCenterUserBaseResponse getUserDetailById(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
         CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
@@ -110,7 +144,12 @@ public class CallCenterBankController extends BaseController{
         }
         return callCenterUserBaseResponse;
     }
-    
+
+    /**
+     * 查询汇付绑卡
+     * @param callcenterAccountHuifuRequest
+     * @return
+     */
     @RequestMapping("/getHuifuTiedcardInfo")
     public CallCenterAccountHuifuResponse getHuifuTiedcardInfo(@RequestBody @Valid CallcenterAccountHuifuRequest callcenterAccountHuifuRequest){
     	CallCenterAccountHuifuResponse CallCenterAccountHuifuResponse = new CallCenterAccountHuifuResponse();
@@ -122,8 +161,13 @@ public class CallCenterBankController extends BaseController{
     	return CallCenterAccountHuifuResponse;
     }
 
+    /**
+     * 获取优惠券内容
+     * @param couponCode
+     * @return
+     */
     @RequestMapping("/getCouponContent/{couponCode}")
-    public String getVipLevel(@PathVariable String couponCode){
-        return callCenterBankService.getCouponContent(couponCode);
+    public StringResponse getCouponContent(@PathVariable String couponCode){
+        return new StringResponse(callCenterBankService.getCouponContent(couponCode));
     }
 }
