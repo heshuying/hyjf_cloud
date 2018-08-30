@@ -819,7 +819,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
-						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId);
+						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
 
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
@@ -875,8 +875,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId) throws Exception {
-
+	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId,int infoId) throws Exception {
 		// 插入时间
 		int systemNowDateLong = GetDate.getNowTime10();
 		Date systemNowDate = GetDate.getDate(systemNowDateLong);
@@ -1343,6 +1342,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setId(borrow.getInfoId());
 		BorrowInfo record=new BorrowInfo();
 		BeanUtils.copyProperties(borrow,record);
+		 record.setId(infoId);
 		this.borrowInfoMapper.updateByPrimaryKey(record);
 		// 个人信息
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
