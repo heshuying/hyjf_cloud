@@ -55,7 +55,7 @@ public interface CouponConfigService {
      * @param couponConfig
      * @return
      */
-    Map<String,Object> saveCouponConfig(CouponConfig couponConfig);
+    int saveCouponConfig(CouponConfig couponConfig);
 
     /**
      * 添加发行优惠券信息

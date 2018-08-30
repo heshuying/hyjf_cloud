@@ -3,11 +3,12 @@
  */
 package com.hyjf.am.trade.service.admin.coupon;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
 import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.BaseService;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -20,4 +21,19 @@ public interface DataCenterCouponService extends BaseService {
      * @return
      */
     List<DataCenterCouponCustomize> getDataCenterCouponList(DataCenterCouponRequest request);
+
+    /**
+     * 获取加息券列表
+     * @param request
+     * @return
+     */
+    List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request);
+
+    /**
+     * 获取加息券列表
+     * @param request
+     * @return
+     */
+    List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request);
+
 }
