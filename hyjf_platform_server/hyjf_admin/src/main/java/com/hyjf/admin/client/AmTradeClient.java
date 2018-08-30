@@ -2825,5 +2825,11 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
+
+    /**
+     * 统计总数
+     * @return
+     */
+    AdminMerchantAccountSumCustomizeVO searchAccountSum();
 }
 
