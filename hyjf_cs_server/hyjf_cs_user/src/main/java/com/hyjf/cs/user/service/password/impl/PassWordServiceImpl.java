@@ -628,9 +628,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setMobile(user.getMobile());
 
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+     /*   LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
@@ -663,9 +663,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+     /*   LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
