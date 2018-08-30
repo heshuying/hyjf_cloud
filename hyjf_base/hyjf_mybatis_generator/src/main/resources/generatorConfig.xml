@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -664,7 +664,6 @@
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
-            <generatedKey column="send_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1855,6 +1854,10 @@
         </table>
         <table tableName="ht_sms_count" domainObjectName="SmsCount">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <table tableName="ht_under_line_recharge" domainObjectName="UnderLineRecharge">
+           <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+           <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
     </context>
 </generatorConfiguration>
