@@ -45,14 +45,9 @@ public class PushMoneyManageController extends BaseController {
         PushMoneyResponse response = new PushMoneyResponse();
         int pushMoneyTotal = pushMoneyManagerService.countPushMoney(request);
         // 查询列表传入分页
-        Paginator paginator;
-        if(request.getLimit() == 0){
-            // 前台传分页
-            paginator = new Paginator(request.getCurrPage(), pushMoneyTotal);
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),pushMoneyTotal,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
-        } else {
-            // 前台未传分页那默认 10
-            paginator = new Paginator(request.getCurrPage(), pushMoneyTotal,request.getPageSize());
             request.setLimitEnd(paginator.getLimit());
         }
         if (pushMoneyTotal > 0) {

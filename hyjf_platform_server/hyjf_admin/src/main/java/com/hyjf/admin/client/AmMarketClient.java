@@ -23,12 +23,6 @@ public interface AmMarketClient {
 
     List<ActivityListVO> getActivityList();
 
-    /**
-     * 获取活动title
-     * @param activityId 活动id
-     * @return
-     */
-    String getActivityTitle(Integer activityId);
 
     /**
      * 查询活动列表

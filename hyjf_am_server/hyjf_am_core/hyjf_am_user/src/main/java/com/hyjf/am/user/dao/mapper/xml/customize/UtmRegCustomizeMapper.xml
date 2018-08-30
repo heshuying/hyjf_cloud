@@ -38,6 +38,7 @@
 	</select>
 	<sql id="Where_Clause">
 		<where>
+			1 = 1
 			<if test="sourceType != null and sourceType != ''" >
 				and source_type =  #{sourceType}
 			</if>
@@ -47,10 +48,10 @@
 			<if test="delFlag != null and delFlag != ''" >
 				and del_flag =  #{delFlag}
 			</if>
-			<if test="limitStart >= 0" >
-				limit #{limitStart} , #{limitEnd}
-			</if>
 		</where>
+		<if test="limitStart != null and limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+		</if>
 	</sql>
 
 	<select id="getUtmPlat" resultType="com.hyjf.am.vo.user.UtmPlatVO" parameterType="map" >

@@ -88,7 +88,7 @@ public class BatchBorrowRecoverController extends BaseController{
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRecoverBankInfoList(@RequestBody Map map) {
         JSONObject jsonObject;
-        String apicronID = (String) map.get("apicronID");
+        String apicronID = map.get("apicronID").toString();
         List<BorrowRecoverBankInfoVo> resultList= batchBorrowRecoverService.queryBatchBorrowRecoverBankInfoList(apicronID);
         if (null != resultList) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);

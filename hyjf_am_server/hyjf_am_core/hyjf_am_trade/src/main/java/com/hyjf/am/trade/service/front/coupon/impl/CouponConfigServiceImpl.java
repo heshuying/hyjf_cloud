@@ -112,15 +112,9 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> saveCouponConfig(CouponConfig couponConfig) {
+	public int saveCouponConfig(CouponConfig couponConfig) {
 		int count = couponConfigMapper.updateByPrimaryKey(couponConfig);
-		Map<String,Object> map = new HashMap<>();
-		if (count > 0) {
-			map.put("success",true);
-		}else {
-			map.put("success",false);
-		}
-		return map;
+		return count;
 	}
 
 	/**

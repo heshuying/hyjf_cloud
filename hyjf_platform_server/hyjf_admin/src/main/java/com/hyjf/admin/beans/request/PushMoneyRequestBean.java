@@ -4,6 +4,8 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import com.hyjf.am.resquest.Request;
+import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.io.Serializable;
  * @author zdj
  * @version PushMoneyRequestBean.java, v0.1 2018年7月13日 下午3:11:08
  */
-public class PushMoneyRequestBean extends BaseRequest implements Serializable{
+public class PushMoneyRequestBean extends Request implements Serializable{
 
 	/**
 	 * serialVersionUID
@@ -27,7 +29,6 @@ public class PushMoneyRequestBean extends BaseRequest implements Serializable{
 	 */
 	private String col;
 
-	public int limit;
 	@ApiModelProperty(value = "检索条件-项目编号")
 	private String borrowNid;
 
@@ -54,6 +55,43 @@ public class PushMoneyRequestBean extends BaseRequest implements Serializable{
 
 	@ApiModelProperty(value = "检索条件-项目类型")
 	private int projectType;
+	/**
+	 * 翻页机能用的隐藏变量
+	 */
+	private int paginatorPage = 1;
+
+	public int limit;
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	/**
+	 * 列表画面自定义标签上的用翻页对象：paginator
+	 */
+	private Paginator paginator;
+	public Paginator getPaginator() {
+		return paginator;
+	}
+
+	public void setPaginator(Paginator paginator) {
+		this.paginator = paginator;
+	}
+
+	public int getPaginatorPage() {
+		if (paginatorPage == 0) {
+			paginatorPage = 1;
+		}
+		return paginatorPage;
+	}
+
+	public void setPaginatorPage(int paginatorPage) {
+		this.paginatorPage = paginatorPage;
+	}
 
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
@@ -73,14 +111,6 @@ public class PushMoneyRequestBean extends BaseRequest implements Serializable{
 
 	public void setCol(String col) {
 		this.col = col;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
 	}
 
 	public String getBorrowNid() {
