@@ -55,6 +55,9 @@ public class BankJournalController {
             status =  "000";
             statusDesc = "查询银行交易明细成功";
 
+        }else{
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);
