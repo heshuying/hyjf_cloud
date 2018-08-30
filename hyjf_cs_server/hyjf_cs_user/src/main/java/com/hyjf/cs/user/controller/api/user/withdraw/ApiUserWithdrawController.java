@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(value = "api端-用户提现接口",tags = "api端-用户提现接口")
 @Controller
 @RequestMapping(value = "/server/user/withdraw")
-public class UserWithdrawController extends BaseUserController {
+public class ApiUserWithdrawController extends BaseUserController {
 
     @ApiOperation(value = "外部服务接口用户提现",notes = "外部服务接口用户提现")
     @PostMapping(value = "/withdraw")
