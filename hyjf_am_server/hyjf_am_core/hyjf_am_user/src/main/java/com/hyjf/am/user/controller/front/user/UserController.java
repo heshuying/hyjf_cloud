@@ -837,8 +837,8 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/isExistsUser/{userId}")
-    public int findUserByUsername(@PathVariable String condition) {
-        logger.info("findUserByCondition run...condition is :{}", condition);
-        return userService.isExistsUser(condition);
+    public int findUserByUsername(@PathVariable String userId) {
+        logger.info("findUserByCondition run...condition is :{}", userId);
+        return userService.isExistsUser(userId);
     }
 }
