@@ -35,6 +35,8 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String successStatus;
 
+    private String creditCapitalAssigned;
+
     public Integer getUserId() {
         return userId;
     }
@@ -164,5 +166,13 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setSuccessStatus(String successStatus) {
         this.successStatus = successStatus;
+    }
+
+    public String getCreditCapitalAssigned() {
+        return creditCapitalAssigned;
+    }
+
+    public void setCreditCapitalAssigned(String creditCapitalAssigned) {
+        this.creditCapitalAssigned = creditCapitalAssigned;
     }
 }
