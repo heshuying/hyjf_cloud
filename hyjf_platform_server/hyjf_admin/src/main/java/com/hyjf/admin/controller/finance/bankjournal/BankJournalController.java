@@ -47,13 +47,17 @@ public class BankJournalController {
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
         String status="error";
+        String statusDesc = "未检索到相应的列表数据";
         if(null!=bankEveList&&bankEveList.size()>0){
             Integer count = bankEveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
-            status="success";
+            jsonObject.put("status", "000");
+            jsonObject.put("statusDesc", "查询银行交易明细成功");
+
         }
         jsonObject.put("status",status);
+        jsonObject.put("statusDesc",statusDesc);
         return jsonObject;
     }
     /**
