@@ -96,8 +96,11 @@ public class AccountRechargeController extends BaseController {
 
         if (!CollectionUtils.isEmpty(responseList)){
 
+            // 充值状态 Redis Key
             String rechargeStatusKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.RECHARGE_STATUS;
+            // 托管平台Key
             String bankTypeKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.BANK_TYPE;
+            // 用户类型 Key
             String userPropertyKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.USER_PROPERTY;
             Map<String, String> rechargeStatusMap = RedisUtils.hgetall(rechargeStatusKey);
             Map<String, String> bankTypeMap = RedisUtils.hgetall(bankTypeKey);
