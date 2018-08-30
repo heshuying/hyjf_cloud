@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.controller.front.trade;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
@@ -276,8 +278,10 @@ public class CreditTenderController extends BaseController {
      * @return
      */
     @GetMapping("/updateCreditTenderResult/{logOrderId}/{logUserId}/{retCode}/{retMsg}")
-    public Integer updateCreditTenderResult( @PathVariable String logOrderId,@PathVariable String logUserId,@PathVariable String retCode,@PathVariable String retMsg){
-        return bankCreditTenderService.updateCreditTenderResult(logOrderId,logUserId,retCode,retMsg);
+    public IntegerResponse updateCreditTenderResult( @PathVariable String logOrderId,@PathVariable String logUserId,@PathVariable String retCode,@PathVariable String retMsg){
+        IntegerResponse response = new IntegerResponse();
+        response.setResultInt(bankCreditTenderService.updateCreditTenderResult(logOrderId,logUserId,retCode,retMsg));
+        return response;
     }
 
     /**
@@ -287,8 +291,10 @@ public class CreditTenderController extends BaseController {
      * @return
      */
     @GetMapping("/getFailResult/{logOrderId}/{logUserId}")
-    public String getFailResult( @PathVariable String logOrderId,@PathVariable String logUserId){
-        return bankCreditTenderService.getFailResult(logOrderId,logUserId);
+    public StringResponse getFailResult( @PathVariable String logOrderId,@PathVariable String logUserId){
+        StringResponse response = new StringResponse();
+        response.setResultStr(bankCreditTenderService.getFailResult(logOrderId,logUserId));
+        return response;
     }
 
     /**
