@@ -3,13 +3,14 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author yaoyong
  * @version VipManageRequest, v0.1 2018/7/2 15:13
  */
-public class VipManageRequest {
+public class VipManageRequest extends BasePage {
     @ApiModelProperty(value = "注册开始时间")
     public String regTimeStart;
     @ApiModelProperty(value = "注册结束时间")

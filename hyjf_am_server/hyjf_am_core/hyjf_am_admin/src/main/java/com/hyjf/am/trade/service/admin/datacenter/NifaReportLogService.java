@@ -28,4 +28,10 @@ public interface NifaReportLogService {
      * @return
      */
     int countNifaReportLog(NifaReportLogRequest request);
+    /**
+     * 根据id查找数据
+     * @param logId
+     * @return
+     */
+    NifaReportLog selectNifaReportLogById(int logId);
 }

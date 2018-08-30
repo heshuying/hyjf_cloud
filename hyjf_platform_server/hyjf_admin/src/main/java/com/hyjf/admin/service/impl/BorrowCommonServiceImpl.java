@@ -60,7 +60,7 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	@Override
 	public int isExistsUser(String userId) {
 
-		return amTradeClient.isExistsUser(userId);
+		return amUserClient.isExistsUser(userId);
 	}
 
 	@Override

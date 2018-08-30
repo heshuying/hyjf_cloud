@@ -18,4 +18,10 @@ public interface NifaReportLogService {
      * @return
      */
     NifaReportLogResponse selectNifaReportLogList(NifaReportLogRequest request);
+    /**
+     * 根据id查找互金协会报送日志
+     * @param logId
+     * @return
+     */
+    NifaReportLogResponse selectNifaReportLogById(int logId);
 }

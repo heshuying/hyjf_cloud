@@ -180,6 +180,7 @@ public class APPAutoPlusController extends BaseUserController {
             e.printStackTrace();
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
         }
+        result.setStatus("000");
         return result;
     }
 
@@ -298,6 +299,7 @@ public class APPAutoPlusController extends BaseUserController {
         } catch (Exception e) {
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
         }
+        result.setStatus("000");
         return result;
     }
 

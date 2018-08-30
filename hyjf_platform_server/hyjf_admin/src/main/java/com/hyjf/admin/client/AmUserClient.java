@@ -1125,4 +1125,6 @@ public interface AmUserClient {
      **/
     Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
 
+	int isExistsUser(String userId);
+
 }

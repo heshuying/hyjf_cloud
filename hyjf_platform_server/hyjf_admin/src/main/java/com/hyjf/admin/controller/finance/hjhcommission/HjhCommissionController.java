@@ -109,7 +109,7 @@ public class HjhCommissionController extends BaseController{
 	 * @param request
 	 * @return 进入汇计划提成列表
 	 */
-	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表查询")
+	@ApiOperation(value = "汇计划提成列表查询", notes = "汇计划提成列表查询")
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -145,7 +145,7 @@ public class HjhCommissionController extends BaseController{
 	 * @param request
 	 * @return 
 	 */
-	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表 加入金额/提成金额 累计")
+	@ApiOperation(value = "汇计划提成列表 加入金额/提成金额 累计", notes = "汇计划提成列表 加入金额/提成金额 累计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -176,7 +176,7 @@ public class HjhCommissionController extends BaseController{
      * @param form
      * @return
      */
-	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表-校验发提成状态是不是已经发放")
+	@ApiOperation(value = "汇计划提成列表-校验发提成状态是不是已经发放", notes = "汇计划提成列表-校验发提成状态是不是已经发放")
 	@PostMapping(value = "/checkstatus")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -210,7 +210,7 @@ public class HjhCommissionController extends BaseController{
      * @param form
      * @return
      */
-	@ApiOperation(value = "汇计划提成列表", notes = "发提成跳转展示页面(跳转详情画面)")
+	@ApiOperation(value = "发提成跳转展示页面(跳转详情画面)", notes = "发提成跳转展示页面(跳转详情画面)")
 	@PostMapping(value = "/showpage")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -242,7 +242,7 @@ public class HjhCommissionController extends BaseController{
 	 * @param request
 	 * @return 带条件导出         已测试
 	 */
-	@ApiOperation(value = "汇计划提成列表", notes = "带条件导出EXCEL")
+	@ApiOperation(value = "汇计划提成列表带条件导出EXCEL", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/export")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -425,7 +425,7 @@ public class HjhCommissionController extends BaseController{
      * @param form 
      * @return
      */
-	@ApiOperation(value = "汇计划提成列表", notes = "取得部门信息")
+	@ApiOperation(value = "汇计划提成列表取得部门信息", notes = "取得部门信息")
 	@PostMapping(value = "/getcrmdepartmentlist")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -460,7 +460,7 @@ public class HjhCommissionController extends BaseController{
      * @param form
      * @return
      */
-	@ApiOperation(value = "汇计划提成列表", notes = "汇计划发提成")
+	@ApiOperation(value = "汇计划提成列表汇计划发提成", notes = "汇计划发提成")
 	@PostMapping(value = "/confirmpushmoney")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
