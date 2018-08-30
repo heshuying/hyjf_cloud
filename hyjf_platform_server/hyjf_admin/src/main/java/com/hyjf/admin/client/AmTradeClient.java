@@ -1636,14 +1636,6 @@ public interface AmTradeClient {
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
     /**
-     * 查询数据中心优惠券数据
-     * @param requestBean
-     * @param type 优惠券类型
-     * @return
-     */
-    DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
-
-    /**
      * 根据筛选条件查询银行账务明细list
      * @param
      * @return
@@ -1733,12 +1725,6 @@ public interface AmTradeClient {
     int isEntrustedExistsUser(String userName);
 
     /**
-     * 获取加息券回款列表
-     * @param dataCenterCouponCustomize
-     * @return
-     */
-    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
-    /**
      * 获取计划列表无分页
      * @return
      */
@@ -1752,12 +1738,6 @@ public interface AmTradeClient {
      */
     BankMerchantAccountVO getBankMerchantAccount(String accountCode);
 
-    /**
-     * 获取代金券回款列表
-     * @param dataCenterCouponCustomize
-     * @return
-     */
-    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
     /**
      * 获取子账户信息
      * @param accountCode

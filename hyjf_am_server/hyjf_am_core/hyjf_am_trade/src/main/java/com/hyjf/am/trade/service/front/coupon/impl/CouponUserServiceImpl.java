@@ -144,14 +144,4 @@ public class CouponUserServiceImpl implements CouponUserService {
         return couponUserList == null || couponUserList.size() == 0 ? true : false;
     }
 
-    @Override
-    public List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request) {
-        return couponUserCustomizeMapper.selectDataCenterCouponJXList(request);
-    }
-
-    @Override
-    public List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request) {
-        return couponUserCustomizeMapper.selectDataCenterCouponDJList(request);
-    }
-
 }
