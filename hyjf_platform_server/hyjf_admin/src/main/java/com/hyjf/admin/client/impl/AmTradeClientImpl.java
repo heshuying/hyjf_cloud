@@ -5870,4 +5870,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public AdminMerchantAccountSumCustomizeVO searchAccountSum() {
+        String url = "http://AM-ADMIN/am-trade/merchantAccount/searchAccountSum";
+        AdminMerchantAccountSumCustomizeResponse response = restTemplate.getForEntity(url, AdminMerchantAccountSumCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 }

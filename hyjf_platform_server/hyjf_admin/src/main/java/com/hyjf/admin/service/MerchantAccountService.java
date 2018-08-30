@@ -6,6 +6,7 @@ package com.hyjf.admin.service;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.vo.admin.AdminMerchantAccountSumCustomizeVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 
@@ -70,4 +71,10 @@ public interface MerchantAccountService {
      * @return
      */
     public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode);
+
+    /**
+     * 统计总数
+     * @return
+     */
+    AdminMerchantAccountSumCustomizeVO searchAccountSum();
 }

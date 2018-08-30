@@ -362,4 +362,13 @@
     WHERE
     status = "1"
   </select>
+
+  <select id="selectTemplateById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    ht_protocol_template
+    WHERE
+    protocol_id = #{protocolId}
+  </select>
 </mapper>

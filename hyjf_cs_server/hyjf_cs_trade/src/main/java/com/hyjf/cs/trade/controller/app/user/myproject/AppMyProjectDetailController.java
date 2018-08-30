@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2018/8/1 10:05
  */
 @Api(value = "app端-用户我的散标详情",tags = "app端-用户我的散标详情")
-@Controller
+@RestController
 @RequestMapping("/hyjf-app/user/borrow")
 public class AppMyProjectDetailController extends BaseTradeController {
 
