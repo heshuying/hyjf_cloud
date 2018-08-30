@@ -17,7 +17,7 @@
 	</resultMap>
 	<sql id="Where_Clause">
 		<where>
-			hwpc.delete_status = 0
+			hwpc.del_flag = 0
 			<!-- 投资订单号 -->
 			<if test="utmName != null and utmName != ''">
 				AND utm.utm_source LIKE CONCAT('%', #{utmName}, '%')

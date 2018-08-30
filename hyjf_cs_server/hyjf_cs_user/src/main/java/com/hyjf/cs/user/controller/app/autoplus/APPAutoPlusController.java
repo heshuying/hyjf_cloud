@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -112,7 +113,7 @@ public class APPAutoPlusController extends BaseUserController {
         if (userAuth != null && userAuth.getAutoInvesStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
-        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
+        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"&code=" + code + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -141,7 +142,7 @@ public class APPAutoPlusController extends BaseUserController {
             result.setStatusDesc("自动投标已授权");
             return result;
         }
-        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthCredit?code=" + code
+        String url = systemConfig.getAppServerHost()+"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHCREDIT+"&code=" + code
                 + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
@@ -161,6 +162,7 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping(value = "/userAuthCredit")
     public AppResult userAuthCredit(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        result.setStatusInfo(BaseResult.SUCCESS,BaseResult.SUCCESS_DESC);
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
@@ -279,6 +281,7 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping(value = "/userAuthInves")
     public AppResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        result.setStatusInfo(BaseResult.SUCCESS,BaseResult.SUCCESS_DESC);
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);

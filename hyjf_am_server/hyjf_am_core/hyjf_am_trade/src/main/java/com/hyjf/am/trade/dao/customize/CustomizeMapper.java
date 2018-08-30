@@ -206,4 +206,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminBankAccountCheckCustomizeMapper adminBankAccountCheckCustomizeMapper;
+
+	@Autowired
+	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
 }

@@ -372,7 +372,7 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/queryBankOpenAccountByUserId/{userId}")
-    public BankOpenAccountResponse queryBankOpenAccountByUserId(@Valid int userId) {
+    public BankOpenAccountResponse queryBankOpenAccountByUserId(@PathVariable int userId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
         BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserId(userId);
@@ -437,11 +437,11 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/updateUserInfoByUserInfo")
-    public int updateUserInfoByUserInfo(@RequestBody @Valid UserInfoRequest request) {
+    public IntegerResponse updateUserInfoByUserInfo(@RequestBody @Valid UserInfoRequest request) {
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(request, userInfo);
         int ingFlg = userManagerService.updateUserInfoByUserInfo(userInfo);
-        return ingFlg;
+        return new IntegerResponse(ingFlg);
     }
 
     /**
@@ -451,11 +451,11 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/updateUser")
-    public int updateUser(@RequestBody @Valid UserRequest request) {
+    public IntegerResponse updateUser(@RequestBody @Valid UserRequest request) {
         User user = new User();
         BeanUtils.copyProperties(request, user);
         int ingFlg = userManagerService.updateUser(user);
-        return ingFlg;
+        return new IntegerResponse(ingFlg);
     }
 
     /**
@@ -616,8 +616,9 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/updateUserRecommend")
-    public int updateUserRecommend(@RequestBody @Valid  AdminUserRecommendRequest request){
-        return userManagerService.updateUserRe(request);
+    public IntegerResponse updateUserRecommend(@RequestBody @Valid  AdminUserRecommendRequest request){
+        int updateUser =  userManagerService.updateUserRe(request);
+        return new IntegerResponse(updateUser);
     }
     /**
      * 修改用户身份证
@@ -625,8 +626,9 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/updateUserIdCard")
-    public int updateUserIdCard(@RequestBody @Valid AdminUserRecommendRequest request){
-        return userManagerService.updateUserIdCard(request);
+    public IntegerResponse updateUserIdCard(@RequestBody @Valid AdminUserRecommendRequest request){
+        int updateUser =  userManagerService.updateUserIdCard(request);
+        return new IntegerResponse(updateUser);
     }
 
     /**

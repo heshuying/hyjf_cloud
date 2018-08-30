@@ -55,7 +55,6 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
@@ -95,9 +94,8 @@ public class BorrowTenderController extends BaseTradeController {
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
-        logger.info("web端请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
+        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} ",logOrdId , borrowNid);
+        return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
     @ApiOperation(value = "web端散标投资获取投资成功结果", notes = "web端散标投资获取投资成功结果")
@@ -106,9 +104,8 @@ public class BorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
-        logger.info("web端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
+        logger.info("web端散标投资获取投资成功结果，logOrdId{}  couponGrantId {}  borrowNid {}", logOrdId,couponGrantId,borrowNid);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")

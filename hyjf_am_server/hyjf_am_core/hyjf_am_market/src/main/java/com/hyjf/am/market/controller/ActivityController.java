@@ -14,6 +14,7 @@ import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import io.swagger.models.auth.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -83,12 +84,10 @@ public class ActivityController {
     public ActivityListResponse getRecordList(@RequestBody ActivityListRequest request) {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));
         ActivityListResponse response = new ActivityListResponse();
-        String returnCode = Response.FAIL;
-//        Map<String,Object> mapParam = paramSet(request);
         int recordCount = activityService.countActivityList(request);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), recordCount,request.getLimit());
-        if(request.getLimit()==0){
-            paginator = new Paginator(request.getPaginatorPage(), recordCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), recordCount, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), recordCount);
         }
         List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
         if(recordCount>0){
@@ -112,8 +111,8 @@ public class ActivityController {
         try {
             ActivityList activityList = new ActivityList();
             BeanUtils.copyProperties(request, activityList);
-            activityList.setTimeStart(request.getStartTime());
-            activityList.setTimeEnd(request.getEndTime());
+            activityList.setTimeStart(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartTime()));
+            activityList.setTimeEnd(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndTime()));
             int result = activityService.insertRecord(activityList);
             if (result > 0){
                 response.setRtn(Response.SUCCESS);
@@ -133,8 +132,8 @@ public class ActivityController {
         try {
         ActivityList activityList = new ActivityList();
         BeanUtils.copyProperties(request,activityList);
-        activityList.setTimeStart(request.getStartTime());
-        activityList.setTimeEnd(request.getEndTime());
+        activityList.setTimeStart(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getStartTime()));
+        activityList.setTimeEnd(GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getEndTime()));
         int result = activityService.updateActivity(activityList);
             if (result > 0){
                 response.setRtn(Response.SUCCESS);

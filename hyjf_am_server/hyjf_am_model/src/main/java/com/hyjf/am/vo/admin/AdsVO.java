@@ -16,6 +16,9 @@ import java.util.Date;
 public class AdsVO extends BaseVO implements Serializable {
     private Integer id;
 
+    @ApiModelProperty(value = "广告位")
+    private String typeName;
+
     @ApiModelProperty(value = "广告名称")
     private String name;
 
@@ -36,7 +39,7 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private Integer hits;
 
-    @ApiModelProperty(value = "广告状态")
+    @ApiModelProperty(value = "广告状态 1-启用,0-关闭")
     private Integer status;
 
     private String shareUrl;
@@ -70,6 +73,7 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private Integer updateUserId;
 
+    @ApiModelProperty(value = "添加时间")
     private String createTime;
 
     private Date updateTime;
@@ -293,5 +297,13 @@ public class AdsVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

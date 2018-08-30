@@ -4,9 +4,7 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: am-admin
-
   boot:
     admin:
       client:
@@ -14,9 +12,12 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
+  profiles:
+    active: dev
 server:
   port: 8099
 
+# spring boot admin 监控的端点
 management:
   endpoints:
     web:
@@ -28,6 +29,7 @@ management:
 
 logging:
   file: am-admin.log
+
 file:
  physical:
   path: D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/

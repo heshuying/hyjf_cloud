@@ -7,7 +7,6 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
@@ -588,7 +587,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean);
+	int insertAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 修改内容管理-办公环境
@@ -596,7 +595,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean);
+	int updateAction(ContentEnvironmentRequestBean requestBean);
 
 	/**
 	 * 根据id查询内容管理-办公环境
@@ -612,7 +611,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentEnvironmentResponse deleteContentEnvironmentById(Integer id);
+	int deleteContentEnvironmentById(Integer id);
 
 	/**
 	 * 根据条件查询着路页管理列表
@@ -660,7 +659,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentPartnerRequestBean requestBean);
+	int insertAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴
@@ -668,7 +667,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentPartnerRequestBean requestBean);
+	int updateAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-合作伙伴
@@ -684,7 +683,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	LinkResponse deleteLinkById(Integer id);
+	int deleteLinkById(Integer id);
 
 	/**
 	 * 公司管理-资质荣誉列表查询
@@ -700,7 +699,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean);
+	int insertAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉
@@ -708,7 +707,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean);
+	int updateAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉状态
@@ -724,7 +723,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	ContentQualifyResponse deleteContentQualifyById(Integer id);
+	int deleteContentQualifyById(Integer id);
 
 	/**
 	 * 获取优惠券列表
@@ -782,7 +781,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse insertAction(EventRequestBean requestBean);
+	int insertAction(EventRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-公司记事
@@ -790,7 +789,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	EventResponse updateAction(EventRequestBean requestBean);
+	int updateAction(EventRequestBean requestBean);
 
 	/**
 	 * 根据id查找公司管理-公司记事
@@ -806,7 +805,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	EventResponse deleteEventById(Integer id);
+	int deleteEventById(Integer id);
 
 	/**
 	 * 查询手续费配置列表
@@ -992,7 +991,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse insertAction(TeamRequestBean requestBean);
+	int insertAction(TeamRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-团队介绍
@@ -1000,7 +999,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	TeamResponse updateAction(TeamRequestBean requestBean);
+	int updateAction(TeamRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-团队介绍
@@ -1016,7 +1015,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	TeamResponse deleteTeamById(Integer id);
+	int deleteTeamById(Integer id);
 
 	/**
 	 * 查询版本设置列表
@@ -1089,7 +1088,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse insertAction(ContentJobRequestBean requestBean);
+	int insertAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-招贤纳士
@@ -1097,7 +1096,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	JobResponse updateAction(ContentJobRequestBean requestBean);
+	int updateAction(ContentJobRequestBean requestBean);
 
 	/**
 	 * 根据id查询公司管理-招贤纳士
@@ -1113,7 +1112,7 @@ public interface AmConfigClient {
 	 * @param id
 	 * @return
 	 */
-	JobResponse deleteJobById(Integer id);
+	int deleteJobById(Integer id);
 
 	/**
 	 * 根据条件查询友情链接列表
@@ -1121,7 +1120,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse searchAction(ContentLinksRequestBean requestBean);
+	List<LinkVO> searchActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 添加根据条件查询友情链接列表
@@ -1129,7 +1128,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+	LinkResponse insertActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 根据id查询数据
@@ -1145,7 +1144,7 @@ public interface AmConfigClient {
 	 * @param requestBean
 	 * @return
 	 */
-	LinkResponse updateAction(ContentLinksRequestBean requestBean);
+	LinkResponse updateActions(ContentLinksRequest requestBean);
 
 	/**
 	 * 查询配置中心操作日志配置
@@ -1372,12 +1371,6 @@ public interface AmConfigClient {
 	 * @param request
 	 */
     int updateStatus(SmsTemplateRequest request);
-
-	/**
-	 * 关闭短信配置模板
-	 * @param request
-	 */
-	void closeSmsTemplate(SmsTemplateRequest request);
 
 	/**
 	 * 修改短信模版

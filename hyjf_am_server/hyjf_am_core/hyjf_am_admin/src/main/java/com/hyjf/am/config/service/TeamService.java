@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Team;
 import com.hyjf.am.resquest.admin.TeamRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -33,14 +33,14 @@ public interface TeamService {
      *
      * @param request
      */
-    void insertAction(TeamRequest request);
+    int insertAction(TeamRequest request);
 
     /**
      * 修改公司管理-团队介绍
      *
      * @param request
      */
-    void updateAction(TeamRequest request);
+    int updateAction(TeamRequest request);
 
     /**
      * 根据id查询公司管理-团队介绍
@@ -55,5 +55,12 @@ public interface TeamService {
      *
      * @param id
      */
-    void deleteById(Integer id);
+    int deleteById(Integer id);
+
+    /**
+     * 查询符合条件的条数
+     * @param request
+     * @return
+     */
+    int selectCount(TeamRequest request);
 }

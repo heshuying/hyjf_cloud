@@ -90,6 +90,7 @@ public class ContentPartnerController extends BaseConfigController {
 		if (link != null) {
 			LinkVO vo = new LinkVO();
 			BeanUtils.copyProperties(link, vo);
+			response.setResult(vo);
 		}
 		return response;
 	}
@@ -103,10 +104,10 @@ public class ContentPartnerController extends BaseConfigController {
 	@RequestMapping("/getbypartnertype/{type}")
 	public LinkResponse getbyPartnerType(@PathVariable Integer type) {
 		LinkResponse response = new LinkResponse();
-		Link link = contentPartnerService.getbyPartnerType(type);
-		if (link != null) {
-			LinkVO vo = new LinkVO();
-			BeanUtils.copyProperties(link, vo);
+		List<Link> list = contentPartnerService.getbyPartnerType(type);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<LinkVO> voList = CommonUtils.convertBeanList(list, LinkVO.class);
+			response.setResultList(voList);
 		}
 		return response;
 	}

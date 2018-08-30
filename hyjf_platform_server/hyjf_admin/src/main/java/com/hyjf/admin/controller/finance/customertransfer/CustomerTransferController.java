@@ -3,20 +3,28 @@
  */
 package com.hyjf.admin.controller.finance.customertransfer;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -49,6 +57,8 @@ public class CustomerTransferController extends BaseController {
 
     @Autowired
     private CustomerTransferService customerTransferService;
+    @Autowired
+    private AdminCommonService adminCommonService;
 
 
     /**
@@ -64,6 +74,23 @@ public class CustomerTransferController extends BaseController {
         count = (count == null)?0:count;
         List<UserTransferVO> userTransferVOList = customerTransferService.searchUserTransferList(request);
         return new AdminResult<>(ListResult.build(userTransferVOList,count));
+    }
+
+    /**
+     * 获取交易类型和转账状态下拉框数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "转账状态下拉框数据",notes = "转账状态下拉框数据")
+    @PostMapping(value = "/getselectordata")
+    public AdminResult getSelectorData(){
+        Map<String,List> data = new HashMap<>();
+        List<DropDownVO> status = adminCommonService.getParamNameList("TRANSFER_STATUS");
+        List<DropDownVO> type = adminCommonService.getParamNameList("TRANSFER_TYPE");
+        data.put("statusData",status);
+        data.put("typeData",type);
+        return new AdminResult(data);
     }
 
     /**
@@ -188,20 +215,16 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
-    public AdminResult searchBalanceByUsername(@RequestBody Map map){
+    public AdminResult<String> searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
         JSONObject jsonObject = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
             jsonObject = customerTransferService.searchBalanceByUsername(outUserName);
         }else{
-            return new AdminResult(FAIL,"用户账号不能为空");
+            CheckUtil.check(false,MsgEnum.ERR_OBJECT_REQUIRED,"用户账号");
         }
-        if("0".equals(jsonObject.get("status"))){
-            return new AdminResult(SUCCESS,jsonObject.getString("result"));
-        }else{
-            return new AdminResult(FAIL,jsonObject.getString("result"));
-        }
+        return new AdminResult<>(jsonObject.getString("result"));
     }
 
     /**
@@ -213,18 +236,19 @@ public class CustomerTransferController extends BaseController {
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
-        Integer userId = Integer.valueOf(getUser(request).getId());
-        JSONObject result = new JSONObject();
-        result = customerTransferService.checkCustomerTransferParam(customerTransferRequest);
-        if(result != null && "0".equals(result.get("status"))){
-            AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
-            customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
-            customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
-            boolean success = customerTransferService.insertTransfer(customerTransferRequest);
-            if(success){
-                return new AdminResult(SUCCESS,SUCCESS_DESC);
-            }
+        //Integer userId = Integer.valueOf(getUser(request).getId());
+        customerTransferService.checkCustomerTransferParam(customerTransferRequest);
+        //AdminSystemVO adminSystemVO = customerTransferService.getAdminSystemByUserId(userId);
+        AdminSystemVO adminSystemVO = getUser(request);
+        customerTransferRequest.setCreateUserId(Integer.valueOf(adminSystemVO.getId()));
+        customerTransferRequest.setCreateUserName(adminSystemVO.getUsername());
+        logger.info("request:[{}]", JSON.toJSONString(customerTransferRequest));
+        boolean success = customerTransferService.insertTransfer(customerTransferRequest);
+        if(success){
+            logger.info("success");
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
         }
+        logger.error("fail");
         return new AdminResult(FAIL,FAIL_DESC);
     }
 

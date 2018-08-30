@@ -47,14 +47,6 @@ public interface ActivityListService {
     ActivityListResponse updateActivity(ActivityListRequest activityListRequest);
 
     /**
-     * 资料上传
-     * @param request
-     * @param response
-     * @return
-     */
-    String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-    /**
      * 删除活动配置信息
      * @param request
      * @return

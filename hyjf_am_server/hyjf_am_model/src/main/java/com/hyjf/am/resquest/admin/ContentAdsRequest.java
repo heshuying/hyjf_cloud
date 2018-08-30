@@ -14,7 +14,7 @@ public class ContentAdsRequest extends BasePage implements Serializable {
 
     private static final long serialVersionUID = 3803722754627036581L;
 
-    @ApiModelProperty(value = "广告类型")
+    @ApiModelProperty(value = "广告类型 6-首页BANNER，9-活动BANNER，10-着陆页BANNER1，11-着陆页BANNER2")
     private Integer typeid;
 
     @ApiModelProperty(value = "广告名称")

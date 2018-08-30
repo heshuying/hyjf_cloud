@@ -386,7 +386,7 @@ public interface AmTradeClient {
      * @param accountwithdraw
      * @return
      */
-    int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw);
+    boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw);
 
     /**
      * 提现后续操作

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.invest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
@@ -40,7 +41,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @ApiOperation(value = "web端-散标债转投资", notes = "web端-散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
-        logger.info("web端请求债转投资接口");
+        logger.info("web端请求债转投资接口 编号 {}   金额  {} " ,tender.getCreditNid() ,tender.getAssignCapital() );
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
@@ -83,8 +84,18 @@ public class BorrowCreditTenderController extends BaseTradeController {
     public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
         logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getSuccessResult(userVO.getUserId(),logOrdId);
+        return  borrowTenderService.getSuccessResult(userId,logOrdId);
+    }
+
+    @ApiOperation(value = "前端Web页面投资可债转输入投资金额后获取收益", notes = "前端Web页面投资可债转输入投资金额后获取收益")
+    @PostMapping(value = "/webCreditTenderInterest", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> getInterestInfo(@RequestHeader(value = "userId") int userId,
+                                                         @RequestBody @Valid TenderRequest tender) {
+        logger.info("前端Web页面投资可债转输入投资金额后获取收益，creditNid:{},assignCapital:{}",tender.getCreditNid(),tender.getAssignCapital());
+        JSONObject json = borrowTenderService.getInterestInfo(userId,tender.getCreditNid(),tender.getAssignCapital());
+        WebResult result = new WebResult();
+        result.setData(json);
+        return result;
     }
 
 }

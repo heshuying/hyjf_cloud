@@ -110,6 +110,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         Integer userId = loginUser.getUserId();
         logger.info("开始检查散标投资参数,userId:{}", userId);
         request.setUser(loginUser);
+        request.setUserName(loginUser.getUsername());
         // 设置redis 用户正在投资
         String key = RedisConstants.BORROW_TENDER_REPEAT + userId;
         boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
@@ -128,6 +129,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 查询散标是否存在
         BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
+        borrow.setTenderAccountMin(borrowInfoVO.getTenderAccountMin());
+        borrow.setTenderAccountMax(borrowInfoVO.getTenderAccountMax());
+        borrow.setCanTransactionAndroid(borrowInfoVO.getCanTransactionAndroid());
+        borrow.setCanTransactionIos(borrowInfoVO.getCanTransactionIos());
+        borrow.setCanTransactionPc(borrowInfoVO.getCanTransactionPc());
+        borrow.setCanTransactionWei(borrowInfoVO.getCanTransactionWei());
+        borrow.setBorrowIncreaseMoney(borrowInfoVO.getBorrowIncreaseMoney());
         if (borrow == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
         }
@@ -193,13 +202,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="+callBean.getLogOrderId()+"&couponGrantId="+request.getCouponGrantId();
 
-        logger.info("投资结果页显示:错误页 -> [{}],成功页 -> [{}]",retUrl,successUrl);
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + request.getCouponGrantId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + request.getCouponGrantId();
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
@@ -208,12 +216,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setNotifyUrl(bgRetUrl);
         callBean.setForgotPwdUrl(forgetPassWoredUrl);
         // 插入记录 tmp表
-        amTradeClient.updateBeforeChinaPnR(request);
+        boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
+        logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            map.forEach((key,value)->{
-                logger.info("key:[{}],value:[{}]",key,value);
-            });
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             result.setData(map);
             return result;
@@ -260,6 +266,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(account);
         String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrow.getBorrowNid());
+        logger.info("标的号{}  项目剩余redis:{}  取值为{}",borrow.getBorrowNid(),balance,RedisConstants.BORROW_NID+borrow.getBorrowNid());
         // 您来晚了，下次再来抢吧
         if (StringUtils.isEmpty(balance)) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
@@ -457,7 +464,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     @Override
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
-        logger.info("开始调用散标投资异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient());
+        logger.info("开始调用散标投资异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
         // 用户Userid
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 投资结果返回码
@@ -508,15 +515,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     /**
      * 获取投资结果 ---失败
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid) {
+    public WebResult<Map<String, Object>> getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
         WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-        String retMsg = amTradeClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
+        String retMsg = amTradeClient.getBorrowTenderResult(userId,logOrdId,borrowNid);
         Map<String, Object> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);
@@ -526,23 +533,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     /**
      * 查询投资成功的结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @param borrowNid
      * @param couponGrantId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId) {
         Map<String, Object> data = new HashedMap();
         BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         // 查看tmp表
         BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
         borrowTenderRequest.setBorrowNid(borrowNid);
         borrowTenderRequest.setTenderNid(logOrdId);
-        borrowTenderRequest.setTenderUserId(userVO.getUserId());
+        borrowTenderRequest.setTenderUserId(userId);
         data.put("borrowNid",borrow.getBorrowNid());
+        data.put("investDesc","恭喜您，投资成功！");
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+        logger.info("获取投资成功结果为:"+borrowTender);
         if(borrowTender!=null){
             // 本金收益  历史回报
             data.put("income",borrowTender.getRecoverAccountWait());
@@ -550,9 +559,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("account",borrowTender.getAccount());
 
             // 查询优惠券信息
-            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userVO.getUserId());
+            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
             // 查询优惠券的投资
-            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userVO.getUserId(),borrowNid,borrowTender.getNid(),couponGrantId);
+            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
             data.put("couponQuota",borrowTenderCpn.getAccount());
             data.put("couponType",couponUser.getCouponType());

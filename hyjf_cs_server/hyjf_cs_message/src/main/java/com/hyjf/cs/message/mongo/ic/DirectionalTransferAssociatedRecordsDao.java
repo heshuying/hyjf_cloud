@@ -53,7 +53,7 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
     private Criteria createCriteria(AssociatedRecordListRequest request){
         Criteria criteria;
         if(null!=request){
-            criteria = Criteria.where("id").gt(0);
+            criteria = Criteria.where("id").ne("").ne(null);
             // 转出账户
             if(StringUtils.isNoneBlank(request.getTurnOutUsername())){
                 criteria = criteria.and("turnOutUsername").regex(request.getTurnOutUsername());
@@ -74,12 +74,12 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
             if (StringUtils.isNoneBlank(request.getShiftToMobile())) {
                 criteria.and("shiftToMobile").regex(request.getShiftToMobile());
             }
-            // 关联时间开始
-            if (StringUtils.isNoneBlank(request.getStartDate())) {
+            // 关联时间开始和结束
+            if (StringUtils.isNoneBlank(request.getStartDate()) && StringUtils.isNoneBlank(request.getEndDate())) {
+                criteria = criteria.and("associatedTime").gte(GetDate.stringToDate(request.getStartDate() + " 00:00:00")).lte(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
+            }else if(StringUtils.isNoneBlank(request.getStartDate())){
                 criteria = criteria.and("associatedTime").gte(GetDate.stringToDate(request.getStartDate() + " 00:00:00"));
-            }
-            // 关联时间结束
-            if (StringUtils.isNoneBlank(request.getEndDate())) {
+            }else if(StringUtils.isNoneBlank(request.getEndDate())){
                 criteria = criteria.and("associatedTime").lte(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
             }
             return criteria;

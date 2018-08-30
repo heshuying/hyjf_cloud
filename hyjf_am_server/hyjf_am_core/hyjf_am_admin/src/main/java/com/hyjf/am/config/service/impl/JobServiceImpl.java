@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.JobMapper;
 import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.JobExample;
 import com.hyjf.am.config.service.JobService;
 import com.hyjf.am.resquest.admin.JobRequest;
-import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -33,35 +32,54 @@ public class JobServiceImpl implements JobService {
 		if (StringUtils.isNotBlank(request.getOfficeName())) {
 			criteria.andOfficeNameEqualTo(request.getOfficeName());
 		}
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
-		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
-		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+		}
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("create_time DESC");
 		return jobMapper.selectByExample(example);
 	}
 
 	@Override
-	public void insertAction(JobRequest request) {
+	public int insertAction(JobRequest request) {
 		Job job = new Job();
 		BeanUtils.copyProperties(request, job);
-		jobMapper.insert(job);
+		return jobMapper.insertSelective(job);
 	}
 
 	@Override
-	public void updateAction(JobRequest request) {
+	public int updateAction(JobRequest request) {
 		Job job = new Job();
 		BeanUtils.copyProperties(request, job);
-		jobMapper.updateByPrimaryKey(job);
+		return jobMapper.updateByPrimaryKeySelective(job);
 	}
 
 	@Override
 	public Job getRecord(Integer id) {
 		return jobMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public int selectCount(JobRequest request) {
+		request.setCurrPage(0);
+		List<Job> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
+	}
+
+	@Override
+	public int delete(Integer id) {
+		return jobMapper.deleteByPrimaryKey(id);
 	}
 }

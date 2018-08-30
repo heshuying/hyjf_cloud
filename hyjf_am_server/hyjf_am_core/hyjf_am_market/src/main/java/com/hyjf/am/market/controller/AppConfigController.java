@@ -7,6 +7,7 @@ import com.hyjf.am.market.service.AppConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 import com.hyjf.am.vo.market.AppBannerVO;
 import com.hyjf.common.paginator.Paginator;
@@ -43,9 +44,9 @@ public class AppConfigController {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         Integer count = appConfigService.countRecordList(request);
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             List<Ads> recordList = appConfigService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
-            List<AppBannerVO> appBannerVos = CommonUtils.convertBeanList(recordList, AppBannerVO.class);
+            List<AdsVO> appBannerVos = CommonUtils.convertBeanList(recordList, AdsVO.class);
             appBannerResponse.setResultList(appBannerVos);
         }
         List<AdsType> adsTypeList = appConfigService.getAdsTypeList();

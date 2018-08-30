@@ -27,7 +27,7 @@ public interface ContentQualifyService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean);
+	int insertAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉
@@ -35,7 +35,7 @@ public interface ContentQualifyService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean);
+	int updateAction(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-资质荣誉状态
@@ -43,7 +43,7 @@ public interface ContentQualifyService {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentQualifyResponse updateStatus(ContentQualifyRequestBean requestBean);
+	int updateStatus(ContentQualifyRequestBean requestBean);
 
 	/**
 	 * 删除公司管理-资质荣誉状态
@@ -51,5 +51,5 @@ public interface ContentQualifyService {
 	 * @param id
 	 * @return
 	 */
-    ContentQualifyResponse deleteById(Integer id);
+	int deleteById(Integer id);
 }

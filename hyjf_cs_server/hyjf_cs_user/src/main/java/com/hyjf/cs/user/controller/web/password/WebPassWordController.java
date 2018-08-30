@@ -102,13 +102,13 @@ public class WebPassWordController extends BaseUserController{
      * @return
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
-    @PostMapping(value = "/passwordBgreturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/passwordBgreturn")
     public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<Object> result = new WebResult<Object>();
         bean.convert();
         LogAcqResBean acqes = bean.getLogAcqResBean();
         int userId = acqes.getUserId();
-        // 查询用户开户状态
+        // 查询设置交易密码状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
         if (user != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
@@ -150,7 +150,7 @@ public class WebPassWordController extends BaseUserController{
      * @return
      */
     @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
-    @PostMapping(value = "/resetPasswordBgreturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/resetPasswordBgreturn")
     public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<String> result = new WebResult<String>();
         result.setStatus("0");

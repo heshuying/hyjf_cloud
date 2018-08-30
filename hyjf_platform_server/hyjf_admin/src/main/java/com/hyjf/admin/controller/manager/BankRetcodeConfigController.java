@@ -51,7 +51,7 @@ public class BankRetcodeConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getResultList().size())) ;
+        return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
     @ApiOperation(value = "查询配置中心返回码配置--条件查询", notes = "查询配置中心返回码配置--条件查询")
@@ -69,7 +69,7 @@ public class BankRetcodeConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getResultList().size())) ;
+        return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
     @ApiOperation(value = "查询配置中心返回码配置详情页面", notes = "查询配置中心返回码配置详情页面")
@@ -111,16 +111,17 @@ public class BankRetcodeConfigController extends BaseController {
         BeanUtils.copyProperties(from,adminRequest);
         ModelAndView mv =new ModelAndView();
         // 画面验证
-        this.validatorFieldCheck(mv, adminRequest);
+        String message = this.validatorFieldCheck(mv, adminRequest);
         // 返回码功能按钮是否重复
         if (this.bankRetcodeConfigService.isExistsReturnCode(adminRequest)) {
-            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
-            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
+//            todo
+//            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
+//            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
         }
         // 数据检索
-        if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
+        if (StringUtils.isNotBlank(message)) {
             // 失败返回
-            return new AdminResult<>(FAIL, "校验失败");
+            return new AdminResult<>(FAIL, message);
         }
         // 插入数据
         if (StringUtils.isNotEmpty(adminRequest.getRetCode())) {
@@ -145,16 +146,17 @@ public class BankRetcodeConfigController extends BaseController {
         BeanUtils.copyProperties(from,adminRequest);
         ModelAndView mv =new ModelAndView();
         // 画面验证
-        this.validatorFieldCheck(mv, adminRequest);
+        String message = this.validatorFieldCheck(mv, adminRequest);
         // 返回码功能按钮是否重复
         if (this.bankRetcodeConfigService.isExistsReturnCode(adminRequest)) {
-            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
-            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
+//            todo
+//            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
+//            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
         }
         // 数据检索
-        if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
+        if (StringUtils.isNotBlank(message)) {
             // 失败返回
-            return new AdminResult<>(FAIL, "校验失败");
+            return new AdminResult<>(FAIL, message);
         }
         // 插入数据----之后的分页查询，通过前端调用
         if (StringUtils.isNotEmpty(adminRequest.getRetCode())) {
@@ -176,11 +178,16 @@ public class BankRetcodeConfigController extends BaseController {
      * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, AdminBankRetcodeConfigRequest form) {
+    private String validatorFieldCheck(ModelAndView modelAndView, AdminBankRetcodeConfigRequest form) {
         // 权限检查用字段的校验
+        if(StringUtils.isBlank(form.getTxCode())||(StringUtils.isNotBlank(form.getTxCode())&&(form.getTxCode().length()>20))){
+            return "txCode不能为空，且长度不能超过20";
+        }
         ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "txCode", form.getTxCode(), 20, true);
         // 权限名字
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "retCode", form.getRetCode(), 20, true);
-
+        if(StringUtils.isBlank(form.getRetCode())||(StringUtils.isNotBlank(form.getRetCode())&&(form.getRetCode().length()>20))){
+            return "retCode，且长度不能超过20";
+        }
+        return "";
     }
 }

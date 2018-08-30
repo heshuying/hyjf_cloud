@@ -10,14 +10,11 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
-  sleuth:
-    sampler:
-      percentage: 1.0
-#    kafka:
-#      bootstrap-servers: 123.56.216.212:9092
+
 server:
   port: 8084
 
+# spring boot admin 监控的端点
 management:
   endpoints:
     web:

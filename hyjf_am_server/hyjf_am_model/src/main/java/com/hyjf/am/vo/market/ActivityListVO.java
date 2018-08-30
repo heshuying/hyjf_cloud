@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.market;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.util.Date;
@@ -15,6 +16,10 @@ public class ActivityListVO extends BaseVO {
     /**
      * 前台时间接收
      */
+    private String acStartTime;
+
+    private String acEndTime;
+
     private int timeStart;
 
     private int timeEnd;
@@ -125,6 +130,7 @@ public class ActivityListVO extends BaseVO {
         this.urlForeground = urlForeground;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
@@ -213,11 +219,28 @@ public class ActivityListVO extends BaseVO {
         this.description = description;
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAcStartTime() {
+        return acStartTime;
+    }
+
+    public void setAcStartTime(String acStartTime) {
+        this.acStartTime = acStartTime;
+    }
+
+    public String getAcEndTime() {
+        return acEndTime;
+    }
+
+    public void setAcEndTime(String acEndTime) {
+        this.acEndTime = acEndTime;
     }
 }

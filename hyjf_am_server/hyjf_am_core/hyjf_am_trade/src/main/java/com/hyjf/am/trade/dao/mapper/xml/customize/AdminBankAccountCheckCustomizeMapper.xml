@@ -23,13 +23,13 @@
     <select id="queryAllBankOpenAccount" resultMap="AccountCheckMapResult"
             parameterType="com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO">
         SELECT
-        a.account AS 'account_id',
+        a.account_id,
         u.user_id,
         u.username
         FROM
-        ht_bank_open_account a
-        LEFT JOIN ht_users u ON u.user_id = a.user_id
-        WHERE u.bank_open_account = 1
+        ht_account a
+        LEFT JOIN ht_r_user u ON u.user_id = a.user_id
+        WHERE 1 = 1
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
         </if>

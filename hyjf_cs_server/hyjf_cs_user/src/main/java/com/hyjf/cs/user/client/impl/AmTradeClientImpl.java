@@ -5,9 +5,11 @@ package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
@@ -16,10 +18,12 @@ import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -653,6 +657,70 @@ public class AmTradeClientImpl implements AmTradeClient {
         STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 插入充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
+        String url = tradeService + "/trade/insertAccountRecharge";
+        AccountRechargeResponse response = restTemplate.postForEntity(url,accountRechargeVO,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据orderId查询充值记录
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> selectAccountRechargeByOrderId(String orderId) {
+        String url = tradeService + "/trade/selectAccountRechargeByOrderId/" + orderId;
+        AccountRechargeResponse response = restTemplate.getForEntity(url,AccountRechargeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 更新充值的相关信息(接口调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 更新充值的相关信息(页面调用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String handleRechargeOnlineInfo(HandleAccountRechargeRequest request) {
+        String url = tradeService + "/trade/handleRechargeOnlineInfo";
+        StringResponse response = restTemplate.postForEntity(url,request,StringResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultStr();
         }
         return null;
     }

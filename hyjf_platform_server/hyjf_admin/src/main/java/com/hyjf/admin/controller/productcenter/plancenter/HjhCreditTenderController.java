@@ -179,6 +179,7 @@ public class HjhCreditTenderController extends BaseController{
     		jsonObject.put("sumAssignPay", sumVO.getSumAssignPay());
     		// 服务费总计
     		jsonObject.put("sumAssignServiceFee", sumVO.getSumAssignServiceFee());
+    		jsonObject.put("status", SUCCESS);
     	} else {
 			jsonObject.put("msg", "查询为空");
 			jsonObject.put("status", FAIL);
@@ -360,7 +361,7 @@ public class HjhCreditTenderController extends BaseController{
     @ResponseBody
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws MQException {
     	JSONObject ret = new JSONObject();
-    	TenderAgreementVO tenderAgreement;
+    	TenderAgreementVO tenderAgreement = new TenderAgreementVO();
 		HjhCreditTenderRequest form = new HjhCreditTenderRequest();
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
@@ -399,7 +400,13 @@ public class HjhCreditTenderController extends BaseController{
         }
 		// 获取投资协议记录
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(assignNid);
-		tenderAgreement = tenderAgreementList.get(0);
+		if(CollectionUtils.isNotEmpty(tenderAgreementList)){
+			tenderAgreement = tenderAgreementList.get(0);
+		} else {
+            ret.put("result", "获取协议记录失败");
+            ret.put("status", FAIL);
+            return ret;
+		}
 		// 如果签署成功,下载失败
 		if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
 			// PDF脱敏加下载处理发送MQ

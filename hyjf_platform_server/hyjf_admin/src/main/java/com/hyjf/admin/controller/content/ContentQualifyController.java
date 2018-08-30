@@ -3,20 +3,16 @@
  */
 package com.hyjf.admin.controller.content;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.ContentQualifyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ContentQualifyService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentQualifyResponse;
-import com.hyjf.am.vo.config.ContentQualifyVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fuqiang
@@ -30,8 +26,8 @@ public class ContentQualifyController extends BaseController {
 	private ContentQualifyService contentQualifyService;
 
 	@ApiOperation(value = "公司管理-资质荣誉条件列表查询", notes = "公司管理-资质荣誉条件列表查询")
-	@PostMapping("/searchaction")
-	public AdminResult<ListResult<ContentQualifyVO>> searchAction(@RequestBody ContentQualifyRequestBean requestBean) {
+	@PostMapping("/search_action")
+	public AdminResult searchAction(@RequestBody ContentQualifyRequestBean requestBean) {
 		ContentQualifyResponse response = contentQualifyService.searchAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -39,58 +35,46 @@ public class ContentQualifyController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult(response);
 	}
 
 	@ApiOperation(value = "添加公司管理-资质荣誉", notes = "添加公司管理-资质荣誉")
 	@PostMapping("/insert")
 	public AdminResult add(@RequestBody ContentQualifyRequestBean requestBean) {
-		ContentQualifyResponse response = contentQualifyService.insertAction(requestBean);
-		if (response == null) {
+		int num = contentQualifyService.insertAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-资质荣誉", notes = "修改公司管理-资质荣誉")
 	@PostMapping("/update")
 	public AdminResult update(@RequestBody ContentQualifyRequestBean requestBean) {
-		ContentQualifyResponse response = contentQualifyService.updateAction(requestBean);
-		if (response == null) {
+		int num = contentQualifyService.updateAction(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "修改公司管理-资质荣誉状态", notes = "修改公司管理-资质荣誉状态")
 	@PostMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentQualifyRequestBean requestBean) {
-		ContentQualifyResponse response = contentQualifyService.updateStatus(requestBean);
-		if (response == null) {
+		int num = contentQualifyService.updateStatus(requestBean);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 
 	@ApiOperation(value = "删除公司管理-资质荣誉状态", notes = "删除公司管理-资质荣誉状态")
 	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
-		ContentQualifyResponse response = contentQualifyService.deleteById(id);
-		if (response == null) {
+		int num = contentQualifyService.deleteById(id);
+		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
-		if (!Response.isSuccess(response)) {
-			return new AdminResult<>(FAIL, response.getMessage());
-		}
-		return new AdminResult<>();
+		return new AdminResult<>(SUCCESS, SUCCESS_DESC);
 	}
 }

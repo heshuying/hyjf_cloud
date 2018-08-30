@@ -6,10 +6,12 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
@@ -39,6 +41,8 @@ public class AppMyProjectController extends BaseTradeController {
 
     @Autowired
     private AppMyProjectService appMyProjectService;
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
@@ -194,10 +198,8 @@ public class AppMyProjectController extends BaseTradeController {
             // 判断债权能否债转
             if (canDoTransfer(entity.getBorrowNid(), nid, userId)) {
                 vo.setIsDisplay("1");
-                //TODO  需要补全
-                String url = ""+ "?borrowId=" + entity.getBorrowNid()
+                String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/transfer/" +assignNid + "?borrowId=" + entity.getBorrowNid()
                         + "&tenderId=" + nid;
-                //vo.setUrl(CommonUtils.concatReturnUrl(request, url));
                 vo.setUrl(url);
             } else {
                 vo.setIsDisplay("0");
@@ -274,7 +276,7 @@ public class AppMyProjectController extends BaseTradeController {
             vo.setIsDisplay("0");
             vo.setBorrowName(customize.getCreditNid());
 
-            String borrowUrl = "" + "/" + customize.getRealCreditNid();
+            String borrowUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/transfer/" + customize.getRealCreditNid();
             //vo.setBorrowUrl(CommonUtils.concatReturnUrl(request, borrowUrl));
             vo.setBorrowUrl(borrowUrl);
             CommonUtils.convertNullToEmptyString(vo);
@@ -297,7 +299,7 @@ public class AppMyProjectController extends BaseTradeController {
         if (StringUtils.isEmpty(couponType)) {
             couponType = "0";
         }
-        String url = "" + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
+        String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/borrow"  + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
                 + "&couponType=" + couponType + "&assignNid=" + assignNid +"&investStatusDesc=" + investStatusDesc;
         return url;
     }

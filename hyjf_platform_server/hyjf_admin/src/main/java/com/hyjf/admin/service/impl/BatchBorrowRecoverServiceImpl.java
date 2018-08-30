@@ -348,27 +348,54 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
 
     /**
      * 获得批次放款页面需要的展示列表
-     * @param resultBean
+     * @param resultBeans
      * @return
      */
-    private List<BorrowRecoverBankInfoVo> getRecoverDetailList(BankCallBean resultBean) {
+    private List<BorrowRecoverBankInfoVo> getRecoverDetailList(BankCallBean resultBeans) {
         List<BorrowRecoverBankInfoVo> detailList = new ArrayList<>();
-        String subPacks = resultBean.getSubPacks();
-        if (StringUtils.isNotBlank(subPacks)) {
-            JSONArray loanDetails = JSONObject.parseArray(subPacks);
-            for (int j = 0; j < loanDetails.size(); j++) {
-                JSONObject loanDetail = loanDetails.getJSONObject(j);
-                BorrowRecoverBankInfoVo info = new BorrowRecoverBankInfoVo();
-                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
-                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
-                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
-                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT).toString());// 操作金额
-                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
-                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
-                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
-                detailList.add(info);
-            }
+
+        BorrowRecoverBankInfoVo detailLists = new BorrowRecoverBankInfoVo();
+        if (Validator.isNotNull(resultBeans)) {
+            // 借款人电子账户号
+            detailLists.setForAccountId(resultBeans.getAccountId());
+            // 借款人姓名
+            detailLists.setName(resultBeans.getName());
+            // 响应代码
+            detailLists.setRetCode(resultBeans.getRetCode());
+            // 错误描述
+            detailLists.setFileMsg(resultBeans.getRetMsg());
+            // 标的编号
+            detailLists.setProductId(resultBeans.getProductId());
+            // 借款人入账金额
+            detailLists.setTxAmount(resultBeans.getTxAmount());
+            // 手续费金额
+            detailLists.setFeeAmount(resultBeans.getFeeAmount());
+            // 风险准备金
+            detailLists.setRiskAmount(resultBeans.getRiskAmount());
+            // 交易状态
+            detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals(resultBeans.getRetCode()) ? "成功" : "失败");
         }
+        //TODO 测试数据，待删除
+        // 借款人电子账户号
+        detailLists.setForAccountId("6212461890000001801");
+        // 借款人姓名
+        detailLists.setName("金子裕");
+        // 响应代码
+        detailLists.setRetCode("00000000");
+        // 错误描述
+        detailLists.setFileMsg("");
+        // 标的编号
+        detailLists.setProductId("WDD180503000007");
+        // 借款人入账金额
+        detailLists.setTxAmount("20000.00");
+        // 手续费金额
+        detailLists.setFeeAmount("160.00");
+        // 风险准备金
+        detailLists.setRiskAmount("0.00");
+        // 交易状态
+        detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
+
+        detailList.add(detailLists);
         return detailList;
     }
 }

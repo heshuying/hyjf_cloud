@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.bindlog;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -24,11 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -64,16 +63,15 @@ public class BindLogController extends BaseController {
      * @return
      */
     @ApiOperation(value = "导出绑定日志列表",notes = "根据筛选条件导出绑定日志list")
-    @GetMapping(value = "/bindloglistexport")
-    public void exportBindLogList(HttpServletResponse response, @ModelAttribute BindLogListRequest request){
+    @PostMapping(value = "/bindloglistexport")
+    public void exportBindLogList(HttpServletResponse response, @RequestBody BindLogListRequest request) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
 
         // 表格sheet名称
         String sheetName = "绑定日志列表";
         // 文件名称
-        String fileName =
-                sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 检索列表
         List<BindLogVO> bindLogVOList = bindLogService.searchBindLogList(request);

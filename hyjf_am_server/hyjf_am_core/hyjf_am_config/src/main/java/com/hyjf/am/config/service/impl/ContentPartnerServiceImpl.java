@@ -8,12 +8,10 @@ import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -33,14 +31,18 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 		if (StringUtils.isNotBlank(request.getWebname())) {
 			criteria.andWebnameEqualTo(request.getWebname());
 		}
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
-		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
 		return linkMapper.selectByExample(example);
@@ -66,14 +68,16 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	}
 
 	@Override
-	public Link getbyPartnerType(Integer type) {
+	public List<Link> getbyPartnerType(Integer type) {
 		LinkExample example = new LinkExample();
-		example.createCriteria().andPartnerTypeEqualTo(type);
-		List<Link> linkList = linkMapper.selectByExample(example);
-		if (!CollectionUtils.isEmpty(linkList)) {
-			return linkList.get(0);
+		LinkExample.Criteria criteria = example.createCriteria();
+		criteria.andStatusEqualTo( 1);// 启用状态
+		criteria.andTypeEqualTo(2);// 合作伙伴
+		if (type != null) {
+			criteria.andPartnerTypeEqualTo(type);
 		}
-		return null;
+		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+		return linkMapper.selectByExample(example);
 	}
 
 	@Override

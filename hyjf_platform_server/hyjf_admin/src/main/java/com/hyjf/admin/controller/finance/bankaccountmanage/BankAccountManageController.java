@@ -3,18 +3,17 @@
  */
 package com.hyjf.admin.controller.finance.bankaccountmanage;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.BankAccountManageResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankAccountManageService;
-import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -37,8 +36,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI
@@ -65,15 +66,14 @@ public class BankAccountManageController extends BaseController {
 
         BankAccountManageResponseBean bean = new BankAccountManageResponseBean();
 
-        // 部门下拉框
-        List<OADepartmentCustomizeVO> departmentList = bankAccountManageService.queryDepartmentInfo();
-        bean.setDepartmentList(ConvertUtils.convertListToDropDown(departmentList, "id", "name"));
-        // 会员等级下拉框
-        bean.setVipList(ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("VIP_GRADE")));
-
         Integer count = bankAccountManageService.selectAccountInfoCount(request);
         count = (count == null) ? 0 : count;
         bean.setTotal(count);
+        //分页参数
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        page.setTotal(count);
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
         if (count > 0) {
             List<BankAccountManageCustomizeVO> bankAccountManageCustomizeVO = bankAccountManageService.queryAccountInfos(request);
             if (bankAccountManageCustomizeVO == null || bankAccountManageCustomizeVO.size() == 0) {
@@ -97,10 +97,7 @@ public class BankAccountManageController extends BaseController {
     public void exportAccountDetailExcel(@RequestBody BankAccountManageRequest request, HttpServletResponse response) {
         // 表格sheet名称
         String sheetName = "资金明细";
-        JSONObject jsonObject = new JSONObject();
         // 取得数据
-        request.setLimitStart(-1);
-        request.setLimitEnd(-1);
         List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountDetails(request);
 
         String fileName = null;
@@ -204,34 +201,33 @@ public class BankAccountManageController extends BaseController {
     /**
      * 更新
      *
-     * @param request
      * @param userIdStr
      * @return
      */
     @ApiOperation(value = "更新账户余额", notes = "银行账户管理")
     @ResponseBody
-    @PostMapping("/update_balance_action/{userIdStr}")
-    public String updateBalanceAction(HttpServletRequest request, @PathVariable String userIdStr) {
+    @GetMapping("/update_balance_action/{userIdStr}")
+    public JSONObject updateBalanceAction(@PathVariable String userIdStr) {
 
         JSONObject ret = new JSONObject();
 
         // 用户ID
         Integer userId = GetterUtil.getInteger(userIdStr);
-        if (Validator.isNull(userId)) {
-            ret.put("status", "error");
-            ret.put("result", "更新发生错误,请重新操作!");
+        if (null == userId || 0 ==userId) {
+            ret.put("status", FAIL);
+            ret.put("statusDesc", "更新发生错误,请重新操作!");
             logger.error("参数不正确[userId=" + userId + "]", BankAccountManageController.class);
-            return ret.toString();
+            return ret;
         }
 
         // 取得用户在银行的账户信息
-        BankOpenAccountVO bankOpenAccountVO = bankAccountManageService.getBankOpenAccount(userId);
+        AccountVO accountVO = bankAccountManageService.getAccountByUserId(userId);
         // 用户未开户时,返回错误信息
-        if (bankOpenAccountVO == null) {
-            ret.put("status", "error");
-            ret.put("result", "用户未开户!");
+        if (accountVO == null || StringUtils.isBlank(accountVO.getAccountId())) {
+            ret.put("status", FAIL);
+            ret.put("statusDesc", "用户未开户!");
             logger.error("参数不正确[userId=" + userId + "]", BankAccountManageController.class);
-            return ret.toString();
+            return ret;
         }
 
         // 账户可用余额
@@ -255,7 +251,7 @@ public class BankAccountManageController extends BaseController {
         // 交易渠道
         bean.setChannel(BankCallConstant.CHANNEL_PC);
         // 电子账号
-        bean.setAccountId(bankOpenAccountVO.getAccount());
+        bean.setAccountId(accountVO.getAccountId());
         // 订单号
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(userId)));
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
@@ -267,9 +263,9 @@ public class BankAccountManageController extends BaseController {
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
             if (resultBean == null) {
                 logger.error("调用银行接口发生错误", BankAccountManageController.class);
-                ret.put("status", "error");
-                ret.put("result", "调用银行接口发生错误");
-                return ret.toString();
+                ret.put("status", FAIL);
+                ret.put("statusDesc", "调用银行接口发生错误");
+                return ret;
             }
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                 // 账户余额
@@ -280,9 +276,9 @@ public class BankAccountManageController extends BaseController {
                 frost = currBalance.subtract(balance);
             } else {
                 logger.error("调用银行接口发生错误", BankAccountManageController.class);
-                ret.put("status", "error");
-                ret.put("result", "调用银行接口发生错误");
-                return ret.toString();
+                ret.put("status", FAIL);
+                ret.put("statusDesc", "调用银行接口发生错误");
+                return ret;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,14 +295,14 @@ public class BankAccountManageController extends BaseController {
 
         // 返现成功
         if (cnt > 0) {
-            ret.put("status", "success");
-            ret.put("result", "更新操作成功!");
+            ret.put("status", SUCCESS);
+            ret.put("statusDesc", "更新操作成功!");
         } else {
-            ret.put("status", "error");
-            ret.put("result", "更新发生错误,请重新操作!");
+            ret.put("status", FAIL);
+            ret.put("statusDesc", "更新发生错误,请重新操作!");
         }
 
-        return ret.toString();
+        return ret;
     }
 
     /**
@@ -319,25 +315,59 @@ public class BankAccountManageController extends BaseController {
     @ApiOperation(value = "开始线下充值对账", notes = "银行账户管理")
     @ResponseBody
     @PostMapping("/start_account_check_action")
-    public String bankAccountCheckAction(HttpServletRequest request, @RequestBody BankAccountManageCustomizeVO form) {
+    public JSONObject bankAccountCheckAction(HttpServletRequest request, @RequestBody BankAccountManageCustomizeVO form) {
         Integer userId = form.getUserId();
         JSONObject ret = new JSONObject();
         String startTime = form.getStartTime();
         String endTime = form.getEndTime();
         if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
-            ret.put("msg", "开始时间或结束时间不得为空!");
-            ret.put("status", "error");
-            return ret.toString();
+            ret.put("statusDesc", "开始时间或结束时间不得为空!");
+            ret.put("status", FAIL);
+            return ret;
         }
         String result = this.bankAccountManageService.updateAccountCheck(userId, startTime, endTime);
 
         if ("success".equals(result)) {
-            ret.put("msg", "success");
+            ret.put("statusDesc", "处理成功");
+            ret.put("status", SUCCESS);
         } else {
-            ret.put("msg", result);
-            ret.put("status", "error");
+            ret.put("statusDesc", result);
+            ret.put("status", FAIL);
         }
 
-        return ret.toString();
+        return ret;
+    }
+
+     /**
+     * 取得部门信息
+     *
+     * @return
+     */
+    @ApiOperation(value = "取得部门信息", notes = "银行账户管理")
+    @GetMapping(value = "/get_crm_department_list")
+    public JSONObject getCrmDepartmentListAction() {
+        // 部门
+        String[] list = new String[]{};
+
+        JSONArray ja = this.bankAccountManageService.getCrmDepartmentList(list);
+        if (ja != null) {
+
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+
+            ja.add(jo);
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            ret.put("status", SUCCESS);
+            ret.put("statusDesc", "成功");
+            return ret;
+        }
+        return new JSONObject();
     }
 }

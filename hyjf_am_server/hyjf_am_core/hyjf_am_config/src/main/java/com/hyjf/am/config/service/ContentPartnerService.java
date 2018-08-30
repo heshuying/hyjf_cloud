@@ -49,7 +49,7 @@ public interface ContentPartnerService {
 	 * @param type
 	 * @return
 	 */
-    Link getbyPartnerType(Integer type);
+	List<Link> getbyPartnerType(Integer type);
 
 	/**
 	 * 根据id删除合作伙伴

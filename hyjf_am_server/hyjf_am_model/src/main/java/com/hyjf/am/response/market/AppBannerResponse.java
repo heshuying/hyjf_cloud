@@ -1,6 +1,7 @@
 package com.hyjf.am.response.market;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppBannerVO;
 
 /**
@@ -8,7 +9,7 @@ import com.hyjf.am.vo.market.AppBannerVO;
  * @version AppBannerResponse, v0.1 2018/7/11 14:34
  */
 
-public class AppBannerResponse extends Response<AppBannerVO> {
+public class AppBannerResponse extends Response<AdsVO> {
 
     private int recordTotal;
 

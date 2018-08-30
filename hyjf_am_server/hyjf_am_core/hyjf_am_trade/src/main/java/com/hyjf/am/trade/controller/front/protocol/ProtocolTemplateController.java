@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.protocol;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.response.trade.ProtocolTemplateResponse;
@@ -128,9 +129,11 @@ public class ProtocolTemplateController extends BaseController {
      * @return
      */
     @RequestMapping("/getnewinfo")
-    public List<ProtocolTemplateVO> getnewinfo() {
+    public Response getnewinfo() {
+        Response<ProtocolTemplateVO> response = new Response<>();
         List<ProtocolTemplateVO> list = protocolTemplateService.getnewinfo();
-        return list;
+        response.setResultList(list);
+        return response;
     }
 
     /**

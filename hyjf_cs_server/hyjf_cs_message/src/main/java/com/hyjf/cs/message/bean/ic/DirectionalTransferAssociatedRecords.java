@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ht_directional_transfer_associated_records")
 public class DirectionalTransferAssociatedRecords implements Serializable {
-    private String id;
+    private Integer id;
 
     private String turnOutUsername;
 
@@ -31,11 +31,11 @@ public class DirectionalTransferAssociatedRecords implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

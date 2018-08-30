@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.ContentEnvironmentMapper;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironmentExample;
 import com.hyjf.am.config.service.ContentEnvironmentService;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
-import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -31,7 +30,7 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 		ContentEnvironmentExample example = new ContentEnvironmentExample();
 		ContentEnvironmentExample.Criteria criteria = example.createCriteria();
 		if (StringUtils.isNotBlank(request.getName())) {
-			criteria.andNameLike("%" + request.getName() + "%");
+			criteria.andNameEqualTo(request.getName());
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
@@ -39,28 +38,32 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 		if (request.getImgType() != null) {
 			criteria.andImgTypeEqualTo(request.getImgType());
 		}
-		if (StringUtils.isNotBlank(request.getStartTime())) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
+			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
 		}
-		if (StringUtils.isNotBlank(request.getEndTime())) {
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
+			int limitEnd = request.getPageSize();
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
 		}
 		example.setOrderByClause("update_time");
 		return environmentMapper.selectByExample(example);
 	}
 
 	@Override
-	public void insertAction(ContentEnvironmentRequest request) {
+	public int insertAction(ContentEnvironmentRequest request) {
 		ContentEnvironment target = new ContentEnvironment();
 		BeanUtils.copyProperties(request, target);
-		environmentMapper.insert(target);
+		return environmentMapper.insertSelective(target);
 	}
 
 	@Override
-	public void updateAction(ContentEnvironmentRequest request) {
+	public int updateAction(ContentEnvironmentRequest request) {
 		ContentEnvironment target = new ContentEnvironment();
 		BeanUtils.copyProperties(request, target);
-		environmentMapper.updateByPrimaryKey(target);
+		return environmentMapper.updateByPrimaryKeySelective(target);
 	}
 
 	@Override
@@ -71,7 +74,17 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		environmentMapper.deleteByPrimaryKey(id);
+	public int deleteById(Integer id) {
+		return environmentMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int selectCount(ContentEnvironmentRequest request) {
+		request.setCurrPage(0);
+		List<ContentEnvironment> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }

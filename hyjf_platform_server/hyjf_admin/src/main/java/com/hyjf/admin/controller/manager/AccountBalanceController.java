@@ -73,7 +73,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @GetMapping("/exportActionByDay")
-    public void exportActionByDay(HttpServletResponse response,@RequestBody  HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionByDay(HttpServletResponse response,HjhAccountBalanceRequest form) throws Exception {
         // 表格sheet名称
         String sheetName = "每日交易量";
         List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceList(form);
@@ -149,7 +149,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
-    public void exportActionMonth( HttpServletResponse response,@RequestBody HjhAccountBalanceRequest form) throws Exception {
+    public void exportActionMonth( HttpServletResponse response, HjhAccountBalanceRequest form) throws Exception {
         // 表格sheet名称
         String sheetName = "每月交易量";
         List<HjhAccountBalanceVO> resultList = accountBalanceService.getHjhAccountBalanceMonthList(form);
