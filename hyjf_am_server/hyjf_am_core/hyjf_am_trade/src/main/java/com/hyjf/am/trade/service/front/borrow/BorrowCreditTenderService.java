@@ -82,4 +82,11 @@ public interface BorrowCreditTenderService {
      * @date 2018/8/28 19:06
      */
     int getBorrowCreditTenderCount4Admin(Map<String,Object> params);
+
+    /**
+     * 根据creditNId查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:11
+     */
+    String getCreditTenderServiceFee(String creditNid);
 }

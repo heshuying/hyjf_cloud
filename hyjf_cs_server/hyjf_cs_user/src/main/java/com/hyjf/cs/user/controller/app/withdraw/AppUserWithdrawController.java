@@ -12,7 +12,6 @@ import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.user.bean.AppBankCardBean;
-import com.hyjf.cs.user.bean.BankCardBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
@@ -37,7 +36,7 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/hyjf-app")
-public class UserWithdrawController extends BaseUserController {
+public class AppUserWithdrawController extends BaseUserController {
 
     @Autowired
     private UserWithdrawService userWithdrawService;

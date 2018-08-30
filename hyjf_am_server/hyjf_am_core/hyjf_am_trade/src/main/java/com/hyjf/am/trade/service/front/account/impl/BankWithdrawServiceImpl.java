@@ -5,7 +5,7 @@ import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankWithdrawService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -78,7 +78,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
     @Override
     public Boolean updateHandlerAfterCash(JSONObject para) throws Exception{
 
-        BankCallBeanVO bean= (BankCallBeanVO) para.get("bankCallBeanVO");
+        BankCallBean bean= (BankCallBean) para.get("bankCallBean");
         AccountWithdrawVO accountWithdraw = (AccountWithdrawVO) para.get("accountWithdrawVO");
         BankCardVO bankCard= (BankCardVO) para.get("bankCardVO");
         String fee = (String)para.get("withdrawFee");
@@ -283,7 +283,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @param accountWithdraw
      * @return
      */
-    private CheckResult checkCallRetAndHyjf(BankCallBeanVO bean, AccountWithdrawVO accountWithdraw) {
+    private CheckResult checkCallRetAndHyjf(BankCallBean bean, AccountWithdrawVO accountWithdraw) {
         CheckResult result = new CheckResult();
 
         Boolean resultBool = true;

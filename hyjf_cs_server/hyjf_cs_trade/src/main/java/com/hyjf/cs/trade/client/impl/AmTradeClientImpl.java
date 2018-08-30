@@ -58,7 +58,6 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -70,7 +69,6 @@ import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -1582,15 +1580,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * 调用后平台操作
      */
     @Override
-    public boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
-                                    String withdrawFee) {
-        JSONObject para = new JSONObject();
-        para.put("bankCallBeanVO",bean);
-        para.put("accountWithdrawVO",accountwithdraw);
-        para.put("bankCardVO",bankCard);
-        para.put("withdrawFee",withdrawFee);
+    public boolean handlerAfterCash(JSONObject params) {
         String url = "http://AM-TRADE/am-trade/bankException/handlerAfterCash";
-        return restTemplate.postForEntity(url,para,Boolean.class).getBody();
+        return restTemplate.postForEntity(url,params,Boolean.class).getBody();
     }
 
     /**
@@ -4169,4 +4161,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResultInt().intValue();
 	}
+
+	/**
+	 * 根据userId和tenderNid查询投资记录
+	 * @author zhangyk
+	 * @date 2018/8/30 10:49
+	 */
+	@Override
+    public List<BorrowCreditVO> getBorrowCreditListByUserIdAndTenderNid(String tenderNid, String userId) {
+	    String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByUserIdAndTenderNid/"+ userId +"/"+ tenderNid;
+	    BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+	    if (Response.isSuccess(response)){
+	        return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据承接编号查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:06
+     */
+    @Override
+    public String getBorrowCreditTenderServiceFee(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderServiceFee/" +creditNid;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            response.getResultStr();
+        }
+        return null;
+    }
 }

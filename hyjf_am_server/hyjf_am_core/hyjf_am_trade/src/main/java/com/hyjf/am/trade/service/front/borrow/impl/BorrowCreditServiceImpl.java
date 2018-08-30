@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
@@ -15,6 +16,7 @@ import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,6 +160,25 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     public BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request) {
         return borrowCreditCustomizeMapper.sumBorrowCreditInfoData(request);
     }
+
+    /**
+     * 根据userId和tenderNid获取投资债转信息
+     * @author zhangyk
+     * @date 2018/8/30 10:58
+     */
+    @Override
+    public List<BorrowCredit> getBorrowCreditList(String userId, String tenderNid) {
+        if(StringUtils.isEmpty(tenderNid)){
+            return null;
+        }
+        BorrowCreditExample example = new BorrowCreditExample();
+        example.createCriteria().andTenderNidEqualTo(tenderNid).andCreditUserIdEqualTo(Integer.valueOf(userId));
+        List<BorrowCredit> list = borrowCreditMapper.selectByExample(example);
+        return list;
+    }
+
+
+
 
 
 }
