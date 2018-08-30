@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.mq.producer;
+package com.hyjf.am.admin.mq.producer;
 
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -9,9 +9,9 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.stereotype.Component;
 
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.base.Producer;
-import com.hyjf.am.user.mq.base.ProducerFieldsWrapper;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.base.Producer;
+import com.hyjf.am.admin.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 

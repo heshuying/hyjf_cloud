@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
@@ -156,9 +156,8 @@ public class BorrowCommonController extends BaseController {
         if(bo.getEntrustedUserName()!= null){
         	form.setEntrustedUsername(bo.getEntrustedUserName());
         }
-//        BorrowCommonVO vo=new BorrowCommonVO();
-//        BeanUtils.copyProperties(form, vo);
-        bcr.setBo(bo);;
+
+        bcr.setResult(form);
         return bcr;
     }
 
@@ -299,9 +298,8 @@ public class BorrowCommonController extends BaseController {
             this.borrowCommonService.isAutoRecord(form.getBorrowPreNid());
 		}
 		// 列表迁移
-        BorrowCommonVO vo=new BorrowCommonVO();
-        BeanUtils.copyProperties(form, vo);
-        bcr.setResult(vo);
+ 
+        bcr.setResult(form);
         return bcr;
 	}
 

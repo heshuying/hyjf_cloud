@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SyncAccountProducer;
+import com.hyjf.am.admin.mq.producer.SyncAccountProducer;
 import com.hyjf.common.constants.MQConstant;
 
 /**
