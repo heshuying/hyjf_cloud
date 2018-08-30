@@ -33,6 +33,8 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String status;
 
+    private String successStatus;
+
     public Integer getUserId() {
         return userId;
     }
@@ -154,5 +156,13 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSuccessStatus() {
+        return successStatus;
+    }
+
+    public void setSuccessStatus(String successStatus) {
+        this.successStatus = successStatus;
     }
 }
