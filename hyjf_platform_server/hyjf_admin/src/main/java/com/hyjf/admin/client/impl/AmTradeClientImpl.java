@@ -9,11 +9,7 @@ import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.AccountRechargeResponse;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
@@ -21,11 +17,6 @@ import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.AccountListResponse;
-import com.hyjf.am.response.trade.account.AccountResponse;
-import com.hyjf.am.response.trade.account.AccountTradeResponse;
-import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
-import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -38,7 +29,6 @@ import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -5662,6 +5652,51 @@ public class AmTradeClientImpl implements AmTradeClient {
         NifaReportLogResponse response = restTemplate.getForEntity(url,NifaReportLogResponse.class).getBody();
         return response;
     }
+
+    @Override
+    public MerchantAccountResponse selectMerchantAccountList(Integer status) {
+        MerchantAccountResponse response = restTemplate
+                .getForEntity(tradeService + "/merchantAccount/selectMerchantAccountList/"+status, MerchantAccountResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MerchantTransferResponse selectMerchantTransfer(MerchantTransferListRequest form) {
+        MerchantTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/merchantAccount/selectMerchantTransfer",form, MerchantTransferResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public MerchantAccountVO selectMerchantAccountById(Integer id) {
+        MerchantAccountResponse response = restTemplate
+                .getForEntity(tradeService + "/merchantAccount/selectMerchantAccountById/"+id, MerchantAccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean insertTransfer(MerchantTransferListRequest form) {
+        String url = tradeService + "/merchantAccount/insertTransfer";
+        BooleanResponse response = restTemplate.postForEntity(url, form, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    @Override
+    public int updateMerchantTransfer(String orderId, int status, String message) {
+        String url = tradeService + "/merchantAccount/updateMerchantTransfer/"+orderId+"/"+status+"/"+message;
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        return response.getResultInt();
+    }
+
     /**
      * 行账户管理页面查询件数
      *

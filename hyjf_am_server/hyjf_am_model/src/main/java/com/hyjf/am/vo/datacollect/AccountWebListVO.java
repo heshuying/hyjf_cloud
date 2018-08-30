@@ -34,26 +34,13 @@ public class AccountWebListVO extends BasePage implements Serializable {
     @ApiModelProperty(value = "交易类型")
     private String tradeTypeSearch;
 
-    /**
-     * 翻页机能用的隐藏变量
-     */
-    private int paginatorPage = 1;
-
-
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-
     private String id;
 
     private String ordid;
 
     private String borrowNid;
 
-    private BigDecimal amount;
+    private Double amount;
 
     private Integer type;
 
@@ -77,13 +64,29 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     private String note;
 
-    private Integer createTime;
+    private Integer createStartTime;
+
+    private Integer createEndTime;
 
     private String operator;
 
     private Integer flag;
 
     private String username;
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
 
     private static final long serialVersionUID = 1L;
 
