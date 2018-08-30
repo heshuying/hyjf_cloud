@@ -1,6 +1,6 @@
 package com.hyjf.am.vo.datacollect;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author xiasq
  * @version AccountWebListVO, v0.1 2018/6/19 16:38
  */
-public class AccountWebListVO extends BaseVO implements Serializable {
+public class AccountWebListVO extends BasePage implements Serializable {
 
     private int limitStart = -1;
     private int limitEnd = -1;

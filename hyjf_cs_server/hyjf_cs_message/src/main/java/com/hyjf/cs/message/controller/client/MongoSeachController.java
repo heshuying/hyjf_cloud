@@ -138,7 +138,7 @@ public class MongoSeachController extends BaseController {
         AccountWebListResponse response = new AccountWebListResponse();
         int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
             List<AccountWebList> recordList = accountWebListDao.queryWebList(accountWebList, paginator.getOffset(), paginator.getLimit());
             if (recordList != null) {
                 List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList, AccountWebListVO.class);
@@ -162,7 +162,7 @@ public class MongoSeachController extends BaseController {
         int recordTotal = recordList.size();
         if (null != recordList) {
             if (recordTotal > 0) {
-                Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
+                Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
                 int end = 0;
                 if(recordTotal<paginator.getOffset()*paginator.getLimit()+paginator.getLimit()){
                     end=recordTotal;
