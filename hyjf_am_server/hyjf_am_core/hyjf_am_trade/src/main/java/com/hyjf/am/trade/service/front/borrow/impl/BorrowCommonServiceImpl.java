@@ -816,7 +816,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					for (BorrowInfo borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
-						 BeanUtils.copyProperties(borrow,this.getBorrow(borrowNid));
+						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
 						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId);
@@ -1810,6 +1810,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				}else{
 					borrowManinfo.setIsPunished("暂无");
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 				this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			} else {
 			    BorrowManinfo borrowManinfo = new BorrowManinfo();
