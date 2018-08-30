@@ -104,16 +104,15 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 
 		List<InvestListCustomizeVO> InvestListRet = new ArrayList<InvestListCustomizeVO>();
 		//查询条件过滤
-		for(InvestListCustomizeVO InvestVo:InvestList){
-			if(StringUtils.isNotEmpty(bean.getAccountId())){
-				//InvestList.remove(InvestVo);
-				if(InvestVo.getAccountId().equals(bean.getAccountId())){
-					InvestListRet.add(InvestVo);
-				}
-			}else{
-				InvestListRet.addAll(InvestList);
-			}
-		}
+        if(StringUtils.isNotEmpty(bean.getAccountId())) {
+            for (InvestListCustomizeVO InvestVo : InvestList) {
+                if (InvestVo.getAccountId().equals(bean.getAccountId())) {
+                    InvestListRet.add(InvestVo);
+                 }
+            }
+        }else{
+            InvestListRet.addAll(InvestList);
+        }
 
 		return InvestListRet;
 	}
