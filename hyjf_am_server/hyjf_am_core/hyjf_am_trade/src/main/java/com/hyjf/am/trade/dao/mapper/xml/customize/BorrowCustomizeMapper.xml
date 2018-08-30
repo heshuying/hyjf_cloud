@@ -94,7 +94,7 @@
 		borrowAccount,
 		TRUNCATE(hydb.account/10000,2) AS borrowAccountWan,
 		hydb.borrow_apr as  borrowApr,
-		hydb.borrow_period, CASE WHEN hydb.borrow_style =
+		hydb.borrow_period as borrowPeriod, CASE WHEN hydb.borrow_style =
 		'endday' THEN '天' ELSE '个月' END AS borrowPeriodType,
 		hydb.borrow_account_wait AS investAccount,
 		hbi.company_or_personal AS

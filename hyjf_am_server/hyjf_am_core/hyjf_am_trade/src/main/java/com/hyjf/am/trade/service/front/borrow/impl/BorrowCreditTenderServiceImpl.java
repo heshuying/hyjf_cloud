@@ -132,4 +132,16 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         int count = creditTenderMapper.countByExample(example);
         return count;
     }
+
+
+    /**
+     * 根据creditNId查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:11
+     */
+    @Override
+    public String getCreditTenderServiceFee(String creditNid) {
+       String serviceFee = borrowCreditTenderCustomizeMapper.getServiceFee(creditNid);
+        return serviceFee;
+    }
 }

@@ -18,6 +18,12 @@ public class BankAleveRequest extends Request implements Serializable {
 
 	@ApiModelProperty(value = "自动同步用生成订单id")
 	private String orderId;
+	@ApiModelProperty(value = "电子账号")
+	private String cardnbr;
+	@ApiModelProperty(value = "系统跟单号")
+	private String seqno;
+	@ApiModelProperty(value = "交易类型")
+	private String transtype;
 	@ApiModelProperty(value = "用户")
 	private Integer userId;
 
@@ -106,6 +112,30 @@ public class BankAleveRequest extends Request implements Serializable {
 
 	public void setPaginator(Paginator paginator) {
 		this.paginator = paginator;
+	}
+
+	public String getCardnbr() {
+		return cardnbr;
+	}
+
+	public void setCardnbr(String cardnbr) {
+		this.cardnbr = cardnbr;
+	}
+
+	public String getSeqno() {
+		return seqno;
+	}
+
+	public void setSeqno(String seqno) {
+		this.seqno = seqno;
+	}
+
+	public String getTranstype() {
+		return transtype;
+	}
+
+	public void setTranstype(String transtype) {
+		this.transtype = transtype;
 	}
 
 	/**
