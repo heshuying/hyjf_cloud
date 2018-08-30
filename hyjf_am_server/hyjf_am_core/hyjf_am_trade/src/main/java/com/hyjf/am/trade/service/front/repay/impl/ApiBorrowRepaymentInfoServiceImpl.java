@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.ApiBorrowRepaymentInfoRequest;
 import com.hyjf.am.trade.dao.model.customize.ApiBorrowRepaymentInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.ApiBorrowRepaymentInfoService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @version BorrowRepaymentInfoServiceImpl, v0.1 2018/8/28 14:48
  * @Author: Zha Daojian
  */
+@Service
 public class ApiBorrowRepaymentInfoServiceImpl extends BaseServiceImpl implements ApiBorrowRepaymentInfoService {
 
     /**

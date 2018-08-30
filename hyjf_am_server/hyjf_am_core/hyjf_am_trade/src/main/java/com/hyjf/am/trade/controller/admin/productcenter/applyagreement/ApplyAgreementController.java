@@ -260,7 +260,7 @@ public class ApplyAgreementController extends BaseController {
      * @auther: Zha Daojian
      * @date: 2018/8/14 14:19
      */
-    @RequestMapping("/getApplyAgreementList")
+    @RequestMapping("/saveApplyAgreementInfo")
     public ApplyAgreementInfoResponse saveApplyAgreementInfo(@RequestBody ApplyAgreementInfoRequest request) {
         ApplyAgreementInfoResponse response = new ApplyAgreementInfoResponse();
         logger.info("saveApplyAgreementInfo::::::::::");

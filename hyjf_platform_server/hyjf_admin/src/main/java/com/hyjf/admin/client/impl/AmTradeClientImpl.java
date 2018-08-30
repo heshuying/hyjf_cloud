@@ -50,6 +50,7 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -5842,6 +5843,37 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-ADMIN/am-trade/borrowTender/updateBorrowTender";
         BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
         return response.getResultBoolean();
+    }
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+     *
+     * @param applyAgreementInfoVO
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     * @author Zha Daojian
+     * @date 2018/8/23 15:38
+     **/
+    @Override
+    public ApplyAgreementInfoResponse saveApplyAgreementInfo(ApplyAgreementInfoVO applyAgreementInfoVO) {
+        ApplyAgreementInfoRequest request = new ApplyAgreementInfoRequest();
+        BeanUtils.copyProperties(applyAgreementInfoVO, request);
+        return null;
+    }
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+    * @author Zha Daojian
+    * @date 2018/8/23 15:47
+    * @param contractId
+    * @return ApplyAgreementInfoVO
+    **/
+    public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
+        String url = "http://AM-TRADE/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
+        ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 	@Override
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
