@@ -233,7 +233,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
         String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        data.put("errorMsg",errorMsg);
+        data.put("errorMsg",errorMsg==null?"请联系客服":errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
@@ -1234,7 +1234,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
 
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn?platform="+request.getPlatform();
+        String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
