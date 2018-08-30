@@ -186,7 +186,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setBorrowNid("");
                 accountWebList.setUserId(receiveUserId);
                 // 管理费
-                accountWebList.setAmount(new BigDecimal(txAmount));
+                accountWebList.setAmount(Double.valueOf(txAmount));
                 // 类型1收入,2支出
                 accountWebList.setType(CustomConstants.TYPE_OUT);
                 // 管理费
@@ -195,7 +195,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setTradeType("手续费分佣");
                 // 备注
                 accountWebList.setRemark(request.getRemark());
-                accountWebList.setCreateTime(nowTime);
+                accountWebList.setCreateStartTime(nowTime);
+                accountWebList.setCreateEndTime(nowTime);
                 accountWebList.setOperator(adminSystemVO.getUsername());
                 int webListCount = csMessageClient.queryAccountWebList(accountWebList).getResultList().size();
                 if (webListCount == 0) {

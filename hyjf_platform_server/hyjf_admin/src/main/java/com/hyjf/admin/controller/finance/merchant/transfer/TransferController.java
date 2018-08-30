@@ -105,7 +105,7 @@ public class TransferController extends BaseController {
         String outAccountId = param.get("outAccountId");
         String transferAmount = param.get("transferAmount");
         JSONObject ret = new JSONObject();
-        ret = this.transferService.checkMerchantTransfer(outAccountId,transferAmount, ret);
+      this.transferService.checkMerchantTransfer(outAccountId,transferAmount, ret);
         return new AdminResult();
     }
 
