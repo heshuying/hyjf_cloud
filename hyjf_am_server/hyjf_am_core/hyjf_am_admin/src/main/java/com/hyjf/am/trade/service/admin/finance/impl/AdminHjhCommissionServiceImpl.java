@@ -10,15 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
+import com.hyjf.am.admin.mq.producer.AppMessageProducer;
+import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -35,10 +39,8 @@ import com.hyjf.am.trade.dao.model.auto.CommissionLog;
 import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.dao.model.auto.PushMoneyExample;
 import com.hyjf.am.trade.dao.model.auto.TenderCommission;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
+/*import com.hyjf.am.trade.mq.producer.AppMessageProducer;*/
+/*import com.hyjf.am.trade.mq.producer.SmsProducer;*/
 import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -47,7 +49,6 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -56,7 +57,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * @author libin
