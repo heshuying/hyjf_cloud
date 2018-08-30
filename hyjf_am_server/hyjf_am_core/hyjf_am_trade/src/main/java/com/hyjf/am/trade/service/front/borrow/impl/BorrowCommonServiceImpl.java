@@ -4495,8 +4495,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String borrowNid = borrowBean.getBorrowNid();
 		if (StringUtils.isNotEmpty(borrowNid)) {
 			BorrowWithBLOBs bwb=new BorrowWithBLOBs();
-			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 			BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
+			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 			return  bwb;
 		}
 		

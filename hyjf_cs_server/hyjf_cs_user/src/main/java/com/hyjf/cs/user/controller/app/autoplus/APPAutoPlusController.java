@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -161,6 +162,7 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping(value = "/userAuthCredit")
     public AppResult userAuthCredit(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        result.setStatusInfo(BaseResult.SUCCESS,BaseResult.SUCCESS_DESC);
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
@@ -280,6 +282,7 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping(value = "/userAuthInves")
     public AppResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
+        result.setStatusInfo(BaseResult.SUCCESS,BaseResult.SUCCESS_DESC);
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);

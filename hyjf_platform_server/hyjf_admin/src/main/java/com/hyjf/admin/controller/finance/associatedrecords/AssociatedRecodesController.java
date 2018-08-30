@@ -69,8 +69,7 @@ public class AssociatedRecodesController extends BaseController {
         // 表格sheet名称
         String sheetName = "关联记录列表";
         // 文件名称
-        String fileName =
-                URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 检索列表
         List<AssociatedRecordListVo> associatedRecordListVos = associatedRecordsService.getAssociatedRecordList(request);

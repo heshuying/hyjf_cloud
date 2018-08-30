@@ -674,8 +674,6 @@
 		FROM ht_credit_tender ct
 		WHERE hbr.nid = ct.credit_tender_nid
 		) recover_account_all,
-
-
 		hbr.recover_interest_yes -
 		(SELECT IFNULL(SUM(ct.assign_repay_interest),0)
 		FROM ht_credit_tender ct
@@ -1619,6 +1617,7 @@
 		ht_borrow_recover hydbr
 		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        WHERE
 		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
 		AND hydbr.user_id = #{userId,jdbcType=INTEGER}
 		AND hydbr.recover_status = 1
@@ -1858,11 +1857,12 @@
 	<!-- 获取可转让的投资列表 -->
 	<select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
 		SELECT
-		*
+		count(*)
 		FROM
 		ht_borrow_recover hbr
 		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
 		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow_info hbinfo ON hbinfo.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	<!-- 获取可转让的投资查询条件 -->
@@ -1881,7 +1881,7 @@
 			AND hb.borrow_style != 'month'
 			AND hb.borrow_style != 'principal'
 			AND hb.plan_nid IS NULL
-			AND hb.inst_code = 10000000
+			AND hbinfo.inst_code = 10000000
 			AND hbr.advance_status != 3
 			AND hbr.delay_days = 0
 			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
@@ -1889,7 +1889,7 @@
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
 			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30)
 			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
-			AND hbr.addtime <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
+			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
 			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
 			AND hbr.user_id = #{userId}
 			<!-- 分期标提前还款该月不允许债转 -->

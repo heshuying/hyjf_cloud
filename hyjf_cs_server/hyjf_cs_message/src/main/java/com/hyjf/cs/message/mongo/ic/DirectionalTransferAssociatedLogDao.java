@@ -3,36 +3,30 @@
  */
 package com.hyjf.cs.message.mongo.ic;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.admin.BindLogListRequest;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.message.bean.ic.DirectionalTransferAssociatedLog;
+import com.hyjf.cs.message.bean.ic.DirectionalTransferAssociatedRecords;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.ic.DirectionalTransferAssociatedRecords;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
- * @author zhangqingqing
- * @version DirectionalTransferAssociatedRecordsDao, v0.1 2018/6/25 10:18
+ * @author: sunpeikai
+ * @version: DirectionalTransferAssociatedLogDao, v0.1 2018/8/29 19:32
  */
 @Repository
-public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<DirectionalTransferAssociatedRecords> {
+public class DirectionalTransferAssociatedLogDao extends BaseMongoDao<DirectionalTransferAssociatedLog> {
     @Override
-    protected Class<DirectionalTransferAssociatedRecords> getEntityClass() {
-        return DirectionalTransferAssociatedRecords.class;
+    protected Class<DirectionalTransferAssociatedLog> getEntityClass() {
+        return DirectionalTransferAssociatedLog.class;
     }
 
-    public DirectionalTransferAssociatedRecords findByUserId(int userId) {
-        Query query = new Query();
-        Criteria criteria = Criteria.where("userId").is(userId);
-        query.addCriteria(criteria);
-        return mongoTemplate.findOne(query, getEntityClass());
-    }
-
-    public long getDirectionalTransferCount(AssociatedRecordListRequest request){
+    public long getDirectionalTransferLogCount(BindLogListRequest request){
         Query query = new Query();
         Criteria criteria = createCriteria(request);
         query.addCriteria(criteria);
@@ -41,7 +35,7 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
         }
         return mongoTemplate.count(query,getEntityClass());
     }
-    public List<DirectionalTransferAssociatedRecords> searchDirectionalTransferList(AssociatedRecordListRequest request){
+    public List<DirectionalTransferAssociatedLog> searchDirectionalTransferLogList(BindLogListRequest request){
         Query query = new Query();
         Criteria criteria = createCriteria(request);
         query.addCriteria(criteria);
@@ -50,7 +44,8 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
         }
         return mongoTemplate.find(query,getEntityClass());
     }
-    private Criteria createCriteria(AssociatedRecordListRequest request){
+    private Criteria createCriteria(BindLogListRequest request){
+        SimpleDateFormat format =  new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
         Criteria criteria;
         if(null!=request){
             criteria = Criteria.where("id").ne("").ne(null);
@@ -82,6 +77,7 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
             }else if(StringUtils.isNoneBlank(request.getEndDate())){
                 criteria = criteria.and("associatedTime").lte(GetDate.stringToDate(request.getEndDate() + " 23:59:59"));
             }
+
             return criteria;
         }
         return new Criteria();
