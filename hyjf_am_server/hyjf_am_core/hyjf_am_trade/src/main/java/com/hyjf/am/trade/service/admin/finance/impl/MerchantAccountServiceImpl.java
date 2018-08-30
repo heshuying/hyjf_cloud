@@ -34,6 +34,8 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
     @Override
     public List<MerchantAccount> selectRecordList(MerchantAccountListRequest request, int offset, int limit) {
         MerchantAccountExample example = new MerchantAccountExample();
+        example.setLimitStart(offset);
+        example.setLimitEnd(limit);
         example.setOrderByClause("sort ASC");
         return merchantAccountMapper.selectByExample(example);
     }
