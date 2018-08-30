@@ -1,6 +1,7 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
@@ -126,8 +127,8 @@ public class UtmController extends BaseController {
      * @return
      */
     @RequestMapping("/getutmbyid/{id}")
-    public UtmResponse getUtmPlatById(@PathVariable Integer id) {
-        UtmResponse response = new UtmResponse();
+    public UtmPlatResponse getUtmPlatById(@PathVariable Integer id) {
+        UtmPlatResponse response = new UtmPlatResponse();
         UtmPlatVO utmPlat = utmService.getUtmPlatById(id);
         response.setResult(utmPlat);
         return response;
