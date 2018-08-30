@@ -5682,6 +5682,17 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据id查找互金协会报送日志
+     * @param logId
+     * @return
+     */
+    @Override
+    public NifaReportLogResponse selectNifaReportLogById(int logId){
+        String url = "http://AM-ADMIN/am-trade/datacenter/nifareportlog/selectNifaReportLogById/"+logId;
+        NifaReportLogResponse response = restTemplate.getForEntity(url,NifaReportLogResponse.class).getBody();
+        return response;
+    }
+    /**
      * 行账户管理页面查询件数
      *
      * @param bankAccountManageRequest

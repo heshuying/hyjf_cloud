@@ -100,4 +100,15 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
         int intCount = nifaReportLogMapper.countByExample(example);
         return intCount;
     }
+
+    /**
+     * 根据id查找数据
+     * @param logId
+     * @return
+     */
+    @Override
+    public NifaReportLog selectNifaReportLogById(int logId){
+        NifaReportLog nifaReportLog = nifaReportLogMapper.selectByPrimaryKey(logId);
+        return  nifaReportLog;
+    }
 }
