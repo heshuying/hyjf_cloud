@@ -2041,7 +2041,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     AccountWebListVO accountWebList = new AccountWebListVO();
                                                     accountWebList.setOrdid(debtCreditTender.getAssignOrderId() + "_" + borrowNid + "_" + liquidatesPeriod);
                                                     accountWebList.setBorrowNid(debtCreditTender.getBorrowNid());
-                                                    accountWebList.setAmount(debtCreditTender.getAssignServiceFee());
+                                                    accountWebList.setAmount(Double.valueOf(debtCreditTender.getAssignServiceFee().toString()));
                                                     accountWebList.setType(1);
                                                     accountWebList.setTrade("hjh_credit_fee");
                                                     accountWebList.setTradeType("汇计划债转服务费");
@@ -2053,7 +2053,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     accountWebList.setDepartmentName(null);
                                                     accountWebList.setRemark(debtCreditTender.getAssignOrderId());
                                                     accountWebList.setNote(null);
-                                                    accountWebList.setCreateTime(nowTime);
+                                                    accountWebList.setCreateStartTime(nowTime);
+                                                    accountWebList.setCreateEndTime(nowTime);
                                                     accountWebList.setOperator(null);
                                                     accountWebList.setFlag(1);
                                                     // 设置部门信息
