@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
  * @author fuqiang
  * @version BankEveRequest, v0.1 2018/7/10 19:26
  */
-public class BankEveRequest extends Request implements Serializable {
+public class BankEveRequest extends BasePage implements Serializable {
 
 	@ApiModelProperty(value = "主账号检索")
 	private String cardnbr;
