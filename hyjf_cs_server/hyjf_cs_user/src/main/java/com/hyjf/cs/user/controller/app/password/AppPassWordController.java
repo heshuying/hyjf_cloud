@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.app.password;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -11,6 +12,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -121,6 +123,12 @@ public class AppPassWordController extends BaseUserController {
     public AppResult<Object> setPassword(@RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
         UserVO user = passWordService.checkStatus(token,sign);
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 1) {
+            //已设置交易密码
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"已设置交易密码！");
+        }
         int userId = user.getUserId();
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
@@ -249,6 +257,12 @@ public class AppPassWordController extends BaseUserController {
     public AppResult<Object> resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
         UserVO user = passWordService.checkStatus(token,sign);
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 0) {
+            //已设置交易密码
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"未设置交易密码！");
+        }
         int userId = user.getUserId();
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
