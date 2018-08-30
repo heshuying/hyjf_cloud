@@ -1908,7 +1908,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				if(borrowBean.getIsPunished() != null ){
 					borrowManinfo.setIsPunished(borrowBean.getIsPunished());
 				}
-			    this.borrowManinfoMapper.insertSelective(borrowManinfo);
+				//20180705 添加借款人地址 add by NXL start
+				borrowManinfo.setAddress(borrowBean.getAddress());
+				//20180705 添加借款人地址 add by NXL end
+				this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			}
 		} else {
 			if (StringUtils.isNotEmpty(borrowBean.getSize())) {
@@ -2170,6 +2173,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			} else {
 				borrowUsers.setIsPunished("暂无");
 			}
+			//20180705 add by NXL 添加企业组织机构代码和企业注册地 start
+			borrowUsers.setCorporateCode(borrowBean.getCorporateCode());
+			borrowUsers.setRegistrationAddress(borrowBean.getRegistrationAddress());
+            //20180705 add by NXL 添加企业组织机构代码和企业注册地 end
 			this.borrowUserMapper.insertSelective(borrowUsers);
 		}
 		return 0;
