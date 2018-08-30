@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -128,11 +127,11 @@ public class AppPassWordController extends BaseUserController {
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+passWordService.packageStrForm(request);
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success"+passWordService.packageStr(request) ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
+                + CommonConstant.RETURN_ASY_PASSWORD_ACTION+passWordService.packageStr(request);
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
@@ -220,8 +219,7 @@ public class AppPassWordController extends BaseUserController {
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
-        LogAcqResBean acqes = bean.getLogAcqResBean();
-        int userId = acqes.getUserId();
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户开户状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
@@ -257,11 +255,11 @@ public class AppPassWordController extends BaseUserController {
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+passWordService.packageStrForm(request) ;
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success"+passWordService.packageStr(request) ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION;
+                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+passWordService.packageStr(request);
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);

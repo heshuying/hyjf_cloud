@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,6 +33,10 @@ public class CouponCheckVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+
+    private String createtime;
+
+    private String updatetime;
 
     private static final long serialVersionUID = 1L;
 
@@ -113,5 +118,21 @@ public class CouponCheckVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreatetime() {
+        return GetDate.getDateTimeMyTimeInMillis(createTime);
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getUpdatetime() {
+        return GetDate.getDateTimeMyTimeInMillis(updateTime);
+    }
+
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime;
     }
 }
