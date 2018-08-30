@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version MerchantAccountListRequest, v0.1 2018/7/5 15:04
  */
-public class MerchantAccountListRequest {
+public class MerchantAccountListRequest extends BasePage{
 
     /** serialVersionUID */
     private static final long serialVersionUID = 7768418442884796575L;
