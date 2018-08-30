@@ -15,6 +15,7 @@ import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoRecordMessageProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -1216,7 +1217,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 根据此标的是否跑引擎来操作redis: 0:未使用引擎 , 1：使用引擎
 					if(borrow.getIsEngineUsed().equals(0)){
 						// borrowNid，借款的borrowNid,account借款总额
-						RedisUtils.set(borrowNid, borrow.getAccount().toString());
+						RedisUtils.set(RedisConstants.BORROW_NID+borrowNid, borrow.getAccount().toString());
 					}
 				}
 			}
