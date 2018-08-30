@@ -1,26 +1,22 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.user.mq.producer;
+package com.hyjf.am.admin.mq.producer;
 
-import org.springframework.stereotype.Component;
-
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.base.Producer;
-import com.hyjf.am.user.mq.base.ProducerFieldsWrapper;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.base.Producer;
+import com.hyjf.am.admin.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import org.springframework.stereotype.Component;
 
 /**
- * 法大大CA认证
- * @author zhangqingqing
+ * @author xiasq
+ * @version AccountWebListProducer, v0.1 2018/6/19 16:56
  */
 @Component
-public class FddCertificateProducer extends Producer {
+public class AccountWebListProducer  extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.FDD_CERTIFICATE_AUTHORITY_GROUP);
+        wrapper.setGroup(MQConstant.ACCOUNT_WEB_LIST_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

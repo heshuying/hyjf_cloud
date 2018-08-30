@@ -23,9 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,10 +32,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author fuqiang
+ * @author Yinhui
  * @version CouponJXController, v0.1 2018/7/18 18:18
  */
-@Api(tags = "数据中心-加息券")
+@Api(tags = "数据中心-优惠券-加息券")
 @RestController
 @RequestMapping("/hyjf-admin/datacenter/coupon_jx")
 public class CouponJXController extends BaseController {
@@ -46,7 +44,7 @@ public class CouponJXController extends BaseController {
 
 	@ApiOperation(value = "数据中心-加息券", notes = "数据中心-加息券列表查询")
 	@PostMapping("/get_coupon_list")
-	public AdminResult<ListResult<DataCenterCouponCustomizeVO>> getCouponList(DadaCenterCouponRequestBean requestBean) {
+	public AdminResult<ListResult<DataCenterCouponCustomizeVO>> getCouponList(@RequestBody DadaCenterCouponRequestBean requestBean) {
 		DataCenterCouponResponse response = couponService.searchAction(requestBean, "JX");
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -58,7 +56,7 @@ public class CouponJXController extends BaseController {
 	}
 
 	@ApiOperation(value = "导出加息券列表", notes = "导出加息券列表")
-	@PostMapping("/export_jx_action")
+	@GetMapping("/export_jx_action")
 	public void exportJXAction(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
 		// 表格sheet名称
 		String sheetName = "加息券列表";

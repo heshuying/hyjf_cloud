@@ -230,7 +230,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         BigDecimal earnings = new BigDecimal("0");
         // 如果投资金额不为空
-        if (!StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 1 ||!(StringUtils.isEmpty(money) && couponConfig != null && couponConfig.getCouponType() == 1 && couponConfig.getAddFlg() == 1)) {
+        if (!StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 1 ||!(StringUtils.isEmpty(money) && couponConfig != null && couponConfig.getCouponType() == 1 && couponConfig.getAddFlag() == 1)) {
             // 收益率
             BigDecimal borrowApr = plan.getExpectApr();
             // 周期
