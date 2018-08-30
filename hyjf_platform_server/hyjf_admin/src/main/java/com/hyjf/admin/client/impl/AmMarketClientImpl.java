@@ -44,18 +44,6 @@ public class AmMarketClientImpl implements AmMarketClient {
 	}
 
 	@Override
-	public String getActivityTitle(Integer activityId) {
-		CouponTenderResponse response = restTemplate
-				.getForEntity("http://AM-MARKET/am-market/activity/hztgetactivitytitle/" + activityId,
-						CouponTenderResponse.class)
-				.getBody();
-		if (response != null) {
-			return response.getAttrbute();
-		}
-		return null;
-	}
-
-	@Override
 	public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
 		String url = "http://AM-MARKET/am-market/activity/getRecordList";
 		ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();

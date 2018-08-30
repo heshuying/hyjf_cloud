@@ -74,18 +74,22 @@ public class CouponConfigController extends BaseController {
         String returnCode = Response.FAIL;
         Map<String, Object> mapParam = paramSet(couponConfigRequest);
         int recordTotal = couponConfigService.countRecord(mapParam);
+        Paginator paginator = new Paginator(couponConfigRequest.getCurrPage(), recordTotal, couponConfigRequest.getPageSize());
+        if (couponConfigRequest.getPageSize() == 0) {
+            paginator = new Paginator(couponConfigRequest.getCurrPage(), recordTotal);
+        }
+        List<CouponConfigCustomize> recordList = couponConfigService.getRecordList(mapParam, paginator.getOffset(), paginator.getLimit());
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(couponConfigRequest.getPaginatorPage(), recordTotal);
-            List<CouponConfigCustomize> recordList = couponConfigService.getRecordList(mapParam, paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(recordList)) {
                 List<CouponConfigCustomizeVO> cvo = CommonUtils.convertBeanList(recordList, CouponConfigCustomizeVO.class);
                 response.setResultList(cvo);
                 response.setCount(recordTotal);
                 response.setRtn(Response.SUCCESS);
+            }else {
+                 response.setRtn(returnCode);
             }
-            return response;
         }
-        return new CouponConfigCustomizeResponse();
+        return response;
     }
 
     /**
@@ -122,20 +126,16 @@ public class CouponConfigController extends BaseController {
                 CouponConfig couponConfig = new CouponConfig();
                 BeanUtils.copyProperties(configRequest, couponConfig);
                 couponConfig.setId(Integer.valueOf(configRequest.getId()));
-                Map<String, Object> resultMap = couponConfigService.saveCouponConfig(couponConfig);
-                if ((Boolean) resultMap.get("success")) {
-                    return ccr;
+                int result = couponConfigService.saveCouponConfig(couponConfig);
+                if (result > 0) {
+                    ccr.setRtn(Response.SUCCESS);
                 } else {
                     ccr.setRtn(Response.FAIL);
-                    ccr.setMessage("保存失败");
-                    return ccr;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ccr.setRtn(Response.FAIL);
-        ccr.setMessage("校验失败");
         return ccr;
     }
 
@@ -227,14 +227,13 @@ public class CouponConfigController extends BaseController {
         couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
         couponConfig.setAuditTime((int)nowTime);
         couponConfig.setUpdateTime(GetDate.getTimestamp(nowTime));
-        Map<String,Object> map = couponConfigService.saveCouponConfig(couponConfig);
-        if ((Boolean) map.get("success")) {
-            return configResponse;
+        int result = couponConfigService.saveCouponConfig(couponConfig);
+        if (result > 0) {
+            configResponse.setRtn(Response.SUCCESS);
         } else {
-            configResponse.setRtn("failed");
-            configResponse.setMessage((String) map.get("msg"));
-            return configResponse;
+            configResponse.setRtn(Response.FAIL);
         }
+        return configResponse;
     }
 
 

@@ -1150,7 +1150,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * yangchangwei
-     * 根据Borrownid 获取放款任务表
+     * 根据id 获取放款任务表
      *
      * @param id
      * @return
@@ -3413,15 +3413,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type) {
-        if (requestBean != null) {
-            requestBean.setType(type);
-        }
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/datacenter/coupon/getdatacentercouponlist",
-                requestBean, DataCenterCouponResponse.class);
-    }
-
-    @Override
     public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest) {
         BorrowCommonResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
@@ -3505,17 +3496,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
-        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
-                "http://AM-TRADE/am-trade/couponUser/get_record_list_jx", dataCenterCouponCustomize,
-                DataCenterCouponCustomizeResponse.class);
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
     public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
         HjhPlanResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParamWithoutPage", form, HjhPlanResponse.class).getBody();
@@ -3540,17 +3520,6 @@ public class AmTradeClientImpl implements AmTradeClient {
                 BankMerchantAccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
-        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
-                "http://AM-TRADE/am-trade/couponUser/get_record_list_dj", dataCenterCouponCustomize,
-                DataCenterCouponCustomizeResponse.class);
-        if (response != null) {
-            return response.getResultList();
         }
         return null;
     }
@@ -4683,7 +4652,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form) {
         HjhCommissionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhCommission/selectHjhCommissionList", form,
+                .postForEntity("http://AM-ADMIN/am-trade/hjhCommission/selectHjhCommissionList", form,
                         HjhCommissionResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -4931,7 +4900,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
 		HjhCommissionResponse response = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
+				.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
 						HjhCommissionResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -4965,7 +4934,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
 		TenderCommissionResponse response = restTemplate
-	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
+	            .getForEntity("http://AM-ADMIN/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
 	    if (response != null) {
 	        return response.getResult();
 	    }
@@ -5046,7 +5015,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form) {
 		OADepartmentResponse response = restTemplate
-				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/getCrmDepartmentList" ,form,
+				.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/getCrmDepartmentList" ,form,
 						OADepartmentResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -5228,7 +5197,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public Integer queryCrmCuttype(Integer userId) {
 		TenderCommissionResponse response = restTemplate
-	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
+	            .getForEntity("http:// AM-ADMIN/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
 	    if (response != null) {
 	        return response.getType();
 	    }

@@ -13,10 +13,8 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
-import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,8 +76,8 @@ public class AccountRechargeImpl implements AccountRecharge {
      * @Author : huanghui
      */
     @Override
-    public List<AccountRechargeCustomizeVO> getAccountRechargeList(AccountRechargeRequest request) {
-        List<AccountRechargeCustomizeVO> rechargeVOList = accountRechargeCustomizeMapper.getAccountRechargeList(request);
+    public List<AccountRechargeCustomize> getAccountRechargeList(AccountRechargeRequest request) {
+        List<AccountRechargeCustomize> rechargeVOList = accountRechargeCustomizeMapper.getAccountRechargeList(request);
         return rechargeVOList;
     }
 

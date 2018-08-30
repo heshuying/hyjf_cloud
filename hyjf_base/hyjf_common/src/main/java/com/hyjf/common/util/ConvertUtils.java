@@ -56,4 +56,43 @@ public  class ConvertUtils {
         }
         return mapParam;
     }
+
+    /**
+     * 将实体类转换成对应Object，类属性名称需要一致
+     * apache 工具类在转换时报错，自己写着用，仅转换参数类和目标类字段相同的部分 yangchangwei
+     * @param bean 需要转换的实体类
+     * @param T 转换结果的类型
+     * @return 返回转换后的实体
+     */
+    public static Object convertBeanToObject(Object bean,Class T){
+        Object obj = null;
+        try {
+            obj = T.newInstance();
+            Field[] fs = T.getDeclaredFields();
+            for(int i = 0 ; i < fs.length; i++){
+                Field f = fs[i];
+                f.setAccessible(true); //设置些属性是可以访问的
+                String mtdName = "set"+ f.getName().substring(0,1).toUpperCase() + f.getName().substring(1);
+                Method method;
+                try{
+                    method = T.getMethod(mtdName, f.getType());
+                }catch (Exception e){
+                    continue;
+                }
+                Class beanClass = bean.getClass();
+                Field[] fs2 = beanClass.getDeclaredFields();
+                for(int i2 = 0 ; i2 < fs2.length; i2++){
+                    Field f2 = fs2[i2];
+                    f2.setAccessible(true); //设置些属性是可以访问的
+                    if(f2.getName().equals(f.getName())){
+                        method.invoke(obj,f2.get(bean));
+                    }
+                }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return obj;
+    }
 }

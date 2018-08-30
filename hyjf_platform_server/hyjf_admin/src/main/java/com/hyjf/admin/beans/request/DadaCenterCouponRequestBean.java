@@ -13,11 +13,37 @@ public class DadaCenterCouponRequestBean extends BaseRequest {
     /** 优惠券类型 */
     private String type;
 
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

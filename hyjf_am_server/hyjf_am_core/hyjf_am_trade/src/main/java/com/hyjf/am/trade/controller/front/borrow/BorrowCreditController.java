@@ -189,6 +189,21 @@ public class BorrowCreditController extends BaseController {
     }
 
 
+    /**
+     * 根据credit查询投资列表
+     * @author zhangyk
+     * @date 2018/8/30 13:27
+     */
+    @GetMapping("/getBorrowCreditListByCreditNid/{creditNid}")
+    public BorrowCreditResponse getBorrowCreditList( @PathVariable String creditNid) {
+        BorrowCreditResponse response = new BorrowCreditResponse();
+        List<BorrowCredit> borrowCredits =borrowCreditService.getBorrowCreditListByCreditNid(creditNid);
+        if(CollectionUtils.isNotEmpty(borrowCredits)) {
+            response.setResultList(CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class));
+        }
+        return response;
+    }
+
 
 
     

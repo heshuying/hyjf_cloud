@@ -139,7 +139,7 @@ public class AppPassWordController extends BaseUserController {
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码设置成功" ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_PASSWORD_ACTION+passWordService.packageStr(request);
+                + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
@@ -273,7 +273,7 @@ public class AppPassWordController extends BaseUserController {
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码重置成功" ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+passWordService.packageStr(request);
+                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION;
 
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);

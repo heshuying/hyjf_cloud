@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,6 +18,7 @@ public class CouponConfigRequest extends BasePage {
 
     private String couponCode;
 
+    @ApiModelProperty(value = "优惠券名称")
     private String couponName;
 
     private BigDecimal couponQuota;
@@ -37,6 +39,7 @@ public class CouponConfigRequest extends BasePage {
 
     private String couponSystem;
 
+    @ApiModelProperty(value = "优惠券类型")
     private Integer couponType;
 
     private String projectType;
@@ -59,6 +62,7 @@ public class CouponConfigRequest extends BasePage {
 
     private String content;
 
+    @ApiModelProperty(value = "优惠券状态")
     private Integer status;
 
     private String auditContent;
@@ -81,11 +85,13 @@ public class CouponConfigRequest extends BasePage {
     /**
      * 检索条件 时间开始
      */
+    @ApiModelProperty(value = "发行开始时间")
     private String timeStartSrch;
 
     /**
      * 检索条件 时间结束
      */
+    @ApiModelProperty(value = "发行结束时间")
     private String timeEndSrch;
 
     private int paginatorPage = 1;

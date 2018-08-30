@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Api(value = "app端-风险测评",tags = "app端-风险测评（新）")
 @RestController
-@RequestMapping("/hyjf-app")
+@RequestMapping("/hyjf-app/user")
 public class AppRiskAssesmentController extends BaseUserController {
 
     private final String TOKEN_ISINVALID_STATUS = "Token失效，请重新登录";

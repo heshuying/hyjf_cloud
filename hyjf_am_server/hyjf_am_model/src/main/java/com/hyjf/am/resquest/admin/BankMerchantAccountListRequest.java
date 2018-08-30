@@ -11,6 +11,7 @@
 
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * @author
  */
 
-public class BankMerchantAccountListRequest implements Serializable {
+public class BankMerchantAccountListRequest extends BasePage implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;

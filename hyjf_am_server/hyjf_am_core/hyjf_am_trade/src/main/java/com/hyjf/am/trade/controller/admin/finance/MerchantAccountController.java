@@ -34,7 +34,7 @@ public class MerchantAccountController {
         MerchantAccountResponse response = new MerchantAccountResponse();
         Integer recordTotal = merchantAccountService.countByExample();
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(request.getCurrPage(), recordTotal,request.getPageSize());
             List<MerchantAccount> recordList = merchantAccountService.selectRecordList(request,paginator.getOffset(),paginator.getLimit());
             if (recordList != null) {
                 List<MerchantAccountVO> voList = CommonUtils.convertBeanList(recordList, MerchantAccountVO.class);

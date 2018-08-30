@@ -3996,9 +3996,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhAccedeVO> getAccedesWaitCompute() {
-        Response<HjhAccedeVO> response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", Response.class).getBody();
-        if (response != null) {
+        HjhWaitComputeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", HjhWaitComputeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;
@@ -4197,6 +4197,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
             response.getResultStr();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据tenderNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:49
+     */
+    @Override
+    public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByCreditNid/"+ creditNid;
+        BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

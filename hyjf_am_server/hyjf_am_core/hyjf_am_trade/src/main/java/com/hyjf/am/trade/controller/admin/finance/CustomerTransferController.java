@@ -87,7 +87,7 @@ public class CustomerTransferController extends BaseController {
         UserTransferResponse response = new UserTransferResponse();
         Integer count = customerTransferService.getRecordCount(request);
         if (count > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             List<UserTransfer> recordList = customerTransferService.selectRecordList(request, paginator.getOffset(), paginator.getLimit());
             if (recordList != null) {
                 List<UserTransferVO> voList = CommonUtils.convertBeanList(recordList, UserTransferVO.class);
