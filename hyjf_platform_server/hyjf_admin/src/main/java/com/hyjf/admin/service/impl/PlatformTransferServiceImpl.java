@@ -439,7 +439,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         // 写入网站收支
         AccountWebListVO accountWebListVO = new AccountWebListVO();
         accountWebListVO.setOrdid(bankBean.getLogOrderId());
-        accountWebListVO.setAmount(money);
+        accountWebListVO.setAmount(Double.valueOf(money.toString()));
         // 1收入2支出
         accountWebListVO.setType(2);
         accountWebListVO.setTrade("platform_transfer");
@@ -451,7 +451,8 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountWebListVO.setBranchName(userInfo.getBranchName());
         accountWebListVO.setDepartmentName(userInfo.getDepartmentName());
         accountWebListVO.setRemark(platformTransferRequest.getRemark());
-        accountWebListVO.setCreateTime(time);
+        accountWebListVO.setCreateStartTime(time);
+        accountWebListVO.setCreateEndTime(time);
         accountWebListVO.setOperator(loginUserName);
         accountWebListVO.setFlag(1);
        // ret += csMessageClient.insertAccountWebList(accountWebListVO);

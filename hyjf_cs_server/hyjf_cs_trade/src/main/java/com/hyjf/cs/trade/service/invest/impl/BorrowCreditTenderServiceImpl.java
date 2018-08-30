@@ -851,7 +851,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(creditTender.getCreditFee());
+                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");
@@ -859,7 +859,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setUsrcustid(creditTenderLog.getAccountId());
                         accountWebList.setRemark(creditTender.getCreditNid());
                         accountWebList.setNote(null);
-                        accountWebList.setCreateTime(nowTime);
+                        accountWebList.setCreateStartTime(nowTime);
+                        accountWebList.setCreateEndTime(nowTime);
                         accountWebList.setOperator(null);
                         accountWebList.setFlag(1);
                         try {

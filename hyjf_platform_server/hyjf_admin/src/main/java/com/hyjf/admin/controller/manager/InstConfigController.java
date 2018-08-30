@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -15,12 +16,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * @author by xiehuili on 2018/7/5.
@@ -125,6 +124,35 @@ public class InstConfigController extends BaseController {
         return new AdminResult<>();
     }
 
+
+    /**
+     * 发标额度上限校验
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "保证金配置发标额度上限校验", notes = "保证金配置发标额度上限校验")
+    @PostMapping("/topLimitCheckAction")
+    public AdminResult topLimitCheckAction(HttpServletRequest request,@RequestParam(value="capitalToplimitStr",required = true)String capitalToplimitStr,
+                                      @RequestParam(value="capitalUsedStr",required = false)String capitalUsedStr) {
+        JSONObject ret = new JSONObject();
+        //新增配置instCode
+        if (StringUtils.isBlank(capitalUsedStr) || "undefined".equals(capitalUsedStr)) {
+            ret.put("error", "capitalUsedStr 为空！");
+            return new AdminResult<String>(ret.toJSONString());
+        }
+        if (StringUtils.isNotBlank(capitalToplimitStr)) {
+            BigDecimal capitalToplimit = new BigDecimal(capitalToplimitStr);
+            BigDecimal capitalUsed = new BigDecimal(capitalUsedStr);
+            if (capitalToplimit.compareTo(capitalUsed) < 0) {
+                ret.put("error", "发标额度余额不可为负数");
+                return new AdminResult<String>(ret.toJSONString());
+            }
+        }
+        //校验通过正常返回
+        ret.put("status", "y");
+        return new AdminResult<String>(ret.toJSONString());
+    }
 
 
 }

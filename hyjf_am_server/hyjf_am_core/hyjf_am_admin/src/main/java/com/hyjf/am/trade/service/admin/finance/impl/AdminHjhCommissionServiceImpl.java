@@ -302,12 +302,13 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		AccountWebListVO accountWebList = new AccountWebListVO();
 		accountWebList.setOrdid(accountList.getNid());// 订单号
 		accountWebList.setUserId(accountList.getUserId()); // 投资者
-		accountWebList.setAmount(accountList.getAmount()); // 管理费
+		accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
 		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
-		accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+		accountWebList.setCreateStartTime(GetterUtil.getInteger(accountList.getCreateTime()));
+		accountWebList.setCreateEndTime(GetterUtil.getInteger(accountList.getCreateTime()));
 		//TODO: 网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {
