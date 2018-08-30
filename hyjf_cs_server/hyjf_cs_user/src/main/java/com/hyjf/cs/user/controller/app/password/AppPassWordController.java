@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -220,8 +219,7 @@ public class AppPassWordController extends BaseUserController {
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
-        LogAcqResBean acqes = bean.getLogAcqResBean();
-        int userId = acqes.getUserId();
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户开户状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
