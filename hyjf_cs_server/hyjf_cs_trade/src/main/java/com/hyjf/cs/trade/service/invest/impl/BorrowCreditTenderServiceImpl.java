@@ -225,15 +225,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     /**
      * 债转投资获取投资失败结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
-        String errorMsg = amTradeClient.getFailResult(logOrdId,userVO.getUserId());
+    public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
+        String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        data.put("errorMsg",errorMsg);
+        data.put("errorMsg",errorMsg==null?"请联系客服":errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
@@ -250,13 +250,18 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        // 投资金额
-        data.put("assignCapital",bean.getAssignCapital());
-        // 历史回报
-        data.put("assignInterest",bean.getAssignInterest());
-        WebResult<Map<String, Object>> result = new WebResult();
-        result.setData(data);
-        return result;
+        if(bean!=null){
+            // 投资金额
+            data.put("assignCapital",bean.getAssignCapital());
+            // 历史回报
+            data.put("assignInterest",bean.getAssignInterest());
+            WebResult<Map<String, Object>> result = new WebResult();
+            result.setData(data);
+            return result;
+        }else{
+            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR);
+        }
+
     }
 
     /**
@@ -1234,7 +1239,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
 
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn?platform="+request.getPlatform();
+        String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);

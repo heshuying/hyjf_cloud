@@ -1476,6 +1476,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public List<ChannelCustomizeVO> getChannelList(ChannelCustomizeVO channelCustomizeVO) {
+		if (channelCustomizeVO.getCurrPage() > 0 && channelCustomizeVO.getPageSize() > 0) {
+			channelCustomizeVO.setLimitStart((channelCustomizeVO.getCurrPage() - 1) * channelCustomizeVO.getPageSize());
+			channelCustomizeVO.setLimitEnd(channelCustomizeVO.getPageSize());
+		}
 		UtmResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1538,10 +1542,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UtmPlatVO getDataById(Integer id) {
-		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmResponse.class).getBody();
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmPlatResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return (UtmPlatVO)response.getResult();
+			return response.getResult();
 		}else{
 			return null;
 		}

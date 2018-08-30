@@ -32,7 +32,7 @@ public class DataCenterCouponRequest extends BasePage {
     private int limitEnd = -1;
 
     public int getLimitStart() {
-        return (getCurrPage() - 1) * (getPageSize());
+        return limitStart;
     }
 
     public void setLimitStart(int limitStart) {
@@ -40,12 +40,10 @@ public class DataCenterCouponRequest extends BasePage {
     }
 
     public int getLimitEnd() {
-        return (getCurrPage()) * (getPageSize());
+        return limitEnd;
     }
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
     }
-
-
 }

@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.Instant;
@@ -760,6 +761,59 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		return retMsg;
 
 	}
+	// 组装url
+	@Override
+	public String packageStr(HttpServletRequest request) {
+		StringBuffer sbUrl = new StringBuffer();
+		// 版本号
+		String version = request.getParameter("version");
+		// 网络状态
+		String netStatus = request.getParameter("netStatus");
+		// 平台
+		String platform = request.getParameter("platform");
+		// token
+		String token = request.getParameter("token");
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		// 随机字符串
+		String randomString = request.getParameter("randomString");
+		// Order
+		String order = request.getParameter("order");
+		sbUrl.append("?").append("version").append("=").append(version);
+		sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+		sbUrl.append("&").append("platform").append("=").append(platform);
+		sbUrl.append("&").append("randomString").append("=").append(randomString);
+		sbUrl.append("&").append("sign").append("=").append(sign);
+		sbUrl.append("&").append("token").append("=").append(strEncode(token));
+		sbUrl.append("&").append("order").append("=").append(strEncode(order));
+		return sbUrl.toString();
+	}
 
+	@Override
+	public String packageStrForm(HttpServletRequest request) {
+		StringBuffer sbUrl = new StringBuffer();
+		// 版本号
+		String version = request.getParameter("version");
+		// 网络状态
+		String netStatus = request.getParameter("netStatus");
+		// 平台
+		String platform = request.getParameter("platform");
+		// token
+		String token = request.getParameter("token");
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		// 随机字符串
+		String randomString = request.getParameter("randomString");
+		// Order
+		String order = request.getParameter("order");
+		sbUrl.append("&").append("version").append("=").append(version);
+		sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+		sbUrl.append("&").append("platform").append("=").append(platform);
+		sbUrl.append("&").append("randomString").append("=").append(randomString);
+		sbUrl.append("&").append("sign").append("=").append(sign);
+		sbUrl.append("&").append("token").append("=").append(strEncode(token));
+		sbUrl.append("&").append("order").append("=").append(strEncode(order));
+		return sbUrl.toString();
+	}
 
 }

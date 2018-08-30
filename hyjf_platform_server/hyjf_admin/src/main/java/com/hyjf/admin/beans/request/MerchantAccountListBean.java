@@ -11,6 +11,7 @@
 
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author
  */
 
-public class MerchantAccountListBean implements Serializable {
+public class MerchantAccountListBean extends BasePage implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;

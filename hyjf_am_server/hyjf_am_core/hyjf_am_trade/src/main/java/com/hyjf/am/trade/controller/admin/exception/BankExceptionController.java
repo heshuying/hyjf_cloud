@@ -180,10 +180,10 @@ public class BankExceptionController extends BaseController {
      * @return
      */
     @PostMapping("/handlerAfterCash")
-    public Boolean handlerAfterCash(@RequestBody JSONObject para){
+    public Boolean handlerAfterCash(@RequestBody JSONObject params){
         Boolean ret = true;
         try {
-            ret = bankWithdrawService.updateHandlerAfterCash(para);
+            ret = bankWithdrawService.updateHandlerAfterCash(params);
         }catch (Exception e){
             ret = false;
         }

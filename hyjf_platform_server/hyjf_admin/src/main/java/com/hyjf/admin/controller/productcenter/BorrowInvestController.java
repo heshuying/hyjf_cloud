@@ -17,8 +17,11 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
+import com.hyjf.admin.service.BorrowRegistService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -53,6 +56,9 @@ public class BorrowInvestController extends BaseController {
     BorrowInvestService borrowInvestService;
 
     @Autowired
+    BorrowRegistService borrowRegistService;
+
+    @Autowired
     AdminCommonService adminCommonService;
 
     /**
@@ -85,6 +91,12 @@ public class BorrowInvestController extends BaseController {
         //投资方式
         List<DropDownVO> investTypeList = adminCommonService.getParamNameList("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
+        // 资产来源
+        List<DropDownVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
+        responseBean.setHjhInstConfigList(hjhInstConfigList);
+        //产品类型
+        List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
+        responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
         return new AdminResult(responseBean);
     }
 

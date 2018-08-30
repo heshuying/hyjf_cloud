@@ -4,14 +4,15 @@
 package com.hyjf.cs.user.controller.app.password;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -122,14 +123,20 @@ public class AppPassWordController extends BaseUserController {
     public AppResult<Object> setPassword(@RequestHeader(value = "token") String token, @RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
         UserVO user = passWordService.checkStatus(token,sign);
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 1) {
+            //已设置交易密码
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"已设置交易密码！");
+        }
         int userId = user.getUserId();
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码设置失败&logOrdId="+bean.getLogOrderId();
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码设置成功" ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
@@ -220,8 +227,7 @@ public class AppPassWordController extends BaseUserController {
     public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
-        LogAcqResBean acqes = bean.getLogAcqResBean();
-        int userId = acqes.getUserId();
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户开户状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
@@ -251,14 +257,20 @@ public class AppPassWordController extends BaseUserController {
     public AppResult<Object> resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
         UserVO user = passWordService.checkStatus(token,sign);
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 0) {
+            //已设置交易密码
+            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"未设置交易密码！");
+        }
         int userId = user.getUserId();
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppHost() +"/user/setting/bankPassword/result/success" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码重置失败&logOrdId="+bean.getLogOrderId() ;
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码重置成功" ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION;

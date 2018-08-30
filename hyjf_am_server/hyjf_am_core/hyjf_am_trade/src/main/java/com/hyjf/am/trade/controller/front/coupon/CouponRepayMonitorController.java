@@ -71,7 +71,7 @@ public class CouponRepayMonitorController extends BaseController {
         AdminCouponRepayMonitorCustomizeResponse response = new AdminCouponRepayMonitorCustomizeResponse();
         Integer count = this.couponRepayMonitorService.countRecordTotal(form);
         if(count>0){
-            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
             Map<String, Object> paraMap = new HashMap<>();
             paraMap.put("limitStart", paginator.getOffset());
             paraMap.put("limitEnd", paginator.getLimit());

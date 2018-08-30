@@ -2,8 +2,8 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowCommonFile;
 import com.hyjf.am.trade.bean.BorrowCommonFileData;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
@@ -1581,7 +1581,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					|| StringUtils.isNotEmpty(borrowBean.getWtime()) || StringUtils.isNotEmpty(borrowBean.getUserCredit())) {
 
 				BorrowManinfo borrowManinfo = new BorrowManinfo();
-
 				borrowManinfo.setBorrowNid(borrowNid);
 				borrowManinfo.setBorrowPreNid(borrow.getBorrowPreNid());
 				// 姓名
@@ -1908,6 +1907,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				if(borrowBean.getIsPunished() != null ){
 					borrowManinfo.setIsPunished(borrowBean.getIsPunished());
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 			    this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			}
 		} else {
@@ -2432,7 +2432,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowAssetNumber(this.getValue(borrowWithBLOBs.getBorrowAssetNumber()));
 		// 新增协议期限字段
 		// 协议期限
-		borrowBean.setContractPeriod(this.getValue(borrowWithBLOBs.getContractPeriod() + ""));
+		if(borrowWithBLOBs.getContractPeriod()!=null) {
+			borrowBean.setContractPeriod(String.valueOf(borrowWithBLOBs.getContractPeriod()));
+		}
 		// 项目来源
 		borrowBean.setBorrowProjectSource(this.getValue(borrowWithBLOBs.getBorrowProjectSource()));
 		// 起息时间
@@ -2836,6 +2838,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(个人) end */
+				if (StringUtils.isNotEmpty(record.getAddress())) {
+					borrowBean.setAddress(this.getValue(record.getAddress()));
+				} else {
+					borrowBean.setAddress(StringUtils.EMPTY);
+				}
 			}
 		}
 	}
@@ -3448,8 +3455,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			return null;
 		}
 		BorrowWithBLOBs bwb=new BorrowWithBLOBs();
-		BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 		BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
+		BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 //		BorrowExample example = new BorrowExample();
 //		BorrowExample.Criteria cra = example.createCriteria();
 //		cra.andBorrowNidEqualTo(borrowNid);
@@ -4491,16 +4498,16 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
+	public com.hyjf.am.bean.admin.BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
 		String borrowNid = borrowBean.getBorrowNid();
 		if (StringUtils.isNotEmpty(borrowNid)) {
-			BorrowWithBLOBs bwb=new BorrowWithBLOBs();
+			com.hyjf.am.bean.admin.BorrowWithBLOBs bwb=new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 			BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
 			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 			return  bwb;
 		}
 		
-		return new BorrowWithBLOBs();
+		return new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 	}
 	
 	

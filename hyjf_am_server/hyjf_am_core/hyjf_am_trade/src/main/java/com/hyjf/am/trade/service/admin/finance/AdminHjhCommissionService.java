@@ -14,7 +14,7 @@ import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 
 /**
  * @author libin
- * @version AdminHjhCommissionService.java, v0.1 2018年8月7日 下午4:44:24
+ * @version AdminHjhCommissionService.java, v0.1 2018年8月7日 下午4:44:24  旧
  */
 public interface AdminHjhCommissionService {
 	

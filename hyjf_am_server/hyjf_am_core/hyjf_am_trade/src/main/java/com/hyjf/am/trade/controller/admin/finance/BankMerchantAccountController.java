@@ -34,7 +34,7 @@ public class BankMerchantAccountController {
         BankMerchantAccountResponse response = new BankMerchantAccountResponse();
         int recordTotal = this.bankMerchantAccountService.queryRecordTotal(request);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(request.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(request.getCurrPage(), recordTotal,request.getPageSize());
             List<BankMerchantAccount> recordList = this.bankMerchantAccountService.selectRecordList(request, paginator.getOffset(), paginator.getLimit());
             // 更新数据
             recordList = this.bankMerchantAccountService.updateBankMerchantAccount(recordList,request.getUserId());

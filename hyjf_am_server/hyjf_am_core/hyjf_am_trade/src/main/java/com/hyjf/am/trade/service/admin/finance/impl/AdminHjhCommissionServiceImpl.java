@@ -60,7 +60,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * @author libin
- * @version AdminHjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午4:45:57
+ * @version AdminHjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午4:45:57   旧
  */
 @Service
 public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements AdminHjhCommissionService{

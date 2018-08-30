@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * @date 2015/07/09 17:00
  * @version V1.0  
  */
-public class CouponRepayRequest implements Serializable {
+public class CouponRepayRequest extends BasePage implements Serializable {
 
 	/**
 	 * serialVersionUID:

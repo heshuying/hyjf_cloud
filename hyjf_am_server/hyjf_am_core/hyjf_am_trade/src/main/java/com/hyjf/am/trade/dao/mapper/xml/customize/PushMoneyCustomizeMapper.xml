@@ -19,14 +19,15 @@
         FROM
         (SELECT * FROM ht_borrow_apicron a WHERE a.api_type = 0 ) api
         JOIN ht_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
-        <include refid="Where_Clause"/>
+        JOIN ht_borrow_info bi ON api.borrow_nid = bi.borrow_nid
+        <include refid="where-all-page-condition-detail"/>
     </select>
     <select id="queryPushMoneyList" resultMap="PushMoneyMap"
             parameterType="com.hyjf.am.resquest.admin.PushMoneyRequest">
         SELECT
         api.id,
         b.borrow_nid,
-        b.`name` AS borrow_name,
+        bi.`name` AS borrow_name,
         b.borrow_period,
         b.borrow_style,
         b.account,
@@ -34,7 +35,7 @@
         SELECT
         IFNULL(sum(c.commission), 0.00) AS commission
         FROM
-        huiyingdai_tender_commission c
+        ht_tender_commission c
         WHERE
         c.borrow_nid = api.borrow_nid
         ) AS commission,
@@ -52,7 +53,8 @@
         FROM
         (SELECT * FROM ht_borrow_apicron a WHERE a.api_type = 0 ORDER BY a.id DESC) api
         JOIN ht_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
-        <include refid="Where_Clause" />
+        JOIN ht_borrow_info bi ON api.borrow_nid = bi.borrow_nid
+        <include refid="where-all-page-condition-detail"/>
         ORDER BY
         api.web_status,b.recover_last_time DESC
         <if test="limitStart >= 0" >

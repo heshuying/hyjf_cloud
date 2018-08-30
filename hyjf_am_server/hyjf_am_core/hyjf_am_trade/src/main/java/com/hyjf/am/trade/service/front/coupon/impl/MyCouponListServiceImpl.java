@@ -240,7 +240,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             /**************逻辑修改 pcc start***************/
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
+            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
                 addFlg = true;
             }
             if (addFlg) {
@@ -328,7 +328,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                 }
                 //是否与本金公用
                 boolean addFlg = false;
-                if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
+                if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
                     addFlg = true;
                 }
                 if (addFlg) {
@@ -409,7 +409,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             }
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
+            if (bestCoupon.getAddFlag() == 1 && !"0".equals(money)) {
                 addFlg = true;
             }
             if (addFlg) {
