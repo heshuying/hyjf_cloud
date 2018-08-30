@@ -574,12 +574,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             //未开户
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未开户！");
         }
-        //判断用户是否设置过交易密码
-        Integer passwordFlag = user.getIsSetPassword();
-        if (passwordFlag == 1) {
-            //已设置交易密码
-            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"已设置交易密码！");
-        }
         return user;
     }
 
