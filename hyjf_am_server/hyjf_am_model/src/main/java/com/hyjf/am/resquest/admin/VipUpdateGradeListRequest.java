@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author yaoyong
  * @version VipUpdateGradeListRequest, v0.1 2018/7/4 9:16
  */
-public class VipUpdateGradeListRequest {
+public class VipUpdateGradeListRequest extends BasePage {
     private String userId;
 
     public int limit;

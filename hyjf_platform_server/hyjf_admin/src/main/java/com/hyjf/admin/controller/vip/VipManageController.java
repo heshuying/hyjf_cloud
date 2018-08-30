@@ -91,9 +91,9 @@ public class VipManageController extends BaseController {
     }
 
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
-    @RequestMapping (value = "/vipdetailInit",method = RequestMethod.GET)
+    @RequestMapping (value = "/vipdetailInit/{userId}",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult vipDetailInit(@RequestParam String userId) {
+    public AdminResult vipDetailInit(@PathVariable String userId) {
         VipDetailListRequest vdr = new VipDetailListRequest();
         vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
@@ -116,9 +116,9 @@ public class VipManageController extends BaseController {
     }
 
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
-    @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.GET)
+    @RequestMapping(value = "/vipupgradeInit/{userId}",method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult vipUpdateGradeInit(@RequestParam String userId) {
+    public AdminResult vipUpdateGradeInit(@PathVariable String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -144,7 +144,7 @@ public class VipManageController extends BaseController {
      */
     @ApiOperation(value = "导出",notes = "导出")
     @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
-    public void exportExcel( @RequestBody VipManageRequest vipManageRequest, HttpServletRequest request,
+    public void exportExcel( VipManageRequest vipManageRequest, HttpServletRequest request,
                             HttpServletResponse response) throws Exception {
         // 表格sheet名称
         String sheetName = "VIP列表";
@@ -214,7 +214,7 @@ public class VipManageController extends BaseController {
         if (vipManageResponse != null) {
             recordList = vipManageResponse.getResultList();
         }
-        String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户名", "姓名", "手机号码","VIP等级","V值","VIP购买时间", "用户角色", "用户属性", "推荐人", "51老用户",
+        String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户名", "姓名", "手机号码","VIP等级","V值","VIP购买时间", "用户角色", "用户属性", "推荐人",
                 "用户状态", "开户状态","会员开通渠道", "注册平台", "注册时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -268,8 +268,6 @@ public class VipManageController extends BaseController {
                         cell.setCellValue(user.getUserProperty());
                     } else if (celLength == 12) {// 推荐人
                         cell.setCellValue(user.getRecommendName());
-                    } else if (celLength == 13) {// 51老用户
-                        cell.setCellValue(user.getIs51());
                     } else if (celLength == 14) {// 用户状态
                         cell.setCellValue(user.getUserStatus());
                     } else if (celLength == 15) {// 开户状态
