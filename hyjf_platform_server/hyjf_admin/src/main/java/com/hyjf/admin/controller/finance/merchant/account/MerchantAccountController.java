@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 /**
  * @author zhangqingqing
  * @version MerchantAccountController, v0.1 2018/7/5 10:01
@@ -59,9 +61,9 @@ public class MerchantAccountController extends BaseController {
         }
         AdminMerchantAccountSumCustomizeVO accoutSum = merchantAccountService.searchAccountSum();
         MerchantAccountVO merchantAccountVO = new MerchantAccountVO();
-        merchantAccountVO.setAccountBalanceSum(accoutSum.getAccountBalanceSum());
-        merchantAccountVO.setAvailableBalanceSum(accoutSum.getAvailableBalanceSum());
-        merchantAccountVO.setFrostSum(accoutSum.getFrostSum());
+        merchantAccountVO.setAccountBalance(new BigDecimal(accoutSum.getAccountBalanceSum()));
+        merchantAccountVO.setAvailableBalance(new BigDecimal(accoutSum.getAvailableBalanceSum()));
+        merchantAccountVO.setFrost(new BigDecimal(accoutSum.getFrostSum()));
         return new AdminResult<>(ListResult.build2(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal(),merchantAccountVO)) ;
     }
 }
