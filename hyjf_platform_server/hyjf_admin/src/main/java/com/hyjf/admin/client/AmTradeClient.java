@@ -2825,11 +2825,11 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
+
     /**
-     * 根据id查找互金协会报送日志
-     * @param logId
+     * 统计总数
      * @return
      */
-   NifaReportLogResponse selectNifaReportLogById(int logId);
+    AdminMerchantAccountSumCustomizeVO searchAccountSum();
 }
 

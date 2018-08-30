@@ -42,8 +42,37 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
-    private String updatetime;
+    private String accountBalanceSum;
+
+    private String availableBalanceSum;
+
+    private String frostSum;
+
     private static final long serialVersionUID = 1L;
+
+    public String getAccountBalanceSum() {
+        return accountBalanceSum;
+    }
+
+    public void setAccountBalanceSum(String accountBalanceSum) {
+        this.accountBalanceSum = accountBalanceSum;
+    }
+
+    public String getAvailableBalanceSum() {
+        return availableBalanceSum;
+    }
+
+    public void setAvailableBalanceSum(String availableBalanceSum) {
+        this.availableBalanceSum = availableBalanceSum;
+    }
+
+    public String getFrostSum() {
+        return frostSum;
+    }
+
+    public void setFrostSum(String frostSum) {
+        this.frostSum = frostSum;
+    }
 
     public String getIds() {
         return ids;
@@ -189,11 +218,4 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getUpdatetime() {
-        return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(updateTime);
-    }
-
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime;
-    }
 }
