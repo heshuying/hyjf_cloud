@@ -225,13 +225,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     /**
      * 债转投资获取投资失败结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
-        String errorMsg = amTradeClient.getFailResult(logOrdId,userVO.getUserId());
+    public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
+        String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
         data.put("errorMsg",errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();

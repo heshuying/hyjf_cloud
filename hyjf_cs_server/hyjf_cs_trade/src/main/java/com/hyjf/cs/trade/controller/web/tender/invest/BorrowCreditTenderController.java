@@ -75,8 +75,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
         logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
-        return  borrowTenderService.getFaileResult(userVO,logOrdId);
+        return  borrowTenderService.getFaileResult(userId,logOrdId);
     }
 
     @ApiOperation(value = "web端债转投资获取投资结果  成功", notes = "web端债转投资获取投资结果  成功")
