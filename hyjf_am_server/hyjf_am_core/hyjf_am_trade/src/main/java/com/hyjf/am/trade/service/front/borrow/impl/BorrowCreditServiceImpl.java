@@ -171,11 +171,35 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         if(StringUtils.isEmpty(tenderNid)){
             return null;
         }
+
         BorrowCreditExample example = new BorrowCreditExample();
-        example.createCriteria().andTenderNidEqualTo(tenderNid).andCreditUserIdEqualTo(Integer.valueOf(userId));
+        BorrowCreditExample.Criteria criteria =  example.createCriteria();
+        criteria.andTenderNidEqualTo(tenderNid);
+        if (StringUtils.isNotBlank(userId)){
+            criteria.andCreditUserIdEqualTo(Integer.valueOf(userId));
+        }
         List<BorrowCredit> list = borrowCreditMapper.selectByExample(example);
         return list;
     }
+
+    /**
+     * 根据creditNid获取投资债转信息
+     * @author zhangyk
+     * @date 2018/8/30 10:58
+     */
+    @Override
+    public List<BorrowCredit> getBorrowCreditListByCreditNid(String creditNid) {
+        if(StringUtils.isEmpty(creditNid)){
+            return null;
+        }
+
+        BorrowCreditExample example = new BorrowCreditExample();
+        BorrowCreditExample.Criteria criteria =  example.createCriteria();
+        criteria.andCreditNidEqualTo(Integer.valueOf(creditNid));
+        List<BorrowCredit> list = borrowCreditMapper.selectByExample(example);
+        return list;
+    }
+
 
 
 
