@@ -40,13 +40,13 @@ public class BankJournalController {
     private BankJournalService bankJournalService;
 
     @ApiOperation(value = "银行交易明细", notes = "银行交易明细列表查询")
-    @PostMapping(value = "/bankalevelist")
+    @PostMapping(value = "/bankevelist")
     @ResponseBody
-    public JSONObject getBankaleveList(@RequestBody BankEveRequest bankEveRequest){
+    public JSONObject getBankeveList(@RequestBody BankEveRequest bankEveRequest){
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        String status="99";
+        String status="000";
         String statusDesc = "未检索到相应的列表数据";
         if(null!=bankEveList&&bankEveList.size()>0){
             Integer count = bankEveList.size();
