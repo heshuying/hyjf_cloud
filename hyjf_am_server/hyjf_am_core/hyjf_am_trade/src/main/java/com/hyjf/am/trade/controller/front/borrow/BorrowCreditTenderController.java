@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
@@ -18,10 +19,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -169,6 +167,16 @@ public class BorrowCreditTenderController extends BaseController {
         CountResponse response = new CountResponse();
         int count = borrowCreditTenderService.getBorrowCreditTenderCount4Admin(param);
         response.setCount(count);
+        return response;
+    }
+
+
+
+    @GetMapping("getCreditTenderServiceFee/{creditNid}")
+    public StringResponse getCreditTenderServiceFee(@PathVariable String creditNid){
+        StringResponse response = new StringResponse();
+        String fee = borrowCreditTenderService.getCreditTenderServiceFee(creditNid);
+        response.setResultStr(fee);
         return response;
     }
 

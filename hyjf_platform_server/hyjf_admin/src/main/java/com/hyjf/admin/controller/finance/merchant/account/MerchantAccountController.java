@@ -11,6 +11,8 @@ import com.hyjf.admin.service.MerchantAccountService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.vo.admin.AdminMerchantAccountSumCustomizeVO;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
 
 /**
  * @author zhangqingqing
@@ -45,16 +49,21 @@ public class MerchantAccountController extends BaseController {
         //查询商户配置表相应的账户配置
         MerchantAccountResponse merchantAccounts = merchantAccountService.selectRecordList(request);
         if(merchantAccounts == null||merchantAccounts.getRecordTotal()==0) {
-            return new AdminResult<>();
+            return new AdminResult<>(ListResult.build(null,0));
         }
         //更新商户子账户的金额信息
         boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
         if(!flag){
-            return new AdminResult<>();
+            return new AdminResult<>(ListResult.build(null,0));
         }
         if (!Response.isSuccess(merchantAccounts)) {
             return new AdminResult<>(FAIL, merchantAccounts.getMessage());
         }
-        return new AdminResult<>(ListResult.build(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal())) ;
+        AdminMerchantAccountSumCustomizeVO accoutSum = merchantAccountService.searchAccountSum();
+        MerchantAccountVO merchantAccountVO = new MerchantAccountVO();
+        merchantAccountVO.setAccountBalance(new BigDecimal(accoutSum.getAccountBalanceSum()));
+        merchantAccountVO.setAvailableBalance(new BigDecimal(accoutSum.getAvailableBalanceSum()));
+        merchantAccountVO.setFrost(new BigDecimal(accoutSum.getFrostSum()));
+        return new AdminResult<>(ListResult.build2(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal(),merchantAccountVO)) ;
     }
 }

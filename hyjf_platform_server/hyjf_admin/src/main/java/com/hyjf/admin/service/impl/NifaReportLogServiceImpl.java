@@ -27,4 +27,14 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
         return amTradeClient.selectNifaReportLogList(request);
     }
 
+    /**
+     * 根据id查找互金协会报送日志
+     * @param logId
+     * @return
+     */
+    @Override
+    public NifaReportLogResponse selectNifaReportLogById(int logId){
+        return amTradeClient.selectNifaReportLogById(logId);
+    }
+
 }

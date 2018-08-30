@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2018/8/1 10:05
  */
 @Api(value = "app端-用户我的散标详情",tags = "app端-用户我的散标详情")
-@Controller
+@RestController
 @RequestMapping("/hyjf-app/user/borrow")
 public class AppMyProjectDetailController extends BaseTradeController {
 
@@ -34,7 +34,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标详情", notes = "App端:获取我的散标详情")
     @GetMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
-    public Object MyProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader("userId") String userId){
+    public Object MyProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId",required = false) String userId){
        JSONObject result = appMyProjectService.getMyProjectDetail(borrowId,request,userId);
        return result;
     }

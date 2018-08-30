@@ -56,6 +56,18 @@ public class TransferListRequest extends UserTransferVO implements Serializable 
 	private List<UserTransferVO> recordList;
 
 	/**
+	 * 当前页码
+	 */
+	@ApiModelProperty(value = "当前页")
+	private int currPage;
+
+	/**
+	 * 当前页条数
+	 */
+	@ApiModelProperty(value = "当前页条数")
+	private int pageSize;
+
+	/**
 	 * 翻页机能用的隐藏变量
 	 */
 	private int paginatorPage = 1;
@@ -153,6 +165,19 @@ public class TransferListRequest extends UserTransferVO implements Serializable 
 		this.transferTypeSrch = transferTypeSrch;
 	}
 
-	
-	
+	public int getCurrPage() {
+		return currPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 }

@@ -26,6 +26,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -224,13 +225,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     /**
      * 债转投资获取投资失败结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
-        String errorMsg = amTradeClient.getFailResult(logOrdId,userVO.getUserId());
+    public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
+        String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
         data.put("errorMsg",errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
@@ -1210,6 +1211,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     private BankCallBean getCreditBankCallBean(TenderRequest request, UserVO user, BankOpenAccountVO bankOpenAccount, TenderToCreditAssignCustomizeVO creditAssign, CreditTenderLogVO creditTenderLog) {
         BankCallBean bean =  new BankCallBean(user.getUserId(),BankCallConstant.TXCODE_CREDITINVEST,Integer.parseInt(request.getPlatform()),BankCallConstant.BANK_URL_MOBILE_CREDITINVEST);
+        String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
+        bean.setOrderId(orderId);
+        bean.setLogOrderId(orderId);
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息

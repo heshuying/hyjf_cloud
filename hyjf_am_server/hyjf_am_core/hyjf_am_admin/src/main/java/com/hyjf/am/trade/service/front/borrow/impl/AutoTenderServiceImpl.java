@@ -5,10 +5,10 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
+import com.hyjf.am.admin.mq.producer.FddProducer;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;

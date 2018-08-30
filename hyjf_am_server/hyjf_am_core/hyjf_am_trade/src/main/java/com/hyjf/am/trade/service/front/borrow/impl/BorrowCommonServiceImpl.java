@@ -2,8 +2,8 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowCommonFile;
 import com.hyjf.am.trade.bean.BorrowCommonFileData;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
@@ -3448,8 +3448,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			return null;
 		}
 		BorrowWithBLOBs bwb=new BorrowWithBLOBs();
-		BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 		BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
+		BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 //		BorrowExample example = new BorrowExample();
 //		BorrowExample.Criteria cra = example.createCriteria();
 //		cra.andBorrowNidEqualTo(borrowNid);
@@ -4491,16 +4491,16 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
+	public com.hyjf.am.bean.admin.BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean) {
 		String borrowNid = borrowBean.getBorrowNid();
 		if (StringUtils.isNotEmpty(borrowNid)) {
-			BorrowWithBLOBs bwb=new BorrowWithBLOBs();
-			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
+			com.hyjf.am.bean.admin.BorrowWithBLOBs bwb=new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 			BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid),bwb);
+			BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 			return  bwb;
 		}
 		
-		return new BorrowWithBLOBs();
+		return new com.hyjf.am.bean.admin.BorrowWithBLOBs();
 	}
 	
 	

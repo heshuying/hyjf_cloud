@@ -4,6 +4,7 @@ package com.hyjf.am.user.dao.auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.admin.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.user.dao.mapper.auto.AccountBankMapper;
 import com.hyjf.am.user.dao.mapper.auto.AccountChinapnrMapper;
 import com.hyjf.am.user.dao.mapper.auto.AccountMobileSynchMapper;
@@ -68,7 +69,6 @@ import com.hyjf.am.user.dao.mapper.auto.VipUserTenderMapper;
 import com.hyjf.am.user.dao.mapper.auto.VipUserUpgradeMapper;
 import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPageConfigMapper;
 import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPagePictureMapper;
-import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
 
 @Service("amUserAutoMapper")
 public class AutoMapper {

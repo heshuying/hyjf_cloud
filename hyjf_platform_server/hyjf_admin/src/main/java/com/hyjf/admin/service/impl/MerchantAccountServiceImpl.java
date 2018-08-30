@@ -10,6 +10,7 @@ import com.hyjf.admin.service.MerchantAccountService;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.vo.admin.AdminMerchantAccountSumCustomizeVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.GetDate;
@@ -169,6 +170,11 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
     @Override
     public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode){
         return amTradeClient.countAccountListInfoBySubAccountCode(ids,subAccountCode);
+    }
+
+    @Override
+    public AdminMerchantAccountSumCustomizeVO searchAccountSum() {
+        return amTradeClient.searchAccountSum();
     }
 
 
