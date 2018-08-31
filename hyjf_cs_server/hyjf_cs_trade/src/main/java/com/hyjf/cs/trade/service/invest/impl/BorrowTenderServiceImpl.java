@@ -1302,7 +1302,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             tenderBg.setAuthCode(bean.getAuthCode());
         }
         // 开始调用原子层操作主表
+        logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
+        logger.info("操作原子层主表结束 结果 {} ",insertFlag);
         if (insertFlag) {
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计投资追加

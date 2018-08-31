@@ -275,10 +275,9 @@ public class CouponIssuanceController extends BaseController {
         Integer couponQuantity = request.getCouponQuantity();
         // 优惠券编号
         String couponCode = request.getCouponCode();
-        int issuNum = 0;
         CouponUserResponse response = couponConfigService.getIssueNumber(couponCode);
         if (response.getCount() > couponQuantity) {
-            String message = "修改数量不能小于已发放数量，已发放" + issuNum + "张";
+            String message = "修改数量不能小于已发放数量，已发放" + response.getCount() + "张";
             response.setMessage(message);
             return new AdminResult<>(FAIL,response.getMessage());
         }

@@ -18,7 +18,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.trade.client.HjhSmsNoticeServiceClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -34,14 +33,15 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 	private static final Logger logger = LoggerFactory.getLogger(HjhSmsNoticeServiceImpl.class);
 
 	@Autowired
-	private HjhSmsNoticeServiceClient hjhSmsNoticeServiceClient;
-	@Autowired
 	private SmsProducer smsProducer;
 
+	/**
+	 * 逾期还款标的短信通知
+	 */
 	@Override
 	public void overdueSmsNotice() {
 		logger.info("-------------------逾期未还款标的统计发短信任务开始------------------");
-		List<BorrowVO> borrowList = hjhSmsNoticeServiceClient.selectOverdueBorrowList();
+		List<BorrowVO> borrowList = amTradeClient.selectOverdueBorrowList();
 		if (CollectionUtils.isEmpty(borrowList)) {
 			logger.info("当前没有逾期的标的信息");
 			return;

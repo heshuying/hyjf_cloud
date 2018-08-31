@@ -18,6 +18,7 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -56,4 +57,24 @@ public interface AmAdminClient {
      * @return
      */
     STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean);
+
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     * yangchangwei 迁移至amadminClient
+     */
+    List<BorrowStyleVO> selectCommonBorrowStyleList();
+
+
+    /**
+     * 查询汇计划转让列表
+     *
+     * @param request
+     * @return
+     * yangchangwei
+     */
+    HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
 }

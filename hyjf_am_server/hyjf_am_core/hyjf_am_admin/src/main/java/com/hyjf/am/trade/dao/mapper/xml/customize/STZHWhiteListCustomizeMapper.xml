@@ -20,7 +20,7 @@
     <result column="createuser" property="createuser" jdbcType="VARCHAR" />
     <result column="updatetime" property="updatetime" jdbcType="VARCHAR" />
     <result column="updateuser" property="updateuser" jdbcType="VARCHAR" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="approval_name" property="approvalName" jdbcType="VARCHAR" />
     <result column="approval_time" property="approvalTime" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -501,7 +501,7 @@
       <!--instName = #{instname,jdbcType=VARCHAR}-->
     <!--where id = #{id,jdbcType=INTEGER}-->
   <!--</update>-->
-  <select id="selectByObject" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize" >
+  <select id="selectInfo" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize" >
 	    SELECT
 			hu.user_id,
 			(

@@ -3,10 +3,15 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,4 +63,40 @@ public class AmAdminClientImpl implements AmAdminClient {
         return null;
     }
 
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     * yangchangwei 迁移至amadminClient
+     */
+    @Override
+    public List<BorrowStyleVO> selectCommonBorrowStyleList() {
+        String url = "http://AM-ADMIN/am-trade/admin_common/select_borrow_style";
+        BorrowStyleResponse response = restTemplate.getForEntity(url, BorrowStyleResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询汇计划转让列表
+     *
+     * @param request
+     * @return
+     * yangchangwei
+     */
+    @Override
+    public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
+
+        HjhDebtCreditReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-trade/adminHjhDebtCredit/getList", request, HjhDebtCreditReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 }
