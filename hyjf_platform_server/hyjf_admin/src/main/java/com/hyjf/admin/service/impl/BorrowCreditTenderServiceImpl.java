@@ -293,7 +293,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     @Override
     public AdminResult pdfSign(BorrowCreditTenderPDFSignReq request, AdminSystemVO adminSystemVO) {
         AdminResult result = new AdminResult();
-        String userId = (adminSystemVO == null || StringUtils.isBlank(adminSystemVO.getId())) ? "" : adminSystemVO.getId();
+        String userId = request.getUserId();
         // 标的编号
         String borrowNid = request.getBorrowNid();
         // 承接订单号
@@ -303,7 +303,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         // 债转编号
         String creditNid = request.getCreditNid();
 
-        CheckUtil.check(!org.apache.commons.lang3.StringUtils.isAnyBlank(borrowNid, assignNid, creditTenderNid, creditNid), MsgEnum.ERR_OBJECT_REQUIRED, "各项");
+        CheckUtil.check(!org.apache.commons.lang3.StringUtils.isAnyBlank(borrowNid, assignNid, creditTenderNid, creditNid,userId), MsgEnum.ERR_OBJECT_REQUIRED, "各项");
         String borrowUrl = BORROW_URL + borrowNid;
         BorrowResponse response = baseClient.getExe(borrowUrl,BorrowResponse.class);
         BorrowVO borrowVO = response.getResult();

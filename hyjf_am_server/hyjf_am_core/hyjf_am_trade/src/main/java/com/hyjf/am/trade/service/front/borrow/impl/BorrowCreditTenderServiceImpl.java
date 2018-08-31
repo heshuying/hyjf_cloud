@@ -124,7 +124,11 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public int getBorrowCreditTenderCount4Admin(Map<String, Object> params) {
         CreditTenderExample example = new CreditTenderExample();
         CreditTenderExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo((Integer) params.get("userId"));
+        Object userIdObject = params.get("userId");
+        if (null != userIdObject){
+            String userId = String.valueOf(userIdObject);
+            cra.andUserIdEqualTo(Integer.valueOf(userId));
+        }
         cra.andBidNidEqualTo((String) params.get("borrowNid"));
         cra.andAssignNidEqualTo((String) params.get("assignNid"));
         cra.andCreditTenderNidEqualTo((String) params.get("creditTenderNid"));
