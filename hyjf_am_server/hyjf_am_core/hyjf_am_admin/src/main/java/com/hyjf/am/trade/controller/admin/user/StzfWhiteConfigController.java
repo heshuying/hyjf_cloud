@@ -5,6 +5,8 @@ package com.hyjf.am.trade.controller.admin.user;
 
 import java.util.List;
 
+import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,4 +75,24 @@ public class StzfWhiteConfigController extends BaseController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
+
+	/**
+	 * 获取用户/机构信息
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getUserByUserName")
+	public STZHWhiteListResponse getUserByUserName(@RequestBody STZHWhiteListRequest request) {
+		STZHWhiteListResponse response = new STZHWhiteListResponse();
+		STZHWhiteListCustomize stzhWhiteListCustomize = new STZHWhiteListCustomize();
+		BeanUtils.copyProperties(request,stzhWhiteListCustomize);
+		STZHWhiteListCustomize whiteListCustomize = stzfWhiteConfigService.selectInfo(stzhWhiteListCustomize);
+		if (whiteListCustomize != null) {
+			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
+			BeanUtils.copyProperties(whiteListCustomize,stzhWhiteListVO);
+			response.setResult(stzhWhiteListVO);
+		}
+		return response;
+	}
+
 }

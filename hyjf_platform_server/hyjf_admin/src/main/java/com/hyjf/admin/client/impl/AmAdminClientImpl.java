@@ -1,7 +1,9 @@
 package com.hyjf.admin.client.impl;
 
+import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
@@ -42,6 +44,16 @@ public class AmAdminClientImpl implements AmAdminClient {
                 postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/pcutm_list", null, UtmPlatResponse.class).getBody();
         if (UtmPlatResponse.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
+        String url = "http://AM-ADMIN/am-trade/stzfwhiteconfig/getUserByUserName";
+        STZHWhiteListResponse response = restTemplate.postForEntity(url,requestBean,STZHWhiteListResponse.class).getBody();
+        if (STZHWhiteListResponse.isSuccess(response)) {
+            return response;
         }
         return null;
     }
