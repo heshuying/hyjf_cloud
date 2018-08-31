@@ -4318,13 +4318,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据优惠券编号查询
      *
-     * @param cur
+     * @param couponCode
      * @return
      */
     @Override
-    public CouponUserResponse getIssueNumber(CouponUserRequest cur) {
-        String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber";
-        CouponUserResponse response = restTemplate.postForEntity(url, cur, CouponUserResponse.class).getBody();
+    public CouponUserResponse getIssueNumber(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber/" + couponCode;
+        CouponUserResponse response = restTemplate.getForEntity(url, CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -5740,6 +5740,14 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getBorrowRepaymentPlanCustomizeVO();
         }
         return null;
+    }
+
+
+    @Override
+    public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
+        String url = "http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteById/" + id;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
+        return response;
     }
 
     /**

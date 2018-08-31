@@ -5,6 +5,9 @@ package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -13,11 +16,21 @@ import com.hyjf.am.vo.trade.STZHWhiteListVO;
 public class STZHWhiteListResponse extends Response<STZHWhiteListVO> {
     private int count;
 
+    private List<HjhInstConfigVO> regionList;
+
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public List<HjhInstConfigVO> getRegionList() {
+        return regionList;
+    }
+
+    public void setRegionList(List<HjhInstConfigVO> regionList) {
+        this.regionList = regionList;
     }
 }
