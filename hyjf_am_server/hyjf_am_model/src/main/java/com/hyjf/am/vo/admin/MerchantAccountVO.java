@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -41,7 +40,6 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     private Integer createTime;
 
     private Integer updateTime;
-    private String updatetime;
 
     private static final long serialVersionUID = 1L;
 
@@ -191,11 +189,4 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getUpdatetime() {
-        return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(updateTime);
-    }
-
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime;
-    }
 }
