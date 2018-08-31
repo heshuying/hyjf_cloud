@@ -2612,7 +2612,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     /*承接记录 end AM-ADMIN*/
 
     /*计划引擎 start*/
-
     /**
      * 查询计划专区列表
      *
@@ -2621,7 +2620,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhRegionResponse getHjhRegionList(AllocationEngineRuquest form) {
         HjhRegionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/selectHjhRegionList", form, HjhRegionResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/selectHjhRegionList", form, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2631,7 +2630,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public String getPlanNameByPlanNid(AllocationEngineRuquest form) {
         HjhRegionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/selectPlanNameByPlanNid", form, HjhRegionResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/selectPlanNameByPlanNid", form, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getPlanName();
         }
@@ -2640,15 +2639,18 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertRecord(HjhRegionVO request) {
-        String url = "http://AM-TRADE/am-trade/allocation/insertRecord";
-        Integer Flag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/allocation/insertRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public HjhRegionResponse getPlanNidAjaxCheck(String planNid) {
         HjhRegionResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/getPlanNidAjaxCheck/" + planNid, HjhRegionResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/getPlanNidAjaxCheck/" + planNid, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2658,7 +2660,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhRegionVO getHjhRegionVOById(String id) {
         HjhRegionResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegionVOById/" + id, HjhRegionResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/getHjhRegionVOById/" + id, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2667,15 +2669,18 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateHjhRegionRecord(HjhRegionVO vo) {
-        String url = "http://AM-TRADE/am-trade/allocation/updateHjhRegionRecord";
-        Integer Flag = restTemplate.postForEntity(url, vo, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/allocation/updateHjhRegionRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, vo, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public HjhRegionResponse updateAllocationEngineRecord(HjhRegionVO vo) {
         HjhRegionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/updateAllocationEngineRecord", vo, HjhRegionResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/updateAllocationEngineRecord", vo, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2685,7 +2690,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhRegionVO> getHjhRegionListWithOutPage(AllocationEngineRuquest request) {
         HjhRegionResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegionListWithOutPage", request, HjhRegionResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getHjhRegionListWithOutPage", request, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2695,7 +2700,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAllocationEngineResponse getHjhAllocationEngineList(AllocationEngineRuquest request) {
         HjhAllocationEngineResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/getHjhAllocationEngineList", request, HjhAllocationEngineResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getHjhAllocationEngineList", request, HjhAllocationEngineResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -2705,7 +2710,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhAllocationEngineVO> getAllocationList(AllocationEngineRuquest form) {
         HjhAllocationEngineResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/getAllocationList", form, HjhAllocationEngineResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getAllocationList", form, HjhAllocationEngineResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -2715,7 +2720,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAllocationEngineVO getPlanConfigRecord(Integer engineId) {
         HjhAllocationEngineResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/getPlanConfigRecord/" + engineId, HjhAllocationEngineResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/getPlanConfigRecord/" + engineId, HjhAllocationEngineResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2724,15 +2729,18 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateHjhAllocationEngineRecord(HjhAllocationEngineVO vo) {
-        String url = "http://AM-TRADE/am-trade/allocation/updateHjhAllocationEngineRecord";
-        Integer Flag = restTemplate.postForEntity(url, vo, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/allocation/updateHjhAllocationEngineRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, vo, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public HjhAllocationEngineVO getPlanConfigRecordByParam(AllocationEngineRuquest form) {
         HjhAllocationEngineResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/getPlanConfigRecordByParam", form, HjhAllocationEngineResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getPlanConfigRecordByParam", form, HjhAllocationEngineResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2743,7 +2751,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public int checkRepeat(AllocationEngineRuquest form) {
         int flg = 0;
         HjhAllocationEngineResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/allocation/checkRepeat", form, HjhAllocationEngineResponse.class).getBody();
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/checkRepeat", form, HjhAllocationEngineResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
         }
@@ -2752,15 +2760,15 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public String getPlanBorrowStyle(String planNid) {
-        String url = "http://AM-TRADE/am-trade/allocation/getPlanBorrowStyle/" + planNid;
-        String borrowStyle = restTemplate.getForEntity(url, String.class).getBody();
-        return borrowStyle;
+        String url = "http://AM-ADMIN/am-trade/allocation/getPlanBorrowStyle/" + planNid;
+        StringResponse borrowStyle = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        return borrowStyle.getResult().toString();
     }
 
     @Override
     public HjhRegionVO getHjhRegionRecordByPlanNid(String planNid) {
         HjhRegionResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegionRecordByPlanNid/" + planNid, HjhRegionResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/getHjhRegionRecordByPlanNid/" + planNid, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
         }
@@ -2769,15 +2777,18 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertHjhAllocationEngineRecord(HjhAllocationEngineVO request) {
-        String url = "http://AM-TRADE/am-trade/allocation/insertHjhAllocationEngineRecord";
-        Integer Flag = restTemplate.postForEntity(url, request, Integer.class).getBody();
-        return Flag;
+        String url = "http://AM-ADMIN/am-trade/allocation/insertHjhAllocationEngineRecord";
+        IntegerResponse Flag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (Flag == null || !Response.isSuccess(Flag)) {
+            return 0;
+        }
+        return Flag.getResultInt().intValue();
     }
 
     @Override
     public List<HjhPlanVO> getHjhPlanByPlanNid(String planNid) {
         HjhPlanResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/selectHjhPlanByPlanNid/" + planNid, HjhPlanResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/selectHjhPlanByPlanNid/" + planNid, HjhPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -2787,14 +2798,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhRegionVO> getHjhRegioByPlanNid(String planNid) {
         HjhRegionResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegioByPlanNid/" + planNid, HjhRegionResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-trade/allocation/getHjhRegioByPlanNid/" + planNid, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
         return null;
     }
     /*计划引擎 end*/
-
+    
     /**
      * @Description 获取admin产品中心-汇直投-放款明细列表数量
      * @Author pangchengchao
