@@ -1,12 +1,14 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
@@ -48,4 +50,10 @@ public interface AmAdminClient {
      */
     public List<UtmPlatVO> getPCUtm();
 
+    /**
+     * 获取用户/机构信息
+     * @param requestBean
+     * @return
+     */
+    STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean);
 }

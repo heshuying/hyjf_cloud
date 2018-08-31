@@ -53,7 +53,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 
     public static final Logger logger = LoggerFactory.getLogger(BorrowCreditServiceImpl.class);
 
-    private static final String BASE_URL = "http://AM-TRADE/am-trade";
+    private static final String BASE_URL = "http://AM-ADMIN/am-trade";
 
     /**
      * 查询汇转让数据列表
