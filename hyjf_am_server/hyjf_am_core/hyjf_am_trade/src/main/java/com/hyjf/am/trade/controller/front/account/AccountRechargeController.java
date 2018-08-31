@@ -144,7 +144,7 @@ public class AccountRechargeController extends BaseController {
 
         String status = request.getStatus();
         Integer userId = request.getUserId();
-        String nid = request.getNid();
+        String nid = request.getNidSearch();
 
         // 确认充值 ; 0表示充值失败
         boolean isAccountUpdate = false;
