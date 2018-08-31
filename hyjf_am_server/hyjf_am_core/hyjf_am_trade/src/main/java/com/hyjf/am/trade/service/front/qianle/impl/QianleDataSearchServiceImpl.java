@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.front.qianle.impl;
 
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.trade.dao.mapper.auto.QianleDataSearchCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.QianleDataSearchCustomizeMapper;
 import com.hyjf.am.trade.service.front.qianle.QianleDataSearchService;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import org.apache.commons.lang3.StringUtils;
