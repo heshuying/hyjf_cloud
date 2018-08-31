@@ -1,12 +1,12 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.HjhDebtCreditService;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
-import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,21 @@ import java.util.Map;
 @Service
 public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebtCreditService{
 
+
     @Autowired
-    private AmTradeClient amTradeClient;
+    private AmAdminClient amAdminClient;
+
+
+    /**
+     * 获取还款方式list,用于筛选条件展示
+     * @auth yangchangwei
+     * @param
+     * @return
+     */
+    @Override
+    public List<BorrowStyleVO> selectBorrowStyleList(){
+        return amAdminClient.selectCommonBorrowStyleList();
+    }
 
     /**
      * 查询汇计划转让列表
@@ -34,7 +47,7 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
     @Override
     public HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request) {
 
-        HjhDebtCreditReponse reponse = amTradeClient.queryHjhDebtCreditList(request);
+        HjhDebtCreditReponse reponse = amAdminClient.queryHjhDebtCreditList(request);
         return reponse;
     }
 

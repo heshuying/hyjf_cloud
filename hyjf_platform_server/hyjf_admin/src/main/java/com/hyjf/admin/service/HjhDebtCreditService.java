@@ -5,6 +5,7 @@ import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
 import java.util.List;
 
@@ -15,7 +16,11 @@ import java.util.List;
  */
 public interface HjhDebtCreditService extends BaseService{
 
+    List<BorrowStyleVO> selectBorrowStyleList();
+
     HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
 
     void queryHjhDebtCreditListStatusName(List<HjhDebtCreditVo> hjhDebtCreditVoList);
+
+
 }
