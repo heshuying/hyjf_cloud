@@ -118,7 +118,7 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "初始化用户转账画面")
     @PostMapping("/addTransfer")
-    public ModelAndView addTransfer(HttpServletRequest request, @ModelAttribute MerchantTransferListRequest form) {
+    public ModelAndView addTransfer(HttpServletRequest request, @RequestBody MerchantTransferListRequest form) {
         ModelAndView modelAndView = new ModelAndView("finance/merchant/transfer/transfer");
         this.transferService.checkMerchantTransferParam(modelAndView, form);
         if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
@@ -221,7 +221,7 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "导出")
     @PostMapping("exportTransfer")
-    public void exportExcel(@ModelAttribute MerchantTransferListRequest form,HttpServletResponse response) throws Exception {
+    public void exportExcel(@RequestBody MerchantTransferListRequest form,HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
         String sheetName = "平台子账户转账记录";
@@ -261,23 +261,31 @@ public class TransferController extends BaseController {
                     MerchantTransferVO transfer = recordList.get(i);
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
+                    if (celLength == 0) {
+                        // 序号
                         cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {// 订单号
+                    } else if (celLength == 1) {
+                        // 订单号
                         cell.setCellValue(transfer.getOrderId());
-                    } else if (celLength == 2) {// 转出子账户
+                    } else if (celLength == 2) {
+                        // 转出子账户
                         cell.setCellValue(transfer.getOutAccountName());
-                    } else if (celLength == 3) {// 转出子账户代号
+                    } else if (celLength == 3) {
+                        // 转出子账户代号
                         cell.setCellValue(transfer.getOutAccountCode());
-                    } else if (celLength == 4) {// 转入子账户
+                    } else if (celLength == 4) {
+                        // 转入子账户
                         cell.setCellValue(transfer.getInAccountName());
-                    } else if (celLength == 5) {// 转入子账户代号
+                    } else if (celLength == 5) {
+                        // 转入子账户代号
                         cell.setCellValue(transfer.getInAccountCode());
-                    } else if (celLength == 6) {// 转账金额
+                    } else if (celLength == 6) {
+                        // 转账金额
                         cell.setCellValue(String.valueOf(transfer.getTransferAmount()));
-                    } else if (celLength == 7) {// 备注
+                    } else if (celLength == 7) {
+                        // 备注
                         cell.setCellValue(transfer.getRemark());
-                    } else if (celLength == 8) { // 转账状态
+                    } else if (celLength == 8) {
                         // 转账状态
                         Map<String, String> transferStatus = CacheUtil.getParamNameMap("MER_TRANS_STATUS");
                         Set<String> tranKey = transferStatus.keySet();
@@ -286,9 +294,10 @@ public class TransferController extends BaseController {
                                 cell.setCellValue(transferStatus.get(key));
                             }
                         }
-                    }else if (celLength == 9 ) {// 操作人
+                    }else if (celLength == 9 ) {
+                        // 操作人
                         cell.setCellValue(transfer.getCreateUserName());
-                    }else if (celLength == 10 ) {//转账类型
+                    }else if (celLength == 10 ) {
                         // 交易类型
                         Map<String, String> transferTypes = CacheUtil.getParamNameMap("MER_TRANS_TYPE");
                         Set<String> tranKey = transferTypes.keySet();
@@ -297,7 +306,8 @@ public class TransferController extends BaseController {
                                 cell.setCellValue(transferTypes.get(key));
                             }
                         }
-                    }else if (celLength == 11) {// 转账时间
+                    }else if (celLength == 11) {
+                        // 转账时间
                         if(transfer.getTransferTime() == null){
                             cell.setCellValue("");
                         }else{
