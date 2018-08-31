@@ -65,18 +65,6 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "获取报表明细", notes = "获取报表明细-app和web端使用")
-    @GetMapping("/reportinfo/{id}")
-    public AdminResult<ListResult<OperationReportVO>> reportInfo(@PathVariable String id) {
-        OperationReportResponse response = operationReportService.reportInfo(id);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
     @ApiOperation(value = "进入季度报告页面", notes = "进入季度报告页面")
     @GetMapping("/initQuarter/{operationReportType}/{year}")
     public AdminResult<OperationReportResponse> initQuarter(@PathVariable Integer operationReportType, @PathVariable String year){
