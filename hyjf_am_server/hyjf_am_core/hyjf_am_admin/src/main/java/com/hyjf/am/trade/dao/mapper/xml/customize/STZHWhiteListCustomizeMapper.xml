@@ -27,19 +27,19 @@
     <result column="instCode" property="instcode" jdbcType="VARCHAR" />
     <result column="instName" property="instname" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="BaseResultMapName" type="com.hyjf.mybatis.model.auto.HjhInstConfig" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
-    <result column="inst_name" property="instName" jdbcType="VARCHAR" />
-    <result column="inst_type" property="instType" jdbcType="TINYINT" />
-    <result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="create_user" property="createUser" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_user" property="updateUser" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
-    <result column="del_flg" property="delFlg" jdbcType="TINYINT" />
-  </resultMap>
+  <!--<resultMap id="BaseResultMapName" type="com.hyjf.mybatis.model.auto.HjhInstConfig" >-->
+    <!--<id column="id" property="id" jdbcType="INTEGER" />-->
+    <!--<result column="inst_code" property="instCode" jdbcType="VARCHAR" />-->
+    <!--<result column="inst_name" property="instName" jdbcType="VARCHAR" />-->
+    <!--<result column="inst_type" property="instType" jdbcType="TINYINT" />-->
+    <!--<result column="capital_toplimit" property="capitalToplimit" jdbcType="DECIMAL" />-->
+    <!--<result column="remark" property="remark" jdbcType="VARCHAR" />-->
+    <!--<result column="create_user" property="createUser" jdbcType="INTEGER" />-->
+    <!--<result column="create_time" property="createTime" jdbcType="INTEGER" />-->
+    <!--<result column="update_user" property="updateUser" jdbcType="INTEGER" />-->
+    <!--<result column="update_time" property="updateTime" jdbcType="INTEGER" />-->
+    <!--<result column="del_flg" property="delFlg" jdbcType="TINYINT" />-->
+  <!--</resultMap>-->
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
