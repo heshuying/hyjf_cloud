@@ -13,11 +13,31 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 public class CouponConfigResponse extends Response<CouponConfigVO> {
     private int count;
 
+    private String selectedClientDisplay;
+
+    private String selectedProjectDisplay;
+
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getSelectedClientDisplay() {
+        return selectedClientDisplay;
+    }
+
+    public void setSelectedClientDisplay(String selectdeClientDisplay) {
+        this.selectedClientDisplay = selectdeClientDisplay;
+    }
+
+    public String getSelectedProjectDisplay() {
+        return selectedProjectDisplay;
+    }
+
+    public void setSelectedProjectDisplay(String selectedProjectDisplay) {
+        this.selectedProjectDisplay = selectedProjectDisplay;
     }
 }

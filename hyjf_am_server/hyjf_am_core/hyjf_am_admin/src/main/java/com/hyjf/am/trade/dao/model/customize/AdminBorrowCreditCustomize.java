@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.dao.model.customize;
 
+import com.hyjf.am.vo.BaseVO;
+
 public class AdminBorrowCreditCustomize  {
 
     /**
@@ -71,6 +73,8 @@ public class AdminBorrowCreditCustomize  {
      * 出让人
      */
     private String creditUserName;
+
+    private String creditUserId;
 
     /**
      * 转让本金
@@ -698,5 +702,13 @@ public class AdminBorrowCreditCustomize  {
 
     public void setSumAssignPay(String sumAssignPay) {
         this.sumAssignPay = sumAssignPay;
+    }
+
+    public String getCreditUserId() {
+        return creditUserId;
+    }
+
+    public void setCreditUserId(String creditUserId) {
+        this.creditUserId = creditUserId;
     }
 }

@@ -3813,7 +3813,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowCreditVO> getBorrowCreditList(BorrowCreditAmRequest request) {
-        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditList4admin", request, AdminBorrowCreditResponse.class).getBody();
+        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrowCredit/getBorrowCreditList4admin", request, AdminBorrowCreditResponse.class).getBody();
         if (AdminResponse.isSuccess(response)) {
             return response.getResultList();
         }
@@ -3828,7 +3828,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer getBorrowCreditCount(BorrowCreditAmRequest request) {
-        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrowCredit/countBorrowCreditList4admin", request, AdminBorrowCreditResponse.class).getBody();
+        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrowCredit/countBorrowCreditList4admin", request, AdminBorrowCreditResponse.class).getBody();
         if (AdminResponse.isSuccess(response)) {
             return response.getRecordTotal();
         }
@@ -3843,7 +3843,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowCreditSumVO getBorrwoCreditTotalSum(BorrowCreditAmRequest request) {
-        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditTotalCount", request, AdminBorrowCreditResponse.class).getBody();
+        AdminBorrowCreditResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrowCredit/getBorrowCreditTotalCount", request, AdminBorrowCreditResponse.class).getBody();
         if (AdminResponse.isSuccess(response)) {
             return response.getSumVO();
         }
@@ -3853,7 +3853,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request) {
-        AdminBorrowCreditInfoResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/borrowCredit/sumBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class).getBody();
+        AdminBorrowCreditInfoResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/borrowCredit/sumBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getSumData();
         }
@@ -4318,13 +4318,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据优惠券编号查询
      *
-     * @param cur
+     * @param couponCode
      * @return
      */
     @Override
-    public CouponUserResponse getIssueNumber(CouponUserRequest cur) {
-        String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber";
-        CouponUserResponse response = restTemplate.postForEntity(url, cur, CouponUserResponse.class).getBody();
+    public CouponUserResponse getIssueNumber(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber/" + couponCode;
+        CouponUserResponse response = restTemplate.getForEntity(url, CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -5740,6 +5740,14 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getBorrowRepaymentPlanCustomizeVO();
         }
         return null;
+    }
+
+
+    @Override
+    public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
+        String url = "http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteById/" + id;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
+        return response;
     }
 
     /**

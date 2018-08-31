@@ -859,8 +859,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Override
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
-		logger.info("风险测评参数："+userId+"==="+countScore);
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
@@ -876,7 +878,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		AnswerRequest answerRequest = new AnswerRequest();
 		answerRequest.setResultList(answerList);
 		Evalation evalation = getEvalationByCountScore(countScore.shortValue());
-		logger.info("风险测评参数："+userId);
 		userEvalationResult.setUserId(userId);
 		userEvalationResult.setScoreCount(countScore);
 		userEvalationResult.setEvalType(evalation.getEvalType());
