@@ -287,4 +287,10 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
+
+	<select id="getServiceFee" resultType="String">
+		SELECT SUM(credit_fee) AS creditFee
+			FROM huiyingdai_credit_tender
+		  WHERE credit_nid = #{creditNid}
+	</select>
 </mapper>
