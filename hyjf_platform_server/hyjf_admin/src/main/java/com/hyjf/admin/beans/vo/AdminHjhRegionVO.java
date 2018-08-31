@@ -41,6 +41,8 @@ public class AdminHjhRegionVO extends BaseVO implements Serializable{
     private Integer delFlg;
 	@ApiModelProperty(value = "计划专区添加时间")
 	private String addTime;
+	@ApiModelProperty(value = "计划专区添加时间显示")
+	private String addConfigTime;
 
 	public Integer getId() {
 		return id;
@@ -128,5 +130,13 @@ public class AdminHjhRegionVO extends BaseVO implements Serializable{
 
 	public void setAddTime(String addTime) {
 		this.addTime = addTime;
+	}
+
+	public String getAddConfigTime() {
+		return addConfigTime;
+	}
+
+	public void setAddConfigTime(String addConfigTime) {
+		this.addConfigTime = addConfigTime;
 	}
 }
