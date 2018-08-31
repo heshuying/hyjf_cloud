@@ -280,6 +280,22 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         }
         return new BorrowRepayPlanBean();
     }
+
+    @Override
+    public int countBorrowRepaymentPlan(BorrowRepaymentRequest request) {
+        return this.borrowRepaymentCustomizeMapper.countBorrowRepaymentPlan(request);
+    }
+
+    @Override
+    public List<AdminBorrowRepaymentPlanCustomize> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request) {
+        return this.borrowRepaymentCustomizeMapper.selectBorrowRepaymentPlanList(request);
+    }
+
+    @Override
+    public AdminBorrowRepaymentPlanCustomize sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request) {
+        return this.borrowRepaymentCustomizeMapper.sumBorrowRepaymentPlanInfo(request);
+    }
+
     /**
      * 统计分期还款用户正常还款的总标
      *

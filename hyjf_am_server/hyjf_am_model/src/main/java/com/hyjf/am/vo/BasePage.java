@@ -19,7 +19,7 @@ public class BasePage {
      * 当前页条数
      */
     @ApiModelProperty(value = "当前页条数")
-    private int pageSize;
+    private int pageSize = 10;
 
     public int getCurrPage() {
         return currPage;

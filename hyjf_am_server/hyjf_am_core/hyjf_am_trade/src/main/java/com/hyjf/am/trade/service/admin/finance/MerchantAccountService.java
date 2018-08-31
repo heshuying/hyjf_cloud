@@ -5,7 +5,9 @@ package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
 import com.hyjf.am.trade.dao.model.auto.MerchantAccount;
+import com.hyjf.am.trade.dao.model.auto.MerchantTransfer;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.HashMap;
@@ -66,4 +68,49 @@ public interface MerchantAccountService extends BaseService {
      * @return
      */
     public int countAccountListInfoBySubAccountCode(HashMap<String,String> map);
+
+    /**
+     * 查询账户信息
+     * @param status
+     * @return
+     */
+    List<MerchantAccount> selectMerchantAccountList(Integer status);
+
+    /**
+     * 转账记录总数
+     * @param form
+     * @return
+     */
+    int queryRecordTotal(MerchantTransferListRequest form);
+
+    /**
+     * 账户转账列表
+     * @param form
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<MerchantTransfer> selectMerchantTransfer(MerchantTransferListRequest form, int offset, int limit);
+
+    /**
+     * 根据id获取转账信息
+     * @param id
+     * @return
+     */
+    MerchantAccount selectMerchantAccountById(Integer id);
+
+    /**
+     * 插入转账信息
+     * @param form
+     * @return
+     */
+    boolean insertTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 更新转账信息
+     * @param orderId
+     * @param status
+     * @param message
+     */
+    int updateMerchantTransfer(String orderId, Integer status, String message);
 }

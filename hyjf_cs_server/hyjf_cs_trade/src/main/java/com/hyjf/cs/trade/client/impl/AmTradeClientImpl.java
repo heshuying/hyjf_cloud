@@ -3996,9 +3996,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhAccedeVO> getAccedesWaitCompute() {
-        Response<HjhAccedeVO> response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", Response.class).getBody();
-        if (response != null) {
+        HjhWaitComputeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhcommision/accedes_waitcompute", HjhWaitComputeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;

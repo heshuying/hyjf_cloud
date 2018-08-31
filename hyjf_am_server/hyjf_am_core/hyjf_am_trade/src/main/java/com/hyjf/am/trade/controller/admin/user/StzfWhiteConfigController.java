@@ -5,9 +5,11 @@ package com.hyjf.am.trade.controller.admin.user;
 
 import java.util.List;
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,6 +74,23 @@ public class StzfWhiteConfigController extends BaseController {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		stzfWhiteConfigService.updateSTZHWhiteList(request);
 		response.setRtn(AdminResponse.SUCCESS);
+		return response;
+	}
+
+	/**
+	 * 根据id查询受托支付白名单详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/selectSTZHWhiteById/{id}")
+	public STZHWhiteListResponse selectSTZHWhiteById(@PathVariable Integer id) {
+		STZHWhiteListResponse response = new STZHWhiteListResponse();
+		StzhWhiteList stzhWhiteList = stzfWhiteConfigService.selectStzfWhiteById(id);
+		if (stzhWhiteList != null) {
+			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
+			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
+			response.setResult(stzhWhiteListVO);
+		}
 		return response;
 	}
 }

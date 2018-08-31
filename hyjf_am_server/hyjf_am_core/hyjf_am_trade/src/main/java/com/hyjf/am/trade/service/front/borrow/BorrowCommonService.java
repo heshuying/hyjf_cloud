@@ -113,7 +113,7 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowBean
 	 * @param borrow
 	 */
-	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowNid,String adminUsername,int adminId) throws Exception;
+	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowNid,String adminUsername,int adminId,int infoId) throws Exception;
 
 	/**
 	 * 获取借款预编号

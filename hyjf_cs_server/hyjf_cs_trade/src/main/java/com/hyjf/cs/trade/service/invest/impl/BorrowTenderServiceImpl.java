@@ -466,6 +466,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
         logger.info("开始调用散标投资异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
         // 用户Userid
+        if(couponGrantId==null||couponGrantId.equals("null") ||couponGrantId.equals("")){
+            couponGrantId = "0";
+        }
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 投资结果返回码
         String respCode = bean.getRetCode();
@@ -506,7 +509,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             result.setMessage("回调时,borrowNid为空.");
             return result;
         }
-        // 开始投资逻辑
+        // 开始投资逻辑开始调用散标投资异步方法
         this.userBorrowTender(borrow, bean, couponGrantId);
         result.setStatus(true);
         return result;
@@ -1163,7 +1166,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.borrowTender(borrow, bean);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
-        if (StringUtils.isNotEmpty(couponGrantId)) {
+        if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId)) {
             // 开始使用优惠券
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -1298,8 +1301,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
-
+        // 开始调用原子层操作主表
+        logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
+        logger.info("操作原子层主表结束 结果 {} ",insertFlag);
         if (insertFlag) {
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计投资追加

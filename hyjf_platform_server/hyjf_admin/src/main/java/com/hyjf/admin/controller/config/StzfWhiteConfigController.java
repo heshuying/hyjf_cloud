@@ -16,12 +16,10 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -47,6 +45,21 @@ public class StzfWhiteConfigController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+	}
+
+	@ApiOperation(value = "受托支付白名单初始详情",notes = "受托支付白名单初始详情")
+	@PostMapping("/infoAction")
+	public AdminResult infoAction(@RequestBody STZHWhiteListRequestBean requestBean) {
+		STZHWhiteListResponse response = new STZHWhiteListResponse();
+		if (requestBean.getId() != null) {
+			response = stzfWhiteConfigService.selectSTZHWhiteById(requestBean.getId());
+			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
+			response.setRegionList(regionList);
+		}else {
+			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
+			response.setRegionList(regionList);
+		}
+		return new AdminResult<>(response);
 	}
 
 	@ApiOperation(value = "添加受托支付白名单", notes = "添加受托支付白名单")
@@ -96,4 +109,16 @@ public class StzfWhiteConfigController extends BaseController {
 		}
 		return new AdminResult<>();
 	}
+
+	@ApiOperation(value = "加载姓名详细信息",notes = "加载姓名详细信息")
+	@PostMapping(value = "/loadNameConfig")
+	public AdminResult loadNameConfig(@RequestBody STZHWhiteListRequestBean requestBean) {
+		STZHWhiteListResponse response = stzfWhiteConfigService.getUserByUserName(requestBean);
+		if (response.getResult() == null) {
+			response.setMessage("用户名不存在");
+			return new AdminResult<>(FAIL,response.getMessage());
+		}
+		return new AdminResult<>(response);
+	}
+
 }

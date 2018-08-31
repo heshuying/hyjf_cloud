@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -18,12 +19,15 @@ import com.hyjf.common.util.GetDate;
  * @Author : huanghui
  */
 @Repository
-public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapitalVO> {
+public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
 
     @Override
-    protected Class<HjhPlanCapitalVO> getEntityClass() {
-        return HjhPlanCapitalVO.class;
+    protected Class<HjhPlanCapital> getEntityClass(){
+        return HjhPlanCapital.class;
     }
+//    protected Class<HjhPlanCapitalVO> getEntityClass() {
+//        return HjhPlanCapitalVO.class;
+//    }
 
     public long getCount(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
         Query query = new Query();
@@ -32,13 +36,12 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapitalVO> {
         return  mongoTemplate.count(query, getEntityClass());
     }
 
-    public List<HjhPlanCapitalVO> findAllList(HjhPlanCapitalRequest request){
+    public List<HjhPlanCapital> findAllList(HjhPlanCapitalRequest request){
         Query query = new Query();
-        Criteria criteria = new Criteria();
-        criteria.and("date").gte(request.getDateFromSrch());
-        criteria.and("date").lte(request.getDateToSrch());
-
-        return mongoTemplate.find(query, getEntityClass());
+        Criteria criteria = Criteria.where("date").gte(GetDate.stringToDate(request.getDateFromSrch())).lte(GetDate.stringToDate(request.getDateToSrch()));
+        query.addCriteria(criteria);
+        List<HjhPlanCapital> hjhPlanCapitalList = mongoTemplate.find(query, getEntityClass());
+        return hjhPlanCapitalList;
     }
 
     public Criteria createCriteria(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
@@ -78,7 +81,8 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapitalVO> {
         criteria.and("date").is(hjhPlanCapital.getDate());
         criteria.and("planNid").is(hjhPlanCapital.getPlanNid());
         query.addCriteria(criteria);
-        return this.find(query);
+//        return this.find(query);
+        return null;
     }
 
     /**
@@ -107,7 +111,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapitalVO> {
     public boolean insertHjhPlanCapital(HjhPlanCapitalVO hjhPlanCapital) {
         hjhPlanCapital.setCreateTime(GetDate.getNowTime10());
         hjhPlanCapital.setDelFlg(0);
-        this.insert(hjhPlanCapital);
+//        this.insert(hjhPlanCapital);
         return true;
     }
 }

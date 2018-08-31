@@ -383,7 +383,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         accountWebList.setBorrowNid(borrowTender.getBorrowNid()); // 投资编号
         accountWebList.setUserId(borrowTender.getUserId()); // 投资者
-        accountWebList.setAmount(transfer.getTransAmt()); // 优惠券投资受益
+        accountWebList.setAmount(Double.valueOf(transfer.getTransAmt().toString())); // 优惠券投资受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
         String remark = "";
         if(currentRecover.getCouponType()==1){

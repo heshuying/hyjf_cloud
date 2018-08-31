@@ -1,12 +1,14 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
@@ -16,6 +18,7 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -48,4 +51,30 @@ public interface AmAdminClient {
      */
     public List<UtmPlatVO> getPCUtm();
 
+    /**
+     * 获取用户/机构信息
+     * @param requestBean
+     * @return
+     */
+    STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean);
+
+    /**
+     * 还款方式下拉列表
+     *
+     * @param
+     * @return
+     * @author wangjun
+     * yangchangwei 迁移至amadminClient
+     */
+    List<BorrowStyleVO> selectCommonBorrowStyleList();
+
+
+    /**
+     * 查询汇计划转让列表
+     *
+     * @param request
+     * @return
+     * yangchangwei
+     */
+    HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
 }

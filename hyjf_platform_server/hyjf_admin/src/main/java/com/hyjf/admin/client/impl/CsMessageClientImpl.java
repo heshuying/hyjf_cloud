@@ -40,7 +40,7 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     @Override
     public AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList) {
         AccountWebListResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/search/queryAccountWebList", accountWebList, AccountWebListResponse.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/search/queryWebCount", accountWebList, AccountWebListResponse.class)
                 .getBody();
         if (response != null) {
             return response;

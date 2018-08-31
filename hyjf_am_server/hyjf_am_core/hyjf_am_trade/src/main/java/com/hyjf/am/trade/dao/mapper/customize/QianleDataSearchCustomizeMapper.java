@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.dao.mapper.auto;
+package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 

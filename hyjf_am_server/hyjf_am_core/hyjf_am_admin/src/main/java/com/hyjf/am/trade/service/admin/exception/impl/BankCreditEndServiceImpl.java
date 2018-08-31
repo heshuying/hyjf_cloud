@@ -230,7 +230,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         cra.andTxDateEqualTo(bean.getTxDate());
         cra.andTxTimeEqualTo(bean.getTxTime());
         cra.andSeqNoEqualTo(bean.getSeqNo());
-//        cra.andStatusEqualTo(0); // 确定先收到合法性//TODO:
+//        cra.andStatusEqualTo(0); // 确定先收到合法性
 
         BankCreditEndExample exampleLimit = example;
         exampleLimit.setLimitStart(0);

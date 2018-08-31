@@ -51,10 +51,9 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     @Autowired
     private BaseClient baseClient;
 
-    @Autowired
-    private AmUserClient amUserClient;
-
     public static final Logger logger = LoggerFactory.getLogger(BorrowCreditServiceImpl.class);
+
+    private static final String BASE_URL = "http://AM-ADMIN/am-trade";
 
     /**
      * 查询汇转让数据列表
@@ -113,7 +112,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         BorrowCreditAmRequest req = new BorrowCreditAmRequest();
         req.setCreditNid(creditNid);
         //Integer count = amBorrowCreditClient.countBorrowCreditInfo(req);
-        AdminBorrowCreditInfoResponse response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/countBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
+        AdminBorrowCreditInfoResponse response = baseClient.postExe(BASE_URL + "/borrowCredit/countBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
         Integer count = response.getCount();
 
         if (count == null) {
@@ -124,7 +123,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
             req.setLimitStart(page.getOffset());
             req.setLimitEnd(page.getLimit());
             //List<BorrowCreditInfoVO> list = amBorrowCreditClient.searchBorrowCreditInfoList(req);
-            response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/searchBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
+            response = baseClient.postExe(BASE_URL + "/borrowCredit/searchBorrowCreditInfo4admin", request, AdminBorrowCreditInfoResponse.class);
             List<BorrowCreditInfoVO> list = response.getResultList();
 
             CheckUtil.checkNull(list, "admin:查询债转详情原子层list异常");

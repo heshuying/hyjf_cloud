@@ -62,11 +62,11 @@ public class ChannelCustomizeVO implements Serializable {
      */
     private int limitEnd = -1;
 
-    public  final int currPage=1;
+    public int currPage=1;
 
-    public  final int pageSize=10;
+    public int pageSize=10;
 
-    public  final int recordTotal=0;
+    public int recordTotal=0;
 
     public String getSourceIdSrch() {
         return sourceIdSrch;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
+import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
 
 /**
  * @author fuqiang
@@ -33,4 +34,11 @@ public interface StzfWhiteConfigService {
 	 * @param request
 	 */
 	void updateSTZHWhiteList(STZHWhiteListRequest request);
+
+	/**
+	 * 加载用户/机构信息
+	 * @param customize
+	 * @return
+	 */
+    STZHWhiteListCustomize selectInfo(STZHWhiteListCustomize customize);
 }
