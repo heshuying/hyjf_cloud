@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.BorrowRepaymentBean;
+import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
@@ -30,4 +31,8 @@ public interface BorrowRepaymentService {
     DelayRepayInfoBean updateBorrowRepayDelayDays(String borrowNid, String delayDays, String repayTime);
 
     RepayInfoBean getRepayInfo(String borrowNid);
+
+    BorrowRepaymentPlanBean searchBorrowRepaymentPlan(BorrowRepaymentRequest copyForm);
+
+    List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest copyForm);
 }

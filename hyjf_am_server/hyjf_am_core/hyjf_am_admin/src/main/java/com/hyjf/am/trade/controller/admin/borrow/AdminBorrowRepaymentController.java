@@ -85,6 +85,42 @@ public class AdminBorrowRepaymentController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "/countBorrowRepaymentPlan")
+    public AdminBorrowRepaymentResponse countBorrowRepaymentPlan(@RequestBody @Valid BorrowRepaymentRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
+        int count = this.adminBorrowRepaymentService.countBorrowRepaymentPlan(request);
+
+        response.setTotal(count);
+        return response;
+    }
+
+    @RequestMapping(value = "/selectBorrowRepaymentPlanList")
+    public AdminBorrowRepaymentResponse selectBorrowRepaymentPlanList(@RequestBody @Valid BorrowRepaymentRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
+
+        List<AdminBorrowRepaymentPlanCustomize> list = adminBorrowRepaymentService.selectBorrowRepaymentPlanList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<BorrowRepaymentPlanCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRepaymentPlanCustomizeVO.class);
+            response.setBorrowRepaymentPlanList(voList);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/sumBorrowRepaymentPlanInfo")
+    public AdminBorrowRepaymentResponse sumBorrowRepaymentPlanInfo(@RequestBody @Valid BorrowRepaymentRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
+
+        AdminBorrowRepaymentPlanCustomize customize = adminBorrowRepaymentService.sumBorrowRepaymentPlanInfo(request);
+        if(customize!=null){
+            BorrowRepaymentPlanCustomizeVO vo = CommonUtils.convertBean(customize,BorrowRepaymentPlanCustomizeVO.class);
+            response.setBorrowRepaymentPlanCustomizeVO(vo);
+        }
+        return response;
+    }
+
 
     @RequestMapping(value = "/exportRepayClkActBorrowRepaymentInfoList")
     public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentPlanRequest request){

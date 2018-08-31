@@ -2872,5 +2872,26 @@ public interface AmTradeClient {
      * @return
      */
     int updateMerchantTransfer(String orderId, int status, String message);
+
+    /**
+     * 还款计划数量查询
+     * @param request
+     * @return
+     */
+    Integer countBorrowRepaymentPlan(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划列表查询
+     * @param request
+     * @return
+     */
+    List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划统计查询
+     * @param request
+     * @return
+     */
+    BorrowRepaymentPlanCustomizeVO sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
 }
 
