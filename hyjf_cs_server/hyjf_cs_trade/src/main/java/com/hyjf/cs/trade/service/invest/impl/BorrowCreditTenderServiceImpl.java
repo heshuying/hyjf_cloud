@@ -17,13 +17,11 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -859,8 +857,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setUsrcustid(creditTenderLog.getAccountId());
                         accountWebList.setRemark(creditTender.getCreditNid());
                         accountWebList.setNote(null);
-                        accountWebList.setCreateStartTime(nowTime);
-                        accountWebList.setCreateEndTime(nowTime);
+                        accountWebList.setCreateTime(nowTime);
                         accountWebList.setOperator(null);
                         accountWebList.setFlag(1);
                         try {

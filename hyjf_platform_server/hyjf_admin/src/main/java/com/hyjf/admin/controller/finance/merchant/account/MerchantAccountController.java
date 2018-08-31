@@ -52,10 +52,10 @@ public class MerchantAccountController extends BaseController {
             return new AdminResult<>(ListResult.build(null,0));
         }
         //更新商户子账户的金额信息
-        boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
+        /*boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
         if(!flag){
             return new AdminResult<>(ListResult.build(null,0));
-        }
+        }*/
         if (!Response.isSuccess(merchantAccounts)) {
             return new AdminResult<>(FAIL, merchantAccounts.getMessage());
         }

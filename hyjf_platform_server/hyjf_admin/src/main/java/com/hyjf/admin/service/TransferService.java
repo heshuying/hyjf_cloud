@@ -10,7 +10,6 @@ import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author zhangqingqing
@@ -62,10 +61,9 @@ public interface TransferService extends BaseAdminService{
 
     /**
      * 校验
-     * @param modelAndView
      * @param form
      */
-    void checkMerchantTransferParam(ModelAndView modelAndView, MerchantTransferListRequest form);
+    JSONObject checkMerchantTransferParam(MerchantTransferListRequest form);
 
     /**
      * 修改转账列表

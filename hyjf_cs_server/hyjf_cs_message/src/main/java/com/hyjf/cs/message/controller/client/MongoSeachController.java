@@ -134,7 +134,7 @@ public class MongoSeachController extends BaseController {
     }
 
     @RequestMapping(value = "/queryWebCount")
-    public AccountWebListResponse queryWebList(AccountWebListVO accountWebList) {
+    public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
         if (recordTotal > 0) {
@@ -150,11 +150,11 @@ public class MongoSeachController extends BaseController {
         return response;
     }
 
-    /**
+   /* *//**
      * 绝对错误的写法,list是使内存瞬间飙升  todo ....
      * @param accountWebList
      * @return
-     */
+     *//*
     @RequestMapping(value = "/queryAccountWebList")
     public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
@@ -177,7 +177,7 @@ public class MongoSeachController extends BaseController {
         response.setRecordTotal(recordTotal);
         response.setRtn(Response.SUCCESS);
         return response;
-    }
+    }*/
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList){

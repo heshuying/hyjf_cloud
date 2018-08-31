@@ -311,8 +311,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         accountWebList.setTradeType(tradeType); // 加息券回款
         String remark = "计划编号：" + planNid + "<br />优惠券:" + ct.getCouponUserCode();
         accountWebList.setRemark(remark); // 投资编号
-        accountWebList.setCreateStartTime(nowTime);
-        accountWebList.setCreateEndTime(nowTime);
+        accountWebList.setCreateTime(nowTime);
         int accountWebListCnt = insertAccountWebList(accountWebList);
         if (accountWebListCnt == 0) {
             throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
@@ -695,8 +694,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         accountWebList.setTradeType(tradeType); // 加息券回款
         String remark = "项目编号：" + borrowNid + "<br />优惠券:" + ct.getCouponUserCode();
         accountWebList.setRemark(remark); // 投资编号
-        accountWebList.setCreateStartTime(nowTime);
-        accountWebList.setCreateEndTime(nowTime);
+        accountWebList.setCreateTime(nowTime);
         int accountWebListCnt = insertAccountWebList(accountWebList);
         if (accountWebListCnt == 0) {
             throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");

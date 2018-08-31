@@ -2053,8 +2053,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     accountWebList.setDepartmentName(null);
                                                     accountWebList.setRemark(debtCreditTender.getAssignOrderId());
                                                     accountWebList.setNote(null);
-                                                    accountWebList.setCreateStartTime(nowTime);
-                                                    accountWebList.setCreateEndTime(nowTime);
+                                                    accountWebList.setCreateTime(nowTime);
                                                     accountWebList.setOperator(null);
                                                     accountWebList.setFlag(1);
                                                     // 设置部门信息

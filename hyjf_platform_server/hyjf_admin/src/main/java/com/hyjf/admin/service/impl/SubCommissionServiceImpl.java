@@ -195,8 +195,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setTradeType("手续费分佣");
                 // 备注
                 accountWebList.setRemark(request.getRemark());
-                accountWebList.setCreateStartTime(nowTime);
-                accountWebList.setCreateEndTime(nowTime);
+                accountWebList.setCreateTime(nowTime);
                 accountWebList.setOperator(adminSystemVO.getUsername());
                 int webListCount = csMessageClient.queryAccountWebList(accountWebList).getResultList().size();
                 if (webListCount == 0) {

@@ -13,7 +13,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.admin.utils.ConvertUtils;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
@@ -33,17 +32,16 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -118,16 +116,19 @@ public class TransferController extends BaseController {
      */
     @ApiOperation(value = "初始化用户转账画面")
     @PostMapping("/addTransfer")
-    public ModelAndView addTransfer(HttpServletRequest request, @RequestBody MerchantTransferListRequest form) {
-        ModelAndView modelAndView = new ModelAndView("finance/merchant/transfer/transfer");
-        this.transferService.checkMerchantTransferParam(modelAndView, form);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-            modelAndView.addObject("merchanttransferForm", form);
+    public AdminResult addTransfer(HttpServletRequest request, @RequestBody MerchantTransferListRequest form) {
+        AdminResult result = new AdminResult();
+        JSONObject ret = this.transferService.checkMerchantTransferParam(form);
+        Map<String,Object> map = new HashMap<>();
+        if (ret.containsKey("99")) {
+            map.put("merchanttransferForm", form);
             // 子账户列表
             MerchantAccountResponse merchantAccountListOut = transferService.selectMerchantAccountList(0);
             MerchantAccountResponse merchantAccountListIn = transferService.selectMerchantAccountList(1);
-            modelAndView.addObject("merchantAccountListOut", merchantAccountListOut);
-            modelAndView.addObject("merchantAccountListIn", merchantAccountListIn);
+            map.put("merchantAccountListOut", merchantAccountListOut);
+            map.put("merchantAccountListIn", merchantAccountListIn);
+            result.setData(map);
+            return result;
         } else {
             // 生成订单
             String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(form.getOutAccountId()));
@@ -168,13 +169,16 @@ public class TransferController extends BaseController {
                         boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,1,null)>0?true:false;
                         if(afterFlag){
                             //转账成功
-                            System.out.println("转账成功,订单号："+orderId);
-                            modelAndView.addObject("success","success");
+                            logger.info("转账成功,订单号："+orderId);
+                            map.put("success","success");
+                            result.setData(map);
                         }else{
                             //转账成功，更新状态失败
-                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.success","更新转账成功状态失败!");
-                            modelAndView.addObject("merchanttransferForm", form);
-                            System.out.println("更新转账成功状态失败,订单号："+orderId);
+                           // ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.success","更新转账成功状态失败!");
+                            map.put("99","更新转账成功状态失败");
+                            map.put("merchanttransferForm", form);
+                            result.setData(map);
+                            logger.info("更新转账成功状态失败,订单号："+orderId);
                         }
                     } else {
                         String  respDesc = "";
@@ -183,31 +187,40 @@ public class TransferController extends BaseController {
                         }
                         boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,2,"转账失败，失败原因:"+respDesc)>0?true:false;
                         if(afterFlag){
-                            System.out.println("转账失败,订单号："+orderId);
+                            logger.info("转账失败,订单号："+orderId);
                         }else{
-                            System.out.println("更新转账失败状态失败,订单号："+orderId);
+                            logger.info("更新转账失败状态失败,订单号："+orderId);
                         }
-                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.fail","调用子账户转账接口失败!");
-                        modelAndView.addObject("merchanttransferForm", form);
+//                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.fail","调用子账户转账接口失败!");
+//                        modelAndView.addObject("merchanttransferForm", form);
+                        map.put("99","调用子账户转账接口失败");
+                        map.put("merchanttransferForm", form);
+                        result.setData(map);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,2,"调用子账户转账接口异常")>0?true:false;
                     if(afterFlag){
-                        System.out.println("调用子账户转账接口异常，转账失败,订单号："+orderId);
+                        logger.info("调用子账户转账接口异常，转账失败,订单号："+orderId);
                     }else{
-                        System.out.println("调用子账户转账接口异常，更新转账失败状态失败,订单号："+orderId);
+                        logger.info("调用子账户转账接口异常，更新转账失败状态失败,订单号："+orderId);
                     }
-                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.exception","调用子账户转账接口异常!");
-                    modelAndView.addObject("merchanttransferForm", form);
+//                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.exception","调用子账户转账接口异常!");
+//                    modelAndView.addObject("merchanttransferForm", form);
+                    map.put("99","调用子账户转账接口异常");
+                    map.put("merchanttransferForm", form);
+                    result.setData(map);
                 }
             } else {
-                System.out.println("数据预插入失败,订单号："+orderId);
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.error","数据预插入失败!");
-                modelAndView.addObject("merchanttransferForm", form);
+                logger.info("数据预插入失败,订单号："+orderId);
+//                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.error","数据预插入失败!");
+//                modelAndView.addObject("merchanttransferForm", form);
+                map.put("99","数据预插入失败");
+                map.put("merchanttransferForm", form);
+                result.setData(map);
             }
         }
-        return modelAndView;
+        return result;
     }
 
 
