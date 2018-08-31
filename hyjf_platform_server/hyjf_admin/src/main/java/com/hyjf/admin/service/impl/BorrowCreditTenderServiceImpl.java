@@ -84,7 +84,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     public static final String HZR_PREFIX = "HZR";
 
-    public static final String BASE_URL = "http://AM-TRADE/am-trade";
+    public static final String BASE_URL = "http://AM-ADMIN/am-trade";
 
     /*还款信息列表*/
     public static final String REPAY_LIST_URL = BASE_URL + "/creditTender/getRepayList";
