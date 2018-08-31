@@ -1886,7 +1886,7 @@ public interface AmTradeClient {
 
     CouponConfigResponse updateAuditInfo(CouponConfigRequest couponConfigRequest);
 
-    CouponUserResponse getIssueNumber(CouponUserRequest cur);
+    CouponUserResponse getIssueNumber(String couponCode);
 
     CouponTenderResponse countRecordHzt(CouponTenderRequest couponTenderRequest);
 
@@ -2893,5 +2893,12 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRepaymentPlanCustomizeVO sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
+
+    /**
+     * 根据id查询受托支付白名单详情
+     * @param id
+     * @return
+     */
+    STZHWhiteListResponse selectSTZHWhiteById(Integer id);
 }
 

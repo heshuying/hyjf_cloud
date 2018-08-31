@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -47,6 +48,21 @@ public class StzfWhiteConfigController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+	}
+
+	@ApiOperation(value = "受托支付白名单初始详情",notes = "受托支付白名单初始详情")
+	@PostMapping("/infoAction")
+	public AdminResult infoAction(@RequestBody STZHWhiteListRequestBean requestBean) {
+		STZHWhiteListResponse response = new STZHWhiteListResponse();
+		if (requestBean.getId() != null) {
+			response = stzfWhiteConfigService.selectSTZHWhiteById(requestBean.getId());
+			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
+			response.setRegionList(regionList);
+		}else {
+			List<HjhInstConfigVO> regionList = stzfWhiteConfigService.getRegionList();
+			response.setRegionList(regionList);
+		}
+		return new AdminResult<>(response);
 	}
 
 	@ApiOperation(value = "添加受托支付白名单", notes = "添加受托支付白名单")
