@@ -1859,5 +1859,16 @@
            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
+
+        <table tableName="ht_protocol_log" domainObjectName="ProtocolLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="operation" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_protocol_version" domainObjectName="ProtocolVersion">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="display_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
     </context>
 </generatorConfiguration>

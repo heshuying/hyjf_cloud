@@ -10,8 +10,10 @@ import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import com.hyjf.cs.message.service.HjhAccountBalanceService;
 import com.hyjf.cs.message.service.HjhPlanCapitalService;
 import org.apache.commons.collections.CollectionUtils;
@@ -147,10 +149,11 @@ public class HjhPlanCapitalController extends BaseController {
             request.setLimitEnd(paginator.getLimit());
         }
 
-        List<HjhPlanCapitalVO> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
+        List<HjhPlanCapital> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
 
         if (CollectionUtils.isNotEmpty(recordList)){
-            hjhPlanCapitalResponse.setResultList(recordList);
+            List<HjhPlanCapitalVO> hjhPlanCapitalVOList = CommonUtils.convertBeanList(recordList, HjhPlanCapitalVO.class);
+            hjhPlanCapitalResponse.setResultList(hjhPlanCapitalVOList);
             hjhPlanCapitalResponse.setCount(count);
             hjhPlanCapitalResponse.setRtn(Response.SUCCESS);
         }
