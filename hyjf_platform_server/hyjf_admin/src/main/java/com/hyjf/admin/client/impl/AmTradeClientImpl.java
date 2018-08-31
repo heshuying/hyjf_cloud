@@ -5697,6 +5697,37 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResultInt();
     }
 
+
+    @Override
+    public Integer countBorrowRepaymentPlan(BorrowRepaymentRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/countBorrowRepaymentPlan";
+        AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
+        if (response != null) {
+            return response.getTotal();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/selectBorrowRepaymentPlanList";
+        AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
+        if (response != null) {
+            return response.getBorrowRepaymentPlanList();
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowRepaymentPlanCustomizeVO sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/sumBorrowRepaymentPlanInfo";
+        AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
+        if (response != null) {
+            return response.getBorrowRepaymentPlanCustomizeVO();
+        }
+        return null;
+    }
+
     /**
      * 行账户管理页面查询件数
      *

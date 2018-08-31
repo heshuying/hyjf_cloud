@@ -22,4 +22,10 @@ public interface AdminBorrowRepaymentCustomizeMapper {
     List<AdminBorrowRepaymentPlanCustomize> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
 
     AdminRepayDelayCustomize selectBorrowInfo(AdminRepayDelayCustomize repayDelayCustomize);
+
+    int countBorrowRepaymentPlan(BorrowRepaymentRequest request);
+
+    List<AdminBorrowRepaymentPlanCustomize> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
+
+    AdminBorrowRepaymentPlanCustomize sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
 }

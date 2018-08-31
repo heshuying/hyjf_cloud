@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowRepaymentBean;
+import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
@@ -144,6 +145,31 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
             bean.setRepayInfo(borrowRepayPlan);
         }
         return bean;
+    }
+
+    @Override
+    public BorrowRepaymentPlanBean searchBorrowRepaymentPlan(BorrowRepaymentRequest request) {
+        BorrowRepaymentPlanBean bean=new BorrowRepaymentPlanBean();
+        Integer count = this.amTradeClient.countBorrowRepaymentPlan(request);
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        page.setTotal(count);
+        request.setLimitStart(page.getOffset());
+        request.setLimitEnd(page.getLimit());
+        if (count != null && count > 0) {
+            List<BorrowRepaymentPlanCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentPlanList(request);
+            bean.setRecordList(recordList);
+            BorrowRepaymentPlanCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentPlanInfo(request);
+            bean.setSumObject(sumObject);
+        }else{
+            bean.setSumObject(new BorrowRepaymentPlanCustomizeVO());
+            bean.setRecordList(new ArrayList<BorrowRepaymentPlanCustomizeVO>());
+        }
+        return bean;
+    }
+
+    @Override
+    public List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request) {
+        return  this.amTradeClient.selectBorrowRepaymentPlanList(request);
     }
 
     /**
