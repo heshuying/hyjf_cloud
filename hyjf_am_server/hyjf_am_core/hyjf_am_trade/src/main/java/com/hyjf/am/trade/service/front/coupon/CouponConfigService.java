@@ -62,14 +62,14 @@ public interface CouponConfigService {
      * @param couponConfig
      * @return
      */
-    Map<String,Object> insertAction(CouponConfig couponConfig);
+    int insertAction(CouponConfig couponConfig);
 
     /**
      *删除发行信息
      * @param id
      * @return
      */
-    Map<String,Object> deleteCouponConfig(int id);
+    int deleteCouponConfig(int id);
 
     /**
      * 查询优惠券已发行数量
