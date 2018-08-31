@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.promotion.channel;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
@@ -8,10 +9,13 @@ import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,9 +62,8 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
     @PostMapping("/infoaction")
-    public UtmResultResponse info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
+    public AdminResult info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
-        List<UtmPlatVO> utmPlatList = this.channelService.getUtmPlat(StringUtils.EMPTY);
         if (StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())) {
             UtmChannelVO record = channelService.getRecord(channelCustomizeVO.getUtmId());
             if (record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
@@ -72,9 +76,9 @@ public class ChannelController extends BaseController {
             if (record != null) {
                 adminResult.setUrl(getUrl(record));
             }
+            adminResult.setData(record);
         }
-        adminResult.setResultList(utmPlatList);
-        return adminResult;
+        return new AdminResult(adminResult);
     }
 
     @ApiOperation(value = "添加信息", notes = "添加信息")
@@ -159,12 +163,13 @@ public class ChannelController extends BaseController {
 //                }
 //
 //            }
-            if("000".equals(modelAndView.getStatus())){
-                adminResult.setStatus(AdminResult.SUCCESS);
-            }else{
-                adminResult.setStatus(UtmResultResponse.FAIL);
-                adminResult.setStatusDesc("参数异常！");
-            }
+//            if("000".equals(modelAndView.getStatus())){
+//                adminResult.setStatus(AdminResult.SUCCESS);
+//            }else{
+//                adminResult.setStatus(UtmResultResponse.FAIL);
+//                adminResult.setStatusDesc("参数异常！");
+//            }
+            adminResult.setStatus(AdminResult.SUCCESS);
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);
             adminResult.setStatusDesc("SourceId为空！");
@@ -229,4 +234,51 @@ public class ChannelController extends BaseController {
         }
         return null;
     }
+
+    /**
+     * 资料上传
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "资料上传", notes = "资料上传")
+    @PostMapping("/upload")
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(ChannelController.class.toString(), "startLog -- /hyjf-admin/promotion/channel/upload");
+        String files = this.channelService.uploadFile(request, response);
+        logger.info(ChannelController.class.toString(), "endLog -- /hyjf-admin/promotion/channel/upload");
+        if (StringUtils.isNotBlank(files)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+    }
+
+    /**
+     * 导出功能
+     *
+     * @param request
+     * @param modelAndView
+     * @param form
+     */
+    @ApiOperation(value = "导出功能", notes = "导出功能")
+    @PostMapping("/export")
+    public void exportAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // 表格sheet名称
+        String sheetName = "推广管理模板";
+
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+
+        String[] titles = new String[] { "渠道(utm_source)", "推广方式(utm_medium)", "推广单元(utm_content)", "推广计划(utm_campaign)", "关键字(utm_term)", "推荐人(utm_referrer)", "备注" };
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        // 生成一个表格
+        ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName);
+
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }
+
 }
