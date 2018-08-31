@@ -3138,6 +3138,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setComIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(企业) end */
+				/** add by nxl 添加企业注册地址和企业组织机构代码 Start */
+				borrowBean.setCorporateCode(this.getValue(record.getCorporateCode()));
+				borrowBean.setRegistrationAddress(this.getValue(record.getRegistrationAddress()));
+				/** add by nxl 添加企业注册地址和企业组织机构代码 end */
 			}
 		}
 	}
