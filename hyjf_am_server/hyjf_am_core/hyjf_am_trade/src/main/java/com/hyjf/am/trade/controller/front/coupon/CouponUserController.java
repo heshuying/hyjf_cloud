@@ -36,11 +36,11 @@ public class CouponUserController extends BaseController {
     private CouponUserService couponUserService;
 
     @RequestMapping("/selectCouponUser/{nowBeginDate}/{nowEndDate}")
-    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate,@PathVariable int nowEndDate) {
+    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate, @PathVariable int nowEndDate) {
         CouponUserResponse response = new CouponUserResponse();
-        List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate,nowEndDate);
+        List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate, nowEndDate);
         if (!CollectionUtils.isEmpty(couponUserList)) {
-            List<CouponUserVO> couponUserVOList = CommonUtils.convertBeanList(couponUserList,CouponUserVO.class);
+            List<CouponUserVO> couponUserVOList = CommonUtils.convertBeanList(couponUserList, CouponUserVO.class);
             response.setResultList(couponUserVOList);
         }
         return response;
@@ -48,43 +48,41 @@ public class CouponUserController extends BaseController {
 
 
     @GetMapping("/countCouponValid/{userId}")
-    public Integer countCouponValid(@PathVariable Integer userId){
+    public Integer countCouponValid(@PathVariable Integer userId) {
         return couponUserService.countCouponValid(userId);
     }
 
 
     @PostMapping("/selectCouponUserList")
-    public CouponUserListCustomizeResponse selectCouponUserList(@RequestBody Map<String, Object> mapParameter){
+    public CouponUserListCustomizeResponse selectCouponUserList(@RequestBody Map<String, Object> mapParameter) {
         CouponUserListCustomizeResponse response = new CouponUserListCustomizeResponse();
         List<CouponUserListCustomize> lstResult = couponUserService.selectCouponUserList(mapParameter);
-        if (CollectionUtils.isNotEmpty(lstResult)){
-            response.setResultList(CommonUtils.convertBeanList(lstResult,CouponUserListCustomizeVO.class));
+        if (CollectionUtils.isNotEmpty(lstResult)) {
+            response.setResultList(CommonUtils.convertBeanList(lstResult, CouponUserListCustomizeVO.class));
         }
         return response;
     }
 
 
-    @PostMapping("/getIssueNumber")
-    public CouponUserResponse getIssueNumber(@RequestBody @Valid CouponUserRequest request) {
+    @RequestMapping("/getIssueNumber/{couponCode}")
+    public CouponUserResponse getIssueNumber(@PathVariable String couponCode) {
         CouponUserResponse response = new CouponUserResponse();
-        if (StringUtils.isNotEmpty(request.getCouponCode())) {
-            String couponCode = request.getCouponCode();
-            int count = couponUserService.getIssueNumber(couponCode);
-            response.setCount(count);
-        }
+        int count = couponUserService.getIssueNumber(couponCode);
+        response.setCount(count);
         return response;
     }
 
 
     /**
      * 查询用户的优惠券数目(useFlag[0:未使用，1：已使用])
+     *
      * @author zhangyk
      * @date 2018/7/4 15:34
      */
     @RequestMapping("/user_coupon_count/{userId}/{useFlag}")
-    public CouponUserResponse getUserCouponCount(@PathVariable Integer userId,@PathVariable String useFlag) {
+    public CouponUserResponse getUserCouponCount(@PathVariable Integer userId, @PathVariable String useFlag) {
         CouponUserResponse response = new CouponUserResponse();
-        Integer count = couponUserService.getUserCouponCount(userId,useFlag);
+        Integer count = couponUserService.getUserCouponCount(userId, useFlag);
         response.setCount(count);
         return response;
     }
@@ -94,18 +92,18 @@ public class CouponUserController extends BaseController {
     public CouponUserResponse insertCouponUser(@RequestBody @Valid CouponUserVO couponUserVO) {
         CouponUserResponse response = new CouponUserResponse();
         CouponUser couponUser = new CouponUser();
-        BeanUtils.copyProperties(couponUserVO,couponUser);
+        BeanUtils.copyProperties(couponUserVO, couponUser);
         int count = couponUserService.insertCouponUser(couponUser);
         response.setCount(count);
         return response;
     }
 
     /**
+     * @return
      * @Author walter.limeng
-     * @Description  查询用户优惠券
+     * @Description 查询用户优惠券
      * @Date 18:06 2018/7/16
      * @Param couponUserRequest
-     * @return
      */
     @PostMapping("/getsendrepeat")
     public CouponUserResponse getSendRepeat(@RequestBody @Valid CouponUserSearchRequest couponUserSearchRequest) {

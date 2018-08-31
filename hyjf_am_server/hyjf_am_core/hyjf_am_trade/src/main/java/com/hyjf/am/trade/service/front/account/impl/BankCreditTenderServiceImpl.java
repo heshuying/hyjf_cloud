@@ -601,8 +601,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					}	
 					accountWebList.setRemark(creditTender.getCreditNid());
 					accountWebList.setNote(null);
-					accountWebList.setCreateStartTime(nowTime);
-					accountWebList.setCreateEndTime(nowTime);
+					accountWebList.setCreateTime(nowTime);
 					accountWebList.setOperator(null);
 					accountWebList.setFlag(1);
 					

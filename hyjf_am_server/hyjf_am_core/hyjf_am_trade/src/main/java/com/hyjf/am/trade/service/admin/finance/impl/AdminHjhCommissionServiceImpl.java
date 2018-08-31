@@ -307,8 +307,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
 		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
-		accountWebList.setCreateStartTime(GetterUtil.getInteger(accountList.getCreateTime()));
-		accountWebList.setCreateEndTime(GetterUtil.getInteger(accountList.getCreateTime()));
+		accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
 		//TODO: 网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {

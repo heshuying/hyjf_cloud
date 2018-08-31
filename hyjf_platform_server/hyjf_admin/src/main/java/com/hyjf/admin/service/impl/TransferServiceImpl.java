@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.controller.finance.merchant.transfer.TransferCustomizeBean;
 import com.hyjf.admin.service.TransferService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
@@ -27,7 +26,6 @@ import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -175,7 +173,8 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
     }
 
     @Override
-    public void checkMerchantTransferParam(ModelAndView modelAndView, MerchantTransferListRequest form) {
+    public JSONObject checkMerchantTransferParam(MerchantTransferListRequest form) {
+        JSONObject ret = new JSONObject();
         if (Validator.isNotNull(form.getOutAccountId())) {
             //获取转出账户
             MerchantAccountVO outAccount = amTradeClient.selectMerchantAccountById(form.getOutAccountId());
@@ -202,9 +201,12 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                     // 调用汇付接口,查询余额
                                     ChinapnrBean bean = new ChinapnrBean();
                                     // 构建请求参数
-                                    bean.setVersion(ChinaPnrConstant.VERSION_10); // 版本号(必须)
-                                    bean.setCmdId(ChinaPnrConstant.CMDID_QUERY_ACCTS); // 消息类型(必须)
-                                    bean.setMerCustId(systemConfig.getMerCustId()); // 商户客户号
+                                    // 版本号(必须)
+                                    bean.setVersion(ChinaPnrConstant.VERSION_10);
+                                    // 消息类型(必须)
+                                    bean.setCmdId(ChinaPnrConstant.CMDID_QUERY_ACCTS);
+                                    // 商户客户号
+                                    bean.setMerCustId(systemConfig.getMerCustId());
                                     // 发送请求获取结果
                                     ChinapnrBean resultBean = ChinapnrUtil.callApiBg(bean);
                                     String respCode = resultBean == null ? "" : resultBean.getRespCode();
@@ -231,7 +233,8 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                                         if(StringUtils.isNotBlank(accType)&&StringUtils.isNotBlank(accCode)&&accType.equals(outSubAccountType)&&accCode.equals(outSubAccountCode)){
                                                             outFlag = true;
                                                             if(avlBal.compareTo(transferAmount)==-1){
-                                                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.balance","转出账户余额不足!");
+                                                                ret.put("99","转出账户余额不足!");
+                                                                //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.balance","转出账户余额不足!");
                                                             }
                                                             form.setOutAccountCode(outSubAccountCode);
                                                             form.setOutAccountName(outSubAccountName);
@@ -243,50 +246,65 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                                         }
                                                     }
                                                     if(!outFlag){
-                                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.error","配置错误，未查询到转出子账户信息!");
+                                                        ret.put("99","配置错误,未查询到转出子账户信息!");
+                                                        //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.error","配置错误，未查询到转出子账户信息!");
                                                     }
                                                     if(!inFlag){
-                                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.error","配置错误，未查询到转入子账户信息!");
+                                                        ret.put("99","配置错误,未查询到转入子账户信息!");
+//                                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.error","配置错误，未查询到转入子账户信息!");
                                                     }
                                                     if(form.getOutAccountCode().equals(form.getInAccountCode())){
-                                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.same","转入账户不能同转出账户相同!");
+                                                        ret.put("99","转入账户不能同转出账户相同!");
+//                                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.same","转入账户不能同转出账户相同!");
                                                     }
                                                 }else{
-                                                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.amount","转出金额错误!");
+                                                    ret.put("99","转出金额错误!");
+//                                                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.amount","转出金额错误!");
                                                 }
                                             } catch (Exception e) {
                                                 e.printStackTrace();
-                                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.success.exception","汇付余额信息校验失败!");
+                                                ret.put("99","汇付余额信息校验失败!");
+//                                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.success.exception","汇付余额信息校验失败!");
                                             }
                                         } else {
-                                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.success.empty","汇付余额信息为空!");
+                                            ret.put("99","汇付余额信息为空!");
+//                                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.success.empty","汇付余额信息为空!");
                                         }
                                     } else {
-                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.fail","子账户汇付余额查询失败!");
+                                        ret.put("99","子账户汇付余额查询失败!");
+//                                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.fail","子账户汇付余额查询失败!");
                                     }
                                 }else{
-                                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.empty","转账金额不能为空!");
+                                    ret.put("99","转账金额不能为空!");
+//                                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.empty","转账金额不能为空!");
                                 }
                             }else{
-                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.type","配置错误，此账户不能转入!");
+                                ret.put("99","配置错误，此账户不能转入!");
+//                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.type","配置错误，此账户不能转入!");
                             }
                         }else{
-                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.null","未查询到转入子账户信息!");
+                            ret.put("99","未查询到转入子账户信息!");
+//                            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.null","未查询到转入子账户信息!");
                         }
                     }else{
-                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.empty","转入账号不能为空!");
+                        ret.put("99","转入账号不能为空!");
+//                        ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "inAccountId", "merchant.transfer.inAccountId.empty","转入账号不能为空!");
                     }
                 }else{
-                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.type","配置错误，此账户不能转出!");
+                    ret.put("99","配置错误，此账户不能转出!");
+//                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.type","配置错误，此账户不能转出!");
                 }
             }else{
-                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.null","未查询到转出子账户信息!");
+                ret.put("99","未查询到转出子账户信息!");
+//                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.null","未查询到转出子账户信息!");
             }
         } else {
-            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.empty","转出账号不能为空!");
+            ret.put("99","转出账号不能为空!");
+//            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "outAccountId", "merchant.transfer.outAccountId.empty","转出账号不能为空!");
         }
         // 说明
-        ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", form.getRemark(), 50, true);
+        //ValidatorFieldCheckUtil.validateMaxLength("remark", form.getRemark(), 50, true);
+        return ret;
     }
 
     @Override

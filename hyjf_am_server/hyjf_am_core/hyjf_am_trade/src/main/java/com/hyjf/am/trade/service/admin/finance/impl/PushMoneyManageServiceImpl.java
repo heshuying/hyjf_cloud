@@ -242,8 +242,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
         accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
         accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
         accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
-        accountWebList.setCreateStartTime(GetterUtil.getInteger(accountList.getCreateTime()));
-        accountWebList.setCreateEndTime(GetterUtil.getInteger(accountList.getCreateTime()));
+        accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
         AccountWebListResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist", accountWebList, AccountWebListResponse.class).getBody();
         if(Response.isSuccess(response)){
             ret += response.getRecordTotal();

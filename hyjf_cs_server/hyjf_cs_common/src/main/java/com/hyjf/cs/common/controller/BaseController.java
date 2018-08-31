@@ -29,7 +29,7 @@ import java.net.URLEncoder;
 public class BaseController {
     protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-    // TODO 联调阶段方便前端用错误信息，调试完成后要删除。
+    // 联调阶段方便前端用错误信息，调试完成后要删除。
     private String getMessageForTest(Exception ex){
         return "---《"+ex.getMessage()+"》";
     }
@@ -53,7 +53,7 @@ public class BaseController {
      * @param request
      * @param response
      * @param ex
-     * eturn
+     * @return
      */
     @ExceptionHandler(value = AMException.class)
     @ResponseBody

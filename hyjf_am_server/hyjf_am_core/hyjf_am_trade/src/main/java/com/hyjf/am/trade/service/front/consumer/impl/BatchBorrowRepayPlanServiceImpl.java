@@ -2210,8 +2210,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
 			accountWebList.setRemark(borrowNid); // 投资编号
-			accountWebList.setCreateStartTime(nowTime);
-			accountWebList.setCreateEndTime(nowTime);
+			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
 			//网站首支明细队列
 			try {
@@ -3138,8 +3137,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
 			accountWebList.setRemark(borrowNid); // 投资编号
-			accountWebList.setCreateStartTime(nowTime);
-			accountWebList.setCreateEndTime(nowTime);
+			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
 
 			//网站首支明细队列

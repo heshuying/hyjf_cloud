@@ -4,23 +4,17 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
@@ -28,10 +22,6 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,8 +177,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             }
             accountWebList.setTradeType(tradeType); // 加息券回款
             accountWebList.setRemark(remark); // 投资编号
-            accountWebList.setCreateStartTime(nowTime);
-            accountWebList.setCreateEndTime(nowTime);
+            accountWebList.setCreateTime(nowTime);
             int accountWebListCnt = insertAccountWebList(accountWebList);
             if (accountWebListCnt == 0) {
                 throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");

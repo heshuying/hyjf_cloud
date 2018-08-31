@@ -405,8 +405,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         }
         remark = "项目编号："+borrowTender.getBorrowNid()+"<br />优惠券:"+couponUserCode;
         accountWebList.setRemark(remark); // 投资编号
-        accountWebList.setCreateStartTime(GetDate.getNowTime10());
-        accountWebList.setCreateEndTime(GetDate.getNowTime10());
+        accountWebList.setCreateTime(GetDate.getNowTime10());
 
         producer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
 

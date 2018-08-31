@@ -57,4 +57,10 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
         stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
 		stzhWhiteListMapper.updateByPrimaryKey(stzhWhiteList);
 	}
+
+    @Override
+    public StzhWhiteList selectStzfWhiteById(Integer id) {
+		StzhWhiteList pushMoney = stzhWhiteListMapper.selectByPrimaryKey(id);
+		return pushMoney;
+    }
 }

@@ -4,7 +4,6 @@ import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author xiasq
@@ -74,6 +73,9 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     private String username;
 
+    private Integer createTime;
+
+
     /**
      * 翻页机能用的隐藏变量
      */
@@ -87,6 +89,13 @@ public class AccountWebListVO extends BasePage implements Serializable {
         return paginatorPage;
     }
 
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
 
     private static final long serialVersionUID = 1L;
 

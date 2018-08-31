@@ -13,6 +13,8 @@ import com.hyjf.admin.service.StzfWhiteConfigService;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
+import java.util.List;
+
 /**
  * @author fuqiang
  * @version StzfWhiteConfigServiceImpl, v0.1 2018/7/10 9:21
@@ -41,5 +43,15 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	@Override
 	public HjhInstConfigVO selectHjhInstConfig(String instcode) {
 		return amTradeClient.selectHjhInstConfig(instcode);
+	}
+
+    @Override
+    public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
+        return amTradeClient.selectSTZHWhiteById(id);
+    }
+
+	@Override
+	public List<HjhInstConfigVO> getRegionList() {
+		return amTradeClient.selectHjhInstConfigList();
 	}
 }
