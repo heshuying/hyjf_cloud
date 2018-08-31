@@ -183,7 +183,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "删除运营报告", notes = "删除运营报告")
-	@PostMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public OperationReportResponse delete(@PathVariable String id) {
 		OperationReportResponse response = new OperationReportResponse();
 		if(StringUtils.isNotEmpty(id)){
