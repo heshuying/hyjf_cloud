@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolLogMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
+import com.hyjf.am.trade.dao.mapper.customize.ProtocolTemplateCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
@@ -36,6 +37,9 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 	
 	@Autowired
 	protected  ProtocolTemplateMapper protocolTemplateMapper;
+
+	@Autowired
+	protected ProtocolTemplateCustomizeMapper protocolTemplateCustomizeMapper;
 
 	@Autowired
 	private ProtocolVersionMapper protocolVersionMapper;
@@ -251,7 +255,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 
 	@Override
 	public List<ProtocolTemplateVO> getnewinfo() {
-		List<ProtocolTemplate> list = protocolTemplateMapper.getdisplayNameDynamic();
+		List<ProtocolTemplate> list = protocolTemplateCustomizeMapper.getdisplayNameDynamic();
 		List<ProtocolTemplateVO> ListVO = CommonUtils.convertBeanList(list, ProtocolTemplateVO.class);
 		return ListVO;
 	}
@@ -377,7 +381,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 	@Override
 	public ProtocolTemplateVO byIdTemplateBy(String protocolId){
 		ProtocolTemplateVO vo = new ProtocolTemplateVO();
-		ProtocolTemplate protocolVersion = protocolTemplateMapper.selectTemplateById(protocolId);
+		ProtocolTemplate protocolVersion = protocolTemplateCustomizeMapper.selectTemplateById(protocolId);
 		BeanUtils.copyProperties(protocolVersion,vo);
 		return vo;
 	}

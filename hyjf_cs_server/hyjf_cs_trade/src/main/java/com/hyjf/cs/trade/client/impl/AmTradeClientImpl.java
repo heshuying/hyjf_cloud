@@ -4216,4 +4216,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     * 获取逾期的标的
+     * @return
+     */
+    @Override
+    public List<BorrowVO> selectOverdueBorrowList() {
+        String url = "http://AM-TRADE/am-trade/borrow/selectOverdueBorrowList";
+        BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
 }

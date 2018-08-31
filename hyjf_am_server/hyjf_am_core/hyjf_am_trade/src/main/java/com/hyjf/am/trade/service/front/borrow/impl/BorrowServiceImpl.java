@@ -265,6 +265,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
+        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
         BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
@@ -333,6 +334,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         //投资授权码
         borrowTender.setAuthCode(tenderBg.getAuthCode());
         borrowTender.setRemark("现金投资");
+        borrowTender.setBorrowUserId(borrow.getUserId());
+        borrowTender.setBorrowUserName(borrow.getBorrowUserName());
         logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
