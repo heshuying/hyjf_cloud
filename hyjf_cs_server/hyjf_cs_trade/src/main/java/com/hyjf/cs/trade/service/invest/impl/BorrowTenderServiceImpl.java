@@ -1166,7 +1166,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.borrowTender(borrow, bean);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
-        if (StringUtils.isNotEmpty(couponGrantId)) {
+        if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId)) {
             // 开始使用优惠券
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -1301,7 +1301,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
-
+        // 开始调用原子层操作主表
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
         if (insertFlag) {
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);

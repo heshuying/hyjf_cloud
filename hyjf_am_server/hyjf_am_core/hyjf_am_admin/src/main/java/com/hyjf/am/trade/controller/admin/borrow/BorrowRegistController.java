@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-trade/borrow_regist")
-public class BorrowRegistController {
+public class BorrowRegistController extends BaseController {
     @Autowired
     BorrowRegistService borrowRegistService;
 

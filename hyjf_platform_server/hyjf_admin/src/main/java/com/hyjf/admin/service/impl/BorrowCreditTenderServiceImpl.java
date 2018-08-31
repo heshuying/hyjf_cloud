@@ -84,34 +84,34 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     public static final String HZR_PREFIX = "HZR";
 
-    public static final String BASE_URL = "http://AM-TRADE";
+    public static final String BASE_URL = "http://AM-TRADE/am-trade";
 
     /*还款信息列表*/
-    public static final String REPAY_LIST_URL = BASE_URL + "/am-trade/creditTender/getRepayList";
+    public static final String REPAY_LIST_URL = BASE_URL + "/creditTender/getRepayList";
     /*还款信息count*/
-    public static final String REPAY_COUNT_URL = BASE_URL + "/am-trade/creditTender/getRepayCount";
+    public static final String REPAY_COUNT_URL = BASE_URL + "/creditTender/getRepayCount";
     /*还款信息合计*/
-    public static final String REPAY_SUM_URL = BASE_URL + "/am-trade/creditTender/getRepaySum";
+    public static final String REPAY_SUM_URL = BASE_URL + "/creditTender/getRepaySum";
 
     /*还款详情count*/
-    public static final String REPAY_INFO_COUNT_URL = BASE_URL + "/am-trade/creditTender/getRepayInfoCount";
+    public static final String REPAY_INFO_COUNT_URL = BASE_URL + "/creditTender/getRepayInfoCount";
     /*还款详情list*/
-    public static final String REPAY_INFO_LIST_URL = BASE_URL + "/am-trade/creditTender/getRepayInfoList";
+    public static final String REPAY_INFO_LIST_URL = BASE_URL + "/creditTender/getRepayInfoList";
     /*还款详情合计*/
-    public static final String REPAY_INFO_SUM_URL = BASE_URL + "/am-trade/creditTender/getRepayInfoSum";
+    public static final String REPAY_INFO_SUM_URL = BASE_URL + "/creditTender/getRepayInfoSum";
 
     /*承接列表count*/
-    public static final String TENDER_COUNT_URL = BASE_URL + "/am-trade/creditTender/getTenderCount";
+    public static final String TENDER_COUNT_URL = BASE_URL + "/creditTender/getTenderCount";
     /*承接列表list*/
-    public static final String TENDER_LIST_URL = BASE_URL + "/am-trade/creditTender/getTenderList";
+    public static final String TENDER_LIST_URL = BASE_URL + "/creditTender/getTenderList";
     /*承接列表sum*/
-    public static final String TENDER_SUM_URL = BASE_URL + "/am-trade/creditTender/getTenderSum";
+    public static final String TENDER_SUM_URL = BASE_URL + "/creditTender/getTenderSum";
 
     public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/";
 
-    public static final String BORROW_URL = BASE_URL + "/am-trade/borrow/getBorrow/";
+    public static final String BORROW_URL = BASE_URL + "/borrow/getBorrow/";
 
-    public static final String PDFSIGN_CREDIT_TENDER_COUNT_URL = BASE_URL + "/am-trade/creditTender/getBorrowCreditTender4Admin";
+    public static final String PDFSIGN_CREDIT_TENDER_COUNT_URL = BASE_URL + "/creditTender/getBorrowCreditTender4Admin";
     /**
      * 查询还款信息列表
      *

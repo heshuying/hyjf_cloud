@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 
 	@Autowired
 	private AmTradeClient amTradeClient;
+	@Autowired
+	private AmAdminClient amAdminClient;
 
 	@Override
 	public STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
@@ -54,4 +57,9 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	public List<HjhInstConfigVO> getRegionList() {
 		return amTradeClient.selectHjhInstConfigList();
 	}
+
+    @Override
+    public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
+        return amAdminClient.getUserByUserName(requestBean);
+    }
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,10 +51,10 @@ public class CsMessageClientImpl implements CsMessageClient {
          */
         @Override
         public BigDecimal selectTenderSum() {
-            BigDecimal TenderSum = restTemplate.getForObject(
+            BigDecimalResponse tenderSum = restTemplate.getForObject(
                     "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTenderSum",
-                    BigDecimal.class);
-            return TenderSum;
+                    BigDecimalResponse.class);
+            return tenderSum.getResultDec();
         }
         /**
          * 累计收益
@@ -60,10 +62,10 @@ public class CsMessageClientImpl implements CsMessageClient {
          */
         @Override
         public BigDecimal selectInterestSum() {
-            BigDecimal InterestSum = restTemplate.getForObject(
+            BigDecimalResponse interestSum = restTemplate.getForObject(
                     "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectInterestSum",
-                    BigDecimal.class);
-            return InterestSum;
+                    BigDecimalResponse.class);
+            return interestSum.getResultDec();
         }
         /**
          * 累计投资笔数
@@ -71,10 +73,10 @@ public class CsMessageClientImpl implements CsMessageClient {
          */
         @Override
         public int selectTotalTenderSum() {
-            Integer TotalTenderSum = restTemplate.getForObject(
+            IntegerResponse totalTenderSum = restTemplate.getForObject(
                     "http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTotalTenderSum",
-                    Integer.class);
-            return TotalTenderSum;
+                    IntegerResponse.class);
+            return totalTenderSum.getResultInt();
         }
 
 

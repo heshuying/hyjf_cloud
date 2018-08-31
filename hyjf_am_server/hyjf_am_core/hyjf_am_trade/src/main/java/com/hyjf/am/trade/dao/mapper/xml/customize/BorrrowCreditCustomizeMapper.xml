@@ -267,10 +267,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStart != null and timeStart != ''">
-                AND bc.create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+                AND bc.create_time <![CDATA[>=]]> concat(#{timeStart},' 00:00:00')
             </if>
             <if test="timeEnd != null and timeEnd != ''">
-                AND bc.create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+                AND bc.create_time <![CDATA[<=]]> concat(#{timeEnd},' 23:59:59')
             </if>
         </where>
     </sql>

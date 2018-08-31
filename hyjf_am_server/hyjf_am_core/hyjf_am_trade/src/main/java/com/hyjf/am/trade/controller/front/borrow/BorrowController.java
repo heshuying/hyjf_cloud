@@ -259,14 +259,17 @@ public class BorrowController extends BaseController {
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
+		logger.info("原子层  散标投资 开始操作数据库表");
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
 			result.setResultInt(1);
+			logger.info("原子层  散标投资 操作数据库表成功");
 			return result;
 		}catch (Exception e){
 			e.printStackTrace();
 			result.setResultInt(0);
+			logger.info("原子层  散标投资 操作数据库表失败");
 			return result;
 		}
 	}
