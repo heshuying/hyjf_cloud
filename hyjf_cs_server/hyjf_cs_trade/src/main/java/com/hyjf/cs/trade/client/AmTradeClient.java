@@ -1810,4 +1810,9 @@ public interface AmTradeClient {
      */
     public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid);
 
+    /**
+     * 获取逾期的标的
+     * @return
+     */
+    List<BorrowVO> selectOverdueBorrowList();
 }
