@@ -1486,12 +1486,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setOrdid(creditRepay.getAssignNid() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
 			accountWebList.setRemark(borrowNid); // 投资编号
-			accountWebList.setCreateTime(nowTime);
+			accountWebList.setCreateStartTime(nowTime);
+			accountWebList.setCreateEndTime(nowTime);
 			accountWebList.setFlag(1);
 			//网站首支明细队列
 			try {
@@ -2885,12 +2886,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
 			accountWebList.setRemark(borrowNid); // 投资编号
-			accountWebList.setCreateTime(nowTime);
+			accountWebList.setCreateStartTime(nowTime);
+			accountWebList.setCreateEndTime(nowTime);
 			accountWebList.setFlag(1);
 			//网站首支明细队列
 			try {

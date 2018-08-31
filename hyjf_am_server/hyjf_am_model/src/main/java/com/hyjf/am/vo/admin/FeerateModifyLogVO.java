@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
@@ -44,6 +45,8 @@ public class FeerateModifyLogVO extends BaseVO implements Serializable {
     private Integer updateUserId;
 
     private Date createTime;
+
+    private Date operationTime;
 
     private Date updateTime;
 
@@ -240,5 +243,13 @@ public class FeerateModifyLogVO extends BaseVO implements Serializable {
 
     public void setModifyTypeSrch(String modifyTypeSrch) {
         this.modifyTypeSrch = modifyTypeSrch;
+    }
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    public Date getOperationTime() {
+        return createTime;
+    }
+
+    public void setOperationTime(Date operationTime) {
+        this.operationTime = operationTime;
     }
 }

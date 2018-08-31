@@ -467,8 +467,10 @@ public class HjhCommissionController extends BaseController{
     public JSONObject confirmPushMoneyAction(HttpServletRequest request, @RequestBody HjhCommissionViewRequest viewRequest) {
 		// 调用基类方法获取登录者userid
 		int loginUserId = Integer.valueOf(this.getUser(request).getId());
+		/*int loginUserId = 5274;*/
 		// 调用基类方法获取登录者userName
 		String loginUserName = this.getUser(request).getUsername();
+		/*String loginUserName = "hyjf288535";*/
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 将画面检索参数request赋值给原子层 request
@@ -504,7 +506,8 @@ public class HjhCommissionController extends BaseController{
                 if (!usersInfo.getAttribute().equals(cuttype)) {
                     ret.put("status", "error");
                     ret.put("result", "该用户属性异常！");
-                    logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]"));              
+                    /*logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]")); */  
+                    logger.error("汇计划提成列表汇计划发提成/confirmpushmoney" + "该用户平台属性与CRM 不符！[userId=" + userId + "]");
 /*                    原LogUtil.errorLog(THIS_CLASS, PushMoneyManageHjhDefine.CONFIRM_PUSHMONEY, new Exception(
                             "该用户平台属性与CRM 不符！[userId=" + userId + "]"));*/
                     return ret;

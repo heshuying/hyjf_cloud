@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.admin.controller.finance.transfer;
+package com.hyjf.admin.controller.finance.merchant.transfer;
 
 import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.common.paginator.Paginator;

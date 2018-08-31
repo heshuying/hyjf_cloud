@@ -250,13 +250,18 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        // 投资金额
-        data.put("assignCapital",bean.getAssignCapital());
-        // 历史回报
-        data.put("assignInterest",bean.getAssignInterest());
-        WebResult<Map<String, Object>> result = new WebResult();
-        result.setData(data);
-        return result;
+        if(bean!=null){
+            // 投资金额
+            data.put("assignCapital",bean.getAssignCapital());
+            // 历史回报
+            data.put("assignInterest",bean.getAssignInterest());
+            WebResult<Map<String, Object>> result = new WebResult();
+            result.setData(data);
+            return result;
+        }else{
+            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR);
+        }
+
     }
 
     /**
@@ -846,7 +851,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(creditTender.getCreditFee());
+                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");
@@ -854,7 +859,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setUsrcustid(creditTenderLog.getAccountId());
                         accountWebList.setRemark(creditTender.getCreditNid());
                         accountWebList.setNote(null);
-                        accountWebList.setCreateTime(nowTime);
+                        accountWebList.setCreateStartTime(nowTime);
+                        accountWebList.setCreateEndTime(nowTime);
                         accountWebList.setOperator(null);
                         accountWebList.setFlag(1);
                         try {

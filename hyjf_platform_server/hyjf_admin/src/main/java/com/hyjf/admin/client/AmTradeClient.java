@@ -10,10 +10,8 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.AccountListResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -2837,5 +2835,42 @@ public interface AmTradeClient {
      * @return
      */
     NifaReportLogResponse selectNifaReportLogById(int logId);
+
+    /**
+     * 查询账户信息
+     * @param status
+     * @return
+     */
+    MerchantAccountResponse selectMerchantAccountList(Integer status);
+
+    /**
+     * 获取转账列表
+     * @param form
+     * @return
+     */
+    MerchantTransferResponse selectMerchantTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 根据id获取转账信息
+     * @param id
+     * @return
+     */
+    MerchantAccountVO selectMerchantAccountById(Integer id);
+
+    /**
+     * 插入转账信息
+     * @param form
+     * @return
+     */
+    boolean insertTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 更新转账信息
+     * @param orderId
+     * @param status
+     * @param message
+     * @return
+     */
+    int updateMerchantTransfer(String orderId, int status, String message);
 }
 

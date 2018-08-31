@@ -941,8 +941,17 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	 * 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
 	 */
 	private String assetAttributes;
+	private String address;
 	
 	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getAssetAttributes() {
 		return assetAttributes;
 	}

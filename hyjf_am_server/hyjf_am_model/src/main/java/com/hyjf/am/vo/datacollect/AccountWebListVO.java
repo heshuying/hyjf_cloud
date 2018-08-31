@@ -34,26 +34,13 @@ public class AccountWebListVO extends BasePage implements Serializable {
     @ApiModelProperty(value = "交易类型")
     private String tradeTypeSearch;
 
-    /**
-     * 翻页机能用的隐藏变量
-     */
-    private int paginatorPage = 1;
-
-
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-
     private String id;
 
     private String ordid;
 
     private String borrowNid;
 
-    private BigDecimal amount;
+    private Double amount;
 
     private Integer type;
 
@@ -77,13 +64,29 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     private String note;
 
-    private Integer createTime;
+    private Integer createStartTime;
+
+    private Integer createEndTime;
 
     private String operator;
 
     private Integer flag;
 
     private String username;
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
 
     private static final long serialVersionUID = 1L;
 
@@ -187,11 +190,11 @@ public class AccountWebListVO extends BasePage implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -283,14 +286,6 @@ public class AccountWebListVO extends BasePage implements Serializable {
         this.note = note == null ? null : note.trim();
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
     public String getOperator() {
         return operator;
     }
@@ -305,5 +300,21 @@ public class AccountWebListVO extends BasePage implements Serializable {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public Integer getCreateStartTime() {
+        return createStartTime;
+    }
+
+    public void setCreateStartTime(Integer createStartTime) {
+        this.createStartTime = createStartTime;
+    }
+
+    public Integer getCreateEndTime() {
+        return createEndTime;
+    }
+
+    public void setCreateEndTime(Integer createEndTime) {
+        this.createEndTime = createEndTime;
     }
 }
