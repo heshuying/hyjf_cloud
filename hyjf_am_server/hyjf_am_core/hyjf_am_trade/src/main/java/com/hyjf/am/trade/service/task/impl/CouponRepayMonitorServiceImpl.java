@@ -61,8 +61,16 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
     public Integer countRecordTotal(CouponRepayRequest form) {
         CouponRepayMonitorExample example = new CouponRepayMonitorExample();
         CouponRepayMonitorExample.Criteria criteria = example.createCriteria();
-        criteria.andDayGreaterThan(form.getTimeStartSrch());
-        criteria.andDayLessThan(form.getTimeEndSrch());
+        if(null!=form.getTimeStartSrch()){
+            criteria.andDayGreaterThan(form.getTimeStartSrch());
+        }else {
+            // TODO: 2018/8/31  
+            //criteria.andDayGreaterThan();
+        }
+        if(null!=form.getTimeEndSrch()){
+            criteria.andDayLessThan(form.getTimeEndSrch());
+        }
+
         int cnt = couponRepayMonitorMapper.countByExample(example);
         return cnt;
     }
