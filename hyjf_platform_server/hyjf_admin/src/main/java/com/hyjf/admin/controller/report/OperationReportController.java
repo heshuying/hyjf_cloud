@@ -64,18 +64,6 @@ public class OperationReportController extends BaseController {
         }
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
-    @ApiOperation(value = "获取已发布运营报告接口", notes = "获取已发布运营报告接口-app和web端使用")
-    @PostMapping("/listbyrelease")
-    public AdminResult<ListResult<OperationReportVO>> listByRelease(@RequestBody OperationReportRequest request) {
-        OperationReportResponse response = operationReportService.listByRelease(request);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
 
     @ApiOperation(value = "获取报表明细", notes = "获取报表明细-app和web端使用")
     @PostMapping("/reportinfo/{id}")
