@@ -155,8 +155,8 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "运营报告下拉框初始化", notes = "运营报告下拉框初始化")
-    @PostMapping("/infomonthoperation")
-    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(@RequestBody OperationReportRequest request){
+    @GetMapping ("/infomonthoperation")
+    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(){
         //下拉框初始化
         List<OperationSelectVO> selectList = initSelect();
         return new AdminResult(selectList);
