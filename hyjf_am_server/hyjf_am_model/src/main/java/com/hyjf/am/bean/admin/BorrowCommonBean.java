@@ -906,7 +906,6 @@ public class BorrowCommonBean implements Serializable {
 	 * 受托支付标志 
 	 */
 	private String entrustedFlg;//0 否；1是
-	private String address;
 	/**
 	 * 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
 	 */
@@ -3516,14 +3515,6 @@ public class BorrowCommonBean implements Serializable {
 
 	public void setComIsPunished(String comIsPunished) {
 		this.comIsPunished = comIsPunished;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getCorporateCode() {

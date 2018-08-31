@@ -2172,6 +2172,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			} else {
 				borrowUsers.setIsPunished("暂无");
 			}
+			//20180705 add by NXL 添加企业组织机构代码和企业注册地 start
+			borrowUsers.setCorporateCode(borrowBean.getCorporateCode());
+			borrowUsers.setRegistrationAddress(borrowBean.getRegistrationAddress());
+			//20180705 add by NXL 添加企业组织机构代码和企业注册地 end
 			this.borrowUserMapper.insertSelective(borrowUsers);
 		}
 		return 0;
