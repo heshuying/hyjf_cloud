@@ -100,9 +100,10 @@ public class AppRiskAssesmentController extends BaseUserController {
     @ApiOperation(value = "风险测评提交")
     @PostMapping(value = "/riskTest")
     public RiskAssesmentResponse evaluationResult(@RequestHeader(value = "userId")Integer userId,@RequestBody UserAnswerRequestBean userAnswerRequestBean) {
+        logger.info("app端风险测评参数："+userId);
         RiskAssesmentResponse response = new RiskAssesmentResponse();
         // 检查参数
-        if (userId == null || userId == 0) {
+        if (userId == null) {
             response.setStatus(RiskAssesmentResponse.FAIL);
             response.setStatusDesc(RiskAssesmentResponse.FAIL_MSG);
             return response;
@@ -124,8 +125,8 @@ public class AppRiskAssesmentController extends BaseUserController {
      */
     @ApiOperation(value = "风险空测评提交  -- 跳过测评")
     @PostMapping(value = "/riskTestNone")
-    public RiskAssesmentResponse skipEvaluate(@RequestHeader(value = "userId")Integer userId,HttpServletRequest request) {
-
+    public RiskAssesmentResponse skipEvaluate(@RequestHeader(value = "userId")Integer userId) {
+        logger.info("app端风险测评参数："+userId);
         RiskAssesmentResponse response = new RiskAssesmentResponse();
         // 检查参数
         if (userId == null || userId == 0) {
