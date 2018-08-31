@@ -148,7 +148,9 @@ public class AccountRechargeController extends BaseController {
 
         // 确认充值 ; 0表示充值失败
         boolean isAccountUpdate = false;
-        if ("1".equals(status)){
+        // 代码规约
+        String errorStatus = "1";
+        if (errorStatus.equals(status)){
             isAccountUpdate = this.accountRecharge.updateAccountAfterRecharge(userId, nid);
         }else {
             isAccountUpdate = this.accountRecharge.updateAccountAfterRechargeFail(userId, nid);
