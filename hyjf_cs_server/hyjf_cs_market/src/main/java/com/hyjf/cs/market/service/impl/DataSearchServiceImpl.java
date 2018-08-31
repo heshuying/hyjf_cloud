@@ -1,19 +1,18 @@
 package com.hyjf.cs.market.service.impl;
 
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
-import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.market.client.AmAdminClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.service.DataSearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author lisheng
@@ -21,11 +20,15 @@ import java.util.Map;
  */
 @Service
 public class DataSearchServiceImpl implements DataSearchService {
+
     @Autowired
-    AmTradeClient amTradeClient;
+    AmAdminClient adminClient;
 
     @Autowired
     AmUserClient amUserClient;
+    @Value("${qianle.mobile}")
+    private String  configMobile;
+
 
     /**
      * 查詢千乐列表数据
@@ -35,21 +38,53 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
-        List<Integer> qianleUser = amUserClient.getQianleUser();
-        dataSearchRequest.setUserIds(qianleUser);
         String type = dataSearchRequest.getType();
         if (StringUtils.equals(type,"1")) {
-            dataSearchCustomizeResponse= amTradeClient.queryQianleList(dataSearchRequest);
+            dataSearchCustomizeResponse= adminClient.queryQianleList(dataSearchRequest);
         }else  if (StringUtils.equals(type,"2")) {
-            dataSearchCustomizeResponse = amTradeClient.queryPlanList(dataSearchRequest);
+            dataSearchCustomizeResponse = adminClient.queryPlanList(dataSearchRequest);
         }else  if (StringUtils.equals(type,"3")) {
-             dataSearchCustomizeResponse = amTradeClient.querySanList(dataSearchRequest);
+             dataSearchCustomizeResponse = adminClient.querySanList(dataSearchRequest);
         }
         return dataSearchCustomizeResponse;
     }
 
 
+    /**
+     * 验证手机号
+     * @param mobile
+     * @return
+     */
+    @Override
+    public boolean checkMobile(String mobile)
+    {
+        if(StringUtils.isNotBlank(configMobile)){
+            String[] split = configMobile.split(",");
+            for (String s : split) {
+                if (StringUtils.equals(s,mobile)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    @Override
+    public SmsConfigResponse initSmsConfig() {
+        SmsConfigRequest request = new SmsConfigRequest();
+        return adminClient.initSmsConfig(request);
+    }
+
+    @Override
+    public void saveSmsCode(String checkCode, String mobile, String platform) {
+        amUserClient.saveSmsCode(mobile, checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
+
+    }
+
+    @Override
+    public int checkMobileCode(String phone, String code) {
+        return amUserClient.onlyCheckMobileCode(phone,code);
+    }
 
 
 }
