@@ -65,6 +65,11 @@ public class AdminBorrowCreditTenderController extends BaseController {
     }
 
 
+    /**
+     * 原接口：com.hyjf.admin.manager.borrow.credittender.CreditTenderController.pdfSignAction()
+     * @author zhangyk
+     * @date 2018/8/31 10:08
+     */
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdfSign")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)

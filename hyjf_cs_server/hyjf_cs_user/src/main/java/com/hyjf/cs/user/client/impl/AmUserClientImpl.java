@@ -1107,4 +1107,36 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 更新银行卡信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int updateBankCard(BankCardVO bankCardVO) {
+		String url = userService + "/bankCard/updateBankCard";
+		IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 根据主键查询银行卡信息
+	 * @auth sunpeikai
+	 * @param id 主键
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardById(Integer id) {
+		String url = userService + "/bankCard/getBankCardById/" + id;
+		BankCardResponse response = restTemplate.getForEntity(url,BankCardResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
 }

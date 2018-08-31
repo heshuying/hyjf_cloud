@@ -5,6 +5,8 @@ package com.hyjf.am.response.admin;
 
 import java.util.List;
 
+import com.hyjf.am.bean.admin.BorrowCommonBean;
+import com.hyjf.am.bean.admin.BorrowWithBLOBs;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.config.LinkVO;
@@ -12,7 +14,6 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 
@@ -20,7 +21,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  * @author dongzeshan
  * @version BorrowFirstCustomizeResponse, v0.1 2018/7/3 15:16
  */
-public class BorrowCommonResponse extends AdminResponse<BorrowCommonVO> {
+public class BorrowCommonResponse extends AdminResponse<BorrowCommonBean> {
 	private List<HjhInstConfigVO> instList;
 	private List<HjhInstConfigVO> instConfigList;
 	private List<BorrowProjectTypeVO> borrowProjectType;
@@ -31,8 +32,15 @@ public class BorrowCommonResponse extends AdminResponse<BorrowCommonVO> {
 	private List<ParamNameVO> companySizeList;
 	private List<ParamNameVO> levelList;
 	private List<ParamNameVO> currencyList;
+	private BorrowWithBLOBs bo;
 
 	
+	public BorrowWithBLOBs getBo() {
+		return bo;
+	}
+	public void setBo(BorrowWithBLOBs bo) {
+		this.bo = bo;
+	}
 	public List<ParamNameVO> getHousesTypeList() {
 		return housesTypeList;
 	}

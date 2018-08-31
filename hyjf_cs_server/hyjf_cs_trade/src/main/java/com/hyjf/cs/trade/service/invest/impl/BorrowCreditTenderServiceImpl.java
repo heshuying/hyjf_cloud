@@ -17,15 +17,14 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -224,15 +223,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     /**
      * 债转投资获取投资失败结果
      *
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
-        String errorMsg = amTradeClient.getFailResult(logOrdId,userVO.getUserId());
+    public WebResult<Map<String, Object>> getFaileResult(Integer userId, String logOrdId) {
+        String errorMsg = amTradeClient.getFailResult(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        data.put("errorMsg",errorMsg);
+        data.put("errorMsg",errorMsg==null?"请联系客服":errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
@@ -249,13 +248,18 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        // 投资金额
-        data.put("assignCapital",bean.getAssignCapital());
-        // 历史回报
-        data.put("assignInterest",bean.getAssignInterest());
-        WebResult<Map<String, Object>> result = new WebResult();
-        result.setData(data);
-        return result;
+        if(bean!=null){
+            // 投资金额
+            data.put("assignCapital",bean.getAssignCapital());
+            // 历史回报
+            data.put("assignInterest",bean.getAssignInterest());
+            WebResult<Map<String, Object>> result = new WebResult();
+            result.setData(data);
+            return result;
+        }else{
+            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR);
+        }
+
     }
 
     /**
@@ -845,7 +849,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(creditTender.getCreditFee());
+                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");
@@ -1210,6 +1214,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     private BankCallBean getCreditBankCallBean(TenderRequest request, UserVO user, BankOpenAccountVO bankOpenAccount, TenderToCreditAssignCustomizeVO creditAssign, CreditTenderLogVO creditTenderLog) {
         BankCallBean bean =  new BankCallBean(user.getUserId(),BankCallConstant.TXCODE_CREDITINVEST,Integer.parseInt(request.getPlatform()),BankCallConstant.BANK_URL_MOBILE_CREDITINVEST);
+        String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
+        bean.setOrderId(orderId);
+        bean.setLogOrderId(orderId);
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
@@ -1230,7 +1237,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
 
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn?platform="+request.getPlatform();
+        String bgRetUrl = systemConfig.getWebHost() + "/tender/credit/bgReturn?platform="+request.getPlatform();
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);

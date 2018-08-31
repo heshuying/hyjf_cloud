@@ -3,14 +3,14 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.service.totalinterest.TotalInvestAndInterestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.math.BigDecimal;
 
 /**
  * 定时更新运营数据
@@ -35,8 +35,8 @@ public class TotalInvestAndInterestController extends BaseController {
      * @return
      */
     @RequestMapping("/selectTenderSum")
-    BigDecimal selectTenderSum(){
-        return service.selectTenderSum();
+    BigDecimalResponse selectTenderSum(){
+        return new BigDecimalResponse(service.selectTenderSum()) ;
     }
 
     /**
@@ -44,8 +44,8 @@ public class TotalInvestAndInterestController extends BaseController {
      * @return
      */
     @RequestMapping("/selectInterestSum")
-    BigDecimal selectInterestSum(){
-        return service.selectInterestSum();
+    BigDecimalResponse selectInterestSum(){
+        return new BigDecimalResponse(service.selectInterestSum());
     }
 
     /**
@@ -53,8 +53,8 @@ public class TotalInvestAndInterestController extends BaseController {
      * @return
      */
     @RequestMapping("/selectTotalTenderSum")
-    int selectTotalTenderSum(){
-        return service.selectTotalTenderSum();
+    IntegerResponse selectTotalTenderSum(){
+        return new IntegerResponse(service.selectTotalTenderSum());
     }
 
 }

@@ -18,19 +18,15 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
      */
     private String repayLastTimeEndSrch;
 
-    /**
-     * 发布日期 检索条件
-     */
-    private String verifyTimeStartSrch;
-    /**
-     * 发布日期 检索条件
-     */
-    private String verifyTimeEndSrch;
 
     /**
      * 机构名称代号 检索条件
      */
     private String instCodeSrch;
+
+    private String borrowNid;// 借款编号
+    private String borrowName;// 借款标题
+    private String statusSrch;// 还款状态
 
     public String getRepayLastTimeStartSrch() {
         return repayLastTimeStartSrch;
@@ -48,21 +44,6 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
         this.repayLastTimeEndSrch = repayLastTimeEndSrch;
     }
 
-    public String getVerifyTimeStartSrch() {
-        return verifyTimeStartSrch;
-    }
-
-    public void setVerifyTimeStartSrch(String verifyTimeStartSrch) {
-        this.verifyTimeStartSrch = verifyTimeStartSrch;
-    }
-
-    public String getVerifyTimeEndSrch() {
-        return verifyTimeEndSrch;
-    }
-
-    public void setVerifyTimeEndSrch(String verifyTimeEndSrch) {
-        this.verifyTimeEndSrch = verifyTimeEndSrch;
-    }
 
     public String getInstCodeSrch() {
         return instCodeSrch;
@@ -70,5 +51,29 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
 
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getBorrowName() {
+        return borrowName;
+    }
+
+    public void setBorrowName(String borrowName) {
+        this.borrowName = borrowName;
+    }
+
+    public String getStatusSrch() {
+        return statusSrch;
+    }
+
+    public void setStatusSrch(String statusSrch) {
+        this.statusSrch = statusSrch;
     }
 }

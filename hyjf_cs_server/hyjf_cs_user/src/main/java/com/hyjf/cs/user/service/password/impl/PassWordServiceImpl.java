@@ -574,12 +574,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             //未开户
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未开户！");
         }
-        //判断用户是否设置过交易密码
-        Integer passwordFlag = user.getIsSetPassword();
-        if (passwordFlag == 1) {
-            //已设置交易密码
-            throw new CheckException(BaseResultBeanFrontEnd.FAIL,"已设置交易密码！");
-        }
         return user;
     }
 
@@ -628,9 +622,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setMobile(user.getMobile());
 
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+     /*   LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
@@ -663,9 +657,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+     /*   LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);

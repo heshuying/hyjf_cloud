@@ -288,7 +288,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         // 未分期
         accountWebList.setOrdid(borrowTenderCpn.getNid());// 订单号
         accountWebList.setUserId(tenderUserId); // 投资者
-        accountWebList.setAmount(recoverAccount); // 优惠券投资受益
+        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
 
         String tradeType = StringUtils.EMPTY;
@@ -671,7 +671,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         }
         accountWebList.setBorrowNid(borrowNid); // 投资编号
         accountWebList.setUserId(tenderUserId); // 投资者
-        accountWebList.setAmount(recoverAccount); // 优惠券投资受益
+        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
 
         String tradeType = StringUtils.EMPTY;

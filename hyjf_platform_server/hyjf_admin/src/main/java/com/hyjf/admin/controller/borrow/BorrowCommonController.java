@@ -959,6 +959,17 @@ public class BorrowCommonController extends BaseController {
 							resultMap.put("isAccountBook", this.getValue(hssfRow.getCell(1)));
 						}	
 						/** 原个人勾选内容改上传 end */
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
+						else if(rowNum == 87){//(企业)企业注册地
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
+						}
+						else if(rowNum == 88){//(个人)借款人地址
+							resultMap.put("address", this.getValue(hssfRow.getCell(1)));
+						}
+						else if(rowNum == 89){//(企业)企业组织机构代码
+							resultMap.put("corporateCode", this.getValue(hssfRow.getCell(1)));
+						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 end
 					}
 				}
 			}
@@ -989,7 +1000,7 @@ public class BorrowCommonController extends BaseController {
 				HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName);
 
 				int rowNum = 0;
-				for (int i = 0; i < 87; i++) {
+				for (int i = 0; i < 90; i++) {
 					// 新建一行
 					Row row = sheet.createRow(rowNum);
 
@@ -1580,6 +1591,29 @@ public class BorrowCommonController extends BaseController {
 								cell.setCellValue("");
 							}
 						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
+						else if(rowNum == 87){//企业注册地
+							if (celLength == 0) {
+								cell.setCellValue("(企业)企业注册地");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						else if(rowNum == 88){//借款人地址
+							if (celLength == 0) {
+								cell.setCellValue("(个人)借款人地址");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						else if(rowNum == 89){//企业注册地
+							if (celLength == 0) {
+								cell.setCellValue("(企业)企业组织机构代码");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 end
 					}
 					//行++
 					rowNum++;

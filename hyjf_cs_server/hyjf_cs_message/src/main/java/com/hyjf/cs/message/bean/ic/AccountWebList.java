@@ -50,6 +50,16 @@ public class AccountWebList implements Serializable {
 
     private String username;
 
+    private Integer createTime;
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
+
     public String getUsername() {
         return username;
     }

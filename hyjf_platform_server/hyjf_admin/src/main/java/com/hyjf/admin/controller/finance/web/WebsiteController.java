@@ -28,12 +28,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -97,7 +93,7 @@ public class WebsiteController extends BaseController {
      */
     @ApiOperation(value = "网站收支-查询条件",notes = "网站收支-查询条件")
     @PostMapping(value = "/searchAction")
-    //View
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initWithQ(@RequestBody WebBean form) {
         AccountWebListVO accountWebList = new AccountWebListVO();
         BeanUtils.copyProperties(form, accountWebList);
@@ -126,14 +122,13 @@ public class WebsiteController extends BaseController {
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
      *
      * 导出网站收支列表
-     * @param request
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "导出网站收支列表")
     @PostMapping(value = "/exportWeblistExcel")
-    //EXPORT
-    public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportWeblistExcel(HttpServletResponse response, @RequestBody WebBean form) throws Exception {
         AccountWebListVO accountWebList = new AccountWebListVO();
         // 表格sheet名称
         String sheetName = "网站收支";
@@ -221,8 +216,7 @@ public class WebsiteController extends BaseController {
                     else if (celLength == 11) {
 
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-                        cell.setCellValue(sdf.format(bean.getCreateTime()));
+                        cell.setCellValue(sdf.format(bean.getCreateStartTime()));
                     }
                 }
             }

@@ -5,19 +5,21 @@ import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankWithdrawService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,8 +57,9 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
         cra.andStatusIn(status);// 提现状态为提现中, 审核中（处理中）, 提现失败
         cra.andBankFlagEqualTo(1);// 提现平台:江西银行
         // 当前时间
-        cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));// TODO T-1天之前
-        cra.andCreateTimeLessThanOrEqualTo(GetDate.getMinutesAfter(GetDate.getDate(),-30));// 30分钟之前的充值订单TODO
+        Date nowDate = new Date();
+        cra.andCreateTimeGreaterThanOrEqualTo(DateUtils.addDays(nowDate,-2));//  T-2天之后的充值订单
+        cra.andCreateTimeLessThanOrEqualTo(DateUtils.addMinutes(nowDate,-30));// 30分钟之前的充值订单
         return this.accountWithdrawMapper.selectByExample(example);
     }
 
@@ -78,7 +81,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
     @Override
     public Boolean updateHandlerAfterCash(JSONObject para) throws Exception{
 
-        BankCallBeanVO bean= (BankCallBeanVO) para.get("bankCallBeanVO");
+        BankCallBean bean= (BankCallBean) para.get("bankCallBean");
         AccountWithdrawVO accountWithdraw = (AccountWithdrawVO) para.get("accountWithdrawVO");
         BankCardVO bankCard= (BankCardVO) para.get("bankCardVO");
         String fee = (String)para.get("withdrawFee");
@@ -283,7 +286,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @param accountWithdraw
      * @return
      */
-    private CheckResult checkCallRetAndHyjf(BankCallBeanVO bean, AccountWithdrawVO accountWithdraw) {
+    private CheckResult checkCallRetAndHyjf(BankCallBean bean, AccountWithdrawVO accountWithdraw) {
         CheckResult result = new CheckResult();
 
         Boolean resultBool = true;

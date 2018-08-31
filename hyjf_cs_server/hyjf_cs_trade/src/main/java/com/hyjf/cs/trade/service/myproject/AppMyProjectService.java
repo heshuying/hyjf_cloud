@@ -50,4 +50,12 @@ public interface AppMyProjectService extends BaseTradeService {
      * @return
      */
     AppResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
+
+
+    /**
+     * 我的债转详情
+     * @author zhangyk
+     * @date 2018/8/30 13:54
+     */
+    JSONObject getMyCreditDetail(String transfId, HttpServletRequest request, Integer userId);
 }

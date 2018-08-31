@@ -1,7 +1,6 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,37 +41,9 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
-    private String accountBalanceSum;
-
-    private String availableBalanceSum;
-
-    private String frostSum;
 
     private static final long serialVersionUID = 1L;
 
-    public String getAccountBalanceSum() {
-        return accountBalanceSum;
-    }
-
-    public void setAccountBalanceSum(String accountBalanceSum) {
-        this.accountBalanceSum = accountBalanceSum;
-    }
-
-    public String getAvailableBalanceSum() {
-        return availableBalanceSum;
-    }
-
-    public void setAvailableBalanceSum(String availableBalanceSum) {
-        this.availableBalanceSum = availableBalanceSum;
-    }
-
-    public String getFrostSum() {
-        return frostSum;
-    }
-
-    public void setFrostSum(String frostSum) {
-        this.frostSum = frostSum;
-    }
 
     public String getIds() {
         return ids;

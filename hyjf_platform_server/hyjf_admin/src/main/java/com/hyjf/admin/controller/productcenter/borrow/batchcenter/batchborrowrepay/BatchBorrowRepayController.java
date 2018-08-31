@@ -90,7 +90,7 @@ public class BatchBorrowRepayController extends BaseController{
     public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody Map map) {
 
         JSONObject jsonObject;
-        String apicronID = (String) map.get("apicronID");
+        String apicronID = map.get("apicronID").toString();
         List<BatchBorrowRepayBankInfoVO> resultList = batchBorrowRecoverService.queryBatchBorrowRepayBankInfoList(apicronID);
         if (null != resultList) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);

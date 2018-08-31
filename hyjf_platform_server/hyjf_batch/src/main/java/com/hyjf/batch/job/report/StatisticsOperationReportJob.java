@@ -3,6 +3,7 @@
  */
 package com.hyjf.batch.job.report;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -18,7 +19,7 @@ public class StatisticsOperationReportJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("StatisticsOperationReportJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/operation_report_job/countOperationReport", String.class);
+        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/operation_report_job/countOperationReport", StringResponse.class);
         logger.info("HjhSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
     }
 }

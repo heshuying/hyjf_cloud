@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 /**
  * @author zhangqingqing
  * @version MerchantAccountController, v0.1 2018/7/5 10:01
@@ -50,18 +52,18 @@ public class MerchantAccountController extends BaseController {
             return new AdminResult<>(ListResult.build(null,0));
         }
         //更新商户子账户的金额信息
-        boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
+        /*boolean flag = this.merchantAccountService.updateMerchantAccount(merchantAccounts.getResultList());
         if(!flag){
             return new AdminResult<>(ListResult.build(null,0));
-        }
+        }*/
         if (!Response.isSuccess(merchantAccounts)) {
             return new AdminResult<>(FAIL, merchantAccounts.getMessage());
         }
         AdminMerchantAccountSumCustomizeVO accoutSum = merchantAccountService.searchAccountSum();
         MerchantAccountVO merchantAccountVO = new MerchantAccountVO();
-        merchantAccountVO.setAccountBalanceSum(accoutSum.getAccountBalanceSum());
-        merchantAccountVO.setAvailableBalanceSum(accoutSum.getAvailableBalanceSum());
-        merchantAccountVO.setFrostSum(accoutSum.getFrostSum());
+        merchantAccountVO.setAccountBalance(new BigDecimal(accoutSum.getAccountBalanceSum()));
+        merchantAccountVO.setAvailableBalance(new BigDecimal(accoutSum.getAvailableBalanceSum()));
+        merchantAccountVO.setFrost(new BigDecimal(accoutSum.getFrostSum()));
         return new AdminResult<>(ListResult.build2(merchantAccounts.getResultList(), merchantAccounts.getRecordTotal(),merchantAccountVO)) ;
     }
 }

@@ -37,6 +37,7 @@ import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -82,8 +83,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		CreditTenderLogExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
-		cra.andCreateTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime10(),-5));
-		cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,-2));//两天之前
+		Date nowDate = GetDate.getNowTime();
+		cra.andCreateTimeLessThan(DateUtils.addMinutes(nowDate,-5));//当前时间-5分钟
+		cra.andCreateTimeGreaterThanOrEqualTo(DateUtils.addDays(nowDate,-2));//两天之前
 		return creditTenderLogMapper.selectByExample(example);
 	}
 
@@ -582,7 +584,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					AccountWebListVO accountWebList = new AccountWebListVO();
 					accountWebList.setOrdid(assignOrderId);
 					accountWebList.setBorrowNid(creditTender.getBidNid());
-					accountWebList.setAmount(creditTender.getCreditFee());
+					accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
 					accountWebList.setType(1);
 					accountWebList.setTrade("CREDITFEE");
 					accountWebList.setTradeType("债转服务费");

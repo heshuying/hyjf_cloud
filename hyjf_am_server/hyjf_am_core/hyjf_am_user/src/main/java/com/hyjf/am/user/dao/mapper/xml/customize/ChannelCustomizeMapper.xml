@@ -54,7 +54,7 @@
 		FROM
 		  ht_utm utm
 	      LEFT JOIN ht_utm_plat plat ON utm.source_id = plat.source_id
-	      LEFT JOIN ht_users u ON utm.utm_referrer = u.user_id
+	      LEFT JOIN ht_user u ON utm.utm_referrer = u.user_id
 	   <include refid="Where_Clause" />
 		ORDER BY
 		  utm.create_time DESC

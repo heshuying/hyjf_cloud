@@ -5,10 +5,10 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
+import com.hyjf.am.admin.mq.producer.FddProducer;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
@@ -2041,7 +2041,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     AccountWebListVO accountWebList = new AccountWebListVO();
                                                     accountWebList.setOrdid(debtCreditTender.getAssignOrderId() + "_" + borrowNid + "_" + liquidatesPeriod);
                                                     accountWebList.setBorrowNid(debtCreditTender.getBorrowNid());
-                                                    accountWebList.setAmount(debtCreditTender.getAssignServiceFee());
+                                                    accountWebList.setAmount(Double.valueOf(debtCreditTender.getAssignServiceFee().toString()));
                                                     accountWebList.setType(1);
                                                     accountWebList.setTrade("hjh_credit_fee");
                                                     accountWebList.setTradeType("汇计划债转服务费");

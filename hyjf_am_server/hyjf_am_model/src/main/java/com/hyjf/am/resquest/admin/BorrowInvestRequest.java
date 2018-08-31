@@ -86,7 +86,7 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
     /**
      * 资产来源
      */
-    private String InstCodeSrch;
+    private String instCodeSrch;
 
     /**
      * 产品类型
@@ -237,11 +237,11 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
     }
 
     public String getInstCodeSrch() {
-        return InstCodeSrch;
+        return instCodeSrch;
     }
 
     public void setInstCodeSrch(String instCodeSrch) {
-        InstCodeSrch = instCodeSrch;
+        this.instCodeSrch = instCodeSrch;
     }
 
     public String getProductType() {

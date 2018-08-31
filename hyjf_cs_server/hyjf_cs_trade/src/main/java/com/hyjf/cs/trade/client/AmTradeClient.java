@@ -1,10 +1,16 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.admin.AssetListRequest;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
@@ -13,6 +19,8 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -1315,8 +1323,7 @@ public interface AmTradeClient {
      * @param withdrawFee
      * @return
      */
-    boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
-                             String withdrawFee);
+    boolean handlerAfterCash(JSONObject params);
 
 
     /**
@@ -1704,6 +1711,45 @@ public interface AmTradeClient {
      */
     List<TenderAgreementVO> selectTenderAgreementByTenderNid(String tenderNid);
 
+
+    /**
+     * 查询资产状态
+     * @author Zha Daojian
+     * @date 2018/8/27 10:27
+     * @param assetListRequest
+     * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
+     **/
+    AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
+
+    /**
+     * 获取批次放款列表
+    * @author Zha Daojian
+    * @date 2018/8/27 15:37
+    * @param request
+    * @return java.util.List<com.hyjf.am.vo.admin.BatchBorrowRecoverVo>
+    **/
+    List<BatchBorrowRecoverVo> getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 获取批次放款列表条数
+     *
+     * @param request
+     * @return
+     * @author Zha Daojian
+     * @date 2018/8/27 15:57
+     **/
+    Integer getCountBatchCenter(BatchBorrowRecoverRequest request);
+
+
+    /**
+     * 第三方还款明细查询
+     * @param request
+     * @return java.util.List<com.hyjf.am.vo.trade.ApiBorrowRepaymentInfoCustomizeVO>
+     * @author Zha Daojian
+     * @date 2018/8/28 10:33
+     **/
+    List<ApiBorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoList(ApiBorrowRepaymentInfoRequest request);
+
     /**
      * api: 查询标的列表
      * @author zhangyk
@@ -1741,5 +1787,27 @@ public interface AmTradeClient {
 	 * @param orderId
 	 */
     int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
+
+
+    /**
+     * 根据userId和tenderNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:51
+     */
+    public List<BorrowCreditVO> getBorrowCreditListByUserIdAndTenderNid(String tenderNid, String userId);
+
+    /**
+     * 根据承接编号查询服务费总计
+     * @author zhangyk
+     * @date 2018/8/30 11:06
+     */
+    public String getBorrowCreditTenderServiceFee(String creditNid);
+
+    /**
+     * 根据creditNid查询投资记录
+     * @author zhangyk
+     * @date 2018/8/30 10:51
+     */
+    public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid);
 
 }

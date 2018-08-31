@@ -860,6 +860,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();

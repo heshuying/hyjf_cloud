@@ -5,7 +5,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowFlowService;
 import com.hyjf.admin.service.BorrowProjectTypeService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
@@ -15,6 +14,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -91,8 +91,8 @@ public class BorrowFlowController extends BaseController {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
         ModelAndView modelAndView = new ModelAndView();
         // 表单校验
-        this.validatorFieldCheck(modelAndView, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
+        String message=this.validatorFieldCheck(modelAndView, adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             // 项目列表
             List<BorrowProjectTypeVO> borrowProjectTypeList = this.borrowFlowService.borrowProjectTypeList("HZT");
             resList.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -103,7 +103,7 @@ public class BorrowFlowController extends BaseController {
             List<HjhAssetTypeVO> assetTypeList = this.borrowFlowService.hjhAssetTypeList(adminRequest.getInstCode());
             resList.setAssetTypeList(assetTypeList);
             resList.setRtn(Response.FAIL);
-            resList.setMessage("输入内容验证失败");
+            resList.setMessage(message);
             return resList;
         }
         // todo 联调时需要放开 todo-------------------------------------------
@@ -137,12 +137,13 @@ public class BorrowFlowController extends BaseController {
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "删除流程配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public String deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
+    public AdminBorrowFlowResponse deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
         // 数据更新
         this.borrowFlowService.deleteRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
-        return "redirect:" + "/manager/config/borrowflow/init";
+//        return "redirect:" + "/manager/config/borrowflow/init";
+        return resList;
     }
 
     /**
@@ -151,45 +152,61 @@ public class BorrowFlowController extends BaseController {
      * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, AdminBorrowFlowRequest form) {
+    private String validatorFieldCheck(ModelAndView modelAndView, AdminBorrowFlowRequest form) {
         //标的类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "borrowCd", form.getBorrowCd().toString());
+        if(null == form.getBorrowCd()){
+            return "borrowCd 不能为空！";
+        }
         //机构编号
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "instCode", form.getInstCode());
+        if(StringUtils.isBlank(form.getInstCode())){
+            return "instCode 不能为空！";
+        }
         //资产类型
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "assetType", form.getAssetType().toString());
+        if(null == form.getAssetType()){
+            return "assetType 不能为空！";
+        }
 //    	是否关联计划
 //    	ValidatorFieldCheckUtil.validateRequired(modelAndView, "isAssociatePlan", form.getIsAssociatePlan().toString());
         //自动录标
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "autoAdd", form.getAutoAdd().toString());
+        if(null == form.getAutoAdd()){
+            return "autoAdd 不能为空！";
+        }
         //自动备案
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "autoRecord", form.getAutoRecord().toString());
+        if(null == form.getAutoRecord()){
+            return "autoRecord 不能为空！";
+        }
         //自动保证金
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "autoBail", form.getAutoBail().toString());
+        if(null == form.getAutoBail()){
+            return "autoBail 不能为空！";
+        }
         //自动初审
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "autoAudit", form.getAutoAudit().toString());
+        if(null == form.getAutoAudit()){
+            return "iautoAudit 不能为空！";
+        }
         //自动复审
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "autoReview", form.getAutoReview().toString());
+        if(null == form.getAutoReview()){
+            return "autoReview 不能为空！";
+        }
         //是否开启
-        ValidatorFieldCheckUtil.validateRequired(modelAndView, "isOpen", form.getIsOpen().toString());
-
+        if(null == form.getIsOpen()){
+            return "isOpen 不能为空！";
+        }
         // 检查唯一性
         int cnt = this.borrowFlowService.countRecordByPK(form.getInstCode(), form.getAssetType());
         if (cnt > 0) {
-            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "borrowflow.pk.repeat");
+            return "instCode 重复了！";
         }
-
+        return "";
     }
 
     /**
      * 下拉联动
      *
-     * @param request
      * @return 进入资产列表页面
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
-    @PostMapping("/assetTypeAction/{instCode}")
-    public List<Map<String, Object>> assetTypeAction(@PathVariable String instCode) {
+    @PostMapping("/assetTypeAction")
+    public List<Map<String, Object>> assetTypeAction(@RequestParam(value="instCode") String instCode) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
         // 根据资金来源取得产品类型
         List<HjhAssetTypeVO> hjhAssetTypeList = this.borrowFlowService.hjhAssetTypeList(instCode);

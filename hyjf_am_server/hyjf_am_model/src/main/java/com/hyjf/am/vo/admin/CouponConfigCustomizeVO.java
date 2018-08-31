@@ -39,15 +39,6 @@ public class CouponConfigCustomizeVO extends BaseVO implements Serializable {
     //发行时间
     private int status;
 
-    /**
-     * 检索条件 时间开始
-     */
-    private String timeStartSrch;
-
-    /**
-     * 检索条件 时间结束
-     */
-    private String timeEndSrch;
     private int paginatorPage = 1;
     public int getPaginatorPage() {
         if (paginatorPage == 0) {
@@ -158,22 +149,6 @@ public class CouponConfigCustomizeVO extends BaseVO implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public String getTimeStartSrch() {
-        return timeStartSrch;
-    }
-
-    public void setTimeStartSrch(String timeStartSrch) {
-        this.timeStartSrch = timeStartSrch;
-    }
-
-    public String getTimeEndSrch() {
-        return timeEndSrch;
-    }
-
-    public void setTimeEndSrch(String timeEndSrch) {
-        this.timeEndSrch = timeEndSrch;
     }
 
     public void setPaginatorPage(int paginatorPage) {

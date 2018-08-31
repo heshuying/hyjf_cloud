@@ -5,6 +5,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
+import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
@@ -13,6 +14,7 @@ import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -334,4 +336,36 @@ public interface AmTradeClient {
      * @return
      */
     String handleRechargeOnlineInfo(HandleAccountRechargeRequest request);
+
+    /**
+     * 第三方用户提现
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateBeforeCash(ApiUserWithdrawRequest request);
+
+    /**
+     * 根据orderId查询出status=2的账户提现信息
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    AccountWithdrawVO getAccountWithdrawByOrderId(String orderId);
+
+    /**
+     * 执行提现后处理
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String handlerAfterCash(ApiUserWithdrawRequest request);
+
+    /**
+     * 查询某用户 id 的提现记录，带分页
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
 }

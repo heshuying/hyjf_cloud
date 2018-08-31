@@ -1460,4 +1460,18 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
      */
     public static final Integer COUPON_TENDER_TYPE_HZT = 1;
 
+    /**
+     * 充值状态
+     */
+    public static final String RECHARGE_STATUS = "RECHARGE_STATUS";
+
+    /**
+     * 托管机构
+     */
+    public static final String BANK_TYPE = "BANK_TYPE";
+
+    /**
+     * 用户类型
+     */
+    public static final String USER_PROPERTY = "USER_PROPERTY";
 }

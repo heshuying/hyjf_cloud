@@ -95,7 +95,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     @Override
     public Integer countCouponValid(Integer userId) {
-       return couponUserCustomizeMapper.countCouponValid(userId);
+        return couponUserCustomizeMapper.countCouponValid(userId);
     }
 
 
@@ -107,9 +107,9 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     @Override
     public Integer getUserCouponCount(Integer userId, String useFlag) {
-        Map<String,Object> param = new HashMap<>();
-        param.put("userId",userId);
-        param.put("useFlag",useFlag);
+        Map<String, Object> param = new HashMap<>();
+        param.put("userId", userId);
+        param.put("useFlag", useFlag);
         Integer count = couponUserCustomizeMapper.countCouponUser(param);
         return count;
     }
@@ -118,9 +118,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public Integer getIssueNumber(String couponCode) {
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria cra = example.createCriteria();
-        if (StringUtils.isNotEmpty(couponCode)) {
-            cra.andCouponCodeEqualTo(couponCode);
-        }
+        cra.andCouponCodeEqualTo(couponCode);
         cra.andDelFlagEqualTo(CustomConstants.FALG_NOR);
         return this.couponUserMapper.countByExample(example);
     }
@@ -142,16 +140,6 @@ public class CouponUserServiceImpl implements CouponUserService {
         List<CouponUser> couponUserList = this.couponUserMapper.selectByExample(couponUserExample);
 
         return couponUserList == null || couponUserList.size() == 0 ? true : false;
-    }
-
-    @Override
-    public List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request) {
-        return couponUserCustomizeMapper.selectDataCenterCouponJXList(request);
-    }
-
-    @Override
-    public List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request) {
-        return couponUserCustomizeMapper.selectDataCenterCouponDJList(request);
     }
 
 }

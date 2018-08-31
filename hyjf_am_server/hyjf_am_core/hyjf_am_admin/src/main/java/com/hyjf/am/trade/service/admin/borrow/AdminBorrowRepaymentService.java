@@ -37,4 +37,9 @@ public interface AdminBorrowRepaymentService {
 
     BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
 
+    int countBorrowRepaymentPlan(BorrowRepaymentRequest request);
+
+    List<AdminBorrowRepaymentPlanCustomize> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
+
+    AdminBorrowRepaymentPlanCustomize sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
 }

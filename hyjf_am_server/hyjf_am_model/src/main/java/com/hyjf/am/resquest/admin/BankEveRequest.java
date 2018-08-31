@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
  * @author fuqiang
  * @version BankEveRequest, v0.1 2018/7/10 19:26
  */
-public class BankEveRequest extends Request implements Serializable {
+public class BankEveRequest extends BasePage implements Serializable {
 
 	@ApiModelProperty(value = "主账号检索")
 	private String cardnbr;
@@ -27,13 +28,7 @@ public class BankEveRequest extends Request implements Serializable {
 	@ApiModelProperty(value = "交易传输时间 结束")
 	private String endDate;
 
-	public Paginator getPaginator() {
-		return paginator;
-	}
 
-	public void setPaginator(Paginator paginator) {
-		this.paginator = paginator;
-	}
 
 	/**
 	 * 翻页机能用的隐藏变量
@@ -54,6 +49,13 @@ public class BankEveRequest extends Request implements Serializable {
 	 * 列表画面自定义标签上的用翻页对象：paginator
 	 */
 	private Paginator paginator;
+	public Paginator getPaginator() {
+		return paginator;
+	}
+
+	public void setPaginator(Paginator paginator) {
+		this.paginator = paginator;
+	}
 
 	public int getPaginatorPage() {
 		if (paginatorPage == 0) {

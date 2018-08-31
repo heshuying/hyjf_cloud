@@ -237,7 +237,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
         AccountWebListVO accountWebList = new AccountWebListVO();
         accountWebList.setOrdid(bankBean.getLogOrderId());// 订单号
         accountWebList.setUserId(accountList.getUserId()); // 投资者
-        accountWebList.setAmount(accountList.getAmount()); // 管理费
+        accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
         accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
         accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成

@@ -2,11 +2,9 @@ package com.hyjf.am.trade.service.front.borrow;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
-import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
@@ -115,7 +113,7 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowBean
 	 * @param borrow
 	 */
-	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowNid,String adminUsername,int adminId) throws Exception;
+	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowNid,String adminUsername,int adminId,int infoId) throws Exception;
 
 	/**
 	 * 获取借款预编号
@@ -372,7 +370,7 @@ public interface BorrowCommonService extends BaseService {
 	 */
 	//public String uploadAuthen(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	public BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean);
+	public com.hyjf.am.bean.admin.BorrowWithBLOBs getRecordById(BorrowCommonBean borrowBean);
 
 	/**
 	 * 判断借款期限是否为0

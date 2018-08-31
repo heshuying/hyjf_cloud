@@ -6,6 +6,7 @@ package com.hyjf.cs.message.service;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 
 import java.util.Date;
 import java.util.List;
@@ -61,5 +62,5 @@ public interface HjhPlanCapitalService {
      * @return
      * @Author : huanghui
      */
-    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest request);
+    List<HjhPlanCapital> getPlanCapitalList(HjhPlanCapitalRequest request);
 }

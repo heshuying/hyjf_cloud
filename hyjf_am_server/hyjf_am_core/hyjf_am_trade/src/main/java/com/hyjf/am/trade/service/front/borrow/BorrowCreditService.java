@@ -88,4 +88,19 @@ public interface BorrowCreditService {
      */
     BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
 
+
+    /**
+     * 根据userId和tenderNid获取投资债转信息
+     * @author zhangyk
+     * @date 2018/8/30 10:58
+     */
+    List<BorrowCredit> getBorrowCreditList(String userId, String tenderNid);
+
+    /**
+     * 根据userId和tenderNid获取投资债转信息
+     * @author zhangyk
+     * @date 2018/8/30 10:58
+     */
+    List<BorrowCredit> getBorrowCreditListByCreditNid(String creditNid);
+
 }

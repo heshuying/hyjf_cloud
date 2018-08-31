@@ -33,4 +33,11 @@ public interface StzfWhiteConfigService {
 	 * @param request
 	 */
 	void updateSTZHWhiteList(STZHWhiteListRequest request);
+
+	/**
+	 * 根据id查询受托支付白名单详情
+	 * @param id
+	 * @return
+	 */
+    StzhWhiteList selectStzfWhiteById(Integer id);
 }

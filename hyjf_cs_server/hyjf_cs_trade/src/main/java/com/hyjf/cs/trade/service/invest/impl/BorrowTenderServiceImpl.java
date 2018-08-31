@@ -466,6 +466,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
         logger.info("开始调用散标投资异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
         // 用户Userid
+        if(couponGrantId==null||couponGrantId.equals("null") ||couponGrantId.equals("")){
+            couponGrantId = "0";
+        }
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 投资结果返回码
         String respCode = bean.getRetCode();
@@ -506,7 +509,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             result.setMessage("回调时,borrowNid为空.");
             return result;
         }
-        // 开始投资逻辑
+        // 开始投资逻辑开始调用散标投资异步方法
         this.userBorrowTender(borrow, bean, couponGrantId);
         result.setStatus(true);
         return result;
@@ -560,13 +563,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-            // 查询优惠券的投资
-            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
-            // 优惠券收益
-            data.put("couponQuota",borrowTenderCpn.getAccount());
-            data.put("couponType",couponUser.getCouponType());
-            data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
-            data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+            if(couponUser!=null){
+                // 查询优惠券的投资
+                BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
+                // 优惠券收益
+                if(borrowTenderCpn!=null){
+                    data.put("couponQuota",borrowTenderCpn.getAccount());
+                    data.put("couponType",couponUser.getCouponType());
+                    data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
+                    data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+                }else{
+                    data.put("couponQuota","");
+                    data.put("couponType","");
+                    data.put("couponAll","");
+                    data.put("couponInterest","");
+                }
+            }else{
+                data.put("couponQuota","");
+                data.put("couponType","");
+                data.put("couponAll","");
+                data.put("couponInterest","");
+            }
         }
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);

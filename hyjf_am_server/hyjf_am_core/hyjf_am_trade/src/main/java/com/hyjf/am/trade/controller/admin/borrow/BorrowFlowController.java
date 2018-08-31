@@ -134,8 +134,9 @@ public class BorrowFlowController {
                 BeanUtils.copyProperties(record, recordVo);
                 result.setResult(recordVo);
                 result.setRtn(Response.SUCCESS);
+                return result;
             }
-            return result;
+            return null;
         }
         return null;
     }
@@ -154,6 +155,7 @@ public class BorrowFlowController {
            return result;
        }
         result.setRtn(Response.FAIL);
+        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -171,6 +173,7 @@ public class BorrowFlowController {
             return result;
         }
         result.setRtn(Response.FAIL);
+        result.setMessage(Response.FAIL_MSG);
         return result;
     }
     /**
@@ -188,9 +191,11 @@ public class BorrowFlowController {
                 return resp;
             }
             resp.setRtn(Response.FAIL);
+            resp.setMessage(Response.FAIL_MSG);
             return resp;
         }
         resp.setRtn(Response.FAIL);
+        resp.setMessage(Response.FAIL_MSG);
         return resp;
     }
 }
