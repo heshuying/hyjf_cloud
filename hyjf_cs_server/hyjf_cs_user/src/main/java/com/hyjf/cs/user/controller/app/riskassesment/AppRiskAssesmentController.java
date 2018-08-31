@@ -5,9 +5,7 @@ package com.hyjf.cs.user.controller.app.riskassesment;
 
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.RiskAssesmentResponse;
@@ -33,8 +31,6 @@ import java.util.List;
 @RequestMapping("/hyjf-app/user")
 public class AppRiskAssesmentController extends BaseUserController {
 
-    private final String TOKEN_ISINVALID_STATUS = "Token失效，请重新登录";
-
     @Autowired
     EvaluationService evaluationService;
 
@@ -48,31 +44,15 @@ public class AppRiskAssesmentController extends BaseUserController {
      */
     @ApiOperation(value = "风险测评")
     @GetMapping(value = "/riskTest")
-    public RiskAssesmentResponse getQuestionList(HttpServletRequest request) {
+    public RiskAssesmentResponse getQuestionList(@RequestHeader(value = "userId")Integer userId,HttpServletRequest request) {
 
         RiskAssesmentResponse response = new RiskAssesmentResponse();
-
-        String sign = request.getParameter("sign");
-        if (sign == null) {
-            response.setStatus(RiskAssesmentResponse.FAIL);
-            response.setStatusDesc("参数非法");
-            return response;
-        }
         String platform = request.getParameter("platform");
-        Integer userId = null;
-        try {
-            userId = SecretUtil.getUserId(sign);
-        } catch (Exception e) { // token失效
-            response.setStatus(CustomConstants.APP_STATUS_FAIL);
-            response.setStatusDesc(TOKEN_ISINVALID_STATUS);
-            return response;
-        }
         if (userId == null || userId == 0) {
             response.setStatus(RiskAssesmentResponse.FAIL);
             response.setStatusDesc("用户未登录");
             return response;
         }
-
         UserEvalationResultVO ueResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (ueResult == null) {
             // 未测评
@@ -119,18 +99,9 @@ public class AppRiskAssesmentController extends BaseUserController {
      */
     @ApiOperation(value = "风险测评提交")
     @PostMapping(value = "/riskTest")
-    public RiskAssesmentResponse evaluationResult(HttpServletRequest request,
-                                                  @RequestBody UserAnswerRequestBean userAnswerRequestBean) {
+    public RiskAssesmentResponse evaluationResult(@RequestHeader(value = "userId")Integer userId,@RequestBody UserAnswerRequestBean userAnswerRequestBean) {
         RiskAssesmentResponse response = new RiskAssesmentResponse();
         // 检查参数
-        String sign = request.getParameter("sign");
-        if (sign == null) {
-            response.setStatus(RiskAssesmentResponse.FAIL);
-            response.setStatusDesc("参数非法");
-            return response;
-        }
-        // 用户ID
-        Integer userId = SecretUtil.getUserId(sign);
         if (userId == null || userId == 0) {
             response.setStatus(RiskAssesmentResponse.FAIL);
             response.setStatusDesc(RiskAssesmentResponse.FAIL_MSG);
@@ -153,18 +124,10 @@ public class AppRiskAssesmentController extends BaseUserController {
      */
     @ApiOperation(value = "风险空测评提交  -- 跳过测评")
     @PostMapping(value = "/riskTestNone")
-    public RiskAssesmentResponse skipEvaluate(HttpServletRequest request) {
+    public RiskAssesmentResponse skipEvaluate(@RequestHeader(value = "userId")Integer userId,HttpServletRequest request) {
 
         RiskAssesmentResponse response = new RiskAssesmentResponse();
         // 检查参数
-        String sign = request.getParameter("sign");
-        if (sign == null) {
-            response.setStatus(RiskAssesmentResponse.FAIL);
-            response.setStatusDesc("参数非法");
-            return response;
-        }
-        // 用户ID
-        Integer userId = SecretUtil.getUserId(sign);
         if (userId == null || userId == 0) {
             response.setStatus(RiskAssesmentResponse.FAIL);
             response.setStatusDesc(RiskAssesmentResponse.FAIL_MSG);
