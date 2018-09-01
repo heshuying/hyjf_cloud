@@ -92,7 +92,7 @@ public class PlanCapitalController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(planCapitalResponse.getResultList())){
             returnList = CommonUtils.convertBeanList(planCapitalResponse.getResultList(), HjhPlanCapitalVO.class);
-            return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build(returnList, planCapitalResponse.getCount()));
+            return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build2(returnList, planCapitalResponse.getCount(), planCapitalResponse.getSumHjhPlanCapitalVO()));
         }else {
             return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build(returnList, 0));
         }
