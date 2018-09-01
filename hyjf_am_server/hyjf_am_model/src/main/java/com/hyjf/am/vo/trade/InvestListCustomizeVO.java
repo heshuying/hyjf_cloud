@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.trade;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 
-public class InvestListCustomizeVO implements Serializable{
+public class InvestListCustomizeVO extends BaseVO implements Serializable{
 
     /**
      *序列化id

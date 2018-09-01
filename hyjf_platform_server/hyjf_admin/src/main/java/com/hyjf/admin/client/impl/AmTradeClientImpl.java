@@ -6,7 +6,7 @@ package com.hyjf.admin.client.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.*;
-import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.AdminResponse;
@@ -67,10 +67,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -5899,6 +5896,232 @@ public class AmTradeClientImpl implements AmTradeClient {
         AdminMerchantAccountSumCustomizeResponse response = restTemplate.getForEntity(url, AdminMerchantAccountSumCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 产品中心-加息投资明细（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public int getIncreaseInterestInvestDetaiCount(IncreaseInterestInvestDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestInvestDetaiCount";
+        IncreaseInterestInvestDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestInvestDetailResponse.class).getBody();
+        if(response != null){
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 产品中心-加息投资明细（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestInvestDetaiList(IncreaseInterestInvestDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestInvestDetaiList";
+        EnumMap<AmTradeClient.IncreaseProperty,Object> retMap = new EnumMap<AmTradeClient.IncreaseProperty, Object>(AmTradeClient.IncreaseProperty.class);
+        IncreaseInterestInvestDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestInvestDetailResponse.class).getBody();
+        if(response != null){
+            retMap.put(AmTradeClient.IncreaseProperty.VO,response.getResultList());
+            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumAccount());
+            return retMap;
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息投资明细（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public String getSumAccount(IncreaseInterestInvestDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getSumAccount";
+        IncreaseInterestInvestDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestInvestDetailResponse.class).getBody();
+        if(response != null){
+            return response.getSumAccount();
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款信息（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public int getIncreaseInterestRepayCount(IncreaseInterestRepayRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayCount";
+        IncreaseInterestRepayResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayResponse.class).getBody();
+        if(response != null){
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 产品中心-加息还款信息（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayList(IncreaseInterestRepayRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayList";
+        EnumMap<AmTradeClient.IncreaseProperty,Object> retMap = new EnumMap<AmTradeClient.IncreaseProperty, Object>(AmTradeClient.IncreaseProperty.class);
+        IncreaseInterestRepayResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayResponse.class).getBody();
+        if(response != null){
+            retMap.put(AmTradeClient.IncreaseProperty.VO,response.getResultList());
+            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumAccount());
+            return retMap;
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款信息（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public String getSumAccount(IncreaseInterestRepayRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getSumAccount";
+        IncreaseInterestRepayResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayResponse.class).getBody();
+        if(response != null){
+            return response.getSumAccount();
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款明细（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public int getIncreaseInterestRepayDetailCount(IncreaseInterestRepayDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayDetailCount";
+        IncreaseInterestRepayDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayDetailResponse.class).getBody();
+        if(response != null){
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 产品中心-加息还款明细（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayDetailList(IncreaseInterestRepayDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayDetailList";
+        EnumMap<AmTradeClient.IncreaseProperty,Object> retMap = new EnumMap<AmTradeClient.IncreaseProperty, Object>(AmTradeClient.IncreaseProperty.class);
+        IncreaseInterestRepayDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayDetailResponse.class).getBody();
+        if(response != null){
+            retMap.put(AmTradeClient.IncreaseProperty.VO,response.getResultList());
+            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumRepayCapital());
+            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumRepayInterest());
+            return retMap;
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款明细（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public AdminIncreaseInterestRepayCustomizeVO getSumBorrowRepaymentInfo(IncreaseInterestRepayDetailRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getSumBorrowRepaymentInfo";
+        IncreaseInterestRepayDetailResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayDetailResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款明细详情（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public int getIncreaseInterestRepayInfoListCount(IncreaseInterestRepayInfoListRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayInfoListCount";
+        IncreaseInterestRepayInfoListResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayInfoListResponse.class).getBody();
+        if(response != null){
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 产品中心-加息还款明细详情（列表导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayInfoListList(IncreaseInterestRepayInfoListRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayInfoListList";
+        EnumMap<AmTradeClient.IncreaseProperty,Object> retMap = new EnumMap<AmTradeClient.IncreaseProperty, Object>(AmTradeClient.IncreaseProperty.class);
+        IncreaseInterestRepayInfoListResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayInfoListResponse.class).getBody();
+        if(response != null){
+            retMap.put(AmTradeClient.IncreaseProperty.VO,response.getResultList());
+            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumLoanInterest());
+            retMap.put(AmTradeClient.IncreaseProperty.STR1,response.getSumRepayCapital());
+            return retMap;
+        }
+        return null;
+    }
+    /**
+     * 产品中心-加息还款明细详情（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public AdminIncreaseInterestRepayCustomizeVO getSumBorrowLoanmentInfo(IncreaseInterestRepayInfoListRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getSumBorrowLoanmentInfo";
+        IncreaseInterestRepayInfoListResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayInfoListResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     *  产品中心-加息还款计划（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public int getIncreaseInterestRepayPlanCount(IncreaseInterestRepayPlanRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayPlanCount";
+        IncreaseInterestRepayPlanResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayPlanResponse.class).getBody();
+        if(response != null){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     *  产品中心-加息还款计划（列表）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    @Override
+    public List<IncreaseInterestRepayDetailVO> getIncreaseInterestRepayPlanList(IncreaseInterestRepayPlanRequest request){
+        String url = "http://AM-ADMIN/am-trade/increaseinterest/getIncreaseInterestRepayPlanList";
+        IncreaseInterestRepayPlanResponse response = restTemplate.postForEntity(url,request,IncreaseInterestRepayPlanResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
         }
         return null;
     }
