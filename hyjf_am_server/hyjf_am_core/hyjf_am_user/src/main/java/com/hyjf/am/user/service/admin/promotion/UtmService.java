@@ -46,7 +46,7 @@ public interface UtmService extends BaseService {
      * @Param utmId
      * @return
      */
-    UtmChannelVO getUtmByUtmId(String utmId);
+    UtmChannelVO getUtmByUtmId(Integer utmId);
 
     /**
      * @Author walter.limeng

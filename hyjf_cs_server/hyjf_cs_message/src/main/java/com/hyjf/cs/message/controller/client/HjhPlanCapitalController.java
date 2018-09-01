@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,8 @@ public class HjhPlanCapitalController extends BaseController {
 
                         if (!result){
                             logger.error("汇计划资本预估统计(每日)任务 更新前一天的汇计划资本统计(实际) 失败 日期："
-                                    + GetDate.dateToString(hjhPlanCapital.getDate())
+//                                    + GetDate.dateToString(hjhPlanCapital.getDate())
+                                    + hjhPlanCapital.getDate()
                                     + " 计划编号：" + hjhPlanCapital.getPlanNid());
                         }
                     }
@@ -89,7 +91,8 @@ public class HjhPlanCapitalController extends BaseController {
 
                         if (!result){
                             logger.error("汇计划资本预估统计(每日)任务 更新当日及后9天的汇计划资本统计(预估) 失败 日期："
-                                    + GetDate.dateToString(hjhPlanCapital.getDate())
+//                                    + GetDate.dateToString(hjhPlanCapital.getDate())
+                                    + hjhPlanCapital.getDate()
                                     + " 计划编号：" + hjhPlanCapital.getPlanNid());
                         }
                     }
@@ -143,18 +146,40 @@ public class HjhPlanCapitalController extends BaseController {
         //总计条数
         Integer count = this.hjhPlanCapitalService.getPlanCapitalCount(request);
 
-        if (request.getCurrPage() > 0){
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+        // 分页
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count.intValue(), request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
 
         List<HjhPlanCapital> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
 
+        // 初始化总计数据
+        BigDecimal sumAccedeAccount = BigDecimal.ZERO;
+        BigDecimal sumRepayInterest = BigDecimal.ZERO;
+
+        for (int i = 0; i < recordList.size(); i++){
+            if (recordList.get(i).getReinvestAccount() == null){
+                sumAccedeAccount = BigDecimal.ZERO;
+            }else {
+                sumAccedeAccount = sumAccedeAccount.add(recordList.get(i).getReinvestAccount());
+            }
+            if (recordList.get(i).getCreditAccount() == null){
+                sumRepayInterest = BigDecimal.ZERO;
+            }else {
+                sumRepayInterest = sumRepayInterest.add(recordList.get(i).getCreditAccount());
+            }
+        }
+
         if (CollectionUtils.isNotEmpty(recordList)){
             List<HjhPlanCapitalVO> hjhPlanCapitalVOList = CommonUtils.convertBeanList(recordList, HjhPlanCapitalVO.class);
+            HjhPlanCapitalVO hjhPlanCapitalVO = new HjhPlanCapitalVO();
             hjhPlanCapitalResponse.setResultList(hjhPlanCapitalVOList);
             hjhPlanCapitalResponse.setCount(count);
+            hjhPlanCapitalVO.setReinvestAccount(sumAccedeAccount);
+            hjhPlanCapitalVO.setCreditAccount(sumRepayInterest);
+            hjhPlanCapitalResponse.setSumHjhPlanCapitalVO(hjhPlanCapitalVO);
             hjhPlanCapitalResponse.setRtn(Response.SUCCESS);
         }
         return hjhPlanCapitalResponse;

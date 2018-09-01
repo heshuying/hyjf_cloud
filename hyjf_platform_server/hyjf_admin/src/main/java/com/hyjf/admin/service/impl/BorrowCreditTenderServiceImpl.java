@@ -107,7 +107,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     /*承接列表sum*/
     public static final String TENDER_SUM_URL = BASE_URL + "/creditTender/getTenderSum";
 
-    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/";
+    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/";
 
     public static final String BORROW_URL = BASE_URL + "/borrow/getBorrow/";
 

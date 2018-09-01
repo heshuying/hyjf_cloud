@@ -21,7 +21,7 @@
 			crm.interest_wait_total,
 			crm.interest_yes_total,
 			IFNULL(crm.interest_yes_total, 0) - IFNULL(crm.interest_wait_total, 0) AS repay_gap,
-		  crm.update_time
+			DATE_FORMAT(crm.update_time, '%Y-%m-%d %H:%i:%s' ) AS update_time
 		FROM
 			ht_coupon_repay_monitor crm
 		WHERE crm.del_flag = 0

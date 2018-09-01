@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
+import com.hyjf.am.response.admin.UtmChannelResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.user.controller.BaseController;
@@ -41,6 +42,7 @@ public class UtmController extends BaseController {
         List<UtmVO> pageList = utmService.getByPageList(map);
         if (pageList != null) {
             response.setResultList(pageList);
+            response.setResultListS(pageList);
         }
         return response;
     }
@@ -79,8 +81,8 @@ public class UtmController extends BaseController {
      * @return
      */
     @RequestMapping("/getutmbyutmid/{utmId}")
-    public UtmResponse getUtmByUtmId(@PathVariable String utmId) {
-        UtmResponse response = new UtmResponse();
+    public UtmChannelResponse getUtmByUtmId(@PathVariable Integer utmId) {
+        UtmChannelResponse response = new UtmChannelResponse();
         UtmChannelVO utmChannelVO = utmService.getUtmByUtmId(utmId);
         response.setResult(utmChannelVO);
         return response;

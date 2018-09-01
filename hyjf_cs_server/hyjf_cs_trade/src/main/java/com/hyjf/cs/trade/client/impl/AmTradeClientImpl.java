@@ -60,6 +60,8 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
@@ -4216,4 +4218,51 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     * 获取逾期的标的
+     * @return
+     */
+    @Override
+    public List<BorrowVO> selectOverdueBorrowList() {
+        String url = "http://AM-TRADE/am-trade/borrow/selectOverdueBorrowList";
+        BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 计划锁定
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
+     */
+    @Override
+    public void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateLockRepayInfo";
+        HjhLockVo hjhLockVo = new HjhLockVo();
+        hjhLockVo.setAccedeOrderId(accedeOrderId);
+        hjhLockVo.setInverestUserInfo(inverestUserInfo);
+        hjhLockVo.setCommissioUserInfoVO(commissioUserInfoVO);
+        hjhLockVo.setBankOpenAccountVO(bankOpenAccountVO);
+        hjhLockVo.setUserInfoCustomizeVOS(userInfoCustomizeVOS);
+        restTemplate.postForEntity(url,hjhLockVo,null);
+    }
+
+    /**
+     * 计划退出
+     *
+     * @param accedeOrderId
+     */
+    @Override
+    public void updateForQuit(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateQuitRepayInfo/" + accedeOrderId;
+        restTemplate.getForEntity(url, String.class);
+    }
+
 }

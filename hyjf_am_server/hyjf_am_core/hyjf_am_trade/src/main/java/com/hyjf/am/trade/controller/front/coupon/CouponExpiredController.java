@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.coupon;
 
+import com.hyjf.am.response.StringResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +23,13 @@ public class CouponExpiredController extends BaseController {
 	private CouponExpiredService couponExpiredService;
 
 	@RequestMapping("/expired")
-	public void updateCouponExpired() {
-		logger.info("检查优惠券使用是否过期 开始");
-		couponExpiredService.updateCouponExpired();
-		logger.info("检查优惠券使用是否过期 结束");
+	public StringResponse updateCouponExpired() {
+		try {
+			couponExpiredService.updateCouponExpired();
+		} catch (Exception e) {
+			logger.error("检查优惠券使用是否过期 失败", e);
+			return new StringResponse("fail");
+		}
+		return new StringResponse("success");
 	}
 }

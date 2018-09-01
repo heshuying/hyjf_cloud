@@ -12,6 +12,7 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -53,14 +54,18 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     @Override
-    public UtmChannelVO getUtmByUtmId(String utmId) {
+    public UtmChannelVO getUtmByUtmId(Integer utmId) {
         return utmRegCustomizeMapper.getUtmByUtmId(utmId);
     }
 
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        Integer utmId = Integer.parseInt(channelCustomizeVO.getUtmId());
+        UtmExample example = new UtmExample();
+        example.createCriteria().andUtmIdEqualTo(utmId);
+        List<Utm> utmList = utmMapper.selectByExample(example);
+        if(utmId == null || !CollectionUtils.isEmpty(utmList)) {
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));

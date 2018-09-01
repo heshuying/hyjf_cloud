@@ -41,8 +41,8 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
-
     private static final long serialVersionUID = 1L;
+
 
 
     public String getIds() {

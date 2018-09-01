@@ -2,12 +2,12 @@ package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.market.UtmRegResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
@@ -16,6 +16,10 @@ import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -97,10 +101,16 @@ public class AmUserClientImpl implements AmUserClient {
 			params.put("sourceType", 1);// 渠道1 APP
 			params.put("flagType", 0);// 未删除
 		}
-		UtmResponse response = restTemplate.postForObject("http://AM-USER/am-user/promotion/utm/getbypagelist", params,
-				UtmResponse.class);
-		if (response != null) {
-			return response.getResultList();
+//		UtmResponse response = restTemplate.postForObject("http://AM-USER/am-user/promotion/utm/getbypagelist",
+//				params,
+//				UtmResponse.class);
+		HttpEntity httpEntity = new HttpEntity(params);
+		ResponseEntity<UtmResponse<UtmVO>> response =
+				restTemplate.exchange("http://AM-USER/am-user/promotion/utm/getbypagelist",
+						HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
+
+		if (response.getBody() != null) {
+			return response.getBody().getResultListS();
 		}
 		return null;
 	}
@@ -127,7 +137,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getOpenAccountNumber(Integer sourceId, String type) {
-		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getopenaccountnumber/" + sourceId,
+		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getopenaccountnumber/" + sourceId+"/"+type,
 				UtmResponse.class);
 		if (response != null) {
 			return response.getOpenAccountNumber();

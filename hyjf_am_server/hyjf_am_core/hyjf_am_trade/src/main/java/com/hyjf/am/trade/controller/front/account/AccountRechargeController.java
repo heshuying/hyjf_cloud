@@ -47,8 +47,9 @@ public class AccountRechargeController extends BaseController {
         BigDecimal rechargePrice = accountRecharge.getRechargePrice(list);
         if (rechargePrice != null) {
             response.setRechargePrice(rechargePrice);
+            return response;
         }
-        return response;
+        return null;
     }
 
     /**

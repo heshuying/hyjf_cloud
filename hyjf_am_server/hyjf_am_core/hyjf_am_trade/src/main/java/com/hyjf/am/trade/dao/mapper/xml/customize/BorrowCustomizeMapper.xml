@@ -14,7 +14,7 @@
 	</select>
 
 	<update id="updateOfBorrow" parameterType="map">
-		UPDATE huiyingdai_borrow b
+		UPDATE ht_borrow b
 		SET b.borrow_account_yes = b.borrow_account_yes +
 		#{borrowAccountYes,jdbcType=DECIMAL},
 		b.borrow_account_wait =
@@ -39,7 +39,7 @@
 	</update>
 
 	<update id="updateOfFullBorrow" parameterType="map">
-		UPDATE huiyingdai_borrow b
+		UPDATE ht_borrow b
 		SET b.borrow_full_status = 1,
 		b.`status` = 3,
 		b.borrow_full_time = unix_timestamp(now())
@@ -737,7 +737,7 @@ WHERE
 		<!--  债转  -->
 		<!-- union all
 	  SELECT b.borrow_nid, b.`status`
-	  FROM huiyingdai_borrow b
+	  FROM ht_borrow b
 	  INNER JOIN hyjf_debt_credit_tender dct ON b.borrow_nid = dct.borrow_nid
 	  WHERE EXISTS(
 		 SELECT hr.id

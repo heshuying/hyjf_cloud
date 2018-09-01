@@ -5,6 +5,8 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -77,4 +79,12 @@ public interface ChannelService {
      * @return
      */
     boolean deleteAction(ChannelCustomizeVO channelCustomizeVO);
+
+    /**
+     * 资料上传
+     * @param request
+     * @param response
+     * @return
+     */
+    String uploadFile(HttpServletRequest request, HttpServletResponse response);
 }
