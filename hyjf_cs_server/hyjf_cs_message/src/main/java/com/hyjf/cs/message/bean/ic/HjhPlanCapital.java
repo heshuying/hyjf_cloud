@@ -9,124 +9,136 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * @Author : huanghui
  */
-@Document(collection = "t_hjh_plan_capital")
+@Document(collection = "ht_hjh_plan_capital")
 public class HjhPlanCapital implements Serializable {
 
-    private Integer id;
-    private Date date;
-    private String plan_nid;
-    private String plan_name;
-    private Integer lock_period;
-    private Integer is_month;
-    private BigDecimal reinvest_account;
-    private BigDecimal credit_account;
-    private Integer create_user;
-    private Integer create_time;
-    private Integer update_user;
-    private Integer update_time;
-    private Integer del_flg;
+    private String id;
 
-    public Integer getId() {
+    private String date;
+
+    private String planNid;
+
+    private String planName;
+
+    private Integer lockPeriod;
+
+    private Integer isMonth;
+
+    private BigDecimal reinvestAccount;
+
+    private BigDecimal creditAccount;
+
+    private Integer createUser;
+
+    private Integer createTime;
+
+    private Integer updateUser;
+
+    private String updateTime;
+
+    private Integer delFlg;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public String getPlan_nid() {
-        return plan_nid;
+    public String getPlanNid() {
+        return planNid;
     }
 
-    public void setPlan_nid(String plan_nid) {
-        this.plan_nid = plan_nid;
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
     }
 
-    public String getPlan_name() {
-        return plan_name;
+    public String getPlanName() {
+        return planName;
     }
 
-    public void setPlan_name(String plan_name) {
-        this.plan_name = plan_name;
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
 
-    public Integer getLock_period() {
-        return lock_period;
+    public Integer getLockPeriod() {
+        return lockPeriod;
     }
 
-    public void setLock_period(Integer lock_period) {
-        this.lock_period = lock_period;
+    public void setLockPeriod(Integer lockPeriod) {
+        this.lockPeriod = lockPeriod;
     }
 
-    public Integer getIs_month() {
-        return is_month;
+    public Integer getIsMonth() {
+        return isMonth;
     }
 
-    public void setIs_month(Integer is_month) {
-        this.is_month = is_month;
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 
-    public BigDecimal getReinvest_account() {
-        return reinvest_account;
+    public BigDecimal getReinvestAccount() {
+        return reinvestAccount;
     }
 
-    public void setReinvest_account(BigDecimal reinvest_account) {
-        this.reinvest_account = reinvest_account;
+    public void setReinvestAccount(BigDecimal reinvestAccount) {
+        this.reinvestAccount = reinvestAccount;
     }
 
-    public BigDecimal getCredit_account() {
-        return credit_account;
+    public BigDecimal getCreditAccount() {
+        return creditAccount;
     }
 
-    public void setCredit_account(BigDecimal credit_account) {
-        this.credit_account = credit_account;
+    public void setCreditAccount(BigDecimal creditAccount) {
+        this.creditAccount = creditAccount;
     }
 
-    public Integer getCreate_user() {
-        return create_user;
+    public Integer getCreateUser() {
+        return createUser;
     }
 
-    public void setCreate_user(Integer create_user) {
-        this.create_user = create_user;
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
     }
 
-    public Integer getCreate_time() {
-        return create_time;
+    public Integer getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Integer create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getUpdate_user() {
-        return update_user;
+    public Integer getUpdateUser() {
+        return updateUser;
     }
 
-    public void setUpdate_user(Integer update_user) {
-        this.update_user = update_user;
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
     }
 
-    public Integer getUpdate_time() {
-        return update_time;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Integer update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
-    public Integer getDel_flg() {
-        return del_flg;
+    public Integer getDelFlg() {
+        return delFlg;
     }
 
-    public void setDel_flg(Integer del_flg) {
-        this.del_flg = del_flg;
+    public void setDelFlg(Integer delFlg) {
+        this.delFlg = delFlg;
     }
 }

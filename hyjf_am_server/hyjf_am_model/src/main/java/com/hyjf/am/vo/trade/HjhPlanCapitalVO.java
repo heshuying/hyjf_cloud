@@ -14,9 +14,14 @@ import java.util.Date;
  * @version HjhPlanCapitalVO, v0.1 2018/7/31 11:35
  */
 public class HjhPlanCapitalVO extends BaseVO implements Serializable {
-    private Integer id;
 
-    private Date date;
+    /**
+     * Warning 数据读取 MongoDB时,不应存在除MongoDB已存在的_id之外的 id 含 : id    (写入不影响)
+     * 否则会冲突 o(*￣︶￣*)o
+     */
+    private String id;
+
+    private String date;
 
     private String planNid;
 
@@ -36,25 +41,25 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
     private Integer updateUser;
 
-    private Integer updateTime;
+    private String updateTime;
 
     private Integer delFlg;
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -130,11 +135,11 @@ public class HjhPlanCapitalVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 

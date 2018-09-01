@@ -98,7 +98,7 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
      */
     @Override
     public Integer getPlanCapitalCount(HjhPlanCapitalRequest request) {
-        return null;
+        return this.hjhPlanCapitalDao.getCount(request);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
  * 产品中心 --> 汇计划 --> 资金计划
  * @Author : huanghui
  */
-public class HjhPlanCapitalRequestBean {
+public class HjhPlanCapitalRequestBean extends BasePage {
 
     @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
