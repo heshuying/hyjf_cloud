@@ -284,7 +284,7 @@ public class AdminAllocationEngineController {
     @RequestMapping(value = "/getPlanConfigRecordByParam", method = RequestMethod.POST)
     public HjhAllocationEngineResponse getPlanConfigRecordByParam(@RequestBody @Valid AllocationEngineRuquest request) {
     	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
-       	HjhAllocationEngineVO vo  = adminAllocationEngineService.selectPlanConfigRecordByParam(request.getPlanNidSrch(),request.getLabelId());
+       	HjhAllocationEngineVO vo  = adminAllocationEngineService.selectPlanConfigRecordByParam(request.getPlanNid(),request.getLabelId());
     	if(vo != null){
             response.setResult(vo);
             //代表成功
@@ -292,7 +292,24 @@ public class AdminAllocationEngineController {
     	}
     	return response;
     }
-   
+    
+	/**
+	 * @Author: libin
+	 * @Desc :根据参数获取 HjhAllocationEngineVO
+	 */
+    @RequestMapping(value = "/getPlanConfigRecordByPlanNidLabelName", method = RequestMethod.POST)
+    public HjhAllocationEngineResponse getPlanConfigRecordByPlanNidLabelName(@RequestBody @Valid AllocationEngineRuquest request) {
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+       	HjhAllocationEngineVO vo  = adminAllocationEngineService.getPlanConfigRecordByPlanNidLabelName(request.getPlanNid(),request.getLabelName());
+    	if(vo != null){
+            response.setResult(vo);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+    	}
+    	return response;
+    }
+    
+
 	/**
 	 * @Author: libin
 	 * @Desc :

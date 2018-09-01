@@ -95,6 +95,12 @@ public interface AllocationEngineService {
 	HjhAllocationEngineVO getPlanConfigRecordByParam(AllocationEngineRuquest form);
 	
     /**
+     * 根据参数获取 HjhAllocationEngineVO
+     * @return
+     */
+	HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
+	
+    /**
      * 验证重复
      * 
      * @param planName

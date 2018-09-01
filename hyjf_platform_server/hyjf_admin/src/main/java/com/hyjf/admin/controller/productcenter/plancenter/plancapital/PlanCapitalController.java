@@ -40,7 +40,7 @@ import java.util.List;
  */
 @Api(value = "产品中心-汇计划-资金计划",tags ="产品中心-汇计划-资金计划")
 @RestController
-@RequestMapping(value = "/plancapital")
+@RequestMapping(value = "/hyjf-admin/plancapital")
 public class PlanCapitalController extends BaseController {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -92,7 +92,7 @@ public class PlanCapitalController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(planCapitalResponse.getResultList())){
             returnList = CommonUtils.convertBeanList(planCapitalResponse.getResultList(), HjhPlanCapitalVO.class);
-            return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build(returnList, planCapitalResponse.getCount()));
+            return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build2(returnList, planCapitalResponse.getCount(), planCapitalResponse.getSumHjhPlanCapitalVO()));
         }else {
             return new AdminResult<ListResult<HjhPlanCapitalVO>>(ListResult.build(returnList, 0));
         }
@@ -158,7 +158,8 @@ public class PlanCapitalController extends BaseController {
                     if (celLength == 0) {// 序号
                         cell.setCellValue(i + 1);
                     } else if (celLength == 1) {// 日期
-                        cell.setCellValue(GetDate.dateToString2(data.getDate()));
+//                        cell.setCellValue(GetDate.dateToString2(data.getDate()));
+                        cell.setCellValue(data.getDate());
                     } else if (celLength == 2) {// 计划编号
                         cell.setCellValue(data.getPlanNid());
                     } else if (celLength == 3) {// 计划名称

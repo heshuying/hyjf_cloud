@@ -336,6 +336,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setRemark("现金投资");
         borrowTender.setBorrowUserId(borrow.getUserId());
         borrowTender.setBorrowUserName(borrow.getBorrowUserName());
+        borrowTender.setUserName(tenderBg.getUserName());
         logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
@@ -410,7 +411,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         Map<String, Object> borrowParam = new HashMap<String, Object>();
         borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
         borrowParam.put("borrowService", tenderBg.getPerService());
-        borrowParam.put("borrowId", tenderBg.getBorrowNid());
+        borrowParam.put("borrowId", borrow.getId());
         logger.info("开始更新borrow表");
         boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
         // 更新borrow表

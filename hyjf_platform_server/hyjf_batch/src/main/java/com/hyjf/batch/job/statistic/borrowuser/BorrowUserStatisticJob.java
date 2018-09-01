@@ -3,6 +3,7 @@
  */
 package com.hyjf.batch.job.statistic.borrowuser;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -18,10 +19,8 @@ import org.quartz.JobExecutionException;
 public class BorrowUserStatisticJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        logger.info("BorrowUserStatisticJob: {} execute...",
-                jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MARKET/cs-market/statisticsoperationreport/insertstatistic",
-                Object.class);
+        logger.info("BorrowUserStatisticJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/statisticsoperationreports/insertstatistic", StringResponse.class);
         logger.info("BorrowUserStatisticJob execute end...");
     }
 }

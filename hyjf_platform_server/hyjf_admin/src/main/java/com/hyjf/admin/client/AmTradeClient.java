@@ -2900,5 +2900,12 @@ public interface AmTradeClient {
      * @return
      */
     STZHWhiteListResponse selectSTZHWhiteById(Integer id);
+    
+    /**
+     * 根据参数获取 HjhRegionVO
+     * @param form
+     * @return
+     */
+    HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
 }
 
