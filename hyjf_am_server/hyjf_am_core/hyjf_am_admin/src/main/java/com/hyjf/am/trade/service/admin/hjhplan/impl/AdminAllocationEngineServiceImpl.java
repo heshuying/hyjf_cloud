@@ -403,5 +403,17 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		return null;
 	}
 
-
+	@Override
+	public HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(String planNid, String labelName) {
+		HjhAllocationEngineVO vo = new HjhAllocationEngineVO();
+		List<HjhAllocationEngine> aList;
+		HjhAllocationEngineExample example = new HjhAllocationEngineExample(); 
+		HjhAllocationEngineExample.Criteria criteria = example.createCriteria();
+		criteria.andPlanNidEqualTo(planNid);
+		criteria.andLabelNameEqualTo(labelName);
+		aList = this.hjhAllocationEngineMapper.selectByExample(example);
+		HjhAllocationEngine engine = aList.get(0);
+		BeanUtils.copyProperties(engine, vo);
+		return vo;
+	}
 }

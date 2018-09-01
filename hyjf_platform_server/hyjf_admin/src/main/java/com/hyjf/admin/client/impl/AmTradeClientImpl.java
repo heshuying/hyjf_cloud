@@ -6001,4 +6001,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+	@Override
+	public HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form) {
+        HjhAllocationEngineResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getPlanConfigRecordByPlanNidLabelName", form, HjhAllocationEngineResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+	}
 }

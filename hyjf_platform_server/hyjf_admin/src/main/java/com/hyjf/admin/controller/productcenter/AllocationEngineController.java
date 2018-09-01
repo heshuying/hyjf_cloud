@@ -819,7 +819,9 @@ public class AllocationEngineController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		if (StringUtils.isNotEmpty(form.getPlanNid()) && StringUtils.isNotEmpty(form.getLabelName())) {
-			record = this.allocationEngineService.getPlanConfigRecordByParam(form);
+			// 通过 计划编号 和 标签名称 查询 引擎表
+/*			record = this.allocationEngineService.getPlanConfigRecordByParam(form);*/
+			record = this.allocationEngineService.getPlanConfigRecordByPlanNidLabelName(form);
 			//1.
 			record.setLabelName(form.getLabelName());
 			//2.
@@ -880,7 +882,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
 	/**
-	 * 计划配置info画面标签排序入力校验
+	 * 计划配置info画面标签排序入力校验   已测试
 	 *
 	 * @param labelName
 	 * @return 
