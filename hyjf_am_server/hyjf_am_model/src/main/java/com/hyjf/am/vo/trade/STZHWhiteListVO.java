@@ -4,8 +4,10 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author fuqiang
@@ -44,7 +46,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
 
     private String updateuser;
 
-    private Boolean delFlg;
+    private Integer delFlag;
 
     private String approvalName;
 
@@ -55,6 +57,10 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     private String instcode;
 
     private String instname;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -155,7 +161,10 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public String getCreatetime() {
-        return createtime;
+        if (createTime != null) {
+            return GetDate.getDateTimeMyTimeInMillis(createTime);
+        }
+        return null;
     }
 
     public void setCreatetime(String createtime) {
@@ -171,7 +180,10 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public String getUpdatetime() {
-        return updatetime;
+        if (updateTime != null) {
+            return GetDate.getDateTimeMyTimeInMillis(updateTime);
+        }
+        return null;
     }
 
     public void setUpdatetime(String updatetime) {
@@ -186,12 +198,12 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
         this.updateuser = updateuser == null ? null : updateuser.trim();
     }
 
-    public Boolean getDelFlg() {
-        return delFlg;
+    public Integer getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(Boolean delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getApprovalName() {
@@ -234,6 +246,22 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
         this.instname = instname == null ? null : instname.trim();
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
         return "STZHWhiteListVO{" +
@@ -253,7 +281,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
                 ", createuser='" + createuser + '\'' +
                 ", updatetime='" + updatetime + '\'' +
                 ", updateuser='" + updateuser + '\'' +
-                ", delFlg=" + delFlg +
+                ", delFlag=" + delFlag +
                 ", approvalName='" + approvalName + '\'' +
                 ", approvalTime='" + approvalTime + '\'' +
                 ", remark='" + remark + '\'' +

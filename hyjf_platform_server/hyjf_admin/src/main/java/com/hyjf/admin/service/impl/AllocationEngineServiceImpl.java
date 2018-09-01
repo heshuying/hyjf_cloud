@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.GetDate;
 
 /**
  * @author libin
@@ -30,6 +32,13 @@ public class AllocationEngineServiceImpl implements  AllocationEngineService{
 	@Override
 	public HjhRegionResponse getHjhRegionList(AllocationEngineRuquest form) {
 		HjhRegionResponse list = amTradeClient.getHjhRegionList(form);
+		if(CollectionUtils.isNotEmpty(list.getResultList())){
+			for(HjhRegionVO vo :list.getResultList()){
+				if(vo.getConfigAddTime() != null){
+					vo.setAddConfigTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getConfigAddTime()));
+				}
+			}
+		}
 		return list;
 	}
 
@@ -78,6 +87,13 @@ public class AllocationEngineServiceImpl implements  AllocationEngineService{
 	@Override
 	public HjhAllocationEngineResponse getHjhAllocationEngineList(AllocationEngineRuquest form ) {
 		HjhAllocationEngineResponse response = amTradeClient.getHjhAllocationEngineList(form);
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			for(HjhAllocationEngineVO vo : response.getResultList()){
+				if(vo.getAddTime() != null){
+					vo.setAddTimeString(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getAddTime()));
+				}
+			}
+		}
 		return response;
 	}
 

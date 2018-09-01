@@ -50,7 +50,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	public void updateSTZHWhiteList(STZHWhiteListRequest request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
-		stzhWhiteList.setDelFlag(request.getDelFlg());
+		stzhWhiteList.setDelFlag(request.getDelFlag());
 		stzhWhiteList.setUpdateTime(GetDate.getDate());
 		stzhWhiteList.setApprovalTime(String.valueOf(GetDate.strYYYYMMDD2Timestamp2(stzhWhiteList.getApprovalTime())));
         stzhWhiteList.setCreateUserId(Integer.parseInt(request.getCreateuser()));

@@ -46,7 +46,7 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 
 	private String updateuser;
 
-	private Integer delFlg;
+	private Integer delFlag;
 
 	private String approvalName;
 
@@ -208,12 +208,12 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 		this.updateuser = updateuser == null ? null : updateuser.trim();
 	}
 
-	public Integer getDelFlg() {
-		return delFlg;
+	public Integer getDelFlag() {
+		return delFlag;
 	}
 
-	public void setDelFlg(Integer delFlg) {
-		this.delFlg = delFlg;
+	public void setDelFlag(Integer delFlg) {
+		this.delFlag = delFlg;
 	}
 
 	public String getApprovalName() {

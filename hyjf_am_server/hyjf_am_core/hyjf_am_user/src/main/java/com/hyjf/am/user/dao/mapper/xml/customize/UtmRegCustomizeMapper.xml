@@ -61,13 +61,13 @@
 		<include refid="Where_Clause" />
 	</select>
 
-	<select id="getUtmByUtmId" resultType="com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO" parameterType="String" >
+	<select id="getUtmByUtmId" resultType="com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO" parameterType="INTEGER" >
 		SELECT utm_id utmId, utm_source utmSource,source_id sourceId,utm_medium utmMedium,utm_term utmTerm,utm_content utmContent,
 				utm_campaign utmCampaign,utm_referrer utmReferrer,link_address linkAddress,remark remark,STATUS STATUS
 		FROM ht_utm
 		where 1=1
 		<if test="utmId != null and utmId != ''" >
-			and utm_id =  ${utmId}
+			and utm_id = #{utmId}
 		</if>
 	</select>
 	
