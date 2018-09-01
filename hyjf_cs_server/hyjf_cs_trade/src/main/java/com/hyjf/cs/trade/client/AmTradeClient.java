@@ -1815,4 +1815,21 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowVO> selectOverdueBorrowList();
+
+    /**
+     * 计划锁定
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
+     */
+    void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS);
+
+    /**
+     * 计划退出
+     *
+     * @param accedeOrderId
+     */
+    void updateForQuit(String accedeOrderId);
 }
