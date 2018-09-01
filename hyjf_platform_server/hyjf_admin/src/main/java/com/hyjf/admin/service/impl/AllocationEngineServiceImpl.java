@@ -156,4 +156,10 @@ public class AllocationEngineServiceImpl implements  AllocationEngineService{
 		List<HjhRegionVO> list = amTradeClient.getHjhRegioByPlanNid(planNid);
 		return list;
 	}
+
+	@Override
+	public HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form) {
+		HjhAllocationEngineVO vo = amTradeClient.getPlanConfigRecordByPlanNidLabelName(form);
+		return vo;
+	}
 }

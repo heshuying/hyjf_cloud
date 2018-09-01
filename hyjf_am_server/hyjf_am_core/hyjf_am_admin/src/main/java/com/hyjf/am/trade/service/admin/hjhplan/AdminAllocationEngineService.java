@@ -87,6 +87,9 @@ public interface AdminAllocationEngineService {
    
    HjhAllocationEngineVO selectPlanConfigRecordByParam(String planNid,String labelId); 
    
+   
+   HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(String planNid,String labelName);
+   
    int checkRepeat(AllocationEngineRuquest form);
    
    String getPlanBorrowStyle(String planNid);

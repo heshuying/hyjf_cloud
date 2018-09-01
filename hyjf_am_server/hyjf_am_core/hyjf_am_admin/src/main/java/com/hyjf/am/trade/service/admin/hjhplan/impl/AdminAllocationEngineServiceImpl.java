@@ -283,6 +283,7 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		// 此时也会把主键传入
 		BeanUtils.copyProperties(request, engine);
 		engine.setUpdateTime(new Date());
+		engine.setCreateTime(new Date());
 		int flg = this.hjhAllocationEngineMapper.updateByPrimaryKeySelective(engine);
 		return flg;
 	}
@@ -403,5 +404,17 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		return null;
 	}
 
-
+	@Override
+	public HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(String planNid, String labelName) {
+		HjhAllocationEngineVO vo = new HjhAllocationEngineVO();
+		List<HjhAllocationEngine> aList;
+		HjhAllocationEngineExample example = new HjhAllocationEngineExample(); 
+		HjhAllocationEngineExample.Criteria criteria = example.createCriteria();
+		criteria.andPlanNidEqualTo(planNid);
+		criteria.andLabelNameEqualTo(labelName);
+		aList = this.hjhAllocationEngineMapper.selectByExample(example);
+		HjhAllocationEngine engine = aList.get(0);
+		BeanUtils.copyProperties(engine, vo);
+		return vo;
+	}
 }

@@ -791,9 +791,9 @@ public class AllocationEngineController extends BaseController{
 		String planNameM = this.allocationEngineService.getPlanNameByPlanNid(form);
 		hjhAllocationEngine.setPlanName(planNameM);
 		hjhAllocationEngine.setLabelStatus(Integer.parseInt(newLabelStatus));
-		hjhAllocationEngine.setUpdateTime(GetDate.getNowTime10());
 		hjhAllocationEngine.setLabelSort(Integer.parseInt(form.getLabelSort()));
-		hjhAllocationEngine.setCreateTime(GetDate.getNowTime10());
+/*		hjhAllocationEngine.setUpdateTime(GetDate.getNowTime10());
+		hjhAllocationEngine.setCreateTime(GetDate.getNowTime10());*/
 		int flag = this.allocationEngineService.updateHjhAllocationEngineRecord(hjhAllocationEngine);
 		if(flag > 0){
 			response.setMessage(Response.SUCCESS);
@@ -801,8 +801,8 @@ public class AllocationEngineController extends BaseController{
 		return new AdminResult<String>(response.getMessage());
 	}
 	
-	/**
-	 * 修改畫面
+	/** 
+	 * 修改畫面     已测试
 	 * 
 	 * @param request
 	 * @param form
@@ -819,7 +819,9 @@ public class AllocationEngineController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		if (StringUtils.isNotEmpty(form.getPlanNid()) && StringUtils.isNotEmpty(form.getLabelName())) {
-			record = this.allocationEngineService.getPlanConfigRecordByParam(form);
+			// 通过 计划编号 和 标签名称 查询 引擎表
+/*			record = this.allocationEngineService.getPlanConfigRecordByParam(form);*/
+			record = this.allocationEngineService.getPlanConfigRecordByPlanNidLabelName(form);
 			//1.
 			record.setLabelName(form.getLabelName());
 			//2.
@@ -880,7 +882,7 @@ public class AllocationEngineController extends BaseController{
 	
 	
 	/**
-	 * 计划配置info画面标签排序入力校验
+	 * 计划配置info画面标签排序入力校验   已测试
 	 *
 	 * @param labelName
 	 * @return 

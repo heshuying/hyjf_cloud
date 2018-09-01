@@ -2549,8 +2549,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
         // 原 selectTenderAgreementByNid 方法返回的是 List<CurrentHoldObligatoryRightListCustomizeVO> 不能共用，换新方法
-    	/*此方法不需要迁移到AM-TRADE，继续保留在AM-TRADE*/
-    	String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
+    	String url = "http://AM-ADMIN/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
         TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -6002,4 +6001,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+	@Override
+	public HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form) {
+        HjhAllocationEngineResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/allocation/getPlanConfigRecordByPlanNidLabelName", form, HjhAllocationEngineResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+	}
 }
