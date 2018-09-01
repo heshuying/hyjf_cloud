@@ -24,7 +24,7 @@ public class CouponExpiredSmsClientImpl implements CouponExpiredSmsClient {
 
     @Override
     public List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate) {
-        String url = "http://AM-TRADE/am-trade/batch/selectCouponQuota/" + threeBeginDate + "/" + threeEndDate;
+        String url = "http://AM-TRADE/am-trade/couponRepay/selectCouponQuota/" + threeBeginDate + "/" + threeEndDate;
         BatchCouponTimeoutCommonResponse response = restTemplate.getForEntity(url, BatchCouponTimeoutCommonResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
