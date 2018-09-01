@@ -791,9 +791,9 @@ public class AllocationEngineController extends BaseController{
 		String planNameM = this.allocationEngineService.getPlanNameByPlanNid(form);
 		hjhAllocationEngine.setPlanName(planNameM);
 		hjhAllocationEngine.setLabelStatus(Integer.parseInt(newLabelStatus));
-		hjhAllocationEngine.setUpdateTime(GetDate.getNowTime10());
 		hjhAllocationEngine.setLabelSort(Integer.parseInt(form.getLabelSort()));
-		hjhAllocationEngine.setCreateTime(GetDate.getNowTime10());
+/*		hjhAllocationEngine.setUpdateTime(GetDate.getNowTime10());
+		hjhAllocationEngine.setCreateTime(GetDate.getNowTime10());*/
 		int flag = this.allocationEngineService.updateHjhAllocationEngineRecord(hjhAllocationEngine);
 		if(flag > 0){
 			response.setMessage(Response.SUCCESS);
@@ -801,8 +801,8 @@ public class AllocationEngineController extends BaseController{
 		return new AdminResult<String>(response.getMessage());
 	}
 	
-	/**
-	 * 修改畫面
+	/** 
+	 * 修改畫面     已测试
 	 * 
 	 * @param request
 	 * @param form

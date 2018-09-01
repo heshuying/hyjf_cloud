@@ -283,6 +283,7 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		// 此时也会把主键传入
 		BeanUtils.copyProperties(request, engine);
 		engine.setUpdateTime(new Date());
+		engine.setCreateTime(new Date());
 		int flg = this.hjhAllocationEngineMapper.updateByPrimaryKeySelective(engine);
 		return flg;
 	}
