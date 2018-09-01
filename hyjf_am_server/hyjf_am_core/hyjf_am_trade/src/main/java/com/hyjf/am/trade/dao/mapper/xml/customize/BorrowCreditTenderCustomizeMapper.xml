@@ -230,10 +230,10 @@
 		</where>
 	</sql>
 
-	<select id="getHzrTenderPrice" resultType="DECIMAL" parameterType="map">
-		select sum(hbt.account) from ht_credit_tender hct
+	<select id="getHzrTenderPrice" resultType="DECIMAL" >
+		select sum(hct.assign_capital) from ht_credit_tender hct
 		<where>
-			<if test="list != null">
+			<if test="list != null and list.size()>0">
 				and hct.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}

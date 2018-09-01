@@ -1386,7 +1386,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTagVO findMsgTagByTagName(String tagName) {
         MessagePushTagVO result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgTagByTagName/" + tagName,
+                .getForEntity("http://AM-CONFIG/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
                         MessagePushTagVO.class)
                 .getBody();
         return result;
