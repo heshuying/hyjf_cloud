@@ -410,7 +410,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         Map<String, Object> borrowParam = new HashMap<String, Object>();
         borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
         borrowParam.put("borrowService", tenderBg.getPerService());
-        borrowParam.put("borrowId", tenderBg.getBorrowNid());
+        borrowParam.put("borrowId", borrow.getId());
         logger.info("开始更新borrow表");
         boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
         // 更新borrow表
