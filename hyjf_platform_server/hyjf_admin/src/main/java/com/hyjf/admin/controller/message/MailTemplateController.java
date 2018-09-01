@@ -173,14 +173,13 @@ public class MailTemplateController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "资料上传")
+	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
 		String filePhysicalPath = UploadFileUtils.getDoPath(physical);
 		String fileUploadTempPath = UploadFileUtils.getDoPath(temppath);
-
 		String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 
 		File logoSaveFile = new File(logoRealPathDir);
