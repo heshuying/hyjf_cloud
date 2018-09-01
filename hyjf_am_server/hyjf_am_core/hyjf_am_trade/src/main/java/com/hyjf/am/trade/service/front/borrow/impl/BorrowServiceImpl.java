@@ -336,6 +336,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setRemark("现金投资");
         borrowTender.setBorrowUserId(borrow.getUserId());
         borrowTender.setBorrowUserName(borrow.getBorrowUserName());
+        borrowTender.setUserName(tenderBg.getUserName());
         logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
