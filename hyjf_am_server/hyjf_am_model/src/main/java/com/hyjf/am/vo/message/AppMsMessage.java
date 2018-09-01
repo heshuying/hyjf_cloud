@@ -24,7 +24,7 @@ public class AppMsMessage extends HyjfMessage {
 
     private String tplCode;
 
-    private Integer msgId;
+    private String msgId;
     
     public AppMsMessage() {
         super();
@@ -37,7 +37,7 @@ public class AppMsMessage extends HyjfMessage {
         this.tplCode = tplCode;
     }
 
-    public AppMsMessage(String serviceType, Integer msgId) {
+    public AppMsMessage(String serviceType, String msgId) {
         super();
         this.serviceType = serviceType;
         this.msgId = msgId;
@@ -68,11 +68,11 @@ public class AppMsMessage extends HyjfMessage {
     }
 
 
-	public Integer getMsgId() {
+	public String getMsgId() {
 		return msgId;
 	}
 
-	public void setMsgId(Integer msgId) {
+	public void setMsgId(String msgId) {
 		this.msgId = msgId;
 	}
 

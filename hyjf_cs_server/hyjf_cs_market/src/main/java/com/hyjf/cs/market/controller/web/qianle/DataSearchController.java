@@ -59,7 +59,6 @@ public class DataSearchController {
     @ApiOperation(value = "千乐数据查询", notes = "千乐数据查询")
     @PostMapping("/querylist")
     public  WebResult<Map<String, Object>> getQianleSanList(@RequestBody DataSearchBean request){
-
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
         DataSearchCustomizeResponse response = dataSearchService.findDataList(dataSearchRequest);
         HashMap<String, Object> result = new HashMap<>();
@@ -87,8 +86,15 @@ public class DataSearchController {
         if(!dataSearchService.checkMobile(mobile)){
             return webResult;
         }
-        int cnt = dataSearchService.checkMobileCode(mobile, code);
-        return webResult;
+        int result = dataSearchService.checkMobileCode(mobile, code);
+
+        if(result>0){
+            return webResult;
+        }else{
+            webResult=new WebResult("111", "登录失败");
+            return webResult;
+        }
+
     }
 
 

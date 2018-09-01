@@ -4,9 +4,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document(collection = "ht_message_push")
+@Document(collection = "ht_message_push_msg")
 public class MessagePush implements Serializable {
-    private Integer id;
+    private String id;
 
     private String tagId;
 
@@ -52,11 +52,11 @@ public class MessagePush implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
