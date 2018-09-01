@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.TenderCityCountCustomizeMapper">
+
+	<resultMap id="cityResultMap" type="com.hyjf.am.trade.dao.model.customize.TenderCityCount" >
+		<id column="citycode" property="citycode" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="cityname" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ageResultMap" type="com.hyjf.am.trade.dao.model.customize.TenderSexCount" >
+		<id column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+	</resultMap>
+
+
+	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+	<select  id="getTenderCityGroupBy" parameterType="java.util.Date" resultMap="cityResultMap">
+		SELECT
+		a.p AS citycode, a.counts AS count, b.area AS cityname
+		FROM
+		(SELECT
+		LEFT(ui.idcard, 2) AS p, COUNT(u.user_id) AS counts
+		FROM
+		(SELECT
+		user_id
+		FROM
+		ht_borrow_tender
+		WHERE
+		create_time  &lt;= #{date} UNION SELECT
+		user_id
+		FROM
+		ht_credit_tender
+		WHERE
+		create_time  &lt;= #{date} UNION SELECT
+		hdpa.user_id
+		FROM
+		ht_debt_plan_accede hdpa
+		LEFT JOIN ht_debt_plan hdp ON hdpa.plan_nid = hdp.debt_plan_nid
+		WHERE
+		hdp.plan_lock_time  &lt;= unix_timestamp(#{date}) UNION SELECT
+		user_id
+		FROM
+		ht_product_list
+		WHERE
+		invest_time  &lt;= unix_timestamp(#{date})
+		AND invest_status = 0) t
+		LEFT JOIN ht_user u ON t.user_id = u.user_id
+		LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+		GROUP BY p) a
+		LEFT JOIN
+		(SELECT
+		LEFT(bm, 2) AS bm, LEFT(area, 3) AS area
+		FROM
+		ht_idcard
+		GROUP BY LEFT(bm, 2)) b ON a.p = b.bm where a.p is not null and   <![CDATA[ a.p<>'' ]]>
+		ORDER BY a.counts DESC;
+	</select>
+
+	<!-- 	投资人性别分布 -->
+	<select  id="getTenderSexGroupBy"  resultMap="ageResultMap">
+		SELECT
+		ui.sex as sex,count(1) as count
+		FROM
+		(SELECT
+		br.user_id
+		FROM
+		ht_borrow_tender br
+		INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+		WHERE
+		b.recover_last_time &lt;= unix_timestamp(#{0})
+		UNION
+		SELECT
+		user_id
+		FROM
+		ht_credit_tender
+		WHERE
+		create_time  &lt;= #{0}
+
+		UNION
+		SELECT
+		hdpa.user_id
+		FROM
+		ht_debt_plan_accede hdpa
+		left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+		WHERE
+		hdp.plan_lock_time &lt;= unix_timestamp(#{0})
+
+		UNION
+		SELECT
+		user_id
+		FROM
+		ht_product_list
+		WHERE
+		invest_time &lt;= unix_timestamp(#{0})
+		And  invest_status = 0
+		) t
+		LEFT JOIN ht_user u on t.user_id=u.user_id
+		LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id where ui.sex=2 or ui.sex=1
+		group by ui.sex;
+	</select>
+
+	<!-- 	投资人年龄分布 -->
+	<select id="getTenderAgeByRange"   resultType="int">
+		SELECT
+		count(t.user_id)
+		FROM
+		(SELECT
+		br .user_id
+		FROM
+		ht_borrow_tender  br
+		INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+		WHERE
+		b.recover_last_time  &lt;=  unix_timestamp(#{date})
+		UNION
+		SELECT
+		user_id
+		FROM
+		ht_credit_tender
+		WHERE
+		create_time  &lt;= #{date}
+
+		UNION
+		SELECT
+		hdpa.user_id
+		FROM
+		ht_debt_plan_accede hdpa
+		left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+		WHERE
+		hdp.plan_lock_time &lt;= unix_timestamp(#{date})
+
+		UNION
+		SELECT
+		user_id
+		FROM
+		ht_product_list
+		WHERE
+		invest_time &lt;= unix_timestamp(#{date})
+		And  invest_status = 0
+		) t
+		LEFT JOIN ht_user u on t.user_id=u.user_id
+		LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+		WHERE  TIMESTAMPDIFF(YEAR, ui.birthday, now())  &lt;#{endAge}
+		and TIMESTAMPDIFF(YEAR, ui.birthday, now()) &gt;=#{firstAge}
+	</select>
+
+</mapper>
