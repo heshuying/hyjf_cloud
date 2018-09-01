@@ -56,38 +56,6 @@ public class CallCenterBankController extends BaseController{
     }
 
     /**
-     * 查询呼叫中心未分配客服的用户（复投用户筛选）
-     * @param callCenterUserInfoRequest
-     * @return
-     */
-    @RequestMapping("/getNoServiceFuTouUsersList")
-    public CallCenterUserBaseResponse getNoServiceFuTouUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
-        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
-        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceFuTouUsersList(callCenterUserInfoRequest);
-        if(!CollectionUtils.isEmpty(list)){
-            List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
-            callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
-        }
-        return callCenterUserBaseResponse;
-    }
-
-    /**
-     * 查询呼叫中心未分配客服的用户（流失用户筛选）
-     * @param callCenterUserInfoRequest
-     * @return
-     */
-    @RequestMapping("/getNoServiceLiuShiUsersList")
-    public CallCenterUserBaseResponse getNoServiceLiuShiUsersList(@RequestBody @Valid CallCenterUserInfoRequest callCenterUserInfoRequest){
-        CallCenterUserBaseResponse callCenterUserBaseResponse = new CallCenterUserBaseResponse();
-        List<CallcenterUserBaseCustomize> list = callCenterBankService.getNoServiceLiuShiUsersList(callCenterUserInfoRequest);
-        if(!CollectionUtils.isEmpty(list)){
-            List<CallCenterUserBaseVO> callCenterUserBaseVOS = CommonUtils.convertBeanList(list,CallCenterUserBaseVO.class);
-            callCenterUserBaseResponse.setResultList(callCenterUserBaseVOS);
-        }
-        return callCenterUserBaseResponse;
-    }
-
-    /**
      * 查询呼叫中心未分配客服的用户
      * @param callCenterUserInfoRequest
      * @return
