@@ -263,4 +263,12 @@ public interface UserService extends BaseService {
 	int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog);
 
 	int isExistsUser(String condition);
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+    User selectUserInfoByUsername(String userName);
 }

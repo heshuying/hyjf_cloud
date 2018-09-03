@@ -1003,7 +1003,7 @@ public class NewAgreementController extends BaseTradeController{
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "获得 协议模板pdf显示地址", httpMethod = "POST", notes = "获得 协议模板pdf显示地址")
+    @ApiOperation(value = "获得协议模板pdf显示地址", httpMethod = "POST", notes = "获得协议模板pdf显示地址")
     @ResponseBody
     @PostMapping("/gotAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam(required = true) String aliasName) {
@@ -1131,7 +1131,7 @@ public class NewAgreementController extends BaseTradeController{
         return listImg;
     }
 
-    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获取协议模板")
+    @ApiOperation(value = "获取协议模板", httpMethod = "POST", notes = "获取协议模板")
     @ResponseBody
     @PostMapping("/getAgreementTemplateApi")
     public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
@@ -1145,7 +1145,7 @@ public class NewAgreementController extends BaseTradeController{
         if (!Response.isSuccess(response)) {
             return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
         }
-        return new AppResult(response.getResultList());
+        return new AppResult(response.getResult());
     }
 
     @ApiOperation(value = "查看协议模板接口", httpMethod = "POST", notes = "查看协议模板接口")

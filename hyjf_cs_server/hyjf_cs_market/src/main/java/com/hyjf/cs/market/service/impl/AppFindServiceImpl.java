@@ -27,7 +27,6 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
 
     /**
      * 查询文章条数
-     * @param params
      * @return
      */
     @Override

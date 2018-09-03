@@ -30,7 +30,7 @@
         create_user_name,
         update_time,
         update_user_id,
-        update_user_name,
+        update_user_name
         FROM
         ht_fdd_templet ft
         ORDER BY
