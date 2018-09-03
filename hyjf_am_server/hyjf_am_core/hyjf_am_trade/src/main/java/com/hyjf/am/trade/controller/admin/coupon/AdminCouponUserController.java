@@ -18,6 +18,7 @@ import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -137,9 +138,11 @@ public class AdminCouponUserController extends BaseController {
     public CouponUserCustomizeResponse selectCouponUserById(@PathVariable Integer couponUserId) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         CouponUser couponUser = adminCouponUserService.selectCouponUserById(couponUserId);
-        CouponUserVO couponUserVO = new CouponUserVO();
         if (couponUser != null) {
+            CouponUserVO couponUserVO = new CouponUserVO();
             BeanUtils.copyProperties(couponUser,couponUserVO);
+            couponUserVO.setUpdateTime(GetDate.getTime10(couponUser.getUpdateTime()));
+            couponUserVO.setAddTime(GetDate.getTime10(couponUser.getCreateTime()));
             response.setCouponUser(couponUserVO);
         }
         return response;
@@ -156,8 +159,9 @@ public class AdminCouponUserController extends BaseController {
         Integer count = adminCouponUserService.auditRecord(couponUserRequestBean);
         if (count > 0) {
             response.setCount(count);
-            response.setRtn(Response.SUCCESS);
-            response.setMessage(Response.SUCCESS_MSG);
+        }else {
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
         }
         return response;
     }
