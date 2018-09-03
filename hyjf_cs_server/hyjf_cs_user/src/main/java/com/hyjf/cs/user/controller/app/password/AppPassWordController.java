@@ -223,7 +223,8 @@ public class AppPassWordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/bank/user/transpassword/passwordBgreturn")
-    public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String passwordBgreturn(@RequestBody BankCallBean bean) {
+        logger.info("app设置交易密码异步回调"+bean.getLogOrderId());
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId());
