@@ -37,7 +37,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-wechat/user/invest")
 public class WechatBorrowTenderController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatBorrowTenderController.class);
 
     @Autowired
     private BorrowTenderService borrowTenderService;
