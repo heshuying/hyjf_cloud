@@ -47,21 +47,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 
 	@Autowired
-	protected AdminBorrowRecoverCustomizeMapper borrowRecoverCustomizeMapper;
-	
-	@Autowired
-	protected AdminBorrowLogCustomizeMapper borrowLogCustomizeMapper;
-	
-	@Autowired
-	protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
-
-	@Autowired
-	protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
-
-	@Autowired
-	protected AdminBorrowRepaymentInfoListCustomizeMapper borrowRepaymentInfoListCustomizeMapper;
-	
-	@Autowired
 	protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
 
 	@Autowired
