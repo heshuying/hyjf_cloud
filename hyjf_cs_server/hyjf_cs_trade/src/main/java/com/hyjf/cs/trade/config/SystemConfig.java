@@ -9,6 +9,10 @@ public class SystemConfig {
     public String webHost;
     @Value("${hyjf.app.host}")
     public String appHost;
+
+    @Value("${hyjf.role.isopen}")
+    private String hyjfRoleIsopen;
+
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
 
@@ -455,5 +459,13 @@ public class SystemConfig {
 
     public void setAppHost(String appHost) {
         this.appHost = appHost;
+    }
+
+    public String getHyjfRoleIsopen() {
+        return hyjfRoleIsopen;
+    }
+
+    public void setHyjfRoleIsopen(String hyjfRoleIsopen) {
+        this.hyjfRoleIsopen = hyjfRoleIsopen;
     }
 }
