@@ -1431,6 +1431,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UserEvalationResult skipEvaluate(Integer userId, Integer countScore) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		Evalation evalation = getEvalationByCountScore(countScore.shortValue());
 		userEvalationResult.setUserId(userId);
