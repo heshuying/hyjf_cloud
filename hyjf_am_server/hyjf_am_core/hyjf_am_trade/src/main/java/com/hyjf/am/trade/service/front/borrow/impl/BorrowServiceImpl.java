@@ -597,4 +597,21 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO) {
 		return this.borrowCustomizeMapper.exportBorrowList(BorrowCommonCustomizeVO);
 	}
+
+	/**
+	 * 根据Nid和当前时间获取borrow
+	 * @author zhangyk
+	 * @date 2018/9/3 17:25
+	 */
+    @Override
+    public Borrow selectBorrowByNidAndNowTime(String borrowNid, Integer nowtime) {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andStatusEqualTo(1);
+        criteria.andVerifyStatusEqualTo(3);
+        criteria.andOntimeGreaterThan(0);
+        criteria.andOntimeLessThan(nowtime);
+        return null;
+    }
 }

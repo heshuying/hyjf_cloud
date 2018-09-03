@@ -6,10 +6,7 @@ package com.hyjf.cs.trade.controller.web.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
-import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
-import com.hyjf.cs.trade.bean.WebCreditRequestBean;
-import com.hyjf.cs.trade.bean.WebPlanRequestBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import io.swagger.annotations.Api;
@@ -107,6 +104,15 @@ public class WebProjectListController extends BaseTradeController {
         return result;
     }
 
+
+    @ApiOperation(value = "散标倒计时" , notes = "散标倒计时")
+    @GetMapping(value = "/ontime/{borrowNid}")
+    public Object borrowOntime(@PathVariable String borrowNid){
+        OntimeCheckBean ontimeCheckBean = webProjectListService.getBorrowOntime(borrowNid);
+        WebResult result = new WebResult();
+        result.setData(ontimeCheckBean);
+        return result;
+    }
 
 
 

@@ -5222,13 +5222,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param couponUserBeanRequest
      * @return
      */
     @Override
-    public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser/" + id + remark + userId;
-        CouponUserCustomizeResponse response = restTemplate.getForEntity(url, CouponUserCustomizeResponse.class).getBody();
+    public CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser";
+        CouponUserCustomizeResponse response = restTemplate.postForEntity(url,couponUserBeanRequest, CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
         }

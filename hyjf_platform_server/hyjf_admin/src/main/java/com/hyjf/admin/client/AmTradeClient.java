@@ -2512,7 +2512,7 @@ public interface AmTradeClient {
 
     CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
 
-    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+    CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest);
 
     List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
 

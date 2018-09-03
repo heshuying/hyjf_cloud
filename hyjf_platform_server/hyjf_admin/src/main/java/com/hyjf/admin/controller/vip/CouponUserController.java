@@ -65,6 +65,8 @@ public class CouponUserController extends BaseController {
      * 权限名称
      */
     private static final String PERMISSIONS = "couponuser";
+    /** 排他check */
+    private static final String SYN_OPERATION = "syn.operation";
 
     @Value("${coupon.audit.pwd}")
     private String Coupon_AUDIT_PWD;
@@ -89,19 +91,18 @@ public class CouponUserController extends BaseController {
     @ApiOperation(value = "删除优惠券", notes = "删除优惠券")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult<CouponUserCustomizeVO> deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
+    public AdminResult deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
-        int id = couponUserBeanRequest.getId();
-        String remark = couponUserBeanRequest.getContent();
-        CouponUserCustomizeResponse response = couponUserService.deleteById(id, remark, userId);
+        couponUserBeanRequest.setUpdateUser(userId);
+        CouponUserCustomizeResponse response = couponUserService.deleteById(couponUserBeanRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<CouponUserCustomizeVO>(response.getResult());
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "手动发放页面信息", notes = "手动发放页面信息")
@@ -167,10 +168,8 @@ public class CouponUserController extends BaseController {
         }
         couponUserRequest.setUserId(userId);
         couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
-//        couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setCreateTime(GetDate.getDate());
-//        couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
         couponUserRequest.setUpdateTime(GetDate.getDate());
         couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
@@ -386,9 +385,9 @@ public class CouponUserController extends BaseController {
 
     @ApiOperation(value = "编辑初始页", notes = "编辑初始页")
     @RequestMapping(value = "/auditInitAction", method = RequestMethod.POST)
-    public AdminResult<ListResult<CouponUserCustomizeVO>> auditInitAction(@RequestBody CouponUserBeanRequest request) {
+    public AdminResult auditInitAction(@RequestBody CouponUserBeanRequest request) {
         CouponUserCustomizeVO customizeVO = new CouponUserCustomizeVO();
-        ListResult<CouponUserCustomizeVO> result = new ListResult<>();
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         Integer couponUserId = request.getId();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("couponUserId", couponUserId);
@@ -449,32 +448,29 @@ public class CouponUserController extends BaseController {
         }
         detail.setProjectType("适用" + projectString);
         CouponUserVO couponUserVO = couponUserService.selectCouponUserById(couponUserId);
-        customizeVO.setDetail(detail);
-        customizeVO.setCouponUser(couponUserVO);
-        customizeVO.setId(couponUserId);
-        return new AdminResult<>(result);
+        response.setDetail(detail);
+        response.setCouponUser(couponUserVO);
+        return new AdminResult<>(response);
     }
 
 
     @ApiOperation(value = "编辑保存", notes = "编辑保存")
     @RequestMapping(value = "/auditAction", method = RequestMethod.POST)
-    public AdminResult<ListResult<CouponUserCustomizeVO>> auditAction(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
-        JSONObject json = new JSONObject();
+    public AdminResult auditAction(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeVO customizeVO = new CouponUserCustomizeVO();
-        ListResult<CouponUserCustomizeVO> result = new ListResult<>();
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         CouponUserVO record = couponUserService.selectCouponUserById(couponUserBeanRequest.getId());
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
-            return new AdminResult<>(result);
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
         if (configResponse == null && configResponse.getResult() == null) {
-            return new AdminResult<>(result);
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        json = this.validatorFieldCheckAudit(json, couponUserBeanRequest, record);
-
-        if (AdminValidatorFieldCheckUtil.hasValidateError(json)) {
+        String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);
+        if (message == null) {
             Integer couponUserId = couponUserBeanRequest.getId();
-            Map<String, Object> paramMap = new HashMap<String, Object>();
+            Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("couponUserId", couponUserId);
             CouponTenderDetailVo detail = couponUserService.getCouponTenderDetailCustomize(paramMap);
             //操作平台
@@ -533,10 +529,8 @@ public class CouponUserController extends BaseController {
             }
             detail.setProjectType("适用" + projectString);
             CouponUserVO couponUserVO = couponUserService.selectCouponUserById(couponUserId);
-            customizeVO.setDetail(detail);
-            customizeVO.setCouponUser(couponUserVO);
-            customizeVO.setId(couponUserId);
-            return new AdminResult<>(result);
+            response.setDetail(detail);
+            response.setCouponUser(couponUserVO);
         } else {
             AdminSystemVO user = getUser(request);
             String loginUserId = user.getId();
@@ -545,9 +539,9 @@ public class CouponUserController extends BaseController {
             adminCouponUserRequestBean.setCouponConfigVO(configResponse.getResult());
             adminCouponUserRequestBean.setUserId(record.getUserId());
             adminCouponUserRequestBean.setLoginUserId(loginUserId);
-            CouponUserCustomizeResponse couponUserCustomizeResponse = couponUserService.auditRecord(adminCouponUserRequestBean);
+            response = couponUserService.auditRecord(adminCouponUserRequestBean);
         }
-        return new AdminResult<>(result);
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "手动批量发券上传", notes = "手动批量发券上传")
@@ -721,19 +715,20 @@ public class CouponUserController extends BaseController {
     /**
      * 画面校验
      *
-     * @param jsonObject
      * @param request
      * @param record
      * @return
      */
-    private JSONObject validatorFieldCheckAudit(JSONObject jsonObject, CouponUserBeanRequest request, CouponUserVO record) {
-        AdminValidatorFieldCheckUtil.validateSynOperation(jsonObject, "synOperation", request.getUpdateTime(), record.getUpdateTime());
-        if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {
-            CustomErrors.add(jsonObject, "couponAuditPwd", "same", "审核口令错误");
+    private String validatorFieldCheckAudit(CouponUserBeanRequest request, CouponUserVO record) {
+        String message = null;
+        if (GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getUpdateTime()) != (int)record.getUpdateTime()) {
+            return message = "排他check" + SYN_OPERATION;
         }
-        return jsonObject;
+        if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {
+            message = "审核口令错误";
+        }
+        return message;
     }
-
 
     /**
      * 画面校验

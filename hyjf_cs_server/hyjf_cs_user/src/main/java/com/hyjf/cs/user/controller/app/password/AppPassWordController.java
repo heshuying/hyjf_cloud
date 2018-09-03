@@ -23,7 +23,6 @@ import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -224,14 +223,15 @@ public class AppPassWordController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "设置交易密码异步回调")
     @PostMapping(value = "/bank/user/transpassword/passwordBgreturn")
-    public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
+    public String passwordBgreturn(@RequestBody BankCallBean bean) {
+        logger.info("app设置交易密码异步回调"+bean.getLogOrderId());
         BankCallResult result = new BankCallResult();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户开户状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
-        if (user != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
+        if (user != null) {
             try {
                 // 开户后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(user.getUserId());

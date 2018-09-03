@@ -5,17 +5,14 @@ package com.hyjf.admin.service.impl.coupon;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BatchSubUserCouponBean;
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.CouponUserClient;
 import com.hyjf.admin.service.coupon.CouponUserService;
+import com.hyjf.am.bean.admin.BatchSubUserCouponBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
@@ -107,12 +104,12 @@ public class CouponUserServiceImpl implements CouponUserService {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param request
      * @return
      */
     @Override
-    public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
-        return amTradeClient.deleteById(id, remark, userId);
+    public CouponUserCustomizeResponse deleteById(CouponUserBeanRequest request) {
+        return amTradeClient.deleteById(request);
     }
 
     /**
