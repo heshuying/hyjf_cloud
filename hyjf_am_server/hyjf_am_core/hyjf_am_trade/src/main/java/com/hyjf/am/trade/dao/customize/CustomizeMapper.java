@@ -209,4 +209,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
+
+	@Autowired
+	protected ApiRepayListCustomizeMapper apiRepayListCustomizeMapper;
 }

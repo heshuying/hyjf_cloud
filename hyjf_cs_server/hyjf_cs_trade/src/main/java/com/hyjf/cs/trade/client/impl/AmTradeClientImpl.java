@@ -23,6 +23,7 @@ import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -36,6 +37,7 @@ import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
+import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -63,6 +65,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.ApiRepayListRequestBean;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
@@ -4211,6 +4214,24 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid) {
         String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditListByCreditNid/"+ creditNid;
         BorrowCreditResponse response = restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取回款记录信息
+     *
+     * @param request
+     * @return List<RepayListCustomize>
+     * @author Zha Daojian
+     * @date 2018/9/1 13:20
+     **/
+    @Override
+    public List<ApiRepayListCustomizeVO> searchRepayList(ApiRepayListRequest request) {
+        String url = "http://AM-TRADE/am-trade/invest/searchRepayList";
+        ApiRepayListResponse response = restTemplate.postForEntity(url,request,ApiRepayListResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }
