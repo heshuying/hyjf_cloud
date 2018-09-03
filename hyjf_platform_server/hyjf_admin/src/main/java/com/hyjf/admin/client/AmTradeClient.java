@@ -76,21 +76,6 @@ public interface AmTradeClient {
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
 
     /**
-     * 根据筛选条件查询绑定日志count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getBindLogCount(BindLogListRequest request);
-    /**
-     * 根据筛选条件查询绑定日志list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<BindLogVO> searchBindLogList(BindLogListRequest request);
-
-    /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
      * @auth sunpeikai
      * @param userId 用户id

@@ -77,4 +77,19 @@ public interface AmAdminClient {
      * yangchangwei
      */
     HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
+
+    /**
+     * 查询手续费分账count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPoundageCount(PoundageListRequest request);
+    /**
+     * 查询手续费分账list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PoundageCustomizeVO> searchPoundageList(PoundageListRequest request);
 }
