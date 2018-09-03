@@ -901,6 +901,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponType("");
 
             investInfo.setDesc("历史年回报率: " + borrow.getBorrowApr() + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
+            investInfo.setDesc1("历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
             investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "%");
             investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
             investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
@@ -945,20 +946,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             investInfo.setBorrowAccountWait(CommonUtils.formatAmount(borrow.getBorrowAccountWait()) + "");
             investInfo.setAnnotation("");
-
             // 设置无用的东西 不给app返回null
-
             investInfo.setEndTime("");
-            investInfo.setDesc1("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
-
             // 投资协议
+            if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
+                investInfo.setRealAmount("");
+                investInfo.setButtonWord("确认");
+            } else {
+                investInfo.setRealAmount("");
+                investInfo.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
+            }
             this.setProtocolsToResultVO(investInfo, investType);
 
-            // 前端要求改成bean，不要封装
-/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);*/
             return investInfo;
         }
         return null;
