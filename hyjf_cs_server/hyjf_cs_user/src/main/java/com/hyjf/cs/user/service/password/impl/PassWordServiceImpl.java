@@ -109,9 +109,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 判断用户是否开户
         int accountFlag = user.getBankOpenAccount();
         // 未开户
-        if (accountFlag!=1) {
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        }
+        CheckUtil.check(accountFlag==1,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
         CheckUtil.check(count>0, MsgEnum.ERR_CARD_NOT_BIND);
         // 判断用户是否设置过交易密码
