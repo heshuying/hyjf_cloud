@@ -5575,8 +5575,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoRecord() && hjhAssetBorrowType.getAutoRecord() == 1) {
 			// 遍历borrowNid
 			for (int i = 0; i < list.size(); i++) {
-				// TODO 三方资产录标的有发送MQ
-//				this.sendToMQ(list.get(i).getBorrowNid(), RabbitMQConstants.ROUTINGKEY_BORROW_RECORD);
                 logger.info(list.get(i).getBorrowNid()+" 发送自动备案消息到MQ ");
                 try {
                     JSONObject params = new JSONObject();

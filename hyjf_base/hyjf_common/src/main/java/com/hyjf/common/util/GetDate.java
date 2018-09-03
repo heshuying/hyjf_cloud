@@ -1953,8 +1953,8 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期的时间戳
 	 */
 	public static int getTime10(Date date) {
-		return (int) date.getTime()/1000;
-	}
+		return (int) (date.getTime()/1000);
+}
 
 	/**
 	 * 返回距离某个日期多少年(不满按一年计算)

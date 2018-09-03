@@ -53,7 +53,10 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
         //起始时间
         param.put("date", request.getDate() + " 00:00:00");
         // 结束时间
-        param.put("datee", request.getDate() + " 23:59:59");
+        // TODO : 列表查询Sqlwhere条件 1=1 应替换为 ct.tender_type = 1
+        //TODO : 为方便前端联调 屏蔽条件, 联调完应做删除
+//        param.put("datee", request.getDate() + " 23:59:59");
+        param.put("datee", "2018-09-30 23:59:59");
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
         }

@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Api(tags = "weChat端-散标投资")
 @RestController
-@RequestMapping("/hyjf-wechat/user/invest")
+@RequestMapping("/hyjf-wechat/wx/bank/wechat/borrow")
 public class WechatBorrowTenderController extends BaseTradeController {
 
     @Autowired
@@ -104,8 +104,8 @@ public class WechatBorrowTenderController extends BaseTradeController {
     }
 
     @ApiOperation(value = "获取投资信息", notes = "获取投资信息")
-    @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
+    public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息 userid:{}" , userId);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
