@@ -1047,8 +1047,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         BigDecimal borrowAccountWait = borrow.getBorrowAccountWait();
         // 去最小值 最大可投和 项目可投
-        if (borrow.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
-            BigDecimal TenderAccountMax = new BigDecimal(borrow.getTenderAccountMax());
+        if (borrowInfo.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
+            BigDecimal TenderAccountMax = new BigDecimal(borrowInfo.getTenderAccountMax());
             if (TenderAccountMax.compareTo(borrowAccountWait) == -1) {
                 vo.setBorrowAccountWait(CommonUtils.formatAmount(null, TenderAccountMax));
             } else {
@@ -1061,9 +1061,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (balanceWait == null || balanceWait.equals("")) {
             balanceWait = "0";
         }
-        logger.info("剩余金额为:{}  最小起投{} ",balanceWait,borrow.getTenderAccountMin());
+        logger.info("剩余金额为:{}  最小起投{} ",balanceWait,borrowInfo.getTenderAccountMin());
         // 剩余可投小于起投，计算收益按照剩余可投计算
-        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 1) {
+        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrowInfo.getTenderAccountMin())) < 1) {
             money = new BigDecimal(balanceWait).intValue() + "";
         }
 
@@ -1090,23 +1090,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         }
 
-        vo.setInitMoney(borrow.getTenderAccountMin() + "");
+        vo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
         vo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
-        vo.setInvestmentDescription(borrow.getTenderAccountMin() + "元起投," + borrow.getBorrowIncreaseMoney() + "元递增");
+        vo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
         // 可用余额的递增部分
         AccountVO account = amTradeClient.getAccount(tender.getUserId());
         BigDecimal balance = account.getBankBalance();
         vo.setUserBalance(CommonUtils.formatAmount(null,balance));
         BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).divide(new BigDecimal(borrow.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
                 .multiply(new BigDecimal(borrow.getBorrowIncreaseMoney())).add(new BigDecimal(borrow.getTenderAccountMin()));
-        if (balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
+        if (balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
             // 可用余额<起投金额 时 investAllMoney 传 -1
             // 全投金额
             vo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = vo.getBorrowAccountWait().replace(",", "");
-            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
-                vo.setInvestAllMoney(borrow.getTenderAccountMax() + "");
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                vo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
                 vo.setInvestAllMoney(tmpmoney + "");
