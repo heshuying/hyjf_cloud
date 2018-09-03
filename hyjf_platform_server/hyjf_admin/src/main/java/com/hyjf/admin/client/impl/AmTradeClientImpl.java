@@ -5313,7 +5313,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUsrByCouponCode/" + couponCode;
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUserByCouponCode/" + couponCode;
         CouponUserResponse response = restTemplate.getForEntity(url,CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5757,6 +5757,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
         String url = "http://AM-TRADE/am-trade/stzfwhiteconfig/selectSTZHWhiteById/" + id;
         STZHWhiteListResponse response = restTemplate.getForEntity(url,STZHWhiteListResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/adminCouponConfig";
+        CouponConfigCustomizeResponse response = restTemplate.postForEntity(url,request,CouponConfigCustomizeResponse.class).getBody();
         return response;
     }
 

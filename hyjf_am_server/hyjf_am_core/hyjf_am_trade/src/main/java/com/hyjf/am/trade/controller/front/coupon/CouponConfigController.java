@@ -112,6 +112,20 @@ public class CouponConfigController extends BaseController {
         return ccr;
     }
 
+    /**
+     * 加载优惠券配置列表
+     * @return
+     */
+    @PostMapping("/getConfigCustomizeList")
+    public CouponConfigCustomizeResponse getConfigCustomizeList() {
+        CouponConfigCustomizeResponse response = new CouponConfigCustomizeResponse();
+        List<CouponConfigCustomize> customizeList = couponConfigService.getConfigCustomizeList(new CouponConfigCustomize());
+        if (!CollectionUtils.isEmpty(customizeList)) {
+            List<CouponConfigCustomizeVO> customizeVOS = CommonUtils.convertBeanList(customizeList,CouponConfigCustomizeVO.class);
+            response.setResultList(customizeVOS);
+        }
+        return response;
+    }
 
     /**
      * 保存优惠券配置信息

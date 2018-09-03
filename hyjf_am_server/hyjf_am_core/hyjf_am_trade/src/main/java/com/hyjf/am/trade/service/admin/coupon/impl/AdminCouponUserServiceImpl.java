@@ -240,7 +240,7 @@ public class AdminCouponUserServiceImpl implements AdminCouponUserService {
         co.setCreateUserId(Integer.parseInt(userId));
         // 操作时间
         co.setCreateTime(GetDate.getDate());
-        couponOperationHistoryMapper.insertSelective(co);
+        couponOperationHistoryMapper.insert(co);
 
     }
 }
