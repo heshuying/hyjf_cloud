@@ -13,6 +13,8 @@ import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,13 +33,13 @@ public class ProtocolsController extends BaseController {
 	/**
 	 * 获取协议列表
 	 *
-	 * @param request
+	 * @param requestT
 	 * @return
 	 */
 	@RequestMapping("/selectfddtempletlist")
-	public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequest request) {
+	public FddTempletCustomizeResponse selectFddTempletList(@RequestBody ProtocolsRequest requestT) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(request);
+		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(requestT);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<FddTempletCustomizeVO> voList = CommonUtils.convertBeanList(list, FddTempletCustomizeVO.class);
 			response.setResultList(voList);
@@ -48,13 +50,13 @@ public class ProtocolsController extends BaseController {
 	/**
 	 * 添加协议列表
 	 *
-	 * @param request
+	 * @param requestT
 	 * @return
 	 */
 	@RequestMapping("/insertaction")
-	public FddTempletCustomizeResponse insertAction(ProtocolsRequest request) {
+	public FddTempletCustomizeResponse insertAction(@RequestBody ProtocolsRequest requestT) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		protocolsService.insertAction(request);
+		protocolsService.insertAction(requestT);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
@@ -62,13 +64,13 @@ public class ProtocolsController extends BaseController {
 	/**
 	 * 修改协议列表
 	 *
-	 * @param request
+	 * @param requestT
 	 * @return
 	 */
-	@RequestMapping("/updateaction")
-	public FddTempletCustomizeResponse updateAction(ProtocolsRequest request) {
+	@PostMapping("/updateaction")
+	public FddTempletCustomizeResponse updateAction(@RequestBody ProtocolsRequest requestT) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		protocolsService.updateAction(request);
+		protocolsService.updateAction(requestT);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
