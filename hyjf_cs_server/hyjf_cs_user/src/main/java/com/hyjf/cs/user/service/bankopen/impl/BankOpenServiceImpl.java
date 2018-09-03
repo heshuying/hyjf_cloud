@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bankopen.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
@@ -8,9 +9,12 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -21,6 +25,8 @@ import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
@@ -38,6 +44,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author xiasq
@@ -55,6 +62,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
 
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private FddCertificateProducer fddCertificateProducer;
 
 
     @Override
@@ -262,6 +272,16 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setStatus(true);
             result.setMessage("开户失败,保存银行卡信息失败");
             return result;
+        }
+
+        try {
+            // 加入到消息队列
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mqMsgId", GetCode.getRandomCode(10));
+            params.put("userId", String.valueOf(userId));
+            fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            logger.error("用户开户后，发送【法大大CA认证】MQ消息失败！userId:[{}]",userId);
         }
         result.setStatus(true);
         result.setMessage("开户成功");
