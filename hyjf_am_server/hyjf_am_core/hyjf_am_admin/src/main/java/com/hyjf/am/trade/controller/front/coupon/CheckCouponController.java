@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.controller.front.coupon;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.BatchCouponsRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.coupon.CheckCouponService;
 import com.hyjf.common.security.util.MD5;
