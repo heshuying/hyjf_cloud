@@ -4,12 +4,13 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: admin
   boot:
     admin:
       client:
         url: http://micoserver:18080
+  profiles:
+    active: dev
 server:
   port: 9093
 
