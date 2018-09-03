@@ -68,6 +68,6 @@ public class PushMoneyController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		return new AdminResult<>(response);
 	}
 }

@@ -14,10 +14,11 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * @author PC-LIUSHOUYI
  * @version RedPacketSmsNoticeBatchController, v0.1 2018/6/21 17:46
+ * 红包账户余额短信提醒
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-trade/redPacket")
+@RequestMapping("/redPacket")
 public class RedPacketSmsNoticeBatchController {
     private static final Logger logger = LoggerFactory.getLogger(RedPacketSmsNoticeBatchController.class);
 

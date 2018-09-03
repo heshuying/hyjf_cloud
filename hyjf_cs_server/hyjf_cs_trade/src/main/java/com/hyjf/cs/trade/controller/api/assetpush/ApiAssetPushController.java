@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Api(tags = "api端-资产推送接口")
 @RestController
-@RequestMapping("/hyjf-api/api")
+@RequestMapping("/server/assetpush")
 public class ApiAssetPushController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiAssetPushController.class);

@@ -5,6 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -4726,17 +4727,24 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/selectfddtempletlist", request, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        requestT.setCurrPage(request.getCurrPage());
+        requestT.setPageSize(request.getPageSize());
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse insertAction(ProtocolsRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/insertaction", requestBean, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/insertaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/updateaction", requestBean, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/updateaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
@@ -4746,13 +4754,17 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestBean,
+        PushMoneyRequest requestT = new PushMoneyRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestT,
                 PushMoneyResponse.class);
     }
 
     @Override
     public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestBean,
+        PushMoneyRequest requestT = new PushMoneyRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestT,
                 PushMoneyResponse.class);
     }
 

@@ -48,13 +48,13 @@ public class PushMoneyController extends BaseController {
 	/**
 	 * 添加提成配置
 	 *
-	 * @param request
+	 * @param requestT
 	 * @return
 	 */
 	@RequestMapping("/insertpushmoney")
-	public PushMoneyResponse insertPushMoney(@RequestBody PushMoneyRequest request) {
+	public PushMoneyResponse insertPushMoney(@RequestBody PushMoneyRequest requestT) {
 		PushMoneyResponse response = new PushMoneyResponse();
-		pushMoneyService.insertPushMoney(request);
+		pushMoneyService.insertPushMoney(requestT);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
@@ -62,15 +62,19 @@ public class PushMoneyController extends BaseController {
 	/**
 	 * 修改提成配置
 	 *
-	 * @param request
+	 * @param requestT
 	 * @return
 	 */
 	@RequestMapping("/updatepushmoney")
-	public PushMoneyResponse updatePushMoney(@RequestBody PushMoneyRequest request) {
+	public PushMoneyResponse updatePushMoney(@RequestBody PushMoneyRequest requestT) {
 		PushMoneyResponse response = new PushMoneyResponse();
-		List<PushMoney> list = pushMoneyService.getRecordList();
-		pushMoneyService.updatePushMoney(request);
-		response.setRtn(AdminResponse.SUCCESS);
+		PushMoney record = pushMoneyService.getRecordById(requestT.getId());
+		if (record != null){
+			pushMoneyService.updatePushMoney(requestT);
+			return response;
+		}
+		response.setRtn(PushMoneyResponse.FAIL);
+		response.setMessage("被修改id不存在");
 		return response;
 	}
 

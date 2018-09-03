@@ -35,7 +35,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-wechat/tender/hjh")
 public class WechatjhPlanController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatjhPlanController.class);
 
     @Autowired
     private HjhTenderService hjhTenderService;
@@ -63,7 +62,7 @@ public class WechatjhPlanController extends BaseTradeController {
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender) {
         tender.setUserId(userId);
-        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         return  hjhTenderService.getInvestInfo(tender);
     }
 

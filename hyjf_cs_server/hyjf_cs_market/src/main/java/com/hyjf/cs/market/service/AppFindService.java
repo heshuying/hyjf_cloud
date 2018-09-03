@@ -19,7 +19,6 @@ public interface AppFindService extends BaseMarketService {
 
     /**
      * 查询文章条数
-     * @param params
      * @return
      */
     Integer countContentArticleByType();
