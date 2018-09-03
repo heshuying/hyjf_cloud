@@ -8,6 +8,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -48,6 +49,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("wechat端-请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
+        tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         tender.setUserId(userId);
         WebResult<Map<String,Object>> result = null;
         try{
@@ -73,6 +75,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("wechat端-散标投资异步处理start,userId:{}", bean.getLogUserId());
         BankCallResult result ;
         try{
+            bean.setLogClient(ClientConstants.WECHAT_CLIENT);
             result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
         }catch (CheckException e){
             throw e;
@@ -106,6 +109,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
     public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息 userid:{}" , userId);
         tender.setUserId(userId);
+        tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         return borrowTenderService.getInvestInfoApp(tender);
     }
 
