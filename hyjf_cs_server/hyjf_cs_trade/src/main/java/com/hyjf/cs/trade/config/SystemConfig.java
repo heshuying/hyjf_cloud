@@ -10,7 +10,7 @@ public class SystemConfig {
     @Value("${hyjf.app.host}")
     public String appHost;
 
-    @Value("${hyjf.role.isopen}")
+    //@Value("${hyjf.role.isopen}")
     private String hyjfRoleIsopen;
 
     @Value("${hyjf.weChat.host}")
