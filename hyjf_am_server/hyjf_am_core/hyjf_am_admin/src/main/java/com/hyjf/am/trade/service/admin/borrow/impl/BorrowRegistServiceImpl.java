@@ -246,6 +246,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                                     try {
                                         JSONObject params = new JSONObject();
                                         params.put("borrowNid", borrow.getBorrowNid());
+                                        params.put("instCode",borrowInfo.getInstCode());
                                         autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                                     } catch (Exception e) {
                                         logger.error("发送MQ到审核保证金失败，borrowNid：" + borrowNid);
@@ -265,8 +266,9 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                                         try {
                                             JSONObject params = new JSONObject();
                                             params.put("borrowNid", borrow.getBorrowNid());
+                                            params.put("instCode",borrowInfo.getInstCode());
                                             autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                                        } catch (MQException e) {
+                                        } catch (Exception e) {
                                             logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
                                             e.printStackTrace();
                                         }
