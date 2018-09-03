@@ -4356,4 +4356,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         restTemplate.getForEntity(url, String.class);
     }
 
+    /**
+     * 查询待退出计划的标的
+     *
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectWaitQuitHjhList() {
+        HjhAccedeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhAccede/selectWaitQuitHjhList/",
+                HjhAccedeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
