@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.am.bean.admin;
 
 import java.io.Serializable;
 import java.util.List;

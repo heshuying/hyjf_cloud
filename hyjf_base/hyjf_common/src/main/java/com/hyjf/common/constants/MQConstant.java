@@ -93,6 +93,12 @@ public interface MQConstant {
 	String TYJ_COUPON_REPAY_GROUP = "TYJ_COUPON_REPAY_GROUP";
 	String TYJ_COUPON_REPAY_TOPIC = "TYJ_COUPON_REPAY_TOPIC";
 
+	/**
+	 * 优惠券批量发放
+	 */
+	String BATCH_USER_COUPON_SEND_GROUP = "BATCH_USER_COUPON_SEND_GROUP";
+	String BATCH_USER_COUPON_SEND_TOPIC = "BATCH_USER_COUPON_SEND_TOPIC";
+
 	/** ------------------------------- 优惠券相关 end ------------------------- end */
 
 

@@ -103,13 +103,14 @@ public class WebPassWordController extends BaseUserController{
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
     public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
+        logger.info("设置交易密码异步回调"+bean.getLogOrderId());
         WebResult<Object> result = new WebResult<Object>();
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询设置交易密码状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
-        if (user != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
+        if (user != null) {
             try {
                 // 修改密码后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(userId);
