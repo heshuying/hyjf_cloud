@@ -11,17 +11,10 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
 
 package com.hyjf.cs.common.aop;
 
-import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.common.exception.CheckException;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 
 
 /**
@@ -45,20 +38,20 @@ public class AOPHandler {
 	 * @return
 	 */
 //	@Pointcut("controllerLog()")
-	@Around("(execution(public com.hyjf.am.bean.result.BaseResult+ com.hyjf.cs..*Controller.*(..))) && !(@annotation(org.springframework.web.bind.annotation.ExceptionHandler))")
-	public Object controllerAOPHandler(ProceedingJoinPoint pjp) {
-
-		long startTime = System.currentTimeMillis();
-		Object result;
-		try {
-			result = pjp.proceed();
-			logger.info(pjp.getSignature() + " 执行时间:" + (System.currentTimeMillis() - startTime));
-		}catch(Throwable e) {
-			logger.error("组合层对外接口通用AOP处理异常！", e);
-			return null;
-		}
-		return result;
-	}
+//	@Around("(execution(public com.hyjf.am.bean.result.BaseResult+ com.hyjf.cs..*Controller.*(..))) && !(@annotation(org.springframework.web.bind.annotation.ExceptionHandler))")
+//	public Object controllerAOPHandler(ProceedingJoinPoint pjp) {
+//
+//		long startTime = System.currentTimeMillis();
+//		Object result;
+//		try {
+//			result = pjp.proceed();
+//			logger.info(pjp.getSignature() + " 执行时间:" + (System.currentTimeMillis() - startTime));
+//		}catch(Throwable e) {
+//			logger.error("组合层对外接口通用AOP处理异常！", e);
+//			return null;
+//		}
+//		return result;
+//	}
 //
 //	/**
 //	 * api用错误处理
