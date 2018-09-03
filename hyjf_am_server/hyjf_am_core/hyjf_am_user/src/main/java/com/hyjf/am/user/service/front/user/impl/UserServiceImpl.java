@@ -1431,6 +1431,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UserEvalationResult skipEvaluate(Integer userId, Integer countScore) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		Evalation evalation = getEvalationByCountScore(countScore.shortValue());
 		userEvalationResult.setUserId(userId);
@@ -1565,5 +1568,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return 0;
 		}
 		return 1;
+	}
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public User selectUserInfoByUsername(String userName) {
+		UserExample example = new UserExample();
+		UserExample.Criteria crt = example.createCriteria();
+		crt.andUsernameEqualTo(userName);
+		List<User> list = this.usersMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 }

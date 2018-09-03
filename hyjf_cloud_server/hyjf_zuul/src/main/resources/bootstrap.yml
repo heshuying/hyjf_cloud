@@ -5,6 +5,8 @@ spring:
     admin:
       client:
         url: http://micoserver:18080
+  profiles:
+    active: dev
 eureka:
   client:
     serviceUrl:

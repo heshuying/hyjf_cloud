@@ -833,12 +833,35 @@ public class UserController extends BaseController {
     /**
      * 根据username查询用户
      *
-     * @param condition
+     * @param userId
      * @return
      */
     @RequestMapping("/isExistsUser/{userId}")
     public int findUserByUsername(@PathVariable String userId) {
         logger.info("findUserByCondition run...condition is :{}", userId);
         return userService.isExistsUser(userId);
+    }
+
+    /**
+     * 通过用户名获得用户的详细信息
+     *
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/selectUserInfoByUsername/{userName}")
+    public UserResponse selectUserInfoByUsername(@PathVariable String userName) {
+        UserResponse userResponse = new UserResponse();
+        User user = null;
+            user = userService.selectUserInfoByUsername(userName);
+
+            if (user == null) {
+                userResponse.setRtn(Response.FAIL);
+                userResponse.setMessage(Response.FAIL_MSG);
+            } else {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                userResponse.setResult(userVO);
+            }
+        return userResponse;
     }
 }

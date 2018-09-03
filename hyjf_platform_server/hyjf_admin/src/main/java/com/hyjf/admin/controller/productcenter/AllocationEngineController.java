@@ -491,6 +491,8 @@ public class AllocationEngineController extends BaseController{
 		if(viewRequest.getAddOrModify().equals("0")){
 			if(form.getPlanNidSrch()!= null){
 				jsonObject.put("planNid", form.getPlanNidSrch());
+				jsonObject.put("result", SUCCESS);
+				jsonObject.put("msg", SUCCESS_DESC);
 			}
 			return jsonObject;
 		} else if(viewRequest.getAddOrModify().equals("1")){
@@ -500,6 +502,8 @@ public class AllocationEngineController extends BaseController{
 			if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
 				HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
 				jsonObject.put("hjhAllocationEngine", vo);
+				jsonObject.put("result", SUCCESS);
+				jsonObject.put("msg", SUCCESS_DESC);
 			} else {
 				jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
 			}
