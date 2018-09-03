@@ -47,9 +47,9 @@ public class AutoPreAuditConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ASSET_PUSH_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.ASSET_PUST_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);

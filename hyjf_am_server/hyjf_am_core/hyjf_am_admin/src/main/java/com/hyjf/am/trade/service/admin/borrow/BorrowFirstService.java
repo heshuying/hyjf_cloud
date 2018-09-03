@@ -52,4 +52,11 @@ public interface BorrowFirstService {
      * @param borrowFireRequest
      */
     boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+
+    /**
+     * 根据流程配置判断是否发送mq到自动初审
+     *
+     * @param borrowNid
+     */
+    void sendToMQAutoPreAudit(String borrowNid);
 }

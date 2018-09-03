@@ -82,6 +82,15 @@ public class BorrowFirstController extends BaseController {
     public BorrowFirstCustomizeResponse insertBorrowBail(@PathVariable String borrowNid, @PathVariable String currUserId) {
         BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
         boolean flag = borrowFirstService.insertBorrowBail(borrowNid, currUserId);
+        if (flag) {
+            // 根据流程配置判断是否发送mq到自动初审
+            try {
+                borrowFirstService.sendToMQAutoPreAudit(borrowNid);
+            } catch (Exception e) {
+                logger.error("发送MQ到自动初审失败、借款编号:" + borrowNid);
+                e.printStackTrace();
+            }
+        }
         response.setFlag(flag);
         return response;
     }
