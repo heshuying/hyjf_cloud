@@ -13,6 +13,8 @@ spring:
           searchPaths: src/main/resources
           username: deployment
           password: deploy2018
+  profiles:
+    active: dev
 
 eureka:
   client:

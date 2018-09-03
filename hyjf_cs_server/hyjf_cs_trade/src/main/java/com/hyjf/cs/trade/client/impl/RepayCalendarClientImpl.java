@@ -47,9 +47,8 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
      */
     @Override
     public List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params) {
-        AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/user/repayCalendar/searchRepaymentCalendar",
-                AppReapyCalendarResponse.class);
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchRepaymentCalendar", params, AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getResultList();
         }
@@ -63,9 +62,8 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
      */
     @Override
     public Integer searchNearlyRepaymentTime(Map<String, Object> params) {
-        AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/user/repayCalendar/searchNearlyRepaymentTime",
-                AppReapyCalendarResponse.class);
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchNearlyRepaymentTime", params, AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getCount();
         }

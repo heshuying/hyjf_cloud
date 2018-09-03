@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -35,8 +36,8 @@ public class HomePageController extends BaseMarketController {
     @Autowired
     private HomePageService homePageService;
 
-    // @Value("${file.domain.head.url}")
-    private String HOST_URL;
+    @Value("file.domain.url")
+    private String FILE_DOMAIN_URL;
 
     /** @RequestMapping值 */
     public static final String REQUEST_HOME = "/hyjf-app";
@@ -60,7 +61,7 @@ public class HomePageController extends BaseMarketController {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();
         String platformT = realPlatform;
-        if (StringUtils.isBlank(realPlatform)) {
+        if (StringUtils.isBlank(platformT)) {
             platformT = platform;
         }
         result.put(CustomConstants.APP_REQUEST, REQUEST_HOME + REQUEST_MAPPING + START_PAGE_ACTION);
@@ -68,11 +69,11 @@ public class HomePageController extends BaseMarketController {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
-            ads.put("host", "http://micro.file.hyjf.com");
+            ads.put("host", FILE_DOMAIN_URL);
             ads.put("code", "startpage");
-            if ("2".equals(platformT)) {
+            if (platformT.equals("2")) {
                 ads.put("platformType","1");
-            } else if ("3".equals(platformT)) {
+            } else if (platformT.equals("3")) {
                 ads.put("platformType","2");
             }
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);
