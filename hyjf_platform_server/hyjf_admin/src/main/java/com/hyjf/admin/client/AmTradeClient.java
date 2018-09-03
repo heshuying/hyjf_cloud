@@ -2900,7 +2900,14 @@ public interface AmTradeClient {
      * @return
      */
     STZHWhiteListResponse selectSTZHWhiteById(Integer id);
-    
+
+    /**
+     * 加载优惠券配置列表
+     * @param request
+     * @return
+     */
+    CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request);
+
     /**
      * 根据参数获取 HjhRegionVO
      * @param form

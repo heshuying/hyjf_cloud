@@ -387,7 +387,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(String bankName) {
         AdminBankConfigResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName", bankName, AdminBankConfigResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bankName,  AdminBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

@@ -117,4 +117,12 @@ public interface BaseService {
      * @Author : huanghui
      */
     boolean getIsRechargeTransType(String tranType);
+
+    /**
+     * 根据数据字典获取配置信息
+     *
+     * @param configCd
+     * @return
+     */
+    String selectBorrowConfig(String configCd);
 }

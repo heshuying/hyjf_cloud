@@ -96,4 +96,28 @@ public interface AssetPushService extends BaseService {
      * @return
      */
     int insertCompanyInfoToBorrowUsers(BorrowUser borrowUser);
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowBail> selectBorrowBail(String borrowNid);
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    Integer updateBorrowByBorrowNid(Borrow borrow);
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    Integer insertBorrowBail(BorrowBail borrowBail);
 }

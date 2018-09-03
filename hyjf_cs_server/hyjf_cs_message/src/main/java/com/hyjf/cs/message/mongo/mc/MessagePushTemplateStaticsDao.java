@@ -50,10 +50,13 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 		Criteria criteria = new Criteria();
 		if (startTime != null) {
 			criteria.and("createTime").gte(startTime);
-		}
-		if (endTime != null) {
+			if(endTime != null){
+				criteria.lte(endTime);
+			}
+		}else if (endTime != null) {
 			criteria.and("createTime").lte(endTime);
 		}
+
 		query.addCriteria(criteria);
 		return mongoTemplate.find(query, getEntityClass());
 	}

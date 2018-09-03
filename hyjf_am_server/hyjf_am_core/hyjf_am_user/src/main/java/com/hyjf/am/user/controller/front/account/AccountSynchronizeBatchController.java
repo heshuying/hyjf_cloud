@@ -49,4 +49,13 @@ public class AccountSynchronizeBatchController extends BaseController {
         response.setUpdateFlag(updateFlag);
         return response;
     }
+
+    @RequestMapping("/updateMobileSynch")
+    public AccountMobileSynchResponse accountMobileAynch(@RequestBody  AccountMobileSynchRequest accountMobileSynchRequest) {
+        AccountMobileSynchResponse response = new AccountMobileSynchResponse();
+        boolean updateFlag = mobileSynchronizeService.updateMobileSynch(accountMobileSynchRequest);
+        response.setUpdateFlag(updateFlag);
+        return response;
+    }
+
 }

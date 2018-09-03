@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
@@ -7,8 +8,10 @@ import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.market.UtmRegResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
+import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
@@ -16,6 +19,7 @@ import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -34,6 +38,8 @@ import java.util.*;
 public class AmUserClientImpl implements AmUserClient {
 	@Autowired
 	private RestTemplate restTemplate;
+	@Value("${am.user.service.name}")
+	private String userService;
 
 	/**
 	 * 查询投之家注册人数、开户人数、绑卡人数
@@ -449,5 +455,44 @@ public class AmUserClientImpl implements AmUserClient {
 			}
 		}
 		return userIdList;
+	}
+
+	/**
+	 * 保存验证码
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
+	@Override
+	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(checkCode);
+		request.setVerificationType(validCodeType);
+		request.setStatus(status);
+		request.setPlatform(platform);
+		SmsCodeResponse response = restTemplate
+				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCnt();
+		} else {
+			throw new RuntimeException("发送验证码失败...");
+		}
+	}
+
+	@Override
+	public int onlyCheckMobileCode(String mobile, String code) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(code);
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/qianle_check/", request, IntegerResponse.class)
+				.getBody().getResultInt();
+		if (result == null) {
+			return 0;
+		}
+		return result;
 	}
 }

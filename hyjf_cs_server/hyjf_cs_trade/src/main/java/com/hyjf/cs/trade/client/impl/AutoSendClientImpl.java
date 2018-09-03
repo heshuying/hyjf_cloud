@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UserResponse;
@@ -103,8 +104,8 @@ public class AutoSendClientImpl implements AutoSendClient {
 
     @Override
     public int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetnewVO) {
-        int result = restTemplate.postForEntity("http://AM-TRADE/am-trade/assetPush/updateHjhPlanAssetnew", hjhPlanAssetnewVO, int.class).getBody();
-        return result;
+        IntegerResponse result = restTemplate.postForEntity("http://AM-TRADE/am-trade/assetPush/updateHjhPlanAssetnew", hjhPlanAssetnewVO, IntegerResponse.class).getBody();
+        return result.getResultInt();
     }
 
     @Override

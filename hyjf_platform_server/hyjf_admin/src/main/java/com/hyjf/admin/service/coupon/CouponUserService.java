@@ -35,7 +35,7 @@ public interface CouponUserService {
 
     CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
 
-    AdminCouponUserCustomizeResponse getRecordList(CouponConfigRequest request);
+    CouponUserCustomizeResponse getRecordList(CouponConfigRequest request);
 
     UserVO getUser(String userName);
 

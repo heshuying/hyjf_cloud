@@ -36,4 +36,12 @@ public interface SmsService extends BaseService{
      * @return
      */
     int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform, Integer status, Integer updateStatus);
+
+    /**
+     * 校验千乐验证码
+     * @param phone
+     * @param code
+     * @return
+     */
+    int checkQianleMobileCode(String phone, String code);
 }

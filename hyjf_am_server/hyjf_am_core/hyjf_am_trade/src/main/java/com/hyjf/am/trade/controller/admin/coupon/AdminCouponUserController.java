@@ -50,9 +50,9 @@ public class AdminCouponUserController extends BaseController {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         String returnCode = Response.FAIL;
         Integer recordCount = adminCouponUserService.countCouponUser(request);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), recordCount, request.getLimit());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), recordCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), recordCount, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), recordCount);
         }
         List<CouponUserCustomize> couponUserCustomizes = adminCouponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
         if (recordCount > 0) {
@@ -106,9 +106,9 @@ public class AdminCouponUserController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            response.setRtn("1");
+            response.setMessage("发放失败");
         }
-        response.setRtn("1");
-        response.setMessage("发放失败");
         return response;
     }
 

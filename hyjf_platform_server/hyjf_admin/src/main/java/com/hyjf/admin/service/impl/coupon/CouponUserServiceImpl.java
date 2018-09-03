@@ -11,10 +11,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CouponUserClient;
 import com.hyjf.admin.service.coupon.CouponUserService;
-import com.hyjf.am.response.admin.AdminCouponUserCustomizeResponse;
-import com.hyjf.am.response.admin.CouponTenderResponse;
-import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
-import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
@@ -80,7 +77,7 @@ public class CouponUserServiceImpl implements CouponUserService {
             //活动集合转成 <id,title>格式的map
             Map<Integer,String> dicMap = this.convertToIdTitleMap(activityListVOs);
             for (CouponUserCustomizeVO couponUser:list) {
-                if ("2".equals(couponUser.getCouponSource())){
+                if ("活动发放".equals(couponUser.getCouponSource())){
                     if (StringUtils.isNotEmpty(dicMap.get(couponUser.getActivityId()))){
                         couponUser.setCouponContent(dicMap.get(couponUser.getActivityId()));
                     }else{
@@ -89,7 +86,6 @@ public class CouponUserServiceImpl implements CouponUserService {
                         }else{
                             couponUser.setCouponContent("");
                         }
-
                     }
                 }
             }
@@ -125,13 +121,18 @@ public class CouponUserServiceImpl implements CouponUserService {
      * @return
      */
     @Override
-    public AdminCouponUserCustomizeResponse getRecordList(CouponConfigRequest request) {
-        AdminCouponUserCustomizeResponse response = new AdminCouponUserCustomizeResponse();
-        List<CouponConfigCustomizeVO> adminCouponUserCustomizeVOS = (List<CouponConfigCustomizeVO>) amTradeClient.getCouponConfig(request);
+    public CouponUserCustomizeResponse getRecordList(CouponConfigRequest request) {
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+        //加载优惠券配置列表
+        CouponConfigCustomizeResponse configCustomizeResponse = amTradeClient.getConfigCustomizeList(request);
+        List<CouponConfigCustomizeVO> configCustomizeVOS = configCustomizeResponse.getResultList();
+        //加载有效的活动列表
         List<ActivityListCustomizeVO> activityListCustomizeVOS = amMarketClient.getActivityList(new ActivityListCustomizeVO());
-        if (!CollectionUtils.isEmpty(adminCouponUserCustomizeVOS) && !CollectionUtils.isEmpty(activityListCustomizeVOS)) {
-            response.getResult().setCouponConfigCustomizeVOS(adminCouponUserCustomizeVOS);
-            response.getResult().setActivityListCustomizeVOS(activityListCustomizeVOS);
+        if (!CollectionUtils.isEmpty(configCustomizeVOS)) {
+            response.setCouponConfigCustomizeVOS(configCustomizeVOS);
+        }
+        if (!CollectionUtils.isEmpty(activityListCustomizeVOS)) {
+            response.setActivityListCustomizeVOS(activityListCustomizeVOS);
         }
         return response;
     }
