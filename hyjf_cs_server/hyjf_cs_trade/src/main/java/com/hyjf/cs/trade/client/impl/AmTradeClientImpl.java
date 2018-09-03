@@ -735,7 +735,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 		String url = "http://AM-TRADE/am-trade/bankException/getBorrowTenderTmpList";
 		BorrowTenderTmpResponse response =restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
 		if (response!=null){
-			response.getResultList();
+			return response.getResultList();
 		}
 		return null;
 	}

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +103,12 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setAccountChinapnrTender(accountChinapnrTender);
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
+					if (StringUtils.isBlank(borrowId)){
+						logger.info("=======================投资掉单修复,borrowNid 为空!");
+						continue;
+					}
 					BorrowVO borrow =this.amTradeClient.selectBorrowByNid(borrowId);
+
 					request.setBorrow(borrow);
 					String borrowNid = borrowId == null ? "" : borrow.getBorrowNid();// 项目编号
 					BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
