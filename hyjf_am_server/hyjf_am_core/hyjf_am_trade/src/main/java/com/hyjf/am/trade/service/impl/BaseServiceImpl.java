@@ -459,4 +459,21 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
         return false;
     }
+
+    /**
+     * 根据数据字典获取配置信息
+     *
+     * @param configCd
+     * @return
+     */
+    @Override
+    public String selectBorrowConfig(String configCd) {
+        BorrowConfigExample example = new BorrowConfigExample();
+        example.createCriteria().andConfigCdEqualTo(configCd);
+        List<BorrowConfig> borrowConfigList = this.borrowConfigMapper.selectByExample(example);
+        if (null != borrowConfigList && borrowConfigList.size() > 0 ) {
+            return borrowConfigList.get(0).getConfigValue();
+        }
+        return null;
+    }
 }

@@ -295,4 +295,13 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		return couponConfigCustomizeMapper.selectCouponConfigList(map);
 	}
 
+    @Override
+    public List<CouponConfigCustomize> getConfigCustomizeList(CouponConfigCustomize couponConfigCustomize) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("limitStart",-1);
+		map.put("limitEnd",-1);
+		map.put("status",CustomConstants.COUPON_STATUS_PUBLISHED);
+        return couponConfigCustomizeMapper.selectCouponConfigList(map);
+    }
+
 }

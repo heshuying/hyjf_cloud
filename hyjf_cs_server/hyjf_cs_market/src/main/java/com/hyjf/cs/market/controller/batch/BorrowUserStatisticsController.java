@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.controller.batch;
 
+import com.hyjf.am.response.StringResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,14 +18,15 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/statisticsoperationreport")
+@RequestMapping("/cs-market/statisticsoperationreports")
 public class BorrowUserStatisticsController extends BaseMarketController {
     @Autowired
     private BorrowUserStatisticsService statisticsService;
 
-    @RequestMapping("/insertstatistics")
-    public String insertStatistics() {
+    @RequestMapping("/insertstatistic")
+    public StringResponse insertStatistics() {
+        StringResponse response = new StringResponse();
         statisticsService.insertStatistics();
-        return "success";
+        return response;
     }
 }

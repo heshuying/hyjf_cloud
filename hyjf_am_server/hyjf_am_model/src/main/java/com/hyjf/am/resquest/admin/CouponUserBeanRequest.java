@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @author yaoyong
  * @version CouponUserBeanRequest, v0.1 2018/7/23 16:04
  */
-public class CouponUserBeanRequest extends Request implements Serializable {
+public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private Integer id;
 
@@ -124,15 +125,15 @@ public class CouponUserBeanRequest extends Request implements Serializable {
 
     private Integer amount;
 
-    public int limit;
-
-    private int paginatorPage = 1;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
+//    public int limit;
+//
+//    private int paginatorPage = 1;
+//    public int getPaginatorPage() {
+//        if (paginatorPage == 0) {
+//            paginatorPage = 1;
+//        }
+//        return paginatorPage;
+//    }
 
     public Integer getId() {
         return id;
@@ -430,17 +431,17 @@ public class CouponUserBeanRequest extends Request implements Serializable {
         this.timeEndAddSrch = timeEndAddSrch;
     }
 
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
+//    public int getLimit() {
+//        return limit;
+//    }
+//
+//    public void setLimit(int limit) {
+//        this.limit = limit;
+//    }
+//
+//    public void setPaginatorPage(int paginatorPage) {
+//        this.paginatorPage = paginatorPage;
+//    }
 
     public Integer getAmount() {
         return amount;

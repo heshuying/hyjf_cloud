@@ -11,8 +11,9 @@ import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.market.client.CsMessageClient;
+import com.hyjf.cs.market.client.AmAdminClient;
 import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.StatisticsOperationReportProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
@@ -21,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -39,6 +39,8 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 	@Autowired
 	private CsMessageClient amDataCollect;
 	@Autowired
+	private AmAdminClient amAdminClient;
+	@Autowired
 	private StatisticsOperationReportProducer statisticsProducer;
 
 	@Override
@@ -54,7 +56,7 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 		oegroup.setStatisticsMonth(transferDateToInt(cal, sdf));
 
 		// 投资人按照地域分布
-		List<TenderCityCountVO> cityGroup = amTradeClient.getTenderCityGroupBy(getLastDay(cal));
+		List<TenderCityCountVO> cityGroup = amAdminClient.getTenderCityGroupBy(getLastDay(cal));
 		Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
 		oegroup.setInvestorRegionMap(cityMap);
 		// Gson gson=new Gson();
@@ -65,21 +67,21 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 		// );
 
 		// 投资人按照性别分布
-		List<TenderSexCountVO> sexGroup = amTradeClient.getTenderSexGroupBy(getLastDay(cal));
+		List<TenderSexCountVO> sexGroup = amAdminClient.getTenderSexGroupBy(getLastDay(cal));
 		Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
 		oegroup.setInvestorSexMap(sexMap);
 
 		// 投资人按照年龄分布
 		Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
-		int age = amTradeClient.getTenderAgeByRange(getLastDay(cal), 0, OperationMongoGroupEntityVO.ageRange1);
+		int age = amAdminClient.getTenderAgeByRange(getLastDay(cal), 0, OperationMongoGroupEntityVO.ageRange1);
 		ageMap.put(OperationMongoGroupEntityVO.ageRange1, age);
-		age = amTradeClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange1,
+		age = amAdminClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange1,
 				OperationMongoGroupEntityVO.ageRange2);
 		ageMap.put(OperationMongoGroupEntityVO.ageRange2, age);
-		age = amTradeClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange2,
+		age = amAdminClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange2,
 				OperationMongoGroupEntityVO.ageRange3);
 		ageMap.put(OperationMongoGroupEntityVO.ageRange3, age);
-		age = amTradeClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange3,
+		age = amAdminClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntityVO.ageRange3,
 				OperationMongoGroupEntityVO.ageRange4);
 		ageMap.put(OperationMongoGroupEntityVO.ageRange4, age);
 

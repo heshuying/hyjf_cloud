@@ -1788,6 +1788,54 @@ public interface AmTradeClient {
 	 */
     int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
 
+    /**
+     * 更新资产表 add by liushouyi
+     *
+     * @param hjhPlanAssetnewVO
+     * @return
+     */
+    int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetnewVO);
+
+    /**
+     * 查询单个资产根据资产ID
+     *
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    HjhPlanAssetVO selectPlanAsset(String assetId, String instCode);
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowBailVO selectBorrowBail(String borrowNid);
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    boolean updateBorrowByBorrowNid(BorrowVO borrow);
+
+    /**
+     * 获取系统配置 add by liushouyi
+     *
+     * @param configCd
+     * @return
+     */
+    String getBorrowConfig(String configCd);
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    Integer insertBorrowBail(BorrowBailVO borrowBail);
 
     /**
      * 根据userId和tenderNid查询投资记录
@@ -1810,4 +1858,26 @@ public interface AmTradeClient {
      */
     public List<BorrowCreditVO> getBorrowCreditListByCreditNid(String creditNid);
 
+    /**
+     * 获取逾期的标的
+     * @return
+     */
+    List<BorrowVO> selectOverdueBorrowList();
+
+    /**
+     * 计划锁定
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
+     */
+    void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS);
+
+    /**
+     * 计划退出
+     *
+     * @param accedeOrderId
+     */
+    void updateForQuit(String accedeOrderId);
 }

@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.admin.borrow;
 import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/borrow_first")
-public class BorrowFirstController {
+public class BorrowFirstController extends BaseController {
     @Autowired
     BorrowFirstService borrowFirstService;
 

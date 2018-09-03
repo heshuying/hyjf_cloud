@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -43,7 +44,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-trade/borrow_invest")
-public class BorrowInvestController {
+public class BorrowInvestController extends BaseController {
     @Autowired
     BorrowInvestService borrowInvestService;
 

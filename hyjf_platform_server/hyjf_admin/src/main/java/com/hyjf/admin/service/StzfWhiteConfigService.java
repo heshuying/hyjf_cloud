@@ -60,4 +60,11 @@ public interface StzfWhiteConfigService {
 	 * @return
 	 */
 	List<HjhInstConfigVO> getRegionList();
+
+	/**
+	 * 加载用户/企业信息
+	 * @param requestBean
+	 * @return
+	 */
+    STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean);
 }

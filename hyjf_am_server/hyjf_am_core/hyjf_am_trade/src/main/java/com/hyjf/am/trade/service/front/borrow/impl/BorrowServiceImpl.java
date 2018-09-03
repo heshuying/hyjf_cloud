@@ -265,6 +265,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
+        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
         BorrowTenderTmpExample borrowTenderTmpExample = new BorrowTenderTmpExample();
@@ -274,6 +275,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria1.andBorrowNidEqualTo(tenderBg.getBorrowNid());
         boolean tenderTempFlag = borrowTenderTmpMapper.deleteByExample(borrowTenderTmpExample) > 0 ? true : false;
         if (!tenderTempFlag) {
+            logger.error("删除borrowTenderTmp表失败 borrowNid:{}  logOrdId:{} userId:{} ",tenderBg.getBorrowNid(),tenderBg.getOrderId(),tenderBg.getUserId());
             throw new RuntimeException("删除borrowTenderTmp表失败");
         }
         // 插入冻结表
@@ -290,6 +292,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         record.setUnfreezeManual(0);
         boolean freezeFlag = freezeListMapper.insertSelective(record) > 0 ? true : false;
         if (!freezeFlag) {
+            logger.error("散标投资  插入freezeFlag表失败 ");
             throw new RuntimeException("插入freezeFlag表失败");
         }
         // 插入BorrowTender表
@@ -331,8 +334,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         //投资授权码
         borrowTender.setAuthCode(tenderBg.getAuthCode());
         borrowTender.setRemark("现金投资");
+        borrowTender.setBorrowUserId(borrow.getUserId());
+        borrowTender.setBorrowUserName(borrow.getBorrowUserName());
+        borrowTender.setUserName(tenderBg.getUserName());
+        logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
-
+        logger.info("插入borrowTender表结束...");
         // 更新用户账户余额表
         Account accountBean = new Account();
         accountBean.setUserId(userId);
@@ -345,8 +352,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         accountBean.setBankBalanceCash(tenderBg.getAccountDecimal());
         // 江西银行账户冻结金额
         accountBean.setBankFrostCash(tenderBg.getAccountDecimal());
+        logger.info("开始更新用户账户信息表");
         Boolean accountFlag = this.accountCustomizeMapper.updateOfTender(accountBean) > 0 ? true : false;
         if (!accountFlag) {
+            logger.error("用户账户信息表更新失败");
             throw new RuntimeException("用户账户信息表更新失败");
         }
         // 插入account_list表
@@ -391,8 +400,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         accountList.setUserId(userId);
         accountList.setWeb(0);
         accountList.setIsBank(1);// 是否是银行的交易记录(0:否,1:是)
+        logger.info("开始更新用户账户交易明细表更新");
         boolean accountListFlag = accountListMapper.insertSelective(accountList) > 0 ? true : false;
         if (!accountListFlag) {
+            logger.error("用户账户交易明细表更新失败");
             throw new RuntimeException("用户账户交易明细表更新失败");
         }
 
@@ -400,10 +411,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         Map<String, Object> borrowParam = new HashMap<String, Object>();
         borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
         borrowParam.put("borrowService", tenderBg.getPerService());
-        borrowParam.put("borrowId", tenderBg.getBorrowNid());
+        borrowParam.put("borrowId", borrow.getId());
+        logger.info("开始更新borrow表");
         boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
         // 更新borrow表
         if (!updateBorrowAccountFlag) {
+            logger.error("更新borrow表失败");
             throw new RuntimeException("borrow表更新失败");
         }
 
@@ -422,11 +435,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         String borrowNid = tenderBg.getBorrowNid();
         // 满标处理
         if (accountWait.compareTo(new BigDecimal(0)) == 0) {
-            System.out.println("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
+            logger.info("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
             Map<String, Object> borrowFull = new HashMap<String, Object>();
             borrowFull.put("borrowId", borrowNid);
             boolean fullFlag = borrowCustomizeMapper.updateOfFullBorrow(borrowFull) > 0 ? true : false;
             if (!fullFlag) {
+                logger.error("满标更新borrow表失败");
                 throw new RuntimeException("满标更新borrow表失败");
             }
             // 清除标总额的缓存
@@ -440,10 +454,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             sendTypeCriteria.andSendCdEqualTo("AUTO_FULL");
             List<BorrowSendType> sendTypeList = borrowSendTypeMapper.selectByExample(sendTypeExample);
             if (sendTypeList == null || sendTypeList.size() == 0) {
+                logger.error("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "数据库查不到 sendTypeList == null");
                 throw new RuntimeException("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "数据库查不到 sendTypeList == null");
             }
             BorrowSendType sendType = sendTypeList.get(0);
             if (sendType.getAfterTime() == null) {
+                logger.error("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "sendType.getAfterTime()==null");
                 throw new RuntimeException("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "sendType.getAfterTime()==null");
             }
             replaceMap.put("val_times", sendType.getAfterTime() + "");
@@ -453,7 +469,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                         UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
             }catch (Exception e){
-
+                e.printStackTrace();
+                logger.error("发送短信失败");
             }
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");

@@ -557,14 +557,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT
-						+ packageStr(request) + "&mobile=" + result.getMobile());
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStrForm(request)+ "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStr(request));
+						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStrForm(request));
 			}
 		}
 		{
@@ -747,7 +746,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 自动投标授权URL
 			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?1=1"));
+					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+ packageStrForm(request)));
 			// 缴费授权Url
 			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));

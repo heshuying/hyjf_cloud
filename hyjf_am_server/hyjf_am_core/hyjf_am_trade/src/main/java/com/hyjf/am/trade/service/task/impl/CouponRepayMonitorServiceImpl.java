@@ -13,6 +13,7 @@ import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,11 +60,10 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
 
     @Override
     public Integer countRecordTotal(CouponRepayRequest form) {
-        CouponRepayMonitorExample example = new CouponRepayMonitorExample();
-        CouponRepayMonitorExample.Criteria criteria = example.createCriteria();
-        criteria.andDayGreaterThan(form.getTimeStartSrch());
-        criteria.andDayLessThan(form.getTimeEndSrch());
-        int cnt = couponRepayMonitorMapper.countByExample(example);
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("timeStartSrch", form.getTimeStartSrch());
+        paraMap.put("timeEndSrch", form.getTimeEndSrch());
+        int cnt = adminCouponRepayMonitorCustomizeMapper.countRecordTotal(paraMap);
         return cnt;
     }
 

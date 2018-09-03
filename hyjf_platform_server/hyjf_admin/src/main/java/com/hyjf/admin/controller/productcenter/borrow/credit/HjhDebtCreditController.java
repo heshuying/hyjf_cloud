@@ -61,7 +61,7 @@ public class HjhDebtCreditController extends BaseController{
     public JSONObject hjhDebtCreditInit() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",SUCCESS);
-        List<BorrowStyleVO> styleVOList = borrowRegistExceptionService.selectBorrowStyleList();
+        List<BorrowStyleVO> styleVOList = hjhDebtCreditService.selectBorrowStyleList();
         if(styleVOList != null && styleVOList.size() > 0){
             jsonObject.put("还款方式列表","borrowStyleList");
             List<DropDownVO> dropDownVOS = ConvertUtils.convertListToDropDown(styleVOList, "id", "name");

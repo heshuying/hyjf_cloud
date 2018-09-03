@@ -134,10 +134,10 @@
     <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_coupon_operation_history (coupon_code, operation_code, create_user_id, 
+    insert into ht_coupon_operation_history (uuid,coupon_code, operation_code, create_user_id,
       create_time, operation_content_from, 
       operation_content_to)
-    values (#{couponCode,jdbcType=VARCHAR}, #{operationCode,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
+    values (#{uuid,jdbcType=VARCHAR}, #{couponCode,jdbcType=VARCHAR}, #{operationCode,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER},
       #{createTime,jdbcType=TIMESTAMP}, #{operationContentFrom,jdbcType=LONGVARCHAR}, 
       #{operationContentTo,jdbcType=LONGVARCHAR})
   </insert>

@@ -20,6 +20,6 @@ public class StatisticsOperationReportJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("StatisticsOperationReportJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-MESSAGE/cs-message/operation_report_job/countOperationReport", StringResponse.class);
-        logger.info("HjhSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("StatisticsOperationReportJob: {} execute end...", context.getJobDetail().getKey().getName());
     }
 }

@@ -30,7 +30,8 @@ public class StatisticsOperationReportController extends BaseController {
     public String insertOperationGroupData() {
         Calendar cal = Calendar.getInstance();
         statisticsService.insertOperationGroupData(cal);
-        statisticsService.insertOperationData(cal);
+        //TODO 放后再测 yinhui
+//        statisticsService.insertOperationData(cal);
         return "success";
     }
 

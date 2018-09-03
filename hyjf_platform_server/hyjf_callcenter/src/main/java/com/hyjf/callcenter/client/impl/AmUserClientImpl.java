@@ -81,7 +81,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CallCenterUserBaseVO> selectNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
-				.postForEntity("http://AM-USER//am-user/callcenter/getNoServiceFuTouUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
+				.postForEntity("http://AM-ADMIN//am-user/callcenter/getNoServiceFuTouUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
 				.getBody();
 		if (callCenterUserBaseResponse != null) {
 			return callCenterUserBaseResponse.getResultList();
@@ -92,7 +92,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CallCenterUserBaseVO> selectNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
-				.postForEntity("http://AM-USER//am-user/callcenter/getNoServiceLiuShiUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
+				.postForEntity("http://AM-ADMIN//am-user/callcenter/getNoServiceLiuShiUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
 				.getBody();
 		if (callCenterUserBaseResponse != null) {
 			return callCenterUserBaseResponse.getResultList();

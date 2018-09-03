@@ -180,7 +180,7 @@ public class MongoSeachController extends BaseController {
     }*/
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
-    public String selectBorrowInvestAccount(AccountWebListVO accountWebList){
+    public String selectBorrowInvestAccount(@RequestBody AccountWebListVO accountWebList){
         int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
         DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(total);

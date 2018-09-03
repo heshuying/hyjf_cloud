@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -29,19 +30,65 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
 //        return HjhPlanCapitalVO.class;
 //    }
 
-    public long getCount(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
+    /**
+     * 查询类表条数
+     * @param request
+     * @return
+     */
+    public Integer getCount(HjhPlanCapitalRequest request){
         Query query = new Query();
-        Criteria criteria = createCriteria(hjhPlanCapitalVO);
+        Criteria criteria = createCriteria2(request);
         query.addCriteria(criteria);
-        return  mongoTemplate.count(query, getEntityClass());
+
+        return (int)mongoTemplate.count(query, getEntityClass());
     }
 
+    /**
+     * 获取列表
+     * @param request
+     * @return
+     */
     public List<HjhPlanCapital> findAllList(HjhPlanCapitalRequest request){
         Query query = new Query();
-        Criteria criteria = Criteria.where("date").gte(GetDate.stringToDate(request.getDateFromSrch())).lte(GetDate.stringToDate(request.getDateToSrch()));
+        Criteria criteria = createCriteria2(request);
         query.addCriteria(criteria);
+        // 分页
+        if(request.getLimitStart()!=-1){
+            query.skip(request.getLimitStart()-1).limit(request.getLimitEnd());
+        }
         List<HjhPlanCapital> hjhPlanCapitalList = mongoTemplate.find(query, getEntityClass());
         return hjhPlanCapitalList;
+    }
+
+    private Criteria createCriteria2(HjhPlanCapitalRequest request){
+
+        Criteria criteria;
+        if(null!=request){
+            criteria = Criteria.where("id").ne("").ne(null);
+
+            // 日期区间查询
+            if (StringUtils.isNoneBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
+                criteria = criteria.and("date").gte(request.getDateFromSrch()).lte(request.getDateToSrch());
+            }
+
+            // 计划编号查询
+            if (StringUtils.isNotBlank(request.getPlanNidSrch())){
+                criteria = criteria.and("planNid").is(request.getPlanNidSrch());
+            }
+
+            // 计划名称查询
+            if (StringUtils.isNotBlank(request.getPlanNameSrch())){
+                criteria = criteria.and("planName").is(request.getPlanNameSrch());
+            }
+
+            // 锁定期查询
+            if (StringUtils.isNotEmpty(request.getLockPeriodSrch())){
+                criteria = criteria.and("lockPeriod").is(Integer.valueOf(request.getLockPeriodSrch()));
+            }
+
+            return criteria;
+        }
+        return new Criteria();
     }
 
     public Criteria createCriteria(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){

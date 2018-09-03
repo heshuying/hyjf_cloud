@@ -60,6 +60,8 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
@@ -4216,4 +4218,142 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 更新资产表 upd by liushouyi
+     *
+     * @param hjhPlanAssetnewVO
+     * @return
+     */
+    @Override
+    public int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetnewVO) {
+        IntegerResponse result = restTemplate.postForEntity("http://AM-TRADE/am-trade/assetPush/updateHjhPlanAssetnew", hjhPlanAssetnewVO, IntegerResponse.class).getBody();
+        return result.getResultInt();
+    }
+
+    /**
+     * 查询单个资产根据资产ID upd by liushouyi
+     *
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    @Override
+    public HjhPlanAssetVO selectPlanAsset(String assetId, String instCode) {
+        HjhPlanAssetResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectPlanAsset/" + assetId + "/" + instCode, HjhPlanAssetResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowBailVO selectBorrowBail(String borrowNid) {
+        String url = urlBase + "/assetPush/select_borrow_bail/" + borrowNid;
+        BorrowBailResponse response = restTemplate.getForEntity(url,BorrowBailResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    @Override
+    public boolean updateBorrowByBorrowNid(BorrowVO borrow) {
+        String url = urlBase + "/assetPush/update_borrow_by_borrow_nid";
+        IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
+        return result.getResultInt() > 0 ? true : false;
+    }
+
+    /**
+     * 获取系统配置 add by liushouyi
+     *
+     * @param configCd
+     * @return
+     */
+    @Override
+    public String getBorrowConfig(String configCd) {
+        String url = urlBase + "/assetPush/select_borrow_config/" + configCd;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (response != null) {
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    @Override
+    public Integer insertBorrowBail(BorrowBailVO borrowBail) {
+        String url = urlBase + "/assetPush/insert_borrow_bail/" + borrowBail;
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+
+
+    /**
+     * 获取逾期的标的
+     * @return
+     */
+    @Override
+    public List<BorrowVO> selectOverdueBorrowList() {
+        String url = "http://AM-TRADE/am-trade/borrow/selectOverdueBorrowList";
+        BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 计划锁定
+     *  @param accedeOrderId
+     * @param inverestUserInfo
+     * @param commissioUserInfoVO
+     * @param bankOpenAccountVO
+     * @param userInfoCustomizeVOS
+     */
+    @Override
+    public void updateForLock(String accedeOrderId, UserInfoVO inverestUserInfo, UserInfoVO commissioUserInfoVO, BankOpenAccountVO bankOpenAccountVO, List<UserInfoCustomizeVO> userInfoCustomizeVOS) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateLockRepayInfo";
+        HjhLockVo hjhLockVo = new HjhLockVo();
+        hjhLockVo.setAccedeOrderId(accedeOrderId);
+        hjhLockVo.setInverestUserInfo(inverestUserInfo);
+        hjhLockVo.setCommissioUserInfoVO(commissioUserInfoVO);
+        hjhLockVo.setBankOpenAccountVO(bankOpenAccountVO);
+        hjhLockVo.setUserInfoCustomizeVOS(userInfoCustomizeVOS);
+        restTemplate.postForEntity(url,hjhLockVo,null);
+    }
+
+    /**
+     * 计划退出
+     *
+     * @param accedeOrderId
+     */
+    @Override
+    public void updateForQuit(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/planLockQuit/updateQuitRepayInfo/" + accedeOrderId;
+        restTemplate.getForEntity(url, String.class);
+    }
+
 }

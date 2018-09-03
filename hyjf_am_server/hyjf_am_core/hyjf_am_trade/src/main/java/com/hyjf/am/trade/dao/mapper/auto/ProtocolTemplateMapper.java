@@ -29,7 +29,4 @@ public interface ProtocolTemplateMapper {
 
     int updateByPrimaryKey(ProtocolTemplate record);
 
-    List<ProtocolTemplate> getdisplayNameDynamic();
-
-    ProtocolTemplate selectTemplateById(String protocolId);
 }

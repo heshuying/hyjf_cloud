@@ -16,10 +16,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -112,4 +109,16 @@ public class StzfWhiteConfigController extends BaseController {
 		}
 		return new AdminResult<>();
 	}
+
+	@ApiOperation(value = "加载姓名详细信息",notes = "加载姓名详细信息")
+	@PostMapping(value = "/loadNameConfig")
+	public AdminResult loadNameConfig(@RequestBody STZHWhiteListRequestBean requestBean) {
+		STZHWhiteListResponse response = stzfWhiteConfigService.getUserByUserName(requestBean);
+		if (response.getResult() == null) {
+			response.setMessage("用户名不存在");
+			return new AdminResult<>(FAIL,response.getMessage());
+		}
+		return new AdminResult<>(response);
+	}
+
 }

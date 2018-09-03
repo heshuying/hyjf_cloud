@@ -3627,7 +3627,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 List<ProjectRepayDetailBean> userRepayDetails = new ArrayList<ProjectRepayDetailBean>();
                 for (int j = 0; j < userRecoversDetails.size(); j++) {
                     RepayRecoverPlanBean userRecoverPlan = userRecoversDetails.get(j);
-                    Integer id = userRecoverPlan.getId();
+
 //		            BorrowRecoverPlan planInfo = this.borrowRecoverPlanMapper.selectByPrimaryKey(id);
 
                     BigDecimal recoverAccount = userRecoverPlan.getRecoverAccountOld();

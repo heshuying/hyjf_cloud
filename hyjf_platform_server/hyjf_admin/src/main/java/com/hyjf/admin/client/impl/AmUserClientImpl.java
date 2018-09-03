@@ -951,7 +951,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserInfoVO selectUsersInfoByUserId(int userid) {
 		UserInfoResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
+				.getForEntity("http://AM-ADMIN/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -1500,10 +1500,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UtmChannelVO getRecord(String utmId) {
-		UtmResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmResponse.class).getBody();
+		UtmChannelResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmChannelResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return (UtmChannelVO)response.getResult();
+			return response.getResult();
 		}
 		return null;
 	}
@@ -1521,7 +1521,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
 		UtmResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm/",channelCustomizeVO, UtmResponse.class).getBody();
+				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm",channelCustomizeVO, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
 		}else{

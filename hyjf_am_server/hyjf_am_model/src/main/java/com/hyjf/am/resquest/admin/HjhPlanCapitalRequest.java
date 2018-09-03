@@ -15,6 +15,12 @@ public class HjhPlanCapitalRequest extends BasePage implements Serializable {
 
     private String dateToSrch;
 
+    private String planNidSrch;
+
+    private String planNameSrch;
+
+    private String lockPeriodSrch;
+
     private Integer id;
 
     private Date date;
@@ -59,6 +65,31 @@ public class HjhPlanCapitalRequest extends BasePage implements Serializable {
 
     public void setDateToSrch(String dateToSrch) {
         this.dateToSrch = dateToSrch;
+    }
+
+
+    public String getPlanNidSrch() {
+        return planNidSrch;
+    }
+
+    public void setPlanNidSrch(String planNidSrch) {
+        this.planNidSrch = planNidSrch;
+    }
+
+    public String getPlanNameSrch() {
+        return planNameSrch;
+    }
+
+    public void setPlanNameSrch(String planNameSrch) {
+        this.planNameSrch = planNameSrch;
+    }
+
+    public String getLockPeriodSrch() {
+        return lockPeriodSrch;
+    }
+
+    public void setLockPeriodSrch(String lockPeriodSrch) {
+        this.lockPeriodSrch = lockPeriodSrch;
     }
 
     public Integer getId() {

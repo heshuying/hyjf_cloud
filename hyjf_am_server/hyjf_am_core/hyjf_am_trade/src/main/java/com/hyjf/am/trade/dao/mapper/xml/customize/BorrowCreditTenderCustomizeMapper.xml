@@ -90,10 +90,10 @@
 				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[<=]]> #{assignRepayNextTimeEnd}
 			</if>
 			<if test="addTimeStart != null and addTimeStart != ''">
-				AND DATE_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{addTimeStart},'%Y-%m-%d')
+				AND hct.create_time <![CDATA[>=]]> CONCAT(#{addTimeStart},' 00:00:00')
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND DA_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{addTimeEnd},  '%Y-%m-%d')
+				AND  hct.create_time <![CDATA[<=]]> CONCAT(#{addTimeEnd},  ' 23:59:59')
 			</if>
 		</where>
 	</sql>
@@ -210,7 +210,7 @@
 			</if>
 			<!-- 承接人-->
 			<if test="creditUserName != null and creditUserName != ''">
-				AND bt.create_user_name LIKE CONCAT('%', #{creditUserName}, '%')
+				AND ct.credit_user_name LIKE CONCAT('%', #{creditUserName}, '%')
 			</if>
 			<!-- 订单号-->
 			<if test="assignNid != null and assignNid != ''">
@@ -230,10 +230,10 @@
 		</where>
 	</sql>
 
-	<select id="getHzrTenderPrice" resultType="DECIMAL" parameterType="map">
-		select sum(hbt.account) from ht_credit_tender hct
+	<select id="getHzrTenderPrice" resultType="DECIMAL" >
+		select sum(hct.assign_capital) from ht_credit_tender hct
 		<where>
-			<if test="list != null">
+			<if test="list != null and list.size()>0">
 				and hct.user_id in
 				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 					#{item}
@@ -286,5 +286,11 @@
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
+	</select>
+
+	<select id="getServiceFee" resultType="String">
+		SELECT SUM(credit_fee) AS creditFee
+			FROM huiyingdai_credit_tender
+		  WHERE credit_nid = #{creditNid}
 	</select>
 </mapper>

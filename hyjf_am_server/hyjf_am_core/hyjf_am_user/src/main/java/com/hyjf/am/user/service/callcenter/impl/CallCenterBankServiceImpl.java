@@ -48,28 +48,6 @@ public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCe
 	}
 
 	/**
-	 * 查询呼叫中心未分配客服的用户（复投用户筛选）
-	 * @param callCenterUserInfoRequest
-	 * @return
-	 */
-	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceFuTouUsersList(callCenterUserInfoRequest);
-		return CallcenterUserBaseCustomizeList;
-	}
-
-	/**
-	 * 查询呼叫中心未分配客服的用户（流失用户筛选）
-	 * @param callCenterUserInfoRequest
-	 * @return
-	 */
-	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceLiuShiUsersList(callCenterUserInfoRequest);
-		return CallcenterUserBaseCustomizeList;
-	}
-
-	/**
 	 * 查询呼叫中心未分配客服的用户
 	 * @param callCenterUserInfoRequest
 	 * @return

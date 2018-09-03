@@ -5,6 +5,7 @@ import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.front.sms.SmsService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
 import org.springframework.stereotype.Service;
 
@@ -162,6 +163,25 @@ public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
 		} else {
 			return 0;
 		}
+	}
+
+	/**
+	 * 校验千乐验证码
+	 * @param phone
+	 * @param code
+	 * @return
+	 */
+	@Override
+	public int checkQianleMobileCode(String phone, String code) {
+		int time = GetDate.getNowTime10();
+		int timeAfter = time - 180;
+		SmsCodeExample example = new SmsCodeExample();
+		SmsCodeExample.Criteria cra = example.createCriteria();
+		cra.andPosttimeGreaterThanOrEqualTo(timeAfter);
+		cra.andPosttimeLessThanOrEqualTo(time);
+		cra.andMobileEqualTo(phone);
+		cra.andCheckcodeEqualTo(code);
+		return smsCodeMapper.countByExample(example);
 	}
 
 }
