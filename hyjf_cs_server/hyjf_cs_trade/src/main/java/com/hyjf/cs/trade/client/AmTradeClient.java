@@ -1880,4 +1880,11 @@ public interface AmTradeClient {
      * @param accedeOrderId
      */
     void updateForQuit(String accedeOrderId);
+
+    /**
+     * 查询待退出计划的标的
+     *
+     * @return
+     */
+    List<HjhAccedeVO> selectWaitQuitHjhList();
 }
