@@ -42,7 +42,7 @@
 			count(crm.id)
 		FROM
 			ht_coupon_repay_monitor crm
-		WHERE crm.del_flg = 0
+		WHERE crm.del_flag = 0
 		<if test="timeStartSrch != null and timeStartSrch != ''">
 		AND crm.`day` <![CDATA[>=]]> #{timeStartSrch}
 		</if>

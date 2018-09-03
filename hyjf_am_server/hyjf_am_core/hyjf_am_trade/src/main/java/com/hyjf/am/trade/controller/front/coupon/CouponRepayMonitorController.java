@@ -73,6 +73,8 @@ public class CouponRepayMonitorController extends BaseController {
         if(count>0){
             Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
             Map<String, Object> paraMap = new HashMap<>();
+            paraMap.put("timeStartSrch", form.getTimeStartSrch());
+            paraMap.put("timeEndSrch", form.getTimeEndSrch());
             paraMap.put("limitStart", paginator.getOffset());
             paraMap.put("limitEnd", paginator.getLimit());
             List<AdminCouponRepayMonitorCustomize> recordList = couponRepayMonitorService.selectCouponRepayMonitorPage(paraMap);
@@ -90,8 +92,8 @@ public class CouponRepayMonitorController extends BaseController {
     public AdminCouponRepayMonitorCustomizeResponse selectInterestSum(@RequestBody CouponRepayRequest form) {
         AdminCouponRepayMonitorCustomizeResponse response = new AdminCouponRepayMonitorCustomizeResponse();
         Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("limitStart", form.getLimitStart());
-        paraMap.put("limitEnd", form.getLimitEnd());
+        paraMap.put("timeStartSrch", form.getTimeStartSrch());
+        paraMap.put("timeEndSrch", form.getTimeEndSrch());
         List<AdminCouponRepayMonitorCustomize> couponRepayMonitorList = couponRepayMonitorService.selectInterestSum(paraMap);
         if (!CollectionUtils.isEmpty(couponRepayMonitorList)) {
             List<AdminCouponRepayMonitorCustomizeVO> couponRepayMonitorVOList = CommonUtils.convertBeanList(couponRepayMonitorList,AdminCouponRepayMonitorCustomizeVO.class);
