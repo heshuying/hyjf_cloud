@@ -133,6 +133,9 @@ public class AppInvestInfoResultVO implements Serializable {
     private String status = "";
     // 前端要求的格式
     private String statusDesc = "";
+
+    // 微信端用户可用余额
+    private String userBalance;
     
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
@@ -513,5 +516,13 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setProtocols(List<NewAgreementBean> protocols) {
         this.protocols = protocols;
+    }
+
+    public String getUserBalance() {
+        return userBalance;
+    }
+
+    public void setUserBalance(String userBalance) {
+        this.userBalance = userBalance;
     }
 }

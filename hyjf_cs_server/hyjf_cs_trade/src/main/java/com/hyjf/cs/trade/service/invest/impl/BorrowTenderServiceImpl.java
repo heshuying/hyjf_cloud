@@ -995,6 +995,130 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     }
 
     /**
+     * 微信端获取投资信息
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public AppInvestInfoResultVO getInvestInfoWeChat(TenderRequest tender) {
+
+        AppInvestInfoResultVO vo = new AppInvestInfoResultVO();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        BigDecimal couponInterest = BigDecimal.ZERO;
+        BigDecimal borrowInterest = new BigDecimal(0);
+        String money = tender.getMoney();
+        // 优惠券总张数
+        Integer recordTotal = 0;
+        // 可用优惠券张数
+        Integer couponAvailableCount;
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
+        if (null == borrow) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        vo.setBorrowApr(borrow.getBorrowApr() + "%");
+        vo.setBorrowNid(tender.getBorrowNid());
+
+        //设置是否有可用优惠券
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(tender.getBorrowNid());
+        request.setUserId(String.valueOf(tender.getUserId()));
+        request.setPlatform(tender.getPlatform());
+        // 可用优惠券张数
+        couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
+        // 优惠券总张数
+        recordTotal = amTradeClient.getUserCouponCount(tender.getUserId(), "0");
+        if (couponAvailableCount > 0) {
+            vo.setIsThereCoupon("1");
+            vo.setCouponDescribe("请选择");
+        } else if (couponAvailableCount == 0 && recordTotal > 0) {
+            vo.setIsThereCoupon("1");
+            vo.setCouponDescribe("暂无可用");
+        } else {
+            vo.setIsThereCoupon("0");
+            vo.setCouponDescribe("无可用");
+        }
+        BigDecimal borrowAccountWait = borrow.getBorrowAccountWait();
+        // 去最小值 最大可投和 项目可投
+        if (borrow.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
+            BigDecimal TenderAccountMax = new BigDecimal(borrow.getTenderAccountMax());
+            if (TenderAccountMax.compareTo(borrowAccountWait) == -1) {
+                vo.setBorrowAccountWait(CommonUtils.formatAmount(null, TenderAccountMax));
+            } else {
+                vo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+            }
+        } else {
+            vo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+        }
+        String balanceWait = borrow.getBorrowAccountWait() + "";
+        if (balanceWait == null || balanceWait.equals("")) {
+            balanceWait = "0";
+        }
+        // 剩余可投小于起投，计算收益按照剩余可投计算
+        if ((org.apache.commons.lang3.StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 1) {
+            money = new BigDecimal(balanceWait).intValue() + "";
+        }
+
+        //計算本金收益
+        BigDecimal earnings = new BigDecimal("0");
+        if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
+            earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+            vo.setInterest(CommonUtils.formatAmount(null, earnings));
+            logger.info("散标本金预期收益:  {}", earnings);
+        }
+
+        if (tender.getCouponGrantId()==null||tender.getCouponGrantId()-0==0) {
+            //未选择优惠券
+            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
+        } else {
+            //选择优惠券计算优惠券收益
+            CouponUserVO couponConfig = amTradeClient.getCouponUser(tender.getCouponGrantId(), tender.getUserId());
+            if (couponConfig != null && couponConfig.getId() > 0) {
+                couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
+            }
+            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+
+        }
+
+        vo.setInitMoney(borrow.getTenderAccountMin() + "");
+        vo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
+        vo.setInvestmentDescription(borrow.getTenderAccountMin() + "元起投," + borrow.getBorrowIncreaseMoney() + "元递增");
+        // 可用余额的递增部分
+        AccountVO account = amTradeClient.getAccount(tender.getUserId());
+        BigDecimal balance = account.getBankBalance();
+        vo.setUserBalance(CommonUtils.formatAmount(null,balance));
+        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).divide(new BigDecimal(borrow.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
+                .multiply(new BigDecimal(borrow.getBorrowIncreaseMoney())).add(new BigDecimal(borrow.getTenderAccountMin()));
+        if (balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
+            // 可用余额<起投金额 时 investAllMoney 传 -1
+            // 全投金额
+            vo.setInvestAllMoney("-1");
+        } else {
+            String borrowAccountWaitStr = vo.getBorrowAccountWait().replace(",", "");
+            if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                vo.setInvestAllMoney(borrow.getTenderAccountMax() + "");
+            } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                // 全投金额
+                vo.setInvestAllMoney(tmpmoney + "");
+            } else {
+                // 全投金额
+                vo.setInvestAllMoney(vo.getBorrowAccountWait() + "");
+            }
+        }
+        vo.setBorrowAccountWait(borrow.getBorrowAccountWait().intValue()+"");
+        return vo;
+    }
+
+    /**
      * 计算全投金额
      * @param tenderAccountMax
      * @param tmpmoney
