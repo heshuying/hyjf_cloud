@@ -73,7 +73,7 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private String addUser;
 
-    private Integer updateTime;
+    private String updateTime;
 
     private String updateUser;
 
@@ -303,11 +303,11 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
         this.addUser = addUser;
     }
 
-    public Integer getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 
