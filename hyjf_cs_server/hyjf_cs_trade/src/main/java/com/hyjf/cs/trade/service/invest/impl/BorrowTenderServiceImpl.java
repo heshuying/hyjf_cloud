@@ -1061,8 +1061,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (balanceWait == null || balanceWait.equals("")) {
             balanceWait = "0";
         }
+        logger.info("剩余金额为:{}  最小起投{} ",balanceWait,borrow.getTenderAccountMin());
         // 剩余可投小于起投，计算收益按照剩余可投计算
-        if ((org.apache.commons.lang3.StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 1) {
+        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 1) {
             money = new BigDecimal(balanceWait).intValue() + "";
         }
 
