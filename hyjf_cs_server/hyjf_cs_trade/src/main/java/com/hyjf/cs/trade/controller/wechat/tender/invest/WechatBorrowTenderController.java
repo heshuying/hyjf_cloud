@@ -113,7 +113,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         WeChatResult result = new WeChatResult();
-        result.setData(borrowTenderService.getInvestInfoApp(tender));
+        result.setData(borrowTenderService.getInvestInfoWeChat(tender));
         return result;
     }
 
