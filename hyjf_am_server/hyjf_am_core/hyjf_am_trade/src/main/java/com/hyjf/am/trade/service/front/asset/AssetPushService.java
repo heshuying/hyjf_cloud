@@ -90,10 +90,34 @@ public interface AssetPushService extends BaseService {
     List<HjhPlanAsset> checkDuplicateAssetId(String assetId);
 
     /**
-     * 录标时添加企业资产
+     * 录标时添加企业资产 add by liushouyi
      *
      * @param borrowUser
      * @return
      */
     int insertCompanyInfoToBorrowUsers(BorrowUser borrowUser);
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowBail> selectBorrowBail(String borrowNid);
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    Integer updateBorrowByBorrowNid(Borrow borrow);
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    Integer insertBorrowBail(BorrowBail borrowBail);
 }

@@ -114,6 +114,40 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         return false;
     }
 
+    /**
+     * 手动录标的标的自动备案
+     *
+     * @param borrow
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    @Override
+    public boolean updateRecordBorrow(BorrowVO borrow) {
+
+        // 备案，需要更新资产表
+        JSONObject jsonObject = debtRegist(borrow.getBorrowNid());
+        // 判断更新结果
+        if("0".equals(jsonObject.get("success"))){
+            return true;
+            // 重复失败的情况
+        } else if ("2".equals(jsonObject.get("success"))) {
+            _log.info("备案失败 " + borrow.getBorrowNid() + " 原因：" + jsonObject.get("msg"));
+        } else {
+            _log.info("备案失败 " + borrow.getBorrowNid() + " 原因：" + jsonObject.get("msg"));
+            // 备案失败发送短信
+            // 您好，有一笔标的备案失败，请及时关注！
+            Map<String, String> replaceStrs = new HashMap<String, String>();
+            replaceStrs.put("val_title", borrow.getBorrowNid());
+            SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL, CustomConstants.CHANNEL_TYPE_NORMAL);
+            try {
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+            } catch (MQException e) {
+                _log.error("短信发送失败...", e);
+            }
+        }
+        return false;
+    }
+
     @Override
     public void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String borrowPreauditGroup) {
         // 加入到消息队列
@@ -121,6 +155,27 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
+        try {
+            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            _log.error("自动初审发送消息失败...", e);
+        }
+    }
+
+    /**
+     * 手动录标发送自动初审消息 add by liushouyi
+     *
+     * @param borrowVO
+     * @param borrowPreauditGroup
+     */
+    @Override
+    public void sendToMQ(BorrowVO borrowVO, String borrowPreauditGroup) {
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("borrowNid", borrowVO.getBorrowNid());
+        params.put("instCode", borrowVO.getInstCode());
         try {
             autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
@@ -269,5 +324,4 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         }
         return result;
     }
-
 }
