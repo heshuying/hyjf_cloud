@@ -12,6 +12,7 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -102,10 +103,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "获取投资信息", notes = "获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
-        logger.info("wechat端-获取投资信息");
+    public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        logger.info("wechat端-获取投资信息 userid:{}" , userId);
         tender.setUserId(userId);
-        return borrowTenderService.getInvestInfo(tender);
+        return borrowTenderService.getInvestInfoApp(tender);
     }
 
 }
