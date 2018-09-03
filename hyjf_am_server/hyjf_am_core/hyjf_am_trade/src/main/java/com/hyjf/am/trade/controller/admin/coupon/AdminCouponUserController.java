@@ -72,22 +72,21 @@ public class AdminCouponUserController extends BaseController {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param couponUserBeanRequest
      * @return
      */
-    @RequestMapping("/deleteCouponUser/{id}/{remark}")
-    public CouponUserCustomizeResponse deleteCouponUser(@PathVariable int id, @PathVariable String remark, @PathVariable String userId) {
+    @RequestMapping("/deleteCouponUser")
+    public CouponUserCustomizeResponse deleteCouponUser(@RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         try {
-            int count = adminCouponUserService.deleteCouponUserById(id, remark, userId);
+            int count = adminCouponUserService.deleteCouponUserById(couponUserBeanRequest);
             if (count > 0) {
-                response.setRtn("0");
+                response.setRtn(Response.SUCCESS);
+                response.setCount(count);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        response.setRtn("1");
-        response.setMessage("删除失败");
         return response;
     }
 

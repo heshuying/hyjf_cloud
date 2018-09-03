@@ -163,4 +163,11 @@ public interface BorrowService extends BaseService {
 	 * @return
 	 */
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+
+	/**
+	 * 根据Nid和当前时间获取borrow
+	 * @author zhangyk
+	 * @date 2018/9/3 17:25
+	 */
+	public Borrow selectBorrowByNidAndNowTime(String borrowNid, Integer nowtime);
 }

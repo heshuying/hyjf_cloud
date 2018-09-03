@@ -4371,4 +4371,18 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+    /**
+     * 根据nid和当前时间查询borrow
+     * @author zhangyk
+     * @date 2018/9/3 16:41
+     */
+    @Override
+    public BorrowVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
+        String url = "http://AM-TRADE/am-trade/borrow/getByNidAndNowTime/"+borrowNid + "/" + nowTime;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

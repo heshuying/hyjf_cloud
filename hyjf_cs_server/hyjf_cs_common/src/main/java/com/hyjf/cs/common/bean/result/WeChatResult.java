@@ -27,6 +27,7 @@ import java.io.Serializable;
 public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private T object;
+	private T data;
 	public WeChatResult() {
 	}
 
@@ -59,5 +60,15 @@ public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 
 	public void setObject(T object) {
 		this.object = object;
+	}
+
+	@Override
+	public T getData() {
+		return data;
+	}
+
+	@Override
+	public void setData(T data) {
+		this.data = data;
 	}
 }

@@ -33,7 +33,7 @@ import java.util.Map;
 public interface CouponUserService {
     CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
 
-    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+    CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest);
 
     CouponUserCustomizeResponse getRecordList(CouponConfigRequest request);
 

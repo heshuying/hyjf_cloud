@@ -104,12 +104,12 @@ public class CouponUserServiceImpl implements CouponUserService {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param request
      * @return
      */
     @Override
-    public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
-        return amTradeClient.deleteById(id, remark, userId);
+    public CouponUserCustomizeResponse deleteById(CouponUserBeanRequest request) {
+        return amTradeClient.deleteById(request);
     }
 
     /**
