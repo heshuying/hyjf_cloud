@@ -177,7 +177,7 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     }
 
     /**
-     * 录标时添加企业资产 add by liushouyi
+     * 录标时添加企业资产
      *
      * @param borrowUser
      * @return
