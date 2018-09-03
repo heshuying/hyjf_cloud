@@ -111,7 +111,7 @@ public class DataSearchController {
         SmsConfigVO smsConfig = dataSearchService.initSmsConfig().getResult();
         String ip = GetCilentIP.getIpAddr(request);
         String ipCount = RedisUtils.get(ip + ":MaxIpCount");
-        if (org.apache.commons.lang.StringUtils.isEmpty(ipCount)) {
+        if (ipCount==null||org.apache.commons.lang.StringUtils.isEmpty(ipCount)) {
             ipCount = "0";
             RedisUtils.set(ip + ":MaxIpCount", "0");
         }
