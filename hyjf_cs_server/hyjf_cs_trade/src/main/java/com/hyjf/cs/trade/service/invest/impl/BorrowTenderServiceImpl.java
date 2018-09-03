@@ -155,7 +155,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 投资检查参数
         this.checkParam(request, borrow, account, userInfo);
         // 检查金额
-        this.checkTenderMoney(request, borrow, cuc, tenderAccount);
+        this.checkTenderMoney(request, borrow, cuc, tenderAccount );
         // 开始真正的投资逻辑
         return tender(request, borrow, account, cuc);
     }
@@ -915,7 +915,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal balance = account.getBankBalance();
             investInfo.setBalance(CommonUtils.formatAmount(null, balance));
             investInfo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
-            investInfo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
+            investInfo.setIncreaseMoney(String.valueOf(borrowInfo.getBorrowIncreaseMoney()));
             investInfo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
             // 可用余额的递增部分
             BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
@@ -1091,14 +1091,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
 
         vo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
-        vo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
+        vo.setIncreaseMoney(String.valueOf(borrowInfo.getBorrowIncreaseMoney()));
         vo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
         // 可用余额的递增部分
         AccountVO account = amTradeClient.getAccount(tender.getUserId());
         BigDecimal balance = account.getBankBalance();
         vo.setUserBalance(CommonUtils.formatAmount(null,balance));
-        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).divide(new BigDecimal(borrow.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
-                .multiply(new BigDecimal(borrow.getBorrowIncreaseMoney())).add(new BigDecimal(borrow.getTenderAccountMin()));
+        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
+                .multiply(new BigDecimal(borrowInfo.getBorrowIncreaseMoney())).add(new BigDecimal(borrowInfo.getTenderAccountMin()));
         if (balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
             // 可用余额<起投金额 时 investAllMoney 传 -1
             // 全投金额
