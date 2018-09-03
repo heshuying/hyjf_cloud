@@ -57,11 +57,12 @@ public class AmAdminClientImpl implements AmAdminClient{
         request.setFirstAge(firstAge);
         request.setEndAge(endAge);
         TenderCityCountResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/tendercitycount/gettenderagebyrange",
-                request,TenderCityCountResponse.class);
+                request, TenderCityCountResponse.class);
         if (response != null) {
             return response.getAge();
         }
         return 0;
+    }
     /**
      * 查询千乐散标数据
      * @param dataSearchRequest

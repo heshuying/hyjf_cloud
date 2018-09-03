@@ -44,6 +44,7 @@ public interface AmAdminClient {
      * @return
      */
     DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
     /**
      * 查询千乐渠道计划数据
      * @return
