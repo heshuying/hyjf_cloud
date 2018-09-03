@@ -128,40 +128,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据筛选条件查询绑定日志count
-     *
-     * @param
-     * @return
-     * @auth sunpeikai
-     */
-    @Override
-    public Integer getBindLogCount(BindLogListRequest request) {
-        Integer count = restTemplate
-                .postForEntity(tradeService + "/associatedlog/getbindlogcount", request, Integer.class)
-                .getBody();
-
-        return count;
-    }
-
-    /**
-     * 根据筛选条件查询绑定日志list
-     *
-     * @param
-     * @return
-     * @auth sunpeikai
-     */
-    @Override
-    public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
-        BindLogResponse response = restTemplate
-                .postForEntity(tradeService + "/associatedlog/searchbindloglist", request, BindLogResponse.class)
-                .getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
      *
      * @param userId 用户id
