@@ -91,19 +91,18 @@ public class CouponUserController extends BaseController {
     @ApiOperation(value = "删除优惠券", notes = "删除优惠券")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult<CouponUserCustomizeVO> deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
+    public AdminResult deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
-        int id = couponUserBeanRequest.getId();
-        String remark = couponUserBeanRequest.getContent();
-        CouponUserCustomizeResponse response = couponUserService.deleteById(id, remark, userId);
+        couponUserBeanRequest.setUpdateUser(userId);
+        CouponUserCustomizeResponse response = couponUserService.deleteById(couponUserBeanRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<CouponUserCustomizeVO>(response.getResult());
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "手动发放页面信息", notes = "手动发放页面信息")
