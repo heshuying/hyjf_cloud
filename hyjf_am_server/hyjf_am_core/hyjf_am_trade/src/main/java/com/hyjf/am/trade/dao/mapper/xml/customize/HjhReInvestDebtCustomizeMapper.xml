@@ -18,19 +18,22 @@
         <result column="assign_type" property="assignType" jdbcType="VARCHAR" />
         <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
         <result column="assign_period" property="assignPeriod" jdbcType="VARCHAR" />
-        <result column="create_time" property="assignOrderDate" jdbcType="VARCHAR" />
+        <!--<result column="create_time" property="assignOrderDate" jdbcType="VARCHAR" />-->
         <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
         <result column="assign_time" property="assignTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Where_Clause">
         <where>
-            ct.tender_type = 1
+            1=1
             <if test="planNid != null and planNid != ''">
                 AND hp.plan_nid = #{planNid }
             </if>
-            <if test="date != null and date != ''">
-                AND	FROM_UNIXTIME( ct.create_time, '%Y-%m-%d' ) = #{date }
+            <if test="date != null ">
+                AND  ct.create_time <![CDATA[ >= ]]> #{date}
+            </if>
+            <if test="datee != null">
+                AND  ct.create_time <![CDATA[ <= ]]> #{datee}
             </if>
             <if test="assignPlanOrderIdSrch != null and assignPlanOrderIdSrch != ''">
                 AND ct.assign_plan_order_id = #{assignPlanOrderIdSrch }
@@ -98,10 +101,7 @@
         b.borrow_period
         END AS borrow_period,
         assign_period,
-        FROM_UNIXTIME(
-        ct.create_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS assign_time
+        ct.create_time AS assign_time
         FROM
         ht_hjh_debt_credit_tender ct
         INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid	AND bc.credit_nid = ct.credit_nid

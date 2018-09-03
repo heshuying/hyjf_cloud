@@ -104,7 +104,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
     }
 
     @ApiOperation(value = "获取投资信息", notes = "获取投资信息")
-    @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息 userid:{}" , userId);
         tender.setUserId(userId);
