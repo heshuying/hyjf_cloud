@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.SubConfigService;
@@ -18,6 +19,8 @@ public class SubConfigServiceImpl implements SubConfigService {
     private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient userClient;
+    @Autowired
+    private AmAdminClient amAdminClient;
 
     /**
      * 查询列表
@@ -72,6 +75,29 @@ public class SubConfigServiceImpl implements SubConfigService {
     public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest){
         return amTradeClient.deleteSubConfig(adminRequest);
     }
+    /**
+     *
+     * 查询用户名信息
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public UserInfoCustomizeResponse userMap(AdminSubConfigRequest adminRequest){
+        // 查询用户名信息
+        return userClient.queryUserInfoByUserName(adminRequest);
+    }
 
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest){
+        // 查询用户名信息
+        return amAdminClient.subconfig(adminRequest);
+    }
 
 }

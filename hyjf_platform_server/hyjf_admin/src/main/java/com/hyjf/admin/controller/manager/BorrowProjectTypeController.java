@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.manager;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -108,8 +109,30 @@ public class BorrowProjectTypeController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
-        AdminSystemVO user = getUser(request);
-        adminRequest.setCreateUserId(user.getId());
+        AdminResult result =new AdminResult();
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        if(StringUtils.isBlank(adminRequest.getBorrowCd())){
+            response.setRtn(Response.FAIL);
+            response.setMessage("borrowCd 不能为空");
+            result.setData(response);
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc(BaseResult.FAIL_DESC);
+            return result;
+        }
+        if(StringUtils.isNotBlank(adminRequest.getBorrowCd())){
+            int bo=Integer.valueOf(adminRequest.getBorrowCd());
+            if(bo>127||bo<0){
+                response.setRtn(Response.FAIL);
+                response.setMessage("borrowCd要小于128");
+                result.setData(response);
+                result.setStatus(BaseResult.FAIL);
+                result.setStatusDesc(BaseResult.FAIL_DESC);
+                return result;
+            }
+        }
+//        AdminSystemVO user = getUser(request);
+//        adminRequest.setCreateUserId(user.getId());
+        adminRequest.setCreateUserId("3");
         //优惠券类型转换
         if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
             adminRequest.setInterestCoupon(1);
@@ -123,7 +146,6 @@ public class BorrowProjectTypeController extends BaseController {
             adminRequest.setInterestCoupon(1);
             adminRequest.setTasteMoney(1);
         }
-        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
@@ -152,7 +174,10 @@ public class BorrowProjectTypeController extends BaseController {
             BeanUtils.copyProperties(adminRequest,borrowProjectTypeVO);
             response.setRtn(Response.FAIL);
             response.setMessage(message);
-            return new AdminResult<BorrowProjectTypeResponse>(response);
+            result.setData(response);
+            result.setStatus(BaseResult.FAIL);
+            result.setStatusDesc(BaseResult.FAIL_DESC);
+            return result;
         }
         if (StringUtils.equals("N", adminRequest.getModifyFlag())) {
             response = this.borrowProjectTypeService.insertRecord(adminRequest);
