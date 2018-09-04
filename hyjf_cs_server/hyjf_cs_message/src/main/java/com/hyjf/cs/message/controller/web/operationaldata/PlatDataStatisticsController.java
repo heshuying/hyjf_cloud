@@ -50,7 +50,7 @@ public class PlatDataStatisticsController {
 	 * 
 	 * @return
 	 */
-	@ApiOperation(value = "运营数据第一页面接口数据获取", notes = "运营数据第一页面接口数据获取")
+	@ApiOperation(value = "运营数据", notes = "运营数据")
 	@GetMapping("/initPlatData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
