@@ -72,7 +72,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            autoSendProducer.messageSend(new MessageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoSendProducer.messageSend(new MessageContent(MQConstant.BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }

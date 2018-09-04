@@ -332,7 +332,6 @@
         </table>
 
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_plat" domainObjectName="UserPlat">

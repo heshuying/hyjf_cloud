@@ -504,6 +504,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 	}
 
+	/**
+	 *
+	 * 根据用户id查询用户签约授权信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public HjhUserAuth getHjhUserAuth(Integer userId) {
+		HjhUserAuthExample example = new HjhUserAuthExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<HjhUserAuth> list = hjhUserAuthMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public void insertSelective(HjhUserAuthLog hjhUserAuthLog){
 		hjhUserAuthLogMapper.insertSelective(hjhUserAuthLog);
@@ -561,7 +579,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			this.updateByPrimaryKeySelective(hjhUserAuthLog);
 		}
 		// 这里同步异步一起进来会导致重复插入的异常，加一个同步锁
-		HjhUserAuth hjhUserAuth=this.getHjhUserAuthByUserId(userId);
+		HjhUserAuth hjhUserAuth=this.getHjhUserAuth(userId);
 		// 更新用户签约授权状态信息表
 		if (hjhUserAuth == null) {
 			User user= this.findUserByUserId(userId);
