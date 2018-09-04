@@ -1,8 +1,10 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.mq.AppMessageProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
@@ -17,10 +19,14 @@ import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.service.BaseClient;
@@ -37,9 +43,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BorrowCreditServiceImpl implements BorrowCreditService {
@@ -54,6 +58,9 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     public static final Logger logger = LoggerFactory.getLogger(BorrowCreditServiceImpl.class);
 
     private static final String BASE_URL = "http://AM-ADMIN/am-trade";
+
+    @Autowired
+    private AppMessageProducer appMessageProducer;
 
     /**
      * 查询汇转让数据列表
@@ -253,8 +260,21 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
             throw new CheckException("没有对应的债转标的");
         }
         String creditUserId = credit.getCreditUserId();
-        // TODO: 2018/8/24  发送apppush 待完成  zyk
-
+        Map<String, String> params = new HashMap<String, String>();
+        // 用户id
+        params.put("userId", creditUserId);
+        // 债转编号
+        params.put("creditNid", creditNid);
+        String assignPay = amTradeClient.selectTenderCreditAssignPay(params);
+        params = new HashMap<>();
+        params.put("val_amount",assignPay);
+        params.put("val_profit",borrowCredit.getCreditInterestAssigned() + "");
+        AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(creditUserId),params,null,MessageConstant.APP_MS_SEND_FOR_USER,CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
+        try {
+            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+        } catch (MQException e) {
+            logger.error("apppush消息发送异常:{}",e);
+        }
         return result;
     }
 

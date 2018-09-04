@@ -5948,7 +5948,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO) {
         Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
+                "http://AM-ADMIN/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
                 Integer.class).getBody();
         if (result == null) {
             return 0;
@@ -5996,4 +5996,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
 	}
+
+	/**
+	 *  根据债转编号和出让人id查询assignPay
+	 * @author zhangyk
+	 * @date 2018/9/4 10:31
+	 */
+    @Override
+    public String selectTenderCreditAssignPay(Map<String, String> map) {
+        String url = "http://AM-ADMIN/am-trade/creditTender/selectTenderCreditAssignPay";
+        StringResponse response = restTemplate.postForEntity(url,map,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
 }
