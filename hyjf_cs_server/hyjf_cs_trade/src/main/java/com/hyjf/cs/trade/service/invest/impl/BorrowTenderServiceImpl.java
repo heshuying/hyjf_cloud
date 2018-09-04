@@ -200,13 +200,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId()
-                + "&sign=" + request.getSign() + "&token=1";
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="
-                +callBean.getLogOrderId()+"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())
-                + "&sign=" + request.getSign() + "&token=1";
-
+                +callBean.getLogOrderId()+"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
+        if(request.getToken() != null && !"".equals(request.getToken())){
+            retUrl += "&token=1";
+            successUrl += "&token=1";
+        }
+        if(request.getSign() != null && !"".equals(request.getSign())){
+            retUrl += "&sign=" + request.getSign();
+            successUrl += "&sign=" + request.getSign();
+        }
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
