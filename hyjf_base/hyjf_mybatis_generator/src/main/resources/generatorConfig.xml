@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_market.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
