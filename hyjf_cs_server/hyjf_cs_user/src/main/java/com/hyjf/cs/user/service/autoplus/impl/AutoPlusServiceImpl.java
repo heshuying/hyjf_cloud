@@ -454,7 +454,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setAccountId(bankOpenAccount.getAccount());
         bean.setOrderId(orderId);
         //异步回调
-        bean.setNotifyUrl(bgRetUrl);
+        bean.setNotifyUrl(bgRetUrl+"?sign=" + sign);
         //忘记密码通知地址
         bean.setForgotPwdUrl(forgetPassworedUrl);
         // 前导业务授权码
