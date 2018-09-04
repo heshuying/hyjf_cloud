@@ -723,7 +723,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
-
+        logger.info("investType:[{}]",investType);
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(tender.getCreditNid())) {
             return null;
@@ -740,7 +740,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             Integer recordTotal = 0;
             // 可用优惠券张数
             Integer couponAvailableCount;
-
+            logger.info("entry 散标  borrowNid:[{}]",tender.getBorrowNid());
             BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
             if (null == borrow) {
                 // 标的不存在
@@ -904,7 +904,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
 
             }
-            investInfo.setCapitalInterest("历史回报: 0元");
+            investInfo.setCapitalInterest("历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) +"元");
             investInfo.setConfirmCouponDescribe("加息券:  无");
             investInfo.setRealAmount("");
             investInfo.setCouponType("");
