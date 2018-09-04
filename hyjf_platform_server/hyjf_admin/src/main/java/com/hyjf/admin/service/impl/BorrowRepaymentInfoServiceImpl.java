@@ -55,13 +55,15 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
         if(StringUtils.isNotBlank(request.getBorrowNid())){
             request.setYesTimeStartSrch(null);
             request.setYesTimeEndSrch(null);
+        }else{
+            if(request.getYesTimeStartSrch() == null||"".equals(request.getYesTimeStartSrch())){
+                request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
+            }
+            if(request.getYesTimeEndSrch() == null||"".equals(request.getYesTimeEndSrch())){
+                request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
+            }
         }
-        if(request.getYesTimeStartSrch() == null||"".equals(request.getYesTimeStartSrch())){
-            request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
-        }
-        if(request.getYesTimeEndSrch() == null||"".equals(request.getYesTimeEndSrch())){
-            request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
-        }
+
         if(request.getYesTimeStartSrch() != null&&!"".equals(request.getYesTimeStartSrch())) {
             Date date;
             try {
