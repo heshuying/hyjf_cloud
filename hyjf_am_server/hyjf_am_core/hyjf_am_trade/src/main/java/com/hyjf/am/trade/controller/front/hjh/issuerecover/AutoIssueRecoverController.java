@@ -174,6 +174,7 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
+                        params.put("planId", borrow.getId());
                         autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【自动备案消息到MQ】MQ失败...");
