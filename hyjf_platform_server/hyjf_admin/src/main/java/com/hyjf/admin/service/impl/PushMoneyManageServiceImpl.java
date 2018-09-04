@@ -537,7 +537,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
      * @param
      * @return
      */
-    private BigDecimal getBankBalance(Integer userId, String accountId) {
+    public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
