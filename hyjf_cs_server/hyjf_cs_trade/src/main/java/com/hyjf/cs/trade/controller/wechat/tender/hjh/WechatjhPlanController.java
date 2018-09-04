@@ -42,7 +42,7 @@ public class WechatjhPlanController extends BaseTradeController {
     @ApiOperation(value = "加入计划", notes = "加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WeChatResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
+    public WeChatResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
