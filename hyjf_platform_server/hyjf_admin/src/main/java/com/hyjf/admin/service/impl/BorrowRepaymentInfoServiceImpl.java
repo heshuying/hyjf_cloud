@@ -51,11 +51,16 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
         // 默认当天
         Date endDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
         //modify by cwyang 搜索条件存在标的号时，不加时间限制  20180510
         if(StringUtils.isNotBlank(request.getBorrowNid())){
             request.setYesTimeStartSrch(null);
             request.setYesTimeEndSrch(null);
+        }
+        if(request.getYesTimeStartSrch() == null||"".equals(request.getYesTimeStartSrch())){
+            request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
+        }
+        if(request.getYesTimeEndSrch() == null||"".equals(request.getYesTimeEndSrch())){
+            request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
         }
         if(request.getYesTimeStartSrch() != null&&!"".equals(request.getYesTimeStartSrch())) {
             Date date;
