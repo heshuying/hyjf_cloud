@@ -266,7 +266,7 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping("/userAuthCreditBgreturn")
-    public String userCreditAuthInvesBgreturn(@RequestBody BankCallBean bean) {
+    public String userCreditAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
         return result;
     }
