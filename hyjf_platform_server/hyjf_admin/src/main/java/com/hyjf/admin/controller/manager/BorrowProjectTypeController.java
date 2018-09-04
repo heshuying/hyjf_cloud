@@ -10,6 +10,7 @@ import com.hyjf.admin.service.BorrowProjectTypeService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -107,9 +108,8 @@ public class BorrowProjectTypeController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
-        //todo fangkai
-//        AdminSystemVO user = getUser(request);
-//        adminRequest.setCreateUserId(user.getId());
+        AdminSystemVO user = getUser(request);
+        adminRequest.setCreateUserId(user.getId());
         //优惠券类型转换
         if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
             adminRequest.setInterestCoupon(1);
@@ -166,9 +166,8 @@ public class BorrowProjectTypeController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
-        //todo fangkai
-//        AdminSystemVO user = getUser(request);
-//        adminRequest.setUpdateUserId(user.getId());
+        AdminSystemVO user = getUser(request);
+        adminRequest.setUpdateUserId(user.getId());
         //优惠券类型转换
         if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
             adminRequest.setInterestCoupon(1);
