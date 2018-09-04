@@ -103,19 +103,14 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setAccountChinapnrTender(accountChinapnrTender);
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
-					if (StringUtils.isBlank(borrowId)){
-						logger.info("=======================投资掉单修复,borrowNid 为空!");
-						continue;
-					}
-					BorrowVO borrow =this.amTradeClient.selectBorrowByNid(borrowId);
-
-					request.setBorrow(borrow);
-					String borrowNid = borrowId == null ? "" : borrow.getBorrowNid();// 项目编号
-					BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
-					request.setBorrowInfo(borrowInfo);
-					BankOpenAccountVO accountChinapnrBorrower = this.getBankOpenAccount(borrowInfo.getUserId());
-					request.setAccountChinapnrBorrower(accountChinapnrBorrower);
-
+                    if(StringUtils.isNotBlank(borrowId)){
+                        BorrowVO borrow =this.amTradeClient.selectBorrowByNid(borrowId);
+                        request.setBorrow(borrow);
+                        BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+                        request.setBorrowInfo(borrowInfo);
+                        BankOpenAccountVO accountChinapnrBorrower = this.getBankOpenAccount(borrowInfo.getUserId());
+                        request.setAccountChinapnrBorrower(accountChinapnrBorrower);
+                    }
 				}
 
 				UserVO logUser = this.amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
