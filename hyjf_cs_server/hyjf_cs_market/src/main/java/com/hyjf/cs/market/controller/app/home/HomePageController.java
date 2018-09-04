@@ -48,22 +48,22 @@ public class HomePageController extends BaseMarketController {
 
     /**
      * 获取起始页banner
-     * @param platform
-     * @param realPlatform
+     * @param
+     * @param
      * @return
      */
     @ResponseBody
     @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
     @PostMapping(START_PAGE_ACTION)
-    public JSONObject getStartPage(@RequestHeader(value = "platform", required = false) String platform,
-                                    @RequestHeader(value = "realPlatform", required = false) String realPlatform) {
+    public JSONObject getStartPage(/*@RequestHeader(value = "platform", required = false) String platform,
+                                    @RequestHeader(value = "realPlatform", required = false) String realPlatform*/) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();
-        String platformT = realPlatform;
+        /*String platformT = realPlatform;
         if (StringUtils.isBlank(platformT)) {
             platformT = platform;
-        }
+        }*/
         result.put(CustomConstants.APP_REQUEST, REQUEST_HOME + REQUEST_MAPPING + START_PAGE_ACTION);
         try {
             Map<String, Object> ads = new HashMap<String, Object>();
@@ -71,18 +71,18 @@ public class HomePageController extends BaseMarketController {
             ads.put("limitEnd", 1);
             ads.put("host", FILE_DOMAIN_URL);
             ads.put("code", "startpage");
-            if (platformT.equals("2")) {
+            /*if (platformT.equals("2")) {
                 ads.put("platformType","1");
             } else if (platformT.equals("3")) {
                 ads.put("platformType","2");
-            }
+            }*/
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);
             if(CollectionUtils.isEmpty(picList)){
                 result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
                 result.put(CustomConstants.APP_STATUS_DESC, "获取banner失败,暂无数据");
                 return result;
             }
-            logger.info("platform======"+platform);
+            //logger.info("platform======"+platform);
             logger.info("picUrl======"+picList.get(0).getImage());
             logger.info("actionUrl======"+picList.get(0).getUrl());
             result.put("picUrl",picList.get(0).getImage());
