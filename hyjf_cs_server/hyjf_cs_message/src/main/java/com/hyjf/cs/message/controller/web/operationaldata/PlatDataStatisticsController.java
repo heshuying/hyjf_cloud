@@ -9,6 +9,7 @@ import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @author tanyy
  * @version PlatDataStatisticsController, v0.1 2018/9/16 17:39
  */
-@ApiIgnore
+@Api(tags = "运营数据")
 @RestController
 @RequestMapping("/hyjf-web/platdatastatistics")
 public class PlatDataStatisticsController {

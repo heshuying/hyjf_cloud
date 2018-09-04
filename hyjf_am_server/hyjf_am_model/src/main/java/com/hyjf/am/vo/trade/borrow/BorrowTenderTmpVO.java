@@ -97,8 +97,38 @@ public class BorrowTenderTmpVO extends BaseVO implements Serializable {
 	private Integer couponGrantId;
 	@ApiModelProperty(value = "是否江西银行投资: 1 是")
 	private Integer isBankTender;
+	@ApiModelProperty(value = "投资来源:默认-hyjf,wrb-风车理财")
+	private String tenderFrom;
+	@ApiModelProperty(value = "银行返回码")
+	private String retCode;;
+	@ApiModelProperty(value = "银行返回码描述")
+	private String retMsg;
 
 	private static final long serialVersionUID = 1L;
+
+	public String getTenderFrom() {
+		return tenderFrom;
+	}
+
+	public void setTenderFrom(String tenderFrom) {
+		this.tenderFrom = tenderFrom;
+	}
+
+	public String getRetCode() {
+		return retCode;
+	}
+
+	public void setRetCode(String retCode) {
+		this.retCode = retCode;
+	}
+
+	public String getRetMsg() {
+		return retMsg;
+	}
+
+	public void setRetMsg(String retMsg) {
+		this.retMsg = retMsg;
+	}
 
 	public Integer getId() {
 		return id;

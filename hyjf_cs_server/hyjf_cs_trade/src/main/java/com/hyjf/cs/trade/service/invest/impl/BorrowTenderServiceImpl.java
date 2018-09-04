@@ -156,6 +156,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.checkParam(request, borrow, account, userInfo);
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        logger.info("所有参数都已检查通过!");
         // 开始真正的投资逻辑
         return tender(request, borrow, account, cuc);
     }
@@ -201,14 +202,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //错误页
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="+callBean.getLogOrderId()+"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
-
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="
+                +callBean.getLogOrderId()+"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
+        if(request.getToken() != null && !"".equals(request.getToken())){
+            retUrl += "&token=1";
+            successUrl += "&token=1";
+        }
+        if(request.getSign() != null && !"".equals(request.getSign())){
+            retUrl += "&sign=" + request.getSign();
+            successUrl += "&sign=" + request.getSign();
+        }
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
