@@ -51,13 +51,10 @@ public class HjhDebtCreditController extends BaseController{
     @Autowired
     private HjhDebtCreditService hjhDebtCreditService;
 
-    @Autowired
-    private BorrowRegistExceptionService borrowRegistExceptionService;
 
     @ApiOperation(value = "汇计划-转让记录页面初始化", notes = "页面初始化")
     @PostMapping(value = "/hjhDebtCreditInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject hjhDebtCreditInit() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",SUCCESS);
@@ -109,7 +106,6 @@ public class HjhDebtCreditController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject queryHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request) {
         JSONObject jsonObject = null;
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(request);
@@ -120,7 +116,7 @@ public class HjhDebtCreditController extends BaseController{
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 hjhDebtCreditVoList.addAll(listAccountDetail);
             }
-            if (null != hjhDebtCreditVoList) {
+            if (hjhDebtCreditVoList.size() > 0) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
             } else {
@@ -138,7 +134,6 @@ public class HjhDebtCreditController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    @ResponseBody
     public JSONObject exportHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
 
         request.setCurrPage(-1);
@@ -283,7 +278,6 @@ public class HjhDebtCreditController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject queryoptAction() {
         JSONObject jsonObject;
         HjhDebtCreditListRequest creditListRequest = new HjhDebtCreditListRequest();
@@ -298,7 +292,6 @@ public class HjhDebtCreditController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    @ResponseBody
     public JSONObject queryoptActionSearch(@RequestBody HjhDebtCreditListRequest request) {
         JSONObject jsonObject;
         jsonObject = queryHjhDebtCreditDetail(request);
