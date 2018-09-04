@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.DebtFreezeLog;
 import com.hyjf.am.trade.dao.model.auto.DebtFreezeLogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DebtFreezeLogMapper {
     int countByExample(DebtFreezeLogExample example);

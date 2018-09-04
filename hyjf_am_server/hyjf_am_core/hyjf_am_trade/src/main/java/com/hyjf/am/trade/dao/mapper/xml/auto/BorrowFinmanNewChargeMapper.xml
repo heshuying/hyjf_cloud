@@ -146,9 +146,6 @@
     </selectKey>
     insert into ht_borrow_finman_new_charge
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="manChargeCd != null" >
-        man_charge_cd,
-      </if>
       <if test="manChargeType != null" >
         man_charge_type,
       </if>
@@ -211,9 +208,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="manChargeCd != null" >
-        #{manChargeCd,jdbcType=VARCHAR},
-      </if>
       <if test="manChargeType != null" >
         #{manChargeType,jdbcType=VARCHAR},
       </if>

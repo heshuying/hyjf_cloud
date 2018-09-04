@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.UserLog;
 import com.hyjf.am.user.dao.model.auto.UserLogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserLogMapper {
     int countByExample(UserLogExample example);

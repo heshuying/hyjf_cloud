@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface HjhUserAuthLogMapper {
     int countByExample(HjhUserAuthLogExample example);

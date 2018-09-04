@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectRepayExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BorrowProjectRepayMapper {
     int countByExample(BorrowProjectRepayExample example);

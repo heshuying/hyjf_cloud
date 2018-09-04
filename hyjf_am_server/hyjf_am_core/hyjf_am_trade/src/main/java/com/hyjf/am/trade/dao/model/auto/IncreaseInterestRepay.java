@@ -29,6 +29,8 @@ public class IncreaseInterestRepay implements Serializable {
 
     private String borrowStyleName;
 
+    private BigDecimal borrowAccount;
+
     private String orderId;
 
     private String orderDate;
@@ -62,6 +64,8 @@ public class IncreaseInterestRepay implements Serializable {
     private Integer updateUserId;
 
     private String updateUserName;
+
+    private Integer loanActionTime;
 
     private Date createTime;
 
@@ -163,6 +167,14 @@ public class IncreaseInterestRepay implements Serializable {
 
     public void setBorrowStyleName(String borrowStyleName) {
         this.borrowStyleName = borrowStyleName == null ? null : borrowStyleName.trim();
+    }
+
+    public BigDecimal getBorrowAccount() {
+        return borrowAccount;
+    }
+
+    public void setBorrowAccount(BigDecimal borrowAccount) {
+        this.borrowAccount = borrowAccount;
     }
 
     public String getOrderId() {
@@ -299,6 +311,14 @@ public class IncreaseInterestRepay implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Integer getLoanActionTime() {
+        return loanActionTime;
+    }
+
+    public void setLoanActionTime(Integer loanActionTime) {
+        this.loanActionTime = loanActionTime;
     }
 
     public Date getCreateTime() {

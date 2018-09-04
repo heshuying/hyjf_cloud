@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.Evalation;
 import com.hyjf.am.user.dao.model.auto.EvalationExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface EvalationMapper {
     int countByExample(EvalationExample example);

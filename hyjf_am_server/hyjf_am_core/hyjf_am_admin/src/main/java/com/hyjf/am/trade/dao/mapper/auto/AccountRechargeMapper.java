@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AccountRechargeMapper {
     int countByExample(AccountRechargeExample example);
@@ -29,6 +27,4 @@ public interface AccountRechargeMapper {
     int updateByPrimaryKeySelective(AccountRecharge record);
 
     int updateByPrimaryKey(AccountRecharge record);
-
-
 }

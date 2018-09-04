@@ -1,11 +1,9 @@
 package com.hyjf.am.market.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.auto.ActivityListExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ActivityListMapper {
     int countByExample(ActivityListExample example);

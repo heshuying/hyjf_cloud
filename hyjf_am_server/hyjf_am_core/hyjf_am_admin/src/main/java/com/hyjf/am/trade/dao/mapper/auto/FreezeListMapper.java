@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface FreezeListMapper {
     int countByExample(FreezeListExample example);
