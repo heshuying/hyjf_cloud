@@ -26,6 +26,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
@@ -677,8 +678,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 发送发标短信
             Map<String, String> params = new HashMap<String, String>();
             params.put("val_title", borrow.getBorrowNid());
-            // TODO: 2018/9/3  zyk
-            SmsMessage smsMessage =null;//new SmsMessage(null, params, null, null, sms.SMSSENDFORMANAGER, "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
+            SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
                 smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 return true;
