@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.GroupInfoResponse;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.service.admin.organization.GroupInfoService;
 import com.hyjf.am.vo.user.OrganizationStructureVO;
 import com.hyjf.common.util.CommonUtils;
