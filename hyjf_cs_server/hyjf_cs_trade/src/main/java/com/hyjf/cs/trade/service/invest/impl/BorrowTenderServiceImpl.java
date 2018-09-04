@@ -153,7 +153,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 投资检查参数
-        this.checkParam(request, borrow, account, userInfo);
+        this.checkParam(request, borrow, account, userInfo ,borrowInfoVO);
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
         logger.info("所有参数都已检查通过!");
@@ -285,22 +285,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             // 剩余可投只剩
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL,balance);
             }
         } else {// 项目的剩余金额大于最低起投金额
             if (accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
                 if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
                     if (cuc != null && cuc.getCouponType() != 3 && cuc.getCouponType() != 1) {
-                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
                     }
                 } else {
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
                 }
             } else {
                 Integer max = borrow.getTenderAccountMax();
                 if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
                     // "项目最大投资额为" + max + "元", "1"
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,max);
                 }
             }
         }
@@ -322,7 +322,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 投资递增金额须为" + borrowDetail.getIncreaseMoney() + " 元的整数倍
             if (borrow.getBorrowIncreaseMoney() != null && (accountInt - min) % borrow.getBorrowIncreaseMoney() != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1 && accountInt < borrow.getTenderAccountMax()) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING,borrow.getBorrowIncreaseMoney());
             }
         }
     }
@@ -364,7 +364,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param account
      * @param userInfo
      */
-    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, UserInfoVO userInfo) {
+    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, UserInfoVO userInfo ,BorrowInfoVO borrowInfoVO) {
         Integer userId = request.getUser().getUserId();
         // 借款人不存在
         if (borrow.getUserId() == null) {
@@ -410,25 +410,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(request.getPlatform()==null){
             throw new CheckException(MsgEnum.STATUS_ZC000018);
         }
-        if ("2".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionAndroid())) {
+        if ("2".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionAndroid())) {
             String tmpInfo = "";
-            if ("1".equals(borrow.getCanTransactionPc())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if ("1".equals(borrow.getCanTransactionIos())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionIos())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_IOS);
             }
-            if ("1".equals(borrow.getCanTransactionWei())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
-        } else if ("3".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionIos())) {
-            if ("1".equals(borrow.getCanTransactionPc())) {
+        } else if ("3".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionIos())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if ("1".equals(borrow.getCanTransactionAndroid())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionAndroid())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_ANDROID);
             }
-            if ("1".equals(borrow.getCanTransactionWei())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
         }
