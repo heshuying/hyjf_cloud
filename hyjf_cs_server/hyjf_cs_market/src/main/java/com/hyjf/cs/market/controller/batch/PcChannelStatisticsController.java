@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -23,9 +25,13 @@ public class PcChannelStatisticsController extends BaseController {
 	private PcChannelStatisticsService pcChannelStatisticsService;
 
 	@RequestMapping("/insertStatistics")
-	public String insertStatistics() {
-		pcChannelStatisticsService.insertStatistics();
-		return "success";
+	public StringResponse insertStatistics() {
+		try {
+			pcChannelStatisticsService.insertStatistics();
+		} catch (Exception e) {
+			logger.error("PC渠道统计定时任务出错...", e);
+			return new StringResponse("error");
+		}
+		return new StringResponse("success");
 	}
-
 }

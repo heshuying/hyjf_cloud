@@ -3,22 +3,14 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.market.client.AmUserClient;
-import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.PcChannelStatisticsProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +29,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 		logger.info("----------------PC渠道统计定时任务Start-------------");
 		// 查询所有pc渠道
 		List<UtmVO> voList = amUserClient.selectUtmPlatList("pc");
-		if (!CollectionUtils.isEmpty(voList)) {
+		/*if (!CollectionUtils.isEmpty(voList)) {
 			for (UtmVO vo : voList) {
 				Integer sourceId = vo.getSourceId();
 				// 访问数
@@ -86,7 +78,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 					logger.error("PC渠道统计数据定时任务出错......", e);
 				}
 			}
-		}
+		}*/
 
 	}
 }

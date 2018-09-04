@@ -43,9 +43,8 @@ public class PoundageListRequest extends BasePage implements Serializable {
     private String addTimeStart;
     @ApiModelProperty(value = "分账时间结束时间")
     private String addTimeEnd;
-    /**
-     * id查询条件
-     */
+
+    @ApiModelProperty(value = "id(detail查询时用)")
     private Integer idSer;
     /**
      * 用户id查询条件

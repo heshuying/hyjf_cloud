@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -31,7 +32,6 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -42,7 +42,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayPlanConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-//@Component
+@Component
 public class BorrowRepayPlanConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayPlanConsumer.class);

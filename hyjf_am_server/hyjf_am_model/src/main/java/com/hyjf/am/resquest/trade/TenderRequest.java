@@ -62,6 +62,12 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "优惠券ID  App用")
     private String couponId;
 
+    @ApiModelProperty(value = "签名")
+    private String sign;
+
+    @ApiModelProperty(value = "token")
+    private String token;
+
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -276,5 +282,21 @@ public class TenderRequest extends BaseVO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.admin.user;
 
 import java.util.List;
 
+import com.hyjf.common.util.GetDate;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,7 @@ public class StzfWhiteConfigController extends BaseController {
 		if (stzhWhiteList != null) {
 			STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
 			BeanUtils.copyProperties(stzhWhiteList,stzhWhiteListVO);
+			stzhWhiteListVO.setApprovalTime(GetDate.times10toStrYYYYMMDD(Integer.parseInt(stzhWhiteList.getApprovalTime())));
 			response.setResult(stzhWhiteListVO);
 		}
 		return response;

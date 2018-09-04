@@ -62,7 +62,9 @@ public interface UserService extends BaseService {
 
 	HjhUserAuth getHjhUserAuthByUserId(Integer userId);
 
-	void insertSelective(HjhUserAuthLog hjhUserAuthLog);
+    HjhUserAuth getHjhUserAuth(Integer userId);
+
+    void insertSelective(HjhUserAuthLog hjhUserAuthLog);
 
 	HjhUserAuthLog selectByExample(String orderId);
 

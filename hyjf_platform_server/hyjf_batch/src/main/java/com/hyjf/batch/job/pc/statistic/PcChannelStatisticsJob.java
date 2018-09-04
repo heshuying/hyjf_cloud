@@ -8,6 +8,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
 
 /**
@@ -20,7 +21,9 @@ public class PcChannelStatisticsJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("PcChannelStatisticsJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MARKET/cs-market/pcchannelstatistics/insertStatistics", String.class);
-		logger.info("PcChannelStatisticsJob execute end...");
+		String result = restTemplate
+				.getForObject("http://CS-MARKET/cs-market/pcchannelstatistics/insertStatistics", StringResponse.class)
+				.getResultStr();
+		logger.info("PcChannelStatisticsJob execute end...result is {}", result);
 	}
 }
