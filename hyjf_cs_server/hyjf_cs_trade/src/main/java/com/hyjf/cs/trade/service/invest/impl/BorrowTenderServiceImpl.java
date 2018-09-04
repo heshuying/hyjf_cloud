@@ -156,6 +156,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.checkParam(request, borrow, account, userInfo);
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        logger.info("所有参数都已检查通过!");
         // 开始真正的投资逻辑
         return tender(request, borrow, account, cuc);
     }
