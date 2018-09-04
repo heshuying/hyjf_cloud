@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin;
 
+import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 
 import java.util.List;
@@ -22,5 +23,5 @@ public interface DayCreditDetailService {
      * @param params
      * @return
      */
-    List<DayCreditDetailVO> selectDebtCreditList(Map<String, Object> params);
+    List<HjhDayCreditDetailCustomize> selectDebtCreditList(Map<String, Object> params);
 }
