@@ -86,7 +86,7 @@ public class SubConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
         //todo  测试联调时放开
-        // adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
+         adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
         // 表单校验(双表校验)
         JSONObject json =new JSONObject();
         //表单字段校验
@@ -108,7 +108,7 @@ public class SubConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
         //todo  测试联调时放开
-        //adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
+        adminRequest.setUserId(Integer.valueOf(this.getUser(request).getId()));
         AdminSubConfigResponse result= subConfigService.updateSubConfig(adminRequest);
         if (result == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
