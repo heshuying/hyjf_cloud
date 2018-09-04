@@ -16,6 +16,7 @@ public interface BorrowRepayToHjhQuitService extends BaseService {
 
     /**
      * 查询待退出计划的标的
+     *
      * @return
      */
     List<HjhAccedeVO> selectWaitQuitHjhList();

@@ -735,7 +735,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 		String url = "http://AM-TRADE/am-trade/bankException/getBorrowTenderTmpList";
 		BorrowTenderTmpResponse response =restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
 		if (response!=null){
-			response.getResultList();
+			return response.getResultList();
 		}
 		return null;
 	}
@@ -4219,6 +4219,97 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 更新资产表 upd by liushouyi
+     *
+     * @param hjhPlanAssetnewVO
+     * @return
+     */
+    @Override
+    public int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetnewVO) {
+        IntegerResponse result = restTemplate.postForEntity("http://AM-TRADE/am-trade/assetPush/updateHjhPlanAssetnew", hjhPlanAssetnewVO, IntegerResponse.class).getBody();
+        return result.getResultInt();
+    }
+
+    /**
+     * 查询单个资产根据资产ID upd by liushouyi
+     *
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    @Override
+    public HjhPlanAssetVO selectPlanAsset(String assetId, String instCode) {
+        HjhPlanAssetResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectPlanAsset/" + assetId + "/" + instCode, HjhPlanAssetResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowBailVO selectBorrowBail(String borrowNid) {
+        String url = urlBase + "/assetPush/select_borrow_bail/" + borrowNid;
+        BorrowBailResponse response = restTemplate.getForEntity(url,BorrowBailResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    @Override
+    public boolean updateBorrowByBorrowNid(BorrowVO borrow) {
+        String url = urlBase + "/assetPush/update_borrow_by_borrow_nid";
+        IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
+        return result.getResultInt() > 0 ? true : false;
+    }
+
+    /**
+     * 获取系统配置 add by liushouyi
+     *
+     * @param configCd
+     * @return
+     */
+    @Override
+    public String getBorrowConfig(String configCd) {
+        String url = urlBase + "/assetPush/select_borrow_config/" + configCd;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (response != null) {
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    @Override
+    public Integer insertBorrowBail(BorrowBailVO borrowBail) {
+        String url = urlBase + "/assetPush/insert_borrow_bail/" + borrowBail;
+        IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+
 
     /**
      * 获取逾期的标的
@@ -4265,4 +4356,33 @@ public class AmTradeClientImpl implements AmTradeClient {
         restTemplate.getForEntity(url, String.class);
     }
 
+    /**
+     * 查询待退出计划的标的
+     *
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectWaitQuitHjhList() {
+        HjhAccedeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhAccede/selectWaitQuitHjhList/",
+                HjhAccedeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 根据nid和当前时间查询borrow
+     * @author zhangyk
+     * @date 2018/9/3 16:41
+     */
+    @Override
+    public BorrowVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
+        String url = "http://AM-TRADE/am-trade/borrow/getByNidAndNowTime/"+borrowNid + "/" + nowTime;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

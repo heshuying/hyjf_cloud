@@ -7,7 +7,6 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author lb
@@ -15,10 +14,6 @@ import java.util.Date;
  */
 public class HjhPlanCapitalVO extends BaseVO implements Serializable {
 
-    /**
-     * Warning 数据读取 MongoDB时,不应存在除MongoDB已存在的_id之外的 id 含 : id    (写入不影响)
-     * 否则会冲突 o(*￣︶￣*)o
-     */
     private String id;
 
     private String date;

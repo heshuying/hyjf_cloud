@@ -140,10 +140,10 @@
 			on a.user_id = c.user_id
 			<where>
 				<if test="sourceId != null and sourceId != ''">
-					b.source_id = #{sourceId}
+					AND b.source_id = #{sourceId}
 				</if>
 				<if test="type !=null">
-					c.attribute = 0
+					AND c.attribute = 0
 				</if>
 			</where>
 	</select>

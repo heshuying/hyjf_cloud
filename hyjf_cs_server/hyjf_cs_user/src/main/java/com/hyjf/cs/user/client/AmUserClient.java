@@ -535,18 +535,31 @@ public interface AmUserClient {
 	BankCardVO selectBankCardByUserIdAndCardNo(BankCardRequest request);
 
 	/**
-	 * 更新银行卡信息
-	 * @auth sunpeikai
-	 * @param
+	 * 同步手机号
+	 * @param accountMobileAynch
 	 * @return
 	 */
-	int updateBankCard(BankCardVO bankCardVO);
+	boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch);
 
 	/**
-	 * 根据主键查询银行卡信息
-	 * @auth sunpeikai
-	 * @param id 主键
+	 *修改用户信息
+	 * @param userVO
 	 * @return
 	 */
-	BankCardVO getBankCardById(Integer id);
+	boolean updateByPrimaryKey(UserVO userVO);
+    /**
+     * 更新银行卡信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateBankCard(BankCardVO bankCardVO);
+
+    /**
+     * 根据主键查询银行卡信息
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    BankCardVO getBankCardById(Integer id);
 }

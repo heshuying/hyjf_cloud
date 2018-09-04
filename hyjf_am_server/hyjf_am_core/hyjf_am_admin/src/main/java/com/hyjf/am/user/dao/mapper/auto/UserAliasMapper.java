@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.dao.model.auto.UserAliasExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserAliasMapper {
     int countByExample(UserAliasExample example);

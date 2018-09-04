@@ -48,10 +48,11 @@ public class BankSettingController {
                     banksConfig.setMonthCardQuota(new BigDecimal(0));
                 }
             }
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordList.size());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(), adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
             JxBankConfig bc=new JxBankConfig();
             bc.setBankName(adminRequest.getBankName());
             bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
+            response.setRecordTotal(recordList.size());
             recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(),
                     paginator.getLimit());
             if(CollectionUtils.isNotEmpty(recordList)){

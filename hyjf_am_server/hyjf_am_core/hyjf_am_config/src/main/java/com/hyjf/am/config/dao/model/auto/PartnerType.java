@@ -10,7 +10,7 @@ public class PartnerType implements Serializable {
 
     private Integer state;
 
-    private Short order;
+    private Integer order;
 
     private Integer createUserId;
 
@@ -46,11 +46,11 @@ public class PartnerType implements Serializable {
         this.state = state;
     }
 
-    public Short getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(Short order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 

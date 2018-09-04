@@ -341,4 +341,19 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 根据nid和系统时间查询borrow
+	 * @author zhangyk
+	 * @date 2018/9/3 17:31
+	 */
+	@GetMapping("/getByNidAndNowTime/{borrowNid}/{nowTime}")
+	public BorrowResponse getByNidAndNowTime(@PathVariable String borrowNid, @PathVariable Integer nowTime){
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.selectBorrowByNidAndNowTime(borrowNid,nowTime);
+		if (null != borrow){
+			response.setResult(CommonUtils.convertBean(borrow,BorrowVO.class));
+		}
+		return response;
+	}
+
 }

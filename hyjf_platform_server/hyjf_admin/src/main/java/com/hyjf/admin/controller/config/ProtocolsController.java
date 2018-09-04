@@ -99,7 +99,7 @@ public class ProtocolsController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
-	@PostMapping("/exportaction")
+	@GetMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// 表格sheet名称

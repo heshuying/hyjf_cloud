@@ -1107,36 +1107,55 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+    @Override
+    public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch) {
+        String url = userService+"/batch/updateMobileSynch";
+        AccountMobileSynchResponse response =
+                restTemplate.postForEntity(url,accountMobileAynch, AccountMobileSynchResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getUpdateFlag();
+        }
+        return false;
+    }
 
-	/**
-	 * 更新银行卡信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public int updateBankCard(BankCardVO bankCardVO) {
-		String url = userService + "/bankCard/updateBankCard";
-		IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			response.getResultInt();
-		}
-		return 0;
-	}
+    @Override
+    public boolean updateByPrimaryKey(UserVO userVO) {
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-USER/am-user/user/updateByUserId", userVO, IntegerResponse.class).getBody();
+        if (result != null) {
+            return result.getResultInt() == 0 ? false : true;
+        }
+        return false;
+    }
+    /**
+     * 更新银行卡信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateBankCard(BankCardVO bankCardVO) {
+        String url = userService + "/bankCard/updateBankCard";
+        IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResultInt();
+        }
+        return 0;
+    }
 
-	/**
-	 * 根据主键查询银行卡信息
-	 * @auth sunpeikai
-	 * @param id 主键
-	 * @return
-	 */
-	@Override
-	public BankCardVO getBankCardById(Integer id) {
-		String url = userService + "/bankCard/getBankCardById/" + id;
-		BankCardResponse response = restTemplate.getForEntity(url,BankCardResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			return response.getResult();
-		}
-		return null;
-	}
+    /**
+     * 根据主键查询银行卡信息
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public BankCardVO getBankCardById(Integer id) {
+        String url = userService + "/bankCard/getBankCardById/" + id;
+        BankCardResponse response = restTemplate.getForEntity(url,BankCardResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

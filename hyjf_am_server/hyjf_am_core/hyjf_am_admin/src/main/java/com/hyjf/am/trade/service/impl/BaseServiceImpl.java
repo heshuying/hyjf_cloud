@@ -6,33 +6,12 @@ package com.hyjf.am.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.am.trade.dao.model.auto.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.RUser;
-import com.hyjf.am.trade.dao.model.auto.RUserExample;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -408,5 +387,43 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
 
         return balance;
+    }
+
+    /**
+     * 根据借款编号查询资产信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid){
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<HjhPlanAsset> hjhPlanAssetList = this.hjhPlanAssetMapper.selectByExample(example);
+        if (null != hjhPlanAssetList && hjhPlanAssetList.size() > 0 ) {
+            return hjhPlanAssetList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据借款机构编号和借款类型获取该机构流程配置
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    @Override
+    public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {
+        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+        HjhAssetBorrowtypeExample.Criteria crt = example.createCriteria();
+        crt.andInstCodeEqualTo(instCode);
+        crt.andAssetTypeEqualTo(assetType);
+        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
+        if(list.size() > 0){
+            return list.get(0);
+        }else{
+            return null;
+        }
     }
 }

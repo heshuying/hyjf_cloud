@@ -13,13 +13,10 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.coupon.CouponUserService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminCouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
@@ -68,6 +65,8 @@ public class CouponUserController extends BaseController {
      * 权限名称
      */
     private static final String PERMISSIONS = "couponuser";
+    /** 排他check */
+    private static final String SYN_OPERATION = "syn.operation";
 
     @Value("${coupon.audit.pwd}")
     private String Coupon_AUDIT_PWD;
@@ -92,34 +91,34 @@ public class CouponUserController extends BaseController {
     @ApiOperation(value = "删除优惠券", notes = "删除优惠券")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult<CouponUserCustomizeVO> deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
+    public AdminResult deleteCouponUser(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         AdminSystemVO user = getUser(request);
         String userId = user.getId();
-        int id = couponUserBeanRequest.getId();
-        String remark = couponUserBeanRequest.getContent();
-        CouponUserCustomizeResponse response = couponUserService.deleteById(id, remark, userId);
+        couponUserBeanRequest.setUpdateUser(userId);
+        CouponUserCustomizeResponse response = couponUserService.deleteById(couponUserBeanRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<CouponUserCustomizeVO>(response.getResult());
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "手动发放页面信息", notes = "手动发放页面信息")
     @PostMapping("/distributeViewAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult<AdminCouponUserCustomizeVO> distributeViewAction(@RequestBody CouponConfigRequest request) {
+    public AdminResult distributeViewAction() {
+        CouponConfigRequest request = new CouponConfigRequest();
         request.setStatus(CustomConstants.COUPON_STATUS_PUBLISHED);
-        AdminCouponUserCustomizeResponse response = couponUserService.getRecordList(request);
+        CouponUserCustomizeResponse response = couponUserService.getRecordList(request);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<AdminCouponUserCustomizeVO>(response.getResult());
+        return new AdminResult<>(response);
     }
 
 
@@ -127,16 +126,13 @@ public class CouponUserController extends BaseController {
     @PostMapping("/distributeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult distributeAction(@RequestBody CouponUserBeanRequest couponUserBeanRequest, HttpServletRequest request) {
+        CouponUserResponse couponUserResponse = new CouponUserResponse();
         AdminSystemVO user = getUser(request);
-        String loginUserId = null;
-        if (user != null) {
-            loginUserId = user.getId();
-        }
+        String loginUserId = user.getId();
         //校验请求参数
-        JSONObject json = new JSONObject();
-        json = this.validatorFieldCheck(json, couponUserBeanRequest);
-        if (AdminValidatorFieldCheckUtil.hasValidateError(json)) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        String message = this.validatorFieldCheck(couponUserBeanRequest);
+        if (message != null) {
+            return new AdminResult<>(FAIL, message);
         }
         //校验数量
         if (couponUserBeanRequest.getAmount() == null || couponUserBeanRequest.getAmount() < 0) {
@@ -187,9 +183,9 @@ public class CouponUserController extends BaseController {
         couponUserRequest.setAttribute(userInfoVO.getAttribute());
         couponUserRequest.setChannel(channelName);
         for (int i = 0; i < couponUserBeanRequest.getAmount(); i++) {
-            CouponUserResponse couponUserResponse = couponUserService.insertCouponUser(couponUserRequest);
+            couponUserResponse = couponUserService.insertCouponUser(couponUserRequest);
         }
-        return new AdminResult<>();
+        return new AdminResult<>(couponUserResponse);
     }
 
 
@@ -201,21 +197,19 @@ public class CouponUserController extends BaseController {
         if (StringUtils.isEmpty(userName)) {
             String message = "用户名不能为空";
             response.setMessage(message);
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(FAIL, message);
         }
         UserVO user = couponUserService.getUser(userName);
         if (user == null) {
             String message = "用户名不存在";
             response.setMessage(message);
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(FAIL, message);
         } else if (user.getStatus() != null && user.getStatus() == 1) {
             String message = "用户已锁定";
             response.setMessage(message);
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(FAIL, message);
         }
-        response.setRtn(Response.SUCCESS);
-        response.setMessage(Response.SUCCESS_MSG);
-        return new AdminResult<>(response.getResult());
+        return new AdminResult<>(SUCCESS,SUCCESS_DESC);
     }
 
     @ApiOperation(value = "校验优惠券是否可用", notes = "校验优惠券是否可用")
@@ -223,13 +217,13 @@ public class CouponUserController extends BaseController {
     public AdminResult checkCouponValidAction(@RequestBody CouponUserBeanRequest request) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         String couponCode = request.getCouponCode();
-        String amount = request.getAmount().toString();
+        int amount = 0;
+        if (request.getAmount() != null) {
+            amount = request.getAmount();
+        }
         if (StringUtils.isEmpty(couponCode)) {
             response.setMessage("请求参数不正确");
-            return new AdminResult<>(response.getMessage());
-        }
-        if (amount == null || "".equals(amount)) {
-            amount = "0";
+            return new AdminResult<>(FAIL,response.getMessage());
         }
         CouponUserResponse couponUserResponse = couponUserService.getCouponUserByCouponCode(couponCode);
         List<CouponUserVO> couponUserVOS = couponUserResponse.getResultList();
@@ -238,13 +232,13 @@ public class CouponUserController extends BaseController {
             int sendedCouponSum = couponUserVOS.size();
             CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponCode);
             CouponConfigVO configVO = configResponse.getResult();
-            if (configVO.getCouponQuantity() > sendedCouponSum + Integer.parseInt(amount)) {
+            if (configVO.getCouponQuantity() > sendedCouponSum + amount) {
                 response.setMessage(Response.SUCCESS_MSG);
             } else {
                 response.setMessage("优惠券发行数量已用完");
             }
         }
-        return new AdminResult<>(response.getMessage());
+        return new AdminResult<>(response);
     }
 
 
@@ -254,8 +248,8 @@ public class CouponUserController extends BaseController {
         CouponConfigResponse response = new CouponConfigResponse();
         String couponCode = request.getCouponCode();
         if (StringUtils.isEmpty(couponCode)) {
-            response.setRtn(Response.FAIL);
-            return new AdminResult<>(response.getRtn());
+            response.setMessage("优惠券编码不能为空");
+            return new AdminResult<>(FAIL,response.getMessage());
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponCode);
         CouponConfigVO configVO = configResponse.getResult();
@@ -320,7 +314,7 @@ public class CouponUserController extends BaseController {
 
     @ApiOperation(value = "用户优惠券详情页", notes = "用户优惠券详情页")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
-    public AdminResult<ListResult<CouponTenderVo>> infoAction(@RequestBody CouponUserBeanRequest request) {
+    public AdminResult infoAction(@RequestBody CouponUserBeanRequest request) {
         CouponTenderVo couponTenderHztVo = new CouponTenderVo();
         ListResult<CouponTenderVo> result = new ListResult<CouponTenderVo>();
         Integer couponUserId = request.getId();
@@ -386,14 +380,14 @@ public class CouponUserController extends BaseController {
 
         couponTenderHztVo.setDetail(detail);
         couponTenderHztVo.setCouponRecoverlist(list);
-        return new AdminResult<>(result);
+        return new AdminResult<>(couponTenderHztVo);
     }
 
     @ApiOperation(value = "编辑初始页", notes = "编辑初始页")
     @RequestMapping(value = "/auditInitAction", method = RequestMethod.POST)
-    public AdminResult<ListResult<CouponUserCustomizeVO>> auditInitAction(@RequestBody CouponUserBeanRequest request) {
+    public AdminResult auditInitAction(@RequestBody CouponUserBeanRequest request) {
         CouponUserCustomizeVO customizeVO = new CouponUserCustomizeVO();
-        ListResult<CouponUserCustomizeVO> result = new ListResult<>();
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         Integer couponUserId = request.getId();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("couponUserId", couponUserId);
@@ -454,32 +448,29 @@ public class CouponUserController extends BaseController {
         }
         detail.setProjectType("适用" + projectString);
         CouponUserVO couponUserVO = couponUserService.selectCouponUserById(couponUserId);
-        customizeVO.setDetail(detail);
-        customizeVO.setCouponUser(couponUserVO);
-        customizeVO.setId(couponUserId);
-        return new AdminResult<>(result);
+        response.setDetail(detail);
+        response.setCouponUser(couponUserVO);
+        return new AdminResult<>(response);
     }
 
 
     @ApiOperation(value = "编辑保存", notes = "编辑保存")
     @RequestMapping(value = "/auditAction", method = RequestMethod.POST)
-    public AdminResult<ListResult<CouponUserCustomizeVO>> auditAction(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
-        JSONObject json = new JSONObject();
+    public AdminResult auditAction(HttpServletRequest request, @RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeVO customizeVO = new CouponUserCustomizeVO();
-        ListResult<CouponUserCustomizeVO> result = new ListResult<>();
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         CouponUserVO record = couponUserService.selectCouponUserById(couponUserBeanRequest.getId());
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
-            return new AdminResult<>(result);
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
         if (configResponse == null && configResponse.getResult() == null) {
-            return new AdminResult<>(result);
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        json = this.validatorFieldCheckAudit(json, couponUserBeanRequest, record);
-
-        if (AdminValidatorFieldCheckUtil.hasValidateError(json)) {
+        String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);
+        if (message == null) {
             Integer couponUserId = couponUserBeanRequest.getId();
-            Map<String, Object> paramMap = new HashMap<String, Object>();
+            Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("couponUserId", couponUserId);
             CouponTenderDetailVo detail = couponUserService.getCouponTenderDetailCustomize(paramMap);
             //操作平台
@@ -538,10 +529,8 @@ public class CouponUserController extends BaseController {
             }
             detail.setProjectType("适用" + projectString);
             CouponUserVO couponUserVO = couponUserService.selectCouponUserById(couponUserId);
-            customizeVO.setDetail(detail);
-            customizeVO.setCouponUser(couponUserVO);
-            customizeVO.setId(couponUserId);
-            return new AdminResult<>(result);
+            response.setDetail(detail);
+            response.setCouponUser(couponUserVO);
         } else {
             AdminSystemVO user = getUser(request);
             String loginUserId = user.getId();
@@ -550,9 +539,9 @@ public class CouponUserController extends BaseController {
             adminCouponUserRequestBean.setCouponConfigVO(configResponse.getResult());
             adminCouponUserRequestBean.setUserId(record.getUserId());
             adminCouponUserRequestBean.setLoginUserId(loginUserId);
-            CouponUserCustomizeResponse couponUserCustomizeResponse = couponUserService.auditRecord(adminCouponUserRequestBean);
+            response = couponUserService.auditRecord(adminCouponUserRequestBean);
         }
-        return new AdminResult<>(result);
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "手动批量发券上传", notes = "手动批量发券上传")
@@ -726,32 +715,37 @@ public class CouponUserController extends BaseController {
     /**
      * 画面校验
      *
-     * @param jsonObject
      * @param request
      * @param record
      * @return
      */
-    private JSONObject validatorFieldCheckAudit(JSONObject jsonObject, CouponUserBeanRequest request, CouponUserVO record) {
-        AdminValidatorFieldCheckUtil.validateSynOperation(jsonObject, "synOperation", request.getUpdateTime(), record.getUpdateTime());
-        if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {
-            CustomErrors.add(jsonObject, "couponAuditPwd", "same", "审核口令错误");
+    private String validatorFieldCheckAudit(CouponUserBeanRequest request, CouponUserVO record) {
+        String message = null;
+        if (GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getUpdateTime()) != (int)record.getUpdateTime()) {
+            return message = "排他check" + SYN_OPERATION;
         }
-        return jsonObject;
+        if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {
+            message = "审核口令错误";
+        }
+        return message;
     }
-
 
     /**
      * 画面校验
      *
-     * @param jsonObject
      * @param request
      * @return
      */
-    private JSONObject validatorFieldCheck(JSONObject jsonObject, CouponUserBeanRequest request) {
+    private String validatorFieldCheck(CouponUserBeanRequest request) {
+        String message = null;
         //优惠券编码
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "couponCode", request.getCouponCode());
+        if (request.getCouponCode() == null) {
+            message = "优惠券编码不能为空";
+        }
         //用户名
-        AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "userName", request.getUserName());
-        return jsonObject;
+        if (request.getUserName() == null) {
+            message = "用户名不能为空";
+        }
+        return message;
     }
 }

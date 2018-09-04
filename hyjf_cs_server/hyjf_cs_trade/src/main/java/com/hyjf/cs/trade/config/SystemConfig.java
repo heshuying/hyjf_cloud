@@ -9,6 +9,7 @@ public class SystemConfig {
     public String webHost;
     @Value("${hyjf.app.host}")
     public String appHost;
+
     @Value("${hyjf.weChat.host}")
     public String wechatHost;
 
@@ -456,4 +457,6 @@ public class SystemConfig {
     public void setAppHost(String appHost) {
         this.appHost = appHost;
     }
+
+
 }

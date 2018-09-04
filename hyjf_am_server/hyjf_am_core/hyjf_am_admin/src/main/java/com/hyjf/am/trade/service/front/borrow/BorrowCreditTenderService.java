@@ -89,4 +89,12 @@ public interface BorrowCreditTenderService {
      * @date 2018/8/30 11:11
      */
     String getCreditTenderServiceFee(String creditNid);
+
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:37
+     */
+    String getCreditTenderAssignPay(Map<String,String> params);
 }

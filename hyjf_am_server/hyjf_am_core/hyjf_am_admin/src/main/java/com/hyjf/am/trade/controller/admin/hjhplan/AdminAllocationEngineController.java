@@ -118,7 +118,10 @@ public class AdminAllocationEngineController {
 		} else if (errorFlag == 2) {
 			response.setMessage("错误:" +"计划编号：" + planNid + "已存在与计划专区表");
 			return response;
-		} 
+		} else if (errorFlag == 0) {
+			response.setMessage("");
+			return response;
+		}
 		return response;
     }
     

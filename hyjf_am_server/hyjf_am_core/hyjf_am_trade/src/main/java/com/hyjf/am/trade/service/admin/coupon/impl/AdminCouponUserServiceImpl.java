@@ -109,12 +109,12 @@ public class AdminCouponUserServiceImpl implements AdminCouponUserService {
      * @return
      */
     @Override
-    public int deleteCouponUserById(int id, String remark, String userId) {
+    public int deleteCouponUserById(CouponUserBeanRequest request) {
         CouponUser couponUser = new CouponUser();
-        couponUser.setId(id);
-        couponUser.setDeleteContent(remark);
+        couponUser.setId(request.getId());
+        couponUser.setDeleteContent(request.getContent());
         couponUser.setDelFlag(Integer.parseInt(CustomConstants.FLAG_DELETE));
-        this.operationLog(couponUser, CustomConstants.OPERATION_CODE_DELETE, userId);
+        this.operationLog(couponUser, CustomConstants.OPERATION_CODE_DELETE, request.getUpdateUser());
         int count = couponUserMapper.updateByPrimaryKeySelective(couponUser);
         return count;
     }
@@ -240,7 +240,6 @@ public class AdminCouponUserServiceImpl implements AdminCouponUserService {
         co.setCreateUserId(Integer.parseInt(userId));
         // 操作时间
         co.setCreateTime(GetDate.getDate());
-        couponOperationHistoryMapper.insertSelective(co);
-
+        couponOperationHistoryMapper.insert(co);
     }
 }

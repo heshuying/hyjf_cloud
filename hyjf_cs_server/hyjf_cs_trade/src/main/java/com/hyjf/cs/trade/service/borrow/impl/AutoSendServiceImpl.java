@@ -229,6 +229,9 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         // 标签ID
        // borrowVO.setLabelId(label.getId());
 
+        // 默认使用引擎
+        borrowVO.setIsEngineUsed(1);
+
         String borrowNid = beforeFix + borrowPreNidNew;
         //项目标题
         //borrowVO.setProjectName(borrowNid);

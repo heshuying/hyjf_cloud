@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 
-	public MessagePush findById(int id) {
+	public MessagePush findById(String id) {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("id").is(id);
 		query.addCriteria(criteria);

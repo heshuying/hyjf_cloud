@@ -197,4 +197,11 @@ public interface CouponConfigService {
      * @return
      */
     List<CouponConfigCustomize> getCouponConfigList(CouponConfigRequest request);
+
+    /**
+     * 加载优惠券配置列表
+     * @param couponConfigCustomize
+     * @return
+     */
+    List<CouponConfigCustomize> getConfigCustomizeList(CouponConfigCustomize couponConfigCustomize);
 }

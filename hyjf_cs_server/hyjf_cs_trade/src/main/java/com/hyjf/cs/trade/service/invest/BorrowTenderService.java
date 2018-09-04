@@ -74,4 +74,11 @@ public interface BorrowTenderService extends BaseTradeService {
      * @return
      */
     String getAppTenderUrl(TenderRequest tender);
+
+    /**
+     * 微信端获取投资信息
+     * @param tender
+     * @return
+     */
+    AppInvestInfoResultVO getInvestInfoWeChat(TenderRequest tender);
 }

@@ -491,15 +491,19 @@ public class AllocationEngineController extends BaseController{
 		if(viewRequest.getAddOrModify().equals("0")){
 			if(form.getPlanNidSrch()!= null){
 				jsonObject.put("planNid", form.getPlanNidSrch());
+				jsonObject.put("result", SUCCESS);
+				jsonObject.put("msg", SUCCESS_DESC);
 			}
 			return jsonObject;
 		} else if(viewRequest.getAddOrModify().equals("1")){
 			//2.修改计划配置时
-			String planNid = form.getPlanNidSrch();
+			String planNid = form.getPlanNid();
 			String labelId = form.getLabelId();
 			if(StringUtils.isNotEmpty(labelId) && StringUtils.isNotEmpty(planNid)){
 				HjhAllocationEngineVO vo = this.allocationEngineService.getPlanConfigRecordByParam(form);
 				jsonObject.put("hjhAllocationEngine", vo);
+				jsonObject.put("result", SUCCESS);
+				jsonObject.put("msg", SUCCESS_DESC);
 			} else {
 				jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
 			}
@@ -528,12 +532,12 @@ public class AllocationEngineController extends BaseController{
 		String planNid = form.getPlanNid();
 		if(StringUtils.isEmpty(labelName)){
 			jsonObject.put("info", "未获取标签名称，请重新输入！");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
 		if(StringUtils.isEmpty(planNid)){
 			jsonObject.put("info", "未获取计划编号，请重新输入！");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
 		// 校验一个计划下不能用重复的标签名称 参数 labelName 和 planNid 放在
@@ -541,7 +545,7 @@ public class AllocationEngineController extends BaseController{
 		int existflg = this.allocationEngineService.checkRepeat(form);
 		if(existflg>0){
 			jsonObject.put("info", "该标签已经被使用，无法再次添加");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
 		hjhLabelRequest.setLabelNameSrch(labelName);
@@ -549,23 +553,23 @@ public class AllocationEngineController extends BaseController{
 		hjhLabel = list.get(0);
 		if(hjhLabel == null){
 			jsonObject.put("info", "标签数据不存在，请先查看标签列表是否已经添加");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		} else {
 			//校验
 			if(hjhLabel.getLabelState() == 0){
 				jsonObject.put("info", "标签已停用，请先启用");
-				jsonObject.put("status", "n");
+				jsonObject.put("status", "99");
 				return jsonObject;
 			}
 			if(hjhLabel.getDelFlag() == 1){
 				jsonObject.put("info", "标签已删除");
-				jsonObject.put("status", "n");
+				jsonObject.put("status", "99");
 				return jsonObject;
 			}
 			if(StringUtils.isEmpty(hjhLabel.getBorrowStyle())){
 				jsonObject.put("info", "该标签的还款方式为空,请查询标签列表");
-				jsonObject.put("status", "n");
+				jsonObject.put("status", "99");
 				return jsonObject;
 			}
 			//标签存在的情况下：
@@ -573,10 +577,10 @@ public class AllocationEngineController extends BaseController{
 			String planBorrowStyle = this.allocationEngineService.getPlanBorrowStyle(planNid);//planNid已经校验非空
 			if(StringUtils.isEmpty(planBorrowStyle)){
 				jsonObject.put("info", "该计划的还款方式为空，请查询计划列表");
-				jsonObject.put("status", "n");
+				jsonObject.put("status", "99");
 				return jsonObject;
 			}
-			jsonObject.put("status", "y");
+			jsonObject.put("status", "000");
 		}
 		return jsonObject;
 	}
@@ -601,12 +605,12 @@ public class AllocationEngineController extends BaseController{
 		
 		if(StringUtils.isEmpty(labelSort)){
 			jsonObject.put("info", "请输入标签排序");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
 		if(StringUtils.isEmpty(planNid)){
 			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
 		form.setPlanNidSrch(planNid);
@@ -620,16 +624,16 @@ public class AllocationEngineController extends BaseController{
 				//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
 				if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
 					jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
-					jsonObject.put("status", "n");
+					jsonObject.put("status", "99");
 					return jsonObject;
 				}
 			}
 		} else{
 			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
-			jsonObject.put("status", "n");
+			jsonObject.put("status", "99");
 			return jsonObject;
 		}
-		jsonObject.put("status", "y");
+		jsonObject.put("status", "000");
 		return jsonObject;
 	}
 	
@@ -923,8 +927,10 @@ public class AllocationEngineController extends BaseController{
 			return jsonObject;
 		}
 		if(hjhRegion.getConfigStatus() == 1 && hjhLabel.getLabelState()  == 1 && hjhAllocationEngine.getLabelStatus() == 0){
-			jsonObject.put("info", "确定要执行本次操作吗！");
-			jsonObject.put("status", "3");
+/*			jsonObject.put("info", "确定要执行本次操作吗！");
+			jsonObject.put("status", "3");*/
+			jsonObject.put("info", SUCCESS);
+			jsonObject.put("status", SUCCESS_DESC);
 			return jsonObject;
 		}
 		return jsonObject;

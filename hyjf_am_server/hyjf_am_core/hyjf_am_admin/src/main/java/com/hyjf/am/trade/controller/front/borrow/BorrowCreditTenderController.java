@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -172,7 +173,7 @@ public class BorrowCreditTenderController extends BaseController {
 
 
 
-    @GetMapping("getCreditTenderServiceFee/{creditNid}")
+    @GetMapping("/getCreditTenderServiceFee/{creditNid}")
     public StringResponse getCreditTenderServiceFee(@PathVariable String creditNid){
         StringResponse response = new StringResponse();
         String fee = borrowCreditTenderService.getCreditTenderServiceFee(creditNid);
@@ -181,7 +182,16 @@ public class BorrowCreditTenderController extends BaseController {
     }
 
 
-
+    @PostMapping("/selectTenderCreditAssignPay")
+    public StringResponse selectTenderCreditAssignPay(@RequestBody Map<String,String> map){
+        StringResponse response = new StringResponse();
+        String assignPay = borrowCreditTenderService.getCreditTenderAssignPay(map);
+        if (StringUtils.isNotBlank(assignPay)){
+            assignPay = "0.00";
+        }
+        response.setResultStr(assignPay);
+        return response;
+    }
 
 
 

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.service.batch.CouponExpiredPushService;
 import org.slf4j.Logger;
@@ -27,12 +28,14 @@ public class CouponExpiredPushController {
     private CouponExpiredPushService couponExpiredPushService;
 
     @RequestMapping("/expiredPush")
-    public void sendCouponExpiredMsg() {
+    public StringResponse sendCouponExpiredMsg() {
         logger.info("优惠券过期检查发送push消息开始");
         try {
             couponExpiredPushService.sendExpiredMsgAct();
         } catch (MQException e) {
             logger.info("优惠券过期检查发送push消息失败");
+            return new StringResponse("fail");
         }
+        return new StringResponse("success");
     }
 }

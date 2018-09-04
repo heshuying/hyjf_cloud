@@ -76,21 +76,6 @@ public interface AmTradeClient {
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
 
     /**
-     * 根据筛选条件查询绑定日志count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getBindLogCount(BindLogListRequest request);
-    /**
-     * 根据筛选条件查询绑定日志list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<BindLogVO> searchBindLogList(BindLogListRequest request);
-
-    /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
      * @auth sunpeikai
      * @param userId 用户id
@@ -2527,7 +2512,7 @@ public interface AmTradeClient {
 
     CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
 
-    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+    CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest);
 
     List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
 
@@ -2900,12 +2885,26 @@ public interface AmTradeClient {
      * @return
      */
     STZHWhiteListResponse selectSTZHWhiteById(Integer id);
-    
+
+    /**
+     * 加载优惠券配置列表
+     * @param request
+     * @return
+     */
+    CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request);
+
     /**
      * 根据参数获取 HjhRegionVO
      * @param form
      * @return
      */
     HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:30
+     */
+    String selectTenderCreditAssignPay(Map<String,String> map);
 }
 

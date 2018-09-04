@@ -33,6 +33,18 @@
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="invite_user_id" property="inviteUserId" jdbcType="INTEGER" />
+    <result column="invite_user_name" property="inviteUserName" jdbcType="VARCHAR" />
+    <result column="invite_region_id" property="inviteRegionId" jdbcType="INTEGER" />
+    <result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+    <result column="invite_branch_id" property="inviteBranchId" jdbcType="INTEGER" />
+    <result column="invite_branch_name" property="inviteBranchName" jdbcType="VARCHAR" />
+    <result column="invite_department_id" property="inviteDepartmentId" jdbcType="INTEGER" />
+    <result column="invite_department_name" property="inviteDepartmentName" jdbcType="VARCHAR" />
+    <result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="INTEGER" />
+    <result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="INTEGER" />
+    <result column="repay_time" property="repayTime" jdbcType="INTEGER" />
+    <result column="repay_action_time" property="repayActionTime" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -99,7 +111,10 @@
     borrow_period, borrow_style, borrow_style_name, order_id, order_date, account, `status`, 
     loan_order_date, loan_order_id, repay_interest, repay_interest_yes, repay_interest_wait, 
     repay_times, loan_amount, client, add_ip, web, remark, invest_type, create_user_id, 
-    create_user_name, update_user_id, update_user_name, create_time, update_time
+    create_user_name, update_user_id, update_user_name, invite_user_id, invite_user_name, 
+    invite_region_id, invite_region_name, invite_branch_id, invite_branch_name, invite_department_id, 
+    invite_department_name, tender_user_attribute, invite_user_attribute, repay_time, 
+    repay_action_time, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample" >
     select
@@ -148,7 +163,12 @@
       client, add_ip, web, 
       remark, invest_type, create_user_id, 
       create_user_name, update_user_id, update_user_name, 
-      create_time, update_time)
+      invite_user_id, invite_user_name, invite_region_id, 
+      invite_region_name, invite_branch_id, invite_branch_name, 
+      invite_department_id, invite_department_name, 
+      tender_user_attribute, invite_user_attribute, 
+      repay_time, repay_action_time, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{investUserName,jdbcType=VARCHAR}, #{tenderId,jdbcType=INTEGER}, 
       #{tenderNid,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{borrowApr,jdbcType=DECIMAL}, 
       #{borrowExtraYield,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, 
@@ -159,7 +179,12 @@
       #{client,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
       #{remark,jdbcType=VARCHAR}, #{investType,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{inviteUserId,jdbcType=INTEGER}, #{inviteUserName,jdbcType=VARCHAR}, #{inviteRegionId,jdbcType=INTEGER}, 
+      #{inviteRegionName,jdbcType=VARCHAR}, #{inviteBranchId,jdbcType=INTEGER}, #{inviteBranchName,jdbcType=VARCHAR}, 
+      #{inviteDepartmentId,jdbcType=INTEGER}, #{inviteDepartmentName,jdbcType=VARCHAR}, 
+      #{tenderUserAttribute,jdbcType=INTEGER}, #{inviteUserAttribute,jdbcType=INTEGER}, 
+      #{repayTime,jdbcType=INTEGER}, #{repayActionTime,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -256,6 +281,42 @@
       </if>
       <if test="updateUserName != null" >
         update_user_name,
+      </if>
+      <if test="inviteUserId != null" >
+        invite_user_id,
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name,
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id,
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name,
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id,
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name,
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id,
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name,
+      </if>
+      <if test="tenderUserAttribute != null" >
+        tender_user_attribute,
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute,
+      </if>
+      <if test="repayTime != null" >
+        repay_time,
+      </if>
+      <if test="repayActionTime != null" >
+        repay_action_time,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -354,6 +415,42 @@
       </if>
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null" >
+        #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRegionId != null" >
+        #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserAttribute != null" >
+        #{tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        #{repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayActionTime != null" >
+        #{repayActionTime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -465,6 +562,42 @@
       <if test="record.updateUserName != null" >
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
+      <if test="record.inviteUserId != null" >
+        invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserName != null" >
+        invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteRegionId != null" >
+        invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteRegionName != null" >
+        invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteBranchId != null" >
+        invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteBranchName != null" >
+        invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inviteDepartmentId != null" >
+        invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteDepartmentName != null" >
+        invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderUserAttribute != null" >
+        tender_user_attribute = #{record.tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.inviteUserAttribute != null" >
+        invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayTime != null" >
+        repay_time = #{record.repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.repayActionTime != null" >
+        repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -509,6 +642,18 @@
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      invite_user_id = #{record.inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{record.inviteUserName,jdbcType=VARCHAR},
+      invite_region_id = #{record.inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{record.inviteRegionName,jdbcType=VARCHAR},
+      invite_branch_id = #{record.inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{record.inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{record.inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{record.inviteDepartmentName,jdbcType=VARCHAR},
+      tender_user_attribute = #{record.tenderUserAttribute,jdbcType=INTEGER},
+      invite_user_attribute = #{record.inviteUserAttribute,jdbcType=INTEGER},
+      repay_time = #{record.repayTime,jdbcType=INTEGER},
+      repay_action_time = #{record.repayActionTime,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -608,6 +753,42 @@
       <if test="updateUserName != null" >
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
+      <if test="inviteUserId != null" >
+        invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserName != null" >
+        invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteRegionId != null" >
+        invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteRegionName != null" >
+        invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null" >
+        invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteBranchName != null" >
+        invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteDepartmentId != null" >
+        invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="inviteDepartmentName != null" >
+        invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderUserAttribute != null" >
+        tender_user_attribute = #{tenderUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="inviteUserAttribute != null" >
+        invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="repayTime != null" >
+        repay_time = #{repayTime,jdbcType=INTEGER},
+      </if>
+      <if test="repayActionTime != null" >
+        repay_action_time = #{repayActionTime,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -649,6 +830,18 @@
       create_user_name = #{createUserName,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=INTEGER},
+      invite_user_name = #{inviteUserName,jdbcType=VARCHAR},
+      invite_region_id = #{inviteRegionId,jdbcType=INTEGER},
+      invite_region_name = #{inviteRegionName,jdbcType=VARCHAR},
+      invite_branch_id = #{inviteBranchId,jdbcType=INTEGER},
+      invite_branch_name = #{inviteBranchName,jdbcType=VARCHAR},
+      invite_department_id = #{inviteDepartmentId,jdbcType=INTEGER},
+      invite_department_name = #{inviteDepartmentName,jdbcType=VARCHAR},
+      tender_user_attribute = #{tenderUserAttribute,jdbcType=INTEGER},
+      invite_user_attribute = #{inviteUserAttribute,jdbcType=INTEGER},
+      repay_time = #{repayTime,jdbcType=INTEGER},
+      repay_action_time = #{repayActionTime,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

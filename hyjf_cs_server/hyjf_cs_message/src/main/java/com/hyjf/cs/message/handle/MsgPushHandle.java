@@ -58,7 +58,7 @@ public class MsgPushHandle {
 	 * @return 返回结果,0表示发送成功 -1标识失败
 	 * @throws Exception
 	 */
-	public Integer sendMessages(Integer msgId) {
+	public Integer sendMessages(String msgId) {
 
 		MessagePush message = messagePushMsgDao.findById(msgId);
 

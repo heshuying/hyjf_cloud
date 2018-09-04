@@ -10,6 +10,7 @@ import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.user.service.front.account.MobileSynchronizeService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,4 +71,18 @@ public class MobileSynchronizeServiceImpl extends BaseServiceImpl implements Mob
             return accountMobileSynchMapper.updateByPrimaryKeySelective(accountMobileSynch) > 0 ? true : false;
         }
     }
+
+    /**
+     * 更新手机号
+     * @param accountMobileSynchRequest
+     * @return
+     */
+    @Override
+    public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest) {
+        AccountMobileSynch accountMobileSynch = new AccountMobileSynch();
+        BeanUtils.copyProperties(accountMobileSynchRequest.getAccountMobileSynchVO(), accountMobileSynch);
+        return accountMobileSynchMapper.updateByPrimaryKeySelective(accountMobileSynch) > 0 ? true : false;
+    }
+
+
 }

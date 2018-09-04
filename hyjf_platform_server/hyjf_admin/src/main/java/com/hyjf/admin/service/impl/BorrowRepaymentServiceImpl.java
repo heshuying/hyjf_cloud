@@ -53,6 +53,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
+        bean.setTotal(count);
         if (count != null && count > 0) {
             List<BorrowRepaymentCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentList(request);
             bean.setRecordList(recordList);
@@ -132,7 +133,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         AdminRepayDelayCustomizeVO repayDelay = this.amTradeClient.selectBorrowInfo(borrowNid);
         bean.setBorrowRepayInfo(repayDelay);
         String userId = repayDelay.getUserId();
-        AccountVO account = this.amTradeClient.getAccountByUserId(Integer.getInteger(userId));
+        AccountVO account = this.amTradeClient.getAccountByUserId(Integer.parseInt(userId));
         // 借款人账户余额
         BigDecimal balance = account.getBankBalance();
         bean.setBalance(balance);
@@ -155,6 +156,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
+        bean.setTotal(count);
         if (count != null && count > 0) {
             List<BorrowRepaymentPlanCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentPlanList(request);
             bean.setRecordList(recordList);

@@ -5,12 +5,15 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.admin.PoundageCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
+import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
@@ -96,6 +99,37 @@ public class AmAdminClientImpl implements AmAdminClient {
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询手续费分账count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getPoundageCount(PoundageListRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageCount";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 查询手续费分账list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<PoundageCustomizeVO> searchPoundageList(PoundageListRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/searchPoundageList";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
         }
         return null;
     }

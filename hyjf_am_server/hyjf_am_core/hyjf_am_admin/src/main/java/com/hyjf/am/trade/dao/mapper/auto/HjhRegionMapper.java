@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.HjhRegion;
 import com.hyjf.am.trade.dao.model.auto.HjhRegionExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface HjhRegionMapper {
     int countByExample(HjhRegionExample example);

@@ -48,27 +48,18 @@
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/xml/auto">
 			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/mapper/xml/auto">
     			<include name="**/*.xml"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/auto">
 			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/mapper/auto">
     			<include name="**/*.java"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/model/auto">
 			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/model/auto">
     			<include name="**/*.java"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	</target>
@@ -90,27 +81,18 @@
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto">
 			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto">
     			<include name="**/*.xml"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/auto">
 			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/mapper/auto">
     			<include name="**/*.java"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	
 		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/model/auto">
 			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/model/auto">
     			<include name="**/*.java"/>
-    			<exclude name="ROaUsers*"/>
-    			<exclude name="ROaDepartment*"/>
-    			<exclude name="RUser*"/>
   			</fileset>
 		</copy>
 	</target>

@@ -156,8 +156,8 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 							updateTime= protocolVersions.get(i).getCreateTime();
 							updateUserId= protocolVersions.get(i).getCreateUser();
 						}
-						protocolVersions.get(i).setTime(GetDate.dateToString2(updateTime, "yyyy-MM-dd HH:mm:ss"));
 						BeanUtils.copyProperties(protocolVersions.get(i),protocolVersionVO);
+						protocolVersionVO.setTime(GetDate.dateToString2(updateTime, "yyyy-MM-dd HH:mm:ss"));
 						listProtocolVersionVO.add(protocolVersionVO);
 					}
 

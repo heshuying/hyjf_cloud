@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.PreRegist;
 import com.hyjf.am.user.dao.model.auto.PreRegistExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface PreRegistMapper {
     int countByExample(PreRegistExample example);

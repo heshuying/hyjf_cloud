@@ -1,13 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserInfoMapper {
     int countByExample(UserInfoExample example);
@@ -31,6 +27,4 @@ public interface UserInfoMapper {
     int updateByPrimaryKeySelective(UserInfo record);
 
     int updateByPrimaryKey(UserInfo record);
-
-    AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
 }

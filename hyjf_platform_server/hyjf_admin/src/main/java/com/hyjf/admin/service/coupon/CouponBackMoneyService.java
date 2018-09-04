@@ -1,7 +1,9 @@
 package com.hyjf.admin.service.coupon;
 
+import com.hyjf.admin.beans.response.CouponBackMoneyContResponse;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -118,4 +120,19 @@ public interface CouponBackMoneyService {
      * @return List<CouponBackMoneyCustomize>
      */
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse getdjHzt(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse getjxHzt(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse gettyHzt(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse gettyHjh(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse getdjHjh(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponBackMoneyContResponse getjxHjh(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    void exportAction(String sheetName, List<CouponBackMoneyCustomize> resultList, String recoverInterest,
+                      String investTotal, String fileName, HttpServletResponse response, CouponBackMoneyCustomize couponBackMoneyCustomize);
 }

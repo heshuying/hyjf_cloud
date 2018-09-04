@@ -67,6 +67,30 @@ public class IncreaseInterestInvest implements Serializable {
 
     private String updateUserName;
 
+    private Integer inviteUserId;
+
+    private String inviteUserName;
+
+    private Integer inviteRegionId;
+
+    private String inviteRegionName;
+
+    private Integer inviteBranchId;
+
+    private String inviteBranchName;
+
+    private Integer inviteDepartmentId;
+
+    private String inviteDepartmentName;
+
+    private Integer tenderUserAttribute;
+
+    private Integer inviteUserAttribute;
+
+    private Integer repayTime;
+
+    private Integer repayActionTime;
+
     private Date createTime;
 
     private Date updateTime;
@@ -319,6 +343,102 @@ public class IncreaseInterestInvest implements Serializable {
 
     public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+    }
+
+    public Integer getInviteUserId() {
+        return inviteUserId;
+    }
+
+    public void setInviteUserId(Integer inviteUserId) {
+        this.inviteUserId = inviteUserId;
+    }
+
+    public String getInviteUserName() {
+        return inviteUserName;
+    }
+
+    public void setInviteUserName(String inviteUserName) {
+        this.inviteUserName = inviteUserName == null ? null : inviteUserName.trim();
+    }
+
+    public Integer getInviteRegionId() {
+        return inviteRegionId;
+    }
+
+    public void setInviteRegionId(Integer inviteRegionId) {
+        this.inviteRegionId = inviteRegionId;
+    }
+
+    public String getInviteRegionName() {
+        return inviteRegionName;
+    }
+
+    public void setInviteRegionName(String inviteRegionName) {
+        this.inviteRegionName = inviteRegionName == null ? null : inviteRegionName.trim();
+    }
+
+    public Integer getInviteBranchId() {
+        return inviteBranchId;
+    }
+
+    public void setInviteBranchId(Integer inviteBranchId) {
+        this.inviteBranchId = inviteBranchId;
+    }
+
+    public String getInviteBranchName() {
+        return inviteBranchName;
+    }
+
+    public void setInviteBranchName(String inviteBranchName) {
+        this.inviteBranchName = inviteBranchName == null ? null : inviteBranchName.trim();
+    }
+
+    public Integer getInviteDepartmentId() {
+        return inviteDepartmentId;
+    }
+
+    public void setInviteDepartmentId(Integer inviteDepartmentId) {
+        this.inviteDepartmentId = inviteDepartmentId;
+    }
+
+    public String getInviteDepartmentName() {
+        return inviteDepartmentName;
+    }
+
+    public void setInviteDepartmentName(String inviteDepartmentName) {
+        this.inviteDepartmentName = inviteDepartmentName == null ? null : inviteDepartmentName.trim();
+    }
+
+    public Integer getTenderUserAttribute() {
+        return tenderUserAttribute;
+    }
+
+    public void setTenderUserAttribute(Integer tenderUserAttribute) {
+        this.tenderUserAttribute = tenderUserAttribute;
+    }
+
+    public Integer getInviteUserAttribute() {
+        return inviteUserAttribute;
+    }
+
+    public void setInviteUserAttribute(Integer inviteUserAttribute) {
+        this.inviteUserAttribute = inviteUserAttribute;
+    }
+
+    public Integer getRepayTime() {
+        return repayTime;
+    }
+
+    public void setRepayTime(Integer repayTime) {
+        this.repayTime = repayTime;
+    }
+
+    public Integer getRepayActionTime() {
+        return repayActionTime;
+    }
+
+    public void setRepayActionTime(Integer repayActionTime) {
+        this.repayActionTime = repayActionTime;
     }
 
     public Date getCreateTime() {

@@ -5,6 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -120,40 +121,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferResponse response = restTemplate
                 .postForEntity(tradeService + "/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
-                .getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     * 根据筛选条件查询绑定日志count
-     *
-     * @param
-     * @return
-     * @auth sunpeikai
-     */
-    @Override
-    public Integer getBindLogCount(BindLogListRequest request) {
-        Integer count = restTemplate
-                .postForEntity(tradeService + "/associatedlog/getbindlogcount", request, Integer.class)
-                .getBody();
-
-        return count;
-    }
-
-    /**
-     * 根据筛选条件查询绑定日志list
-     *
-     * @param
-     * @return
-     * @auth sunpeikai
-     */
-    @Override
-    public List<BindLogVO> searchBindLogList(BindLogListRequest request) {
-        BindLogResponse response = restTemplate
-                .postForEntity(tradeService + "/associatedlog/searchbindloglist", request, BindLogResponse.class)
                 .getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -4760,17 +4727,24 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/selectfddtempletlist", request, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        requestT.setCurrPage(request.getCurrPage());
+        requestT.setPageSize(request.getPageSize());
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse insertAction(ProtocolsRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/insertaction", requestBean, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/insertaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
     public FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/updateaction", requestBean, FddTempletCustomizeResponse.class);
+        ProtocolsRequest requestT = new ProtocolsRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/updateaction", requestT, FddTempletCustomizeResponse.class);
     }
 
     @Override
@@ -4780,13 +4754,17 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestBean,
+        PushMoneyRequest requestT = new PushMoneyRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestT,
                 PushMoneyResponse.class);
     }
 
     @Override
     public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestBean,
+        PushMoneyRequest requestT = new PushMoneyRequest();
+        BeanUtils.copyProperties(requestBean, requestT);
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestT,
                 PushMoneyResponse.class);
     }
 
@@ -5244,13 +5222,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param couponUserBeanRequest
      * @return
      */
     @Override
-    public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser/" + id + remark + userId;
-        CouponUserCustomizeResponse response = restTemplate.getForEntity(url, CouponUserCustomizeResponse.class).getBody();
+    public CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser";
+        CouponUserCustomizeResponse response = restTemplate.postForEntity(url,couponUserBeanRequest, CouponUserCustomizeResponse.class).getBody();
         if (response != null) {
             return response;
         }
@@ -5313,7 +5291,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
-        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUsrByCouponCode/" + couponCode;
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUserByCouponCode/" + couponCode;
         CouponUserResponse response = restTemplate.getForEntity(url,CouponUserResponse.class).getBody();
         if (response != null) {
             return response;
@@ -5760,6 +5738,13 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response;
     }
 
+    @Override
+    public CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/adminCouponConfig";
+        CouponConfigCustomizeResponse response = restTemplate.postForEntity(url,request,CouponConfigCustomizeResponse.class).getBody();
+        return response;
+    }
+
     /**
      * 行账户管理页面查询件数
      *
@@ -5963,7 +5948,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO) {
         Integer result =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
+                "http://AM-ADMIN/am-trade/borrowCredit/updateBorrowCredit/", borrowCreditVO,
                 Integer.class).getBody();
         if (result == null) {
             return 0;
@@ -6011,4 +5996,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
 	}
+
+	/**
+	 *  根据债转编号和出让人id查询assignPay
+	 * @author zhangyk
+	 * @date 2018/9/4 10:31
+	 */
+    @Override
+    public String selectTenderCreditAssignPay(Map<String, String> map) {
+        String url = "http://AM-ADMIN/am-trade/creditTender/selectTenderCreditAssignPay";
+        StringResponse response = restTemplate.postForEntity(url,map,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
 }

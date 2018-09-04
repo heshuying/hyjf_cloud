@@ -2116,6 +2116,766 @@ public class IncreaseInterestInvestExample {
             return (Criteria) this;
         }
 
+        public Criteria andInviteUserIdIsNull() {
+            addCriterion("invite_user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdIsNotNull() {
+            addCriterion("invite_user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdEqualTo(Integer value) {
+            addCriterion("invite_user_id =", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdNotEqualTo(Integer value) {
+            addCriterion("invite_user_id <>", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdGreaterThan(Integer value) {
+            addCriterion("invite_user_id >", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_user_id >=", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdLessThan(Integer value) {
+            addCriterion("invite_user_id <", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_user_id <=", value, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdIn(List<Integer> values) {
+            addCriterion("invite_user_id in", values, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdNotIn(List<Integer> values) {
+            addCriterion("invite_user_id not in", values, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdBetween(Integer value1, Integer value2) {
+            addCriterion("invite_user_id between", value1, value2, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_user_id not between", value1, value2, "inviteUserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameIsNull() {
+            addCriterion("invite_user_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameIsNotNull() {
+            addCriterion("invite_user_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameEqualTo(String value) {
+            addCriterion("invite_user_name =", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameNotEqualTo(String value) {
+            addCriterion("invite_user_name <>", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameGreaterThan(String value) {
+            addCriterion("invite_user_name >", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_user_name >=", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameLessThan(String value) {
+            addCriterion("invite_user_name <", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameLessThanOrEqualTo(String value) {
+            addCriterion("invite_user_name <=", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameLike(String value) {
+            addCriterion("invite_user_name like", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameNotLike(String value) {
+            addCriterion("invite_user_name not like", value, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameIn(List<String> values) {
+            addCriterion("invite_user_name in", values, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameNotIn(List<String> values) {
+            addCriterion("invite_user_name not in", values, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameBetween(String value1, String value2) {
+            addCriterion("invite_user_name between", value1, value2, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserNameNotBetween(String value1, String value2) {
+            addCriterion("invite_user_name not between", value1, value2, "inviteUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdIsNull() {
+            addCriterion("invite_region_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdIsNotNull() {
+            addCriterion("invite_region_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdEqualTo(Integer value) {
+            addCriterion("invite_region_id =", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdNotEqualTo(Integer value) {
+            addCriterion("invite_region_id <>", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdGreaterThan(Integer value) {
+            addCriterion("invite_region_id >", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_region_id >=", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdLessThan(Integer value) {
+            addCriterion("invite_region_id <", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_region_id <=", value, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdIn(List<Integer> values) {
+            addCriterion("invite_region_id in", values, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdNotIn(List<Integer> values) {
+            addCriterion("invite_region_id not in", values, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdBetween(Integer value1, Integer value2) {
+            addCriterion("invite_region_id between", value1, value2, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_region_id not between", value1, value2, "inviteRegionId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameIsNull() {
+            addCriterion("invite_region_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameIsNotNull() {
+            addCriterion("invite_region_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameEqualTo(String value) {
+            addCriterion("invite_region_name =", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameNotEqualTo(String value) {
+            addCriterion("invite_region_name <>", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameGreaterThan(String value) {
+            addCriterion("invite_region_name >", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_region_name >=", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameLessThan(String value) {
+            addCriterion("invite_region_name <", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameLessThanOrEqualTo(String value) {
+            addCriterion("invite_region_name <=", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameLike(String value) {
+            addCriterion("invite_region_name like", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameNotLike(String value) {
+            addCriterion("invite_region_name not like", value, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameIn(List<String> values) {
+            addCriterion("invite_region_name in", values, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameNotIn(List<String> values) {
+            addCriterion("invite_region_name not in", values, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameBetween(String value1, String value2) {
+            addCriterion("invite_region_name between", value1, value2, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegionNameNotBetween(String value1, String value2) {
+            addCriterion("invite_region_name not between", value1, value2, "inviteRegionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdIsNull() {
+            addCriterion("invite_branch_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdIsNotNull() {
+            addCriterion("invite_branch_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdEqualTo(Integer value) {
+            addCriterion("invite_branch_id =", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdNotEqualTo(Integer value) {
+            addCriterion("invite_branch_id <>", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdGreaterThan(Integer value) {
+            addCriterion("invite_branch_id >", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_branch_id >=", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdLessThan(Integer value) {
+            addCriterion("invite_branch_id <", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_branch_id <=", value, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdIn(List<Integer> values) {
+            addCriterion("invite_branch_id in", values, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdNotIn(List<Integer> values) {
+            addCriterion("invite_branch_id not in", values, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdBetween(Integer value1, Integer value2) {
+            addCriterion("invite_branch_id between", value1, value2, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_branch_id not between", value1, value2, "inviteBranchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameIsNull() {
+            addCriterion("invite_branch_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameIsNotNull() {
+            addCriterion("invite_branch_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameEqualTo(String value) {
+            addCriterion("invite_branch_name =", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameNotEqualTo(String value) {
+            addCriterion("invite_branch_name <>", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameGreaterThan(String value) {
+            addCriterion("invite_branch_name >", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_branch_name >=", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameLessThan(String value) {
+            addCriterion("invite_branch_name <", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameLessThanOrEqualTo(String value) {
+            addCriterion("invite_branch_name <=", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameLike(String value) {
+            addCriterion("invite_branch_name like", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameNotLike(String value) {
+            addCriterion("invite_branch_name not like", value, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameIn(List<String> values) {
+            addCriterion("invite_branch_name in", values, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameNotIn(List<String> values) {
+            addCriterion("invite_branch_name not in", values, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameBetween(String value1, String value2) {
+            addCriterion("invite_branch_name between", value1, value2, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteBranchNameNotBetween(String value1, String value2) {
+            addCriterion("invite_branch_name not between", value1, value2, "inviteBranchName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdIsNull() {
+            addCriterion("invite_department_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdIsNotNull() {
+            addCriterion("invite_department_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdEqualTo(Integer value) {
+            addCriterion("invite_department_id =", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdNotEqualTo(Integer value) {
+            addCriterion("invite_department_id <>", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdGreaterThan(Integer value) {
+            addCriterion("invite_department_id >", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_department_id >=", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdLessThan(Integer value) {
+            addCriterion("invite_department_id <", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_department_id <=", value, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdIn(List<Integer> values) {
+            addCriterion("invite_department_id in", values, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdNotIn(List<Integer> values) {
+            addCriterion("invite_department_id not in", values, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdBetween(Integer value1, Integer value2) {
+            addCriterion("invite_department_id between", value1, value2, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_department_id not between", value1, value2, "inviteDepartmentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameIsNull() {
+            addCriterion("invite_department_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameIsNotNull() {
+            addCriterion("invite_department_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameEqualTo(String value) {
+            addCriterion("invite_department_name =", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameNotEqualTo(String value) {
+            addCriterion("invite_department_name <>", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameGreaterThan(String value) {
+            addCriterion("invite_department_name >", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_department_name >=", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameLessThan(String value) {
+            addCriterion("invite_department_name <", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameLessThanOrEqualTo(String value) {
+            addCriterion("invite_department_name <=", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameLike(String value) {
+            addCriterion("invite_department_name like", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameNotLike(String value) {
+            addCriterion("invite_department_name not like", value, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameIn(List<String> values) {
+            addCriterion("invite_department_name in", values, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameNotIn(List<String> values) {
+            addCriterion("invite_department_name not in", values, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameBetween(String value1, String value2) {
+            addCriterion("invite_department_name between", value1, value2, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteDepartmentNameNotBetween(String value1, String value2) {
+            addCriterion("invite_department_name not between", value1, value2, "inviteDepartmentName");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeIsNull() {
+            addCriterion("tender_user_attribute is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeIsNotNull() {
+            addCriterion("tender_user_attribute is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeEqualTo(Integer value) {
+            addCriterion("tender_user_attribute =", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeNotEqualTo(Integer value) {
+            addCriterion("tender_user_attribute <>", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeGreaterThan(Integer value) {
+            addCriterion("tender_user_attribute >", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("tender_user_attribute >=", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeLessThan(Integer value) {
+            addCriterion("tender_user_attribute <", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeLessThanOrEqualTo(Integer value) {
+            addCriterion("tender_user_attribute <=", value, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeIn(List<Integer> values) {
+            addCriterion("tender_user_attribute in", values, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeNotIn(List<Integer> values) {
+            addCriterion("tender_user_attribute not in", values, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeBetween(Integer value1, Integer value2) {
+            addCriterion("tender_user_attribute between", value1, value2, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenderUserAttributeNotBetween(Integer value1, Integer value2) {
+            addCriterion("tender_user_attribute not between", value1, value2, "tenderUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeIsNull() {
+            addCriterion("invite_user_attribute is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeIsNotNull() {
+            addCriterion("invite_user_attribute is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeEqualTo(Integer value) {
+            addCriterion("invite_user_attribute =", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeNotEqualTo(Integer value) {
+            addCriterion("invite_user_attribute <>", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeGreaterThan(Integer value) {
+            addCriterion("invite_user_attribute >", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_user_attribute >=", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeLessThan(Integer value) {
+            addCriterion("invite_user_attribute <", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_user_attribute <=", value, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeIn(List<Integer> values) {
+            addCriterion("invite_user_attribute in", values, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeNotIn(List<Integer> values) {
+            addCriterion("invite_user_attribute not in", values, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeBetween(Integer value1, Integer value2) {
+            addCriterion("invite_user_attribute between", value1, value2, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteUserAttributeNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_user_attribute not between", value1, value2, "inviteUserAttribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeIsNull() {
+            addCriterion("repay_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeIsNotNull() {
+            addCriterion("repay_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeEqualTo(Integer value) {
+            addCriterion("repay_time =", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeNotEqualTo(Integer value) {
+            addCriterion("repay_time <>", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeGreaterThan(Integer value) {
+            addCriterion("repay_time >", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("repay_time >=", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeLessThan(Integer value) {
+            addCriterion("repay_time <", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("repay_time <=", value, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeIn(List<Integer> values) {
+            addCriterion("repay_time in", values, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeNotIn(List<Integer> values) {
+            addCriterion("repay_time not in", values, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeBetween(Integer value1, Integer value2) {
+            addCriterion("repay_time between", value1, value2, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("repay_time not between", value1, value2, "repayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeIsNull() {
+            addCriterion("repay_action_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeIsNotNull() {
+            addCriterion("repay_action_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeEqualTo(Integer value) {
+            addCriterion("repay_action_time =", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeNotEqualTo(Integer value) {
+            addCriterion("repay_action_time <>", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeGreaterThan(Integer value) {
+            addCriterion("repay_action_time >", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("repay_action_time >=", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeLessThan(Integer value) {
+            addCriterion("repay_action_time <", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("repay_action_time <=", value, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeIn(List<Integer> values) {
+            addCriterion("repay_action_time in", values, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeNotIn(List<Integer> values) {
+            addCriterion("repay_action_time not in", values, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeBetween(Integer value1, Integer value2) {
+            addCriterion("repay_action_time between", value1, value2, "repayActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayActionTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("repay_action_time not between", value1, value2, "repayActionTime");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

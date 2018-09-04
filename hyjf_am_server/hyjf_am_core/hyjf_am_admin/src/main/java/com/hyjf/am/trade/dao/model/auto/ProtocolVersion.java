@@ -30,12 +30,6 @@ public class ProtocolVersion implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //修改人
-    private String userName;
-
-    //协议模板日志列显示时间
-    private String time;
-
     public Integer getId() {
         return id;
     }
@@ -130,21 +124,5 @@ public class ProtocolVersion implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 }

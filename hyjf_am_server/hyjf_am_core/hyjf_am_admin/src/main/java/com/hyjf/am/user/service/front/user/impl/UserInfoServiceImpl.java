@@ -153,7 +153,7 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 	 */
 	@Override
 	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
-		return userInfoMapper.getMobileCodeByNumber(mobile);
+		return userInfoCustomizeMapper.getMobileCodeByNumber(mobile);
 	}
 
 }

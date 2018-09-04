@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.MspFqz;
 import com.hyjf.am.user.dao.model.auto.MspFqzExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface MspFqzMapper {
     int countByExample(MspFqzExample example);

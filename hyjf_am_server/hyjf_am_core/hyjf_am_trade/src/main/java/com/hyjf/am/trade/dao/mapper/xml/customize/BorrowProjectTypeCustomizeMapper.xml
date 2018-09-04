@@ -44,7 +44,22 @@
         ht_borrow_project_type typ
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         GROUP BY
-        pr.borrow_class
+        pr.borrow_class	,
+        typ.borrow_project_type,
+        typ.id,
+        typ.borrow_cd,
+        typ.borrow_name,
+        typ.borrow_class,
+        typ.invest_start,
+        typ.invest_end,
+        typ.increase_money,
+        typ.interest_coupon,
+        typ.taste_money,
+        typ.invest_user_type,
+        typ. status,
+        typ.remark,
+        typ.create_user_id,
+        typ.update_user_id
         <include refid="Where_Clause" />
         ORDER BY
         typ.id

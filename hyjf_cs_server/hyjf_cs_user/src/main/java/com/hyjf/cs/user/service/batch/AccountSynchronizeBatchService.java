@@ -14,4 +14,6 @@ public interface AccountSynchronizeBatchService {
      * 同步银行卡号任务
      */
     void accountSynchronize();
+
+    void mobileSychronize();
 }

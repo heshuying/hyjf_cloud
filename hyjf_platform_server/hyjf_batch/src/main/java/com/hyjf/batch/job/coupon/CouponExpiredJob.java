@@ -3,6 +3,7 @@
  */
 package com.hyjf.batch.job.coupon;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -24,7 +25,7 @@ public class CouponExpiredJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/coupon/expired", String.class);
-        logger.info("CouponExpiredJob execute end...");
+        String result = restTemplate.getForObject("http://AM-TRADE/am-trade/batch/coupon/expired", StringResponse.class).getResultStr();
+        logger.info("CouponExpiredJob execute end...result is {}", result);
     }
 }

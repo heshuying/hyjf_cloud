@@ -4,9 +4,13 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -18,6 +22,10 @@ public class CouponUserCustomizeResponse extends AdminResponse<CouponUserCustomi
     private CouponUserVO couponUser;
 
     private int count;
+
+    private List<CouponConfigCustomizeVO> couponConfigCustomizeVOS;
+
+    private List<ActivityListCustomizeVO> activityListCustomizeVOS;
 
     public int getCount() {
         return count;
@@ -41,5 +49,21 @@ public class CouponUserCustomizeResponse extends AdminResponse<CouponUserCustomi
 
     public void setCouponUser(CouponUserVO couponUser) {
         this.couponUser = couponUser;
+    }
+
+    public List<CouponConfigCustomizeVO> getCouponConfigCustomizeVOS() {
+        return couponConfigCustomizeVOS;
+    }
+
+    public void setCouponConfigCustomizeVOS(List<CouponConfigCustomizeVO> couponConfigCustomizeVOS) {
+        this.couponConfigCustomizeVOS = couponConfigCustomizeVOS;
+    }
+
+    public List<ActivityListCustomizeVO> getActivityListCustomizeVOS() {
+        return activityListCustomizeVOS;
+    }
+
+    public void setActivityListCustomizeVOS(List<ActivityListCustomizeVO> activityListCustomizeVOS) {
+        this.activityListCustomizeVOS = activityListCustomizeVOS;
     }
 }

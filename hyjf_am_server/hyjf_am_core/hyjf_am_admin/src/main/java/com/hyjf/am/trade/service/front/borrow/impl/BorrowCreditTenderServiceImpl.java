@@ -148,4 +148,16 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
        String serviceFee = borrowCreditTenderCustomizeMapper.getServiceFee(creditNid);
         return serviceFee;
     }
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:38
+     */
+    @Override
+    public String getCreditTenderAssignPay(Map<String, String> params) {
+        String assignPay = borrowCreditTenderCustomizeMapper.getCreditTenderAssignPay(params);
+
+        return assignPay;
+    }
 }

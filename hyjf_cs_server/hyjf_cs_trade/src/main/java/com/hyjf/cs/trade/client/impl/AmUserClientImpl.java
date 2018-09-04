@@ -606,7 +606,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName) {
-		String url = "http://AM-USER/am-user/corpOpenAccountRecord/selectUserBusiNameByUsername/" + userName;
+		String url = "http://AM-USER/am-user/user/selectUserBusiNameByUsername/" + userName;
 		CorpOpenAccountRecordResponse response = restTemplate.getForEntity(url, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
