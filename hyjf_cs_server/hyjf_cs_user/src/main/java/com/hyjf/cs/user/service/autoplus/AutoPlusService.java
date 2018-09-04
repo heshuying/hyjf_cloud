@@ -154,10 +154,10 @@ public interface AutoPlusService extends BaseUserService {
      * @param code
      * @param checkResult
      * @param userId
-     * @param queryType2
+     * @param queryType
      * @return
      */
-    void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId, String queryType2);
+    void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId, String queryType);
 
     /**
      * 插入用户签约授权log

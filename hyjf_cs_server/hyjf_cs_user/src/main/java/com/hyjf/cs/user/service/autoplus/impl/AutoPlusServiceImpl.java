@@ -470,7 +470,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     @Override
-    public void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId, String queryType2) {
+    public void appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId, String queryType) {
         if (checkResult != null) {
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"非法参数!");
         }
@@ -490,7 +490,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         if (user.getIsSetPassword() == 0) {
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"用户未设置交易密码!");
         }
-        if (queryType2.equals(BankCallConstant.QUERY_TYPE_2)){
+        if (queryType.equals(BankCallConstant.QUERY_TYPE_2)){
             // 判断是否授权过
             HjhUserAuthVO hjhUserAuth = this.getHjhUserAuth(user.getUserId());
             if (hjhUserAuth != null && hjhUserAuth.getAutoCreditStatus() == 1) {
