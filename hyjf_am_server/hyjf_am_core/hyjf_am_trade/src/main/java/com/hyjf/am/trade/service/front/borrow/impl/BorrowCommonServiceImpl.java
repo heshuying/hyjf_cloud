@@ -793,8 +793,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 	/**
 	 * 更新
-	 * 
-	 * @param record
+	 *
+	 * @param borrowBean
+	 * @param adminUsername
+	 * @param adminId
 	 * @throws Exception
 	 */
 	@Override
@@ -2599,7 +2601,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 借款人信息数据获取
 	 * 
-	 * @param borrowManinfo
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -2856,7 +2858,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 车辆信息数据获取
 	 * 
-	 * @param borrowManinfo
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -2968,7 +2970,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 用户信息数据获取
 	 * 
-	 * @param borrowUsers
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -4066,7 +4068,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 画面的值放到Bean中
 	 * 
-	 * @param modelAndView
+	 * @param isExistsRecord
 	 * @param form
 	 */
 	@Override
@@ -4108,7 +4110,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 获取融资服务费率 & 账户管理费率 & 收益差率
 	 * 
-	 * @param request
+	 * @param borrowCommonRequest
 	 * @return
 	 */
 	@Override
@@ -4504,7 +4506,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 获取对应借款对象
 	 * 
-	 * @param record
+	 * @param borrowBean
 	 * @throws Exception
 	 */
 	@Override
@@ -5579,6 +5581,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", list.get(i).getBorrowNid());
+                    params.put("planId", list.get(i).getId());
                     autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
