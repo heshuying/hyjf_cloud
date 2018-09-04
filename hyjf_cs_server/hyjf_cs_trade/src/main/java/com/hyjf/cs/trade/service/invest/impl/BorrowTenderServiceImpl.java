@@ -201,11 +201,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         //错误页
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId()
-                + "&sign=" + request.getSign() + "&token=" + request.getToken();
+                + "&sign=" + request.getSign() + "&token=1" ;
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="
                 +callBean.getLogOrderId()+"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())
-                + "&sign=" + request.getSign() + "&token=" + request.getToken();
+                + "&sign=" + request.getSign() + "&token=1" ;
 
         // 异步调用路
         String bgRetUrl = "";
