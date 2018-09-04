@@ -164,7 +164,8 @@ public class APPAutoPlusController extends BaseUserController {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
-        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
+        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId,BankCallConstant.QUERY_TYPE_2);
+
         UserVO user = autoPlusService.getUsersById(userId);
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.appGetCommonBankCallBean(user,2,srvAuthCode,code,sign,token);
@@ -211,7 +212,7 @@ public class APPAutoPlusController extends BaseUserController {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
         JSONObject checkResult = checkParam(request);
-        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId);
+        autoPlusService.appAuthInvesCheck(srvAuthCode,code,checkResult,userId, BankCallConstant.QUERY_TYPE_1);
         UserVO user = autoPlusService.getUsersById(userId);
         // 组装发往江西银行参数
         BankCallBean bean = autoPlusService.appGetCommonBankCallBean(user, 1, srvAuthCode, code, sign, token);

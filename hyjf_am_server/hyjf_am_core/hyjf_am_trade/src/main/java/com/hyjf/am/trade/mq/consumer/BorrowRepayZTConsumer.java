@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -41,7 +42,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayZTConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-//@Component
+@Component
 public class BorrowRepayZTConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayZTConsumer.class);
