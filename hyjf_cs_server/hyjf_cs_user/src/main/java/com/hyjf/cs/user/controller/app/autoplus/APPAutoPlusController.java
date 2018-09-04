@@ -18,7 +18,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
-import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
@@ -35,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -185,80 +183,6 @@ public class APPAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动债转同步回调
-     * @param bean
-     * @return
-     */
-    @ApiOperation(value = "用户授权自动债转同步回调")
-    @GetMapping(value = "/userAuthCreditReturn")
-    public ModelAndView userAuthCreditReturn(@ModelAttribute BankCallBean bean) {
-        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
-        String successPath = systemConfig.getAppServerHost()+"/user/setting/authorization/result/success";
-        ModelAndView modelAndView = new ModelAndView();
-        bean.convert();
-        // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set("userAutoType","1");
-            baseMapBean.set("message","用户授权自动债转失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "请联系客服");
-            baseMapBean.setCallBackAction(errorPath);
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
-        Integer userId = Integer.parseInt(bean.getLogUserId());
-        HjhUserAuthVO hjhUserAuth = this.autoPlusService.getHjhUserAuth(userId);
-        // 判断用户授权自动投资是否已成功
-        if (hjhUserAuth!=null&&hjhUserAuth.getAutoCreditStatus()==1) {
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set("userAutoType","1");
-            baseMapBean.set("autoInvesStatus",hjhUserAuth.getAutoInvesStatus()+"");
-            baseMapBean.set("autoCreditStatus",hjhUserAuth.getAutoCreditStatus()+"");
-            baseMapBean.set("message","用户授权自动债转成功");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-            baseMapBean.setCallBackAction(successPath);
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
-        //投资人签约状态查询
-        BankCallBean retBean=autoPlusService.getUserAuthQUery(userId,BankCallConstant.QUERY_TYPE_2);
-        try {
-            if (retBean != null && "1".equals(retBean.getState())) {
-                modelAndView = new ModelAndView("/jumpHTML");
-                BaseMapBean baseMapBean=new BaseMapBean();
-                baseMapBean.set("userAutoType","1");
-                Integer autoInvesStatus = 0;
-                if(hjhUserAuth!=null){
-                    autoInvesStatus = hjhUserAuth.getAutoInvesStatus();
-                }
-                baseMapBean.set("autoInvesStatus",autoInvesStatus +"");
-                baseMapBean.set("autoCreditStatus",1+"");
-                baseMapBean.set("message","用户授权自动债转成功");
-                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-                baseMapBean.setCallBackAction(successPath);
-                modelAndView.addObject("callBackForm", baseMapBean);
-                return modelAndView;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean=new BaseMapBean();
-        baseMapBean.set("message","");
-        baseMapBean.set("userAutoType","1");
-        baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
-        baseMapBean.set(CustomConstants.APP_STATUS_DESC, "请联系客服");
-        baseMapBean.setCallBackAction(errorPath);
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
-    }
-
-    /**
      * 用户授权自动债转异步回调
      *
      * @param bean
@@ -267,6 +191,7 @@ public class APPAutoPlusController extends BaseUserController {
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
     @PostMapping("/userAuthCreditBgreturn")
     public String userCreditAuthInvesBgreturn(BankCallBean bean) {
+        logger.info("授权异步回调");
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -304,92 +229,14 @@ public class APPAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资同步回调
-     * @param bean
-     * @return
-     */
-    @ApiOperation(value = "用户授权自动投资同步回调",notes = "用户授权自动投资同步回调")
-    @GetMapping(value = "/userAuthInvesReturn")
-    public ModelAndView userAuthInvesReturn(@RequestBody BankCallBean bean) {
-        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
-        ModelAndView modelAndView = new ModelAndView();
-        bean.convert();
-        // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set("userAutoType","0");
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC,"用户授权自动投资失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "请联系客服");
-            baseMapBean.setCallBackAction(errorPath);
-            modelAndView.addObject("callBackForm", baseMapBean);
-            return modelAndView;
-        }
-        String logUserId = bean.getLogUserId();
-        if(StringUtils.isNotBlank(logUserId)){
-            Integer userId = Integer.parseInt(logUserId);
-            HjhUserAuthVO hjhUserAuth = this.autoPlusService.getHjhUserAuth(userId);
-            // 判断用户授权自动投资是否已成功
-            if (hjhUserAuth!=null&&hjhUserAuth.getAutoInvesStatus()==1) {
-                modelAndView = new ModelAndView("/jumpHTML");
-                BaseMapBean baseMapBean=new BaseMapBean();
-                baseMapBean.set("message","用户授权自动投资成功");
-                baseMapBean.set("userAutoType","0");
-                baseMapBean.set("autoInvesStatus",hjhUserAuth.getAutoInvesStatus()+"");
-                baseMapBean.set("autoCreditStatus",hjhUserAuth.getAutoCreditStatus()+"");
-                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-                baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/setting/authorization/result/success");
-                modelAndView.addObject("callBackForm", baseMapBean);
-                return modelAndView;
-            }
-            //投资人签约状态查询
-            BankCallBean retBean = autoPlusService.getUserAuthQUery(userId, BankCallConstant.QUERY_TYPE_1);
-            try {
-                if (retBean != null && "1".equals(retBean.getState())) {
-                    modelAndView = new ModelAndView("/jumpHTML");
-                    Integer autoCreditStatus = 0;
-                    if (hjhUserAuth != null){
-                        logger.info("hjhUserAuth为空");
-                        autoCreditStatus = 0;
-                    }
-                    BaseMapBean baseMapBean = new BaseMapBean();
-                    baseMapBean.set("autoInvesStatus", 1 + "");
-                    baseMapBean.set("autoCreditStatus", autoCreditStatus + "");
-                    baseMapBean.set("message", "用户授权自动投资成功");
-                    baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                    baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-                    baseMapBean.setCallBackAction(errorPath);
-                    modelAndView.addObject("callBackForm", baseMapBean);
-                    return modelAndView;
-                }
-            } catch (Exception e) {
-                logger.error("更新签约状态和日志表异常...", e);
-            }
-            modelAndView = new ModelAndView("/jumpHTML");
-            BaseMapBean baseMapBean=new BaseMapBean();
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC,"");
-            baseMapBean.set("userAutoType","0");
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "请联系客服");
-            baseMapBean.setCallBackAction(errorPath);
-            modelAndView.addObject("callBackForm", baseMapBean);
-        }
-        return modelAndView;
-    }
-
-
-    /**
      * 用户授权自动投资异步回调
      * @param bean
      * @return
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
-    @ResponseBody
     @PostMapping(value = "/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(BankCallBean bean) {
-
+        logger.info("授权异步回调");
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;
     }
