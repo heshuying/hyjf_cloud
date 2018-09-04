@@ -133,7 +133,7 @@ public class AutoSendConsumer extends Consumer {
                     _log.info("自动录标失败！" + "[资产编号：" + hjhPlanAssetVO.getAssetId() + "]");
                 } else {
                     // 成功后到备案队列
-                    apiAssetPushService.sendToMQ(hjhPlanAssetVO, MQConstant.ROCKETMQ_BORROW_RECORD_GROUP);
+                    apiAssetPushService.sendToMQ(hjhPlanAssetVO, MQConstant.BORROW_RECORD_TOPIC);
                 }
 
                 _log.info(hjhPlanAssetVO.getAssetId() + " 结束自动录标");
