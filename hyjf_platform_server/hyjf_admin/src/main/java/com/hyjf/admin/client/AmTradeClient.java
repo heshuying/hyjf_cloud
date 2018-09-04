@@ -2899,5 +2899,12 @@ public interface AmTradeClient {
      * @return
      */
     HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:30
+     */
+    String selectTenderCreditAssignPay(Map<String,String> map);
 }
 

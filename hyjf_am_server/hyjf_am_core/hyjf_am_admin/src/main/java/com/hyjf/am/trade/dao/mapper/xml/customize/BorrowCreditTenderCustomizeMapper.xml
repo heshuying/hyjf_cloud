@@ -294,4 +294,33 @@
 			FROM huiyingdai_credit_tender
 		  WHERE credit_nid = #{creditNid}
 	</select>
+
+
+
+	<!-- 获取用户转让记录详情 -->
+	<select id="getCreditTenderAssignPay" resultType="String" parameterType="java.util.Map">
+		SELECT
+		CASE WHEN hbc.credit_capital_assigned = 0 THEN 0.00
+		ELSE
+		(select  sum(hct.assign_pay)-sum(hct.credit_fee) from ht_credit_tender hct
+		where 1=1
+		<!-- 债转编号-->
+		<if test="creditNid != null and creditNid !=''">
+			AND hct.credit_nid = #{creditNid}
+		</if>
+		)
+		END AS assignPay
+
+		FROM
+		ht_borrow_credit hbc
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hbc.credit_user_id = #{userId}
+			</if>
+			<!-- 债转编号-->
+			<if test="creditNid != null and creditNid !=''">
+				AND hbc.credit_nid = #{creditNid}
+			</if>
+		</where>
+	</select>
 </mapper>
