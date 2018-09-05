@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -11,12 +12,10 @@ import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -73,5 +72,20 @@ public class ProtocolsController extends BaseController {
 		protocolsService.updateAction(requestT);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
+	}
+
+	/**
+	 * 取得新规的模板编号
+	 * @param templetId
+	 * @return
+	 */
+	@GetMapping("/getNewTempletId/{templetId}")
+	public StringResponse getNewTempletId(@PathVariable Integer templetId) {
+
+		String tmpId = protocolsService.getNewTempletId(templetId);
+		if (StringUtils.isNotBlank(tmpId)){
+			return new StringResponse(tmpId);
+		}
+		return null;
 	}
 }

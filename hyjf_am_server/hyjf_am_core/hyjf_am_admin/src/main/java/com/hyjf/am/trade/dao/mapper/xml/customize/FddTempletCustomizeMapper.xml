@@ -48,4 +48,33 @@
         WHERE
         fdd.templet_id NOT IN (SELECT DISTINCT (contract.templet_nid) FROM ht_nifa_contract_template contract)
     </select>
+    
+    <resultMap id="selectFddTempletListMap" type="com.hyjf.am.trade.dao.model.customize.FddTempletCustomize">
+        <result column="templet_id" property="templetId" jdbcType="INTEGER" />
+        <result column="protocol_type" property="protocolType" jdbcType="TINYINT" />
+        <result column="is_active" property="isActive" jdbcType="TINYINT" />
+        <result column="ca_flag" property="caFlag" jdbcType="TINYINT" />
+        <result column="certificate_time" property="certificateTime" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="INTEGER" />
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+        <result column="protocol_type_name" property="protocolTypeName" jdbcType="VARCHAR" />
+        <result column="ca_flag_name" property="caFlagName" jdbcType="VARCHAR" />
+
+    </resultMap>
+    
+    <select id="getMaxTempletId" resultMap="selectFddTempletListMap" parameterType="Integer">
+         SELECT
+            max(ft.templet_id) templet_id
+        FROM
+            ht_fdd_templet ft
+        GROUP BY
+            ft.protocol_type
+        HAVING
+            ft.protocol_type = #{protocolType}
+    </select>
 </mapper>
