@@ -75,7 +75,7 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/open")
     @ResponseBody
-    public WeChatResult<Map> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WeChatResult openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WeChatResult reuslt = new WeChatResult();
 
