@@ -29,7 +29,10 @@ public class SystemConfig {
     
     @Value("${hyjf.makepdf.temppath}")
     public String HYJF_MAKEPDF_TEMPPATH;
-    
+
+    @Value("${hyjf.sub.commission.password}")
+    public String SUB_COMMISSION_PASSWORD;
+
     @Value("${hyjf.ftp.url}")
     public String ftpurl;
     
@@ -385,5 +388,13 @@ public class SystemConfig {
 
     public void setSealOperate(String sealOperate) {
         this.sealOperate = sealOperate;
+    }
+
+    public String getSUB_COMMISSION_PASSWORD() {
+        return SUB_COMMISSION_PASSWORD;
+    }
+
+    public void setSUB_COMMISSION_PASSWORD(String SUB_COMMISSION_PASSWORD) {
+        this.SUB_COMMISSION_PASSWORD = SUB_COMMISSION_PASSWORD;
     }
 }

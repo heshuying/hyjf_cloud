@@ -200,7 +200,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
@@ -735,7 +735,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {
             // 查询项目信息
-            String money = tender.getAccount();
+            String money = tender.getMoney();
             // 优惠券总张数
             Integer recordTotal = 0;
             // 可用优惠券张数
