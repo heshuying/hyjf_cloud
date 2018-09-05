@@ -87,13 +87,11 @@ public class WeChatBankOpenController extends BaseUserController {
         // 拼装参数 调用江西银行
         // 同步调用路径
         OpenAccountPageBean openBean = new OpenAccountPageBean();
-        logger.info("bean对象拷贝");
         try {
             PropertyUtils.copyProperties(openBean, bankOpenVO);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         openBean.setChannel(BankCallConstant.CHANNEL_WEI);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
@@ -102,7 +100,6 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
-        logger.info("组装调用江西银行的MV");
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
         reuslt.setObject(data);
         //保存开户日志  银行卡号不必传了
