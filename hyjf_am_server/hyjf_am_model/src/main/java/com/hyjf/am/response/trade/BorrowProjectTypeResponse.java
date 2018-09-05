@@ -11,4 +11,14 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
  * @version BorrowProjectTypeResponse, v0.1 2018/6/13 15:38
  */
 public class BorrowProjectTypeResponse extends Response<BorrowProjectTypeVO> {
+
+    private int recordTotal;
+
+    public int getRecordTotal() {
+        return recordTotal;
+    }
+
+    public void setRecordTotal(int recordTotal) {
+        this.recordTotal = recordTotal;
+    }
 }

@@ -1,28 +1,20 @@
 package com.hyjf.admin.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
-import com.hyjf.admin.beans.request.SmsCodeRequestBean;
-import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
+import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
+import com.hyjf.am.resquest.admin.PoundageListRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tanyy
@@ -92,6 +84,14 @@ public interface AmAdminClient {
      * @return
      */
     List<PoundageCustomizeVO> searchPoundageList(PoundageListRequest request);
+
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest);
 
     /**
      * 获取手续费分账数额总计
