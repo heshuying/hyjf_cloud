@@ -39,4 +39,29 @@
 		protocol_id = #{protocolId}
 	</select>
 
+	<update id="startUseExistProtocol" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate">
+		update ht_protocol_template
+		<set >
+			<if test="protocolName != null" >
+				protocol_name = #{protocolName,jdbcType=VARCHAR},
+			</if>
+			<if test="displayName != null" >
+				display_name = #{displayName,jdbcType=VARCHAR},
+			</if>
+			<if test="versionNumber != null" >
+				version_number = #{versionNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="protocolUrl != null" >
+				protocol_url = #{protocolUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="imgUrl != null" >
+				img_url = #{imgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null" >
+				remarks = #{remarks,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where protocol_id = #{protocolId,jdbcType=INTEGER}
+	</update>
+
 </mapper>

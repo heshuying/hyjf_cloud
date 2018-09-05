@@ -104,10 +104,10 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String BANK_URL_PAYMENT_AUTH_PAGE = "/p2p/page/paymentAuthPage";
 	public static final String BANK_URL_REPAY_AUTH_PAGE = "/p2p/page/repayAuthPage";
 	public static final String BANK_URL_BIND_CARD_PAGE = "/p2p/page/bindCardPage";
-	/** 签约状态查询 */
-	public static final String QUERY_TYPE_1 = "1";// 1 自动投标签约
-	/** 签约状态查询 */
-	public static final String QUERY_TYPE_2 = "2";// 2 自动债转签约
+	/** 签约状态查询 1 自动投标签约*/
+	public static final String QUERY_TYPE_1 = "1";
+	/** 签约状态查询 2 自动债转签约*/
+	public static final String QUERY_TYPE_2 = "2";
 
 	/** 提现手续费 */
 	public static final String BANK_FEE = "hyjf.bank.fee";

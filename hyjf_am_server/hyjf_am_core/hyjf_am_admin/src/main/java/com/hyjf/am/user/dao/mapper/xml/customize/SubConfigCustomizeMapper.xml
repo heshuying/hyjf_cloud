@@ -2,6 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.SubConfigCustomizeMapper">
 
+    <resultMap id="BaseResultMap" type="com.hyjf.am.vo.trade.SubCommissionListConfigVo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="truename" property="truename" jdbcType="CHAR" />
+        <result column="username" property="username" jdbcType="CHAR" />
+        <result column="role_name" property="roleName" jdbcType="CHAR" />
+        <result column="user_type" property="userType" jdbcType="CHAR" />
+        <result column="bank_open_account" property="bankOpenAccount" jdbcType="CHAR" />
+        <result column="account" property="account" jdbcType="CHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="cooperate_num" property="cooperateNum" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, user_id, username,truename, role_name, user_type, bank_open_account, account, `status`, cooperate_num,
+        remark, create_user_id, create_user_name, create_time, update_user_id, update_user_name
+    </sql>
     <select id="selectUserInfoByUserName" parameterType="String" resultType="Map" >
         SELECT
         users.user_id ,
@@ -42,5 +64,15 @@
         LEFT JOIN ht_bank_open_account hboa ON (users.user_id=hboa.user_id)
         WHERE
         users.username = #{userName,jdbcType=CHAR}
+    </select>
+
+    <select id="selectByExampleUsername" resultMap="BaseResultMap" parameterType="com.hyjf.am.vo.trade.SubCommissionListConfigVo" >
+        select
+        <include refid="Base_Column_List" />
+        from ht_sub_commission_list_config
+        WHERE 1=1
+        <if test="username != null" >
+            and username = #{username,jdbcType=CHAR}
+        </if>
     </select>
 </mapper>

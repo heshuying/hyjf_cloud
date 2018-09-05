@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 
@@ -27,4 +28,44 @@ public interface PoundageService extends BaseAdminService {
      * @return
      */
     List<PoundageCustomizeVO> searchPoundageList(PoundageListRequest request);
+
+    /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageSum(PoundageListRequest request);
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageById(Integer loginUserId,Integer id);
+
+    /**
+     * 审核-更新poundage表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
+
+    /**
+     * 检查参数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    void checkParams(PoundageCustomizeVO poundageCustomizeVO);
+
+    /**
+     * 佣金分账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    JSONObject poundageTransfer(PoundageCustomizeVO poundageCustomizeVO);
 }

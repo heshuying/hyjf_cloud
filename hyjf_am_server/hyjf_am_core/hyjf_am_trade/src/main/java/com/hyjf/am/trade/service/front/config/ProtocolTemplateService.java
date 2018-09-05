@@ -31,6 +31,8 @@ public interface ProtocolTemplateService {
      */
     Integer countRecord(AdminProtocolRequest request);
 
+    int startUseExistProtocol(AdminProtocolRequest request);
+
     List<ProtocolTemplateCommonVO> getRecordList(AdminProtocolRequest request);
 
     /**

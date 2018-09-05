@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.service.home;
 
 import com.hyjf.cs.common.bean.result.WebResult;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Web首页service
  * @author zhangyk
@@ -17,4 +19,11 @@ public interface WebHomeService {
      * @date 2018/7/4 13:52
      */
     WebResult getHomeData(String userId);
+
+    /**
+     * 安卓下载
+     * @author zhangyk
+     * @date 2018/9/5 11:37
+     */
+    void androidDownload(HttpServletResponse response);
 }

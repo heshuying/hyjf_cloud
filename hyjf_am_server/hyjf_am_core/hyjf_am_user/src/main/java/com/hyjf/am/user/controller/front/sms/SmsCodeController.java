@@ -48,7 +48,7 @@ public class SmsCodeController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/check")
-	public int checkMobileCode(@RequestBody @Valid SmsCodeRequest request) {
+	public IntegerResponse checkMobileCode(@RequestBody @Valid SmsCodeRequest request) {
 		logger.info("checkMobileCode...param is :{}", JSONObject.toJSONString(request));
 		String mobile = request.getMobile();
 		String verificationCode = request.getVerificationCode();
@@ -59,7 +59,7 @@ public class SmsCodeController extends BaseController {
 		boolean isUpdate = request.isUpdate();
 		int result = smsService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, status,
 				updateStatus, isUpdate);
-		return result;
+		return new IntegerResponse(result);
 	}
 
 	/**

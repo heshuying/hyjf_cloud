@@ -1,4 +1,8 @@
 package com.hyjf.am.user.dao.mapper.customize;
+
+import com.hyjf.am.vo.trade.SubCommissionListConfigVo;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,4 +16,10 @@ public interface SubConfigCustomizeMapper {
      * @return
      */
     Map<String, Object> selectUserInfoByUserName(String userName);
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @param subCommissionListConfigCustomize
+     * @return
+     */
+    List<SubCommissionListConfigVo>  selectByExampleUsername(SubCommissionListConfigVo subCommissionListConfigCustomize);
 }
