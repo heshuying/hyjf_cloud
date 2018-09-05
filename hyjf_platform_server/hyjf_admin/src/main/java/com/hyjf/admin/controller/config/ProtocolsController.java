@@ -8,6 +8,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
@@ -42,6 +43,8 @@ import java.util.List;
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
+	@Autowired
+	private ProtocolService protocolService;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
@@ -87,6 +90,20 @@ public class ProtocolsController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>();
+	}
+
+	/**
+	 * 资料上传
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "配置中心-协议模板pdf文件上传", notes = "配置中心-协议管理 pdf文件上传")
+	@RequestMapping(value = "uploadFile", method = RequestMethod.POST)
+	public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String files = protocolService.uploadFile(request, response);
+		return files;
 	}
 
 	/**
