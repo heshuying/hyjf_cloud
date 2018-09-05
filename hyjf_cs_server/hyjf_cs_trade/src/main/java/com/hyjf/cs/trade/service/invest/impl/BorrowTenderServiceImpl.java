@@ -571,7 +571,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(borrowTender.getAccount(),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
             data.put("income",df.format(earnings));
             // 本金
-            data.put("account",borrowTender.getAccount());
+            data.put("account",df.format(borrowTender.getAccount()));
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
