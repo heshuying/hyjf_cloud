@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -80,8 +81,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private AmMongoClient amMongoClient;
-    @Autowired
     private CouponService couponService;
     @Autowired
     private SystemConfig systemConfig;
@@ -90,13 +89,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
-    private UtmRegProducer utmRegProducer;
-    @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private CouponTenderProducer couponTenderProducer;
     @Autowired
     private HjhTenderService hjhTenderService;
+    @Autowired
+    private BorrowCreditTenderService borrowTenderService;
 
     /**
      * @param request
@@ -723,10 +722,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
+        String creditNid = tender.getBorrowNid().substring(3);
         logger.info("investType:[{}]",investType);
+        String money = tender.getMoney();
         // 转让的
-        if ("HZR".equals(investType) && StringUtils.isNotEmpty(tender.getCreditNid())) {
-            return null;
+        if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
+            AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getAssignCapital());
+            return result;
         }
         // 计划的
         if ("HJH".equals(investType)) {
@@ -735,7 +737,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {
             // 查询项目信息
-            String money = tender.getMoney();
             // 优惠券总张数
             Integer recordTotal = 0;
             // 可用优惠券张数
