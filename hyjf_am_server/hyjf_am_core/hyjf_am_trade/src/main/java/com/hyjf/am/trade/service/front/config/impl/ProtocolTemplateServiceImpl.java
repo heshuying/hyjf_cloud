@@ -62,6 +62,12 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		return null;
 	}
 
+	public int startUseExistProtocol(AdminProtocolRequest request){
+		ProtocolTemplate protocolTemplate = new ProtocolTemplate();
+		BeanUtils.copyProperties(request.getProtocolTemplateVO(),protocolTemplate);
+		return protocolTemplateCustomizeMapper.startUseExistProtocol(protocolTemplate);
+	}
+
 	/**
 	 * 统计全部个数
 	 *

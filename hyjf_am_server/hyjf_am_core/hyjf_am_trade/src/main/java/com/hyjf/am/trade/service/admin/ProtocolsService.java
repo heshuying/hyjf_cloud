@@ -16,10 +16,11 @@ public interface ProtocolsService {
 	/**
 	 * 获取协议列表
 	 *
-	 * @param request
+	 * @param limitStart
+	 * @param limitEnd
 	 * @return
 	 */
-	List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request);
+	List<FddTempletCustomize> selectFddTempletList(int limitStart, int limitEnd);
 
 	/**
 	 * 添加协议列表
@@ -34,4 +35,11 @@ public interface ProtocolsService {
 	 * @param request
 	 */
 	void updateAction(ProtocolsRequest request);
+
+	/**
+	 * 取得新规的模板编号
+	 * @param templetId
+	 * @return
+	 */
+    String getNewTempletId(Integer templetId);
 }

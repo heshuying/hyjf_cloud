@@ -4,6 +4,8 @@ package com.hyjf.am.trade.dao.auto;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowFullCustomizeMapper;
 
+import com.hyjf.am.trade.dao.model.auto.NifaContractStatus;
+import com.hyjf.am.trade.dao.model.auto.NifaReportLog;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -482,5 +484,10 @@ public class AutoMapper {
     @Resource
     protected UnderLineRechargeMapper underLineRechargeMapper;
 
+    @Resource
+    protected NifaReportLogMapper nifaReportLogMapper;
+
+    @Resource
+    protected NifaContractStatusMapper nifaContractStatusMapper;
 }
 

@@ -12,7 +12,7 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     public String couponAccesskey;
 
-    @Value("${hyjf.api.web.url}")
+    @Value("${hyjf.api.host}")
     public String apiWebUrl;
 
     @Value("${hyjf.web.host}")

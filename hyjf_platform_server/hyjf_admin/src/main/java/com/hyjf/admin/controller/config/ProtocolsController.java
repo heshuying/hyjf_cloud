@@ -3,11 +3,13 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
@@ -30,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,6 +45,8 @@ import java.util.List;
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
+	@Autowired
+	private ProtocolService protocolService;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
@@ -87,6 +92,35 @@ public class ProtocolsController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>();
+	}
+
+	@ApiOperation(value = "取得新规的模板编号", notes = "取得新规的模板编号")
+	@PostMapping("/get_templet_id")
+	public String protocolTypeAction(String protocolType) {
+		String templetId = protocolsService.getNewTempletId(Integer.parseInt(protocolType));
+		return templetId;
+	}
+
+	/**
+	 * 资料上传
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "pdf文件上传", notes = "pdf文件上传")
+	@RequestMapping(value = "uploadFile", method = RequestMethod.POST)
+	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+		try {
+			LinkedList<BorrowCommonImage> borrowCommonImages = protocolService.uploadFile(request, response);
+			adminResult.setData(borrowCommonImages);
+			adminResult.setStatus(SUCCESS);
+			adminResult.setStatusDesc(SUCCESS_DESC);
+			return adminResult;
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
 	}
 
 	/**

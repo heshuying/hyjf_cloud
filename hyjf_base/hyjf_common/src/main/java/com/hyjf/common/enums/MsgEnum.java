@@ -52,6 +52,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_OBJECT_UNMATCH("ETY000009","{0}不符合接口要求，请重新传入"),
 	ERR_OBJECT_EXCEED_LIMIT("ETY000010","{0}超出限制长度"),
 	ERR_OBJECT_DECRYPT("ETY000011","{0}解密失败"),
+	ERR_OBJECT_EXISTS("ETY000012","{0}已存在"),
 
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),
@@ -261,7 +262,7 @@ public enum MsgEnum implements MsgCode {
 	STATUS_CE000006("CE000006","没有用户信息"),
 	STATUS_CE000007("CE000007","没有用户开户信息"),
 	STATUS_CE000008("CE000008","未查询到短信授权码"),
-	STATUS_CE000009("CE000009","请求开始日期大于结束日期"),
+	STATUS_CE000009("CE000009","已授权,请勿重复授权！"),
 	STATUS_CE000010("CE000010","请求手机号格式错误"),
 	STATUS_CE000011("CE000011","请求手机号不存在"),
 	STATUS_CE000012("CE000012","请求用户电子账号不存在"),
