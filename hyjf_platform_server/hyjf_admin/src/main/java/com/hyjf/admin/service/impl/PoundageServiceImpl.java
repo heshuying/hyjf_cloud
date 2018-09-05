@@ -3,11 +3,15 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.PoundageService;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.validator.CheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,5 +91,29 @@ public class PoundageServiceImpl extends BaseAdminServiceImpl implements Poundag
     @Override
     public boolean updatePoundage(PoundageCustomizeVO poundageCustomizeVO) {
         return amAdminClient.updatePoundage(poundageCustomizeVO)>0;
+    }
+
+    /**
+     * 检查参数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public void checkParams(PoundageCustomizeVO poundageCustomizeVO) {
+        CheckUtil.check(new BigDecimal(poundageCustomizeVO.getBalance()).compareTo(poundageCustomizeVO.getAmount()) < 0,MsgEnum.ERR_AMT_NO_MONEY);
+        String password = systemConfig.SUB_COMMISSION_PASSWORD;
+        CheckUtil.check(!password.equals(MD5Utils.MD5(poundageCustomizeVO.getPassword())),MsgEnum.ERR_TRADE_PASSWORD);
+    }
+
+    /**
+     * 佣金分账
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public JSONObject poundageTransfer(PoundageCustomizeVO poundageCustomizeVO) {
+        return null;
     }
 }
