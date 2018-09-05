@@ -14,4 +14,6 @@ public interface ProtocolTemplateCustomizeMapper {
     List<ProtocolTemplate> getdisplayNameDynamic();
 
     ProtocolTemplate selectTemplateById(String protocolId);
+
+    int startUseExistProtocol(ProtocolTemplate protocolTemplate);
 }

@@ -10,7 +10,6 @@ import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import com.hyjf.am.vo.admin.MessagePushErrorVO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
