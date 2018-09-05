@@ -47,21 +47,19 @@ import javax.validation.Valid;
 @RequestMapping("/hyjf-api/server/user/repay")
 public class RepayController extends BaseController {
 
-    Logger _log = LoggerFactory.getLogger(RepayController.class);
-
     @Autowired
     private BatchHjhBorrowRepayApiService batchBorrowRepayService;
-
-    //获取还款信息接口
-    public static final String METHOD_REPAY_INFO = "userRepayInfo";
-    //获取还款结果接口
-    public static final String METHOD_REPAY_RESULT = "userRepayResult";
 
     @Autowired
     private SynBalanceService synBalanceService;
 
     @Autowired
     private RepayService repayService;
+
+    //获取还款信息接口
+    public static final String METHOD_REPAY_INFO = "userRepayInfo";
+    //获取还款结果接口
+    public static final String METHOD_REPAY_RESULT = "userRepayResult";
 
     @PostMapping("/getrepayresult")
     @ApiParam(required = true, name = "findDetailById", value = "第三方资产状态查询接口")
