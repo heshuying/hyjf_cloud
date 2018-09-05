@@ -115,7 +115,6 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public BatchBorrowRecoverVo queryBatchCenterListSum(BatchBorrowRecoverRequest request) {
-//        BatchBorrowRecoverReponse reponse = amTradeClient.getBatchBorrowCenterListSum(request);
         BatchBorrowRecoverReponse reponse = amAdminClient.getBatchBorrowCenterListSum(request);
         if(reponse != null){
             return reponse.getResult();
@@ -130,7 +129,8 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BorrowRecoverBankInfoVo> queryBatchBorrowRecoverBankInfoList(String apicronID) {
-        BorrowApicronResponse reponse = amTradeClient.getBorrowApicronByID(apicronID);
+        BorrowApicronResponse reponse2 = amTradeClient.getBorrowApicronByID(apicronID);
+        BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             // 借款人用户ID

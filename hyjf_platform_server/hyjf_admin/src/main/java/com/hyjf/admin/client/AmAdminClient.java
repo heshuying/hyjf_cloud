@@ -5,6 +5,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
@@ -134,4 +135,13 @@ public interface AmAdminClient {
      * @return
      */
     BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
+
+    /**
+     * yangchangwei
+     * 根据id 获取放款任务表
+     *
+     * @param apicronID
+     * @return
+     */
+    BorrowApicronResponse getBorrowApicronByID(String apicronID);
 }

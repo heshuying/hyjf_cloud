@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PoundageCustomizeResponse;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -213,6 +214,23 @@ public class AmAdminClientImpl implements AmAdminClient {
         BatchBorrowRecoverReponse response = restTemplate.
                 postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getListSum", request, BatchBorrowRecoverReponse.class).
                 getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * yangchangwei
+     * 根据id 获取放款任务表
+     *
+     * @param apicronID
+     * @return
+     */
+    @Override
+    public BorrowApicronResponse getBorrowApicronByID(String apicronID) {
+        String url = "http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getRecoverApicronByID/" + apicronID;
+        BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
