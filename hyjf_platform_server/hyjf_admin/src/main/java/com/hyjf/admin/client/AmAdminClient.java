@@ -3,10 +3,13 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
@@ -116,4 +119,29 @@ public interface AmAdminClient {
      * @return
      */
     Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
+
+
+    /**
+     * 查询批次中心-批次放款列表
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 查询批次中心的批次列表求和
+     *
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
+
+    /**
+     * yangchangwei
+     * 根据id 获取放款任务表
+     *
+     * @param apicronID
+     * @return
+     */
+    BorrowApicronResponse getBorrowApicronByID(String apicronID);
 }

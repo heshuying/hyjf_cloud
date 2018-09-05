@@ -136,4 +136,16 @@ public class ProtocolClientImpl implements ProtocolClient {
                 adminProtocolRequest, AdminProtocolResponse.class);
         return response.getCount();
     }
+
+    @Override
+    public boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest) {
+
+        AdminProtocolResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/startuseexistprotocol",
+                adminProtocolRequest, AdminProtocolResponse.class);
+        if(response.getRtn() == Response.SUCCESS){
+            return true;
+        }
+
+        return false;
+    }
 }

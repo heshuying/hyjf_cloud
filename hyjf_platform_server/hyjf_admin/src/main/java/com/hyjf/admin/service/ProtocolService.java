@@ -1,5 +1,6 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
@@ -7,6 +8,7 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -63,7 +65,7 @@ public interface ProtocolService {
      */
     void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
 
-    String uploadFile(HttpServletRequest request, HttpServletResponse response);
+    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response);
 
-    void updateExistAction(AdminProtocolVersionRequest form, String userId);
+    AdminProtocolResponse updateExistAction(AdminProtocolVersionRequest form, String userId);
 }

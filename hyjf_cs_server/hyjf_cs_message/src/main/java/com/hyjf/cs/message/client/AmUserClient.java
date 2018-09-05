@@ -1,14 +1,11 @@
 package com.hyjf.cs.message.client;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.admin.MessagePushErrorVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author xiasq
@@ -85,4 +82,24 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer countAllUser();
+
+	/**
+	 * 查询用户utm信息
+	 * @param userId
+	 * @return
+	 */
+    UtmRegVO findUtmRegByUserId(Integer userId);
+
+	/**
+	 * 检查用户是不是新手
+	 * @param userId
+	 * @return
+	 */
+	int countNewUserTotal(Integer userId);
+
+	/**
+	 * 更新用户首次投资信息
+	 * @param params
+	 */
+	Integer updateFirstUtmReg(HashMap<String,Object> params);
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.poundage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -10,10 +11,9 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PoundageService;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
@@ -117,10 +118,14 @@ public class PoundageController extends BaseController {
     @ApiOperation(value = "佣金分账",notes = "佣金分账")
     @PostMapping(value = "/poundagetransfer")
     public AdminResult poundageTransfer(HttpServletRequest request,@RequestBody PoundageCustomizeVO poundageCustomizeVO){
+        // 检查参数正确性
+        poundageService.checkParams(poundageCustomizeVO);
         Integer userId = Integer.valueOf(getUser(request).getId());
-
+        poundageCustomizeVO.setUpdater(userId);
+        JSONObject jsonObject = poundageService.poundageTransfer(poundageCustomizeVO);
         return new AdminResult();
     }
+
 
     /**
      * 手续费分账列表导出
