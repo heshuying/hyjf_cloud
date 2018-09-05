@@ -46,7 +46,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -70,6 +69,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
+
+    @Autowired
+    private BankOpenAccountMapper bankOpenAccountMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
