@@ -210,12 +210,12 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
 		request.setUpdate(isUpdate);
-		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
+		IntegerResponse result = restTemplate.postForEntity(userService+"/smsCode/check/", request, IntegerResponse.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
-		return result;
+		return result.getResultInt();
 	}
 
 	@Override
@@ -570,10 +570,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int updateUserAccountLog(BankOpenRequest request) {
-		Integer result = restTemplate
-				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, Integer.class).getBody();
+		IntegerResponse result = restTemplate
+				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, IntegerResponse.class).getBody();
 		if (result != null ) {
-			return result;
+			return result.getResultInt();
 		}
 		return 0;
 	}
