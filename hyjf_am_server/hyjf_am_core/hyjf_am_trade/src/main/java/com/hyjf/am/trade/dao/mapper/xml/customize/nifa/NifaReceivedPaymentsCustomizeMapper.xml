@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReceivedPaymentsCustomizeMapper">
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.NifaReceivedPaymentsCustomize">
+        <result column="platform_no" property="platformNo" jdbcType="VARCHAR"/>
+        <result column="project_no" property="projectNo" jdbcType="VARCHAR"/>
+        <result column="contract_no" property="contractNo" jdbcType="VARCHAR"/>
+        <result column="return_num" property="returnNum" jdbcType="INTEGER"/>
+        <result column="return_date" property="returnDate" jdbcType="DATE"/>
+        <result column="return_principal" property="returnPrincipal" jdbcType="VARCHAR"/>
+        <result column="return_interest" property="returnInterest" jdbcType="VARCHAR"/>
+        <result column="return_source" property="returnSource" jdbcType="INTEGER"/>
+        <result column="return_situation" property="returnSituation" jdbcType="TINYINT"/>
+        <result column="return_principal_rest" property="returnPrincipalRest" jdbcType="VARCHAR"/>
+        <result column="return_interest_rest" property="returnInterestRest" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    platform_no, project_no, contract_no, return_num, return_date, return_principal,
+    return_interest, return_source, return_situation, return_principal_rest, return_interest_rest
+    </sql>
+
+    <select id="selectNifaReceivedPaymentsList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ht_nifa_received_payments hnrp
+        where UNIX_TIMESTAMP(hnrp.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)
+        and UNIX_TIMESTAMP(hnrp.create_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+    </select>
+
+</mapper>

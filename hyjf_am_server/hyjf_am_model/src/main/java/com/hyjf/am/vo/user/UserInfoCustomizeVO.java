@@ -1,8 +1,8 @@
 package com.hyjf.am.vo.user;
 
-import java.io.Serializable;
-
 import com.hyjf.am.vo.BaseVO;
+
+import java.io.Serializable;
 
 public class UserInfoCustomizeVO extends BaseVO implements Serializable{
 
@@ -33,6 +33,14 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
     private Integer referrer;
 
     private Integer attribute;
+    /**
+     * 是否开户
+     */
+    private String open;
+    /**
+     * 状态
+     */
+    private Integer status;
 
     public Integer getUserId() {
         return userId;
@@ -142,5 +150,19 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
         this.departmentId = departmentId;
     }
 
+    public String getOpen() {
+        return open;
+    }
 
+    public void setOpen(String open) {
+        this.open = open;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

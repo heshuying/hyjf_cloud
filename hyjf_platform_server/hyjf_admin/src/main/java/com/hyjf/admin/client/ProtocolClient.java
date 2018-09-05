@@ -79,4 +79,6 @@ public interface ProtocolClient {
     ProtocolTemplateVO byIdTemplateBy(String protocolId);
 
     int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest);
+
+    boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest);
 }

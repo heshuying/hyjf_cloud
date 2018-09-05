@@ -52,4 +52,12 @@ public interface VersionConfigService {
      * @param map
      */
     public VersionVO validationFeild( Map map) ;
+
+
+    /**
+     * 获取最新的版本信息
+     * @author zhangyk
+     * @date 2018/9/5 11:53
+     */
+    public Version  getLastestVersion();
 }

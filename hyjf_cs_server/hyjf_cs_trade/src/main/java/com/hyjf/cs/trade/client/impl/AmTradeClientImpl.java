@@ -723,7 +723,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateTenderStart(BorrowTenderTmpRequest request) {
-        String url = "http://AM-TRADE/am-trade/bankexception/updateTenderStart";
+        String url = "http://AM-TRADE/am-trade/bankException/updateTenderStart";
         return restTemplate.postForEntity(url,request,Boolean.class).getBody();
     }
 
@@ -1605,10 +1605,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean insertHJHPlanAccede(HjhAccedeVO planAccede) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, IntegerResponse.class).getBody();
+        if (IntegerResponse.isSuccess(result)) {
+            return result.getResultInt() == 0 ? false : true;
         }
         return false;
     }

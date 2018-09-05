@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.vo.trade;
 
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 
 /**
  * @author fuqiang
@@ -17,13 +19,13 @@ public class FddTempletCustomizeVO extends BaseVO {
 	private String templetId;
 
 	private Integer protocolType;
-
+	@ApiModelProperty(value = "是否开启")
 	private Integer isActive;
 
 	private Integer caFlag;
 
 	private Integer certificateTime;
-
+	@ApiModelProperty(value = "备注")
 	private String remark;
 
 	private Integer createUserId;
@@ -147,6 +149,7 @@ public class FddTempletCustomizeVO extends BaseVO {
 	/**
 	 * 协议类型名称
 	 */
+	@ApiModelProperty(value = "协议类型名称")
 	private String protocolTypeName;
 
 	/**

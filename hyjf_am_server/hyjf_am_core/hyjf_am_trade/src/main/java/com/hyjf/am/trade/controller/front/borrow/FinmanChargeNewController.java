@@ -45,6 +45,7 @@ public class FinmanChargeNewController extends BaseController {
             if(!CollectionUtils.isEmpty(recordList)){
                 response=new FinmanChargeNewResponse();
                 response.setResultList(recordList);
+                response.setRecordTotal(total);
                 return response;
             }
             response.setRtn(Response.SUCCESS);

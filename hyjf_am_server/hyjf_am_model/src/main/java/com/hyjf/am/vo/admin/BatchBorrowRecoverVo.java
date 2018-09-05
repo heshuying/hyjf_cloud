@@ -175,6 +175,21 @@ public class BatchBorrowRecoverVo extends BaseVO implements Serializable {
      */
     private String sumFailCounts;
 
+    //add by cwyang 20180809 任务增加加息状态标识
+    /**
+     * 是否加息
+     */
+    private String increaseInterestFlag;
+    /**
+     * 加息放款状态
+     */
+    private String extraYieldStatus;
+    /**
+     * 加息还款状态
+     */
+    private String extraYieldRepayStatus;
+
+
     public Integer getId() {
         return id;
     }
@@ -453,5 +468,29 @@ public class BatchBorrowRecoverVo extends BaseVO implements Serializable {
 
     public void setSumFailCounts(String sumFailCounts) {
         this.sumFailCounts = sumFailCounts;
+    }
+
+    public String getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(String increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public String getExtraYieldStatus() {
+        return extraYieldStatus;
+    }
+
+    public void setExtraYieldStatus(String extraYieldStatus) {
+        this.extraYieldStatus = extraYieldStatus;
+    }
+
+    public String getExtraYieldRepayStatus() {
+        return extraYieldRepayStatus;
+    }
+
+    public void setExtraYieldRepayStatus(String extraYieldRepayStatus) {
+        this.extraYieldRepayStatus = extraYieldRepayStatus;
     }
 }

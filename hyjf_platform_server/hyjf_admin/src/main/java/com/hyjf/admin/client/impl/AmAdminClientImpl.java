@@ -4,17 +4,24 @@ import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PoundageCustomizeResponse;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +137,136 @@ public class AmAdminClientImpl implements AmAdminClient {
         PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public PoundageCustomizeVO getPoundageSum(PoundageListRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageSum";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public PoundageCustomizeVO getPoundageById(Integer id) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageById/" + id;
+        PoundageCustomizeResponse response = restTemplate.getForEntity(url,PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 审核-更新poundage表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO) {
+        String url = "http://AM-ADMIN/am-admin/poundage/updatePoundage";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, poundageCustomizeVO, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 查询批次中心-批次放款列表
+     * yangchangwei
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询批次中心的批次列表求和
+     * yangchangwei
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getListSum", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * yangchangwei
+     * 根据id 获取放款任务表
+     *
+     * @param apicronID
+     * @return
+     */
+    @Override
+    public BorrowApicronResponse getBorrowApicronByID(String apicronID) {
+        String url = "http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getRecoverApicronByID/" + apicronID;
+        BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 资产来源
+     * yangchangwei
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectHjhInstConfigList() {
+        String url = "http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest){
+        String url = "http://AM-ADMIN/am-admin/config/subconfig";
+        AdminSubConfigResponse response = restTemplate.postForEntity(url,adminRequest, AdminSubConfigResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response;
         }
         return null;
     }

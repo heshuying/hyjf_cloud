@@ -412,7 +412,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
         borrowParam.put("borrowService", tenderBg.getPerService());
         borrowParam.put("borrowId", borrow.getId());
-        logger.info("开始更新borrow表");
+        logger.info("开始更新borrow表 标的号{} borrowAccountYes {}  ",borrow.getBorrowNid(),tenderBg.getAccountDecimal());
         boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
         // 更新borrow表
         if (!updateBorrowAccountFlag) {
@@ -433,11 +433,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         // 计算此时的剩余可投资金额
         BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
+        logger.info("标的{}  剩余可投为：{} ",borrowNid,accountWait);
         // 满标处理
         if (accountWait.compareTo(new BigDecimal(0)) == 0) {
             logger.info("用户:" + userId + "***********************************项目满标，订单号：" + tenderBg.getOrderId());
             Map<String, Object> borrowFull = new HashMap<String, Object>();
-            borrowFull.put("borrowId", borrowNid);
+            borrowFull.put("borrowId", borrow.getId());
             boolean fullFlag = borrowCustomizeMapper.updateOfFullBorrow(borrowFull) > 0 ? true : false;
             if (!fullFlag) {
                 logger.error("满标更新borrow表失败");
@@ -473,6 +474,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 logger.error("发送短信失败");
             }
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
+            logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
         }
 

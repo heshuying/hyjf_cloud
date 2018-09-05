@@ -34,7 +34,7 @@ public class BankRedPacketAccountController {
         BankMerchantAccountListCustomizeResponse response = new BankMerchantAccountListCustomizeResponse();
         int count = bankRedPacketAccountService.queryRecordTotal(form);
         if (count>0){
-            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
             List<BankMerchantAccountListCustomize> recordList = this.bankRedPacketAccountService.selectRecordList(form, paginator.getOffset(), paginator.getLimit());
             if (recordList != null) {
                 List<BankMerchantAccountListCustomizeVO> voList = CommonUtils.convertBeanList(recordList, BankMerchantAccountListCustomizeVO.class);

@@ -210,12 +210,12 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
 		request.setUpdate(isUpdate);
-		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
+		IntegerResponse result = restTemplate.postForEntity(userService+"/smsCode/check/", request, IntegerResponse.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
-		return result;
+		return result.getResultInt();
 	}
 
 	@Override
@@ -570,10 +570,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int updateUserAccountLog(BankOpenRequest request) {
-		Integer result = restTemplate
-				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, Integer.class).getBody();
+		IntegerResponse result = restTemplate
+				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, IntegerResponse.class).getBody();
 		if (result != null ) {
-			return result;
+			return result.getResultInt();
 		}
 		return 0;
 	}
@@ -777,9 +777,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int isCompAccount(Integer userId) {
-		int result = restTemplate
-				.getForEntity(userService+"/user/isCompAccount/" + userId, Integer.class).getBody();
-		return result;
+		IntegerResponse result = restTemplate
+				.getForEntity(userService+"/user/isCompAccount/" + userId, IntegerResponse.class).getBody();
+		return result.getResultInt();
 	}
 
 	/**
@@ -904,15 +904,15 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int saveUserEvaluation(UserEvalationResultVO userEvalationResult) {
-		int count = restTemplate
-				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, Integer.class).getBody();
-		return count;
+		IntegerResponse count = restTemplate
+				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, IntegerResponse.class).getBody();
+		return count.getResultInt();
 	}
 
 	@Override
 	public Integer insertUserEvalationBehavior(Integer userId, String behavior) {
-		Integer id = restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+behavior, Integer.class).getBody();
-		return id;
+		IntegerResponse id = restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+behavior, IntegerResponse.class).getBody();
+		return id.getResultInt();
 	}
 
 	@Override
@@ -924,7 +924,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void clearMobileCode(Integer userId, String sign) {
-		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
+		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, IntegerResponse.class);
 	}
 
 	@Override

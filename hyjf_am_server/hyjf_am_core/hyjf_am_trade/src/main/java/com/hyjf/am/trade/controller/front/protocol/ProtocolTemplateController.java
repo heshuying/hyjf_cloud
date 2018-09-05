@@ -58,6 +58,22 @@ public class ProtocolTemplateController extends BaseController {
     }
 
     /**
+     * 统计全部个数
+     *
+     * @return
+     */
+    @RequestMapping("/startuseexistprotocol")
+    public AdminProtocolResponse startUseExistProtocol(@RequestBody AdminProtocolRequest request) {
+        AdminProtocolResponse response = new AdminProtocolResponse();
+        Integer count = this.protocolTemplateService.startUseExistProtocol(request);
+        if(count == 0){
+            response.setRtn(Response.ERROR);
+            response.setMessage(Response.ERROR_MSG);
+        }
+        return response;
+    }
+
+    /**
      * 获取全部列表
      *
      * @return
@@ -233,7 +249,7 @@ public class ProtocolTemplateController extends BaseController {
     }
 
     /**
-     * 根据id查询
+     *
      *
      * @return
      */

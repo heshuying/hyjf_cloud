@@ -1,9 +1,9 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.ProtocolClient;
 import com.hyjf.admin.service.ProtocolService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -317,9 +316,10 @@ public class ProtocolServiceImpl implements ProtocolService {
      * @return
      */
     @Override
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+    public LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response) {
+
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+
         String fileDomainUrl = FILEDOMAINURL;
         String filePhysicalPath = FILEPHYSICALPATH;
         String fileUploadTempPath = FILEUPLOADTEMPPATH;
@@ -334,7 +334,6 @@ public class ProtocolServiceImpl implements ProtocolService {
         Iterator<String> itr = multipartRequest.getFileNames();
         MultipartFile multipartFile = null;
 
-        boolean flag =true;
         while (itr.hasNext()) {
             // 文件错误信息
             String errorMessage = null;
@@ -350,15 +349,12 @@ public class ProtocolServiceImpl implements ProtocolService {
                 //判断上传文件是否是Pdf格式的
                 if(!suf.equalsIgnoreCase(".pdf")){
                     errorMessage="上传的文件必须是pdf格式";
-                    flag = false;
                 }else{
                     Long size=multipartFile.getSize();
                     if(multipartFile.getSize() > 5000000L){
                         errorMessage="上传的文件过大";
-                        flag = false;
                     }else if(multipartFile.getSize() < 0L){
                         errorMessage="上传的文件为空";
-                        flag = false;
                     }else{
                         errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 50000000L);
                     }
@@ -384,7 +380,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             files.add(fileMeta);
 
         }
-        return JSONObject.toJSONString(files, flag);
+        return files;
     }
 
     /**
@@ -393,9 +389,11 @@ public class ProtocolServiceImpl implements ProtocolService {
      * @return
      */
     @Override
-    public void updateExistAction(AdminProtocolVersionRequest form, String userId) {
+    public AdminProtocolResponse updateExistAction(AdminProtocolVersionRequest form, String userId) {
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
+        AdminProtocolResponse response = new AdminProtocolResponse();
+
         Integer updateUserId = Integer.parseInt(userId);
         //通过版本id拿到版本列表
         ProtocolVersionVO versionList = client.byIdProtocolVersion(form.getId());
@@ -426,8 +424,16 @@ public class ProtocolServiceImpl implements ProtocolService {
             }
             protocolTemplate.setImgUrl(imgUrl);
 
-            protocolTemplateCommonVO.setProtocolTemplateVO(protocolTemplate);
-//            protocolTemplateMapper.startUseExistProtocol(protocolTemplate);
+            AdminProtocolRequest startUseExistRequest = new AdminProtocolRequest();
+            startUseExistRequest.setProtocolTemplateVO(protocolTemplate);
+
+            boolean flag = client.startUseExistProtocol(startUseExistRequest);
+            if(!flag){
+                response.setRtn(Response.FAIL);
+                response.setMessage(Response.ERROR_MSG);
+                return response;
+            }
+
             //获取将要启用的版本号和协议模板名称
             AdminProtocolRequest adminProtocolRequest = new AdminProtocolRequest();
             adminProtocolRequest.setProtocolTemplateVO(protocolTemplate);
@@ -453,5 +459,6 @@ public class ProtocolServiceImpl implements ProtocolService {
             }
 
         }
+        return response;
     }
 }
