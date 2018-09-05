@@ -137,6 +137,54 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public PoundageCustomizeVO getPoundageSum(PoundageListRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageSum";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public PoundageCustomizeVO getPoundageById(Integer id) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageById/" + id;
+        PoundageCustomizeResponse response = restTemplate.getForEntity(url,PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 审核-更新poundage表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO) {
+        String url = "http://AM-ADMIN/am-admin/poundage/updatePoundage";
+        PoundageCustomizeResponse response = restTemplate.postForEntity(url, poundageCustomizeVO, PoundageCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
      * 根据用户名查询分账名单是否存在
      * @author xiehuili
      * @param username
