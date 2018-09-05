@@ -904,9 +904,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int saveUserEvaluation(UserEvalationResultVO userEvalationResult) {
-		int count = restTemplate
-				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, Integer.class).getBody();
-		return count;
+		IntegerResponse count = restTemplate
+				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, IntegerResponse.class).getBody();
+		return count.getResultInt();
 	}
 
 	@Override

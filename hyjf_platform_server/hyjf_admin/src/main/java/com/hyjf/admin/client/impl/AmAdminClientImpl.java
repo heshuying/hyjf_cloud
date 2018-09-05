@@ -4,12 +4,14 @@ import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PoundageCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
@@ -130,6 +132,22 @@ public class AmAdminClientImpl implements AmAdminClient {
         PoundageCustomizeResponse response = restTemplate.postForEntity(url, request, PoundageCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户名查询分账名单是否存在
+     * @author xiehuili
+     * @param username
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest){
+        String url = "http://AM-ADMIN/am-admin/config/subconfig";
+        AdminSubConfigResponse response = restTemplate.postForEntity(url,adminRequest, AdminSubConfigResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response;
         }
         return null;
     }

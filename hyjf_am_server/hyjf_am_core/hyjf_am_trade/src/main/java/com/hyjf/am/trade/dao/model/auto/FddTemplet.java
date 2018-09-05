@@ -16,6 +16,8 @@ public class FddTemplet implements Serializable {
 
     private Integer certificateTime;
 
+    private String fileUrl;
+
     private String remark;
 
     private Integer createUserId;
@@ -78,6 +80,14 @@ public class FddTemplet implements Serializable {
 
     public void setCertificateTime(Integer certificateTime) {
         this.certificateTime = certificateTime;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl == null ? null : fileUrl.trim();
     }
 
     public String getRemark() {

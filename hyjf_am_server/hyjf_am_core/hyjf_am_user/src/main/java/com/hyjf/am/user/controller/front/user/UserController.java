@@ -553,9 +553,9 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/saveUserEvaluation")
-    public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+    public IntegerResponse saveUserEvaluation(UserEvalationResult userEvalationResult) {
         int cnt = userService.saveUserEvaluation(userEvalationResult);
-        return cnt;
+        return new IntegerResponse(cnt);
     }
 
     @RequestMapping("/isCompAccount/{userId}")

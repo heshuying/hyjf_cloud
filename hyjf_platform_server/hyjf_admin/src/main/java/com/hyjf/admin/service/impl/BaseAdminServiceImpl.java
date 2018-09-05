@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+
 public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminService {
 
 	public final Logger logger = LoggerFactory.getLogger(BaseAdminServiceImpl.class);
@@ -35,5 +37,15 @@ public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminSe
 	public UserVO getUserByUserName(String userName) {
 		UserVO user = amUserClient.getUserByUserName(userName);
 		return user;
+	}
+	/**
+	 * 获取银行账户余额
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public BigDecimal getBankBalance(Integer userId, String accountId) {
+		return null;
 	}
 }
