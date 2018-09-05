@@ -27,4 +27,28 @@ public interface PoundageService extends BaseAdminService {
      * @return
      */
     List<PoundageCustomizeVO> searchPoundageList(PoundageListRequest request);
+
+    /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageSum(PoundageListRequest request);
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageById(Integer loginUserId,Integer id);
+
+    /**
+     * 审核-更新poundage表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
 }

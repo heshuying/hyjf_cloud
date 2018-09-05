@@ -92,4 +92,28 @@ public interface AmAdminClient {
      * @return
      */
     public AdminSubConfigResponse subconfig(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageSum(PoundageListRequest request);
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageCustomizeVO getPoundageById(Integer id);
+
+    /**
+     * 审核-更新poundage表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
 }
