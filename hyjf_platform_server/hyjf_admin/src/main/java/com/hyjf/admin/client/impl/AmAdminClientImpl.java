@@ -12,6 +12,7 @@ import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
@@ -20,6 +21,7 @@ import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,6 +191,7 @@ public class AmAdminClientImpl implements AmAdminClient {
 
     /**
      * 查询批次中心-批次放款列表
+     * yangchangwei
      * @param request
      * @return
      */
@@ -205,7 +208,7 @@ public class AmAdminClientImpl implements AmAdminClient {
 
     /**
      * 查询批次中心的批次列表求和
-     *
+     * yangchangwei
      * @param request
      * @return
      */
@@ -233,6 +236,21 @@ public class AmAdminClientImpl implements AmAdminClient {
         BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
+        }
+        return null;
+    }
+
+    /**
+     * 资产来源
+     * yangchangwei
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> selectHjhInstConfigList() {
+        String url = "http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll";
+        HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
         }
         return null;
     }
