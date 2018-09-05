@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaRepayInfoCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.NifaRepayInfoCustomize" >
+        <result column="platform_no" property="platformNo" jdbcType="VARCHAR" />
+        <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+        <result column="payment_num" property="paymentNum" jdbcType="INTEGER" />
+        <result column="payment_date" property="paymentDate" jdbcType="DATE" />
+        <result column="payment_principal" property="paymentPrincipal" jdbcType="VARCHAR" />
+        <result column="payment_interest" property="paymentInterest" jdbcType="VARCHAR" />
+        <result column="payment_source" property="paymentSource" jdbcType="INTEGER" />
+        <result column="payment_situation" property="paymentSituation" jdbcType="INTEGER" />
+        <result column="payment_principal_rest" property="paymentPrincipalRest" jdbcType="VARCHAR" />
+        <result column="payment_interest_rest" property="paymentInterestRest" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    platform_no, project_no, payment_num, payment_date, payment_principal, payment_interest,
+    payment_source, payment_situation, payment_principal_rest, payment_interest_rest,
+    create_user_id, create_time, update_user_id, update_time
+    </sql>
+
+    <select id="selectNifaRepayInfoList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ht_nifa_repay_info hnri
+        where UNIX_TIMESTAMP(hnri.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)
+        and UNIX_TIMESTAMP(hnri.create_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+    </select>
+</mapper>

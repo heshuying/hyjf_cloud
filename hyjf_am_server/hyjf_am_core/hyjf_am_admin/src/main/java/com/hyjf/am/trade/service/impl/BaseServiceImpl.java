@@ -6,8 +6,13 @@ package com.hyjf.am.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -426,4 +431,54 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
             return null;
         }
     }
+
+    /**
+     * 判断是否属于线下充值类型.
+     * 	优先从Redis中取数据,当Redis中的数据为空时,从数据表中读取数据
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean getIsRechargeTransType(String tranType) {
+        //从Redis获取线下充值类型List
+        String codeStringList = RedisUtils.get(RedisConstants.UNDER_LINE_RECHARGE_TYPE);
+        JSONArray redisCodeList = JSONArray.parseArray(codeStringList);
+
+        if (StringUtils.isBlank(codeStringList) || redisCodeList.size() <= 0){
+            logger.info(this.getClass().getName(), "---------------------------线下充值类型Redis为空!-------------------------");
+
+            UnderLineRechargeRequest request = new UnderLineRechargeRequest();
+            UnderLineRechargeExample example = new UnderLineRechargeExample();
+            UnderLineRechargeExample.Criteria criteria = example.createCriteria();
+
+            // 启用状态的
+            criteria.andStatusEqualTo(0);
+
+            List<UnderLineRecharge> codeList = this.underLineRechargeMapper.selectByExample(example);
+            if (codeList.isEmpty()){
+                logger.info(this.getClass().getName(), "---------------------------线下充值类型数据库未配置!-------------------------");
+                return false;
+            }else {
+                for (UnderLineRecharge code : codeList){
+                    if (code.getCode().equals(tranType)){
+                        return true;
+                    }else {
+                        continue;
+                    }
+                }
+            }
+        }else {
+
+            for(Object code : redisCodeList) {
+                if (code.equals(tranType)){
+                    return true;
+                }else {
+                    continue;
+                }
+            }
+        }
+        return false;
+    }
+
 }

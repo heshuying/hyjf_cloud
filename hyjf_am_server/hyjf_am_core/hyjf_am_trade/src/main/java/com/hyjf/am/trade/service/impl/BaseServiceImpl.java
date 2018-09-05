@@ -23,8 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 资金服务:BaseService实现类
@@ -475,5 +478,42 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
             return borrowConfigList.get(0).getConfigValue();
         }
         return null;
+    }
+
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    @Override
+    public boolean writeZip(StringBuffer sb, String zipName) {
+        try {
+            String[] files = sb.toString().split(",");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
+            ZipOutputStream zos = new ZipOutputStream(os);
+            byte[] buf = new byte[8192];
+            int len;
+            for (int i = 0; i < files.length; i++) {
+                File file = new File(files[i]);
+                if (!file.isFile()) {
+                    continue;
+                }
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                while ((len = bis.read(buf)) > 0) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }
+            zos.closeEntry();
+            zos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

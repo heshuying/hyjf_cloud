@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
+import com.hyjf.am.trade.dao.mapper.customize.nifa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -172,8 +173,6 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected AdminHjhCommissionMapper adminHjhCommissionMapper;
 
-
-
 	@Autowired
 	protected FundChangeStatisticsCustomizeMapper fundChangeStatisticsCustomizeMapper;
 
@@ -194,4 +193,22 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
+
+	@Autowired
+	protected NifaContractEssenceCustomizeMapper nifaContractEssenceCustomizeMapper;
+
+	@Autowired
+	protected NifaContractTemplateCustomizeMapper nifaContractTemplateCustomizeMapper;
+
+	@Autowired
+	protected NifaRepayInfoCustomizeMapper nifaRepayInfoCustomizeMapper;
+
+	@Autowired
+	protected NifaContractStatusCustomizeMapper nifaContractStatusCustomizeMapper;
+
+	@Autowired
+	protected NifaReceivedPaymentsCustomizeMapper nifaReceivedPaymentsCustomizeMapper;
+
+	@Autowired
+	protected  NifaReportLogCustomizeMapper nifaReportLogCustomizeMapper;
 }
