@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractTemplateCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.NifaContractTemplateCustomize" >
+        <result column="templet_nid" property="templetNid" jdbcType="VARCHAR" />
+        <result column="normal_definition" property="normalDefinition" jdbcType="VARCHAR" />
+        <result column="prepayment_definition" property="prepaymentDefinition" jdbcType="VARCHAR" />
+        <result column="borrower_promises" property="borrowerPromises" jdbcType="VARCHAR" />
+        <result column="lender_promises" property="lenderPromises" jdbcType="VARCHAR" />
+        <result column="borrower_obligation" property="borrowerObligation" jdbcType="VARCHAR" />
+        <result column="confidentiality" property="confidentiality" jdbcType="VARCHAR" />
+        <result column="breach_contract" property="breachContract" jdbcType="VARCHAR" />
+        <result column="applicable_law" property="applicableLaw" jdbcType="VARCHAR" />
+        <result column="dispute_resolution" property="disputeResolution" jdbcType="VARCHAR" />
+        <result column="other_conditions" property="otherConditions" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    templet_nid, normal_definition, prepayment_definition, borrower_promises, lender_promises,
+    borrower_obligation, confidentiality, breach_contract, applicable_law, dispute_resolution,
+    other_conditions
+    </sql>
+
+    <select id="selectNifaContractTemplate" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ht_nifa_contract_template hnct
+        where UNIX_TIMESTAMP(hnct.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)
+        and UNIX_TIMESTAMP(hnct.create_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+        order by hnct.create_time desc
+    </select>
+</mapper>

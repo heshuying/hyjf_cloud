@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaContractEssenceCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.NifaContractEssenceCustomize" >
+        <result column="platform_no" jdbcType="VARCHAR" property="platformNo" />
+        <result column="platform_name" jdbcType="VARCHAR" property="platformName" />
+        <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
+        <result column="contract_name" jdbcType="VARCHAR" property="contractName" />
+        <result column="contract_no" jdbcType="VARCHAR" property="contractNo" />
+        <result column="contract_signer" jdbcType="VARCHAR" property="contractSigner" />
+        <result column="contract_time" jdbcType="VARCHAR" property="contractTime" />
+        <result column="borrower_type" jdbcType="TINYINT" property="borrowerType" />
+        <result column="borrower_cert_type" jdbcType="VARCHAR" property="borrowerCertType" />
+        <result column="borrower_cert_no" jdbcType="VARCHAR" property="borrowerCertNo" />
+        <result column="borrower_name" jdbcType="VARCHAR" property="borrowerName" />
+        <result column="borrower_address" jdbcType="VARCHAR" property="borrowerAddress" />
+        <result column="borrower_nacao_no" jdbcType="VARCHAR" property="borrowerNacaoNo" />
+        <result column="borrower_orgcode_no" jdbcType="VARCHAR" property="borrowerOrgcodeNo" />
+        <result column="borrower_company" jdbcType="VARCHAR" property="borrowerCompany" />
+        <result column="investor_type" jdbcType="TINYINT" property="investorType" />
+        <result column="investor_cert_type" jdbcType="VARCHAR" property="investorCertType" />
+        <result column="investor_cert_no" jdbcType="VARCHAR" property="investorCertNo" />
+        <result column="investor_name" jdbcType="VARCHAR" property="investorName" />
+        <result column="investor_nacao_no" jdbcType="VARCHAR" property="investorNacaoNo" />
+        <result column="investor_orgcode_no" jdbcType="VARCHAR" property="investorOrgcodeNo" />
+        <result column="investor_company" jdbcType="VARCHAR" property="investorCompany" />
+        <result column="invest_amount" jdbcType="VARCHAR" property="investAmount" />
+        <result column="borrow_rate" jdbcType="VARCHAR" property="borrowRate" />
+        <result column="borrow_use" jdbcType="VARCHAR" property="borrowUse" />
+        <result column="borrow_use_limit" jdbcType="VARCHAR" property="borrowUseLimit" />
+        <result column="loan_date" jdbcType="VARCHAR" property="loanDate" />
+        <result column="loan_date_basis" jdbcType="VARCHAR" property="loanDateBasis" />
+        <result column="start_date" jdbcType="VARCHAR" property="startDate" />
+        <result column="expiry_date" jdbcType="VARCHAR" property="expiryDate" />
+        <result column="repay_type" jdbcType="INTEGER" property="repayType" />
+        <result column="repay_formula" jdbcType="VARCHAR" property="repayFormula" />
+        <result column="repay_date_rule" jdbcType="VARCHAR" property="repayDateRule" />
+        <result column="repay_num" jdbcType="INTEGER" property="repayNum" />
+        <result column="repay_plan" jdbcType="VARCHAR" property="repayPlan" />
+        <result column="overdue_repay_def" jdbcType="VARCHAR" property="overdueRepayDef" />
+        <result column="overdue_repay_resp" jdbcType="VARCHAR" property="overdueRepayResp" />
+        <result column="overdue_repay_proc" jdbcType="VARCHAR" property="overdueRepayProc" />
+        <result column="notice_address" jdbcType="VARCHAR" property="noticeAddress" />
+        <result column="contract_effective_date" jdbcType="DATE" property="contractEffectiveDate" />
+        <result column="contract_template_no" jdbcType="VARCHAR" property="contractTemplateNo" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    platform_no, platform_name, project_no, contract_name, contract_no, contract_signer,
+    contract_time, borrower_type, borrower_cert_type, borrower_cert_no, borrower_name,
+    borrower_address, borrower_nacao_no, borrower_orgcode_no, borrower_company, investor_type,
+    investor_cert_type, investor_cert_no, investor_name, investor_nacao_no, investor_orgcode_no,
+    investor_company, invest_amount, borrow_rate, borrow_use, borrow_use_limit, loan_date,
+    loan_date_basis, start_date, expiry_date, repay_type, repay_formula, repay_date_rule,
+    repay_num, repay_plan, overdue_repay_def, overdue_repay_resp, overdue_repay_proc,
+    notice_address, contract_effective_date, contract_template_no, create_user_id, create_time,
+    update_user_id, update_time
+    </sql>
+
+    <select id="selectNifaContractEssenceList" resultMap="BaseResultMap">
+        select
+            platform_no,
+            platform_name,
+            project_no,
+            contract_name,
+            contract_no,
+            contract_signer,
+            contract_time,
+            LPAD(borrower_type,2,0) as borrower_type,
+            borrower_cert_type,
+            borrower_cert_no,
+            borrower_name,
+            borrower_address,
+            borrower_nacao_no,
+            borrower_orgcode_no,
+            borrower_company,
+            LPAD(investor_type,2,0) as investor_type,
+            investor_cert_type,
+            investor_cert_no,
+            investor_name,
+            investor_nacao_no,
+            investor_orgcode_no,
+            investor_company,
+            invest_amount,
+            truncate(borrow_rate,4) as borrow_rate,
+            borrow_use,
+            borrow_use_limit,
+            loan_date,
+            loan_date_basis,
+            start_date,
+            expiry_date,
+            repay_type,
+            repay_formula,
+            repay_date_rule,
+            repay_num,
+            repay_plan,
+            overdue_repay_def,
+            overdue_repay_resp,
+            overdue_repay_proc,
+            notice_address,
+            contract_effective_date,
+            contract_template_no
+        from ht_nifa_contract_essence hnce
+        where UNIX_TIMESTAMP(hnce.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)
+        and UNIX_TIMESTAMP(hnce.create_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+    </select>
+</mapper>
