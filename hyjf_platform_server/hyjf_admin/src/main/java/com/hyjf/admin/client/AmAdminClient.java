@@ -126,4 +126,12 @@ public interface AmAdminClient {
      * @return
      */
     BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+
+    /**
+     * 查询批次中心的批次列表求和
+     *
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
 }

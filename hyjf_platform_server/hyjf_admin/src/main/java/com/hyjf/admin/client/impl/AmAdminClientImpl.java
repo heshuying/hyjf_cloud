@@ -194,7 +194,24 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
         BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-ADMIN/am-trade/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询批次中心的批次列表求和
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getListSum", request, BatchBorrowRecoverReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
@@ -205,7 +222,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     /**
      * 根据用户名查询分账名单是否存在
      * @author xiehuili
-     * @param username
+     * @param adminRequest
      * @return
      */
     @Override

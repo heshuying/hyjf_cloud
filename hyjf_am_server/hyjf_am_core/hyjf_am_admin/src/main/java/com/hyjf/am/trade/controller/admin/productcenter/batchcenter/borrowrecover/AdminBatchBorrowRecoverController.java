@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "批次中心-批次放款")
 @RestController
-@RequestMapping("/am-trade/adminBatchBorrowRecover")
+@RequestMapping("/am-admin/adminBatchBorrowRecover")
 public class AdminBatchBorrowRecoverController extends BaseController {
 
     @Autowired
