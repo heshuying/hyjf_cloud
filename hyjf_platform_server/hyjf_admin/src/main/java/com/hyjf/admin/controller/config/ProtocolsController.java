@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -106,11 +108,19 @@ public class ProtocolsController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@ApiOperation(value = "配置中心-协议模板pdf文件上传", notes = "配置中心-协议管理 pdf文件上传")
+	@ApiOperation(value = "pdf文件上传", notes = "pdf文件上传")
 	@RequestMapping(value = "uploadFile", method = RequestMethod.POST)
-	public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String files = protocolService.uploadFile(request, response);
-		return files;
+	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+		try {
+			LinkedList<BorrowCommonImage> borrowCommonImages = protocolService.uploadFile(request, response);
+			adminResult.setData(borrowCommonImages);
+			adminResult.setStatus(SUCCESS);
+			adminResult.setStatusDesc(SUCCESS_DESC);
+			return adminResult;
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
 	}
 
 	/**
