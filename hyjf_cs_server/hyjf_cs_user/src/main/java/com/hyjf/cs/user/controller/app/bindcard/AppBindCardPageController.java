@@ -144,9 +144,9 @@ public class AppBindCardPageController extends BaseUserController {
                     // 保存银行卡信息
                     bindCardService.updateAfterBindCard(bean);
                 }
-            }else{
+            }/*else{
                 Thread.sleep(3000);
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
