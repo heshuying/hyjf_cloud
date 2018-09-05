@@ -78,9 +78,10 @@ public class WeChatBankOpenController extends BaseUserController {
     public WeChatResult openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WeChatResult reuslt = new WeChatResult();
-
+        bankOpenVO.setUserId(userId);
         // 获取登录信息
         UserVO user = bankOpenService.getUsersById(userId);
+
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行
