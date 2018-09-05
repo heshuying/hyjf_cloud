@@ -47,7 +47,7 @@ import javax.validation.Valid;
 @RequestMapping("/hyjf-api/server/user/repay")
 public class RepayController extends BaseController {
 
-    Logger _log = LoggerFactory.getLogger(RepayServer.class);
+    Logger _log = LoggerFactory.getLogger(RepayController.class);
 
     @Autowired
     private BatchHjhBorrowRepayApiService batchBorrowRepayService;
