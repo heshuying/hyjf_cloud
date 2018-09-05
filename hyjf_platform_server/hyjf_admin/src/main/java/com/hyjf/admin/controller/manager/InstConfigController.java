@@ -12,6 +12,7 @@ import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -68,12 +69,12 @@ public class InstConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
         //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
+        AdminSystemVO user = getUser(request);
+        if(StringUtils.isNotBlank(user.getId())){
+            req.setUserId(Integer.parseInt(user.getId()));
+        }else{
             req.setUserId(3);//为了接口测试用
-//        }
+        }
 
         AdminInstConfigListResponse prs = instConfigService.saveInstConfig(req);
         if(prs==null) {
@@ -90,12 +91,12 @@ public class InstConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
         //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
-        req.setUserId(3);//为了接口测试用
-//        }
+        AdminSystemVO user = getUser(request);
+        if(StringUtils.isNotBlank(user.getId())){
+            req.setUserId(Integer.parseInt(user.getId()));
+        }else{
+            req.setUserId(3);//为了接口测试用
+        }
         AdminInstConfigListResponse prs = instConfigService.updateInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

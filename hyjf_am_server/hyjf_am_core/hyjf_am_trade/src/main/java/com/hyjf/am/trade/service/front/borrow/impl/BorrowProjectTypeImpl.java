@@ -160,10 +160,10 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         record.setBorrowProjectType(form.getBorrowProjectType());
         record.setStatus(0);
         record.setCreateTime(sysDate);
-        record.setCreateUserId(12);//测试用，联调需改 todo
-       // record.setCreateGroupId(userId);//测试用，联调需改 todo
+        record.setCreateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
+//        record.setCreateGroupId(userId);//测试用，联调需改 todo
         record.setUpdateTime(sysDate);
-        record.setUpdateUserId(12);//测试用，联调需改 todo
+        record.setUpdateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
         // record.setUpdateGroupId(userId)(userId);//测试用，联调需改 todo
         borrowProjectTypeMapper.insertSelective(record);
         String  methodName = form.getMethodName();
@@ -268,7 +268,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         HjhAssetType record = new HjhAssetType();
 //        String userId = ShiroUtil.getLoginUserId();
         //更新用户id
-//        record.setUpdateUser(Integer.parseInt(userId));
+        record.setUpdateUser(Integer.valueOf(form.getCreateUserId()));
         int nowTime = GetDate.getNowTime10();
         //更新时间
         record.setUpdateTime(new Date());

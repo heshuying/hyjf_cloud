@@ -42,6 +42,8 @@ public class SystemConfig {
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
 
+    @Value("${hyjf.bank.mers.account}")
+    public String BANK_MERS_ACCOUNT;
     /**
      * 银行代码
      */
@@ -153,7 +155,15 @@ public class SystemConfig {
 		BANK_MERRP_ACCOUNT = bANK_MERRP_ACCOUNT;
 	}
 
-	public String getMerCustId() {
+    public String getBANK_MERS_ACCOUNT() {
+        return BANK_MERS_ACCOUNT;
+    }
+
+    public void setBANK_MERS_ACCOUNT(String BANK_MERS_ACCOUNT) {
+        this.BANK_MERS_ACCOUNT = BANK_MERS_ACCOUNT;
+    }
+
+    public String getMerCustId() {
         return merCustId;
     }
 
