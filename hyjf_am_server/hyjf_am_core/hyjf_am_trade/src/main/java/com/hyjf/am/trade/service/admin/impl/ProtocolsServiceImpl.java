@@ -61,7 +61,7 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	}
 
 	@Override
-	public List<FddTempletCustomize> getNewTempletId(Integer templetId) {
+	public String getNewTempletId(Integer templetId) {
 		return customizeMapper.getMaxTempletId(templetId);
 	}
 }

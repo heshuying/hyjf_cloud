@@ -92,6 +92,8 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
+	@ApiOperation(value = "取得新规的模板编号", notes = "取得新规的模板编号")
+	@PostMapping("/get_templet_id")
 	public String protocolTypeAction(String protocolType) {
 		String templetId = protocolsService.getNewTempletId(Integer.parseInt(protocolType));
 		return templetId;

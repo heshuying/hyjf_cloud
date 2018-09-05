@@ -40,5 +40,5 @@ public interface ProtocolsService {
 	 * @param templetId
 	 * @return
 	 */
-    List<FddTempletCustomize> getNewTempletId(Integer templetId);
+    String getNewTempletId(Integer templetId);
 }

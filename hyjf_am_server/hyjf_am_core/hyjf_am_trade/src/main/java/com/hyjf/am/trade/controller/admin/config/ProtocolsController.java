@@ -12,6 +12,7 @@ import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -81,9 +82,8 @@ public class ProtocolsController extends BaseController {
 	@GetMapping("/getNewTempletId/{templetId}")
 	public StringResponse getNewTempletId(@PathVariable Integer templetId) {
 
-		List<FddTempletCustomize> list = protocolsService.getNewTempletId(templetId);
-		if (list != null && list.size() == 1){
-			String tmpId = list.get(0).getTempletId();
+		String tmpId = protocolsService.getNewTempletId(templetId);
+		if (StringUtils.isNotBlank(tmpId)){
 			return new StringResponse(tmpId);
 		}
 		return null;

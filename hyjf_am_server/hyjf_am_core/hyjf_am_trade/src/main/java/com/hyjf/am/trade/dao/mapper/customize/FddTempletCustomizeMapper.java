@@ -29,5 +29,5 @@ public interface FddTempletCustomizeMapper {
      * @param templetId
      * @return
      */
-    List<FddTempletCustomize> getMaxTempletId(Integer templetId);
+    String getMaxTempletId(Integer templetId);
 }
