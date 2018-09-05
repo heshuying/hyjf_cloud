@@ -1,28 +1,23 @@
 package com.hyjf.cs.message.controller.web.operationaldata;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.ic.*;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
+import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.BasicQuery;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -54,7 +49,8 @@ public class PlatDataStatisticsController {
 	@ApiOperation(value = "运营数据", notes = "运营数据")
 	@GetMapping("/initPlatData")
 	@ResponseBody
-	public JSONObject getPlatformRealTimeData() {
+	public WebResult<Object> getPlatformRealTimeData() {
+		WebResult result = new WebResult();
 		JSONObject jsonObject = new JSONObject();
 		DecimalFormat df = new DecimalFormat("#,##0");
 		OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
@@ -140,8 +136,8 @@ public class PlatDataStatisticsController {
 		String sexData = "[ {value:" + maleCount + ", name:'男:　　　" + oegroup.formatDate(malePer)
 				+ "%　',icon:'circle',}," + "{value:" + femaleCount + ", name:'女:　　　" + oegroup.formatDate(femalePer)
 				+ "%　',icon:'circle',}]";
-		jsonObject.put("sexData", sexData);
-		jsonObject.put("ageData", ageData);
+		jsonObject.put("sexData", JSONObject.parseArray(sexData, Object.class));
+		jsonObject.put("ageData", JSONObject.parseArray(ageData, Object.class));
 
 		// 区域
 		OperationMongoGroupEntity region = platDataStatisticsService.findOneOperationMongoGroupEntity();
@@ -209,8 +205,7 @@ public class PlatDataStatisticsController {
 		jsonObject.put("monthlyTenderTitle", monthlyTenderTitle);
 		jsonObject.put("monthlyTenderData", monthlyTenderData);
 		jsonObject.put("monthlyTenderCountData", monthlyTenderCountData);
-
-		jsonObject.put("regionData", regionData);
+		jsonObject.put("regionData", JSONObject.parseArray(regionData.toString(), Object.class));
 		jsonObject.put("top10RegionData", regionDataList);
 		jsonObject.put("ageDataBeanList", ageDataBeanList);
 		// 满标时间
@@ -228,9 +223,8 @@ public class PlatDataStatisticsController {
 		jsonObject.put("tenderuserCountCurrent", oe.getTenderuserCountCurrent());
 		jsonObject.put("borrowuserMoneyTopone", oe.getBorrowuserMoneyTopone().setScale(2, BigDecimal.ROUND_DOWN));
 		jsonObject.put("borrowuserMoneyTopten", oe.getBorrowuserMoneyTopten().setScale(2, BigDecimal.ROUND_DOWN));
-
-
-		return jsonObject;
+		result.setData(jsonObject);
+		return result;
 	}
 	public int getRegionValue(List<SubEntity> list, String cityName) {
 		for (int i = 0; i < list.size(); i++) {
