@@ -12,7 +12,7 @@ import com.hyjf.batch.job.BaseJob;
 
 /**
  * 运营数据定时任务
- * @author fuqiang
+ * @author yinhui
  * @version StatisicsOperationReportJob, v0.1 2018/7/18 9:40
  */
 @DisallowConcurrentExecution
@@ -21,7 +21,7 @@ public class StatisicsOperationReportJob extends BaseJob implements Job {
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("StatisicsOperationReportJob: {} execute...",
 				jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MESSAGE/cs-market/statisticsoperationreport/insertoperationgroupdata",
+		restTemplate.getForEntity("http://CS-MARKET/cs-market/statisticsoperationreport/insertoperationgroupdata",
 				Object.class);
 		logger.info("StatisicsOperationReportJob execute end...");
 	}

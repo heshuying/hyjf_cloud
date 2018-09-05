@@ -87,6 +87,19 @@ public class WechatBankWithdrawController extends BaseTradeController {
         WxQueryWIthdrawInfoVO vo = new WxQueryWIthdrawInfoVO();
 
 
+
+
+        AccountVO account = bankWithdrawService.getAccountByUserId(userId);
+        CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
+
+
+        //获取企业用户标识（0普通用户1企业用户企业用户）
+        UserVO users = bankWithdrawService.getUsers(userId);
+        CheckUtil.check(null!=users,MsgEnum.ERR_USER_NOT_EXISTS);
+        CheckUtil.check(users.getIsSetPassword()==1,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        CheckUtil.check(users.getBankOpenAccount()==1,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        vo.setIsSetPassWord(users.getIsSetPassword());
+
         BankCardVO bank = bankWithdrawService.getBankCardVOByUserId(userId);
         CheckUtil.check(null!=bank,MsgEnum.ERR_CARD_NOT_BIND);
 
@@ -102,16 +115,6 @@ public class WechatBankWithdrawController extends BaseTradeController {
             phoneNum = user.getMobile();
         }
         vo.setMobile(phoneNum);
-
-        AccountVO account = bankWithdrawService.getAccountByUserId(userId);
-        CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
-
-
-        //获取企业用户标识（0普通用户1企业用户企业用户）
-        UserVO users = bankWithdrawService.getUsers(userId);
-        CheckUtil.check(null!=users,MsgEnum.ERR_USER_NOT_EXISTS);
-        CheckUtil.check(users.getIsSetPassword()==1,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
-        vo.setIsSetPassWord(users.getIsSetPassword());
         if(users != null){
             vo.setUserType(users.getUserType());
         }

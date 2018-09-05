@@ -155,18 +155,18 @@
 				OR ui.attribute = 3 THEN
 					u.user_id
 				ELSE
-					su.spreads_userid
+					su.spreads_user_id
 				END AS hyd_id
 				FROM
-					huiyingdai_users u
-				LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
-				LEFT JOIN huiyingdai_spreads_users su ON u.user_id = su.user_id
+					ht_user u
+				LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+				LEFT JOIN ht_spreads_user su ON u.user_id = su.user_id
 				WHERE u.user_id =  #{userId}
 			) t
-		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.`hyd_id` = `t`.`hyd_id` AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid`
-		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
-		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+		LEFT JOIN `ht_r_oa_users` `ou` ON `ou`.`hyd_id` = `t`.`hyd_id` AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_department` `od` ON `od`.`id` = `ou`.`departmentid`
+		LEFT JOIN `ht_r_oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN `ht_r_oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
 		WHERE
 			`od`.id IS NOT NULL
 	</select>
@@ -249,5 +249,31 @@
 			limit #{limitStart},#{limitEnd}
 		</if>
 	</select>
+
+
+	<resultMap id="BaseResultMapT" type="com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO">
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="package_code" property="packageCode" jdbcType="VARCHAR" />
+		<result column="client" property="client" jdbcType="VARCHAR" />
+		<result column="sign" property="sign" jdbcType="VARCHAR" />
+		<result column="alias" property="alias" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getMobileCodeByNumber" parameterType="java.lang.String" resultMap="BaseResultMapT">
+    SELECT
+			u.user_id,
+			c.sign,
+			c.alias,
+			c.package_code,
+			c.client,
+			u.mobile
+		FROM
+			ht_user u
+		INNER JOIN ht_user_alias c ON u.user_id = c.user_id
+		WHERE
+			u.mobile = #{mobile}
+			limit 1
+  </select>
 </mapper>
 

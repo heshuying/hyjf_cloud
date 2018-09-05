@@ -1,6 +1,7 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
+import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -65,4 +66,10 @@ public interface UserInfoCustomizeMapper {
      */
     int countRecordTotal(Map<String, Object> userPortrait);
 
+    /**
+     * 通过手机号获取设备标识码
+     * @param mobile
+     * @return
+     */
+    AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
 }

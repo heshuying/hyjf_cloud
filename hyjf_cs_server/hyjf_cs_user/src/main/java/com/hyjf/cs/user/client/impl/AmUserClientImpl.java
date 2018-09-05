@@ -210,12 +210,12 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
 		request.setUpdate(isUpdate);
-		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
+		IntegerResponse result = restTemplate.postForEntity(userService+"/smsCode/check/", request, IntegerResponse.class)
 				.getBody();
 		if (result == null) {
 			return 0;
 		}
-		return result;
+		return result.getResultInt();
 	}
 
 	@Override
@@ -570,10 +570,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int updateUserAccountLog(BankOpenRequest request) {
-		Integer result = restTemplate
-				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, Integer.class).getBody();
+		IntegerResponse result = restTemplate
+				.postForEntity(userService+"/bankopen/updateUserAccountLog", request, IntegerResponse.class).getBody();
 		if (result != null ) {
-			return result;
+			return result.getResultInt();
 		}
 		return 0;
 	}
@@ -904,9 +904,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int saveUserEvaluation(UserEvalationResultVO userEvalationResult) {
-		int count = restTemplate
-				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, Integer.class).getBody();
-		return count;
+		IntegerResponse count = restTemplate
+				.postForEntity(userService+"/user/saveUserEvaluation", userEvalationResult, IntegerResponse.class).getBody();
+		return count.getResultInt();
 	}
 
 	@Override
@@ -1107,4 +1107,55 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+    @Override
+    public boolean updateMobileSynch(AccountMobileSynchRequest accountMobileAynch) {
+        String url = userService+"/batch/updateMobileSynch";
+        AccountMobileSynchResponse response =
+                restTemplate.postForEntity(url,accountMobileAynch, AccountMobileSynchResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getUpdateFlag();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateByPrimaryKey(UserVO userVO) {
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-USER/am-user/user/updateByUserId", userVO, IntegerResponse.class).getBody();
+        if (result != null) {
+            return result.getResultInt() == 0 ? false : true;
+        }
+        return false;
+    }
+    /**
+     * 更新银行卡信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateBankCard(BankCardVO bankCardVO) {
+        String url = userService + "/bankCard/updateBankCard";
+        IntegerResponse response = restTemplate.postForEntity(url,bankCardVO,IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据主键查询银行卡信息
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public BankCardVO getBankCardById(Integer id) {
+        String url = userService + "/bankCard/getBankCardById/" + id;
+        BankCardResponse response = restTemplate.getForEntity(url,BankCardResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

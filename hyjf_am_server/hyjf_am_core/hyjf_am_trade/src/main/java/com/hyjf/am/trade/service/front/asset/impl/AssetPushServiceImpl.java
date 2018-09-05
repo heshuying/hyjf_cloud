@@ -23,8 +23,6 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 @Service
 public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushService {
 
-    private Logger _log = LoggerFactory.getLogger(AssetPushServiceImpl.class);
-
     @Override
     public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {
         HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
@@ -187,5 +185,46 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     @Override
     public int insertCompanyInfoToBorrowUsers(BorrowUser borrowUser) {
         return borrowUserMapper.insertSelective(borrowUser);
+    }
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowBail> selectBorrowBail(String borrowNid) {
+        BorrowBailExample example = new BorrowBailExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<BorrowBail> borrowBailList = this.borrowBailMapper.selectByExample(example);
+        if(null != borrowBailList && borrowBailList.size() > 0 ) {
+            return borrowBailList;
+        }
+        return null;
+    }
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrow
+     * @return
+     */
+    @Override
+    public Integer updateBorrowByBorrowNid(Borrow borrow) {
+        BorrowExample example = new BorrowExample();
+        example.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+        return this.borrowMapper.updateByExampleSelective(borrow,example);
+    }
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBail
+     * @return
+     */
+    @Override
+    public Integer insertBorrowBail(BorrowBail borrowBail) {
+        return this.borrowBailMapper.insertSelective(borrowBail);
     }
 }

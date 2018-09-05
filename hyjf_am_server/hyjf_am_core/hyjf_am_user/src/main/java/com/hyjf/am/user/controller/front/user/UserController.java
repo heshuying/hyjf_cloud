@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -553,9 +554,9 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/saveUserEvaluation")
-    public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
+    public IntegerResponse saveUserEvaluation(UserEvalationResult userEvalationResult) {
         int cnt = userService.saveUserEvaluation(userEvalationResult);
-        return cnt;
+        return new IntegerResponse(cnt);
     }
 
     @RequestMapping("/isCompAccount/{userId}")
@@ -833,12 +834,51 @@ public class UserController extends BaseController {
     /**
      * 根据username查询用户
      *
-     * @param condition
+     * @param userId
      * @return
      */
     @RequestMapping("/isExistsUser/{userId}")
     public int findUserByUsername(@PathVariable String userId) {
         logger.info("findUserByCondition run...condition is :{}", userId);
         return userService.isExistsUser(userId);
+    }
+
+    /**
+     * 通过用户名获得用户的详细信息
+     *
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/selectUserInfoByUsername/{userName}")
+    public UserResponse selectUserInfoByUsername(@PathVariable String userName) {
+        UserResponse userResponse = new UserResponse();
+        User user = null;
+            user = userService.selectUserInfoByUsername(userName);
+
+            if (user == null) {
+                userResponse.setRtn(Response.FAIL);
+                userResponse.setMessage(Response.FAIL_MSG);
+            } else {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                userResponse.setResult(userVO);
+            }
+        return userResponse;
+    }
+
+    /**
+     * 更新用户首次投资信息
+     * @param params
+     * @return
+     */
+    @PostMapping("/updateFirstUtmReg")
+    public IntegerResponse updateFirstUtmReg(HashMap<String, Object> params) {
+        IntegerResponse response = new IntegerResponse();
+        try {
+            userService.updateFirstUtmReg(params);
+        }catch (Exception e){
+            logger.error("更新用户首次投资信息失败  参数为：{}",JSONObject.toJSONString(params));
+        }
+        return response;
     }
 }

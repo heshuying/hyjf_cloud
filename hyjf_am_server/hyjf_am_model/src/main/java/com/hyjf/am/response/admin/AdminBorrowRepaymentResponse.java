@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class AdminBorrowRepaymentResponse extends Response<BorrowRepaymentCustomizeVO> {
     private List<BorrowRepaymentPlanCustomizeVO> borrowRepaymentPlanList;
+    private BorrowRepaymentPlanCustomizeVO borrowRepaymentPlanCustomizeVO;
     private Integer total;
 
     public Integer getTotal() {
@@ -29,5 +30,13 @@ public class AdminBorrowRepaymentResponse extends Response<BorrowRepaymentCustom
 
     public void setBorrowRepaymentPlanList(List<BorrowRepaymentPlanCustomizeVO> borrowRepaymentPlanList) {
         this.borrowRepaymentPlanList = borrowRepaymentPlanList;
+    }
+
+    public BorrowRepaymentPlanCustomizeVO getBorrowRepaymentPlanCustomizeVO() {
+        return borrowRepaymentPlanCustomizeVO;
+    }
+
+    public void setBorrowRepaymentPlanCustomizeVO(BorrowRepaymentPlanCustomizeVO borrowRepaymentPlanCustomizeVO) {
+        this.borrowRepaymentPlanCustomizeVO = borrowRepaymentPlanCustomizeVO;
     }
 }

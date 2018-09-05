@@ -1542,9 +1542,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 params.put("limitEnd", limit);
             }
             List<AppProjectInvestListCustomizeVO> recordList = amTradeClient.selectProjectInvestList(params);
-            Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+            Map<String, String> clientMap = CacheUtil.getParamNameMap(CustomConstants.CLIENT);
             for (AppProjectInvestListCustomizeVO obj : recordList){
-                obj.setClientName(relationMap.get(String.valueOf(obj.getClient())));
+                obj.setClientName(clientMap.get(String.valueOf(obj.getClient())));
             }
 
             info.put("list", recordList);

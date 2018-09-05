@@ -40,20 +40,27 @@ public class BankJournalController {
     private BankJournalService bankJournalService;
 
     @ApiOperation(value = "银行交易明细", notes = "银行交易明细列表查询")
-    @PostMapping(value = "/bankalevelist")
+    @PostMapping(value = "/bankevelist")
     @ResponseBody
-    public JSONObject getBankaleveList(@RequestBody BankEveRequest bankEveRequest){
+    public JSONObject getBankeveList(@RequestBody BankEveRequest bankEveRequest){
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        String status="error";
+        String status="000";
+        String statusDesc = "未检索到相应的列表数据";
         if(null!=bankEveList&&bankEveList.size()>0){
             Integer count = bankEveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
-            status="success";
+            status =  "000";
+            statusDesc = "查询银行交易明细成功";
+
+        }else{
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
         }
         jsonObject.put("status",status);
+        jsonObject.put("statusDesc",statusDesc);
         return jsonObject;
     }
     /**

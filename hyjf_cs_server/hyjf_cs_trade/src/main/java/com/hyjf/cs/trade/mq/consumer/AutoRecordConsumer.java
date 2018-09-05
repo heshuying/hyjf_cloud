@@ -50,9 +50,9 @@ public class AutoRecordConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_RECORD_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_RECORD_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.ASSET_PUST_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.BORROW_RECORD_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -199,7 +199,7 @@ public class AutoRecordConsumer extends Consumer {
                     if(hjhPlanAssetVO.getEntrustedFlg() != null && hjhPlanAssetVO.getEntrustedFlg().intValue() ==1){
                         logger.info(hjhPlanAssetVO.getAssetId()+"  未推送，等待授权");
                     }else{
-                        autoRecordService.sendToMQ(hjhPlanAssetVO,  MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
+                        autoRecordService.sendToMQ(hjhPlanAssetVO,  MQConstant.BORROW_PREAUDIT_TOPIC);
                         logger.info(hjhPlanAssetVO.getAssetId()+" 成功发送到初审队列");
                     }
 

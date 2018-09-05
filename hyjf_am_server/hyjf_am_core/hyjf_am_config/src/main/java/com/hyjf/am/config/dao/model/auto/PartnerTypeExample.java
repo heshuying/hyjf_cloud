@@ -325,52 +325,52 @@ public class PartnerTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderEqualTo(Short value) {
+        public Criteria andOrderEqualTo(Integer value) {
             addCriterion("`order` =", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotEqualTo(Short value) {
+        public Criteria andOrderNotEqualTo(Integer value) {
             addCriterion("`order` <>", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderGreaterThan(Short value) {
+        public Criteria andOrderGreaterThan(Integer value) {
             addCriterion("`order` >", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderGreaterThanOrEqualTo(Short value) {
+        public Criteria andOrderGreaterThanOrEqualTo(Integer value) {
             addCriterion("`order` >=", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderLessThan(Short value) {
+        public Criteria andOrderLessThan(Integer value) {
             addCriterion("`order` <", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderLessThanOrEqualTo(Short value) {
+        public Criteria andOrderLessThanOrEqualTo(Integer value) {
             addCriterion("`order` <=", value, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderIn(List<Short> values) {
+        public Criteria andOrderIn(List<Integer> values) {
             addCriterion("`order` in", values, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotIn(List<Short> values) {
+        public Criteria andOrderNotIn(List<Integer> values) {
             addCriterion("`order` not in", values, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderBetween(Short value1, Short value2) {
+        public Criteria andOrderBetween(Integer value1, Integer value2) {
             addCriterion("`order` between", value1, value2, "order");
             return (Criteria) this;
         }
 
-        public Criteria andOrderNotBetween(Short value1, Short value2) {
+        public Criteria andOrderNotBetween(Integer value1, Integer value2) {
             addCriterion("`order` not between", value1, value2, "order");
             return (Criteria) this;
         }

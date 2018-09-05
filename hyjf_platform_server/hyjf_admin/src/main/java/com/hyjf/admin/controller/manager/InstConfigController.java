@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -11,16 +12,15 @@ import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * @author by xiehuili on 2018/7/5.
@@ -69,12 +69,12 @@ public class InstConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
         //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
+        AdminSystemVO user = getUser(request);
+        if(StringUtils.isNotBlank(user.getId())){
+            req.setUserId(Integer.parseInt(user.getId()));
+        }else{
             req.setUserId(3);//为了接口测试用
-//        }
+        }
 
         AdminInstConfigListResponse prs = instConfigService.saveInstConfig(req);
         if(prs==null) {
@@ -91,12 +91,12 @@ public class InstConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
         //登录用户id  todo   联调时要放开
-//        AdminSystemVO user = getUser(request);
-//        if(StringUtils.isNotBlank(user.getId())){
-//            req.setUserId(Integer.parseInt(user.getId()));
-//        }else{
-        req.setUserId(3);//为了接口测试用
-//        }
+        AdminSystemVO user = getUser(request);
+        if(StringUtils.isNotBlank(user.getId())){
+            req.setUserId(Integer.parseInt(user.getId()));
+        }else{
+            req.setUserId(3);//为了接口测试用
+        }
         AdminInstConfigListResponse prs = instConfigService.updateInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -125,6 +125,35 @@ public class InstConfigController extends BaseController {
         return new AdminResult<>();
     }
 
+
+    /**
+     * 发标额度上限校验
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "保证金配置发标额度上限校验", notes = "保证金配置发标额度上限校验")
+    @PostMapping("/topLimitCheckAction")
+    public AdminResult topLimitCheckAction(HttpServletRequest request,@RequestParam(value="capitalToplimitStr",required = true)String capitalToplimitStr,
+                                      @RequestParam(value="capitalUsedStr",required = false)String capitalUsedStr) {
+        JSONObject ret = new JSONObject();
+        //新增配置instCode
+        if (StringUtils.isBlank(capitalUsedStr) || "undefined".equals(capitalUsedStr)) {
+            ret.put("error", "capitalUsedStr 为空！");
+            return new AdminResult<String>(ret.toJSONString());
+        }
+        if (StringUtils.isNotBlank(capitalToplimitStr)) {
+            BigDecimal capitalToplimit = new BigDecimal(capitalToplimitStr);
+            BigDecimal capitalUsed = new BigDecimal(capitalUsedStr);
+            if (capitalToplimit.compareTo(capitalUsed) < 0) {
+                ret.put("error", "发标额度余额不可为负数");
+                return new AdminResult<String>(ret.toJSONString());
+            }
+        }
+        //校验通过正常返回
+        ret.put("status", "y");
+        return new AdminResult<String>(ret.toJSONString());
+    }
 
 
 }

@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
-import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.service.admin.organization.GroupInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;

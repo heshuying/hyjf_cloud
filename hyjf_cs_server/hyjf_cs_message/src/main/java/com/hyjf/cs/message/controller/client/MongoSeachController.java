@@ -134,11 +134,11 @@ public class MongoSeachController extends BaseController {
     }
 
     @RequestMapping(value = "/queryWebCount")
-    public AccountWebListResponse queryWebList(AccountWebListVO accountWebList) {
+    public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
             List<AccountWebList> recordList = accountWebListDao.queryWebList(accountWebList, paginator.getOffset(), paginator.getLimit());
             if (recordList != null) {
                 List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList, AccountWebListVO.class);
@@ -150,11 +150,11 @@ public class MongoSeachController extends BaseController {
         return response;
     }
 
-    /**
+   /* *//**
      * 绝对错误的写法,list是使内存瞬间飙升  todo ....
      * @param accountWebList
      * @return
-     */
+     *//*
     @RequestMapping(value = "/queryAccountWebList")
     public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
@@ -162,7 +162,7 @@ public class MongoSeachController extends BaseController {
         int recordTotal = recordList.size();
         if (null != recordList) {
             if (recordTotal > 0) {
-                Paginator paginator = new Paginator(accountWebList.getPaginatorPage(), recordTotal);
+                Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
                 int end = 0;
                 if(recordTotal<paginator.getOffset()*paginator.getLimit()+paginator.getLimit()){
                     end=recordTotal;
@@ -177,10 +177,10 @@ public class MongoSeachController extends BaseController {
         response.setRecordTotal(recordTotal);
         response.setRtn(Response.SUCCESS);
         return response;
-    }
+    }*/
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
-    public String selectBorrowInvestAccount(AccountWebListVO accountWebList){
+    public String selectBorrowInvestAccount(@RequestBody AccountWebListVO accountWebList){
         int total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
         DecimalFormat df = new DecimalFormat("#0.00");
         return df.format(total);

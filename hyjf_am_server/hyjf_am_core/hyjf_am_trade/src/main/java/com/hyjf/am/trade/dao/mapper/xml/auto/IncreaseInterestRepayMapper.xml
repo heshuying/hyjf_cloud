@@ -14,6 +14,7 @@
     <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
     <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
     <result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+    <result column="borrow_account" property="borrowAccount" jdbcType="DECIMAL" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
     <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
@@ -31,6 +32,7 @@
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="loan_action_time" property="loanActionTime" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -94,10 +96,11 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, user_name, invest_id, invest_order_id, invest_account, borrow_nid, borrow_apr, 
-    borrow_extra_yield, borrow_period, borrow_style, borrow_style_name, order_id, order_date, 
-    repay_status, remain_period, already_repay_period, repay_period, repay_time, repay_action_time, 
-    repay_interest, repay_interest_yes, repay_interest_wait, add_ip, web, create_user_id, 
-    create_user_name, update_user_id, update_user_name, create_time, update_time
+    borrow_extra_yield, borrow_period, borrow_style, borrow_style_name, borrow_account, 
+    order_id, order_date, repay_status, remain_period, already_repay_period, repay_period, 
+    repay_time, repay_action_time, repay_interest, repay_interest_yes, repay_interest_wait, 
+    add_ip, web, create_user_id, create_user_name, update_user_id, update_user_name, 
+    loan_action_time, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample" >
     select
@@ -139,25 +142,25 @@
     insert into ht_increase_interest_repay (user_id, user_name, invest_id, 
       invest_order_id, invest_account, borrow_nid, 
       borrow_apr, borrow_extra_yield, borrow_period, 
-      borrow_style, borrow_style_name, order_id, 
-      order_date, repay_status, remain_period, 
-      already_repay_period, repay_period, repay_time, 
-      repay_action_time, repay_interest, repay_interest_yes, 
-      repay_interest_wait, add_ip, web, 
-      create_user_id, create_user_name, update_user_id, 
-      update_user_name, create_time, update_time
-      )
+      borrow_style, borrow_style_name, borrow_account, 
+      order_id, order_date, repay_status, 
+      remain_period, already_repay_period, repay_period, 
+      repay_time, repay_action_time, repay_interest, 
+      repay_interest_yes, repay_interest_wait, add_ip, 
+      web, create_user_id, create_user_name, 
+      update_user_id, update_user_name, loan_action_time, 
+      create_time, update_time)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{investId,jdbcType=INTEGER}, 
       #{investOrderId,jdbcType=VARCHAR}, #{investAccount,jdbcType=DECIMAL}, #{borrowNid,jdbcType=VARCHAR}, 
       #{borrowApr,jdbcType=DECIMAL}, #{borrowExtraYield,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, 
-      #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, 
-      #{orderDate,jdbcType=VARCHAR}, #{repayStatus,jdbcType=TINYINT}, #{remainPeriod,jdbcType=TINYINT}, 
-      #{alreadyRepayPeriod,jdbcType=TINYINT}, #{repayPeriod,jdbcType=TINYINT}, #{repayTime,jdbcType=INTEGER}, 
-      #{repayActionTime,jdbcType=INTEGER}, #{repayInterest,jdbcType=DECIMAL}, #{repayInterestYes,jdbcType=DECIMAL}, 
-      #{repayInterestWait,jdbcType=DECIMAL}, #{addIp,jdbcType=VARCHAR}, #{web,jdbcType=TINYINT}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{borrowStyle,jdbcType=VARCHAR}, #{borrowStyleName,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, 
+      #{orderId,jdbcType=VARCHAR}, #{orderDate,jdbcType=VARCHAR}, #{repayStatus,jdbcType=TINYINT}, 
+      #{remainPeriod,jdbcType=TINYINT}, #{alreadyRepayPeriod,jdbcType=TINYINT}, #{repayPeriod,jdbcType=TINYINT}, 
+      #{repayTime,jdbcType=INTEGER}, #{repayActionTime,jdbcType=INTEGER}, #{repayInterest,jdbcType=DECIMAL}, 
+      #{repayInterestYes,jdbcType=DECIMAL}, #{repayInterestWait,jdbcType=DECIMAL}, #{addIp,jdbcType=VARCHAR}, 
+      #{web,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{loanActionTime,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -197,6 +200,9 @@
       </if>
       <if test="borrowStyleName != null" >
         borrow_style_name,
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account,
       </if>
       <if test="orderId != null" >
         order_id,
@@ -249,6 +255,9 @@
       <if test="updateUserName != null" >
         update_user_name,
       </if>
+      <if test="loanActionTime != null" >
+        loan_action_time,
+      </if>
       <if test="createTime != null" >
         create_time,
       </if>
@@ -289,6 +298,9 @@
       </if>
       <if test="borrowStyleName != null" >
         #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccount != null" >
+        #{borrowAccount,jdbcType=DECIMAL},
       </if>
       <if test="orderId != null" >
         #{orderId,jdbcType=VARCHAR},
@@ -340,6 +352,9 @@
       </if>
       <if test="updateUserName != null" >
         #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="loanActionTime != null" >
+        #{loanActionTime,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -394,6 +409,9 @@
       <if test="record.borrowStyleName != null" >
         borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
       </if>
+      <if test="record.borrowAccount != null" >
+        borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
+      </if>
       <if test="record.orderId != null" >
         order_id = #{record.orderId,jdbcType=VARCHAR},
       </if>
@@ -445,6 +463,9 @@
       <if test="record.updateUserName != null" >
         update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
       </if>
+      <if test="record.loanActionTime != null" >
+        loan_action_time = #{record.loanActionTime,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -470,6 +491,7 @@
       borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
       borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
       borrow_style_name = #{record.borrowStyleName,jdbcType=VARCHAR},
+      borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
       order_id = #{record.orderId,jdbcType=VARCHAR},
       order_date = #{record.orderDate,jdbcType=VARCHAR},
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
@@ -487,6 +509,7 @@
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
+      loan_action_time = #{record.loanActionTime,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -528,6 +551,9 @@
       </if>
       <if test="borrowStyleName != null" >
         borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowAccount != null" >
+        borrow_account = #{borrowAccount,jdbcType=DECIMAL},
       </if>
       <if test="orderId != null" >
         order_id = #{orderId,jdbcType=VARCHAR},
@@ -580,6 +606,9 @@
       <if test="updateUserName != null" >
         update_user_name = #{updateUserName,jdbcType=VARCHAR},
       </if>
+      <if test="loanActionTime != null" >
+        loan_action_time = #{loanActionTime,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -602,6 +631,7 @@
       borrow_period = #{borrowPeriod,jdbcType=INTEGER},
       borrow_style = #{borrowStyle,jdbcType=VARCHAR},
       borrow_style_name = #{borrowStyleName,jdbcType=VARCHAR},
+      borrow_account = #{borrowAccount,jdbcType=DECIMAL},
       order_id = #{orderId,jdbcType=VARCHAR},
       order_date = #{orderDate,jdbcType=VARCHAR},
       repay_status = #{repayStatus,jdbcType=TINYINT},
@@ -619,6 +649,7 @@
       create_user_name = #{createUserName,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      loan_action_time = #{loanActionTime,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

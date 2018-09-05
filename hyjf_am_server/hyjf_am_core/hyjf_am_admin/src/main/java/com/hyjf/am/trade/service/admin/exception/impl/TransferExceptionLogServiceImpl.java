@@ -6,10 +6,10 @@ package com.hyjf.am.trade.service.admin.exception.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.service.admin.exception.TransferExceptionLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
@@ -383,7 +383,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         accountWebList.setBorrowNid(borrowTender.getBorrowNid()); // 投资编号
         accountWebList.setUserId(borrowTender.getUserId()); // 投资者
-        accountWebList.setAmount(transfer.getTransAmt()); // 优惠券投资受益
+        accountWebList.setAmount(Double.valueOf(transfer.getTransAmt().toString())); // 优惠券投资受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
         String remark = "";
         if(currentRecover.getCouponType()==1){

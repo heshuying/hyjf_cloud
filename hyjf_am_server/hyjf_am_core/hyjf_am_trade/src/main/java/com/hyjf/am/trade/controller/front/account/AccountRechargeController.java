@@ -8,17 +8,22 @@ import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.customize.AccountRechargeCustomize;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -42,8 +47,9 @@ public class AccountRechargeController extends BaseController {
         BigDecimal rechargePrice = accountRecharge.getRechargePrice(list);
         if (rechargePrice != null) {
             response.setRechargePrice(rechargePrice);
+            return response;
         }
-        return response;
+        return null;
     }
 
     /**
@@ -87,10 +93,29 @@ public class AccountRechargeController extends BaseController {
             }
         }
 
-        List<AccountRechargeCustomizeVO> responseList = this.accountRecharge.getAccountRechargeList(request);
+        List<AccountRechargeCustomize> responseList = this.accountRecharge.getAccountRechargeList(request);
 
         if (!CollectionUtils.isEmpty(responseList)){
-            rechargeResponse.setResultList(responseList);
+
+            // 充值状态 Redis Key
+            String rechargeStatusKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.RECHARGE_STATUS;
+            // 托管平台Key
+            String bankTypeKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.BANK_TYPE;
+            // 用户类型 Key
+            String userPropertyKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.USER_PROPERTY;
+            Map<String, String> rechargeStatusMap = RedisUtils.hgetall(rechargeStatusKey);
+            Map<String, String> bankTypeMap = RedisUtils.hgetall(bankTypeKey);
+            Map<String, String> userPropertyMap = RedisUtils.hgetall(userPropertyKey);
+
+            // 遍历列表从, 从Redis中读取配置信息
+            for (AccountRechargeCustomize ac : responseList) {
+                ac.setStatus(rechargeStatusMap.get(ac.getStatus()));
+                ac.setIsBank(bankTypeMap.get(ac.getIsBank()));
+                ac.setUserProperty(userPropertyMap.get(ac.getUserProperty()));
+            }
+
+            List<AccountRechargeCustomizeVO> rechargeCustomizeVOList = CommonUtils.convertBeanList(responseList,AccountRechargeCustomizeVO.class);
+            rechargeResponse.setResultList(rechargeCustomizeVOList);
             rechargeResponse.setCount(count);
             rechargeResponse.setRtn(Response.SUCCESS);
         }
@@ -120,11 +145,13 @@ public class AccountRechargeController extends BaseController {
 
         String status = request.getStatus();
         Integer userId = request.getUserId();
-        String nid = request.getNid();
+        String nid = request.getNidSearch();
 
         // 确认充值 ; 0表示充值失败
         boolean isAccountUpdate = false;
-        if ("1".equals(status)){
+        // 代码规约
+        String errorStatus = "1";
+        if (errorStatus.equals(status)){
             isAccountUpdate = this.accountRecharge.updateAccountAfterRecharge(userId, nid);
         }else {
             isAccountUpdate = this.accountRecharge.updateAccountAfterRechargeFail(userId, nid);

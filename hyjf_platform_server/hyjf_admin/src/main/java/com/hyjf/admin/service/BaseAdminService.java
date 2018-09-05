@@ -3,6 +3,8 @@ package com.hyjf.admin.service;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.service.BaseService;
 
+import java.math.BigDecimal;
+
 
 public interface BaseAdminService extends BaseService{
 
@@ -13,4 +15,11 @@ public interface BaseAdminService extends BaseService{
 	 */
 	UserVO getUserByUserName(String userName);
 
+	/**
+	 * 获取银行账户余额
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	BigDecimal getBankBalance(Integer userId, String accountId);
 }

@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.BorrowAppoint;
 import com.hyjf.am.user.dao.model.auto.BorrowAppointExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BorrowAppointMapper {
     int countByExample(BorrowAppointExample example);

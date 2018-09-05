@@ -30,6 +30,11 @@ import java.util.Map;
 @Service
 public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCenterBankService {
 
+	/**
+	 * 查询江西银行绑卡
+	 * @param userId
+	 * @return
+	 */
 	@Override
 	public List<BankCard> getTiedCardOfAccountBank(Integer userId){
 			BankCardExample example = new BankCardExample();
@@ -42,24 +47,22 @@ public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCe
 		return null;
 	}
 
-	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceFuTouUsersList(callCenterUserInfoRequest);
-		return CallcenterUserBaseCustomizeList;
-	}
-
-	@Override
-	public List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
-		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceLiuShiUsersList(callCenterUserInfoRequest);
-		return CallcenterUserBaseCustomizeList;
-	}
-
+	/**
+	 * 查询呼叫中心未分配客服的用户
+	 * @param callCenterUserInfoRequest
+	 * @return
+	 */
 	@Override
 	public List<CallcenterUserBaseCustomize> getNoServiceUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findNoServiceUsersList(callCenterUserInfoRequest);
 		return CallcenterUserBaseCustomizeList;
 	}
 
+	/**
+	 * 更新客服分配状态
+	 * @param callCenterServiceUsersRequest
+	 * @return
+	 */
 	@Override
 	public Integer updateRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest){
 		//当前时间
@@ -87,6 +90,11 @@ public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCe
 		return rowCound;
 	}
 
+	/**
+	 * 查询用户基本信息
+	 * @param callCenterUserInfoRequest
+	 * @return
+	 */
 	@Override
 	public List<CallcenterUserBaseCustomize> getBasicUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findBasicUsersList(callCenterUserInfoRequest);
@@ -111,6 +119,11 @@ public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCe
 		return CallcenterUserBaseCustomizeList;
 	}
 
+	/**
+	 * 查询用户详细信息
+	 * @param callCenterUserInfoRequest
+	 * @return
+	 */
 	@Override
 	public List<CallcenterUserBaseCustomize> getUserDetailById(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		List<CallcenterUserBaseCustomize> CallcenterUserBaseCustomizeList = callCenterCustomizeMapper.findUserDetailById(callCenterUserInfoRequest);
@@ -131,12 +144,22 @@ public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCe
 		return CallcenterUserBaseCustomizeList;
 	}
 
+	/**
+	 * 查询汇付绑卡
+	 * @param callcenterAccountHuifuRequest
+	 * @return
+	 */
 	@Override
 	public List<CallcenterAccountHuifuCustomize> getHuifuTiedcardInfo(CallcenterAccountHuifuRequest callcenterAccountHuifuRequest) {
 		List<CallcenterAccountHuifuCustomize> callcenterAccountHuifuCustomizeList = callCenterAccountHuifuMapper.findHuifuTiedcardInfo(callcenterAccountHuifuRequest);
 		return callcenterAccountHuifuCustomizeList;
 	}
 
+	/**
+	 * 获取优惠券内容
+	 * @param couponSource
+	 * @return
+	 */
 	@Override
 	public String getCouponContent(String couponSource){
 		return callCenterCustomizeMapper.getCouponContent(couponSource);

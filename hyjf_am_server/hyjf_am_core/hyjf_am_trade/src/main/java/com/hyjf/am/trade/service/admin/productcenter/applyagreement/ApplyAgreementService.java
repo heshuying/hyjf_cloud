@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement;
 
+import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -104,6 +105,23 @@ public interface ApplyAgreementService extends BaseService {
      * @return
      */
     List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, int period);
+    /**
+     * 根据contract_id查询垫付协议生成详情
+    * @author Zha Daojian
+    * @date 2018/8/23 16:37
+    * @param contractId
+    * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+    **/
+    List<ApplyAgreementInfo> selectApplyAgreementInfoByContractId(String contractId);
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 16:37
+     * @param request
+     * @return java.util.List<com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan>
+     **/
+    int saveApplyAgreementInfo(ApplyAgreementInfoRequest request);
 
 
 }

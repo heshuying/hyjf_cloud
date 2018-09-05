@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.vip;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.CouponConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -20,6 +21,8 @@ import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,12 +35,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yaoyong
  * @version CouponIssuanceController, v0.1 2018/7/5 10:05
  */
-@Api(tags = "VIP中心-优惠券发行" )
+@Api(tags = "VIP中心-优惠券发行")
 @RestController
 @RequestMapping("/hyjf-admin/coupon/issuance")
 public class CouponIssuanceController extends BaseController {
@@ -47,14 +52,21 @@ public class CouponIssuanceController extends BaseController {
     private static final String PERMISSIONS = "couponconfig";
     @Autowired
     CouponConfigService couponConfigService;
+    @Autowired
+    CouponCheckService couponCheckService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CouponConfigCustomizeVO>> init(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponConfigRequestBean requestBean) {
-        CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
-        BeanUtils.copyProperties(requestBean, couponConfigRequest);
-        CouponConfigCustomizeResponse ccr = couponConfigService.getRecordList(couponConfigRequest);
+    public AdminResult<CouponConfigCustomizeResponse> init(@RequestBody CouponConfigRequest request) {
+        CouponConfigCustomizeResponse ccr = couponConfigService.getRecordList(request);
+        List<String> couponStatus = new ArrayList<>();
+        couponStatus.add("待审核");
+        couponStatus.add("已发行");
+        couponStatus.add("审核不通过");
+        List<ParamNameVO> couponType = couponCheckService.getParamNameList("COUPON_TYPE");
+        ccr.setCouponStatus(couponStatus);
+        ccr.setCouponTypes(couponType);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -62,25 +74,117 @@ public class CouponIssuanceController extends BaseController {
             return new AdminResult<>(FAIL, ccr.getMessage());
 
         }
-        return new AdminResult<ListResult<CouponConfigCustomizeVO>>(ListResult.build(ccr.getResultList(), ccr.getCount()));
+        return new AdminResult<>(ccr);
     }
 
 
     @ApiOperation(value = "修改页面初始化", notes = "修改页面初始化")
-    @RequestMapping (value = "/updateAction",method = RequestMethod.GET)
+    @RequestMapping(value = "/updateAction/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    @ApiImplicitParam(name = "id", value = "主键")
-    public AdminResult<CouponConfigVO> updateCouponConfig(@PathVariable String id) {
+    public AdminResult updateCouponConfig(@PathVariable String id) {
         CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
+        //操作平台
+        List<ParamNameVO> clients = couponCheckService.getParamNameList("CLIENT");
+        //有效期类型
+        List<ParamNameVO> expType = couponCheckService.getParamNameList("COUPON_EXP_TYPE");
+        //项目类型
+        List<BorrowProjectTypeVO> projectTypes = couponConfigService.getCouponProjectTypeList();
+
+        // 被选中操作平台
+        List<String> selectedClientList = new ArrayList<String>();
+        // 被选中项目类型
+        List<String> selectedProjectList = new ArrayList<String>();
+        // 被选中操作平台表示用
+        StringBuffer selectedClientDisplayBuffer = new StringBuffer();
+        // 被选中项目类别表示用
+        StringBuffer selectedProjectDisplayBuffer = new StringBuffer();
+
         couponConfigRequest.setId(id);
         CouponConfigResponse ccr = couponConfigService.getCouponConfig(couponConfigRequest);
+        if (ccr != null) {
+            CouponConfigVO configVO = ccr.getResult();
+            if (configVO.getAuditUser() != null) {
+                String userName = couponConfigService.getAdminInfoByUserId(configVO.getAuditUser());
+                configVO.setAuditUser(userName);
+            }
+
+            // 被选中操作平台
+            String clientSed[] = StringUtils.split(configVO.getCouponSystem(),
+                    ",");
+            for(int i=0 ; i< clientSed.length;i++){
+                selectedClientList.add(clientSed[i]);
+                if("-1".equals(clientSed[i])){
+                    selectedClientDisplayBuffer.append("全部平台");
+                    break;
+                }else{
+                    for (ParamNameVO paramName : clients) {
+                        if(clientSed[i].equals(paramName.getNameCd())){
+                            if(i!=0&&selectedClientDisplayBuffer.length()!=0){
+                                selectedClientDisplayBuffer.append("/");
+                            }
+                            selectedClientDisplayBuffer.append(paramName.getName());
+
+                        }
+                    }
+                }
+            }
+
+//            modelAndView.addObject("selectedClientList", selectedClientList);
+            String selectedClientDisplay = selectedClientDisplayBuffer
+                    .toString();
+            selectedClientDisplay = StringUtils.removeEnd(
+                    selectedClientDisplay, "/");
+//            modelAndView.addObject("selectedClientDisplay",
+//                    selectedClientDisplay);
+            ccr.setSelectedClientDisplay(selectedClientDisplay);
+
+            // 被选中项目类型    新逻辑 pcc20160715
+            String projectSed[] = StringUtils.split(configVO.getProjectType(),
+                    ",");
+            String selectedProjectDisplay="";
+            if(configVO.getProjectType().indexOf("-1")!=-1){
+                selectedProjectDisplay="所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+            }else{
+                selectedProjectDisplayBuffer.append("所有");
+                for (String project : projectSed) {
+                    if("1".equals(project)){
+                        selectedProjectDisplayBuffer.append("汇直投/");
+                    }
+                    if("2".equals(project)){
+                        selectedProjectDisplayBuffer.append("汇消费/");
+                    }
+                    if("3".equals(project)){
+                        selectedProjectDisplayBuffer.append("新手汇/");
+                    }
+                    if("4".equals(project)){
+                        selectedProjectDisplayBuffer.append("尊享汇/");
+                    }
+                    if("5".equals(project)){
+                        selectedProjectDisplayBuffer.append("汇添金/");
+                    }
+                    if("6".equals(project)){
+                        selectedProjectDisplayBuffer.append("汇计划/");
+                    }
+
+                }
+                selectedProjectDisplay= selectedProjectDisplayBuffer
+                        .toString();
+                selectedProjectDisplay = StringUtils.removeEnd(
+                        selectedProjectDisplay, "/");
+                selectedProjectDisplay=selectedProjectDisplay+"项目";
+            }
+//            modelAndView.addObject("selectedProjectList", selectedProjectList);
+//            modelAndView.addObject("selectedProjectDisplay",
+//                    selectedProjectDisplay);
+            ccr.setSelectedProjectDisplay(selectedProjectDisplay);
+        }
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(ccr)) {
             return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        return new AdminResult<CouponConfigVO>(ccr.getResult());
+        return new AdminResult<>(ccr);
     }
 
 
@@ -88,8 +192,6 @@ public class CouponIssuanceController extends BaseController {
     @PostMapping("/saveAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
-//        CouponConfigRequest request = new CouponConfigRequest();
-//        BeanUtils.copyProperties(requestBean, request);
         CouponConfigResponse ccr = couponConfigService.saveCouponConfig(request);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -116,7 +218,7 @@ public class CouponIssuanceController extends BaseController {
 
 
     @ApiOperation(value = "删除优惠券信息", notes = "删除优惠券信息")
-    @RequestMapping(value = "/deleteAction",method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteAction/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteAction(@PathVariable String id) {
         CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
@@ -133,7 +235,7 @@ public class CouponIssuanceController extends BaseController {
 
 
     @ApiOperation(value = "审核页面信息", notes = "审核页面信息")
-    @RequestMapping(value = "/auditInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/auditInfo/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_AUDIT)
     public AdminResult<CouponConfigVO> auditInfo(@PathVariable String id) {
         CouponConfigRequest ccfr = new CouponConfigRequest();
@@ -169,34 +271,17 @@ public class CouponIssuanceController extends BaseController {
     @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult checkAction(HttpServletRequest request, HttpServletResponse response) {
-        CouponUserRequest cur = new CouponUserRequest();
-        CouponUserResponse curs = new CouponUserResponse();
-        String param = request.getParameter("param");
+    public AdminResult checkAction(@RequestBody CouponConfigRequest request) {
+        Integer couponQuantity = request.getCouponQuantity();
         // 优惠券编号
-        String couponCode = request.getParameter("code");
-        JSONObject ret = new JSONObject();
-        int issuNum = 0;
-        if (StringUtils.isNotEmpty(couponCode)) {
-            cur.setCouponCode(couponCode);
-            curs = couponConfigService.getIssueNumber(cur);
+        String couponCode = request.getCouponCode();
+        CouponUserResponse response = couponConfigService.getIssueNumber(couponCode);
+        if (response.getCount() > couponQuantity) {
+            String message = "修改数量不能小于已发放数量，已发放" + response.getCount() + "张";
+            response.setMessage(message);
+            return new AdminResult<>(FAIL,response.getMessage());
         }
-        if (StringUtils.isNotEmpty(param)) {
-            int count = Integer.parseInt(param);
-            if (curs.getCount() > count) {
-                String message = ValidatorFieldCheckUtil.getErrorMessage(
-                        "coupon.quantity", "");
-                if("errors.coupon.quantity".equals(message)){
-                    message="修改数量不能小于已发放数量，已发放"+issuNum+"张";
-                }
-                ret.put("info", message);
-            }
-            }
-        // 没有错误时,返回y
-        if (!ret.containsKey("info")) {
-            ret.put("status","y");
-        }
-        return new AdminResult<>(ret.toString());
+        return new AdminResult<>(response);
     }
 
 }

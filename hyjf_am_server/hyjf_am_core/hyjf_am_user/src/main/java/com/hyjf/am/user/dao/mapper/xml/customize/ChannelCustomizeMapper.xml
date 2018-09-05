@@ -54,7 +54,7 @@
 		FROM
 		  ht_utm utm
 	      LEFT JOIN ht_utm_plat plat ON utm.source_id = plat.source_id
-	      LEFT JOIN ht_users u ON utm.utm_referrer = u.user_id
+	      LEFT JOIN ht_user u ON utm.utm_referrer = u.user_id
 	   <include refid="Where_Clause" />
 		ORDER BY
 		  utm.create_time DESC
@@ -64,13 +64,12 @@
 	</select>
 	<select id="selectChannelNameByUserId" resultType="java.lang.String" parameterType="int">
 		SELECT
-			IFNULL(
-				hydup.source_name,
-				hacsd.source_name
-			) source_name
+			hydup.source_name
+-- 				hacsd.source_name
+			AS source_name
 		FROM
-			ht_users hydu
-		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+			ht_user hydu
+-- 		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
 		LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
 		LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
 		LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id

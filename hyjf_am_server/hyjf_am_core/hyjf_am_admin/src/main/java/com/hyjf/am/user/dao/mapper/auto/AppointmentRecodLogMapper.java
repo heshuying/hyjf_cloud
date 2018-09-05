@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.AppointmentRecodLog;
 import com.hyjf.am.user.dao.model.auto.AppointmentRecodLogExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AppointmentRecodLogMapper {
     int countByExample(AppointmentRecodLogExample example);

@@ -72,7 +72,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
-            autoSendProducer.messageSend(new MessageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoSendProducer.messageSend(new MessageContent(MQConstant.BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }
@@ -615,13 +615,13 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     pushBean.setIsPunished("暂无");
                 }
                 // add by nxl 20180710互金系统,新添加企业注册地址,企业注册编码Start
-                if (org.apache.commons.lang.StringUtils.isBlank(pushBean.getRegistrationAddress()) || pushBean.getRegistrationAddress().length() >99) {
+                if (StringUtils.isBlank(pushBean.getRegistrationAddress()) || pushBean.getRegistrationAddress().length() > 99) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000013);
                     pushBean.setRetMsg("企业注册地址信息不正确");
                     retassets.add(pushBean);// 返回提示
                     continue;
                 }
-                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getCorporateCode())){
+                if(StringUtils.isBlank(pushBean.getCorporateCode())){
                     pushBean.setCorporateCode("");
                 }
                 // add by nxl 20180710互金系统,新添企业注册地址,企业注册编码End
@@ -672,6 +672,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     }
                     if (users.getUserType() == 0){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
+                        pushBean.setRetMsg("用户类型不是企业用户");
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.druid.util.StringUtils;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
 import com.hyjf.am.response.admin.HjhRegionResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
@@ -93,9 +95,9 @@ public class AdminAllocationEngineController {
 	 * @Desc :插入计划专区表
 	 */
 	@RequestMapping("/insertRecord")
-	public int insertRecord(@RequestBody HjhRegionVO request) {
+	public IntegerResponse insertRecord(@RequestBody HjhRegionVO request) {
 		int flg = adminAllocationEngineService.insertRecord(request);
-		return flg;
+		return new IntegerResponse(flg);
 	}
 	
     /**
@@ -106,17 +108,20 @@ public class AdminAllocationEngineController {
     	HjhRegionResponse response = new HjhRegionResponse();
 		//计划编号未入力
 		if (StringUtils.isEmpty(planNid) && planNid == "") {
-			response.setMessage("未传入计划编号");
+			response.setMessage("错误:" +"未传入计划编号");
 			return response;
 		}
 		int errorFlag = this.checkInputPlanNidSrch(planNid);
 		if (errorFlag == 1) {
-			response.setMessage("计划编号：" + planNid +"不存在于汇计划列表中");
+			response.setMessage("错误:" +"计划编号：" + planNid +"不存在于汇计划列表中");
 			return response;
 		} else if (errorFlag == 2) {
-			response.setMessage("计划编号：" + planNid + "已存在与计划专区表");
+			response.setMessage("错误:" +"计划编号：" + planNid + "已存在与计划专区表");
 			return response;
-		} 
+		} else if (errorFlag == 0) {
+			response.setMessage("");
+			return response;
+		}
 		return response;
     }
     
@@ -161,9 +166,9 @@ public class AdminAllocationEngineController {
 	 * @Desc :更新计划专区表
 	 */
     @RequestMapping("/updateHjhRegionRecord")
-    public int updateHjhRegionRecord(@RequestBody HjhRegionVO request) {
+    public IntegerResponse updateHjhRegionRecord(@RequestBody HjhRegionVO request) {
     	int flg = adminAllocationEngineService.updateHjhRegionRecord(request);
-    	return flg;
+    	return new IntegerResponse(flg);
     }
     
 	/**
@@ -270,9 +275,9 @@ public class AdminAllocationEngineController {
 	 * @Desc :更新计划引擎表
 	 */
     @RequestMapping("/updateHjhAllocationEngineRecord")
-    public int updateHjhAllocationEngineRecord(@RequestBody HjhAllocationEngineVO request) {
+    public IntegerResponse updateHjhAllocationEngineRecord(@RequestBody HjhAllocationEngineVO request) {
     	int flg = adminAllocationEngineService.updateHjhAllocationEngineRecord(request);
-    	return flg;
+    	return new IntegerResponse(flg);
     }
     
 	/**
@@ -282,7 +287,7 @@ public class AdminAllocationEngineController {
     @RequestMapping(value = "/getPlanConfigRecordByParam", method = RequestMethod.POST)
     public HjhAllocationEngineResponse getPlanConfigRecordByParam(@RequestBody @Valid AllocationEngineRuquest request) {
     	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
-       	HjhAllocationEngineVO vo  = adminAllocationEngineService.selectPlanConfigRecordByParam(request.getPlanNidSrch(),request.getLabelId());
+       	HjhAllocationEngineVO vo  = adminAllocationEngineService.selectPlanConfigRecordByParam(request.getPlanNid(),request.getLabelId());
     	if(vo != null){
             response.setResult(vo);
             //代表成功
@@ -293,12 +298,33 @@ public class AdminAllocationEngineController {
     
 	/**
 	 * @Author: libin
+	 * @Desc :根据参数获取 HjhAllocationEngineVO
+	 */
+    @RequestMapping(value = "/getPlanConfigRecordByPlanNidLabelName", method = RequestMethod.POST)
+    public HjhAllocationEngineResponse getPlanConfigRecordByPlanNidLabelName(@RequestBody @Valid AllocationEngineRuquest request) {
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+       	HjhAllocationEngineVO vo  = adminAllocationEngineService.getPlanConfigRecordByPlanNidLabelName(request.getPlanNid(),request.getLabelName());
+    	if(vo != null){
+            response.setResult(vo);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+    	}
+    	return response;
+    }
+    
+
+	/**
+	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/checkRepeat/{labelName}/{planNid}", method = RequestMethod.POST)
-    public boolean checkRepeat(@PathVariable String labelName, @PathVariable String planNid) {
-    	boolean Flag = adminAllocationEngineService.checkRepeat(labelName,planNid);
-    	return Flag;
+    @RequestMapping(value = "/checkRepeat", method = RequestMethod.POST)
+    public HjhAllocationEngineResponse checkRepeat(@RequestBody @Valid AllocationEngineRuquest form) {
+    	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+    	int Flag = adminAllocationEngineService.checkRepeat(form);
+        response.setFlag(Flag);
+        //代表成功
+        response.setRtn(Response.SUCCESS);
+    	return response;
     }
     
 	/**
@@ -306,16 +332,16 @@ public class AdminAllocationEngineController {
 	 * @Desc :
 	 */
     @RequestMapping(value = "/getPlanBorrowStyle/{planNid}", method = RequestMethod.POST)
-    public String getPlanBorrowStyle(@PathVariable String planNid) {
+    public StringResponse getPlanBorrowStyle(@PathVariable String planNid) {
     	String borrowStyle = adminAllocationEngineService.getPlanBorrowStyle(planNid);
-    	return borrowStyle;
+    	return new StringResponse(borrowStyle);
     } 
     
 	/**
 	 * @Author: libin
 	 * @Desc :根据参数获取
 	 */
-    @RequestMapping(value = "/getHjhRegionRecordByPlanNid/{planNid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getHjhRegionRecordByPlanNid/{planNid}")
     public HjhRegionResponse getHjhRegionRecordByPlanNid(@PathVariable String planNid) {
     	HjhRegionResponse response = new HjhRegionResponse();
     	HjhRegionVO vo  = adminAllocationEngineService.getHjhRegionRecordByPlanNid(planNid);
@@ -332,16 +358,16 @@ public class AdminAllocationEngineController {
 	 * @Desc :插入计划引擎表
 	 */
 	@RequestMapping("/insertHjhAllocationEngineRecord")
-	public int insertHjhAllocationEngineRecord(@RequestBody HjhAllocationEngineVO request) {
+	public IntegerResponse insertHjhAllocationEngineRecord(@RequestBody HjhAllocationEngineVO request) {
 		int flg = adminAllocationEngineService.insertHjhAllocationEngineRecord(request);
-		return flg;
+		return new IntegerResponse(flg);
 	}
 	
 	/**
 	 * @Author: libin
 	 * @Desc :根据参数获取
 	 */
-    @RequestMapping(value = "/selectHjhPlanByPlanNid/{planNid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/selectHjhPlanByPlanNid/{planNid}")
     public HjhPlanResponse selectHjhPlanByPlanNid(@PathVariable String planNid) {
     	HjhPlanResponse response = new HjhPlanResponse();
     	List<HjhPlanVO> list = adminAllocationEngineService.selectHjhPlanByPlanNid(planNid);
@@ -359,7 +385,7 @@ public class AdminAllocationEngineController {
 	 * @Author: libin
 	 * @Desc :根据参数获取
 	 */
-    @RequestMapping(value = "/getHjhRegioByPlanNid/{planNid}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getHjhRegioByPlanNid/{planNid}")
     public HjhRegionResponse getHjhRegioByPlanNid(@PathVariable String planNid) {
     	HjhRegionResponse response = new HjhRegionResponse();
     	List<HjhRegionVO> list = adminAllocationEngineService.selectHjhRegioByPlanNid(planNid);
@@ -372,10 +398,5 @@ public class AdminAllocationEngineController {
         }
         return response;
     }
-    
-    
-    
-    
-
     
 }

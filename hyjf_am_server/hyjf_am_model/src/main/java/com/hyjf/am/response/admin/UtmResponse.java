@@ -1,14 +1,16 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.vo.admin.UtmVO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/02 11:17
  */
-public class UtmResponse<T> extends AdminResponse {
+public class UtmResponse<T> extends AdminResponse  {
     /** 访问数 */
     private Integer accessNumber;
     /** 注册数 */
@@ -41,6 +43,8 @@ public class UtmResponse<T> extends AdminResponse {
     private Integer accountNumberWechat;
 
     private String channelName;
+
+    private List<UtmVO> resultListS;
 
     public String getChannelName() {
         return channelName;
@@ -160,5 +164,13 @@ public class UtmResponse<T> extends AdminResponse {
 
     public void setAccountNumberAndroid(Integer accountNumberAndroid) {
         this.accountNumberAndroid = accountNumberAndroid;
+    }
+
+    public List<UtmVO> getResultListS() {
+        return resultListS;
+    }
+
+    public void setResultListS(List<UtmVO> resultListS) {
+        this.resultListS = resultListS;
     }
 }

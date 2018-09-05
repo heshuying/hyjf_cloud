@@ -62,7 +62,7 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     private Integer txCounts;
 
-    private Byte failTimes;
+    private Integer failTimes;
 
     private Integer sucCounts;
 
@@ -282,11 +282,11 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
         this.txCounts = txCounts;
     }
 
-    public Byte getFailTimes() {
+    public Integer getFailTimes() {
         return failTimes;
     }
 
-    public void setFailTimes(Byte failTimes) {
+    public void setFailTimes(Integer failTimes) {
         this.failTimes = failTimes;
     }
 

@@ -10,10 +10,8 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.AccountListResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -36,6 +34,7 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.ApplyAgreementInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -76,21 +75,6 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
-
-    /**
-     * 根据筛选条件查询绑定日志count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getBindLogCount(BindLogListRequest request);
-    /**
-     * 根据筛选条件查询绑定日志list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<BindLogVO> searchBindLogList(BindLogListRequest request);
 
     /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
@@ -1637,14 +1621,6 @@ public interface AmTradeClient {
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
     /**
-     * 查询数据中心优惠券数据
-     * @param requestBean
-     * @param type 优惠券类型
-     * @return
-     */
-    DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
-
-    /**
      * 根据筛选条件查询银行账务明细list
      * @param
      * @return
@@ -1734,12 +1710,6 @@ public interface AmTradeClient {
     int isEntrustedExistsUser(String userName);
 
     /**
-     * 获取加息券回款列表
-     * @param dataCenterCouponCustomize
-     * @return
-     */
-    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
-    /**
      * 获取计划列表无分页
      * @return
      */
@@ -1753,12 +1723,6 @@ public interface AmTradeClient {
      */
     BankMerchantAccountVO getBankMerchantAccount(String accountCode);
 
-    /**
-     * 获取代金券回款列表
-     * @param dataCenterCouponCustomize
-     * @return
-     */
-    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
     /**
      * 获取子账户信息
      * @param accountCode
@@ -1908,7 +1872,7 @@ public interface AmTradeClient {
 
     CouponConfigResponse updateAuditInfo(CouponConfigRequest couponConfigRequest);
 
-    CouponUserResponse getIssueNumber(CouponUserRequest cur);
+    CouponUserResponse getIssueNumber(String couponCode);
 
     CouponTenderResponse countRecordHzt(CouponTenderRequest couponTenderRequest);
 
@@ -2549,7 +2513,7 @@ public interface AmTradeClient {
 
     CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
 
-    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+    CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest);
 
     List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
 
@@ -2810,6 +2774,24 @@ public interface AmTradeClient {
      */
     Integer updateBorrowCredit(com.hyjf.am.vo.trade.BorrowCreditVO borrowCreditVO);
 
+
+    /**
+     * 保存垫付协议申请-协议生成详情
+    * @author Zha Daojian
+    * @date 2018/8/23 15:38
+    * @param applyAgreementInfoVO
+    * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+    **/
+    ApplyAgreementInfoResponse saveApplyAgreementInfo(ApplyAgreementInfoVO applyAgreementInfoVO);
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     **/
+    ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId);
     /**
      * 单期还款数据
      * @param borrowNid
@@ -2839,6 +2821,92 @@ public interface AmTradeClient {
      * @return
      */
     NifaReportLogResponse selectNifaReportLogById(int logId);
+
+    /**
+     * 查询账户信息
+     * @param status
+     * @return
+     */
+    MerchantAccountResponse selectMerchantAccountList(Integer status);
+
+    /**
+     * 获取转账列表
+     * @param form
+     * @return
+     */
+    MerchantTransferResponse selectMerchantTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 根据id获取转账信息
+     * @param id
+     * @return
+     */
+    MerchantAccountVO selectMerchantAccountById(Integer id);
+
+    /**
+     * 插入转账信息
+     * @param form
+     * @return
+     */
+    boolean insertTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 更新转账信息
+     * @param orderId
+     * @param status
+     * @param message
+     * @return
+     */
+    int updateMerchantTransfer(String orderId, int status, String message);
+
+    /**
+     * 还款计划数量查询
+     * @param request
+     * @return
+     */
+    Integer countBorrowRepaymentPlan(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划列表查询
+     * @param request
+     * @return
+     */
+    List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划统计查询
+     * @param request
+     * @return
+     */
+    BorrowRepaymentPlanCustomizeVO sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
+
+    /**
+     * 根据id查询受托支付白名单详情
+     * @param id
+     * @return
+     */
+    STZHWhiteListResponse selectSTZHWhiteById(Integer id);
+
+    /**
+     * 加载优惠券配置列表
+     * @param request
+     * @return
+     */
+    CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request);
+
+    /**
+     * 根据参数获取 HjhRegionVO
+     * @param form
+     * @return
+     */
+    HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:30
+     */
+    String selectTenderCreditAssignPay(Map<String,String> map);
 
     /** 加息接口开始*/
     /** 枚举类型 */

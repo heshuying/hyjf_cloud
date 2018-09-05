@@ -36,6 +36,8 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
 
     private Date updateTime;
 
+    private Integer repayCapitalType;
+
     private static final long serialVersionUID = 1L;
 
     private String capitalAvailable;
@@ -142,5 +144,13 @@ public class HjhInstConfigWrapVo extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getRepayCapitalType() {
+        return repayCapitalType;
+    }
+
+    public void setRepayCapitalType(Integer repayCapitalType) {
+        this.repayCapitalType = repayCapitalType;
     }
 }

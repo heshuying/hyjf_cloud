@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
@@ -32,8 +33,9 @@ public class OperationReportJobController extends BaseController {
 
 	@ApiOperation(value = "统计报表-根据当前时间要获取到上个月的数据", notes = "根据当前时间要获取到上个月的数据")
 	@RequestMapping("/countOperationReport")
-	public void countOperationReport() {
+	public StringResponse countOperationReport() {
 		logger.info("开始 从数据库获取运营报告的数据...");
+		StringResponse response = new StringResponse();
 //		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
 //		if(!flag){
 //			return;
@@ -92,6 +94,7 @@ public class OperationReportJobController extends BaseController {
 		RedisUtils.del(RedisConstants.Statistics_Operation_Report);
 
 		logger.info("完成 插入统计数据到mongodb...");
+		return response;
 	}
 
 	/**

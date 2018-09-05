@@ -44,7 +44,7 @@ public class WechatTradeDetailController extends BaseTradeController {
 
 
     @ApiOperation(value = "获取交易类型", notes = "获取交易类型")
-    @PostMapping("/getTradeTypes")
+    @PostMapping("/getTradeTypes.do")
     public BaseResultBean searchTradeTypes(HttpServletRequest request, HttpServletResponse response) {
         SimpleResultBean<List<AppAccountTradeListCustomizeVO>> baseResultBean = new SimpleResultBean<>();
         baseResultBean.setObject(tradeDetailService.searchAppTradeTypes());
@@ -59,7 +59,7 @@ public class WechatTradeDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "用户收支明细", notes = "用户收支明细")
     @ResponseBody
-    @PostMapping(value = "/queryTradeList",  produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/queryTradeList.do",  produces = "application/json; charset=utf-8")
     public Map<String, Object> searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId, AppTradeDetailBeanRequest trade) {
 
         SimpleResultBean<Map<String, Object>> resultBean = new SimpleResultBean<>();

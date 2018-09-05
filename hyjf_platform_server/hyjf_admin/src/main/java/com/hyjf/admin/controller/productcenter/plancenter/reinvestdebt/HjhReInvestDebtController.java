@@ -68,7 +68,7 @@ public class HjhReInvestDebtController extends BaseController {
         undertakingMethodMap.put("key", 0);
         undertakingMethodMap.put("value", "自动承接");
         undertakingMethodMap1.put("key", 1);
-        undertakingMethodMap1.put("key", "手动承接");
+        undertakingMethodMap1.put("value", "手动承接");
 
         undertakingMethodList.add(undertakingMethodMap);
         undertakingMethodList.add(undertakingMethodMap1);

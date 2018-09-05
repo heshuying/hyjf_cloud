@@ -3,12 +3,16 @@
  */
 package com.hyjf.am.trade.controller.front.trade;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.BorrowBailVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -158,13 +162,15 @@ public class AssetPushController extends BaseController {
      * @param hjhPlanAssetVO
      * @return
      */
-    public int updateHjhPlanAssetnew(HjhPlanAssetVO hjhPlanAssetVO) {
+    @RequestMapping("/updateHjhPlanAssetNew")
+    public IntegerResponse updateHjhPlanAssetNew(@PathVariable HjhPlanAssetVO hjhPlanAssetVO) {
+        Integer num = -1;
         if (hjhPlanAssetVO != null) {
             HjhPlanAsset hjhPlanAsset = new HjhPlanAsset();
             BeanUtils.copyProperties(hjhPlanAssetVO, hjhPlanAsset);
-           return assetPushService.updateHjhPlanAssetnew(hjhPlanAsset);
+            num = assetPushService.updateHjhPlanAssetnew(hjhPlanAsset);
         }
-        return 0;
+        return new IntegerResponse(num);
     }
 
     /**
@@ -198,5 +204,68 @@ public class AssetPushController extends BaseController {
             result =  assetPushService.insertCompanyInfoToBorrowUsers(borrowUser);
         }
         return result;
+    }
+
+    /**
+     * 检查是否交过保证金 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @RequestMapping("/select_borrow_bail/{borrowNid}")
+    public BorrowBailResponse selectBorrowBail(@PathVariable String borrowNid){
+        BorrowBailResponse response = new BorrowBailResponse();
+        List<BorrowBail> borrowBailList = this.assetPushService.selectBorrowBail(borrowNid);
+        if (!CollectionUtils.isEmpty(borrowBailList)) {
+            List<BorrowBailVO> voList = CommonUtils.convertBeanList(borrowBailList, BorrowBailVO.class);
+            response.setResult(voList.get(0));
+        }
+        return response;
+    }
+
+    /**
+     * 更新借款表 add by liushouyi
+     *
+     * @param borrowVO
+     * @return
+     */
+    @RequestMapping("/update_borrow_by_borrow_nid")
+    public IntegerResponse selectBorrowByBorrowNid(@RequestBody BorrowVO borrowVO){
+        Integer result = -1;
+        if (borrowVO != null){
+            Borrow borrow = new Borrow();
+            BeanUtils.copyProperties(borrowVO, borrow);
+            result = this.assetPushService.updateBorrowByBorrowNid(borrow);
+        }
+        return new IntegerResponse(result);
+    }
+
+    /**
+     * 配置表获取保证金比率 add by liushouyi
+     *
+     * @param configCd
+     * @return
+     */
+    @RequestMapping("/select_borrow_config/{configCd}")
+    public StringResponse selectBorrowConfig(@PathVariable String configCd){
+        String result =  this.assetPushService.selectBorrowConfig(configCd);
+        return new StringResponse(result);
+    }
+
+    /**
+     * 插入保证金 add by liushouyi
+     *
+     * @param borrowBailVO
+     * @return
+     */
+    @RequestMapping("/insert_borrow_bail")
+    public IntegerResponse insertBorrowBail(@RequestBody BorrowBailVO borrowBailVO){
+        Integer result = -1;
+        if (borrowBailVO != null){
+            BorrowBail borrowBail = new BorrowBail();
+            BeanUtils.copyProperties(borrowBailVO, borrowBail);
+            result = this.assetPushService.insertBorrowBail(borrowBail);
+        }
+        return new IntegerResponse(result);
     }
 }

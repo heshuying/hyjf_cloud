@@ -557,14 +557,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStr(request));
+						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
 			}
 		}
 		{
@@ -747,7 +747,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 自动投标授权URL
 			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?1=1"));
+					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+ packageStrForm(request)));
 			// 缴费授权Url
 			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
@@ -769,59 +769,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		amUserClient.updateUserById(userVO);
 
 	}
-
-	// 组装url
-	private String packageStr(HttpServletRequest request) {
-		StringBuffer sbUrl = new StringBuffer();
-		// 版本号
-		String version = request.getParameter("version");
-		// 网络状态
-		String netStatus = request.getParameter("netStatus");
-		// 平台
-		String platform = request.getParameter("platform");
-		// token
-		String token = request.getParameter("token");
-		// 唯一标识
-		String sign = request.getParameter("sign");
-		// 随机字符串
-		String randomString = request.getParameter("randomString");
-		// Order
-		String order = request.getParameter("order");
-		sbUrl.append("?").append("version").append("=").append(version);
-		sbUrl.append("&").append("netStatus").append("=").append(netStatus);
-		sbUrl.append("&").append("platform").append("=").append(platform);
-		sbUrl.append("&").append("randomString").append("=").append(randomString);
-		sbUrl.append("&").append("sign").append("=").append(sign);
-		sbUrl.append("&").append("token").append("=").append(strEncode(token));
-		sbUrl.append("&").append("order").append("=").append(strEncode(order));
-		return sbUrl.toString();
-	}
-
-    private String packageStrForm(HttpServletRequest request) {
-        StringBuffer sbUrl = new StringBuffer();
-        // 版本号
-        String version = request.getParameter("version");
-        // 网络状态
-        String netStatus = request.getParameter("netStatus");
-        // 平台
-        String platform = request.getParameter("platform");
-        // token
-        String token = request.getParameter("token");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 随机字符串
-        String randomString = request.getParameter("randomString");
-        // Order
-        String order = request.getParameter("order");
-        sbUrl.append("&").append("version").append("=").append(version);
-        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
-        sbUrl.append("&").append("platform").append("=").append(platform);
-        sbUrl.append("&").append("randomString").append("=").append(randomString);
-        sbUrl.append("&").append("sign").append("=").append(sign);
-        sbUrl.append("&").append("token").append("=").append(strEncode(token));
-        sbUrl.append("&").append("order").append("=").append(strEncode(order));
-        return sbUrl.toString();
-    }
 
 	/**
 	 * 检查是否是新手(未登录或已登录未投资)

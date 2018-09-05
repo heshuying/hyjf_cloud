@@ -7,6 +7,8 @@ import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
+import java.util.List;
+
 /**
  * 受托支付白名单
  * 
@@ -45,4 +47,24 @@ public interface StzfWhiteConfigService {
 	 * @return
 	 */
 	HjhInstConfigVO selectHjhInstConfig(String instcode);
+
+	/**
+	 * 根据id查询白名单详情
+	 * @param id
+	 * @return
+	 */
+    STZHWhiteListResponse selectSTZHWhiteById(Integer id);
+
+	/**
+	 * 获取机构列表
+	 * @return
+	 */
+	List<HjhInstConfigVO> getRegionList();
+
+	/**
+	 * 加载用户/企业信息
+	 * @param requestBean
+	 * @return
+	 */
+    STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean);
 }

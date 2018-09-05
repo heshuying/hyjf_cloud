@@ -17,6 +17,7 @@ public class TenderBgVO extends BaseVO implements Serializable {
 
     private String orderId;
     private Integer userId;
+    private String userName;
     private String borrowNid;
     private BigDecimal accountDecimal;
     private String retCode;
@@ -253,5 +254,13 @@ public class TenderBgVO extends BaseVO implements Serializable {
 
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     int countByExample(UserExample example);

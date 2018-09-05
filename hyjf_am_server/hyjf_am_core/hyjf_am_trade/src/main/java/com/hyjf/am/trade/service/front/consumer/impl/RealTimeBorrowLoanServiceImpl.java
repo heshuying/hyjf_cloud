@@ -1651,7 +1651,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			accountWebList.setOrdid(tenderOrderId);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(borrowTender.getUserId()); // 投资者
-			accountWebList.setAmount(serviceFee); // 服务费
+			accountWebList.setAmount(Double.valueOf(serviceFee.toString())); // 服务费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入2支出
 			accountWebList.setTrade(CustomConstants.TRADE_LOANFEE); // 服务费
 			accountWebList.setTradeType(CustomConstants.TRADE_LOANFEE_NM); // 服务费

@@ -18,6 +18,9 @@ public class BorrowCreditTenderPDFSignReq implements Serializable {
     @ApiModelProperty(value = "债转编号")
     private String creditNid;
 
+    @ApiModelProperty(value = "用户id")
+    private String userId;
+
 
     public String getBorrowNid() {
         return borrowNid;
@@ -49,5 +52,13 @@ public class BorrowCreditTenderPDFSignReq implements Serializable {
 
     public void setCreditNid(String creditNid) {
         this.creditNid = creditNid;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

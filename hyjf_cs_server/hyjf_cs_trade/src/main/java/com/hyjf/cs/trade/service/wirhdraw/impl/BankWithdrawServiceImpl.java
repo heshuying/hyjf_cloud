@@ -309,6 +309,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setStatusDesc(MsgEnum.ERR_USER_UNUSUAL.getMsg());
             return result;
         }
+        // 判断用户是否开户
+        if (!user.isBankOpenAccount()) {
+            result.setStatus(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getCode());
+            result.setStatusDesc(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getMsg());
+            return result;
+        }
         // 查询页面上可以挂载的银行列表
         BankCardVO banks = bindCardClient.selectBankCardByUserId(userId);
         if (banks == null) {
@@ -416,22 +422,46 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param accountwithdraw
      */
     private void updateWithdraw(AccountWithdrawVO accountwithdraw) {
-        //调用银行接口
-        BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
-        if (bean != null) {
-            int userId = accountwithdraw.getUserId();
-            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
-            BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
-            String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
-            //调用后平台操作
-            boolean result=this.amTradeClient.handlerAfterCash(CommonUtils.convertBean(bean,BankCallBeanVO.class), accountwithdraw,bankCard,withdrawFee);
-            if (result){
-                logger.info("银行提现掉单修复成功!,账户:"+accountwithdraw.getAccountId());
 
-            }else{
-                logger.info("银行提现掉单修复失败!,账户:"+accountwithdraw.getAccountId());
+        try {
+            //调用银行接口
+            BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
+            if (bean != null) {
+                int userId = accountwithdraw.getUserId();
+                BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
+                //bean.getTxAmount() 为""
+                if (StringUtils.isEmpty(bean.getTxAmount())){
+                    throw new RuntimeException("调用银行接口,银行返回交易金额为空,充值订单号:"
+                            + accountwithdraw.getNid()
+                            + ",用户Id:" + accountwithdraw.getUserId());
+                }
+
+                BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
+                String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
+                //调用后平台操作
+                JSONObject params = new JSONObject();
+                params.put("bankCallBean",bean);
+                params.put("accountWithdrawVO",accountwithdraw);
+                params.put("bankCardVO",bankCard);
+                params.put("withdrawFee",withdrawFee);
+                boolean result=this.amTradeClient.handlerAfterCash(params);
+                if (result){
+                    logger.info("银行提现掉单修复成功!,账户:"+accountwithdraw.getAccountId());
+
+                }else{
+                    logger.error("银行提现掉单修复失败!,账户:"+accountwithdraw.getAccountId());
+                }
+            }else {
+                throw new RuntimeException("调用银行接口,银行返回NULL,充值订单号:"
+                        + accountwithdraw.getNid()
+                        + ",用户Id:" + accountwithdraw.getUserId());
             }
+
+        } catch (RuntimeException e) {
+            logger.error(this.getClass().getName(), "bankCallFundTransQuery", e);
         }
+
+
     }
 
     /**

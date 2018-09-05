@@ -4,8 +4,8 @@ spring:
   cloud:
           config:
             uri: http://micoserver:2222/
-            profile: test
-
+  profiles:
+    active: dev
 server:
   port: 9091
   servlet:

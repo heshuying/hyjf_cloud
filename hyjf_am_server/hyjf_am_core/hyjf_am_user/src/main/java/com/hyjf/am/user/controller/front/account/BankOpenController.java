@@ -1,6 +1,7 @@
 package com.hyjf.am.user.controller.front.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
@@ -38,7 +39,7 @@ public class BankOpenController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/updateUserAccountLog")
-	public int updateUserAccountLog(@RequestBody @Valid BankOpenRequest request) {
+	public IntegerResponse updateUserAccountLog(@RequestBody @Valid BankOpenRequest request) {
 		logger.info("updateUserAccountLog...param is :{}", JSONObject.toJSONString(request));
 		
 		Integer userId = request.getUserId();
@@ -52,7 +53,7 @@ public class BankOpenController extends BaseController {
 		
 		boolean result = this.bankOpenService.updateUserAccountLog(userId, username, mobile, orderId, channel, trueName,idNo,cardNO);
         
-		return result?1:0;
+		return new IntegerResponse(result?1:0);
 	}
 
 	/**

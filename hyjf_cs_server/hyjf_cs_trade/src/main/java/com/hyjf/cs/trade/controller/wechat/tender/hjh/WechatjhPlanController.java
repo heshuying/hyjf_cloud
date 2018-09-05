@@ -10,14 +10,14 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +33,8 @@ import java.util.Map;
  */
 @Api(tags = "weChat端-加入计划")
 @RestController
-@RequestMapping("/hyjf-wechat/tender/hjh")
+@RequestMapping("/hyjf-wechat/wx/plantender")
 public class WechatjhPlanController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatjhPlanController.class);
 
     @Autowired
     private HjhTenderService hjhTenderService;
@@ -43,28 +42,32 @@ public class WechatjhPlanController extends BaseTradeController {
     @ApiOperation(value = "加入计划", notes = "加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WeChatResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
-        WebResult<Map<String, Object>> result = null;
+        WebResult result = new WebResult();
+        WeChatResult weChatResult = new WeChatResult();
         try {
             result = hjhTenderService.joinPlan(tender);
+            weChatResult.setObject(result.getData());
         } catch (CheckException e) {
             throw e;
         } finally {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
-        return result;
+        return weChatResult;
     }
 
     @ApiOperation(value = "获取计划投资信息", notes = "获取计划投资信息")
-    @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender) {
+    @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
+    public WeChatResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId,TenderRequest tender) {
         tender.setUserId(userId);
-        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        return  hjhTenderService.getInvestInfo(tender);
+        tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
+        AppInvestInfoResultVO resultBean = hjhTenderService.getInvestInfoApp(tender);
+        WeChatResult result = new WeChatResult();
+        result.setObject(resultBean);
+        return  result;
     }
-
 }

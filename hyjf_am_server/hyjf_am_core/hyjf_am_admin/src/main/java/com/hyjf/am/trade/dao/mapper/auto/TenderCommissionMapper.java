@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.TenderCommission;
 import com.hyjf.am.trade.dao.model.auto.TenderCommissionExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface TenderCommissionMapper {
     int countByExample(TenderCommissionExample example);

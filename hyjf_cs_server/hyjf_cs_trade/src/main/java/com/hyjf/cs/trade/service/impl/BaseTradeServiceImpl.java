@@ -87,13 +87,18 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         BigDecimal balance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
-        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
-        bean.setAccountId(accountId);// 电子账号
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
-        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        // 交易渠道
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 订单号
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        // 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogRemark("电子账户余额查询");
-        bean.setLogClient(0);// 平台
+        // 平台
+        bean.setLogClient(0);
         try {
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
             if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {

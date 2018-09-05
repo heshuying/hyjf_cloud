@@ -6,7 +6,6 @@ package com.hyjf.cs.user.controller.web.password;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -103,11 +102,11 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn")
-    public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
+    public WebResult<Object> passwordBgreturn(BankCallBean bean) {
+        logger.info("设置交易密码异步回调"+bean.getLogOrderId());
         WebResult<Object> result = new WebResult<Object>();
         bean.convert();
-        LogAcqResBean acqes = bean.getLogAcqResBean();
-        int userId = acqes.getUserId();
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 查询设置交易密码状态
         UserVO user = passWordService.getUsersById(userId);
         // 成功或审核中
@@ -151,7 +150,7 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn")
-    public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
+    public WebResult<String> resetPasswordBgreturn(BankCallBean bean) {
         WebResult<String> result = new WebResult<String>();
         result.setStatus("0");
         result.setStatusDesc("交易密码修改成功");

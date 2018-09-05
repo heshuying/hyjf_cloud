@@ -38,4 +38,8 @@ public interface BorrowCreditTenderCustomizeMapper {
 	Integer getCreditListCount(Map<String,Object> params);
 
 	List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String,Object> params);
+
+	String getServiceFee(String creditNid);
+
+	String getCreditTenderAssignPay(Map<String,String> params);
 }

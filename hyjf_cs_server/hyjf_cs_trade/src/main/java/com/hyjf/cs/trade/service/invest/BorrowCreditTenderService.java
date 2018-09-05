@@ -33,11 +33,11 @@ public interface BorrowCreditTenderService extends BaseTradeService {
 
     /**
      * 债转投资获取投资失败结果
-     * @param userVO
+     * @param userId
      * @param logOrdId
      * @return
      */
-    WebResult<Map<String,Object>> getFaileResult(WebViewUserVO userVO, String logOrdId);
+    WebResult<Map<String,Object>> getFaileResult(Integer userId, String logOrdId);
 
     /**
      * 获取债转成功的信息

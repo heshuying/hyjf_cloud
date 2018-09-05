@@ -12,6 +12,7 @@ import org.quartz.JobExecutionException;
 /**
  * @author PC-LIUSHOUYI
  * @version BorrowRepayToHjhQuitJob, v0.1 2018/6/25 9:31
+ * 进入锁定期和退出计划
  */
 /** 禁止并发执行 */
 @DisallowConcurrentExecution

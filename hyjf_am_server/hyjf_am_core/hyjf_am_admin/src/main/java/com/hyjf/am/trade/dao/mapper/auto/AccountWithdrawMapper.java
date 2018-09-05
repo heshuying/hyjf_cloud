@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdrawExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AccountWithdrawMapper {
     int countByExample(AccountWithdrawExample example);

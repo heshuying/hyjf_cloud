@@ -156,7 +156,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
-        String url = "http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/" + retCode;
+        String url = "http://AM-ADMIN/am-config/config/getBankReturnCodeConfig/" + retCode;
         BankReturnCodeConfigResponse response = restTemplate.getForEntity(url, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -387,7 +387,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<BankConfigVO> getBankConfigRecordList(String bankName) {
         AdminBankConfigResponse response = restTemplate
-                .postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName", bankName, AdminBankConfigResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bankName,  AdminBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -1386,7 +1386,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public MessagePushTagVO findMsgTagByTagName(String tagName) {
         MessagePushTagVO result = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/messagePushTemplate/findMsgTagByTagName/" + tagName,
+                .getForEntity("http://AM-CONFIG/am-config/messagePushTag/findMsgTagByTagName/" + tagName,
                         MessagePushTagVO.class)
                 .getBody();
         return result;

@@ -332,7 +332,6 @@
         </table>
 
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_plat" domainObjectName="UserPlat">
@@ -664,7 +663,6 @@
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
-            <generatedKey column="send_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1856,5 +1854,38 @@
         <table tableName="ht_sms_count" domainObjectName="SmsCount">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
+        <table tableName="ht_under_line_recharge" domainObjectName="UnderLineRecharge">
+           <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+           <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_protocol_log" domainObjectName="ProtocolLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="operation" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_protocol_version" domainObjectName="ProtocolVersion">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="display_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_config_r_user" domainObjectName="ConfigRUser">
+            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_r_oa_department" domainObjectName="UserROaDepartment">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="ishead" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="ishr" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="isfinance" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="cuttype" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="listorder" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_r_oa_users" domainObjectName="UserROaUsers">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

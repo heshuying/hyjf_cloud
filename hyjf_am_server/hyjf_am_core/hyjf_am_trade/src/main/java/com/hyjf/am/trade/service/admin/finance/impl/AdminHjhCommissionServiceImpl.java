@@ -60,7 +60,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * @author libin
- * @version AdminHjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午4:45:57
+ * @version AdminHjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午4:45:57   旧
  */
 @Service
 public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements AdminHjhCommissionService{
@@ -302,7 +302,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		AccountWebListVO accountWebList = new AccountWebListVO();
 		accountWebList.setOrdid(accountList.getNid());// 订单号
 		accountWebList.setUserId(accountList.getUserId()); // 投资者
-		accountWebList.setAmount(accountList.getAmount()); // 管理费
+		accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成

@@ -56,7 +56,10 @@ public class HjhPlanCapitalServiceImpl extends BaseServiceImpl implements HjhPla
         //起始时间
         param.put("date", request.getDate() + " 00:00:00");
         // 结束时间
-        param.put("datee", request.getDate() + " 23:59:59");
+        // TODO : bt.tender_type = 1 为方便联调删除的sql语句Where条件, 联调完应替换 1=1 条件
+        // TODO : 为方便前端联调做修改, 联调完应做删除
+//        param.put("datee", request.getDate() + " 23:59:59");
+        param.put("datee",  "2018-09-30 23:59:59");
         param.put("planNid", request.getPlanNid());
         param.put("userNameSrch", request.getUserNameSrch());
         param.put("accedeOrderIdSrch", request.getAccedeOrderIdSrch());

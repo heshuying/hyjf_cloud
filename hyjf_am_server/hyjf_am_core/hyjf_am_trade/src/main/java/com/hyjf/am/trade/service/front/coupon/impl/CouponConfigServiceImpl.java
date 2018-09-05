@@ -3,8 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.coupon.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CouponOperationHistoryMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper;
 import com.hyjf.am.trade.dao.mapper.auto.TransferExceptionLogMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponConfigCustomizeMapper;
@@ -19,6 +21,10 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CreateUUID;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -44,6 +50,8 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	private TransferExceptionLogMapper transferExceptionLogMapper;
 	@Resource
 	private CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
+	@Autowired
+	private CouponOperationHistoryMapper couponOperationHistoryMapper;
 	/**
 	 * 根据优惠券编号查找优惠券配置
 	 * 
@@ -112,15 +120,37 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> saveCouponConfig(CouponConfig couponConfig) {
+	public int saveCouponConfig(CouponConfig couponConfig) {
 		int count = couponConfigMapper.updateByPrimaryKey(couponConfig);
-		Map<String,Object> map = new HashMap<>();
-		if (count > 0) {
-			map.put("success",true);
-		}else {
-			map.put("success",false);
+		this.operationLog(couponConfig, CustomConstants.OPERATION_CODE_MODIFY);
+		return count;
+	}
+
+	private void operationLog(CouponConfig couponConfig, int operationCode) {
+		CouponOperationHistoryWithBLOBs co = new CouponOperationHistoryWithBLOBs();
+		// 编号
+		co.setUuid(CreateUUID.getUUID());
+		// 优惠券编号
+		co.setCouponCode(couponConfig.getCouponCode());
+		// 操作编号
+		co.setOperationCode(operationCode);
+		// 取得上传更新前的数据
+		CouponConfig recordFrom = couponConfigMapper
+				.selectByPrimaryKey(couponConfig.getId());
+		// 更新，删除的场合
+		if (operationCode != CustomConstants.OPERATION_CODE_INSERT) {
+			// 更新前的json数据
+			co.setOperationContentFrom(JSONObject
+					.toJSONString(recordFrom, true));
 		}
-		return map;
+		// 更新后的json数据
+		co.setOperationContentTo(JSONObject.toJSONString(couponConfig, true));
+
+		// 操作者
+		co.setCreateUserId(couponConfig.getUpdateUserId());
+		// 操作时间
+		co.setCreateTime(GetDate.getDate());
+		couponOperationHistoryMapper.insertSelective(co);
 	}
 
 	/**
@@ -129,15 +159,9 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> insertAction(CouponConfig couponConfig) {
+	public int insertAction(CouponConfig couponConfig) {
 		int insert = couponConfigMapper.insert(couponConfig);
-		Map<String,Object> map = new HashMap<>();
-		if (insert > 0) {
-			map.put("success", true);
-		} else {
-			map.put("msg", "添加失败");
-		}
-		return map;
+		return insert;
 	}
 
 	/**
@@ -146,15 +170,9 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> deleteCouponConfig(int id) {
-		int i = couponConfigMapper.deleteByPrimaryKey(id);
-		Map<String,Object> map = new HashMap<>();
-		if (i > 0) {
-			map.put("success", true);
-		} else {
-			map.put("msg", "删除失败");
-		}
-		return map;
+	public int deleteCouponConfig(int id) {
+		int result = couponConfigMapper.deleteByPrimaryKey(id);
+		return result;
 	}
 
 	/**
@@ -276,5 +294,14 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		map.put("limitEnd",-1);
 		return couponConfigCustomizeMapper.selectCouponConfigList(map);
 	}
+
+    @Override
+    public List<CouponConfigCustomize> getConfigCustomizeList(CouponConfigCustomize couponConfigCustomize) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("limitStart",-1);
+		map.put("limitEnd",-1);
+		map.put("status",CustomConstants.COUPON_STATUS_PUBLISHED);
+        return couponConfigCustomizeMapper.selectCouponConfigList(map);
+    }
 
 }

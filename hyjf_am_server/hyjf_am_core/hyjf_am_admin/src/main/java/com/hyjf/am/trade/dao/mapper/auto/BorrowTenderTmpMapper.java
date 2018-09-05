@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BorrowTenderTmpMapper {
     int countByExample(BorrowTenderTmpExample example);

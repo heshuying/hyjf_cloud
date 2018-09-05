@@ -62,7 +62,7 @@ public class AssetListController extends BaseController {
 	 * 画面初始化
 	 *
 	 * @param request
-	 * @return 进入资产列表页面
+	 * @return 进入资产列表页面   已测试
 	 */
 	@ApiOperation(value = "资产列表", notes = "资产列表页面初始化")
 	@PostMapping(value = "/init")
@@ -102,7 +102,7 @@ public class AssetListController extends BaseController {
 	 * 产品类型下拉联动
 	 *
 	 * @param request
-	 * @return 进入资产列表页面
+	 * @return 进入资产列表页面   已测试
 	 */
 	@ApiOperation(value = "资产列表", notes = "资产列表页面产品类型下拉联动")
 	@PostMapping(value = "/link")

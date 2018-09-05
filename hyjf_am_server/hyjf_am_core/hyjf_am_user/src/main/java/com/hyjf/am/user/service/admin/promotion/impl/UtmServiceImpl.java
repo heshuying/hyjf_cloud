@@ -10,7 +10,9 @@ import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -43,21 +45,27 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public List<UtmPlatVO> getUtmPlat(String sourceId) {
         Map<String, Object> map = new HashMap<>();
-        map.put("sourceId",sourceId);
+        if (StringUtils.isNotBlank(sourceId)) {
+            map.put("sourceId",sourceId);
+        }
         map.put("delFlag",CustomConstants.FLAG_NORMAL);
         map.put("sourceType",0);
         return utmRegCustomizeMapper.getUtmPlat(map);
     }
 
     @Override
-    public UtmChannelVO getUtmByUtmId(String utmId) {
+    public UtmChannelVO getUtmByUtmId(Integer utmId) {
         return utmRegCustomizeMapper.getUtmByUtmId(utmId);
     }
 
     @Override
     public Utm insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
         Utm utm = new Utm();
-        if(StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())){
+        Integer utmId = Integer.parseInt(channelCustomizeVO.getUtmId());
+        UtmExample example = new UtmExample();
+        example.createCriteria().andUtmIdEqualTo(utmId);
+        List<Utm> utmList = utmMapper.selectByExample(example);
+        if(utmId == null || !CollectionUtils.isEmpty(utmList)) {
             //执行更新操作
             utm = changeUtm(utm,channelCustomizeVO);
             utm.setUtmId(Integer.parseInt(channelCustomizeVO.getUtmId()));
@@ -80,8 +88,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     public UtmPlatVO getUtmPlatById(Integer id) {
         UtmPlat utmPlat = utmPlatMapper.selectByPrimaryKey(id);
         UtmPlatVO utmPlatVO = new UtmPlatVO();
-        utmPlatVO = (UtmPlatVO)convertBean2Bean(utmPlat,utmPlatVO);
-        return utmPlatVO;
+        if (utmPlat != null) {
+            BeanUtils.copyProperties(utmPlat, utmPlatVO);
+            return utmPlatVO;
+        }
+        return null;
     }
 
     @Override
@@ -102,8 +113,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public UtmPlat insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
         UtmPlat utmPlat = new UtmPlat();
-        utmPlat = convertUtmPlat(utmPlat,utmPlatVO);
-        if(StringUtils.isNotEmpty(utmPlatVO.getId()+"")){
+        BeanUtils.copyProperties(utmPlatVO, utmPlat);
+        if(utmPlat.getId() != null){
             utmPlat.setId(Integer.valueOf(utmPlatVO.getId()));
             utmPlatMapper.updateByPrimaryKeySelective(utmPlat);
         }else{

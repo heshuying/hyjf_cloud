@@ -1,5 +1,8 @@
 package com.hyjf.callcenter.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.callcenter.CallCenterAccountHuifuResponse;
 import com.hyjf.am.response.callcenter.CallCenterUserBaseResponse;
 import com.hyjf.am.response.user.BankCardResponse;
@@ -78,7 +81,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CallCenterUserBaseVO> selectNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
-				.postForEntity("http://AM-USER//am-user/callcenter/getNoServiceFuTouUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
+				.postForEntity("http://AM-ADMIN//am-user/callcenter/getNoServiceFuTouUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
 				.getBody();
 		if (callCenterUserBaseResponse != null) {
 			return callCenterUserBaseResponse.getResultList();
@@ -89,7 +92,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CallCenterUserBaseVO> selectNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest) {
 		CallCenterUserBaseResponse callCenterUserBaseResponse = restTemplate
-				.postForEntity("http://AM-USER//am-user/callcenter/getNoServiceLiuShiUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
+				.postForEntity("http://AM-ADMIN//am-user/callcenter/getNoServiceLiuShiUsersList/",callCenterUserInfoRequest, CallCenterUserBaseResponse.class)
 				.getBody();
 		if (callCenterUserBaseResponse != null) {
 			return callCenterUserBaseResponse.getResultList();
@@ -110,10 +113,13 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer executeRecord(CallCenterServiceUsersRequest callCenterServiceUsersRequest){
-		Integer response = restTemplate
-				.postForEntity("http://AM-USER//am-user/callcenter/executeRecord/",callCenterServiceUsersRequest, Integer.class)
+		IntegerResponse response = restTemplate
+				.postForEntity("http://AM-USER//am-user/callcenter/executeRecord/",callCenterServiceUsersRequest, IntegerResponse.class)
 				.getBody();
-		return response;
+		if(Response.isSuccess(response)){
+			return response.getResultInt();
+		}
+		return null;
 	}
 
 	@Override
@@ -140,8 +146,12 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public String getCouponContent(String couponCode){
-		return restTemplate
+		StringResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/callcenter/getCouponContent/"+ couponCode,
-						String.class).getBody();
+						StringResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResultStr();
+		}
+		return null;
 	}
 }

@@ -243,7 +243,8 @@ public class OperationLogController  extends BaseController {
         conditionMap.put("userNameSrch", userNameSrch);
         conditionMap.put("recieveTimeStartSrch", recieveTimeStartSrch);
         conditionMap.put("recieveTimeEndSrch", recieveTimeEndSrch);
-        conditionMap.put("paginatorPage",form.getPaginatorPage());
+        conditionMap.put("pageSize",form.getPageSize()==0?10:form.getPageSize());
+        conditionMap.put("currPage",form.getCurrPage());
         return conditionMap;
     }
     /**

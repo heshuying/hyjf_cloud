@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
@@ -95,7 +98,7 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
      */
     @Override
     public Integer getPlanCapitalCount(HjhPlanCapitalRequest request) {
-        return null;
+        return this.hjhPlanCapitalDao.getCount(request);
     }
 
     /**
@@ -105,7 +108,7 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
      * @Author : huanghui
      */
     @Override
-    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest request) {
+    public List<HjhPlanCapital> getPlanCapitalList(HjhPlanCapitalRequest request) {
         return this.hjhPlanCapitalDao.findAllList(request);
     }
 }

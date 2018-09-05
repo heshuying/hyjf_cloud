@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,14 +103,14 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setAccountChinapnrTender(accountChinapnrTender);
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
-					BorrowVO borrow =this.amTradeClient.selectBorrowByNid(borrowId);
-					request.setBorrow(borrow);
-					String borrowNid = borrowId == null ? "" : borrow.getBorrowNid();// 项目编号
-					BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
-					request.setBorrowInfo(borrowInfo);
-					BankOpenAccountVO accountChinapnrBorrower = this.getBankOpenAccount(borrowInfo.getUserId());
-					request.setAccountChinapnrBorrower(accountChinapnrBorrower);
-
+                    if(StringUtils.isNotBlank(borrowId)){
+                        BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowId);
+                        request.setBorrow(borrow);
+                        BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+                        request.setBorrowInfo(borrowInfo);
+                        BankOpenAccountVO accountChinapnrBorrower = this.getBankOpenAccount(borrowInfo.getUserId());
+                        request.setAccountChinapnrBorrower(accountChinapnrBorrower);
+                    }
 				}
 
 				UserVO logUser = this.amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
@@ -121,19 +122,21 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setEmployeeCustomize(employeeCustomize);
 				
 				SpreadsUserVO spreadsUser = this.amUserClient.querySpreadsUsersByUserId(Integer.parseInt(bean.getLogUserId()));
-				UserVO userss=this.amUserClient.findUserById(spreadsUser.getSpreadsUserId());
-				UserInfoVO refUsers=this.amUserClient.findUsersInfoById(spreadsUser.getSpreadsUserId());
-				EmployeeCustomizeVO employeeCustomize_ref = this.amUserClient.selectEmployeeByUserId(spreadsUser.getSpreadsUserId());
-				request.setUserss(userss);
-				request.setRefUsers(refUsers);
-				request.setEmployeeCustomize_ref(employeeCustomize_ref);
+				if (Validator.isNotNull(spreadsUser)){
+					UserVO userss=this.amUserClient.findUserById(spreadsUser.getSpreadsUserId());
+					request.setUserss(userss);
+					UserInfoVO refUsers=this.amUserClient.findUsersInfoById(spreadsUser.getSpreadsUserId());
+					request.setRefUsers(refUsers);
+					EmployeeCustomizeVO employeeCustomize_ref = this.amUserClient.selectEmployeeByUserId(spreadsUser.getSpreadsUserId());
+					request.setEmployeeCustomize_ref(employeeCustomize_ref);
+				}
 				request.setNowTime(GetDate.getNowTime10());
 				
 				boolean ret = this.amTradeClient.updateTenderStart(request);
 				if (!ret){
 					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
 					//更新失败不继续执行
-					return;
+					continue;
 				}else {
 					//更新渠道统计用户累计投资
 					if (Validator.isNotNull(request.getLogUser()) && request.getBorrowInfo().getProjectType()!=8){

@@ -83,8 +83,8 @@ public class AppProjectListController extends BaseTradeController {
         if(request.getParameter("pageSize") != null){
             size = Integer.parseInt(request.getParameter("pageSize"));
         }
-        info.put("status", CustomConstants.APP_STATUS_SUCCESS);
-        info.put("statusDesc", CustomConstants.APP_STATUS_DESC_SUCCESS);
+        info.put("status", BaseResultBeanFrontEnd.SUCCESS);
+        info.put("statusDesc", BaseResultBeanFrontEnd.SUCCESS_MSG);
 
         AppProjectInvestBeanRequest form = new AppProjectInvestBeanRequest();
         form.setBorrowNid(borrowNid);

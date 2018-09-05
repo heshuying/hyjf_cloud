@@ -3,54 +3,13 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
-import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
-import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.CreditRepay;
-import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.mq.producer.WrbCallBackProducer;
+import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -67,6 +26,12 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author dxj
@@ -1486,7 +1451,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setOrdid(creditRepay.getAssignNid() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
@@ -2885,7 +2850,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费

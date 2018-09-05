@@ -15,8 +15,6 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -26,7 +24,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -36,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -190,7 +186,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setBorrowNid("");
                 accountWebList.setUserId(receiveUserId);
                 // 管理费
-                accountWebList.setAmount(new BigDecimal(txAmount));
+                accountWebList.setAmount(Double.valueOf(txAmount));
                 // 类型1收入,2支出
                 accountWebList.setType(CustomConstants.TYPE_OUT);
                 // 管理费

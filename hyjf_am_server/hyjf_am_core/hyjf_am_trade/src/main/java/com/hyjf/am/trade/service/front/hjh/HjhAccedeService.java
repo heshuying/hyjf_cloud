@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author PC-LIUSHOUYI
  * @version HjhAccedeService, v0.1 2018/6/25 10:24
  */
-public interface HjhAccedeService {
+public interface HjhAccedeService extends BaseService {
 
     /**
      * 查询退出中和准备进入锁定期的计划

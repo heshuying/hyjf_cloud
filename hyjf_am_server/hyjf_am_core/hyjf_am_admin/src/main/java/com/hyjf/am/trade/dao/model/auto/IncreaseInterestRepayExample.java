@@ -896,6 +896,66 @@ public class IncreaseInterestRepayExample {
             return (Criteria) this;
         }
 
+        public Criteria andBorrowAccountIsNull() {
+            addCriterion("borrow_account is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountIsNotNull() {
+            addCriterion("borrow_account is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountEqualTo(BigDecimal value) {
+            addCriterion("borrow_account =", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountNotEqualTo(BigDecimal value) {
+            addCriterion("borrow_account <>", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountGreaterThan(BigDecimal value) {
+            addCriterion("borrow_account >", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("borrow_account >=", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountLessThan(BigDecimal value) {
+            addCriterion("borrow_account <", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("borrow_account <=", value, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountIn(List<BigDecimal> values) {
+            addCriterion("borrow_account in", values, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountNotIn(List<BigDecimal> values) {
+            addCriterion("borrow_account not in", values, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("borrow_account between", value1, value2, "borrowAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBorrowAccountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("borrow_account not between", value1, value2, "borrowAccount");
+            return (Criteria) this;
+        }
+
         public Criteria andOrderIdIsNull() {
             addCriterion("order_id is null");
             return (Criteria) this;
@@ -1963,6 +2023,66 @@ public class IncreaseInterestRepayExample {
 
         public Criteria andUpdateUserNameNotBetween(String value1, String value2) {
             addCriterion("update_user_name not between", value1, value2, "updateUserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeIsNull() {
+            addCriterion("loan_action_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeIsNotNull() {
+            addCriterion("loan_action_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeEqualTo(Integer value) {
+            addCriterion("loan_action_time =", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeNotEqualTo(Integer value) {
+            addCriterion("loan_action_time <>", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeGreaterThan(Integer value) {
+            addCriterion("loan_action_time >", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("loan_action_time >=", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeLessThan(Integer value) {
+            addCriterion("loan_action_time <", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("loan_action_time <=", value, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeIn(List<Integer> values) {
+            addCriterion("loan_action_time in", values, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeNotIn(List<Integer> values) {
+            addCriterion("loan_action_time not in", values, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeBetween(Integer value1, Integer value2) {
+            addCriterion("loan_action_time between", value1, value2, "loanActionTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLoanActionTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("loan_action_time not between", value1, value2, "loanActionTime");
             return (Criteria) this;
         }
 

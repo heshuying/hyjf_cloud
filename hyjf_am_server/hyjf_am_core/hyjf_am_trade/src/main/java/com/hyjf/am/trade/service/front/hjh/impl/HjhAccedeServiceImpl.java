@@ -9,6 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,7 @@ import java.util.List;
  * @version HjhAccedeServiceImpl, v0.1 2018/6/25 10:24
  */
 @Service
-public class HjhAccedeServiceImpl implements HjhAccedeService {
-
-    @Autowired
-    HjhAccedeMapper hjhAccedeMapper;
-    @Autowired
-    BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
+public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeService {
 
     /**
      * 查询退出中和待进入锁定期的标的
@@ -36,8 +32,10 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
     @Override
     public List<HjhAccede> selectWaitQuitHjhList() {
         ArrayList<Integer> list = new ArrayList<>();
-        list.add(5);//(退出中)准备退出计划
-        list.add(2);//(自动投标成功)准备进入锁定期
+        //(退出中)准备退出计划
+        list.add(5);
+        //(自动投标成功)准备进入锁定期
+        list.add(2);
         HjhAccedeExample accedeExample = new HjhAccedeExample();
         accedeExample.createCriteria().andOrderStatusIn(list);
         List<HjhAccede> accedeList = this.hjhAccedeMapper.selectByExample(accedeExample);
@@ -116,7 +114,8 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
         HjhAccedeExample hjhAccedeExample = new HjhAccedeExample();
         HjhAccedeExample.Criteria criteria = hjhAccedeExample.createCriteria();
         criteria.andMatchDatesGreaterThanOrEqualTo(2);
-        criteria.andOrderStatusIn(Arrays.asList(0,2)); // 订单状态处于自动投资中和自动投资成功(0,2) 2018年6月27日14:16:05
+        // 订单状态处于自动投资中和自动投资成功(0,2) 2018年6月27日14:16:05
+        criteria.andOrderStatusIn(Arrays.asList(0,2));
         List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(hjhAccedeExample);
         return accedeList;
     }

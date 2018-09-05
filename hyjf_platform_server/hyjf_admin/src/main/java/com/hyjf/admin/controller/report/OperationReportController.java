@@ -64,33 +64,9 @@ public class OperationReportController extends BaseController {
         }
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
-    @ApiOperation(value = "获取已发布运营报告接口", notes = "获取已发布运营报告接口-app和web端使用")
-    @PostMapping("/listbyrelease")
-    public AdminResult<ListResult<OperationReportVO>> listByRelease(@RequestBody OperationReportRequest request) {
-        OperationReportResponse response = operationReportService.listByRelease(request);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
 
-    @ApiOperation(value = "获取报表明细", notes = "获取报表明细-app和web端使用")
-    @PostMapping("/reportinfo/{id}")
-    public AdminResult<ListResult<OperationReportVO>> reportInfo(@PathVariable String id) {
-        OperationReportResponse response = operationReportService.reportInfo(id);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
     @ApiOperation(value = "进入季度报告页面", notes = "进入季度报告页面")
-    @PostMapping("/initQuarter/{operationReportType}/{year}")
+    @GetMapping("/initQuarter/{operationReportType}/{year}")
     public AdminResult<OperationReportResponse> initQuarter(@PathVariable Integer operationReportType, @PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -112,7 +88,7 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "月度报告新增和公用修改頁面", notes = "月度报告新增和公用修改頁面")
-    @PostMapping("/initupdatepage/{id}/{month}/{year}")
+    @GetMapping("/initupdatepage/{id}/{month}/{year}")
     public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id,@PathVariable String month,@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
@@ -138,7 +114,7 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "进入上半年度报告页面", notes = "进入上半年度报告页面")
-    @PostMapping("/inithalfyear/{year}")
+    @GetMapping("/inithalfyear/{year}")
     public AdminResult<OperationReportResponse> initHalfYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -152,7 +128,7 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "进入年度报告页面", notes = "进入年度报告页面")
-    @PostMapping("/inityear/{year}")
+    @GetMapping("/inityear/{year}")
     public AdminResult<OperationReportResponse> initYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -166,7 +142,7 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "删除信息", notes = "删除信息")
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public AdminResult<OperationReportResponse> delete(@PathVariable String id){
         OperationReportResponse response = operationReportService.delete(id);
         return new AdminResult<>(response);
@@ -179,8 +155,8 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "运营报告下拉框初始化", notes = "运营报告下拉框初始化")
-    @PostMapping("/infomonthoperation")
-    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(@RequestBody OperationReportRequest request){
+    @GetMapping ("/infomonthoperation")
+    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(){
         //下拉框初始化
         List<OperationSelectVO> selectList = initSelect();
         return new AdminResult(selectList);
