@@ -1,6 +1,6 @@
 package com.hyjf.cs.user.bean;
 
-public class AutoPlusRetBean  extends ApiBaseMapBean   {
+public class ApiAutoPlusResultBean extends BaseResultBean   {
 
 
     // 返回信息
@@ -15,6 +15,7 @@ public class AutoPlusRetBean  extends ApiBaseMapBean   {
     private String callBackAction;
     private String srvAuthCode;
     private String  acqRes;
+    private String  orderId;
     
     
     
@@ -97,5 +98,13 @@ public class AutoPlusRetBean  extends ApiBaseMapBean   {
 
     public void setAcqRes(String acqRes) {
         this.acqRes = acqRes;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

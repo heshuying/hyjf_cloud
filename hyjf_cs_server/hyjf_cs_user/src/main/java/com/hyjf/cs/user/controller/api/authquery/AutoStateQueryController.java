@@ -5,7 +5,6 @@ package com.hyjf.cs.user.controller.api.authquery;
 
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -27,23 +26,22 @@ import javax.validation.Valid;
 
 @Api(value = "api端授权状态查询",tags = "api端-授权状态查询")
 @RestController
-@RequestMapping("/hyjf-api/user")
+@RequestMapping("/hyjf-api/authState")
 public class AutoStateQueryController extends BaseUserController {
 
     @Autowired
     AutoStateQueryService autoStateQueryService;
 
     @ApiOperation(value = " 授权状态查询",notes = " 授权状态查询")
-    @PostMapping(value = "query", produces = "application/json; charset=utf-8")
-    public  ApiResult<AutoStateQueryResultBean> queryStatus(@RequestBody @Valid AutoStateQueryRequest autoStateQuery) {
-        ApiResult<AutoStateQueryResultBean> result = new ApiResult<>();
+    @PostMapping(value = "query.do", produces = "application/json; charset=utf-8")
+    public  AutoStateQueryResultBean queryStatus(@RequestBody @Valid AutoStateQueryRequest autoStateQuery) {
         AutoStateQueryResultBean resultBean = autoStateQueryService.queryStatus(autoStateQuery);
         if (null != resultBean) {
-            result.setData(resultBean);
+            return resultBean;
         } else {
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
-        return result;
+
     }
 
 }

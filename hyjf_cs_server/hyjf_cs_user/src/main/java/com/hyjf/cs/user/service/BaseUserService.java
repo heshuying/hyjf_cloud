@@ -6,8 +6,10 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -187,4 +189,6 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
     String packageStrForm(HttpServletRequest request);
+
+    ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status);
 }
