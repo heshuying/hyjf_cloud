@@ -43,6 +43,10 @@ public class HjhPlanCapitalController extends BaseController {
     @Autowired
     private HjhAccountBalanceService hjhAccountBalanceService;
 
+    /**
+     * 定时计划资金统计任务
+     * @return
+     */
     @RequestMapping("/hjhplancapital")
     public BooleanResponse hjhPlanCapital() {
             logger.info("汇计划资本预估统计(每日)任务 开始... ");

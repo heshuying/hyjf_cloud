@@ -15,6 +15,7 @@ import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.util.List;
@@ -144,4 +145,11 @@ public interface AmAdminClient {
      * @return
      */
     BorrowApicronResponse getBorrowApicronByID(String apicronID);
+
+    /**
+     * 资产来源
+     * yangchangwei
+     * @return
+     */
+    List<HjhInstConfigVO> selectHjhInstConfigList();
 }
