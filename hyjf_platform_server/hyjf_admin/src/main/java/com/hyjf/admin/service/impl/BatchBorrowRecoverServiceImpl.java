@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
@@ -25,6 +26,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import net.bytebuddy.asm.Advice;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,9 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Autowired
     private AmTradeClient amTradeClient;
 
+    @Autowired
+    private AmAdminClient amAdminClient;
+
     private SystemConfig systemConfig = new SystemConfig();
 
     /**
@@ -59,7 +64,8 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     public JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
 
         JSONObject jsonObject = new JSONObject();
-        BatchBorrowRecoverReponse batchBorrowRepayReponse = amTradeClient.getBatchBorrowRecoverList(request);
+//        BatchBorrowRecoverReponse batchBorrowRepayReponse = amTradeClient.getBatchBorrowRecoverList(request);
+        BatchBorrowRecoverReponse batchBorrowRepayReponse = amAdminClient.getBatchBorrowRecoverList(request);
         if (null != batchBorrowRepayReponse) {
             List<BatchBorrowRecoverVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
             Integer recordCount = batchBorrowRepayReponse.getRecordTotal();
