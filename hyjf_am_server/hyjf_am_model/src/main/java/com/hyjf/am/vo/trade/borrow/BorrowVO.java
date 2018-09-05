@@ -473,7 +473,7 @@ public class BorrowVO extends BaseVO implements Serializable {
     private Integer isEngineUsed;
 
     private Date createTime;
-
+    private Integer increaseInterestFlag;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -2314,5 +2314,13 @@ public class BorrowVO extends BaseVO implements Serializable {
 
     public void setBorrowPeriodStr(String borrowPeriodStr) {
         this.borrowPeriodStr = borrowPeriodStr;
+    }
+
+    public Integer getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
     }
 }

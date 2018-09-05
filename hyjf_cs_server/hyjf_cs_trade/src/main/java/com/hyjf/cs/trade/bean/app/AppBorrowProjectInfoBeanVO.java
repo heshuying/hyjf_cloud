@@ -55,6 +55,13 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	private String borrowApr;
 
 	/**
+	 * 产品加息收益率
+	 * number
+	 * example: 0.5%.
+	 */
+	private String borrowExtraYield;
+
+	/**
 	 * 项目编号
 	 * string
 	 * example: ZXH17071271
@@ -203,7 +210,9 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	public void setRepayStyle(String repayStyle) {
 		this.repayStyle = repayStyle;
 	}
-	
+
+	public String getBorrowExtraYield() { return borrowExtraYield; }
+	public void setBorrowExtraYield(String borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
 
 
 }

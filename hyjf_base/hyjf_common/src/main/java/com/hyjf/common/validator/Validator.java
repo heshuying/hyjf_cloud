@@ -3,6 +3,7 @@
  */
 package com.hyjf.common.validator;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -1028,7 +1029,23 @@ public class Validator {
             b = m.matches();
             return b;
         }
-
+    /**
+     *
+     * 是否为产品加息
+     * @author sunss
+     * @param increaseFlag
+     * @param borrowExtraYield
+     * @return
+     */
+    public static boolean isIncrease(Integer increaseFlag,BigDecimal borrowExtraYield) {
+        if (increaseFlag == null || increaseFlag.intValue() == 0) {
+            return false;
+        }
+        if (borrowExtraYield == null || borrowExtraYield.compareTo(BigDecimal.ZERO) <= 0) {
+            return false;
+        }
+        return true;
+    }
         private static final int _CHAR_LOWER_CASE_BEGIN = 97;
 
         private static final int _CHAR_LOWER_CASE_END = 122;

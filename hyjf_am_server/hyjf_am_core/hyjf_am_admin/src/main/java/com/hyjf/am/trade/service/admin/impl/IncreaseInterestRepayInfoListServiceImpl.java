@@ -88,6 +88,10 @@ public class IncreaseInterestRepayInfoListServiceImpl extends BaseServiceImpl im
             param.put("timeStartSrch", form.getTimeStartSrch());
             param.put("timeEndSrch", form.getTimeEndSrch());
         }
+        // 还款期数
+        if (StringUtils.isNotEmpty(form.getRepayPeriodSrch())) {
+            param.put("repayPeriodSrch", form.getRepayPeriodSrch());
+        }
         if (form.getLimitStart() != -1) {
             param.put("limitStart", form.getLimitStart());
             param.put("limitEnd", form.getLimitEnd());

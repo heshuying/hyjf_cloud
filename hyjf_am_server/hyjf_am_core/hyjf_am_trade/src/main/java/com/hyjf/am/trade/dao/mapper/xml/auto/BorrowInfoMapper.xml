@@ -92,6 +92,8 @@
     <result column="files" property="files" jdbcType="LONGVARCHAR" />
     <result column="borrow_company_instruction" property="borrowCompanyInstruction" jdbcType="LONGVARCHAR" />
     <result column="borrow_operating_process" property="borrowOperatingProcess" jdbcType="LONGVARCHAR" />
+    <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="DECIMAL" />
+    <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -170,7 +172,9 @@
   </sql>
   <sql id="Blob_Column_List" >
     account_contents, borrow_contents, borrow_running_use, borrow_running_soruce, borrow_measures_instit, 
-    borrow_measures_mort, borrow_measures_mea, files, borrow_company_instruction, borrow_operating_process
+    borrow_measures_mort, borrow_measures_mea, files, borrow_company_instruction, borrow_operating_process,
+    borrow_operating_process,
+    borrow_extra_yield, increase_interest_flag
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowInfoExample" >
     select

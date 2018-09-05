@@ -180,7 +180,7 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 					}
 					// 回款时间++++++++++
 					else if (celLength == 13) {
-						cell.setCellValue((investDetail.getRepayTime()==null ? 0 : investDetail.getRepayTime()) == 0 ? "" :  GetDate.getDateMyTimeInMillis(investDetail.getRepayTime()));
+						cell.setCellValue((investDetail.getRepayTime()==null ? 0 : investDetail.getRepayTime()) == 0 ? "" :  GetDate.getDateTimeMyTime(investDetail.getRepayTime()));
 					}
 				}
 			}

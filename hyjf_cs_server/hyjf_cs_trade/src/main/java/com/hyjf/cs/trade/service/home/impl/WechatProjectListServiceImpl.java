@@ -206,6 +206,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
+            borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getStatus());
@@ -1198,6 +1199,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 customize.setBorrowApr(project.getBorrowApr());
                 customize.setBorrowPeriod(project.getBorrowPeriodInt() + "");
                 customize.setBorrowPeriodType(project.getBorrowPeriodType());
+                customize.setBorrowExtraYield(project.getBorrowExtraYield());
                 if ("0".equals(project.getOnTime()) || "".equals(project.getOnTime())) {
                     switch (project.getStatus()) {
                         case "10":
