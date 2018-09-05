@@ -9,6 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -107,12 +108,14 @@ public class BorrowFlowController extends BaseController {
             return resList;
         }
         // todo 联调时需要放开 todo-------------------------------------------
-//        AdminSystemVO user = getUser(request);
-//        String userId = user.getId();
-//        adminRequest.setCreateUser(Integer.valueOf(userId));
-//        adminRequest.setUpdateUser(Integer.valueOf(userId));
-        adminRequest.setCreateUser(3);
-        adminRequest.setUpdateUser(3);
+        AdminSystemVO user = getUser(request);
+        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
+            adminRequest.setCreateUser(Integer.parseInt(user.getId()));
+            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
+        }else{
+            adminRequest.setCreateUser(3);//为了接口测试用
+            adminRequest.setUpdateUser(3);
+        }
         // 插入
         this.borrowFlowService.insertRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
@@ -125,10 +128,12 @@ public class BorrowFlowController extends BaseController {
     public AdminBorrowFlowResponse updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
         // todo 联调时需要放开 todo-------------------------------------------
-//        AdminSystemVO user = getUser(request);
-//        String userId = user.getId();
-//        adminRequest.setUpdateUser(Integer.valueOf(userId));
-        adminRequest.setUpdateUser(3);
+        AdminSystemVO user = getUser(request);
+        if(org.apache.commons.lang.StringUtils.isNotBlank(user.getId())){
+            adminRequest.setUpdateUser(Integer.valueOf(user.getId()));
+        }else{
+            adminRequest.setUpdateUser(3);
+        }
         // 数据更新
         this.borrowFlowService.updateRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);

@@ -6,13 +6,17 @@ package com.hyjf.am.trade.controller.admin.finance;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminMerchantAccountSumCustomizeResponse;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
 import com.hyjf.am.trade.dao.model.auto.MerchantAccount;
 import com.hyjf.am.trade.dao.model.auto.MerchantTransfer;
+import com.hyjf.am.trade.dao.model.customize.AdminMerchantAccountSumCustomize;
+import com.hyjf.am.trade.service.admin.account.AdminMerchantAccountService;
 import com.hyjf.am.trade.service.admin.finance.MerchantAccountService;
+import com.hyjf.am.vo.admin.AdminMerchantAccountSumCustomizeVO;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.am.vo.trade.account.MerchantTransferVO;
 import com.hyjf.common.paginator.Paginator;
@@ -33,6 +37,20 @@ public class MerchantAccountController {
 
     @Autowired
     MerchantAccountService merchantAccountService;
+
+
+    @Autowired
+    AdminMerchantAccountService adminMerchantAccountService;
+
+    @GetMapping(value = "/searchAccountSum")
+    public AdminMerchantAccountSumCustomizeResponse searchAccountSum() {
+        AdminMerchantAccountSumCustomizeResponse response = new AdminMerchantAccountSumCustomizeResponse();
+        AdminMerchantAccountSumCustomize adminMerchantAccountSumCustomize = adminMerchantAccountService.searchAccountSum();
+        AdminMerchantAccountSumCustomizeVO adminMerchantAccountSumCustomizeVO = new AdminMerchantAccountSumCustomizeVO();
+        BeanUtils.copyProperties(adminMerchantAccountSumCustomize, adminMerchantAccountSumCustomizeVO);
+        response.setResult(adminMerchantAccountSumCustomizeVO);
+        return response;
+    }
 
     @RequestMapping(value = "/selectRecordList")
     public MerchantAccountResponse selectRecordList(@RequestBody MerchantAccountListRequest request) {

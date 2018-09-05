@@ -24,10 +24,11 @@ import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
@@ -107,16 +108,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
         if(!checkTender){
             // 用户正在投资
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
         }
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             // 项目编号不能为空
-            throw new ReturnMessageException(MsgEnum.STATUS_CE000013);
+            throw new CheckException(MsgEnum.STATUS_CE000013);
         }
 
         if(request.getPlatform()==null){
             // 投资平台不能为空
-            throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
+            throw new CheckException(MsgEnum.STATUS_ZC000018);
         }
         // 查询选择的优惠券
         CouponUserVO cuc = null;
@@ -125,14 +126,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         // 查询计划
         if (StringUtils.isEmpty(request.getBorrowNid())) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
         HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
         if (plan == null) {
-            throw new ReturnMessageException(MsgEnum.FIND_PLAN_ERROR);
+            throw new CheckException(MsgEnum.FIND_PLAN_ERROR);
         }
         if (plan.getPlanInvestStatus() == 2) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
         }
         logger.info("加入计划投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
         // 查询用户信息
@@ -143,7 +144,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 检查江西银行账户
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
@@ -613,7 +614,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                                 jedis.unwatch();
                                 logger.info("计划可用开放额度redis扣除失败：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
                                 redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
-                                throw new ReturnMessageException(redisMsgCode);
+                                throw new CheckException(redisMsgCode);
                             } else {
                                 logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
                                 // 写队列
@@ -623,31 +624,36 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     } else {
                         logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
                         redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
-                        throw new ReturnMessageException(redisMsgCode);
+                        throw new CheckException(redisMsgCode);
                     }
                 }
             } catch (Exception e) {
                 if (redisMsgCode != null) {
-                    throw new ReturnMessageException(redisMsgCode);
+                    throw new CheckException(redisMsgCode);
                 } else {
-                    throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
             } finally {
                 RedisUtils.returnResource(pool, jedis);
             }
         } else {
             logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
         }
         // 生成冻结订单-----------------------
         boolean afterDealFlag = false;
         // 插入数据库  真正开始操作加入计划表
         afterDealFlag = updateAfterPlanRedis(request, plan);
-
-        // 计算收益
-        Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
-        result.setStatus(WebResult.SUCCESS);
-        result.setData(tenderEarnings);
+        logger.info("加入计划updateAfterPlanRedis 操作结果 ", afterDealFlag);
+        if(afterDealFlag){
+            // 计算收益
+            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            result.setStatus(WebResult.SUCCESS);
+            result.setData(tenderEarnings);
+        }else{
+            result.setStatus(AppResult.FAIL);
+            result.setStatusDesc("加入失败，请重试！");
+        }
         return result;
     }
 
@@ -870,74 +876,35 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param plan
      */
     private void updateUtm(TenderRequest request, HjhPlanVO plan) {
+        logger.info("加入计划成功  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始  userId {}  计划编号 {}", request.getUserId(), plan.getPlanNid());
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计投资
         // 投资人信息
-        UserVO users = amUserClient.findUserById(request.getUser().getUserId());
-        if (users != null) {
-            // 更新渠道统计用户累计投资 从mongo里面查询
-            AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
-            if (appChannelStatisticsDetails != null) {
-                Map<String, Object> params = new HashMap<String, Object>();
-                // 认购本金
-                params.put("accountDecimal", request.getAccountDecimal());
-                // 投资时间
-                params.put("investTime", request.getNowTime());
-                // 项目类型
-                params.put("projectType", "汇计划");
-                // 首次投标项目期限
-                String investProjectPeriod = "";
-                // 还款方式
-                String borrowStyle = plan.getBorrowStyle();
-                if ("endday".equals(borrowStyle)) {
-                    investProjectPeriod = plan.getLockPeriod() + "天";
-                } else {
-                    investProjectPeriod = plan.getLockPeriod() + "月";
-                }
-                params.put("investProjectPeriod", investProjectPeriod);
-                //根据investFlag标志位来决定更新哪种投资
-                params.put("investFlag", checkIsNewUserCanInvest(request.getUser().getUserId()));
-                //压入消息队列
-                try {
-                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                } catch (MQException e) {
-                    e.printStackTrace();
-                    logger.error("渠道统计用户累计投资推送消息队列失败！！！");
-                }
-            } else {
-                // 更新huiyingdai_utm_reg的首投信息
-                UtmRegVO utmReg = amUserClient.findUtmRegByUserId(request.getUser().getUserId());
-                if (utmReg != null) {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("id", utmReg.getId());
-                    params.put("accountDecimal", request.getAccountDecimal());
-                    // 投资时间
-                    params.put("investTime", request.getNowTime());
-                    // 项目类型
-                    params.put("projectType", "汇计划");
-                    String investProjectPeriod = "";
-                    // 首次投标项目期限 // 还款方式
-                    String borrowStyle = plan.getBorrowStyle();
-                    if ("endday".equals(borrowStyle)) {
-                        investProjectPeriod = plan.getLockPeriod() + "天";
-                    } else {
-                        investProjectPeriod = plan.getLockPeriod() + "月";
-                    }
-                    // 首次投标项目期限
-                    params.put("investProjectPeriod", investProjectPeriod);
-                    // 更新渠道统计用户累计投资
-                    if(this.checkIsNewUserCanInvest(request.getUser().getUserId())){
-                        // 更新huiyingdai_utm_reg的首投信息
-                        try {
-                            utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        } catch (MQException e) {
-                            e.printStackTrace();
-                            logger.error("更新huiyingdai_utm_reg的首投信息失败");
-                        }
-                    }
-                }
-            }
+        // 更新渠道统计用户累计投资 从mongo里面查询
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", request.getUserId());
+        // 认购本金
+        params.put("accountDecimal", request.getAccountDecimal());
+        // 投资时间
+        params.put("investTime", request.getNowTime());
+        // 项目类型
+        params.put("projectType", "汇计划");
+        // 首次投标项目期限
+        String investProjectPeriod = "";
+        // 还款方式
+        String borrowStyle = plan.getBorrowStyle();
+        if ("endday".equals(borrowStyle)) {
+            investProjectPeriod = plan.getLockPeriod() + "天";
+        } else {
+            investProjectPeriod = plan.getLockPeriod() + "月";
+        }
+        params.put("investProjectPeriod", investProjectPeriod);
+        //压入消息队列
+        try {
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
         }
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
@@ -966,29 +933,29 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             String accountSubstr = account.substring(account.indexOf(".") + 1);
             if (StringUtils.isNotEmpty(accountSubstr) && accountSubstr.length() > 2) {
                 // 金额格式错误
-                throw new ReturnMessageException(MsgEnum.ERR_FMT_MONEY);
+                throw new CheckException(MsgEnum.ERR_FMT_MONEY);
             }
         }
         BigDecimal accountBigDecimal = new BigDecimal(account);
         int compareResult = accountBigDecimal.compareTo(BigDecimal.ZERO);
         if (compareResult < 0) {
             // 加入金额不能为负数
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NEGATIVE);
         }
         if ((compareResult == 0 && cuc == null)
                 || (compareResult == 0 && cuc != null && cuc.getCouponType() == 2)) {
             // 投资金额不能为0
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_ZERO);
         }
         if (compareResult > 0 && cuc != null && cuc.getCouponType() == 1
                 && cuc.getAddFlg() == 1) {
             // 投资金额不能为0
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_COUPON_USE_ALONE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_COUPON_USE_ALONE);
         }
         String balance = RedisUtils.get(RedisConstants.HJH_PLAN + plan.getPlanNid());
         if (StringUtils.isEmpty(balance)) {
             // 您来晚了  下次再来
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
         }
         // DB 该计划可投金额
         BigDecimal minInvest = plan.getMinInvestment();// 该计划的最小投资金额
@@ -997,12 +964,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 && new BigDecimal(balance).compareTo(minInvest) == -1) {
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
                 // 剩余可加入金额为" + balance + "元
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
             }
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
                 // 剩余可加入只剩" + balance + "元，须全部购买"
                 //CheckUtil.check();
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS_NEED_BUY_ALL);
             }
         }
         if (accountBigDecimal.compareTo(plan.getMinInvestment()) == -1) {
@@ -1010,38 +977,38 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 if (cuc != null && cuc.getCouponType() != 3
                         && cuc.getCouponType() != 1) {
                     // plan.getMinInvestment() + "元起投"
-                    throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
                 }
             } else {
                 // plan.getMinInvestment() + "元起投"
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
             }
         }
         BigDecimal max = plan.getMaxInvestment();
         if (max != null && max.compareTo(BigDecimal.ZERO) != 0
                 && accountBigDecimal.compareTo(max) == 1) {
             // 项目最大加入额为" + max + "元
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT);
         }
         if (accountBigDecimal.compareTo(plan.getAvailableInvestAccount()) > 0) {
             // 加入金额不能大于开放额度
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_GREATER_THAN_OPEN_LINE);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_GREATER_THAN_OPEN_LINE);
         }
         if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
             // 你没钱了
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
         // 调用江西银行接口查询可用金额
         BigDecimal userBankBalance = this.getBankBalancePay(request.getUser().getUserId(),
                 OpenAccount.getAccount());
         if (userBankBalance.compareTo(accountBigDecimal) < 0) {
             // 你又没钱了
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
         // redis剩余金额不足判断逻辑
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
             // "项目太抢手了！剩余可加入金额只有" + balance + "元"
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_REMAIN);
         }
         // 开放额度和阀值（1000）判断逻辑
         if (new BigDecimal(balance).compareTo(new BigDecimal(CustomConstants.TENDER_THRESHOLD)) == -1) {
@@ -1051,7 +1018,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 if (plan.getInvestmentIncrement() != null
                         && BigDecimal.ZERO.compareTo((accountBigDecimal.subtract(minInvest)).remainder(plan.getInvestmentIncrement())) != 0) {
                     // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                    throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
                 }
             }
         } else {
@@ -1060,7 +1027,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     && BigDecimal.ZERO.compareTo(accountBigDecimal.subtract(minInvest).remainder(plan.getInvestmentIncrement())) != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1) {
                 // 加入递增金额须为" + plan.getInvestmentIncrement() + " 元的整数倍
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INTEGER_MULTIPLE);
             }
         }
     }
@@ -1073,39 +1040,39 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     private void checkUser(UserVO user, UserInfoVO userInfo) {
         if (userInfo.getRoleId() == 3) {// 担保机构用户
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
         }
         if (userInfo.getRoleId() == 2) {// 借款人不能投资
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
         }
         // 判断用户是否禁用
         if (user.getStatus() == 1) {// 0启用，1禁用
-            throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
         // 用户未开户
         if (user.getBankOpenAccount() == 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 交易密码状态检查
         if (user.getIsSetPassword() == 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+            throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());
         // 为空则无授权
         if (userAuth == null) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
         } else {
             if (userAuth.getAutoInvesStatus() == 0) {
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
             }
             if (userAuth.getAutoCreditStatus() == 0) {
-                throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
             }
         }
         // 服务费授权校验
         if (userAuth.getAutoPaymentStatus() == 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
         }
         // 风险测评校验
         this.checkEvaluation(user);

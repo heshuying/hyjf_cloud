@@ -16,10 +16,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -73,6 +70,47 @@ public class PoundageController extends BaseController {
             response.setResultList(poundageCustomizeVOList);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+    /**
+     * 获取手续费分账数额总计
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/getPoundageSum")
+    public PoundageCustomizeResponse getPoundageSum(@RequestBody PoundageListRequest request){
+        PoundageCustomizeResponse response = new PoundageCustomizeResponse();
+        AdminPoundageCustomize adminPoundageCustomize = tradePoundageService.getPoundageSum(request);
+        PoundageCustomizeVO poundageCustomizeVO = CommonUtils.convertBean(adminPoundageCustomize,PoundageCustomizeVO.class);
+        response.setResult(poundageCustomizeVO);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 根据id查询手续费分账信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/getPoundageById/{id}")
+    public PoundageCustomizeResponse getPoundageById(@PathVariable Integer id){
+        PoundageCustomizeResponse response = new PoundageCustomizeResponse();
+        AdminPoundageCustomize adminPoundageCustomize = tradePoundageService.getPoundageById(id);
+        PoundageCustomizeVO poundageCustomizeVO = CommonUtils.convertBean(adminPoundageCustomize,PoundageCustomizeVO.class);
+        response.setResult(poundageCustomizeVO);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+    @PostMapping(value = "/updatePoundage")
+    public PoundageCustomizeResponse updatePoundage(@RequestBody PoundageCustomizeVO poundageCustomizeVO){
+        PoundageCustomizeResponse response = new PoundageCustomizeResponse();
+        Integer count = tradePoundageService.updatePoundage(poundageCustomizeVO);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 }

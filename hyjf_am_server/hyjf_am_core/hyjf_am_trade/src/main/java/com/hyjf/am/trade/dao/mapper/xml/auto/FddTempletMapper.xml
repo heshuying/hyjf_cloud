@@ -8,6 +8,7 @@
     <result column="is_active" property="isActive" jdbcType="TINYINT" />
     <result column="ca_flag" property="caFlag" jdbcType="TINYINT" />
     <result column="certificate_time" property="certificateTime" jdbcType="INTEGER" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
@@ -75,8 +76,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, templet_id, protocol_type, is_active, ca_flag, certificate_time, remark, create_user_id, 
-    create_user_name, update_user_id, update_user_name, create_time, update_time
+    id, templet_id, protocol_type, is_active, ca_flag, certificate_time, file_url, remark, 
+    create_user_id, create_user_name, update_user_id, update_user_name, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.FddTempletExample" >
     select
@@ -116,15 +118,15 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_fdd_templet (templet_id, protocol_type, is_active, 
-      ca_flag, certificate_time, remark, 
-      create_user_id, create_user_name, update_user_id, 
-      update_user_name, create_time, update_time
-      )
+      ca_flag, certificate_time, file_url, 
+      remark, create_user_id, create_user_name, 
+      update_user_id, update_user_name, create_time, 
+      update_time)
     values (#{templetId,jdbcType=VARCHAR}, #{protocolType,jdbcType=TINYINT}, #{isActive,jdbcType=TINYINT}, 
-      #{caFlag,jdbcType=TINYINT}, #{certificateTime,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, 
-      #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{caFlag,jdbcType=TINYINT}, #{certificateTime,jdbcType=INTEGER}, #{fileUrl,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR}, 
+      #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.FddTemplet" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -146,6 +148,9 @@
       </if>
       <if test="certificateTime != null" >
         certificate_time,
+      </if>
+      <if test="fileUrl != null" >
+        file_url,
       </if>
       <if test="remark != null" >
         remark,
@@ -184,6 +189,9 @@
       </if>
       <if test="certificateTime != null" >
         #{certificateTime,jdbcType=INTEGER},
+      </if>
+      <if test="fileUrl != null" >
+        #{fileUrl,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -235,6 +243,9 @@
       <if test="record.certificateTime != null" >
         certificate_time = #{record.certificateTime,jdbcType=INTEGER},
       </if>
+      <if test="record.fileUrl != null" >
+        file_url = #{record.fileUrl,jdbcType=VARCHAR},
+      </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
@@ -269,6 +280,7 @@
       is_active = #{record.isActive,jdbcType=TINYINT},
       ca_flag = #{record.caFlag,jdbcType=TINYINT},
       certificate_time = #{record.certificateTime,jdbcType=INTEGER},
+      file_url = #{record.fileUrl,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       create_user_name = #{record.createUserName,jdbcType=VARCHAR},
@@ -297,6 +309,9 @@
       </if>
       <if test="certificateTime != null" >
         certificate_time = #{certificateTime,jdbcType=INTEGER},
+      </if>
+      <if test="fileUrl != null" >
+        file_url = #{fileUrl,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
@@ -329,6 +344,7 @@
       is_active = #{isActive,jdbcType=TINYINT},
       ca_flag = #{caFlag,jdbcType=TINYINT},
       certificate_time = #{certificateTime,jdbcType=INTEGER},
+      file_url = #{fileUrl,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       create_user_name = #{createUserName,jdbcType=VARCHAR},

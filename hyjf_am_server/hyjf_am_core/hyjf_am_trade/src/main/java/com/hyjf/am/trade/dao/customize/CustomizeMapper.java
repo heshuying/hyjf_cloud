@@ -178,9 +178,6 @@ public class CustomizeMapper extends AutoMapper {
 	protected FundChangeStatisticsCustomizeMapper fundChangeStatisticsCustomizeMapper;
 
 	@Autowired
-	protected BankMerchantAccountListCustomizeMapper bankMerchantAccountListCustomizeMapper;
-
-	@Autowired
 	protected BorrowRepayAgreementCustomizeMapper borrowRepayAgreementCustomizeMapper;
 
 	@Autowired

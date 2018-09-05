@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.front.coupon;
+package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
@@ -10,7 +10,7 @@ import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
 import com.hyjf.am.trade.dao.model.customize.AdminCouponRepayMonitorCustomize;
-import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
+import com.hyjf.am.trade.service.admin.finance.CouponRepayMonitorService;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import com.hyjf.common.paginator.Paginator;
