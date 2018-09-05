@@ -9,10 +9,8 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.*;
-import com.hyjf.am.trade.dao.mapper.auto.RUserMapper;
-import com.hyjf.am.trade.dao.mapper.customize.AccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BankOpenAccountMapper;
-import com.hyjf.am.trade.dao.mapper.customize.WebCalculateInvestInterestCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
@@ -30,9 +28,7 @@ import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -50,6 +46,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -60,27 +57,19 @@ import java.util.*;
  */
 @Service
 public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService {
-
+    Logger _log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private SmsProducer smsProducer;
 
     @Autowired
-    private AccountCustomizeMapper accountCustomizeMapper;
-
-    @Autowired
-    protected BankOpenAccountMapper bankOpenAccountMapper;
-
-    @Autowired
-    protected RUserMapper rUserMapper;
-
-    @Autowired
     private AccountService accountService;
 
     @Autowired
-    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
+    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
 
-    Logger _log = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private AccountCustomizeMapper accountCustomizeMapper;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
