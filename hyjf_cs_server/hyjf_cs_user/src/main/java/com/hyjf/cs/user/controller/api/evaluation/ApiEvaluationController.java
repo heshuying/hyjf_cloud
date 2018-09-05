@@ -7,7 +7,7 @@ import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.bean.ResultApiBean;
 import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyEvaluationResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "api端风险测评接口",tags = "api端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-api/user")
+@RequestMapping("/hyjf-api/server/user/evaluation")
 public class ApiEvaluationController extends BaseUserController {
 
     @Autowired
@@ -39,9 +39,9 @@ public class ApiEvaluationController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "风险测评接口")
-    @PostMapping(value = "/saveUserEvaluationResults")
-    public ApiResult<ThirdPartyEvaluationResultBean> saveUserEvaluationResults(@RequestBody ThirdPartyEvaluationRequestBean thirdPartyFinancialadvisorRequestBean) {
-        ApiResult<ThirdPartyEvaluationResultBean> result = new ApiResult<>();
+    @PostMapping(value = "/saveUserEvaluationResults.do")
+    public ResultApiBean<ThirdPartyEvaluationResultBean> saveUserEvaluationResults(@RequestBody ThirdPartyEvaluationRequestBean thirdPartyFinancialadvisorRequestBean) {
+        ResultApiBean<ThirdPartyEvaluationResultBean> result = new ResultApiBean<>();
         ThirdPartyEvaluationResultBean resultBean = new ThirdPartyEvaluationResultBean();
         //验证请求参数
         EvalationVO evalation = evaluationService.checkParam(thirdPartyFinancialadvisorRequestBean);

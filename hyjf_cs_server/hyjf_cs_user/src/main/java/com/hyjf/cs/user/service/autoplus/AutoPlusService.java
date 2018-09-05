@@ -11,6 +11,7 @@ import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
@@ -53,18 +54,21 @@ public interface AutoPlusService extends BaseUserService {
     /**
      * api检查参数
      * @param payRequestBean
+     * @param modelAndView
+     * @param queryType
      * @return
      */
-    Map<String,String> checkParam(AutoPlusRequestBean payRequestBean);
+    Map<String,Object>  checkParam(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String queryType);
 
     /**
      * api授权
      * @param type
      * @param smsSeq
+     * @param user
      * @param payRequestBean
      * @return
      */
-    Map<String,Object> apiUserAuth(String type, String smsSeq, AutoPlusRequestBean payRequestBean);
+    BankCallBean apiUserAuth(String type, String smsSeq, UserVO user, AutoPlusRequestBean payRequestBean);
 
     /**
      * api自动投资授权同步回调

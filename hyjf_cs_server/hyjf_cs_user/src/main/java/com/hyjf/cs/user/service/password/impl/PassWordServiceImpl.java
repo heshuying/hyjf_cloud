@@ -28,6 +28,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -49,12 +50,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.hyjf.cs.user.bean.BaseDefine.CALL_BACK_TRANSPASSWORD_VIEW;
 
 /**
  * @author wangc
@@ -80,6 +84,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Autowired
     private SystemConfig systemConfig;
+
+    /** 设置密码失败页面*/
+    public static final String PASSWORD_ERROR_PATH = "/bank/user/personalsetting/error";
 
     /**
      * 修改用户登录密码
@@ -370,125 +377,39 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public Map<String,Object> apiSetPassword(ThirdPartyTransPasswordRequestBean param,String bankDetailUrl,String txCode) {
-        Map<String,Object> result = new HashMap<>();
-        String account = param.getAccountId();
-        String retUrl = param.getRetUrl();
-        String bgRetUrl = param.getBgRetUrl();
-        String channel = param.getChannel();
-        String instCode = param.getInstCode();
-        String acqRes = param.getAcqRes();
-        BaseResultBean resultBean = new BaseResultBean();
-        if (StringUtils.isEmpty(account)||StringUtils.isEmpty(retUrl)||StringUtils.isEmpty(bgRetUrl)||StringUtils.isEmpty(channel)||StringUtils.isEmpty(instCode)) {
-            if(StringUtils.isNotEmpty(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("statusDesc","请求参数非法");
-                params.put("acqRes",acqRes);
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
-                params.put("status", resultBean.getStatus());
-                params.put("chkValue", resultBean.getChkValue());
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            CheckUtil.check(StringUtils.isEmpty(retUrl),MsgEnum.STATUS_CE000001);
-        }
-        //验签  暂时去掉验签
-        if(!this.verifyRequestSign(param, BaseDefine.METHOD_SERVER_SET_PASSWORD)){
-            if(Validator.isNotNull(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("status", resultBean.getStatus());
-                params.put("statusDesc","验签失败！");
-                params.put("acqRes",acqRes);
-                params.put("chkValue", resultBean.getChkValue());
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            throw new CheckException(MsgEnum.STATUS_CE000002);
-        }
-        //根据账号找出用户ID
-        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(account);
-        if(bankOpenAccount == null){
-            if(Validator.isNotNull(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("status", resultBean.getStatus());
-                params.put("statusDesc","没有根据电子银行卡找到用户 ");
-                params.put("chkValue", resultBean.getChkValue());
-                params.put("acqRes",acqRes);
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            throw new CheckException(MsgEnum.STATUS_CE000004);
-        }
-        UserVO user = getUsersById(bankOpenAccount.getUserId());
-        if (user == null) {
-            if(Validator.isNotNull(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("status", resultBean.getStatus());
-                params.put("statusDesc","用户不存在汇盈金服账户！");
-                params.put("chkValue", resultBean.getChkValue());
-                params.put("acqRes",acqRes);
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            throw new CheckException(MsgEnum.STATUS_CE000006);
-        }
-        if (user.getBankOpenAccount().intValue() != 1) {
-            if(Validator.isNotNull(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("status", resultBean.getStatus());
-                params.put("statusDesc","用户未开户！");
-                params.put("chkValue", resultBean.getChkValue());
-                params.put("acqRes",acqRes);
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            throw new CheckException(MsgEnum.STATUS_CE000007);
-        }
-        // 判断用户是否设置过交易密码
-        Integer passwordFlag = user.getIsSetPassword();
-        if (passwordFlag == 1) {
-            if(Validator.isNotNull(bgRetUrl)){
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("accountId", account);
-                params.put("status", resultBean.getStatus());
-                params.put("statusDesc","已设置交易密码");
-                params.put("chkValue", resultBean.getChkValue());
-                params.put("acqRes",acqRes);
-                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
-            }
-            throw new CheckException(MsgEnum.STATUS_TP000001);
-        }
+    public BankCallBean apiSetPassword(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String bankDetailUrl, String txCode, UserVO user, BankOpenAccountVO bankOpenAccount) {
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-         retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
-         String successUrl =super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) +"/password/openSuccess";
+        String retUrl = systemConfig.getApiWebUrl() + "/user/password";
         // 异步调用路
-         bgRetUrl = systemConfig.webHost + "/hyjf-api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
+        String bgRetUrl = systemConfig.getApiWebUrl() + "/user/password";
         // 调用设置密码接口
-        System.out.println(retUrl+"..."+bgRetUrl);
+        if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET)){
+            retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
+        }else {
+            retUrl += "/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            bgRetUrl += "/resetPasswordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
+        }
+        logger.info(retUrl+"..."+bgRetUrl);
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(txCode);
-        bean.setChannel(channel);
+        bean.setChannel(transPasswordRequestBean.getChannel());
         bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setIdNo(usersInfo.getIdcard());
         bean.setName(usersInfo.getTruename());
         bean.setMobile(user.getMobile());
-        bean.setRetUrl(retUrl);// 页面同步返回 URL
-        bean.setSuccessfulUrl(successUrl);
-        bean.setNotifyUrl(bgRetUrl);// 页面异步返回URL(必须)
+        // 页面同步返回 URL
+        bean.setRetUrl(retUrl);
+        // 页面异步返回URL(必须)
+        bean.setNotifyUrl(bgRetUrl);
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(bankDetailUrl);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
-        //掉银行接口
-        try {
-            result = BankCallUtils.callApiMap(bean);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+        return bean;
     }
 
     /**
@@ -765,5 +686,218 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             throw new CheckException(ResultEnum.USER_ERROR_208.getStatus(),ResultEnum.USER_ERROR_208.getStatusDesc());
         }
         return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type) {
+        Map<String,Object> result = new HashMap<>();
+        ModelAndView modelAndView = new ModelAndView();
+        String account = transPasswordRequestBean.getAccountId();
+        String retUrl = transPasswordRequestBean.getRetUrl();
+        String bgRetUrl = transPasswordRequestBean.getBgRetUrl();
+        String channel = transPasswordRequestBean.getChannel();
+        String instCode = transPasswordRequestBean.getInstCode();
+        String acqRes = transPasswordRequestBean.getAcqRes();
+        if (StringUtils.isEmpty(account)||StringUtils.isEmpty(retUrl)||StringUtils.isEmpty(bgRetUrl)||StringUtils.isEmpty(channel)||StringUtils.isEmpty(instCode)) {
+            if(StringUtils.isNotEmpty(bgRetUrl)){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("accountId", account);
+                params.put("statusDesc","请求参数非法");
+                params.put("acqRes",acqRes);
+                BaseResultBean resultBean = new BaseResultBean();
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
+                params.put("status", resultBean.getStatus());
+                params.put("chkValue", resultBean.getChkValue());
+                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+            }
+            if(Validator.isNotNull(retUrl)){
+                ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+                repwdResult.setCallBackAction(retUrl);
+                modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+                // 设置交易密码
+                repwdResult.set("statusDesc", "请求参数非法");
+                BaseResultBean resultBean = new BaseResultBean();
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
+                repwdResult.set("chkValue", resultBean.getChkValue());
+                repwdResult.set("status", resultBean.getStatus());
+                repwdResult.set("acqRes",acqRes);
+                modelAndView.addObject("callBackForm", repwdResult);
+                result.put("modelAndView",modelAndView);
+                return result;
+            }
+            modelAndView = new ModelAndView(PASSWORD_ERROR_PATH);
+            logger.info("-------------------请求参数非法--------------------");
+            modelAndView.addObject("message", "请求参数非法");
+            result.put("modelAndView",modelAndView);
+            return result;
+        }
+        //验签  暂时去掉验签
+        if(!this.verifyRequestSign(transPasswordRequestBean, BaseDefine.METHOD_SERVER_SET_PASSWORD)){
+            ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+            repwdResult.set("accountId", account);
+            repwdResult.set("acqRes",acqRes);
+            modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+            // 设置交易密码
+            repwdResult.set("statusDesc", "验签失败！");
+
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
+            repwdResult.set("status", resultBean.getStatus());
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            modelAndView.addObject("callBackForm", repwdResult);
+            if(Validator.isNotNull(bgRetUrl)){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("accountId", account);
+                params.put("status", resultBean.getStatus());
+                params.put("statusDesc","验签失败！");
+                params.put("acqRes",acqRes);
+                params.put("chkValue", resultBean.getChkValue());
+                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+            }
+            result.put("modelAndView",modelAndView);
+            return result;
+        }
+        //根据账号找出用户ID
+        BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(account);
+        if(bankOpenAccount == null){
+            ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+            repwdResult.setCallBackAction(retUrl);
+            repwdResult.set("accountId",account);
+            modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+            // 设置交易密码
+            repwdResult.set("statusDesc", "没有根据电子银行卡找到用户 ");
+
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000004);
+            repwdResult.set("status", resultBean.getStatus());
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            repwdResult.set("acqRes",acqRes);
+            modelAndView.addObject("callBackForm", repwdResult);
+            if(Validator.isNotNull(bgRetUrl)){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("accountId", account);
+                params.put("status", resultBean.getStatus());
+                params.put("statusDesc","没有根据电子银行卡找到用户 ");
+                params.put("chkValue", resultBean.getChkValue());
+                params.put("acqRes",acqRes);
+                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+            }
+            result.put("modelAndView",modelAndView);
+            return result;
+        }
+        UserVO user = getUsersById(bankOpenAccount.getUserId());
+        if (user == null) {
+            ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+            repwdResult.setCallBackAction(retUrl);
+            repwdResult.set("accountId", account);
+            modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+            // 设置交易密码
+            repwdResult.set("statusDesc","用户不存在汇盈金服账户！");
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000006);
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            repwdResult.set("status", resultBean.getStatus());
+            repwdResult.set("acqRes",acqRes);
+            modelAndView.addObject("callBackForm", repwdResult);
+            if(Validator.isNotNull(bgRetUrl)){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("accountId", account);
+                params.put("status", resultBean.getStatus());
+                params.put("statusDesc","用户不存在汇盈金服账户！");
+                params.put("chkValue", resultBean.getChkValue());
+                params.put("acqRes",acqRes);
+                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+            }
+            result.put("modelAndView",modelAndView);
+            return result;
+        }
+        //未开户
+        if (user.getBankOpenAccount().intValue() != 1) {
+            logger.info("-------------------用户未开户！--------------------");
+            ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+            repwdResult.setCallBackAction(retUrl);
+            repwdResult.set("accountId", account);
+            modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+            // 设置交易密码
+            repwdResult.set("statusDesc", "用户未开户！");
+            BaseResultBean resultBean = new BaseResultBean();
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000007);
+            repwdResult.set("chkValue", resultBean.getChkValue());
+            repwdResult.set("status", resultBean.getStatus());
+            repwdResult.set("acqRes",acqRes);
+            modelAndView.addObject("callBackForm", repwdResult);
+            if(Validator.isNotNull(bgRetUrl)){
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("accountId", account);
+                params.put("status", resultBean.getStatus());
+                params.put("statusDesc","用户未开户！");
+                params.put("chkValue", resultBean.getChkValue());
+                params.put("acqRes",acqRes);
+                CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+            }
+            result.put("modelAndView",modelAndView);
+            return result;
+        }
+        // 判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if(type.equals(BankCallConstant.TXCODE_PASSWORD_SET)){
+            if (passwordFlag == 1) {
+                ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+                repwdResult.setCallBackAction(retUrl);
+                repwdResult.set("accountId", account);
+                modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+                // 设置交易密码
+                repwdResult.set("statusDesc", "已设置交易密码");
+                BaseResultBean resultBean = new BaseResultBean();
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_TP000001);
+                repwdResult.set("chkValue", resultBean.getChkValue());
+                repwdResult.set("status", resultBean.getStatus());
+                repwdResult.set("acqRes",acqRes);
+                modelAndView.addObject("callBackForm", repwdResult);
+                if(Validator.isNotNull(bgRetUrl)){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("accountId", account);
+                    params.put("status", resultBean.getStatus());
+                    params.put("statusDesc","已设置交易密码");
+                    params.put("chkValue", resultBean.getChkValue());
+                    params.put("acqRes",acqRes);
+                    CommonSoaUtils.noRetPostThree(bgRetUrl, params);
+                }
+                result.put("modelAndView",modelAndView);
+                return result;
+            }
+        }else {
+            if (passwordFlag == 0) {
+                //未设置交易密码
+                ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
+                repwdResult.setCallBackAction(transPasswordRequestBean.getRetUrl());
+                repwdResult.set("accountId", transPasswordRequestBean.getAccountId());
+                modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
+                // 设置交易密码
+                repwdResult.set("statusDesc", "未设置过交易密码，请先设置交易密码");
+
+                BaseResultBean resultBean = new BaseResultBean();
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_TP000002);
+                repwdResult.set("chkValue", resultBean.getChkValue());
+                repwdResult.set("status", resultBean.getStatus());
+                repwdResult.set("acqRes",transPasswordRequestBean.getAcqRes());
+                modelAndView.addObject("callBackForm", repwdResult);
+                if(Validator.isNotNull(transPasswordRequestBean.getBgRetUrl())){
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("accountId", transPasswordRequestBean.getAccountId());
+                    params.put("status", resultBean.getStatus());
+                    params.put("statusDesc","未设置过交易密码，请先设置交易密码");
+                    params.put("chkValue", resultBean.getChkValue());
+                    params.put("acqRes",transPasswordRequestBean.getAcqRes());
+                    CommonSoaUtils.noRetPostThree(transPasswordRequestBean.getBgRetUrl(), params);
+                }
+                result.put("modelAndView",modelAndView);
+                return result;
+            }
+        }
+        result.put("user",user);
+        result.put("bankOpenAccount",bankOpenAccount);
+        result.put("flag","1");
+        return result;
     }
 }
