@@ -723,7 +723,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateTenderStart(BorrowTenderTmpRequest request) {
-        String url = "http://AM-TRADE/am-trade/bankexception/updateTenderStart";
+        String url = "http://AM-TRADE/am-trade/bankException/updateTenderStart";
         return restTemplate.postForEntity(url,request,Boolean.class).getBody();
     }
 
