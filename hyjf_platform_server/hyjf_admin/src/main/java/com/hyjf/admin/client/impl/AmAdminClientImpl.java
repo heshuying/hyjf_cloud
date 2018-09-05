@@ -194,7 +194,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
         BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                postForEntity("http://AM-ADMIN/am-trade/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
