@@ -16,10 +16,6 @@ public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implement
 
 	@Autowired
 	private BorrowClient borrowClient;
-    /*@Override
-    public Long countBatchCenter(BatchCenterCustomize batchCenterCustomize) {
-        return batchCenterCustomizeMapper.countBatchCenter(batchCenterCustomize);
-    }*/
 
 	/**
 	 * countBatchCenter
@@ -29,11 +25,6 @@ public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implement
 		return borrowClient.countBatchCenter(batchCenterCustomize);
 	}
 
-    /*@Override
-    public List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize) {
-        return batchCenterCustomizeMapper.selectBatchCenterList(batchCenterCustomize);
-    }*/
-
 	/**
 	 * selectBatchCenterList
 	 */
@@ -41,18 +32,6 @@ public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implement
 	public List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize) {
 		return borrowClient.selectBatchCenterList(batchCenterCustomize);
 	}
-
-	/*@Override
-	public String getborrowIdByProductId(String productId,String instCode) {
-		String borrowNid = null;
-		HjhPlanAssetExample example = new HjhPlanAssetExample();
-		example.createCriteria().andAssetIdEqualTo(productId).andInstCodeEqualTo(instCode);
-		List<HjhPlanAsset> planList = this.hjhPlanAssetMapper.selectByExample(example);
-		if (planList != null && planList.size() > 0) {
-			borrowNid = planList.get(0).getBorrowNid();
-		}
-		return borrowNid;
-	}*/
 
 	/**
 	 * searchRepayProjectDetail
