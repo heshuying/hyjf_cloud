@@ -1,11 +1,12 @@
 package com.hyjf.am.vo.user;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class BankOpenAccountVO extends BaseVO implements Serializable {
+public class BankOpenAccountVO  extends Response<BankOpenAccountVO> implements Serializable {
     private Integer id;
 
     private Integer userId;

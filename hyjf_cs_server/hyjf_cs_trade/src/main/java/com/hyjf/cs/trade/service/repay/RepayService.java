@@ -29,4 +29,43 @@ public interface RepayService {
     * @return
     **/
     Integer countBatchCenter(BatchBorrowRecoverRequest request);
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
+
+import java.text.ParseException;
+import java.util.List;
+
+public interface RepayService extends BaseService {
+
+	/**
+	 * 获取用户还款列表
+	 *
+	 * @param form
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	List<WebUserRepayProjectListCustomizeVO> searchUserRepayList(RepayProjectListBean form, int offset, int limit);
+
+	/**
+	 * 查询用户还款详情
+	 *
+	 * @param form
+	 * @return
+	 * @throws ParseException
+	 * @throws NumberFormatException
+	 */
+	ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
+
+	/**
+	 * 获取开户信息
+	 *
+	 * @param bankAccount
+	 * @return
+	 */
+	public BankOpenAccountVO getBankOpenAccount(String bankAccount);
+
 }

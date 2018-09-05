@@ -4485,6 +4485,11 @@ public class BorrowExample {
             addCriterion("updatetime not between", value1, value2, "updatetime");
             return (Criteria) this;
         }
+
+        public Criteria andRepayOrgUserIdEqualTo(Integer value) {
+            addCriterion("repay_org_user_id =", value, "repayOrgUserId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

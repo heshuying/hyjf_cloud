@@ -143,6 +143,7 @@ public class Borrow implements Serializable {
 
     private Date updatetime;
 
+    private String  projectName;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -695,5 +696,13 @@ public class Borrow implements Serializable {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName == null ? null : projectName.trim();
     }
 }
