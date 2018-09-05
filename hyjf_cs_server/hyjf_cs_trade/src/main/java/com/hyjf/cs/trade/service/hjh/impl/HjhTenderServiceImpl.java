@@ -280,7 +280,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         AppInvestInfoResultVO resultVo = new AppInvestInfoResultVO();
         if (StringUtils.isNotBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) > 0) {
             resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
-        }else if(StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
+        }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
             resultVo.setButtonWord("确认");
         }
 
