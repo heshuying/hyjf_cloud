@@ -75,7 +75,7 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/open")
     @ResponseBody
-    public WeChatResult<Map> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public WeChatResult<Map> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WeChatResult reuslt = new WeChatResult();
 
@@ -96,6 +96,8 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_WX);
+        // 开户角色
+        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
