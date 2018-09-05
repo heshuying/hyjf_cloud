@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
@@ -101,10 +102,15 @@ public class HjhPlanController extends BaseController {
      * @param planAccede
      * @return
      */
-    @RequestMapping("/insertHJHPlanAccede")
-    public int insertHJHPlanAccede(@RequestBody HjhAccedeVO planAccede) {
-        Account useraccount  = accountService.getAccount(planAccede.getUserId());
-        return hjhPlanService.insertHJHPlanAccede(planAccede,useraccount);
+    @PostMapping("/insertHJHPlanAccede")
+    public IntegerResponse insertHJHPlanAccede(@RequestBody HjhAccedeVO planAccede) {
+        logger.info("加入计划开始进行插入表操作，userid{}  计划编号{}  ",planAccede.getUserId(),planAccede.getPlanNid());
+        Account userAccount  = accountService.getAccount(planAccede.getUserId());
+        Integer result = hjhPlanService.insertHJHPlanAccede(planAccede,userAccount);
+        IntegerResponse response = new IntegerResponse();
+        response.setResultInt(result);
+        logger.info("加入计划结束插入表操作，userid{}  计划编号{}  结果 {}",planAccede.getUserId(),planAccede.getPlanNid(),result);
+        return response;
     }
 
 

@@ -262,15 +262,19 @@ public class BorrowProjectTypeController extends BaseController {
     /**
      * 检查手机号码或用户名唯一性
      *
-     * @param request
+     * @param adminRequest
      * @return
      */
     @ApiOperation(value = "项目类型校验", notes = "项目类型校验")
     @PostMapping("/checkAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public String checkAction(HttpServletRequest request) {
-        String borrowCd = request.getParameter("param");
+    public String checkAction(@RequestBody BorrowProjectTypeRequest adminRequest) {
         JSONObject ret = new JSONObject();
+        String borrowCd =adminRequest.getBorrowCd();
+        if(StringUtils.isBlank(borrowCd)){
+            ret.put("info", "{label}"+"不能为空!");
+            return ret.toString();
+        }
         // 检查项目名称唯一性
         BorrowProjectTypeRequest form =new BorrowProjectTypeRequest();
         form.setBorrowCd(borrowCd);

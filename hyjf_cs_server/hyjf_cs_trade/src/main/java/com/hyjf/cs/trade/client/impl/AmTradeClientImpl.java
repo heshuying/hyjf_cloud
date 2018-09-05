@@ -1605,10 +1605,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean insertHJHPlanAccede(HjhAccedeVO planAccede) {
-        Integer result = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, Integer.class).getBody();
-        if (result != null) {
-            return result == 0 ? false : true;
+        IntegerResponse result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, IntegerResponse.class).getBody();
+        if (IntegerResponse.isSuccess(result)) {
+            return result.getResultInt() == 0 ? false : true;
         }
         return false;
     }

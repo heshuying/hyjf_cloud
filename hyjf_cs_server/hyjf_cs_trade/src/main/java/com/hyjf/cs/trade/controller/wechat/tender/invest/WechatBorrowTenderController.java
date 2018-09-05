@@ -89,21 +89,27 @@ public class WechatBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "散标投资获取投资结果", notes = "散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
+    public WeChatResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid) {
         logger.info("wechat端-请求获取投资结果接口，logOrdId{}",logOrdId);
-        return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
+        WeChatResult weChatResult = new WeChatResult();
+        weChatResult.setObject(result.getData());
+        return  weChatResult;
     }
 
     @ApiOperation(value = "散标投资获取投资成功结果", notes = "散标投资获取投资成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
+    public WeChatResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
         logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+        WeChatResult weChatResult = new WeChatResult();
+        weChatResult.setObject(result.getData());
+        return  weChatResult;
     }
 
     @ApiOperation(value = "获取投资信息", notes = "获取投资信息")

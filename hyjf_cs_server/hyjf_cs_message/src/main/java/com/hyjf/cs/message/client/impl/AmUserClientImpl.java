@@ -1,22 +1,18 @@
 package com.hyjf.cs.message.client.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.am.response.user.UserAliasResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmUserClient;
 
 /**
@@ -172,5 +168,50 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return response.getCount();
+	}
+
+	/**
+	 * 根据userId查询用户推广链接注册
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmRegVO findUtmRegByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findUtmRegByUserId/" + userId;
+		UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 检查用户是不是新手
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int countNewUserTotal(Integer userId) {
+		IntegerResponse result = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/countNewUserTotal/" + userId,  IntegerResponse.class).getBody();
+		if (IntegerResponse.isSuccess(result)) {
+			return result.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 更新用户首次投资信息
+	 *
+	 * @param params
+	 */
+	@Override
+	public Integer updateFirstUtmReg(HashMap<String, Object> params) {
+		IntegerResponse result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateFirstUtmReg",params,IntegerResponse.class).getBody();
+		if (IntegerResponse.isSuccess(result)) {
+			return result.getResultInt();
+		}
+		return 0;
 	}
 }
