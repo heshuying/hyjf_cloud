@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -13,10 +14,7 @@ import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -73,5 +71,21 @@ public class ProtocolsController extends BaseController {
 		protocolsService.updateAction(requestT);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
+	}
+
+	/**
+	 * 取得新规的模板编号
+	 * @param templetId
+	 * @return
+	 */
+	@GetMapping("/getNewTempletId/{templetId}")
+	public StringResponse getNewTempletId(@PathVariable Integer templetId) {
+
+		List<FddTempletCustomize> list = protocolsService.getNewTempletId(templetId);
+		if (list != null && list.size() == 1){
+			String tmpId = list.get(0).getTempletId();
+			return new StringResponse(tmpId);
+		}
+		return null;
 	}
 }

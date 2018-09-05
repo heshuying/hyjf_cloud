@@ -34,4 +34,11 @@ public interface ProtocolsService {
 	 * @param request
 	 */
 	void updateAction(ProtocolsRequest request);
+
+	/**
+	 * 取得新规的模板编号
+	 * @param templetId
+	 * @return
+	 */
+    List<FddTempletCustomize> getNewTempletId(Integer templetId);
 }

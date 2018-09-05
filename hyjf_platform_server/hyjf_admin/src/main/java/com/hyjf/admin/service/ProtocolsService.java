@@ -34,4 +34,11 @@ public interface ProtocolsService {
 	 * @return
 	 */
 	FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean);
+
+	/**
+	 * 取得新规的模板编号
+	 * @param protocolType
+	 * @return
+	 */
+    String getNewTempletId(Integer protocolType);
 }

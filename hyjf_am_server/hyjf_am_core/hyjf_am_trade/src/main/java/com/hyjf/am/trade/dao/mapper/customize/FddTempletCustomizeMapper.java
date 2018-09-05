@@ -23,4 +23,11 @@ public interface FddTempletCustomizeMapper {
      * @return
      */
    List<FddTempletCustomize> selectContractTempId();
+
+    /**
+     *取得新规的模板编号
+     * @param templetId
+     * @return
+     */
+    List<FddTempletCustomize> getMaxTempletId(Integer templetId);
 }

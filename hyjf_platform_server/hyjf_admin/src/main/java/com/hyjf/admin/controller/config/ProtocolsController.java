@@ -92,6 +92,11 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
+	public String protocolTypeAction(String protocolType) {
+		String templetId = protocolsService.getNewTempletId(Integer.parseInt(protocolType));
+		return templetId;
+	}
+
 	/**
 	 * 资料上传
 	 *

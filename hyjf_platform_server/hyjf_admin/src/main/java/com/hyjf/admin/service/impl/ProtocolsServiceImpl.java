@@ -6,7 +6,6 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.ProtocolsClient;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -66,5 +65,10 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	@Override
 	public FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean) {
 		return amTradeClient.updateAction(requestBean);
+	}
+
+	@Override
+	public String getNewTempletId(Integer protocolType) {
+		return amTradeClient.getNewTempletId(protocolType);
 	}
 }
