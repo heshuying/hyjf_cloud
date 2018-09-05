@@ -19,10 +19,13 @@
         <result column="fail_counts" property="failCounts" /> <!-- 失败笔数 -->
         <result column="status" property="status" /> <!-- 交易状态 -->
         <result column="status_str" property="statusStr" /> <!-- 交易状态 -->
-        <result column="create_time" property="createTime" /> <!-- 提交时间  -->
-        <result column="update_time" property="updateTime" /> <!-- 修改时间  -->
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" /> <!-- 提交时间  -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" /> <!-- 修改时间  -->
         <result column="is_repay_org_flag" property="isRepayOrgFlag" /> <!-- 是否是担保机构还款(0:否,1:是)  -->
         <result column="data" property="data" /> <!-- 银行回执说明 -->
+        <result column="increase_interest_flag" property="increaseInterestFlag" /> <!-- 是否加息 -->
+        <result column="extra_yield_status" property="extraYieldStatus" /> <!-- 加息放款状态 -->
+        <result column="extra_yield_repay_status" property="extraYieldRepayStatus" /> <!-- 加息还款状态 -->
     </resultMap>
 
     <sql id="Where_Clause">
@@ -82,20 +85,18 @@
         hba.fail_amount fail_amount,
         hba.fail_counts fail_counts,
         hba.`status`,
-        from_unixtime(
-        hba.create_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS create_time,
-        from_unixtime(
-        hba.update_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS update_time,
+        DATE_FORMAT(hba.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+        DATE_FORMAT(hba.update_time, '%Y-%m-%d %H:%i:%s' ) AS update_time,
         hba.is_repay_org_flag is_repay_org_flag,
-        hba.data
+        hba.data,
+        b.increase_interest_flag,
+        hba.extra_yield_status,
+        hba.extra_yield_repay_status
         FROM
         ht_borrow_apicron hba
         LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
-        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        LEFT JOIN ht_borrow_info bi ON hba.borrow_nid = bi.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
         <include refid="Where_Clause"/>
         ORDER BY hba.create_time DESC
         <if test="limitStart >= 0" >

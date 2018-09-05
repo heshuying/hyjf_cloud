@@ -59,4 +59,9 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		record.setCreateTime(new Date());
 		fddTempletMapper.updateByPrimaryKeySelective(record);
 	}
+
+	@Override
+	public String getNewTempletId(Integer templetId) {
+		return customizeMapper.getMaxTempletId(templetId);
+	}
 }
