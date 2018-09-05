@@ -101,7 +101,7 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
-        reuslt.setData(data);
+        reuslt.setObject(data);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), CustomConstants.CLIENT_WECHAT, openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
