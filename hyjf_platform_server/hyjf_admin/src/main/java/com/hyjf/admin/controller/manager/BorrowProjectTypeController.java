@@ -57,7 +57,7 @@ public class BorrowProjectTypeController extends BaseController {
             return new AdminResult<>(FAIL, resList.getMessage());
 
         }
-        return new AdminResult<ListResult<BorrowProjectTypeVO>>(ListResult.build(resList.getResultList(), resList.getResultList().size())) ;
+        return new AdminResult<ListResult<BorrowProjectTypeVO>>(ListResult.build(resList.getResultList(), resList.getRecordTotal())) ;
     }
     @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
     @PostMapping("/infoAction")
@@ -130,9 +130,9 @@ public class BorrowProjectTypeController extends BaseController {
                 return result;
             }
         }
-//        AdminSystemVO user = getUser(request);
-//        adminRequest.setCreateUserId(user.getId());
-        adminRequest.setCreateUserId("3");
+        AdminSystemVO user = getUser(request);
+        adminRequest.setCreateUserId(user.getId());
+//        adminRequest.setCreateUserId("3");
         //优惠券类型转换
         if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
             adminRequest.setInterestCoupon(1);
