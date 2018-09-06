@@ -1,8 +1,12 @@
 package com.hyjf.am.trade.service.front.account;
 
+import com.hyjf.am.resquest.ApiTransactionDetailsRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+
+import java.util.List;
 
 /**
  * @author jijun
@@ -31,4 +35,12 @@ public interface AccountListService {
      * @return
      */
     Integer countByNidAndTrade(String nid, String trade);
+
+    /**
+     * 第三方交易明细查询
+     * @param detailsRequest
+     * @return
+     * @Author : huanghui
+     */
+    List<ApiTransactionDetailsCustomize> selectTransactionDetails(ApiTransactionDetailsRequest detailsRequest);
 }
