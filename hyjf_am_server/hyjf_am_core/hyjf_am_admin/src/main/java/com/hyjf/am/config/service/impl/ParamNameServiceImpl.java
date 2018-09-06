@@ -129,6 +129,7 @@ public class ParamNameServiceImpl implements ParamNameService {
      */
     @Override
     public int insertParamName(ParamNameVO paramNameVO) {
+        // 如果重新生成mapper，这里可能会有问题。因为auto生成的mapper把nameCd当成是主键，所以不会插入nameCd，数据库会报错：name_cd没有默认值
         ParamName paramName = CommonUtils.convertBean(paramNameVO,ParamName.class);
         return paramNameMapper.insertSelective(paramName);
     }
