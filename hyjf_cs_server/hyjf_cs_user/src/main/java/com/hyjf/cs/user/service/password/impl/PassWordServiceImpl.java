@@ -148,6 +148,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
+        logger.info("交易密码回调参数:"+bean.getLogOrderId());
         //channel=0：设置交易密码/1：重置交易密码
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
