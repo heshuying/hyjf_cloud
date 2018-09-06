@@ -181,7 +181,8 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode="";
+        BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.WEB_CLIENT);
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         // 消息类型(密码重置)
