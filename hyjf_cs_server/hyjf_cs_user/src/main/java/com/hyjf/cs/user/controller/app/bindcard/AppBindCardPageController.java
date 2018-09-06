@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.app.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -21,6 +22,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import jdk.management.resource.internal.ApproverGroup;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +81,7 @@ public class AppBindCardPageController extends BaseUserController {
             bean.setPlatform("1");
             Map<String,Object> map = bindCardService.getCallbankMap(bean);
             result.setData(map);
+            result.setStatus(BaseResult.SUCCESS);
             logger.info("绑卡调用页面end");
 
             return result;
