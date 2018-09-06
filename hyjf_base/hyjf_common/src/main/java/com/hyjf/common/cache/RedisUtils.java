@@ -867,7 +867,31 @@ public class RedisUtils {
         }
         return result;
     }
+    /**
+     * 删除数据
+     *
+     * @param key
+     * @return
+     */
+    public static Long hdel(String key,String field) {
+        Long result = null;
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+            result = jedis.hdel(key, field);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
 
+        return result;
+    }
     /**
      * 
      * @param key

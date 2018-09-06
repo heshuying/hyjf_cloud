@@ -3,7 +3,10 @@ package com.hyjf.am.config.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hyjf.am.config.dao.model.auto.ParamNameKey;
+import com.hyjf.am.resquest.admin.AdminParamNameRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +59,115 @@ public class ParamNameServiceImpl implements ParamNameService {
             paramNameVOS= CommonUtils.convertBeanList(borrowProjectTypes,ParamNameVO.class);
         }
         return paramNameVOS;
+    }
+
+    /**
+     * 查询数据字典数量
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getParamNamesCount(AdminParamNameRequest request) {
+        ParamNameExample example = convertExample(request);
+        return paramNameMapper.countByExample(example);
+    }
+    /**
+     * 查询数据字典列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<ParamName> searchParamNamesList(AdminParamNameRequest request) {
+        ParamNameExample example = convertExample(request);
+        return paramNameMapper.selectByExample(example);
+    }
+
+    private ParamNameExample convertExample(AdminParamNameRequest request){
+        ParamNameExample example = new ParamNameExample();
+        ParamNameExample.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(request.getNameClassSrch())){
+            criteria.andNameClassLike("%"+request.getNameClassSrch()+"%");
+        }
+        if(StringUtils.isNotBlank(request.getNameCdSrch())){
+            criteria.andNameCdLike("%"+request.getNameCdSrch()+"%");
+        }
+        if(StringUtils.isNotBlank(request.getNameSrch())){
+            criteria.andNameLike("%"+request.getNameSrch()+"%");
+        }
+        example.setOrderByClause("create_time desc");
+        if (request.getLimitStart() != -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        return example;
+    }
+    /**
+     * 检查数据库是否已存在该数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public boolean isExistsParamName(ParamNameVO paramNameVO) {
+        ParamNameExample example = new ParamNameExample();
+        ParamNameExample.Criteria cra = example.createCriteria();
+        cra.andNameCdEqualTo(paramNameVO.getNameCd());
+        cra.andNameClassEqualTo(paramNameVO.getNameClass());
+        List<ParamName> list = paramNameMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 插入数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int insertParamName(ParamNameVO paramNameVO) {
+        ParamName paramName = CommonUtils.convertBean(paramNameVO,ParamName.class);
+        return paramNameMapper.insertSelective(paramName);
+    }
+    /**
+     * 修改数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateParamName(ParamNameVO paramNameVO) {
+        ParamName paramName = CommonUtils.convertBean(paramNameVO,ParamName.class);
+        paramName.setCreateTime(null);
+        return paramNameMapper.updateByPrimaryKeySelective(paramName);
+    }
+    /**
+     * 根据联合主键查询数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public ParamName searchParamNameByKey(ParamNameVO paramNameVO) {
+        ParamNameKey paramNameKey = new ParamNameKey();
+        paramNameKey.setNameClass(paramNameVO.getNameClass());
+        paramNameKey.setNameCd(paramNameVO.getNameCd());
+        return paramNameMapper.selectByPrimaryKey(paramNameKey);
+    }
+    /**
+     * 删除数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int deleteParamName(ParamNameVO paramNameVO) {
+        ParamNameKey paramNameKey = new ParamNameKey();
+        paramNameKey.setNameClass(paramNameVO.getNameClass());
+        paramNameKey.setNameCd(paramNameVO.getNameCd());
+        return paramNameMapper.deleteByPrimaryKey(paramNameKey);
     }
 }

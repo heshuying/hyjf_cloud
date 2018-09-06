@@ -11,5 +11,13 @@ import com.hyjf.am.vo.config.ParamNameVO;
  * @version ParamNameResponse, v0.1 2018/7/5 9:27
  */
 public class ParamNameResponse extends Response<ParamNameVO> {
+    private int count;
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }
