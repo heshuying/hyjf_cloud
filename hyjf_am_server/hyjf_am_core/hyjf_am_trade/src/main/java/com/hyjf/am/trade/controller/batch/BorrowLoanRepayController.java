@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.front.borrow;
+package com.hyjf.am.trade.controller.batch;
 
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;

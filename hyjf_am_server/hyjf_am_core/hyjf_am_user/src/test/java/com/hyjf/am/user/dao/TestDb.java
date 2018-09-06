@@ -28,8 +28,10 @@ public class TestDb {
 	@Test
 	public void getUser() {
 		User users = usersMapper.selectByPrimaryKey(1);
-		if (users != null)
+		if (users != null) {
 			logger.info("users is :{}", JSONObject.toJSONString(users));
+		}
+			
 		logger.info("none this userId");
 	}
 }

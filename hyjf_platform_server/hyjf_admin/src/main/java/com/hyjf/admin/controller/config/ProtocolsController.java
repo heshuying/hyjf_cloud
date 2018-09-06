@@ -120,10 +120,16 @@ public class ProtocolsController extends BaseController {
 
 
 	@ApiOperation(value = "取得新规的模板编号", notes = "取得新规的模板编号")
-	@PostMapping("/getTempletId")
-	public String protocolTypeAction(String protocolType) {
-		String templetId = protocolsService.getNewTempletId(Integer.parseInt(protocolType));
-		return templetId;
+	@GetMapping("/getTempletId")
+        public AdminResult protocolTypeAction(@RequestParam(value = "protocolType") Integer requestBean) {
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		String templetId = protocolsService.getNewTempletId(requestBean);
+		response.setTempletId(templetId);
+		response.setCount(1);
+		if (templetId == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		return new AdminResult<>(response);
 	}
 
 	/**

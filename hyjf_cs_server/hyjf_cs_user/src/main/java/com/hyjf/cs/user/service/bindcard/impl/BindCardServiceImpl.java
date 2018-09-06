@@ -300,6 +300,53 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	@Override
+	public Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token) {
+		UserVO userVO = this.getUsersById(bean.getUserId());
+
+		// 获取共同参数
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String idType = BankCallConstant.ID_TYPE_IDCARD;
+		String orderId = GetOrderIdUtils.getOrderId2(bean.getUserId());
+
+		// 调用开户接口
+		BankCallBean bindCardBean = new BankCallBean();
+		bindCardBean.setTxCode(bean.getTxCode());// 消息类型(用户开户)
+		bindCardBean.setIdType(idType);
+		bindCardBean.setIdNo(bean.getIdNo());
+		bindCardBean.setName(bean.getName());
+		bindCardBean.setAccountId(bean.getAccountId());
+		bindCardBean.setUserIP(bean.getUserIP());
+
+		// 同步调用路径
+		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=1";
+		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=1";
+		// 异步调用路
+		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
+		// 拼装参数 调用江西银行
+		String forgetPassworedUrl = systemConfig.getForgetpassword();
+
+		bindCardBean.setRetUrl(retUrl);
+		bindCardBean.setSuccessfulUrl(successUrl);
+		bindCardBean.setForgotPwdUrl(forgetPassworedUrl);
+		bindCardBean.setNotifyUrl(bgRetUrl);
+		// 页面调用必须传的
+		bindCardBean.setLogBankDetailUrl(BankCallConstant.BANK_URL_BIND_CARD_PAGE);
+		bindCardBean.setLogOrderId(orderId);
+		bindCardBean.setLogOrderDate(orderDate);
+		bindCardBean.setLogUserId(String.valueOf(bean.getUserId()));
+		bindCardBean.setLogRemark("外部服务接口:绑卡页面");
+		bindCardBean.setLogIp(bean.getUserIP());
+		bindCardBean.setLogClient(Integer.parseInt(bean.getPlatform()));
+		try {
+			Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
 	public ModelAndView getCallbankMV(BindCardPageBean bean) {
 		ModelAndView mv = new ModelAndView();
 		// 获取共同参数

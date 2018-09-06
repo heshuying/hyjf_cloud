@@ -57,7 +57,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
-        if(null==user||0==user.getIsSetPassword()||!user.isBankOpenAccount()){
+        if(null==user||!user.isBankOpenAccount()){
             return new WebResult<>();
         }
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);

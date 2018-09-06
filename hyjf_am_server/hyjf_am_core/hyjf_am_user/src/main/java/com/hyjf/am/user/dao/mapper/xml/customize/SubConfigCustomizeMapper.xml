@@ -6,6 +6,7 @@
         SELECT
         users.user_id ,
         users.status,
+        users.username,
         userinfo.truename ,
         userinfo.role_id,
         CASE userinfo.role_id

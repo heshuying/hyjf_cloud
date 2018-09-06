@@ -10,7 +10,7 @@ public interface AccountBankMapper {
 
     int deleteByExample(AccountBankExample example);
 
-    int deleteByPrimaryKey(Integer userId);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(AccountBank record);
 
@@ -18,7 +18,7 @@ public interface AccountBankMapper {
 
     List<AccountBank> selectByExample(AccountBankExample example);
 
-    AccountBank selectByPrimaryKey(Integer userId);
+    AccountBank selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") AccountBank record, @Param("example") AccountBankExample example);
 
