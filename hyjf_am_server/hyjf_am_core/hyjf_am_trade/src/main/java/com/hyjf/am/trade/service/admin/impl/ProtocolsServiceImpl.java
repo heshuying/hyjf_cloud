@@ -28,6 +28,10 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	private FddTempletMapper fddTempletMapper;
 	@Autowired
 	private FddTempletCustomizeMapper customizeMapper;
+	@Autowired
+	private FddTempletCustomizeMapper fddTempletCustomizeMapper;
+
+	private static final String TEMPLET_ID_REFIX = "HYHT";
 
 	@Override
 	public List<FddTempletCustomize> selectFddTempletList(int limitStart, int limitEnd) {
@@ -63,7 +67,15 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 
 	@Override
 	public String getNewTempletId(Integer protocolType) {
-		return customizeMapper.getMaxTempletId(protocolType);
+		String templetId = null;
+		templetId = fddTempletCustomizeMapper.getMaxTempletId(protocolType);
+		if (templetId == null){
+			return TEMPLET_ID_REFIX + String.format("%02d",protocolType) + String.format("%04d",1);
+		}
+		String preFixStr = templetId.substring(0, templetId.length()-4);
+		String postSNStr = templetId.substring(templetId.length()-4);
+		postSNStr = String.format("%04d",Integer.parseInt(postSNStr) + 1);
+		return preFixStr + postSNStr;
 	}
 
 	/**
@@ -83,4 +95,5 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		}
 		return list;
 	}
+
 }
