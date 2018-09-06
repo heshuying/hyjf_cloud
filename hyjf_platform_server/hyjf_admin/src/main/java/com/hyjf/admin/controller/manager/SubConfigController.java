@@ -169,7 +169,7 @@ public class SubConfigController extends BaseController {
     @ApiOperation(value = "用户名信息", notes = "用户名信息")
     @PostMapping("/selectAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public Map<String, Object>  selectAction(HttpServletRequest request,@RequestBody AdminSubConfigRequest adminRequest) {
+    public AdminResult  selectAction(HttpServletRequest request,@RequestBody AdminSubConfigRequest adminRequest) {
         Map<String, Object> userMapNullMap=new HashMap();
         UserInfoCustomizeResponse userMap=subConfigService.userMap(adminRequest);
         AdminSubConfigResponse res=subConfigService.subconfig(adminRequest);
@@ -178,30 +178,31 @@ public class SubConfigController extends BaseController {
             if (!CollectionUtils.isEmpty(res.getResultList())) {
                 userMapNullMap.put("info", "该用户白名单信息已经存在");
                 userMapNullMap.put("status", "n");
-                return userMapNullMap;
+                return new AdminResult<Map>(userMapNullMap);
             }else {
                 if (StringUtils.isNotBlank(user.getOpen())) {
                     if ("未开户".equals((String)user.getOpen().toString().trim())) {
                         userMapNullMap.put("info", "无法获取用户信息");
                         userMapNullMap.put("status", "n");
-                        return userMapNullMap;
+                        return new AdminResult<Map>(userMapNullMap);
                     }
                 }
                 if (user.getStatus() != null) {
                     if (user.getStatus().intValue() ==1) {
                         userMapNullMap.put("info", "该用户已被禁用");
                         userMapNullMap.put("status", "n");
-                        return userMapNullMap;
+                        return new AdminResult<Map>(userMapNullMap);
                     }
                 }
                 userMapNullMap.put("status", "y");
-                return userMapNullMap;
+                userMapNullMap.put("user",userMap);
+                return new AdminResult<Map>(userMapNullMap);
             }
 
         }else {
             userMapNullMap.put("info", "您输入的用户名无对应信息，请重新输入");
             userMapNullMap.put("status", "n");
-            return userMapNullMap;
+            return new AdminResult<Map>(userMapNullMap);
         }
     }
 
