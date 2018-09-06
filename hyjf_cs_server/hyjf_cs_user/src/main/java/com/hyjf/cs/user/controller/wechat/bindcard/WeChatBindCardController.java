@@ -44,55 +44,55 @@ public class WeChatBindCardController extends BaseUserController {
      * 页面请求绑卡
      * @param request
      */
-    @PostMapping("/bindCardPage")
-    @ApiOperation(value = "绑卡", notes = "绑卡")
-    public ModelAndView bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
-
-        ModelAndView modelAndView = new ModelAndView();
-        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
-        // 检查参数
-        ResultEnum checkResult = bindCardService.checkParamBindCardPageWeChat(webViewUserVO);
-
-        if (checkResult != null) {
-            logger.info("checkResult is:{}", checkResult.getStatusDesc());
-            return getErrorModelAndView(checkResult);
-        }
-
-        // 请求银行接口
-        try {
-            // 同步调用路径
-            String retUrl = systemConfig.appHost + request.getContextPath()
-                    + "wx/bindCardPage/return.do";
-            // 异步调用路
-            String bgRetUrl = systemConfig.appHost + request.getContextPath()
-                    + "wx/bindCardPage/notifyReturn.do";
-            // 拼装参数 调用江西银行
-            String forgetPassworedUrl = systemConfig.forgetpassword;
-            BindCardPageBean bean = new BindCardPageBean();
-            bean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
-            bean.setChannel(BankCallConstant.CHANNEL_WEI);
-            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-            bean.setIdNo(webViewUserVO.getIdcard());
-            bean.setName(webViewUserVO.getTruename());
-            bean.setAccountId(webViewUserVO.getBankAccount());
-            bean.setUserIP(GetCilentIP.getIpAddr(request));
-            bean.setUserId(userId);
-            bean.setRetUrl(retUrl);
-            bean.setSuccessfulUrl(retUrl+"&isSuccess=1");
-            bean.setNotifyUrl(bgRetUrl);
-            bean.setForgetPassworedUrl(forgetPassworedUrl);
-            // 微官网 1
-            bean.setPlatform("1");
-            modelAndView = bindCardService.getCallbankMV(bean);
-
-            logger.info("绑卡调用页面end");
-            return modelAndView;
-        } catch (Exception e) {
-            logger.error("调用银行接口失败", e);
-            return getErrorModelAndView(ResultEnum.ERROR_022);
-        }
-
-    }
+//    @PostMapping("/bindCardPage")
+//    @ApiOperation(value = "绑卡", notes = "绑卡")
+//    public ModelAndView bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
+//
+//        ModelAndView modelAndView = new ModelAndView();
+//        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+//        // 检查参数
+//        ResultEnum checkResult = bindCardService.checkParamBindCardPageWeChat(webViewUserVO);
+//
+//        if (checkResult != null) {
+//            logger.info("checkResult is:{}", checkResult.getStatusDesc());
+//            return getErrorModelAndView(checkResult);
+//        }
+//
+//        // 请求银行接口
+//        try {
+//            // 同步调用路径
+//            String retUrl = systemConfig.appHost + request.getContextPath()
+//                    + "wx/bindCardPage/return.do";
+//            // 异步调用路
+//            String bgRetUrl = systemConfig.appHost + request.getContextPath()
+//                    + "wx/bindCardPage/notifyReturn.do";
+//            // 拼装参数 调用江西银行
+//            String forgetPassworedUrl = systemConfig.forgetpassword;
+//            BindCardPageBean bean = new BindCardPageBean();
+//            bean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
+//            bean.setChannel(BankCallConstant.CHANNEL_WEI);
+//            bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
+//            bean.setIdNo(webViewUserVO.getIdcard());
+//            bean.setName(webViewUserVO.getTruename());
+//            bean.setAccountId(webViewUserVO.getBankAccount());
+//            bean.setUserIP(GetCilentIP.getIpAddr(request));
+//            bean.setUserId(userId);
+//            bean.setRetUrl(retUrl);
+//            bean.setSuccessfulUrl(retUrl+"&isSuccess=1");
+//            bean.setNotifyUrl(bgRetUrl);
+//            bean.setForgetPassworedUrl(forgetPassworedUrl);
+//            // 微官网 1
+//            bean.setPlatform("1");
+//            modelAndView = bindCardService.getCallbankMV(bean);
+//
+//            logger.info("绑卡调用页面end");
+//            return modelAndView;
+//        } catch (Exception e) {
+//            logger.error("调用银行接口失败", e);
+//            return getErrorModelAndView(ResultEnum.ERROR_022);
+//        }
+//
+//    }
 
     private ModelAndView getErrorModelAndView(ResultEnum param) {
         ModelAndView modelAndView = new ModelAndView("/jumpHTML");
