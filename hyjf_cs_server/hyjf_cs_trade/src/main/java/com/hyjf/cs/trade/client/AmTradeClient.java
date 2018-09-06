@@ -51,6 +51,7 @@ import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
+import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1896,4 +1897,12 @@ public interface AmTradeClient {
      * @return
      */
     int insertAccountWithdraw(AccountWithdrawVO record);
+
+    /**
+     * 交易明细查询
+     * @param resultBean
+     * @return
+     * @Author : huanghui
+     */
+    List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean resultBean);
 }
