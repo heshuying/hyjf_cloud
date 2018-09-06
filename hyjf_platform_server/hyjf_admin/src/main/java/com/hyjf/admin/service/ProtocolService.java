@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author：yinhui
@@ -76,4 +77,6 @@ public interface ProtocolService {
 
 
     AdminProtocolResponse updateExistAction(AdminProtocolVersionRequest form, String userId);
+
+    Map<String,String> validatorFieldCheck(AdminProtocolRequest request,String protocolName, String versionNumber, String displayName, String protocolUrl, String protocolType, String oldDisplayName, String flagT);
 }

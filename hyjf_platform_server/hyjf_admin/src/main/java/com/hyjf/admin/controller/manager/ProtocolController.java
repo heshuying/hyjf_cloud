@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 协议模板管理
@@ -86,6 +83,7 @@ public class ProtocolController extends BaseController{
         AdminProtocolResponse response = new AdminProtocolResponse();
         AdminSystemVO user = getUser(httpServletRequest);
         String userId = user.getId();
+//        String userId = "1";
 
         protocolService.insertProtocolTemplate(request,userId);
 
@@ -120,9 +118,10 @@ public class ProtocolController extends BaseController{
     @PostMapping("/updateAction")
     public AdminResult updateAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        AdminSystemVO user = getUser(httpServletRequest);
         HashMap<String, Object> map = new HashMap<String, Object>();
+        AdminSystemVO user = getUser(httpServletRequest);
         String userId = user.getId();
+//        String userId = "1";
         protocolService.updateProtocolTemplate(request,userId);
 
         //更新redis
@@ -154,8 +153,8 @@ public class ProtocolController extends BaseController{
     @PostMapping("/updateExistProtocol")
     public AdminResult updateExistProtocol(@RequestBody AdminProtocolVersionRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        AdminSystemVO user = getUser(httpServletRequest);
         HashMap<String, Object> map = new HashMap<String, Object>();
+        AdminSystemVO user = getUser(httpServletRequest);
         String userId = user.getId();
 //        String userId = "1";
         protocolService.updateExistAction(request,userId);
@@ -188,7 +187,6 @@ public class ProtocolController extends BaseController{
     @ApiOperation(value = "删除协议模板", notes = "删除协议模板")
     @RequestMapping(value="/deleteAction",method = RequestMethod.DELETE)
     public AdminResult deleteAction(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
-        AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
         AdminSystemVO user = getUser(httpServletRequest);
         String userId = user.getId();
@@ -235,6 +233,28 @@ public class ProtocolController extends BaseController{
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+    }
+
+    /**
+     * 校验表单字段是否唯一
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "校验字段是否唯一", notes = "校验传给后台的值字段是否唯一")
+    @RequestMapping(value = "validationProtocolNameAction", method = RequestMethod.POST)
+    public Map<String,String> validationProtocolNameAction(@RequestBody  AdminProtocolRequest request) throws Exception {
+        //获取校验参数
+        String protocolName = request.getProtocolName();//协议模板名称
+        String protocolType = request.getProtocolType();//协议类别
+        String versionNumber = request.getVersionNumber();//版本号
+        String displayName = request.getDisplayName();//前台展示名称
+        String protocolUrl = request.getProtocolUrl();//协议上传路径
+        String oldDisplayName = request.getOldDisplayName();//原前台展示名称
+        String flag = request.getFlag();//原前台展示名称
+        Map<String,String> map = protocolService.validatorFieldCheck(request,protocolName,versionNumber,displayName,protocolUrl,protocolType,oldDisplayName,flag);
+        return map;
     }
 
     /**
