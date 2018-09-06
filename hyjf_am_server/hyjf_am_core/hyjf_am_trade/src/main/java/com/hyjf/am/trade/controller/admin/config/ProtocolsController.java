@@ -83,11 +83,27 @@ public class ProtocolsController extends BaseController {
 	 */
 	@GetMapping("/getNewTempletId/{templetId}")
 	public StringResponse getNewTempletId(@PathVariable Integer templetId) {
-
 		String tmpId = protocolsService.getNewTempletId(templetId);
 		if (StringUtils.isNotBlank(tmpId)){
 			return new StringResponse(tmpId);
 		}
 		return null;
+	}
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("/getRecordInfoById/{id}")
+	public FddTempletCustomizeResponse getRecordInfoById(@PathVariable Integer id) {
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		FddTempletCustomize fddTemplet = protocolsService.getRecordInfoById(id);
+		if (fddTemplet != null) {
+			FddTempletCustomizeVO voList = CommonUtils.convertBean(fddTemplet, FddTempletCustomizeVO.class);
+			response.setResult(voList);
+		}
+		return response;
 	}
 }

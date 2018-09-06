@@ -42,4 +42,12 @@ public interface ProtocolsService {
 	 * @return
 	 */
     String getNewTempletId(Integer templetId);
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+    FddTempletCustomize getRecordInfoById(Integer id);
 }
