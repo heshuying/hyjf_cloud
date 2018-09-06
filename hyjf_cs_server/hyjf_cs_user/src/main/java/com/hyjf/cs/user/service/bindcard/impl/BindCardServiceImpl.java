@@ -300,8 +300,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	@Override
-	public Map<String,Object> getCallbankMap(BindCardPageBean bean) {
-		ModelAndView mv = new ModelAndView();
+	public Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token) {
+		UserVO userVO = this.getUsersById(bean.getUserId());
+
 		// 获取共同参数
 		String orderDate = GetOrderIdUtils.getOrderDate();
 		String idType = BankCallConstant.ID_TYPE_IDCARD;
@@ -317,10 +318,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bindCardBean.setUserIP(bean.getUserIP());
 
 		// 同步调用路径
-		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId;
-		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success";
+		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=1";
+		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=1";
 		// 异步调用路
-		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/bindCardPage/notifyReturn";
+		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
 		String forgetPassworedUrl = systemConfig.getForgetpassword();
 

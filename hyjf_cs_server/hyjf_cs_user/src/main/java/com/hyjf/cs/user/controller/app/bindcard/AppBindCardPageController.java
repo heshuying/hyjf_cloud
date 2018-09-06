@@ -56,6 +56,8 @@ public class AppBindCardPageController extends BaseUserController {
     public AppResult<Object> bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
         AppResult<Object> result = new AppResult<Object>();
+        String sign = request.getParameter("sign");
+        String token = request.getParameter("token");
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         // 检查参数
         String checkResult = bindCardService.checkParamBindCardPageAPP(webViewUserVO);
@@ -79,7 +81,7 @@ public class AppBindCardPageController extends BaseUserController {
             bean.setUserId(userId);
             // 微官网 1
             bean.setPlatform("1");
-            Map<String,Object> map = bindCardService.getCallbankMap(bean);
+            Map<String,Object> map = bindCardService.getCallbankMap(bean,sign,token);
             result.setData(map);
             result.setStatus(BaseResult.SUCCESS);
             logger.info("绑卡调用页面end");
