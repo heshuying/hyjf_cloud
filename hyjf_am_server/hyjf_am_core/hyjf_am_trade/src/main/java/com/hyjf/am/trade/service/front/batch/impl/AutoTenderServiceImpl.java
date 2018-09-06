@@ -182,6 +182,11 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         Borrow borrow = this.selectBorrowByNid(borrowNid);
         HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
 
+        // add 主库读取修改后异常处理问题修正 liubin 20180906 start
+        // OrderStatus = 0 or 80 or 90 变更成 0
+        hjhAccede.setOrderStatus(hjhAccede.getOrderStatus() % 10);
+        // add 主库读取修改后异常处理问题修正 liubin 20180906 end
+
         String txAmount = bean.getTxAmount();// 借款金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
 
@@ -620,6 +625,11 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         HjhDebtCredit credit = this.selectCreditByNid(creditNid);
         HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
         HjhPlan hjhPlan = this.selectHjhPlanByPlanNid(planNid);
+
+        // add 主库读取修改后异常处理问题修正 liubin 20180906 start
+        // OrderStatus = 0 or 80 or 90 变更成 0
+        hjhAccede.setOrderStatus(hjhAccede.getOrderStatus() % 10);
+        // add 主库读取修改后异常处理问题修正 liubin 20180906 end
 
         String txAmount = bean.getTxAmount();// 交易金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 交易金额(实际支付金额)
