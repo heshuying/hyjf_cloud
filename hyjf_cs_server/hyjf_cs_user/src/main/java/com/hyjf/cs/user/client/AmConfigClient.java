@@ -127,13 +127,6 @@ public interface AmConfigClient {
     JxBankConfigVO getJxBankConfigById(Integer id);
 
     /**
-     * 银行配置信息
-     * @param code
-     * @return
-     */
-    BankConfigVO selectBankConfigByCode(String code);
-
-    /**
      * 判断江西银行绑卡使用新
      * @param type
      * @return

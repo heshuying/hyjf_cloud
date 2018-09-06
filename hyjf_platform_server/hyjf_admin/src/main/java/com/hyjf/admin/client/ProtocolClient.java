@@ -7,6 +7,7 @@ import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author：yinhui
@@ -81,4 +82,6 @@ public interface ProtocolClient {
     int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest);
 
     boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest);
+
+    Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 }

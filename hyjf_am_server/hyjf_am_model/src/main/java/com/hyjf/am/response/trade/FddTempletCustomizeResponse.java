@@ -4,7 +4,10 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -13,11 +16,41 @@ import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 public class FddTempletCustomizeResponse extends Response<FddTempletCustomizeVO> {
 	private int count;
 
+	private String templetId;
+
+	private FddTempletCustomizeVO protocolsForm;
+
+	private List<ParamNameVO> protocolTypeList;
+
 	public int getCount() {
 		return count;
 	}
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getTempletId() {
+		return templetId;
+	}
+
+	public void setTempletId(String templetId) {
+		this.templetId = templetId;
+	}
+
+	public FddTempletCustomizeVO getProtocolsForm() {
+		return protocolsForm;
+	}
+
+	public void setProtocolsForm(FddTempletCustomizeVO protocolsForm) {
+		this.protocolsForm = protocolsForm;
+	}
+
+	public List<ParamNameVO> getProtocolTypeList() {
+		return protocolTypeList;
+	}
+
+	public void setProtocolTypeList(List<ParamNameVO> protocolTypeList) {
+		this.protocolTypeList = protocolTypeList;
 	}
 }

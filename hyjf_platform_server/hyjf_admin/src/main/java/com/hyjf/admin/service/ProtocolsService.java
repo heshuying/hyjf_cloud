@@ -5,6 +5,9 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
+import com.hyjf.am.vo.config.ParamNameVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -41,4 +44,20 @@ public interface ProtocolsService {
 	 * @return
 	 */
     String getNewTempletId(Integer protocolType);
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+	FddTempletCustomizeResponse getRecordInfo(Integer id);
+
+	/**
+	 * 协议管理-获取协议类型下拉列表
+	 *
+	 * @param protocolType
+	 * @return
+	 */
+	List<ParamNameVO> getParamNameList(String protocolType);
 }

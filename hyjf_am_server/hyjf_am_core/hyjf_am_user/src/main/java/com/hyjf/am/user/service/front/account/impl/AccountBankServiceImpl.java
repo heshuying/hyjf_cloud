@@ -8,6 +8,7 @@ import com.hyjf.am.user.dao.model.auto.AccountBankExample;
 import com.hyjf.am.user.service.front.account.AccountBankService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.common.validator.Validator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +48,19 @@ public class AccountBankServiceImpl extends BaseServiceImpl implements AccountBa
         customize.setUserId(userId);
         List<AdminBankAccountCheckCustomizeVO> bankOpenAccountList = userAdminBankAccountCheckCustomizeMapper.queryAllBankOpenAccount(customize);
         return bankOpenAccountList;
+    }
+
+    @Override
+    public AccountBank getBankInfo(Integer userId, Integer bankId) {
+        if (Validator.isNotNull(userId) && Validator.isNotNull(bankId)) {
+            // 取得用户银行卡信息
+            AccountBankExample accountBankExample = new AccountBankExample();
+            accountBankExample.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(bankId);
+            List<AccountBank> listAccountBank = this.accountBankMapper.selectByExample(accountBankExample);
+            if (listAccountBank != null && listAccountBank.size() > 0) {
+                return listAccountBank.get(0);
+            }
+        }
+        return null;
     }
 }

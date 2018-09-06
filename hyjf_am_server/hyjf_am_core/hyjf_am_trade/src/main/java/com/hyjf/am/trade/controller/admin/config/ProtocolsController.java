@@ -78,16 +78,32 @@ public class ProtocolsController extends BaseController {
 
 	/**
 	 * 取得新规的模板编号
-	 * @param templetId
+	 * @param protocolType
 	 * @return
 	 */
-	@GetMapping("/getNewTempletId/{templetId}")
-	public StringResponse getNewTempletId(@PathVariable Integer templetId) {
-
-		String tmpId = protocolsService.getNewTempletId(templetId);
+	@GetMapping("/getNewTempletId/{protocolType}")
+	public StringResponse getNewTempletId(@PathVariable Integer protocolType) {
+		String tmpId = protocolsService.getNewTempletId(protocolType);
 		if (StringUtils.isNotBlank(tmpId)){
 			return new StringResponse(tmpId);
 		}
 		return null;
+	}
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("/getRecordInfoById/{id}")
+	public FddTempletCustomizeResponse getRecordInfoById(@PathVariable Integer id) {
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		FddTempletCustomize fddTemplet = protocolsService.getRecordInfoById(id);
+		if (fddTemplet != null) {
+			FddTempletCustomizeVO voList = CommonUtils.convertBean(fddTemplet, FddTempletCustomizeVO.class);
+			response.setResult(voList);
+		}
+		return response;
 	}
 }

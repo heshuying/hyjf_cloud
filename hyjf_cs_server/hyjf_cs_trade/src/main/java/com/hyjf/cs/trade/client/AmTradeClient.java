@@ -1,10 +1,6 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -47,12 +43,15 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
-import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
+import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1317,10 +1316,7 @@ public interface AmTradeClient {
 
     /**
      *
-     * @param bean
-     * @param accountwithdraw
-     * @param bankCard
-     * @param withdrawFee
+     * @param params
      * @return
      */
     boolean handlerAfterCash(JSONObject params);
@@ -1760,13 +1756,6 @@ public interface AmTradeClient {
 	/**
 	 *
 	 * 投资预插入
-	 *
-	 * @param borrowNid
-	 * @param orderId
-	 * @param userId
-	 * @param account
-	 * @param ip
-	 * @return
 	 * @author Administrator
 	 * @throws Exception
 	 */
@@ -1774,8 +1763,7 @@ public interface AmTradeClient {
 
     /**
      * 根据id删除BorrowTenderTmp
-     * @auth libin
-     * @param id 主键
+     * @param orgOrderId
      * @return
      */
     Integer deleteBorrowTenderTmp(String orgOrderId);
@@ -1895,4 +1883,19 @@ public interface AmTradeClient {
      * @date 2018/9/3 16:40
      */
     BorrowVO getBorrowByNidAndNowTime(String borrowNid,Integer nowTime);
+
+    /**
+     * 查询提现订单号数量
+     * @param ordId
+     * @return
+     */
+    int countAccountWithdraw(String ordId);
+
+    /**
+     * 交易明细查询
+     * @param resultBean
+     * @return
+     * @Author : huanghui
+     */
+    List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean resultBean);
 }

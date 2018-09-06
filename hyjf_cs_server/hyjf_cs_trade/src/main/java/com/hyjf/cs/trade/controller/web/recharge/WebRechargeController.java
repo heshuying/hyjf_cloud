@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
@@ -87,9 +88,9 @@ public class WebRechargeController extends BaseTradeController{
 
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/rechargeError";
+		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError";
 		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
-		String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
+		String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);

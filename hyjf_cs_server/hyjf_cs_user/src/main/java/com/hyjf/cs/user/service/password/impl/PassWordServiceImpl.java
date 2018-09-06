@@ -148,6 +148,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
+        logger.info("交易密码回调参数:"+bean.getLogOrderId());
         //channel=0：设置交易密码/1：重置交易密码
         String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
@@ -180,7 +181,8 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode="";
+        BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.WEB_CLIENT);
         bean.setTxDate(GetOrderIdUtils.getTxDate());
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         // 消息类型(密码重置)

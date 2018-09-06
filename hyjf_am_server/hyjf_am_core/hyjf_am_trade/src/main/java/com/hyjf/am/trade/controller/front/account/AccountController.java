@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.account;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountInfoResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
@@ -226,6 +227,17 @@ public class AccountController extends BaseController {
             response.setResult(CommonUtils.convertBean(result,AccountWithdrawVO.class));
         }
         return response;
+    }
+
+    /**
+     * 查询订单号数量
+     * @param ordId
+     * @return
+     */
+    @GetMapping("/countAccountWithdraw/{ordId}")
+    public IntegerResponse countAccountWithdraw(@PathVariable String ordId) {
+        int cnt = accountService.countAccountWithdraw(ordId);
+       return new IntegerResponse(cnt);
     }
 
 

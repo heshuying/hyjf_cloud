@@ -13,6 +13,7 @@ import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,19 @@ public class AccountBankController extends BaseController {
         if(!CollectionUtils.isEmpty(accountBankList)){
             List<AccountBankVO> accountBankVOList = CommonUtils.convertBeanList(accountBankList,AccountBankVO.class);
             response.setResultList(accountBankVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    @GetMapping(value = "/getBankInfo/{userId}/{bankId}")
+    public AccountBankResponse getBankInfo(@PathVariable Integer userId,@PathVariable Integer bankId){
+        AccountBankResponse response = new AccountBankResponse();
+        AccountBank accountBank = accountBankService.getBankInfo(userId,bankId);
+        if(accountBank!=null){
+            AccountBankVO accountBankVO = new AccountBankVO();
+            BeanUtils.copyProperties(accountBank,accountBankVO);
+            response.setResult(accountBankVO);
             response.setRtn(Response.SUCCESS);
         }
         return response;

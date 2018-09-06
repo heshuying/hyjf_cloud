@@ -2168,7 +2168,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
         HjhInstConfigResponse response = restTemplate.
-                getForEntity("http://AM-ADMIN/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -6017,6 +6017,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.getForObject(url, StringResponse.class);
         if (Response.isSuccess(response)){
             return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public FddTempletCustomizeResponse getRecordInfoById(Integer id) {
+        String url = "http://AM-TRADE/am-trade/protocol/getRecordInfoById/" + id;
+        FddTempletCustomizeResponse response = restTemplate.getForObject(url, FddTempletCustomizeResponse.class);
+        if (response.getResult() != null){
+            return response;
         }
         return null;
     }

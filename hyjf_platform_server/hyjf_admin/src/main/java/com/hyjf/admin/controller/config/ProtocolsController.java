@@ -14,6 +14,7 @@ import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -94,11 +95,41 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
+	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
+	@PostMapping("/infoAction")
+	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
+		logger.info(ProtocolsController.class.toString(), "infoAction");
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		if (requestBean.getId() != null) {
+			response = this.protocolsService.getRecordInfo(requestBean.getId());
+		}
+		response.setProtocolsForm(response.getResult());
+		// 协议类型下拉
+		List<ParamNameVO> paramNameList = this.protocolsService.getParamNameList("PROTOCOL_TYPE");
+		response.setProtocolTypeList(paramNameList);
+
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		logger.info(ProtocolsController.class.toString(), "infoAction");
+		return new AdminResult<>(response);
+	}
+
+
 	@ApiOperation(value = "取得新规的模板编号", notes = "取得新规的模板编号")
-	@PostMapping("/get_templet_id")
-	public String protocolTypeAction(String protocolType) {
-		String templetId = protocolsService.getNewTempletId(Integer.parseInt(protocolType));
-		return templetId;
+	@GetMapping("/getTempletId")
+        public AdminResult protocolTypeAction(@RequestParam(value = "protocolType") Integer requestBean) {
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		String templetId = protocolsService.getNewTempletId(requestBean);
+		response.setTempletId(templetId);
+		response.setCount(1);
+		if (templetId == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		return new AdminResult<>(response);
 	}
 
 	/**
@@ -109,7 +140,7 @@ public class ProtocolsController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "pdf文件上传", notes = "pdf文件上传")
-	@RequestMapping(value = "uploadFile", method = RequestMethod.POST)
+	@PostMapping(value = "uploadFile")
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
 		try {
@@ -133,7 +164,7 @@ public class ProtocolsController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
-	@GetMapping("/exportaction")
+	@PostMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// 表格sheet名称

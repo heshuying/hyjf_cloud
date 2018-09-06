@@ -33,8 +33,25 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
     private Integer referrer;
 
     private Integer attribute;
+
     /**
-     * 是否开户
+     * 用户角色1投资人  2借款人 3垫付机构
+     */
+    private Integer roleId;
+    /**
+     * 用户类型 0个人 1企业
+     */
+    private Integer userType;
+    /**
+     * 合作机构编号
+     */
+    private String cooperateNum;
+    /**
+     * 江西银行电子 账户
+     */
+    private String account;
+    /**
+     * 是否开户 0 未开 1开
      */
     private String open;
     /**
@@ -164,5 +181,37 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getCooperateNum() {
+        return cooperateNum;
+    }
+
+    public void setCooperateNum(String cooperateNum) {
+        this.cooperateNum = cooperateNum;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

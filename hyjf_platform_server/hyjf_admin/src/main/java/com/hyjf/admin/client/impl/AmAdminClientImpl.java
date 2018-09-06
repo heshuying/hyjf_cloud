@@ -6,6 +6,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -16,6 +17,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -373,6 +375,118 @@ public class AmAdminClientImpl implements AmAdminClient {
     public int deletePermission(String uuid) {
         String url = "http://AM-ADMIN/am-admin/permissions/deletePermission/" + uuid;
         AdminPermissionsResponse response = restTemplate.getForEntity(url,AdminPermissionsResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 查询数据字典总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getParamNamesCount(AdminParamNameRequest request) {
+        String url = "http://AM-ADMIN/am-admin/paramname/getParamNamesCount";
+        ParamNameResponse response = restTemplate.postForEntity(url,request,ParamNameResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 查询数据字典列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<ParamNameVO> searchParamNamesList(AdminParamNameRequest request) {
+        String url = "http://AM-ADMIN/am-admin/paramname/searchParamNamesList";
+        ParamNameResponse response = restTemplate.postForEntity(url,request,ParamNameResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 检查paramName是否存在
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public boolean isExistsParamName(ParamNameVO paramNameVO) {
+        String url = "http://AM-ADMIN/am-admin/paramname/isExistsParamName";
+        BooleanResponse response = restTemplate.postForEntity(url,paramNameVO, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return true;
+    }
+
+    /**
+     * 添加数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int insertParamName(ParamNameVO paramNameVO) {
+        String url = "http://AM-ADMIN/am-admin/paramname/insertParamName";
+        ParamNameResponse response = restTemplate.postForEntity(url,paramNameVO,ParamNameResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 更新数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateParamName(ParamNameVO paramNameVO) {
+        String url = "http://AM-ADMIN/am-admin/paramname/updateParamName";
+        ParamNameResponse response = restTemplate.postForEntity(url,paramNameVO,ParamNameResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 根据联合主键查询数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public ParamNameVO searchParamNameByKey(ParamNameVO paramNameVO) {
+        String url = "http://AM-ADMIN/am-admin/paramname/searchParamNameByKey";
+        ParamNameResponse response = restTemplate.postForEntity(url,paramNameVO,ParamNameResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 删除数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int deleteParamName(ParamNameVO paramNameVO) {
+        String url = "http://AM-ADMIN/am-admin/paramname/deleteParamName";
+        ParamNameResponse response = restTemplate.postForEntity(url,paramNameVO,ParamNameResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCount();
         }
