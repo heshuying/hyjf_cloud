@@ -92,6 +92,7 @@ public class PermissionsServiceImpl implements PermissionsService {
     @Override
     public int updatePermission(AdminPermissionsVO adminPermissionsVO) {
         AdminPermissions adminPermissions = CommonUtils.convertBean(adminPermissionsVO,AdminPermissions.class);
+        adminPermissions.setCreateTime(null);
         return adminPermissionsMapper.updateByPrimaryKeySelective(adminPermissions);
     }
 
@@ -136,6 +137,7 @@ public class PermissionsServiceImpl implements PermissionsService {
         if(StringUtils.isNotBlank(request.getPermissionNameSrch())){
             criteria.andPermissionLike("%"+request.getPermissionNameSrch()+"%");
         }
+        example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
