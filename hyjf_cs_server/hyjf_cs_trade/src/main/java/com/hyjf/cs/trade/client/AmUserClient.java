@@ -318,4 +318,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	AccountBankVO getBankInfo(Integer userId, int bankId);
+
+	/**
+	 * 通过account 获取用户开户信息
+	 * @param account
+	 * @return
+	 * @Author : huanghui
+	 */
+	BankOpenAccountVO getBankOpenAccountByAccountId(String account);
 }

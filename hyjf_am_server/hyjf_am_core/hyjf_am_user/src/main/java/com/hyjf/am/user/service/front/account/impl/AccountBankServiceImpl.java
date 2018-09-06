@@ -55,7 +55,7 @@ public class AccountBankServiceImpl extends BaseServiceImpl implements AccountBa
         if (Validator.isNotNull(userId) && Validator.isNotNull(bankId)) {
             // 取得用户银行卡信息
             AccountBankExample accountBankExample = new AccountBankExample();
-           // accountBankExample.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(bankId);
+            accountBankExample.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(bankId);
             List<AccountBank> listAccountBank = this.accountBankMapper.selectByExample(accountBankExample);
             if (listAccountBank != null && listAccountBank.size() > 0) {
                 return listAccountBank.get(0);

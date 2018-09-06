@@ -10,10 +10,12 @@ import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
 import com.hyjf.am.trade.dao.mapper.customize.ProtocolTemplateCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.admin.finance.CustomerTransferService;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.common.util.CommonUtils;
@@ -129,7 +131,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 	public ProtocolTemplateCommonVO getProtocolTemplateById(Integer id){
 		ProtocolTemplateCommonVO protocolTemplateCommon=new ProtocolTemplateCommonVO();
 		ProtocolTemplateVO protocolTemplateVO = new ProtocolTemplateVO();
-		ProtocolVersionVO protocolVersionVO = new ProtocolVersionVO();
+		ProtocolVersionVO protocolVersionVO = null;
 		List<ProtocolVersionVO> listProtocolVersionVO = new ArrayList<>();
 		//根据协议的id查询协议
 		ProtocolTemplate protocolTemplate= protocolTemplateMapper.selectByPrimaryKey(id);
@@ -151,6 +153,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 				List<ProtocolVersion> protocolVersions =protocolVersionMapper.selectByExample(protocolVersionExample);
 				if( !org.springframework.util.CollectionUtils.isEmpty(protocolVersions)){
 					for(int i=0;i<protocolVersions.size();i++){
+						protocolVersionVO = new ProtocolVersionVO();
 						//时间显示转换
 						Date updateTime= null;
 						Integer updateUserId=0;

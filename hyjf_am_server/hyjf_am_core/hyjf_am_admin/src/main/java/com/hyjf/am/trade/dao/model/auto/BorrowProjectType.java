@@ -38,7 +38,7 @@ public class BorrowProjectType implements Serializable {
 
     private Integer tasteMoney;
 
-    private Boolean increaseInterestFlag;
+    private Integer increaseInterestFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -178,11 +178,11 @@ public class BorrowProjectType implements Serializable {
         this.tasteMoney = tasteMoney;
     }
 
-    public Boolean getIncreaseInterestFlag() {
+    public Integer getIncreaseInterestFlag() {
         return increaseInterestFlag;
     }
 
-    public void setIncreaseInterestFlag(Boolean increaseInterestFlag) {
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
         this.increaseInterestFlag = increaseInterestFlag;
     }
 }
