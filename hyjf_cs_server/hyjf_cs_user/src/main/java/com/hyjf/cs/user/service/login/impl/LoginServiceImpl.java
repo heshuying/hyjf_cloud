@@ -97,8 +97,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		String codeSalt = userVO.getSalt();
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
-		String password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
-
+		String password = "";
+		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+			password = MD5Utils.MD5(loginPassword + codeSalt);
+		}else {
+			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+		}
 		if (password.equals(passwordDb)) {
 			// 是否禁用
 			if (userVO.getStatus() == 1) {
