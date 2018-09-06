@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ProtocolClient;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.Response;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -39,6 +41,9 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Autowired
     private ProtocolClient client;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     @Value("${file.domain.url}")
     private String FILEDOMAINURL;
@@ -73,6 +78,20 @@ public class ProtocolServiceImpl implements ProtocolService {
     public AdminProtocolResponse getProtocolTemplateById(AdminProtocolRequest request) {
         AdminProtocolResponse response = new AdminProtocolResponse();
         ProtocolTemplateCommonVO vo = client.getProtocolTemplateById(request);
+        if(vo.getProtocolVersion().size() > 0){
+            ProtocolVersionVO protocolVersionVO = null;
+            for(int i=0;i<vo.getProtocolVersion().size();i++){
+                protocolVersionVO = vo.getProtocolVersion().get(i);
+                AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(protocolVersionVO.getUpdateUser());
+                if(adminSystemVO != null){
+                    protocolVersionVO.setUserName(adminSystemVO.getUsername());
+                }else{
+                    protocolVersionVO.setUserName("admin");
+                }
+
+            }
+
+        }
         response.setResult(vo);
         return response;
     }
