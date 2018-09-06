@@ -109,24 +109,21 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinhxfmanCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_finhxfman_charge (man_charge_type, man_charge_per, man_charge_per_end, 
-      charge_time, charge_time_type, `status`, 
-      remark, create_time, update_time
-      )
-    values (#{manChargeType,jdbcType=VARCHAR}, #{manChargePer,jdbcType=VARCHAR}, #{manChargePerEnd,jdbcType=VARCHAR}, 
-      #{chargeTime,jdbcType=INTEGER}, #{chargeTimeType,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}
-      )
+    insert into ht_borrow_finhxfman_charge (man_charge_cd, man_charge_type, man_charge_per, 
+      man_charge_per_end, charge_time, charge_time_type, 
+      `status`, remark, create_time, 
+      update_time)
+    values (#{manChargeCd,jdbcType=VARCHAR}, #{manChargeType,jdbcType=VARCHAR}, #{manChargePer,jdbcType=VARCHAR}, 
+      #{manChargePerEnd,jdbcType=VARCHAR}, #{chargeTime,jdbcType=INTEGER}, #{chargeTimeType,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinhxfmanCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_borrow_finhxfman_charge
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        man_charge_cd,
+      </if>
       <if test="manChargeType != null" >
         man_charge_type,
       </if>
@@ -156,6 +153,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        #{manChargeCd,jdbcType=VARCHAR},
+      </if>
       <if test="manChargeType != null" >
         #{manChargeType,jdbcType=VARCHAR},
       </if>

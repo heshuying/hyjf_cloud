@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -546,12 +546,10 @@
         </table>
 
         <table tableName="ht_borrow_finhxfman_charge" domainObjectName="BorrowFinhxfmanCharge">
-            <generatedKey column="man_charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_finman_new_charge" domainObjectName="BorrowFinmanNewCharge">
-            <generatedKey column="man_charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="asset_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="charge_mode" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="late_free_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -561,7 +559,6 @@
         </table>
 
         <table tableName="ht_borrow_finser_charge" domainObjectName="BorrowFinserCharge">
-            <generatedKey column="charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -1671,7 +1668,6 @@
         </table>
 
         <table tableName="ht_param_name" domainObjectName="ParamName">
-            <generatedKey column="name_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1710,7 +1706,7 @@
         </table>
 
         <table tableName="ht_sms_notice_config" domainObjectName="SmsNoticeConfig">
-            <generatedKey column="name" sqlStatement="MySql" type="post" identity="true" />
+			<generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
