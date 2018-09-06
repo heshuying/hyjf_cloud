@@ -9,10 +9,14 @@ import com.hyjf.am.resquest.admin.AdminPermissionsRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.CreateUUID;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,7 +58,13 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
     public boolean insertPermission(AdminPermissionsVO adminPermissionsVO) {
         this.checkInsertParams(adminPermissionsVO);
         boolean isExistsPermission = amAdminClient.isExistsPermission(adminPermissionsVO);
-        CheckUtil.check(isExistsPermission,MsgEnum.ERR_OBJECT_EXISTS,"权限");
+        logger.info("isExistsPermission:[{}]",isExistsPermission);
+        CheckUtil.check(isExistsPermission!=true,MsgEnum.ERR_OBJECT_EXISTS,"权限");
+        Date nowTime = GetDate.getNowTime();
+        adminPermissionsVO.setDelFlag(Integer.valueOf(CustomConstants.FLAG_NORMAL));
+        adminPermissionsVO.setCreateTime(nowTime);
+        adminPermissionsVO.setUpdateTime(nowTime);
+        adminPermissionsVO.setPermissionUuid(CreateUUID.createUUID());
         return this.amAdminClient.insertPermission(adminPermissionsVO)>0;
     }
 
@@ -101,9 +111,9 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
         }
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermission()),MsgEnum.ERR_OBJECT_REQUIRED,"权限");
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermissionName()),MsgEnum.ERR_OBJECT_REQUIRED,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getPermission().length()>20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
-        CheckUtil.check(adminPermissionsVO.getPermissionName().length()>20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getDescription().length()>255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
+        CheckUtil.check(adminPermissionsVO.getPermission().length()<20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
+        CheckUtil.check(adminPermissionsVO.getPermissionName().length()<20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
+        CheckUtil.check(adminPermissionsVO.getDescription().length()<255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
     }
     /**
      * 检查update参数
@@ -117,8 +127,8 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
         }
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermission()),MsgEnum.ERR_OBJECT_REQUIRED,"权限");
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermissionName()),MsgEnum.ERR_OBJECT_REQUIRED,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getPermission().length()>20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
-        CheckUtil.check(adminPermissionsVO.getPermissionName().length()>20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getDescription().length()>255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
+        CheckUtil.check(adminPermissionsVO.getPermission().length()<20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
+        CheckUtil.check(adminPermissionsVO.getPermissionName().length()<20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
+        CheckUtil.check(adminPermissionsVO.getDescription().length()<255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
     }
 }

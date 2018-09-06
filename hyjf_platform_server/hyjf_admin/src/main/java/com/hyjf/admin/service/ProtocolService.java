@@ -65,7 +65,15 @@ public interface ProtocolService {
      */
     void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
 
+    /**
+     * 资料上传
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
     LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response);
+
 
     AdminProtocolResponse updateExistAction(AdminProtocolVersionRequest form, String userId);
 }

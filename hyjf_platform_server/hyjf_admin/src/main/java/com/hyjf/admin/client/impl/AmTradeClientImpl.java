@@ -6020,4 +6020,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public FddTempletCustomizeResponse getRecordInfoById(Integer id) {
+        String url = "http://AM-TRADE/am-trade/protocol/getRecordInfoById/" + id;
+        FddTempletCustomizeResponse response = restTemplate.getForObject(url, FddTempletCustomizeResponse.class);
+        if (response.getResult() != null){
+            return response;
+        }
+        return null;
+    }
 }

@@ -2913,5 +2913,13 @@ public interface AmTradeClient {
      * @return
      */
     String getNewTempletId(Integer protocolType);
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    FddTempletCustomizeResponse getRecordInfoById(Integer id);
 }
 
