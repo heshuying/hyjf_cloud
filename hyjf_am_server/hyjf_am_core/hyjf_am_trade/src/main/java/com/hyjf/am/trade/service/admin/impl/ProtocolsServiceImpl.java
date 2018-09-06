@@ -62,8 +62,8 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	}
 
 	@Override
-	public String getNewTempletId(Integer templetId) {
-		return customizeMapper.getMaxTempletId(templetId);
+	public String getNewTempletId(Integer protocolType) {
+		return customizeMapper.getMaxTempletId(protocolType);
 	}
 
 	/**

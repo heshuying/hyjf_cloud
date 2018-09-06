@@ -4,7 +4,7 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
-import io.swagger.annotations.Api;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -40,7 +40,29 @@ public class FddTempletCustomizeVO extends BaseVO {
 
 	private Date updateTime;
 
+	private String certificateTimeT;
+
+	private String createTimeT;
+
+	private String updateTimeT;
+
 	private static final long serialVersionUID = 1L;
+
+	public String getCertificateTimeT() {
+		if(certificateTime != null){
+			return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(certificateTime);
+		}
+		return null;
+	}
+
+	public String getCreateTimeT() {
+
+		return GetDate.date2Str(createTime, GetDate.datetimeFormat);
+	}
+
+	public String getUpdateTimeT() {
+		return GetDate.date2Str(updateTime, GetDate.datetimeFormat);
+	}
 
 	public Integer getId() {
 		return id;

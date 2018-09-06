@@ -16,6 +16,8 @@ import java.util.List;
 public class FddTempletCustomizeResponse extends Response<FddTempletCustomizeVO> {
 	private int count;
 
+	private String templetId;
+
 	private FddTempletCustomizeVO protocolsForm;
 
 	private List<ParamNameVO> protocolTypeList;
@@ -26,6 +28,14 @@ public class FddTempletCustomizeResponse extends Response<FddTempletCustomizeVO>
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getTempletId() {
+		return templetId;
+	}
+
+	public void setTempletId(String templetId) {
+		this.templetId = templetId;
 	}
 
 	public FddTempletCustomizeVO getProtocolsForm() {

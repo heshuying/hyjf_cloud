@@ -26,8 +26,8 @@ public interface FddTempletCustomizeMapper {
 
     /**
      *取得新规的模板编号
-     * @param templetId
+     * @param protocolType
      * @return
      */
-    String getMaxTempletId(Integer templetId);
+    String getMaxTempletId(Integer protocolType);
 }
