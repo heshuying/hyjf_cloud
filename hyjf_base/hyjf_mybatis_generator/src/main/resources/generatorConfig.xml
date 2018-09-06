@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -47,7 +47,7 @@
         <!-- 表结构 -->
 
         <table tableName="ht_account_bank" domainObjectName="AccountBank">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -582,6 +582,7 @@
             <columnOverride column="asset_attributes" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="bank_regist_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_log" domainObjectName="BorrowLog">
@@ -617,6 +618,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_recover" domainObjectName="BorrowRecover">
