@@ -6010,4 +6010,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public String getNewTempletId(Integer protocolType) {
+        String url = "http://AM-TRADE/am-trade/protocol/getNewTempletId/" + protocolType;
+        StringResponse response = restTemplate.getForObject(url, StringResponse.class);
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
 }
