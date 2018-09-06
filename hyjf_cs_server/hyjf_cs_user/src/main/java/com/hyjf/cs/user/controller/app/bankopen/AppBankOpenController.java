@@ -97,7 +97,7 @@ public class AppBankOpenController extends BaseUserController {
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_APP);
         // 开户角色
-        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
+        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         // 组装调用江西银行的MV
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
         result.setData(data);

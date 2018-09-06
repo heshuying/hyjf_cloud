@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.nifa.NifaReportLogCustomizeMapper" >
+    <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.NifaReportLog" >
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="package_information" jdbcType="VARCHAR" property="packageInformation" />
+        <result column="upload_ime" jdbcType="INTEGER" property="uploadIme" />
+        <result column="file_upload_status" jdbcType="TINYINT" property="fileUploadStatus" />
+        <result column="feedback_result" jdbcType="TINYINT" property="feedbackResult" />
+        <result column="upload_name" jdbcType="VARCHAR" property="uploadName" />
+        <result column="feedback_name" jdbcType="VARCHAR" property="feedbackName" />
+        <result column="upload_path" jdbcType="VARCHAR" property="uploadPath" />
+        <result column="feedback_path" jdbcType="VARCHAR" property="feedbackPath" />
+        <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+        <result column="update_user_id" jdbcType="INTEGER" property="updateUserId" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id, package_information, upload_ime, file_upload_status, feedback_result, upload_name,
+    feedback_name, upload_path, feedback_path, create_user_id, update_user_id, create_time,
+    update_time
+    </sql>
+
+    <select id="selectNowDayUploadDataList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ht_nifa_report_log hnrl
+        where UNIX_TIMESTAMP(hnrl.update_time) <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+        and UNIX_TIMESTAMP(hnrl.update_time) <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) + INTERVAL 1 DAY)
+        and hnrl.feedback_result <![CDATA[<>]]> 1
+    </select>
+</mapper>

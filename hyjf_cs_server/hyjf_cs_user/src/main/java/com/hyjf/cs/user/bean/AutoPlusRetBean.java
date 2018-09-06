@@ -1,6 +1,6 @@
 package com.hyjf.cs.user.bean;
 
-public class AutoPlusRetBean  extends BaseMapBean   {
+public class AutoPlusRetBean  extends ApiBaseMapBean   {
 
 
     // 返回信息
@@ -18,12 +18,10 @@ public class AutoPlusRetBean  extends BaseMapBean   {
     
     
     
-    @Override
     public String getCallBackAction() {
         return callBackAction;
     }
 
-    @Override
     public void setCallBackAction(String callBackAction) {
         this.callBackAction = callBackAction;
     }

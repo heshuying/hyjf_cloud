@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -17,11 +16,8 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -47,7 +43,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -951,7 +946,7 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
                     // 只有实名卡才入库
                     continue;
                 }
-                BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(obj.getString("BankId"));
+                BankConfigVO bankConfig = amConfigClient.getBankConfigByCode(obj.getString("BankId"));
                 BankCardBean bankCardBean = new BankCardBean();
                 // 普通卡
                 bankCardBean.setIsDefault("0");

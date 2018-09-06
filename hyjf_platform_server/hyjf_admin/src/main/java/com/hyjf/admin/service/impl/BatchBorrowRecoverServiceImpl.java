@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
@@ -15,23 +14,19 @@ import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
-import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +41,6 @@ import static com.hyjf.admin.controller.BaseController.*;
 @Service
 public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements BatchBorrowRecoverService{
 
-
-    @Autowired
-    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmAdminClient amAdminClient;
@@ -129,7 +121,6 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BorrowRecoverBankInfoVo> queryBatchBorrowRecoverBankInfoList(String apicronID) {
-        BorrowApicronResponse reponse2 = amTradeClient.getBorrowApicronByID(apicronID);
         BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
@@ -185,7 +176,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
-        BorrowApicronResponse reponse = amTradeClient.getBorrowApicronByID(apicronID);
+        BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             int txCounts = apicron.getTxCounts();// 总交易笔数
@@ -288,7 +279,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<HjhInstConfigVO> findHjhInstConfigList() {
 
-        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.selectHjhInstConfigList();
+        List<HjhInstConfigVO> hjhInstConfigList = amAdminClient.selectHjhInstConfigList();
         if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
             return  hjhInstConfigList;
         }

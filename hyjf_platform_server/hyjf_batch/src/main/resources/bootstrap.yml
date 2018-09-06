@@ -2,8 +2,8 @@ spring:
   application:
     name: BATCH
   cloud:
-          config:
-            uri: http://micoserver:2222/
+    config:
+      uri: http://micoserver:2222/
   profiles:
     active: dev
 server:

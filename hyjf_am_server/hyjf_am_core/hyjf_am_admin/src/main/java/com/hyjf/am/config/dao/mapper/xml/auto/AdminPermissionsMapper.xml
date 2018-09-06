@@ -119,11 +119,11 @@
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminPermissions" >
-    <selectKey resultType="java.lang.String" keyProperty="permissionUuid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_admin_permissions
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="permissionUuid != null" >
+        permission_uuid,
+      </if>
       <if test="permission != null" >
         permission,
       </if>
@@ -150,6 +150,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="permissionUuid != null" >
+        #{permissionUuid,jdbcType=VARCHAR},
+      </if>
       <if test="permission != null" >
         #{permission,jdbcType=VARCHAR},
       </if>

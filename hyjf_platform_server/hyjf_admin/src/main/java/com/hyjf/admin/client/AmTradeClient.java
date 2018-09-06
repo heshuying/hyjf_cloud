@@ -2906,5 +2906,20 @@ public interface AmTradeClient {
      * @date 2018/9/4 10:30
      */
     String selectTenderCreditAssignPay(Map<String,String> map);
+
+    /**
+     * 取得新规的模板编号
+     * @param protocolType
+     * @return
+     */
+    String getNewTempletId(Integer protocolType);
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    FddTempletCustomizeResponse getRecordInfoById(Integer id);
 }
 

@@ -559,9 +559,9 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/isCompAccount/{userId}")
-    public int isCompAccount(@PathVariable Integer userId) {
+    public IntegerResponse isCompAccount(@PathVariable Integer userId) {
         int count = userService.isCompAccount(userId);
-        return count;
+        return new IntegerResponse(count);
     }
 
     @RequestMapping("/insertUserEvalationBehavior/{userId}/{behavior}")

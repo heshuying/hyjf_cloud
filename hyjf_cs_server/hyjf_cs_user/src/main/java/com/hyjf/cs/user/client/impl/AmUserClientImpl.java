@@ -777,9 +777,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int isCompAccount(Integer userId) {
-		int result = restTemplate
-				.getForEntity(userService+"/user/isCompAccount/" + userId, Integer.class).getBody();
-		return result;
+		IntegerResponse result = restTemplate
+				.getForEntity(userService+"/user/isCompAccount/" + userId, IntegerResponse.class).getBody();
+		return result.getResultInt();
 	}
 
 	/**
@@ -911,8 +911,8 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer insertUserEvalationBehavior(Integer userId, String behavior) {
-		Integer id = restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+behavior, Integer.class).getBody();
-		return id;
+		IntegerResponse id = restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+behavior, IntegerResponse.class).getBody();
+		return id.getResultInt();
 	}
 
 	@Override
@@ -924,7 +924,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void clearMobileCode(Integer userId, String sign) {
-		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
+		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, IntegerResponse.class);
 	}
 
 	@Override

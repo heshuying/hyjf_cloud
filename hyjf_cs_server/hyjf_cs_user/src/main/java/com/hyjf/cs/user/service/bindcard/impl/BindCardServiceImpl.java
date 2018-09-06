@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
@@ -386,7 +387,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					}
 					logger.info("根据银行卡号查询出的bankId：" + bankId);
 					// 查询银行配置信息
-					BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
+					JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
 					
 					BankCardRequest bank = new BankCardRequest();
 					bank.setUserId(userId);
@@ -432,8 +433,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			bankId = "0";
 		}
 		// 查询银行配置信息
-		BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
-		
+		JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+
 		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
 		bankCardLogRequest.setUserId(userId);
 		bankCardLogRequest.setUserName(userVO.getUsername());
@@ -693,12 +694,10 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 
 	/**
 	 * 根据银行卡id获取银行配置信息
-	 * @param id
-	 * @return
 	 */
 	@Override
-	public BankConfigVO getBankConfigById(Integer id) {
-		return amConfigClient.getBankConfigById(id);
+	public JxBankConfigVO getBankConfigById(Integer bankId) {
+		return amConfigClient.getJxBankConfigById(bankId);
 	}
 
 	/**

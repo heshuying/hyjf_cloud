@@ -76,8 +76,10 @@ public interface PassWordService extends BaseUserService {
     /**
      * api参数检查
      * @param transPasswordRequestBean
+     * @param user
+     * @param bankOpenAccount
      */
-    Map<String,Object> apiSetPassword(ThirdPartyTransPasswordRequestBean transPasswordRequestBean,String bankDetailUrl,String txCode);
+    BankCallBean apiSetPassword(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String bankDetailUrl, String txCode, UserVO user, BankOpenAccountVO bankOpenAccount);
 
     /**
      * 检查密码格式
@@ -174,4 +176,12 @@ public interface PassWordService extends BaseUserService {
      * @return
      */
     Map<String,Object> resetWeChatPassword(BankCallBean bean, UserVO user, UserInfoVO usersInfo, BankOpenAccountVO bankOpenAccount);
+
+    /**
+     * api端校验参数
+     * @param transPasswordRequestBean
+     * @param type
+     * @return
+     */
+    Map<String,Object> apiCheack(ThirdPartyTransPasswordRequestBean transPasswordRequestBean, String type);
 }

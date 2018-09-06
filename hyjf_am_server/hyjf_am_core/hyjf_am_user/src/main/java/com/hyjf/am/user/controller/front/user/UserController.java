@@ -560,15 +560,20 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/isCompAccount/{userId}")
-    public int isCompAccount(@PathVariable Integer userId) {
+    public IntegerResponse isCompAccount(@PathVariable Integer userId) {
         int count = userService.isCompAccount(userId);
-        return count;
+        return new IntegerResponse(count);
     }
 
     @RequestMapping("/insertUserEvalationBehavior/{userId}/{behavior}")
-    public Integer insertUserEvalationBehavior(@PathVariable Integer userId,@PathVariable String behavior) {
+    public IntegerResponse insertUserEvalationBehavior(@PathVariable Integer userId,@PathVariable String behavior) {
         UserEvalationBehavior userEvalationBehavior = userService.insertUserEvalationBehavior(userId,behavior);
-        return userEvalationBehavior.getId();
+        Integer count = userEvalationBehavior.getId();
+        if (count==null){
+            return new IntegerResponse(0);
+        }else{
+            return new IntegerResponse(count);
+        }
     }
 
     @RequestMapping("/updateUserEvalationBehavior")

@@ -82,7 +82,7 @@ public class RepayAuthController extends BaseController {
         logger.info("还款授权请求参数" + JSONObject.toJSONString(payRequestBean, true) + "]");
         // 检查参数是否为空
         if (payRequestBean.checkParmIsNull()) {
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001);
             payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数异常"));
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
             return modelAndView;
@@ -90,7 +90,7 @@ public class RepayAuthController extends BaseController {
 
         // 验签  暂时去掉验签
         if (!SignUtil.verifyRequestSign(payRequestBean, "/server/repayAuth/repayAuth")) {
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
             payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
             return modelAndView;
@@ -102,7 +102,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------没有根据电子银行卡找到用户" + payRequestBean.getAccountId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004, "没有根据电子银行卡找到用户");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004);
             return modelAndView;
         }
 
@@ -112,7 +112,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------用户不存在汇盈金服账户！" + payRequestBean.getAccountId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000007, "用户不存在汇盈金服账户！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000007);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000007);
             return modelAndView;
         }
 
@@ -121,7 +121,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------用户未开户！" + payRequestBean.getAccountId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000006, "用户未开户！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006);
             return modelAndView;
         }
 
@@ -130,7 +130,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------用户为投资人角色无法授权！" + payRequestBean.getAccountId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000010, "用户为投资账户！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000010);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000010);
             return modelAndView;
         }
 
@@ -140,7 +140,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------未设置交易密码！" + payRequestBean.getAccountId() + "！--------------------status" + user.getIsSetPassword());
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TP000002, "未设置交易密码！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002);
             return modelAndView;
         }
 
@@ -151,7 +151,7 @@ public class RepayAuthController extends BaseController {
             logger.info("-------------------已经授权过！" + payRequestBean.getAccountId());
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000009, "已授权,请勿重复授权！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009);
             return modelAndView;
         }
         // 同步调用路径
@@ -183,23 +183,11 @@ public class RepayAuthController extends BaseController {
             logger.info("调用银行接口失败！" + e.getMessage());
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999, "系统异常！");
             payRequestBean.doNotify(params);
-            getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+            autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
             return modelAndView;
 
         }
         logger.info("还款授权申请end");
-        return modelAndView;
-    }
-
-    private ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status) {
-        AutoPlusRetBean repwdResult = new AutoPlusRetBean();
-        BaseResultBean resultBean = new BaseResultBean();
-        resultBean.setStatusForResponse(status);
-        repwdResult.setCallBackAction(payRequestBean.getRetUrl());
-        repwdResult.set("chkValue", resultBean.getChkValue());
-        repwdResult.set("status", resultBean.getStatus());
-        repwdResult.setAcqRes(payRequestBean.getAcqRes());
-        modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
     }
 

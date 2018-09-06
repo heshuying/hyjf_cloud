@@ -301,4 +301,21 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<UserInfoCustomizeVO> queryDepartmentInfoByUserId(Integer userId);
+
+	List<AccountBankVO> getAccountBankByUserId(Integer userId);
+
+	/**
+	 * 获取用户的汇付客户号
+	 * @param userId
+	 * @return
+	 */
+    AccountChinapnrVO getAccountChinapnr(Integer userId);
+
+	/**
+	 * 取得银行卡号
+	 * @param userId
+	 * @param bankId
+	 * @return
+	 */
+	AccountBankVO getBankInfo(Integer userId, int bankId);
 }
