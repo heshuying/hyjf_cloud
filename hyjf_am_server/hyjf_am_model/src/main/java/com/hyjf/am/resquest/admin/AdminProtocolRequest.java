@@ -34,6 +34,22 @@ public class AdminProtocolRequest  extends BasePage implements Serializable {
     private List<ProtocolTemplateCommonVO> recordList;
 
     private String   pageStatus;
+
+    @ApiModelProperty(value = "校验使用-协议模板名称")
+    private String protocolName ;//协议模板名称
+    @ApiModelProperty(value = "校验使用-协议类别")
+    private String protocolType ;//协议类别
+    @ApiModelProperty(value = "校验使用-版本号")
+    private String versionNumber ;//版本号
+    @ApiModelProperty(value = "校验使用-前台展示名称")
+    private String displayName ;//前台展示名称
+    @ApiModelProperty(value = "校验使用-协议上传路径")
+    private String protocolUrl ;//协议上传路径
+    @ApiModelProperty(value = "校验使用-原前台展示名称")
+    private String oldDisplayName ;//原前台展示名称
+    @ApiModelProperty(value = "校验使用-0=添加校验,1=修改校验")
+    private String flag ;
+
     /**
      * 翻页机能用的隐藏变量
      */
@@ -106,5 +122,61 @@ public class AdminProtocolRequest  extends BasePage implements Serializable {
 
     public void setProtocolTemplateVO(ProtocolTemplateVO protocolTemplateVO) {
         this.protocolTemplateVO = protocolTemplateVO;
+    }
+
+    public String getProtocolName() {
+        return protocolName;
+    }
+
+    public void setProtocolName(String protocolName) {
+        this.protocolName = protocolName;
+    }
+
+    public String getProtocolType() {
+        return protocolType;
+    }
+
+    public void setProtocolType(String protocolType) {
+        this.protocolType = protocolType;
+    }
+
+    public String getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(String versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getProtocolUrl() {
+        return protocolUrl;
+    }
+
+    public void setProtocolUrl(String protocolUrl) {
+        this.protocolUrl = protocolUrl;
+    }
+
+    public String getOldDisplayName() {
+        return oldDisplayName;
+    }
+
+    public void setOldDisplayName(String oldDisplayName) {
+        this.oldDisplayName = oldDisplayName;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

@@ -1,6 +1,7 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.ProtocolClient;
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author：yinhui
@@ -147,5 +149,14 @@ public class ProtocolClientImpl implements ProtocolClient {
         }
 
         return false;
+    }
+
+    @Override
+    public Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest) {
+
+        MapResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/protocol/validatorfieldcheck",
+                adminProtocolRequest, MapResponse.class);
+
+        return response.getResultMap();
     }
 }

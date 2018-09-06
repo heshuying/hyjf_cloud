@@ -15,6 +15,7 @@ import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
@@ -23,9 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Albert
@@ -417,6 +416,71 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 			protocolVersionMapper.updateByPrimaryKey(protocolVersion);
 		}
 		return lists.size();
+	}
+
+	@Override
+	public Map<String,Object> validatorFieldCheck(String protocolName,String versionNumber,String displayName,String protocolUrl,String protocolType,String oldDisplayName,String flagT){
+		Map<String,Object> json = new HashMap<>();
+		ProtocolTemplateExample example=new ProtocolTemplateExample();
+		ProtocolTemplateExample.Criteria criteria = example.createCriteria();
+		List<ProtocolTemplate> lists=null;
+		if(StringUtils.isNotBlank(protocolName)){
+			criteria.andProtocolNameEqualTo(protocolName).andStatusEqualTo(1);
+			lists=protocolTemplateMapper.selectByExample(example);
+			if(!CollectionUtils.isEmpty(lists) ) {
+				json.put("n_error", "协议模板名称已经存在");
+				if(StringUtils.isNotBlank(versionNumber)){
+					ProtocolVersionExample e= new ProtocolVersionExample();
+					ProtocolVersionExample.Criteria c = e.createCriteria();
+					c.andProtocolIdEqualTo(lists.get(0).getProtocolId()).andVersionNumberEqualTo(versionNumber);
+					List<ProtocolVersion> list = protocolVersionMapper.selectByExample(e);
+					if(!CollectionUtils.isEmpty(list) ) {
+						json.put("v_error", "协议版本号已经存在");
+					}
+				}
+			}
+		}
+		if(StringUtils.isNotBlank(displayName)){
+			List<ProtocolVersion> versionList = null;
+			List<ProtocolVersion> versionLists = null;
+			ProtocolVersionExample exampleT=new ProtocolVersionExample();
+			ProtocolVersionExample.Criteria criteriaT = exampleT.createCriteria();
+			criteriaT.andDisplayFlagNotEqualTo(2);
+			versionLists = protocolVersionMapper.selectByExample(exampleT);
+			criteriaT.andDisplayNameEqualTo(displayName);
+			versionList = protocolVersionMapper.selectByExample(exampleT);
+			//添加校验
+			if(flagT.equals("0") && !CollectionUtils.isEmpty(versionList)) {
+				json.put("d_error", "前台展示名称已经存在");
+			}
+			//修改校验
+			if(flagT.equals("1")){
+				if(!displayName.equals(oldDisplayName)){
+					ArrayList arrayList = new ArrayList();
+					for (ProtocolVersion ver:versionLists) {
+						arrayList.add(ver.getDisplayName());
+					}
+					if(arrayList.contains(displayName)){
+						json.put("d_error", "前台展示名称已经存在");
+					}
+				}
+			}
+		}
+		//是否在枚举中有定义
+		String alias = ProtocolEnum.getAlias(protocolType);
+		if (StringUtils.isEmpty(alias)) {
+			json.put("e_error", "请选择正确的协议类别");
+		}else{
+
+			ProtocolTemplateExample exampleT=new ProtocolTemplateExample();
+			ProtocolTemplateExample.Criteria criteriaT = exampleT.createCriteria();
+			criteriaT.andProtocolTypeEqualTo(protocolType).andStatusEqualTo(1);
+			lists=protocolTemplateMapper.selectByExample(exampleT);
+			if(!CollectionUtils.isEmpty(lists) ) {
+				json.put("e_error", "协议类别已经存在");
+			}
+		}
+		return json;
 	}
 
 }
