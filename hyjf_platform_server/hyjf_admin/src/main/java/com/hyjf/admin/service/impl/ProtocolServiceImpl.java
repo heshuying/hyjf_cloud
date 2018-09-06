@@ -463,4 +463,73 @@ public class ProtocolServiceImpl implements ProtocolService {
         }
         return response;
     }
+
+    /**
+     * 校验字段是否为唯一
+     *
+     * @return
+     */
+    @Override
+    public Map<String,String> validatorFieldCheck(AdminProtocolRequest request,String protocolName,String versionNumber,String displayName,String protocolUrl,String protocolType,String oldDisplayName,String flagT){
+        Map<String,String> json = new HashMap<>();
+
+        boolean flag = false;
+        //提示信息初始化
+        //协议模板名称错误
+        json.put("n_error", "");
+        //协议版本号错误
+        json.put("v_error", "");
+        //前台展示名称错误
+        json.put("d_error", "");
+        //协议类别错误
+        json.put("e_error", "");
+        //pdf错误
+        json.put("p_error", "");
+        //通过前台输入信息判断展示提示信息
+        if(StringUtils.isEmpty(protocolName)){
+            json.put("n_error", "协议模板名称不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(versionNumber)) {
+            json.put("v_error", "协议版本号不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(displayName)){
+            json.put("d_error", "前台展示名称不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(protocolType)){
+            json.put("e_error", "协议类别不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(protocolUrl)){
+            json.put("p_error", "文件不能为空");
+            flag =true;
+        }
+
+        if(flag){
+            return json;
+        }
+
+        if(protocolName.length() > 20 ){
+            json.put("n_error", "协议模板名称过长");
+            flag =true;
+        }
+        if(versionNumber.length() > 10 ){
+            json.put("v_error", "协议版本号过长");
+            flag =true;
+        }
+        if(!protocolUrl.contains(".pdf")){
+            json.put("p_error", "文件格式不对");
+            flag = false;
+        }
+
+        if(flag){
+            return json;
+        }
+
+        Map<String, Object> map = client.validatorFieldCheckClient(request);
+        for(Iterator it = map.keySet().iterator() ; it.hasNext();){
+            String key = it.next().toString();
+            json.put(key, (String)map.get(key));
+        }
+
+        return json;
+    }
 }
