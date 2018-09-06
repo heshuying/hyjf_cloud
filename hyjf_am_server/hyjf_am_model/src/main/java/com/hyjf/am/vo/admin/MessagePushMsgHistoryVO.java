@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.admin;
 
+import com.hyjf.common.util.GetDate;
+
 /**
  * @author lisheng
  * @version MessagePushMsgHistoryVO, v0.1 2018/8/14 20:08
@@ -56,7 +58,7 @@ public class MessagePushMsgHistoryVO {
 
     private String msgRemark;
 
-    private String sendTime;
+    private Integer sendTime;
 
     private Integer msgDestinationCountIos;
 
@@ -70,6 +72,12 @@ public class MessagePushMsgHistoryVO {
 
     private String lastupdateTime;
 
+    private String sendTimeT;
+
+    private String createTimeT;
+
+    private String lastupdateTimeT;
+
     private Integer lastupdateUserId;
 
     private String lastupdateUserName;
@@ -77,6 +85,29 @@ public class MessagePushMsgHistoryVO {
     private String msgJpushZyb2Id;
 
     private String tagName;
+
+    public String getSendTimeT() {
+        if(this.sendTime != null){
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(this.sendTime);
+        }
+        return null;
+    }
+
+    public String getCreateTimeT() {
+        if(this.createTime != null){
+            Integer createTimeTh = Integer.valueOf(this.createTime);
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(createTimeTh);
+        }
+        return null;
+    }
+
+    public String getLastupdateTimeT() {
+        if(this.lastupdateTime != null){
+            Integer lastupdateTimeTh = Integer.valueOf(this.lastupdateTime);
+            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(lastupdateTimeTh);
+        }
+        return null;
+    }
 
     public String getTagName() {
         return tagName;
@@ -280,11 +311,11 @@ public class MessagePushMsgHistoryVO {
         this.msgRemark = msgRemark == null ? null : msgRemark.trim();
     }
 
-    public String getSendTime() {
+    public Integer getSendTime() {
         return sendTime;
     }
 
-    public void setSendTime(String sendTime) {
+    public void setSendTime(Integer sendTime) {
         this.sendTime = sendTime;
     }
 
