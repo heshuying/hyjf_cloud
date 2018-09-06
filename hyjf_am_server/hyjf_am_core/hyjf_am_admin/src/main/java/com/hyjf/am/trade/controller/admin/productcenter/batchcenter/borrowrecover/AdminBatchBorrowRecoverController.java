@@ -76,8 +76,8 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     public BatchBorrowRecoverReponse getListSum(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
-
         BatchBorrowRecoverVo result =  batchBorrowRecoverService.getListSum(request);
+        logger.info("====================开始调用列表求和------");
         reponse.setResult(result);
         return reponse;
     }

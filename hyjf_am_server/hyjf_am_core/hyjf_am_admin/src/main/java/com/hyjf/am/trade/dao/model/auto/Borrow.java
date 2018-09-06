@@ -143,6 +143,8 @@ public class Borrow implements Serializable {
 
     private Date updatetime;
 
+    private Boolean increaseInterestFlag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -695,5 +697,13 @@ public class Borrow implements Serializable {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public Boolean getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Boolean increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
     }
 }

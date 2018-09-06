@@ -44,6 +44,10 @@ public class IdCard15To18 {
      * 身份证前4位对应的城市名称
      * */
     static Map<String,String> city = new HashMap<>();
+    
+    private static Pattern IDCARD_18_PATTERN = Pattern.compile("\\d{6}(\\d{4})\\d{6}(\\d{1})[\\dxX]{1}");
+
+    private static Pattern IDCARD_15_PATTERN = Pattern.compile("\\d{6}(\\d{2})\\d{5}(\\d{1})\\d{1}");
 
     /**
      * 根据15位的身份证号码获得18位身份证号码
@@ -108,14 +112,12 @@ public class IdCard15To18 {
         int currentYear = calendar.get(Calendar.YEAR);
         if (idNum.matches("^\\d{15}$|^\\d{17}[\\dxX]$")) {
             if (idNum.length() == 18) {
-                Pattern pattern = Pattern.compile("\\d{6}(\\d{4})\\d{6}(\\d{1})[\\dxX]{1}");
-                Matcher matcher = pattern.matcher(idNum);
+                Matcher matcher = IDCARD_18_PATTERN.matcher(idNum);
                 if (matcher.matches()) {
                     age = currentYear - Integer.parseInt(matcher.group(1));
                 }
             } else if (idNum.length() == 15) {
-                Pattern p = Pattern.compile("\\d{6}(\\d{2})\\d{5}(\\d{1})\\d{1}");
-                Matcher m = p.matcher(idNum);
+                Matcher m = IDCARD_15_PATTERN.matcher(idNum);
                 if (m.matches()) {
                     int year = Integer.parseInt(m.group(1));
                     year = 2000 + year;

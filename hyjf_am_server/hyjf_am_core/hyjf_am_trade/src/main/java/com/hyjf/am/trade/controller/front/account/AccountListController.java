@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.account;
 
+import com.hyjf.am.response.trade.ApiTransactionDetailsCustomizeResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.resquest.ApiTransactionDetailsRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize;
 import com.hyjf.am.trade.service.front.account.AccountListService;
+import com.hyjf.am.vo.trade.ApiTransactionDetailsCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.common.util.CommonUtils;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author $yaoy
@@ -103,6 +108,25 @@ public class AccountListController extends BaseController {
         AccountListResponse response = new AccountListResponse();
         Integer total = accountListService.countByNidAndTrade(nid,trade);
         response.setTotalRecord(total);
+        return response;
+    }
+
+    /**
+     * 第三方交易明细查询
+     * @param detailsRequest
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/selectTransactionDetails", method = RequestMethod.POST)
+    public ApiTransactionDetailsCustomizeResponse selectTransactionDetails(ApiTransactionDetailsRequest detailsRequest){
+        ApiTransactionDetailsCustomizeResponse response = new ApiTransactionDetailsCustomizeResponse();
+        List<ApiTransactionDetailsCustomize> transactionDetailsCustomizeList = this.accountListService.selectTransactionDetails(detailsRequest);
+
+        if (transactionDetailsCustomizeList != null) {
+            ApiTransactionDetailsCustomizeVO transactionDetailsCustomizeVO = new ApiTransactionDetailsCustomizeVO();
+            BeanUtils.copyProperties(transactionDetailsCustomizeList,transactionDetailsCustomizeVO);
+            response.setResult(transactionDetailsCustomizeVO);
+        }
         return response;
     }
 

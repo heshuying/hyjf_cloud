@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -38,10 +38,10 @@ public interface ProtocolsService {
 
 	/**
 	 * 取得新规的模板编号
-	 * @param templetId
+	 * @param protocolType
 	 * @return
 	 */
-    String getNewTempletId(Integer templetId);
+    String getNewTempletId(Integer protocolType);
 
 	/**
 	 * 协议管理-画面迁移
