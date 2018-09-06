@@ -57,7 +57,7 @@ public class BankSettingController extends BaseController {
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
 
-    @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "GET", notes = "列表(条件)查询;江西银行的银行卡配置表")
+    @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "POST", notes = "列表(条件)查询;江西银行的银行卡配置表")
     @PostMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -75,7 +75,7 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "GET", notes = "画面迁移(含有id更新，不含有id添加)")
+    @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
@@ -133,7 +133,7 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>(response);
     }
 
-    @ApiOperation(value = "修改一条数据", httpMethod = "PUT", notes = "修改一条数据")
+    @ApiOperation(value = "修改一条数据", httpMethod = "POST", notes = "修改一条数据")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "修改内容和id")
     @PostMapping("/update")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
@@ -168,7 +168,7 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "删除一条数据", httpMethod = "DELETE", notes = "删除一条数据")
+    @ApiOperation(value = "删除一条数据", httpMethod = "POST", notes = "删除一条数据")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "被删除数据对应的id")
     @PostMapping("/delete")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
@@ -231,7 +231,7 @@ public class BankSettingController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "列表导出", httpMethod = "GET", notes = "列表导出")
+    @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
     @PostMapping(value = "/exportregist")
     public void exportAction(HttpServletResponse response) throws Exception {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/exportregist");
