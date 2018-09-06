@@ -683,9 +683,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 判断用户是否设置过交易密码
-        if (users.getIsSetPassword() == 0) {
+        /*if (users.getIsSetPassword() == 0) {
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
-        }
+        }*/
 
         if ((account.compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
