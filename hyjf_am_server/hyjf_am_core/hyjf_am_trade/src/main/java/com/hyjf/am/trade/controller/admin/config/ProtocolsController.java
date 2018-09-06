@@ -38,8 +38,10 @@ public class ProtocolsController extends BaseController {
 	@RequestMapping("/selectfddtempletlist")
 	public FddTempletCustomizeResponse selectFddTempletList(@RequestBody ProtocolsRequest requestT) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(requestT);
+		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(-1, -1);
 		if (!CollectionUtils.isEmpty(list)) {
+			response.setCount(list.size());
+			list = protocolsService.selectFddTempletList(requestT.getLimitStart(), requestT.getLimitEnd());
 			List<FddTempletCustomizeVO> voList = CommonUtils.convertBeanList(list, FddTempletCustomizeVO.class);
 			response.setResultList(voList);
 		}

@@ -8,11 +8,9 @@ import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
-import com.hyjf.am.resquest.admin.PoundageListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -145,6 +143,62 @@ public interface AmAdminClient {
      * @return
      */
     BorrowApicronResponse getBorrowApicronByID(String apicronID);
+
+    /**
+     * 查询权限数量
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPermissionsCount(AdminPermissionsRequest request);
+
+    /**
+     * 查询权限列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<AdminPermissionsVO> searchPermissionsList(AdminPermissionsRequest request);
+
+    /**
+     * 检查数据库是否已存在该权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean isExistsPermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 插入权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int insertPermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 修改权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updatePermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 根据uuid查询权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    AdminPermissionsVO searchPermissionByUuid(String uuid);
+
+    /**
+     * 删除权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int deletePermission(String uuid);
 
     /**
      * 资产来源

@@ -52,6 +52,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_OBJECT_UNMATCH("ETY000009","{0}不符合接口要求，请重新传入"),
 	ERR_OBJECT_EXCEED_LIMIT("ETY000010","{0}超出限制长度"),
 	ERR_OBJECT_DECRYPT("ETY000011","{0}解密失败"),
+	ERR_OBJECT_EXISTS("ETY000012","{0}已存在"),
 
 	ERR_SIGN("ETY000101","签名验证失败"),
 	ERR_PARAM_TYPE("ETY000102","传入参数类型错误"),

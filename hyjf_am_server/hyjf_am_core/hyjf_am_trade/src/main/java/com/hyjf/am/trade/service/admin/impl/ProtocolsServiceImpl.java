@@ -29,11 +29,11 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	private FddTempletCustomizeMapper customizeMapper;
 
 	@Override
-	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request) {
+	public List<FddTempletCustomize> selectFddTempletList(int limitStart, int limitEnd) {
 		FddTempletCustomize fddTemplet = new FddTempletCustomize();
-		if (request.getLimitStart() != -1) {
-			fddTemplet.setLimitStart(request.getLimitStart());
-			fddTemplet.setLimitEnd(request.getLimitEnd());
+		if (limitStart != -1) {
+			fddTemplet.setLimitStart(limitStart);
+			fddTemplet.setLimitEnd(limitEnd);
 		}
 		return customizeMapper.selectFddTempletList(fddTemplet);
 	}

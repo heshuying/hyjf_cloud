@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Map;
 
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.bean.BindCardPageBean;
@@ -107,15 +108,10 @@ public interface BindCardService extends BaseUserService {
     BankCardVO queryUserCardValid(String userId, String cardNo);
     /**
      * 根据银行卡id获取银行配置信息
-     * @param id
-     * @return
      */
-    BankConfigVO getBankConfigById(Integer id);
+    public JxBankConfigVO getBankConfigById(Integer bankId);
     /**
      * 根据电子账号查询用户在江西银行的可用余额
-     * @param userId
-     * @param accountId
-     * @return
      */
     BigDecimal getBankBalance(Integer userId, String account);
 }

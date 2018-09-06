@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.manager;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -268,27 +267,20 @@ public class BorrowProjectTypeController extends BaseController {
     @ApiOperation(value = "项目类型校验", notes = "项目类型校验")
     @PostMapping("/checkAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public String checkAction(@RequestBody BorrowProjectTypeRequest adminRequest) {
-        JSONObject ret = new JSONObject();
+    public AdminResult checkAction(@RequestBody BorrowProjectTypeRequest adminRequest) {
         String borrowCd =adminRequest.getBorrowCd();
         if(StringUtils.isBlank(borrowCd)){
-            ret.put("info", "{label}"+"不能为空!");
-            return ret.toString();
+            return new AdminResult<String>("borrowCd不能为空!");
         }
         // 检查项目名称唯一性
         BorrowProjectTypeRequest form =new BorrowProjectTypeRequest();
         form.setBorrowCd(borrowCd);
         int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
         if (cnt > 0) {
-//            String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
-            String message = "{label}"+"项目编号重复了";
-            ret.put("info", message);
+            return new AdminResult<String>("borrowCd项目编号重复了!");
         }
         // 没有错误时,返回y
-        if (!ret.containsKey("info")) {
-            ret.put("status", "y");
-        }
-        return ret.toString();
+        return new AdminResult<String>("y");
     }
     /**
      * 画面校验
