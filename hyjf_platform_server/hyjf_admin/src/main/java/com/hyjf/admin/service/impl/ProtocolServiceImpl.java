@@ -223,7 +223,9 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public void updateProtocolTemplate(AdminProtocolRequest request,String userId) {
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
+        List<ProtocolTemplateCommonVO> listLogVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
+        ProtocolTemplateCommonVO logVO = new ProtocolTemplateCommonVO();
         String fileDomainUrl = "";
         Integer updateUserId = Integer.valueOf(userId);
         //1.1修改协议模板
@@ -251,14 +253,14 @@ public class ProtocolServiceImpl implements ProtocolService {
             int count = client.updateDisplayFlag(request);
             if (count == 0) {
                 //2.31新增协议版本
-                this.insertProtocolVersion(protocolTemplate, updateUserId,protocolTemplateCommonVO);
+                this.insertProtocolVersion(protocolTemplate, updateUserId,logVO);
             }
             //3.添加修改协议的日志
-            this.insertProtocolLog(protocolTemplate, 1,protocolTemplateCommonVO);
+            this.insertProtocolLog(protocolTemplate, 1,logVO);
 
             //发往am里面进行保存
-            listProtocolTemplateCommonVO.add(protocolTemplateCommonVO);
-            request.setRecordList(listProtocolTemplateCommonVO);
+            listLogVO.add(logVO);
+            request.setRecordList(listLogVO);
             client.insert(request);
 
             //将协议模板放入redis中
