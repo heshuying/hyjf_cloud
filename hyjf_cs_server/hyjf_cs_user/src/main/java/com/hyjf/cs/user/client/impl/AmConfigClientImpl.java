@@ -181,12 +181,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         return response.getResult();
     }
 
-    @Override
-    public BankConfigVO selectBankConfigByCode(String code) {
-        BankConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/selectBankConfigByCode/" + code, BankConfigResponse.class).getBody();
-        return response.getResult();
-    }
     /**
      * 根据银行code查询银行配置
      * @auth sunpeikai

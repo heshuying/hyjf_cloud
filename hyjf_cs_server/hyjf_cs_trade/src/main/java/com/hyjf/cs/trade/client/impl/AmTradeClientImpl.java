@@ -4385,4 +4385,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public int countAccountWithdraw(String ordId) {
+        return 0;
+    }
+
+    @Override
+    public int insertAccountWithdraw(AccountWithdrawVO record) {
+        return 0;
+    }
 }

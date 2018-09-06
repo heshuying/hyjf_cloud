@@ -596,7 +596,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 						hasQuick = true;
 						result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_YES);
 					}
-					BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(accountBank.getBank());
+					BankConfigVO bankConfig = amConfigClient.getBankConfigByCode(accountBank.getBank());
 					if (bankConfig != null) {
 						result.setBankCardAccount(bankConfig.getName());
 						result.setBankCardAccountLogoUrl(imghost + bankConfig.getAppLogo());
