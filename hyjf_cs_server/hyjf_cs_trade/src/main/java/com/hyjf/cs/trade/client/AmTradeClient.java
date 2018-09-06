@@ -1892,13 +1892,6 @@ public interface AmTradeClient {
     int countAccountWithdraw(String ordId);
 
     /**
-     * 插入用户提现记录表
-     * @param record
-     * @return
-     */
-    int insertAccountWithdraw(AccountWithdrawVO record);
-
-    /**
      * 交易明细查询
      * @param resultBean
      * @return

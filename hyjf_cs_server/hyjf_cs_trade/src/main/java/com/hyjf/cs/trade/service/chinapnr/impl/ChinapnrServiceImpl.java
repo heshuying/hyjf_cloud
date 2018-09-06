@@ -271,7 +271,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         // 提现类型 0主动提现  1代提现
         record.setWithdrawType(0);
         // 插入用户提现记录表
-        boolean withdrawFlag = amTradeClient.insertAccountWithdraw(record) > 0 ? true : false;
+        boolean withdrawFlag = amTradeClient.insertAccountWithdrawLog(record) > 0 ? true : false;
         return withdrawFlag;
     }
 

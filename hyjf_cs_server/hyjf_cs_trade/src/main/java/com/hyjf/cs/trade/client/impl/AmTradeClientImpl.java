@@ -4389,11 +4389,11 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int countAccountWithdraw(String ordId) {
-        return 0;
-    }
-
-    @Override
-    public int insertAccountWithdraw(AccountWithdrawVO record) {
+        String url = "http://AM-TRADE/am-trade/account/countAccountWithdraw/"+ordId ;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
         return 0;
     }
 
