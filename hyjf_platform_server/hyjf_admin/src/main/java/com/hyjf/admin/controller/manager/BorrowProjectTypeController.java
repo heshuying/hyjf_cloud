@@ -44,6 +44,7 @@ public class BorrowProjectTypeController extends BaseController {
 
     @Autowired
     private BorrowProjectTypeService borrowProjectTypeService;
+
     @ApiOperation(value = "查询项目类型", notes = "查询项目类型")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -58,6 +59,7 @@ public class BorrowProjectTypeController extends BaseController {
         }
         return new AdminResult<ListResult<BorrowProjectTypeVO>>(ListResult.build(resList.getResultList(), resList.getRecordTotal())) ;
     }
+
     @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
@@ -186,6 +188,7 @@ public class BorrowProjectTypeController extends BaseController {
         response.setMessage("modifyFlag 等于N，才能添加！");
         return new AdminResult<BorrowProjectTypeResponse>(response);
     }
+
     @ApiOperation(value = "项目类型修改", notes = "项目类型修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
@@ -242,6 +245,8 @@ public class BorrowProjectTypeController extends BaseController {
          response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
         return new AdminResult<BorrowProjectTypeResponse>(response);
     }
+
+
     @ApiOperation(value = "项目类型删除", notes = "项目类型删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
@@ -258,6 +263,7 @@ public class BorrowProjectTypeController extends BaseController {
         }
         return new AdminResult<>();
     }
+
     /**
      * 检查手机号码或用户名唯一性
      *
@@ -282,6 +288,7 @@ public class BorrowProjectTypeController extends BaseController {
         // 没有错误时,返回y
         return new AdminResult<String>("y");
     }
+
     /**
      * 画面校验
      *
