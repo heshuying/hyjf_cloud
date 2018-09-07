@@ -62,7 +62,7 @@ public class PoundageDetailController extends BaseController {
         List<PoundageDetailVO> poundageDetailVOList = poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
         result.put("count",count);
         result.put("poundageDetail",poundageDetailVOList);
-        return new AdminResult<>();
+        return new AdminResult<>(result);
     }
 
     /**
