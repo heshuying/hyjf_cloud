@@ -422,7 +422,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     public BankCallBean appGetCommonBankCallBean(UserVO users, int type, String lastSrvAuthCode, String smsCode, String sign, String token) {
         String remark = "";
         String txcode = "";
-        BankCallBean bean = new BankCallBean();
+        BankCallBean bean = new BankCallBean(users.getUserId(),txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/failed?status=99&statusDesc=授权失败&logOrdId="+bean.getLogOrderId();
         String success = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/success?status=000&statusDesc=授权成功";

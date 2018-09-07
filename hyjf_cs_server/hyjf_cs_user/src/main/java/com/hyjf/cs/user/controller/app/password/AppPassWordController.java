@@ -13,6 +13,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -133,7 +134,8 @@ public class AppPassWordController extends BaseUserController {
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码设置失败&logOrdId="+bean.getLogOrderId();
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码设置成功" ;
@@ -203,7 +205,8 @@ public class AppPassWordController extends BaseUserController {
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码重置失败&logOrdId="+bean.getLogOrderId() ;
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码重置成功" ;

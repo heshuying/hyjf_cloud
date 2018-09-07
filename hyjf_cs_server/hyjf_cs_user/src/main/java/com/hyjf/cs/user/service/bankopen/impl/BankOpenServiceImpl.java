@@ -209,8 +209,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
 
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
+        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?status=99&statusDesc=开户失败&logOrdId="+openAccoutBean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath+"?status=000&statusDesc=开户成功";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost()+"/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
