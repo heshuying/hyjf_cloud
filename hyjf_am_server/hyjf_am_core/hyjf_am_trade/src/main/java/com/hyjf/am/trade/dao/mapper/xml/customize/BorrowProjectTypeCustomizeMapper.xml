@@ -22,6 +22,7 @@
         <result column="repay_name" property="repayName" jdbcType="VARCHAR" />
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
         <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="INTEGER" />
     </resultMap>
     <select id="selectProjectTypeList" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         SELECT
@@ -39,7 +40,8 @@
         typ.remark,
         typ.create_user_id,
         typ.update_user_id,
-        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name
+        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name,
+        typ.increase_interest_flag
         FROM
         ht_borrow_project_type typ
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
