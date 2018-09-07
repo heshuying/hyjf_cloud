@@ -218,11 +218,11 @@ public class CategoryController extends BaseConfigController {
      * @Param cid
      * @return
      */
-    @RequestMapping("/getlistbypcateidandcateid/{pid}/{cid}")
-    public CategoryResponse getListByPcateIdAndcateId(@PathVariable Integer pid,@PathVariable Integer cid) {
+    @RequestMapping("/getlistbypcateidandcateid")
+    public CategoryResponse getListByPcateIdAndcateId(@RequestBody CategoryVO vo) {
         logger.info("根据pCateId和cateId查询List......");
         CategoryResponse response = new CategoryResponse();
-        List<ContentHelpVO> list = categoryService.getListByPcateIdAndcateId(pid,cid);
+        List<ContentHelpVO> list = categoryService.getListByPcateIdAndcateId(vo.getPid(),vo.getId());
         response.setRecordList(list);
         return response;
     }
