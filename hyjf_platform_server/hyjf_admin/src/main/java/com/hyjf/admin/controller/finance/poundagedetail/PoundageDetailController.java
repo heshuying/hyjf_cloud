@@ -75,7 +75,7 @@ public class PoundageDetailController extends BaseController {
     @ApiOperation(value = "项目类型下拉框数据",notes = "项目类型下拉框数据")
     @PostMapping(value = "/getprojecttype")
     public AdminResult<ListResult<DropDownVO>> getSelectorData(){
-        List<DropDownVO> status = adminCommonService.getParamNameList("FS_TRANSFER_STATUS");
-        return new AdminResult<>(ListResult.build(status,0));
+        List<DropDownVO> projectType = adminCommonService.selectProjectType();
+        return new AdminResult<>(ListResult.build(projectType,0));
     }
 }
