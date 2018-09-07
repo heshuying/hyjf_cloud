@@ -229,6 +229,17 @@ public class AccountController extends BaseController {
         return response;
     }
 
+    /**
+     * 查询订单号数量
+     * @param ordId
+     * @return
+     */
+    @GetMapping("/countAccountWithdraw/{ordId}")
+    public IntegerResponse countAccountWithdraw(@PathVariable String ordId) {
+        int cnt = accountService.countAccountWithdraw(ordId);
+       return new IntegerResponse(cnt);
+    }
+
 
     /**
      * 提现成功后,更新用户账户信息,提现记录

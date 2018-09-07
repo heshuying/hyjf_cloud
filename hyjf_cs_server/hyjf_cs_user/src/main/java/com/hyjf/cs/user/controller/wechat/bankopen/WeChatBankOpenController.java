@@ -7,9 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -24,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -87,11 +84,13 @@ public class WeChatBankOpenController extends BaseUserController {
         // 拼装参数 调用江西银行
         // 同步调用路径
         OpenAccountPageBean openBean = new OpenAccountPageBean();
+        logger.info("bean对象拷贝");
         try {
             PropertyUtils.copyProperties(openBean, bankOpenVO);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         openBean.setChannel(BankCallConstant.CHANNEL_WEI);
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
@@ -100,6 +99,7 @@ public class WeChatBankOpenController extends BaseUserController {
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         openBean.setPlatform(ClientConstants.WECHAT_CLIENT+"");
         // 组装调用江西银行的MV
+        logger.info("组装调用江西银行的MV");
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
         reuslt.setObject(data);
         //保存开户日志  银行卡号不必传了

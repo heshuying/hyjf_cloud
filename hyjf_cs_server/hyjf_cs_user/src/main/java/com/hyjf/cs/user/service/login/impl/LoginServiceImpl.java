@@ -95,10 +95,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		int userId = userVO.getUserId();
 		String codeSalt = userVO.getSalt();
+		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
-		String password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
-
+		String password = "";
+		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+			password = MD5Utils.MD5(loginPassword + codeSalt);
+		}else {
+			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+		}
 		if (password.equals(passwordDb)) {
 			// 是否禁用
 			if (userVO.getStatus() == 1) {
@@ -596,7 +601,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 						hasQuick = true;
 						result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_YES);
 					}
-					BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(accountBank.getBank());
+					BankConfigVO bankConfig = amConfigClient.getBankConfigByCode(accountBank.getBank());
 					if (bankConfig != null) {
 						result.setBankCardAccount(bankConfig.getName());
 						result.setBankCardAccountLogoUrl(imghost + bankConfig.getAppLogo());

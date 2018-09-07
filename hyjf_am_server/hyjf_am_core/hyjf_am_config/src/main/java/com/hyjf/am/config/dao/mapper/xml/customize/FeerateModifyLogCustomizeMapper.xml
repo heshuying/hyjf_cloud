@@ -51,11 +51,11 @@
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
-                AND hfml.create_time<![CDATA[>=]]>unix_timestamp(#{recieveTimeStartSrch})
+                AND hfml.create_time<![CDATA[>=]]>str_to_date(#{recieveTimeStartSrch},'%Y-%m-%d %H:%i:%s')
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
-                AND hfml.create_time<![CDATA[<=]]>unix_timestamp(#{recieveTimeEndSrch})+86399
+                AND hfml.create_time<![CDATA[<=]]>str_to_date(#{recieveTimeEndSrch},'%Y-%m-%d %H:%i:%s')
             </if>
         </where>
     </sql>

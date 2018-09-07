@@ -71,4 +71,26 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 	public String getNewTempletId(Integer protocolType) {
 		return amTradeClient.getNewTempletId(protocolType);
 	}
+
+	/**
+	 * 协议管理-画面迁移
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public FddTempletCustomizeResponse getRecordInfo(Integer id) {
+		return amTradeClient.getRecordInfoById(id);
+	}
+
+	/**
+	 * 协议管理-获取协议类型下拉列表
+	 *
+	 * @param protocolType
+	 * @return
+	 */
+	@Override
+	public List<ParamNameVO> getParamNameList(String protocolType) {
+		return amConfigClient.getParamNameList(protocolType);
+	}
 }

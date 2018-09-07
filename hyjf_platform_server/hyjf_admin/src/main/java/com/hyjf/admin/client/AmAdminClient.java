@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -206,4 +207,60 @@ public interface AmAdminClient {
      * @return
      */
     List<HjhInstConfigVO> selectHjhInstConfigList();
+
+    /**
+     * 查询数据字典总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getParamNamesCount(AdminParamNameRequest request);
+
+    /**
+     * 查询数据字典列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<ParamNameVO> searchParamNamesList(AdminParamNameRequest request);
+
+    /**
+     * 检查paramName是否存在
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean isExistsParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 添加数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int insertParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 更新数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 根据联合主键查询数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    ParamNameVO searchParamNameByKey(ParamNameVO paramNameVO);
+
+    /**
+     * 删除数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int deleteParamName(ParamNameVO paramNameVO);
 }

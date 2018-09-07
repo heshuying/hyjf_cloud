@@ -17,8 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.hyjf.common.util.CustomConstants.WITHDRAW_STATUS_WAIT;
-
 /**
  * @author xiasq
  * @version AccountServiceImpl, v0.1 2018/4/25 10:41
@@ -171,6 +169,14 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
         return null;
     }
 
+    @Override
+    public int countAccountWithdraw(String ordId) {
+        AccountWithdrawExample example = new AccountWithdrawExample();
+        AccountWithdrawExample.Criteria cra = example.createCriteria();
+        cra.andNidEqualTo(ordId);
+        int cnt = accountWithdrawMapper.countByExample(example);
+        return cnt;
+    }
 
     /**
      * 提现成功后,更新用户账户信息,提现记录
