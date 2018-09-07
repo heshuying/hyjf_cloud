@@ -35,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -224,8 +223,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
-    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthInvesBgreturn")
+    public String userAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;
     }
