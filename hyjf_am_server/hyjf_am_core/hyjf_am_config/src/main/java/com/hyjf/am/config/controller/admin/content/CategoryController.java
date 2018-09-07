@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.beans.PropertyEditorSupport;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -111,9 +109,11 @@ public class CategoryController extends BaseConfigController {
      */
     @RequestMapping("/infotypeaction/{id}")
     public CategoryResponse infoTypeAction(@PathVariable Integer id) {
-        CategoryResponse response = new CategoryResponse();
+        CategoryResponse<CategoryVO> response = new CategoryResponse();
         Category category = categoryService.infoTypeAction(id);
-        response.setData(category);
+        CategoryVO vo = new CategoryVO();
+        BeanUtils.copyProperties(category, vo);
+        response.setData(vo);
         return response;
     }
 
@@ -200,11 +200,11 @@ public class CategoryController extends BaseConfigController {
      * @Param cid
      * @return
      */
-    @RequestMapping("/getbypcateidAandcateid/{pid}/{cid}")
-    public CategoryResponse getCountByPcateIdAndcateId(@PathVariable Integer pid,@PathVariable Integer cid) {
+    @RequestMapping("/getbypcateidAandcateid")
+    public CategoryResponse getCountByPcateIdAndcateId(@RequestBody CategoryVO request) {
         logger.info("根据pCateId和cateId查询总数......");
         CategoryResponse response = new CategoryResponse();
-        Integer count = categoryService.getConNum(pid,cid);
+        Integer count = categoryService.getConNum(request.getPid(), request.getId());
         response.setCount(count);
         return response;
     }

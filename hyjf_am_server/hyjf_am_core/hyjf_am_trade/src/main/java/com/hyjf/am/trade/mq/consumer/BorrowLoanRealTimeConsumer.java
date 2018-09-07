@@ -45,8 +45,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version BorrowLoanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
-@Profile("test")
+//@Component
+//@Profile("test")
 public class BorrowLoanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanRealTimeConsumer.class);
@@ -66,7 +66,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费

@@ -29,6 +29,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -830,14 +833,22 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public CategoryResponse infoTypeAction(Integer id) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/infotypeaction/" + id,
-                CategoryResponse.class).getBody();
-        if (null != response) {
-            return response;
-        }
-        return null;
-    }
+	public CategoryResponse infoTypeAction(Integer id) {
+		/*
+		 * ResponseEntity<List<ProtocolTemplateVO>> response =
+		 * restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo",
+		 * HttpMethod.GET, null, new
+		 * ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {});
+		 */
+		ResponseEntity<CategoryResponse<CategoryVO>> response = restTemplate.exchange(
+				"http://AM-CONFIG/am-config/content/help/infotypeaction/" + id, HttpMethod.GET, null,
+				new ParameterizedTypeReference<CategoryResponse<CategoryVO>>() {
+				});
+		if (null != response) {
+			return response.getBody();
+		}
+		return null;
+	}
 
     @Override
     public CategoryResponse infoSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
@@ -881,8 +892,11 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public Integer getCountByPcateIdAndcateId(Integer pid, Integer cid) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/getbypcateidAandcateid/" + pid + "/" + cid,
-                CategoryResponse.class).getBody();
+        CategoryVO request = new CategoryVO();
+        request.setPid(pid);
+        request.setId(cid);
+        CategoryResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/help/getbypcateidAandcateid", request,
+                CategoryResponse.class);
         if (null != response) {
             return response.getCount();
         }

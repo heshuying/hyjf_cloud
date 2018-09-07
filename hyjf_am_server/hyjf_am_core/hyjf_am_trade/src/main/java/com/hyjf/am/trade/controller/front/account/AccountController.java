@@ -266,6 +266,23 @@ public class AccountController extends BaseController {
         return ret;
     }
 
+    /**
+     * 开户成功后更新account的accountid
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @GetMapping("/updateAccountAfterWithdrawFail/{userId}/{accountId}")
+    public IntegerResponse updateAccountNumberByUserId(@PathVariable Integer userId,@PathVariable String accountId){
+        IntegerResponse response = new IntegerResponse();
+        try {
+            response.setResultInt(accountService.updateAccountNumberByUserId(userId,accountId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
 
     @GetMapping("/testUpdate")
     public void testUpdate(){

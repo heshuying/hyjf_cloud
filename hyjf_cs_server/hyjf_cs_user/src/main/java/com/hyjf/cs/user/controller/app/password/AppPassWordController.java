@@ -137,8 +137,8 @@ public class AppPassWordController extends BaseUserController {
         String txcode = "";
         BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
-        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码设置失败&logOrdId="+bean.getLogOrderId();
-        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码设置成功" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=&logOrdId="+bean.getLogOrderId();
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=" ;
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
@@ -210,8 +210,8 @@ public class AppPassWordController extends BaseUserController {
         String txcode = "";
         BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
-        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码重置失败&logOrdId="+bean.getLogOrderId() ;
-        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码重置成功" ;
+        String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=&logOrdId="+bean.getLogOrderId() ;
+        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=" ;
         retUrl += "&token=1&sign=" +sign;
         success += "&token=1&sign=" +sign;
         // 异步调用路
