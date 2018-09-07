@@ -269,9 +269,10 @@ public class BorrowCommonController extends BaseController {
 				return bcr;
 			}
 		}
-		Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
+
 		// 初审的时候未打上标签的不允许再进计划
 		if ("BORROW_FIRST".equals(form.getMoveFlag()) && StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
+			Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
 			if (null != borrow.getLabelId() && borrow.getLabelId().intValue() == 0) {
 				// 返回错误信息
 				bcr.setRtn(Response.FAIL);
@@ -290,6 +291,7 @@ public class BorrowCommonController extends BaseController {
 		}
 		if ("BORROW_LIST".equals(form.getMoveFlag())) {
 			boolean isEngineUsed = false;
+			Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
 			if (StringUtils.isBlank(form.getIsEngineUsed())) {
 				if (borrow != null && borrow.getIsEngineUsed() == 1) {
 					isEngineUsed = true;
