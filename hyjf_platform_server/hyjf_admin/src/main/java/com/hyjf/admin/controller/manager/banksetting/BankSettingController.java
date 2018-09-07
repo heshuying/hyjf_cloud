@@ -222,10 +222,13 @@ public class BankSettingController extends BaseController {
     @ResponseBody
     public AdminResult upLoadFile(HttpServletResponse response, HttpServletRequest request) throws Exception {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/upLoadFile");
+        AdminBankSettingResponse responseT = null;
         String files = bankSettingService.uploadFile(request, response);
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/upLoadFile");
         if (StringUtils.isNotBlank(files)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+            responseT = new AdminBankSettingResponse();
+            responseT.setFileDomainUrl(files);
+            return new AdminResult<>(responseT);
         } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
