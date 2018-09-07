@@ -94,8 +94,11 @@ public class ContentCategoryClientImpl implements ContentCategoryClient {
 
     @Override
     public Integer getCountByPcateIdAndcateId(Integer pid, Integer cid) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/getbypcateidAandcateid/"+pid+"/"+cid,
-                CategoryResponse.class).getBody();
+        CategoryVO request = new CategoryVO();
+        request.setPid(pid);
+        request.setId(cid);
+        CategoryResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/help/getbypcateidAandcateid", request,
+                CategoryResponse.class);
         if(null != response){
             return response.getCount();
         }

@@ -72,7 +72,7 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
@@ -97,9 +97,9 @@ public class AppBankOpenController extends BaseUserController {
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_APP);
         // 开户角色
-        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
+        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         // 组装调用江西银行的MV
-        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean,sign);
         result.setData(data);
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");

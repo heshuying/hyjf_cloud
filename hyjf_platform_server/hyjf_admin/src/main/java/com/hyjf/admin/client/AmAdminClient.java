@@ -8,12 +8,13 @@ import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
-import com.hyjf.am.resquest.admin.PoundageListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.admin.PoundageDetailVO;
+import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -147,9 +148,145 @@ public interface AmAdminClient {
     BorrowApicronResponse getBorrowApicronByID(String apicronID);
 
     /**
+     * 查询权限数量
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPermissionsCount(AdminPermissionsRequest request);
+
+    /**
+     * 查询权限列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<AdminPermissionsVO> searchPermissionsList(AdminPermissionsRequest request);
+
+    /**
+     * 检查数据库是否已存在该权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean isExistsPermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 插入权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int insertPermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 修改权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updatePermission(AdminPermissionsVO adminPermissionsVO);
+
+    /**
+     * 根据uuid查询权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    AdminPermissionsVO searchPermissionByUuid(String uuid);
+
+    /**
+     * 删除权限
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int deletePermission(String uuid);
+
+    /**
      * 资产来源
      * yangchangwei
      * @return
      */
     List<HjhInstConfigVO> selectHjhInstConfigList();
+
+    /**
+     * 查询数据字典总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getParamNamesCount(AdminParamNameRequest request);
+
+    /**
+     * 查询数据字典列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<ParamNameVO> searchParamNamesList(AdminParamNameRequest request);
+
+    /**
+     * 检查paramName是否存在
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean isExistsParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 添加数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int insertParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 更新数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 根据联合主键查询数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    ParamNameVO searchParamNameByKey(ParamNameVO paramNameVO);
+
+    /**
+     * 删除数据字典
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int deleteParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 查询手续费分账配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageLedgerVO getPoundageLedgerById(int id);
+
+    /**
+     * 手续费分账详细信息总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPoundageDetailCount(AdminPoundageDetailRequest request);
+
+    /**
+     * 手续费分账详细信息列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PoundageDetailVO> searchPoundageDetailList(AdminPoundageDetailRequest request);
 }

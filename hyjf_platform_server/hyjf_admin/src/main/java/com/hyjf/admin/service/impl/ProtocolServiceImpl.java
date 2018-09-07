@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ProtocolClient;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.Response;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.admin.AdminProtocolVersionRequest;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -39,6 +41,9 @@ public class ProtocolServiceImpl implements ProtocolService {
 
     @Autowired
     private ProtocolClient client;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     @Value("${file.domain.url}")
     private String FILEDOMAINURL;
@@ -73,6 +78,20 @@ public class ProtocolServiceImpl implements ProtocolService {
     public AdminProtocolResponse getProtocolTemplateById(AdminProtocolRequest request) {
         AdminProtocolResponse response = new AdminProtocolResponse();
         ProtocolTemplateCommonVO vo = client.getProtocolTemplateById(request);
+        if(vo.getProtocolVersion().size() > 0){
+            ProtocolVersionVO protocolVersionVO = null;
+            for(int i=0;i<vo.getProtocolVersion().size();i++){
+                protocolVersionVO = vo.getProtocolVersion().get(i);
+                AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(protocolVersionVO.getUpdateUser());
+                if(adminSystemVO != null){
+                    protocolVersionVO.setUserName(adminSystemVO.getUsername());
+                }else{
+                    protocolVersionVO.setUserName("admin");
+                }
+
+            }
+
+        }
         response.setResult(vo);
         return response;
     }
@@ -223,7 +242,9 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public void updateProtocolTemplate(AdminProtocolRequest request,String userId) {
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
+        List<ProtocolTemplateCommonVO> listLogVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
+        ProtocolTemplateCommonVO logVO = new ProtocolTemplateCommonVO();
         String fileDomainUrl = "";
         Integer updateUserId = Integer.valueOf(userId);
         //1.1修改协议模板
@@ -251,14 +272,14 @@ public class ProtocolServiceImpl implements ProtocolService {
             int count = client.updateDisplayFlag(request);
             if (count == 0) {
                 //2.31新增协议版本
-                this.insertProtocolVersion(protocolTemplate, updateUserId,protocolTemplateCommonVO);
+                this.insertProtocolVersion(protocolTemplate, updateUserId,logVO);
             }
             //3.添加修改协议的日志
-            this.insertProtocolLog(protocolTemplate, 1,protocolTemplateCommonVO);
+            this.insertProtocolLog(protocolTemplate, 1,logVO);
 
             //发往am里面进行保存
-            listProtocolTemplateCommonVO.add(protocolTemplateCommonVO);
-            request.setRecordList(listProtocolTemplateCommonVO);
+            listLogVO.add(logVO);
+            request.setRecordList(listLogVO);
             client.insert(request);
 
             //将协议模板放入redis中
@@ -338,7 +359,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             // 文件错误信息
             String errorMessage = null;
             multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
+            String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             String  suf = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
             fileRealName = fileRealName + suf;
@@ -460,5 +481,74 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         }
         return response;
+    }
+
+    /**
+     * 校验字段是否为唯一
+     *
+     * @return
+     */
+    @Override
+    public Map<String,String> validatorFieldCheck(AdminProtocolRequest request,String protocolName,String versionNumber,String displayName,String protocolUrl,String protocolType,String oldDisplayName,String flagT){
+        Map<String,String> json = new HashMap<>();
+
+        boolean flag = false;
+        //提示信息初始化
+        //协议模板名称错误
+        json.put("n_error", "");
+        //协议版本号错误
+        json.put("v_error", "");
+        //前台展示名称错误
+        json.put("d_error", "");
+        //协议类别错误
+        json.put("e_error", "");
+        //pdf错误
+        json.put("p_error", "");
+        //通过前台输入信息判断展示提示信息
+        if(StringUtils.isEmpty(protocolName)){
+            json.put("n_error", "协议模板名称不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(versionNumber)) {
+            json.put("v_error", "协议版本号不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(displayName)){
+            json.put("d_error", "前台展示名称不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(protocolType)){
+            json.put("e_error", "协议类别不能为空");
+            flag =true;
+        }else if(StringUtils.isEmpty(protocolUrl)){
+            json.put("p_error", "文件不能为空");
+            flag =true;
+        }
+
+        if(flag){
+            return json;
+        }
+
+        if(protocolName.length() > 20 ){
+            json.put("n_error", "协议模板名称过长");
+            flag =true;
+        }
+        if(versionNumber.length() > 10 ){
+            json.put("v_error", "协议版本号过长");
+            flag =true;
+        }
+        if(!protocolUrl.contains(".pdf")){
+            json.put("p_error", "文件格式不对");
+            flag = false;
+        }
+
+        if(flag){
+            return json;
+        }
+
+        Map<String, Object> map = client.validatorFieldCheckClient(request);
+        for(Iterator it = map.keySet().iterator() ; it.hasNext();){
+            String key = it.next().toString();
+            json.put(key, (String)map.get(key));
+        }
+
+        return json;
     }
 }

@@ -117,6 +117,8 @@ public class BorrowInfo implements Serializable {
 
     private BigDecimal borrowExtraYield;
 
+    private Integer increaseInterestFlag;
+
     private Integer contractPeriod;
 
     private String borrowLevel;
@@ -609,6 +611,14 @@ public class BorrowInfo implements Serializable {
 
     public void setBorrowExtraYield(BigDecimal borrowExtraYield) {
         this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public Integer getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
     }
 
     public Integer getContractPeriod() {

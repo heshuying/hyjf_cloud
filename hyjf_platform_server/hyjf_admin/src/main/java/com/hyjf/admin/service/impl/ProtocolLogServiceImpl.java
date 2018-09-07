@@ -1,10 +1,12 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ProtocolLogClient;
 import com.hyjf.admin.service.ProtocolLogService;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class ProtocolLogServiceImpl implements ProtocolLogService {
     @Autowired
     private ProtocolLogClient client;
 
+    @Autowired
+    private AmConfigClient amConfigClient;
+
     /**
      * 分页查询
      * @param request
@@ -38,6 +43,21 @@ public class ProtocolLogServiceImpl implements ProtocolLogService {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
             recordList = client.getProtocolLogVOAll(request);
+
+            if(recordList.size()>0){
+                ProtocolLogVO vo = null;
+                for(int i=0;i<recordList.size();i++){
+                    vo = recordList.get(i);
+                    AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(vo.getUpdateUser());
+                    if(adminSystemVO != null){
+                        vo.setUserName(adminSystemVO.getUsername());
+                    }else{
+                        vo.setUserName("admin");
+                    }
+
+                }
+            }
+
             response.setResultList(recordList);
         }
         return response;

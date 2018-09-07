@@ -792,4 +792,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据用户ID修改account表的电子账户
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public Integer updateAccountNumberByUserId(int userId, String accountId) {
+        String url = tradeService + "/account/updateAccountNumberByUserId/" + userId+"/accountId";
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(IntegerResponse.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

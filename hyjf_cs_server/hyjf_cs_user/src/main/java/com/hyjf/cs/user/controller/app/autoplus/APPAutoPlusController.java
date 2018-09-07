@@ -291,6 +291,7 @@ public class APPAutoPlusController extends BaseUserController {
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);
+        result.setStatus("000");
         return result;
     }
 

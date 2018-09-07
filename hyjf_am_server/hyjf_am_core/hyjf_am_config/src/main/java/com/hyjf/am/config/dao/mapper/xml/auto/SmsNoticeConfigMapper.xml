@@ -113,26 +113,26 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfig" >
-    <selectKey resultType="java.lang.String" keyProperty="name" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_sms_notice_config (id, title, config_value, 
+    insert into ht_sms_notice_config (`name`, title, config_value, 
       pvalue, content, create_user_id, 
       update_user_id, create_time, update_time, 
       remark, `status`)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
       #{pvalue,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.SmsNoticeConfig" >
-    <selectKey resultType="java.lang.String" keyProperty="name" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_sms_notice_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="name != null" >
+        `name`,
       </if>
       <if test="title != null" >
         title,
@@ -166,8 +166,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},

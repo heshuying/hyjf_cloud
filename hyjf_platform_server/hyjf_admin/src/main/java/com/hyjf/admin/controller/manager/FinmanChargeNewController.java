@@ -53,7 +53,7 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse resList=finmanChargeNewService.selectFinmanChargeList(adminRequest);
         if (resList!=null &&Response.isSuccess(resList)) {
             response.setResultList(resList.getResultList());
-            response.setRecordTotal(resList.getResultList().size());
+            response.setRecordTotal(resList.getRecordTotal());
         }
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.finmanChargeNewService.hjhInstConfigList("");
@@ -77,7 +77,7 @@ public class FinmanChargeNewController extends BaseController {
         FinmanChargeNewResponse resList=finmanChargeNewService.selectFinmanChargeList(adminRequest);
         if (resList!=null &&Response.isSuccess(resList)) {
             response.setResultList(resList.getResultList());
-            response.setRecordTotal(resList.getResultList().size());
+            response.setRecordTotal(resList.getRecordTotal());
         }
         // 资金来源
         List<HjhInstConfigVO> hjhInstConfigList = this.finmanChargeNewService.hjhInstConfigList("");

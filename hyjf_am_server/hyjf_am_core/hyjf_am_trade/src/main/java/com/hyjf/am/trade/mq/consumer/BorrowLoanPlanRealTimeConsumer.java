@@ -17,6 +17,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -42,6 +43,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @version BorrowLoanPlanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Component
+@Profile("test")
 public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanPlanRealTimeConsumer.class);
@@ -58,7 +60,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 //		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费

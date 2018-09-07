@@ -3,15 +3,18 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -30,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,6 +46,8 @@ import java.util.List;
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
+	@Autowired
+	private ProtocolService protocolService;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
@@ -89,6 +95,65 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
+	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
+	@PostMapping("/infoAction")
+	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
+		logger.info(ProtocolsController.class.toString(), "infoAction");
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		if (requestBean.getId() != null) {
+			response = this.protocolsService.getRecordInfo(requestBean.getId());
+		}
+		response.setProtocolsForm(response.getResult());
+		// 协议类型下拉
+		List<ParamNameVO> paramNameList = this.protocolsService.getParamNameList("PROTOCOL_TYPE");
+		response.setProtocolTypeList(paramNameList);
+
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		logger.info(ProtocolsController.class.toString(), "infoAction");
+		return new AdminResult<>(response);
+	}
+
+
+	@ApiOperation(value = "取得新规的模板编号", notes = "取得新规的模板编号")
+	@GetMapping("/getTempletId")
+        public AdminResult protocolTypeAction(@RequestParam(value = "protocolType") Integer requestBean) {
+		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
+		String templetId = protocolsService.getNewTempletId(requestBean);
+		response.setTempletId(templetId);
+		response.setCount(1);
+		if (templetId == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		return new AdminResult<>(response);
+	}
+
+	/**
+	 * 资料上传
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "pdf文件上传", notes = "pdf文件上传")
+	@PostMapping(value = "uploadFile")
+	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+		try {
+			LinkedList<BorrowCommonImage> borrowCommonImages = protocolService.uploadFile(request, response);
+			adminResult.setData(borrowCommonImages);
+			adminResult.setStatus(SUCCESS);
+			adminResult.setStatusDesc(SUCCESS_DESC);
+			return adminResult;
+		} catch (Exception e) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+	}
+
 	/**
 	 * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
 	 * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
@@ -99,7 +164,7 @@ public class ProtocolsController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
-	@GetMapping("/exportaction")
+	@PostMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// 表格sheet名称
