@@ -40,7 +40,7 @@ public class PoundageDetailController extends BaseController {
     private AdminCommonService adminCommonService;
 
     @ApiOperation(value = "手续费分账详细信息列表",notes = "手续费分账详细信息列表")
-    @GetMapping(value = "/poundagedetaillist")
+    @PostMapping(value = "/poundagedetaillist")
     public AdminResult poundageDetailList(HttpServletRequest request, @RequestBody AdminPoundageDetailRequest poundageDetailRequest){
         Map<String,Object> result = new HashMap<>();
         Integer loginUserId = Integer.valueOf(getUser(request).getId());
@@ -62,7 +62,7 @@ public class PoundageDetailController extends BaseController {
         List<PoundageDetailVO> poundageDetailVOList = poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
         result.put("count",count);
         result.put("poundageDetail",poundageDetailVOList);
-        return new AdminResult<>();
+        return new AdminResult<>(result);
     }
 
     /**
