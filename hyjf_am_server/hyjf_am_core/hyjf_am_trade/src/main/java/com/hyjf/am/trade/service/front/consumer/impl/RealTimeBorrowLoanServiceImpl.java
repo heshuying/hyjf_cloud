@@ -347,6 +347,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 				}
 			} else {
 				//重新查询处理结果
+				logger.info(borrowNid+" 重新查询实时放款请求: " + loanResult);
                 String oldOrdid = apicron.getOrdid();
                 if(StringUtils.isNotBlank(oldOrdid)){
                     loanBean.setOrderId(oldOrdid);
