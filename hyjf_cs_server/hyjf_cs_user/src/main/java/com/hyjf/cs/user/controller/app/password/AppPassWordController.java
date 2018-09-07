@@ -145,8 +145,8 @@ public class AppPassWordController extends BaseUserController {
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
 
-        bean.setRetUrl(retUrl);
-        bean.setSuccessfulUrl(success);
+        bean.setRetUrl(success);
+        bean.setSuccessfulUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl+"?sign=" + sign);
         Map<String,Object> data = passWordService.setAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
