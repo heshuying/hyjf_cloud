@@ -139,6 +139,8 @@ public class AppPassWordController extends BaseUserController {
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码设置失败&logOrdId="+bean.getLogOrderId();
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码设置成功" ;
+        retUrl += "&token=1&sign=" +sign;
+        success += "&token=1&sign=" +sign;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
@@ -210,6 +212,8 @@ public class AppPassWordController extends BaseUserController {
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=交易密码重置失败&logOrdId="+bean.getLogOrderId() ;
         String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=交易密码重置成功" ;
+        retUrl += "&token=1&sign=" +sign;
+        success += "&token=1&sign=" +sign;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+"?sign=" + sign;

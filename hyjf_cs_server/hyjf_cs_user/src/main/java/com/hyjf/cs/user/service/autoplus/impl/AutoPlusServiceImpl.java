@@ -429,6 +429,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
+        retUrl += "&token=1&sign=" +sign;
+        success += "&token=1&sign=" +sign;
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
         if (type == 1) {
