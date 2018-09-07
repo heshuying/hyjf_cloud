@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.account;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountInfoResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
@@ -252,6 +253,23 @@ public class AccountController extends BaseController {
             e.printStackTrace();
         }
         return ret;
+    }
+
+    /**
+     * 开户成功后更新account的accountid
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @GetMapping("/updateAccountAfterWithdrawFail/{userId}/{accountId}")
+    public IntegerResponse updateAccountNumberByUserId(@PathVariable Integer userId,@PathVariable String accountId){
+        IntegerResponse response = new IntegerResponse();
+        try {
+            response.setResultInt(accountService.updateAccountNumberByUserId(userId,accountId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
 

@@ -23,6 +23,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
@@ -56,6 +57,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
 	
     @Autowired
     private AmUserClient amUserClient;
+
+    @Autowired
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -273,7 +277,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存银行卡信息失败");
             return result;
         }
-
+        // 更新account表的电子帐户号
+        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
         try {
             // 加入到消息队列
             Map<String, String> params = new HashMap<String, String>();

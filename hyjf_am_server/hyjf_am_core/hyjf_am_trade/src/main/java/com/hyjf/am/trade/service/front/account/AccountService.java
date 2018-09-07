@@ -125,4 +125,12 @@ public interface AccountService {
      * @return
      */
     boolean updateAccountAfterWithdrawFail(Integer userId, String nid) throws Exception;
+
+    /**
+     * 开户成功修改电子账户号
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    Integer updateAccountNumberByUserId(Integer userId, String accountId);
 }
