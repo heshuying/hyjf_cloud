@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-
 import java.io.Serializable;
 
 /**
@@ -12,18 +10,18 @@ import java.io.Serializable;
  * @version BorrowFireRequest, v0.1 2018/7/4 13:47
  */
 public class BorrowFireRequest implements Serializable {
-    private BorrowVO borrowVO;
+    private String borrowNid;
 
     private String verifyStatus;
 
     private String ontime;
 
-    public BorrowVO getBorrowVO() {
-        return borrowVO;
+    public String getBorrowNid() {
+        return borrowNid;
     }
 
-    public void setBorrowVO(BorrowVO borrowVO) {
-        this.borrowVO = borrowVO;
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 
     public String getVerifyStatus() {
