@@ -159,12 +159,20 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 				return false;
 			}
 			String bankSeqNo = apicron.getBankSeqNo();
-			BankCallBean batchResult = batchQuery(apicron);
-			if (Validator.isNull(batchResult)) {
+			BankCallBean queryResult = autoLendQuery(apicron);
+			if (queryResult == null) {
 				throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
 			}
-			logger.info("标的编号："+ borrowNid +"，批次查询成功了！");
-			apicron.setStatus(1);
+			logger.info(apicron.getBorrowNid()+" 满标自动放款查:"+queryResult.getRetCode());
+			
+			// 这里利用了重复提交失败的原因,暂时不用
+			if (queryResult != null && BankCallConstant.RESPCODE_SUCCESS.equals(queryResult.getRetCode())) {
+				
+			}else {
+				
+			}
+			
+			apicron.setStatus(1); 
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
 			return true;
 		} catch (Exception e) {
@@ -176,7 +184,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 		return false;
 	}
 	
-	private BankCallBean batchQuery(BorrowApicron apicron) {
+	private BankCallBean autoLendQuery(BorrowApicron apicron) {
 		//开始处理
 		String orderId = apicron.getOrdid();
 		logger.info("标的号:" + apicron.getBorrowNid() + "开始查询批次结果,orderId is :" + orderId);
@@ -219,13 +227,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(apicron.getUserId()));
 		bean.setLogRemark("满标自动放款查询");
 		BankCallBean queryResult = BankCallUtils.callApiBg(bean);
-		if (Validator.isNotNull(queryResult)) {
-			String retCode = StringUtils.isNotBlank(queryResult.getRetCode()) ? queryResult.getRetCode() : "";
-			if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-				return queryResult;
-			}
-		} 
-		return null;
+		return queryResult;
 	}
 	
 	private void sendSmsForManager(String borrowNid) {
