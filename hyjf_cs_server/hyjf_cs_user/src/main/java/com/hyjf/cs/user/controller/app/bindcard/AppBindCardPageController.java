@@ -1,16 +1,10 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -18,19 +12,15 @@ import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import jdk.management.resource.internal.ApproverGroup;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
