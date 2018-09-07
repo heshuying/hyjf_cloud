@@ -4,13 +4,20 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminPoundageDetailResponse;
 import com.hyjf.am.response.admin.PoundageCustomizeResponse;
+import com.hyjf.am.response.admin.PoundageLedgerResponse;
+import com.hyjf.am.resquest.admin.AdminPoundageDetailRequest;
 import com.hyjf.am.resquest.admin.PoundageListRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.PoundageDetail;
+import com.hyjf.am.trade.dao.model.auto.PoundageLedger;
 import com.hyjf.am.trade.dao.model.customize.AdminPoundageCustomize;
 import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.TradePoundageService;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.admin.PoundageDetailVO;
+import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -105,12 +112,75 @@ public class PoundageController extends BaseController {
         return response;
     }
 
+    /**
+     * 审核-更新poundage
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     @PostMapping(value = "/updatePoundage")
     public PoundageCustomizeResponse updatePoundage(@RequestBody PoundageCustomizeVO poundageCustomizeVO){
         PoundageCustomizeResponse response = new PoundageCustomizeResponse();
         Integer count = tradePoundageService.updatePoundage(poundageCustomizeVO);
         response.setCount(count);
         response.setRtn(Response.SUCCESS);
+        return response;
+    }
+    /**
+     * 查询手续费分账配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/getPoundageLedgerById/{id}")
+    public PoundageLedgerResponse getPoundageLedgerById(@PathVariable int id){
+        PoundageLedgerResponse response = new PoundageLedgerResponse();
+        PoundageLedger poundageLedger = tradePoundageService.getPoundageLedgerById(id);
+        if(poundageLedger != null){
+            PoundageLedgerVO poundageLedgerVO = CommonUtils.convertBean(poundageLedger,PoundageLedgerVO.class);
+            response.setResult(poundageLedgerVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 手续费分账详细信息总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/getPoundageDetailCount")
+    public AdminPoundageDetailResponse getPoundageDetailCount(@RequestBody AdminPoundageDetailRequest request){
+        AdminPoundageDetailResponse response = new AdminPoundageDetailResponse();
+        Integer count = tradePoundageService.getPoundageDetailCount(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+    /**
+     * 手续费分账详细信息列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/searchPoundageDetailList")
+    public AdminPoundageDetailResponse searchPoundageDetailList(@RequestBody AdminPoundageDetailRequest request){
+        AdminPoundageDetailResponse response = new AdminPoundageDetailResponse();
+        Integer count = tradePoundageService.getPoundageDetailCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        logger.info("searchPoundageList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        List<PoundageDetail> poundageDetailList = tradePoundageService.searchPoundageDetailList(request);
+        if(!CollectionUtils.isEmpty(poundageDetailList)){
+            List<PoundageDetailVO> poundageDetailVOList = CommonUtils.convertBeanList(poundageDetailList,PoundageDetailVO.class);
+            response.setResultList(poundageDetailVOList);
+            response.setRtn(Response.SUCCESS);
+        }
         return response;
     }
 }

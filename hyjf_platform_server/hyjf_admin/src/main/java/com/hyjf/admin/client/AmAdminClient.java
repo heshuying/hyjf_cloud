@@ -12,6 +12,8 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.admin.PoundageDetailVO;
+import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -263,4 +265,28 @@ public interface AmAdminClient {
      * @return
      */
     int deleteParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 查询手续费分账配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    PoundageLedgerVO getPoundageLedgerById(int id);
+
+    /**
+     * 手续费分账详细信息总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPoundageDetailCount(AdminPoundageDetailRequest request);
+
+    /**
+     * 手续费分账详细信息列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PoundageDetailVO> searchPoundageDetailList(AdminPoundageDetailRequest request);
 }
