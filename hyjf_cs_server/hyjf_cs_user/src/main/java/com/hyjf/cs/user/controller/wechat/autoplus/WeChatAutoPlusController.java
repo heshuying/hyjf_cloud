@@ -270,6 +270,7 @@ public class WeChatAutoPlusController extends BaseUserController {
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);
+        result.setStatus("000");
         return result;
     }
 
