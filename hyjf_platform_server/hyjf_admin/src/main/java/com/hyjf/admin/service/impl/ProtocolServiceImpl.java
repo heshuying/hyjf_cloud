@@ -359,7 +359,7 @@ public class ProtocolServiceImpl implements ProtocolService {
             // 文件错误信息
             String errorMessage = null;
             multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
+            String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             String  suf = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
             fileRealName = fileRealName + suf;
