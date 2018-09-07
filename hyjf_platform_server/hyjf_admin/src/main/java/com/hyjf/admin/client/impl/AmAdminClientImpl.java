@@ -17,6 +17,8 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
+import com.hyjf.am.vo.admin.PoundageDetailVO;
+import com.hyjf.am.vo.admin.PoundageLedgerVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -491,5 +493,51 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getCount();
         }
         return 0;
+    }
+
+    /**
+     * 查询手续费分账配置
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public PoundageLedgerVO getPoundageLedgerById(int id) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageLedgerById/" + id;
+        PoundageLedgerResponse response = restTemplate.getForEntity(url,PoundageLedgerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 手续费分账详细信息总数
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getPoundageDetailCount(AdminPoundageDetailRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/getPoundageDetailCount";
+        AdminPoundageDetailResponse response = restTemplate.postForEntity(url,request,AdminPoundageDetailResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+    /**
+     * 手续费分账详细信息列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<PoundageDetailVO> searchPoundageDetailList(AdminPoundageDetailRequest request) {
+        String url = "http://AM-ADMIN/am-admin/poundage/searchPoundageDetailList";
+        AdminPoundageDetailResponse response = restTemplate.postForEntity(url,request,AdminPoundageDetailResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
     }
 }
