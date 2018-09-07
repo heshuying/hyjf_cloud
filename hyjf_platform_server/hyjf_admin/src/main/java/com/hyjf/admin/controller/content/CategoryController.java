@@ -167,8 +167,8 @@ public class CategoryController extends BaseController {
             response = categoryService.getCategoryPage(categoryBeanRequest);
 
             Integer id = categoryBeanRequest.getId();
-            CategoryResponse responses = categoryService.infoTypeAction(Integer.parseInt(categoryBeanRequest.getIds()));
-            CategoryVO record = (CategoryVO)responses.getData();
+            CategoryResponse<CategoryVO> responses = categoryService.infoTypeAction(id);
+            CategoryVO record = responses.getData();
 
             if (record.getLevel() == 0) {
                 // 一级菜单等于ca.id即满足条件
