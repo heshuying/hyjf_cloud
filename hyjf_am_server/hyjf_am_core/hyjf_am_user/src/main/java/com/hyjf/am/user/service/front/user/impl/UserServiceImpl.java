@@ -911,6 +911,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			if (user != null){
 				// 已测评
 				user.setIsEvaluationFlag(1);
+				user.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(),1,1), 5,-1));
 				// 更新用户是否测评标志位
 				this.userMapper.updateByPrimaryKey(user);
 			}
