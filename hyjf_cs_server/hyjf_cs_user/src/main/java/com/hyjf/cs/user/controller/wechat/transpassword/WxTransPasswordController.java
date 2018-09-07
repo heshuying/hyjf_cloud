@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -60,7 +61,8 @@ public class WxTransPasswordController extends BaseUserController {
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 异步调用路
         String bgRetUrl = systemConfig.getWeChatHost()  + request.getContextPath() +  "/wx/transpassword/passwordBgreturn?sign=" + sign;
         // 同步调用路径
@@ -130,7 +132,8 @@ public class WxTransPasswordController extends BaseUserController {
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
         String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;

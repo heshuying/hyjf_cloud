@@ -98,7 +98,7 @@ public class WebBankOpenController extends BaseUserController {
         // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_1);
         // 组装参数
-        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean, null);
         result.setData(data);
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");

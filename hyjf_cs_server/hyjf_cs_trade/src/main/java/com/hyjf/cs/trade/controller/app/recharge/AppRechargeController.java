@@ -11,7 +11,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.DES;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
@@ -29,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +97,7 @@ public class AppRechargeController extends BaseTradeController{
 	@ResponseBody
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
 	public AppResult<Object> recharge(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "key") String key,
-									  HttpServletRequest request) throws Exception {
+									  @RequestHeader(value = "sign") String sign,HttpServletRequest request) throws Exception {
 		logger.info("app充值服务");
 
 		AppResult<Object> result = new AppResult<Object>();
@@ -136,6 +134,8 @@ public class AppRechargeController extends BaseTradeController{
 		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
         bgRetUrl=splicingParam(bgRetUrl,request);
 		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
+		retUrl += "?token=1&sign=" +sign;
+		successfulUrl += "?token=1&sign=" +sign;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);

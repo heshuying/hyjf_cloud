@@ -305,6 +305,24 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
         return false;
     }
 
+    /**
+     * 开户成功修改电子账户号
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public Integer updateAccountNumberByUserId(Integer userId, String accountId) {
+        Account account = getAccountByUserId(userId);
+        if(account!=null){
+            account.setAccountId(accountId);
+            return this.accountMapper.updateByPrimaryKeySelective(account);
+        }
+
+        return 0;
+    }
+
 
     /**
      * 获取账户信息

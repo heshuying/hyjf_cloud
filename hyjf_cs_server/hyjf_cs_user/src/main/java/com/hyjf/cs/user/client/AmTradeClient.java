@@ -368,4 +368,12 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountWithdrawVO> searchAccountWithdrawByUserIdPaginate(ApiUserWithdrawRequest request);
+
+    /**
+     * 根据用户ID修改account表的电子账户
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    Integer updateAccountNumberByUserId(int userId, String accountId);
 }
