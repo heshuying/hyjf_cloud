@@ -30,10 +30,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-import com.hyjf.am.vo.admin.TransferExceptionLogVO;
-import com.hyjf.am.vo.admin.UnderLineRechargeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -43,6 +40,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -52,6 +50,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
+import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -1285,6 +1284,12 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /******************************  app end **************************************/
 
+    /**
+     * 根据借款编号获取借款人公司信息
+     *
+     * @param borrowNid
+     * @return
+     */
     @Override
     public BorrowUserVO getBorrowUser(String borrowNid) {
         BorrowUserResponse response = restTemplate.getForEntity(
@@ -1326,7 +1331,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 借款主体信息
+     * 借款主体信息（根据借款编号获取借款人信息）
      * @author zhangyk
      * @date 2018/7/18 13:58
      */
@@ -4384,5 +4389,116 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> getBorrowTenderListByBorrowNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderListByBorrowNid/"+borrowNid;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据合同编号查询合同要素信息 add by liushouyi
+     *
+     * @param contractNo
+     * @return
+     */
+    @Override
+    public List<NifaContractEssenceVO> selectNifaContractEssenceByContractNo(String contractNo) {
+        String url = "http://AM-TRADE/am-trade/nifa_contract_essence/select_nifa_contract_essence/"+contractNo;
+        NifaContractEssenceResponse response = restTemplate.getForEntity(url,NifaContractEssenceResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据合同编号获取合同模版约定条款
+     *
+     * @param templetId
+     * @return
+     */
+    @Override
+    public List<NifaContractTemplateVO> selectNifaContractTemplateByTemplateNid(String templetId) {
+        String url = "http://AM-TRADE/am-trade/nifa_contract_essence/select_nifa_contract_template/"+templetId;
+        NifaContractTemplateResponse response = restTemplate.getForEntity(url,NifaContractTemplateResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取最新互金字段定义
+     *
+     * @return
+     */
+    @Override
+    public List<NifaFieldDefinitionVO> selectNifaFieldDefinition() {
+        String url = "http://AM-TRADE/am-trade/nifa_contract_essence/select_nifa_field_definition";
+        NifaFieldDefinitionResponse response = restTemplate.getForEntity(url,NifaFieldDefinitionResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取还款计算公式
+     *
+     * @param borrowStyle
+     * @return
+     */
+    @Override
+    public List<BorrowStyleVO> selectBorrowStyleWithBLOBs(String borrowStyle) {
+        String url = "http://AM-TRADE/am-trade/borrow/select_borrow_style_with_blobs/"+borrowStyle;
+        BorrowStyleResponse response = restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户投资订单还款详情
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String nid) {
+        String url = "http://AM-TRADE/am-trade/recoverplan/select_borrow_recover_plan_list/" + nid;
+        BorrowRecoverPlanResponse response = restTemplate.getForEntity(url,BorrowRecoverPlanResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入合同信息要素表
+     *
+     * @param nifaContractEssenceVO
+     * @return
+     */
+    @Override
+    public Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO) {
+        String url = urlBase + "nifa_contract_essence/insert_nifa_contract_essence";
+        IntegerResponse response = restTemplate.postForEntity(url, nifaContractEssenceVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
     }
 }

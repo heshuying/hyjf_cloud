@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.repay;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 
 import java.util.List;
 
@@ -14,4 +15,12 @@ public interface BorrowRecoverPlanService {
     List<BorrowRecoverPlan> selectRecoverPlan(String borrowNid, Integer period);
 
     List<BorrowRecoverPlan> selectRecoverPlanListByTenderNid(String tenderNid);
+
+    /**
+     * 获取用户投资订单还款详情
+     *
+     * @param nid
+     * @return
+     */
+    List<BorrowRecoverPlan> selectBorrowRecoverPlanListByNid(String nid);
 }

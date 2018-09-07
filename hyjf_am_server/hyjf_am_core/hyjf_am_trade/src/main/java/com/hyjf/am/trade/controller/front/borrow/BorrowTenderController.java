@@ -340,4 +340,19 @@ public class BorrowTenderController extends BaseController {
         return new BooleanResponse(bol);
     }
 
+    /**
+     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    @GetMapping("/getBorrowTenderListByBorrowNid/{borrowNid}")
+    public BorrowTenderResponse getBorrowTenderListByBorrowNid(@PathVariable String borrowNid){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        List<BorrowTender> tenderList = borrowTenderService.getBorrowTenderListByBorrowNid(borrowNid);
+        if (CollectionUtils.isNotEmpty(tenderList)){
+            response.setResultList(CommonUtils.convertBeanList(tenderList,BorrowTenderVO.class));
+        }
+        return response;
+    }
 }

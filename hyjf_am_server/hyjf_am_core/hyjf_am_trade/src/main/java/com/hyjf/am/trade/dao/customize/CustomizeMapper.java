@@ -207,5 +207,8 @@ public class CustomizeMapper extends AutoMapper {
 	protected NifaReceivedPaymentsCustomizeMapper nifaReceivedPaymentsCustomizeMapper;
 
 	@Autowired
-	protected  NifaReportLogCustomizeMapper nifaReportLogCustomizeMapper;
+	protected NifaReportLogCustomizeMapper nifaReportLogCustomizeMapper;
+
+	@Autowired
+	protected AccountCustomizeMapper accountCustomizeMapper;
 }

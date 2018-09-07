@@ -16,6 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
+import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -355,5 +356,24 @@ public class BorrowController extends BaseController {
 		}
 		return response;
 	}
+
+    /**
+     * 获取还款计算公式
+	 *
+     * @author liushouyi
+     * @param borrowStyle
+     * @return
+     */
+	@GetMapping("/select_borrow_style_with_blobs/{borrowStyle}")
+	public BorrowStyleResponse selectBorrowStyleWithBLOBs(@PathVariable String borrowStyle){
+		BorrowStyleResponse response = new BorrowStyleResponse();
+		List<BorrowStyleWithBLOBs> borrowStyleWithBLOBs = borrowService.selectBorrowStyleWithBLOBs(borrowStyle);
+		if (!CollectionUtils.isEmpty(borrowStyleWithBLOBs)) {
+			List<BorrowStyleVO> voList = CommonUtils.convertBeanList(borrowStyleWithBLOBs, BorrowStyleVO.class);
+			response.setResultList(voList);
+		}
+		return response;
+	}
+
 
 }

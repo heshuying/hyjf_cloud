@@ -28,4 +28,11 @@ public interface SiteSettingService {
      * @return
      */
     void update(SitesettingRequest request);
+
+    /**
+     * 通过网站设置获取公司信息 add by liushouyi
+     *
+     * @return
+     */
+    SiteSetting selectSiteSetting();
 }
