@@ -904,9 +904,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List<ContentHelpVO> getListByPcateIdAndcateId(Integer pid, Integer cid) {
-        CategoryResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid/" + pid + "/" + cid,
-                CategoryResponse.class).getBody();
+    public List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO) {
+        CategoryResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", categoryVO,
+                CategoryResponse.class);
         if (null != response) {
             return response.getRecordList();
         }
