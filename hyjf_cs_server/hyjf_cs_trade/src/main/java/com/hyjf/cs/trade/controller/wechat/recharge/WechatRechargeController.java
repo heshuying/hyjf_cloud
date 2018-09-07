@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
@@ -70,6 +71,7 @@ public class WechatRechargeController extends BaseTradeController{
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		Map<String,Object> map = new HashMap<>();
 		try {
