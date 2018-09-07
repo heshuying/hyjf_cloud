@@ -130,12 +130,12 @@ public class AppRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed??status=99&statusDesc=充值失败";
+		String retUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/failed";
 		String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/userDirectRecharge/bgreturn?phone="+mobile;
         bgRetUrl=splicingParam(bgRetUrl,request);
-		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money+"&status=000&statusDesc=充值成功";
-		retUrl += "&token=1&sign=" +sign;
-		successfulUrl += "&token=1&sign=" +sign;
+		String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/bank/recharge/result/success?money="+money;
+		retUrl += "?token=1&sign=" +sign;
+		successfulUrl += "?token=1&sign=" +sign;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
