@@ -57,7 +57,6 @@ public class PoundageDetailController extends BaseController {
         if(poundageDetailRequest.getLedgerTimeSer()==null) {
             poundageDetailRequest.setLedgerTimeSer(Integer.parseInt(poundageCustomizeVO.getPoundageTime()));
         }
-        // TODO:项目类型下拉数据框
         Integer count = poundageDetailService.getPoundageDetailCount(poundageDetailRequest);
         count = (count == null)?0:count;
         List<PoundageDetailVO> poundageDetailVOList = poundageDetailService.searchPoundageDetailList(poundageDetailRequest);
