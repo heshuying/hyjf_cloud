@@ -140,7 +140,7 @@ public class AccountConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
+    @ApiOperation(value = "账户平台设置 子账户检索", notes = "账户平台设置 子账户检索")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MerchantAccountVO>  checkAccountConfig(@RequestParam(value="name")String name,@RequestParam(value="param")String param,@RequestParam(value = "ids", required = false) String ids) {
