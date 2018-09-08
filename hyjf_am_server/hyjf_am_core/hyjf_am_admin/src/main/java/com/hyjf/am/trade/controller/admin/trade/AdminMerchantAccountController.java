@@ -1,17 +1,5 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
-import java.util.HashMap;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
@@ -21,12 +9,23 @@ import com.hyjf.am.trade.service.admin.finance.MerchantAccountService;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/13.
  */
 @RestController
-@RequestMapping("/am-trade/config/accountconfig")
+@RequestMapping("/am-admin/config/accountconfig")
 public class AdminMerchantAccountController {
     @Autowired
     MerchantAccountService merchantAccountService;
@@ -37,7 +36,7 @@ public class AdminMerchantAccountController {
      * @return
      */
     @RequestMapping("/selectMerchantAccountListByPage")
-    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest adminRequest) {
+    public MerchantAccountResponse selectMerchantAccountListByPage(@RequestBody AdminMerchantAccountRequest adminRequest) {
         logger.info("平台设置账户列表..." + JSONObject.toJSON(adminRequest));
         MerchantAccountResponse  result=new MerchantAccountResponse();
         //查询平台设置账户列表条数
@@ -119,14 +118,16 @@ public class AdminMerchantAccountController {
      * 根据子账户名称检索
      * @return
      */
-    public int countAccountListInfoBySubAccountName(HashMap<String,String> map){
+    @RequestMapping("/countAccountListInfoBySubAccountName")
+    public int countAccountListInfoBySubAccountName(@RequestBody HashMap<String,String> map){
         return merchantAccountService.countAccountListInfoBySubAccountName(map);
     }
     /**
      * 根据子账户代号检索
      * @return
      */
-    public int countAccountListInfoBySubAccountCode(HashMap<String,String> map){
+    @RequestMapping("/countAccountListInfoBySubAccountCode")
+    public int countAccountListInfoBySubAccountCode(@RequestBody HashMap<String,String> map){
         return merchantAccountService.countAccountListInfoBySubAccountCode(map);
     }
 

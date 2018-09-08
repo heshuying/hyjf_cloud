@@ -2,7 +2,6 @@ package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.beans.request.MerchantAccountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -37,7 +36,7 @@ public class AccountConfigController extends BaseController {
     @ApiOperation(value = "查询配置中心账户平台设置", notes = "查询配置中心账户平台设置")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountConfigInit(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult<MerchantAccountResponse> accountConfigInit(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
         //可以直接使用
         BeanUtils.copyProperties(merchantAccountRequestBean, request);
@@ -49,13 +48,13 @@ public class AccountConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<MerchantAccountResponse>(response) ;
     }
 
     @ApiOperation(value = "查询配置中心账户平台设置列表检索", notes = "查询配置中心账户平台设置列表检索")
     @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountConfigSearch(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult<MerchantAccountResponse> accountConfigSearch(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
         //可以直接使用
         BeanUtils.copyProperties(merchantAccountRequestBean, request);
@@ -67,7 +66,7 @@ public class AccountConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<MerchantAccountResponse>(response) ;
     }
     @ApiOperation(value = "账户平台设置详情页面", notes = "账户平台设置详情页面")
     @PostMapping("/infoAction")

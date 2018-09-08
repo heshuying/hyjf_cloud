@@ -1387,10 +1387,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest request) {
-        String url = "http://AM-TRADE/am-trade/config/accountconfig/selectMerchantAccountListByPage";
-        MerchantAccountResponse response = restTemplate.
-                postForEntity(url, request, MerchantAccountResponse.class).
-                getBody();
+        String url = "http://AM-ADMIN/am-admin/config/accountconfig/selectMerchantAccountListByPage";
+        MerchantAccountResponse response = restTemplate.postForEntity(url, request, MerchantAccountResponse.class).getBody();
         List<ParamNameVO> paramList = getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             if (!CollectionUtils.isEmpty(paramList)) {
@@ -1408,7 +1406,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public MerchantAccountResponse searchAccountConfigInfo(Integer id) {
-        String url = "http://AM-TRADE/am-trade/config/accountconfig/searchAccountConfigInfo";
+        String url = "http://AM-ADMIN/am-admin/config/accountconfig/searchAccountConfigInfo";
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
         request.setId(id);
         MerchantAccountResponse response = restTemplate.postForEntity(url, request, MerchantAccountResponse.class).getBody();
@@ -1425,7 +1423,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public MerchantAccountResponse saveAccountConfig(AdminMerchantAccountRequest request) {
-        String url = "http://AM-TRADE/am-trade/config/accountconfig/saveAccountConfig";
+        String url = "http://AM-ADMIN/am-admin/config/accountconfig/saveAccountConfig";
         MerchantAccountResponse response = restTemplate.
                 postForEntity(url, request, MerchantAccountResponse.class).
                 getBody();
@@ -1442,7 +1440,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public MerchantAccountResponse updateAccountConfig(AdminMerchantAccountRequest request) {
-        String url = "http://AM-TRADE/am-trade/config/accountconfig/updateAccountConfig";
+        String url = "http://AM-ADMIN/am-admin/config/accountconfig/updateAccountConfig";
         MerchantAccountResponse response = restTemplate.
                 postForEntity(url, request, MerchantAccountResponse.class).
                 getBody();
@@ -1479,7 +1477,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         map.put("ids", ids);
         map.put("subAccountName", subAccountName);
         return restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/config/accountconfig/countAccountListInfoBySubAccountName", map, IntegerResponse.class).getBody().getResultInt();
+                postForEntity("http://AM-ADMIN/am-admin/config/accountconfig/countAccountListInfoBySubAccountName", map, IntegerResponse.class).getBody().getResultInt();
     }
 
     /**
@@ -1494,7 +1492,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         map.put("ids", ids);
         map.put("subAccountCode", subAccountCode);
         return restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/config/accountconfig/countAccountListInfoBySubAccountCode", map, IntegerResponse.class).getBody().getResultInt();
+                postForEntity("http://AM-ADMIN/am-admin/config/accountconfig/countAccountListInfoBySubAccountCode", map, IntegerResponse.class).getBody().getResultInt();
     }
 
     /**
