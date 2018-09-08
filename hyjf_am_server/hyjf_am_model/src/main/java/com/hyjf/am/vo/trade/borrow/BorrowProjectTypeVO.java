@@ -63,6 +63,9 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private String repayName;
     @ApiModelProperty(value = "优惠券类型")
     private String Coupon;
+    @ApiModelProperty(value = "产品加息标志位:0:不加息,1:加息")
+    private Integer increaseInterestFlag;
+
     private List<BorrowProjectRepayVO> repayNames;
     // 回显checkbox标签
     private  List<BorrowStyleVO> repayStyles;
@@ -312,5 +315,13 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     public void setMethodName(String methodName) {
         this.methodName = methodName;
+    }
+
+    public Integer getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
     }
 }

@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.BankSettingService;
@@ -16,10 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -36,11 +33,11 @@ public class BankSettingServiceImpl implements BankSettingService {
     private AmConfigClient amConfigClient;
 
     @Value("${file.domain.url}")
-    private String FILEDOMAILURL;
+    private String url;
     @Value("${file.physical.path}")
-    private String FILEPHYSICALPATH;
-    @Value("${file.upload.activity.img.path}")
-    private String FILEUPLOADTEMPPATH;
+    private String physical;
+    @Value("${file.upload.real.path}")
+    private String real;
 
     /**
      *（条件）列表查询
@@ -110,13 +107,13 @@ public class BankSettingServiceImpl implements BankSettingService {
      * @return
      */
     @Override
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+    public LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception {
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
-        String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
-        String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
-        String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
+        String fileDomainUrl = UploadFileUtils.getDoPath(url);
+        String filePhysicalPath = UploadFileUtils.getDoPath(physical);
+        String fileUploadTempPath = UploadFileUtils.getDoPath(real);
+
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 
         File logoSaveFile = new File(logoRealPathDir);
@@ -135,14 +132,8 @@ public class BankSettingServiceImpl implements BankSettingService {
             String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-
-            // 文件大小
-            String errorMessage = null;
-            try {
-                errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            // 图片上传
+            String errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
 
             fileMeta = new BorrowCommonImage();
             int index = originalFilename.lastIndexOf(".");
@@ -161,7 +152,7 @@ public class BankSettingServiceImpl implements BankSettingService {
             fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
             files.add(fileMeta);
         }
-        return JSONObject.toJSONString(files, true);
+        return files;
     }
 
 }

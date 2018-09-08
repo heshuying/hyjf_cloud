@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.manager.banksetting;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.BankSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -22,7 +23,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -34,10 +34,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author dangzw
@@ -220,13 +223,15 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
-    public AdminResult upLoadFile(HttpServletResponse response, HttpServletRequest request) throws Exception {
-        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/upLoadFile");
-        String files = bankSettingService.uploadFile(request, response);
-        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/upLoadFile");
-        if (StringUtils.isNotBlank(files)) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
+    public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
+        AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
+        try {
+            LinkedList<BorrowCommonImage> borrowCommonImages = bankSettingService.uploadFile(request);
+            adminResult.setData(borrowCommonImages);
+            adminResult.setStatus(SUCCESS);
+            adminResult.setStatusDesc(SUCCESS_DESC);
+            return adminResult;
+        } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }

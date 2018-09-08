@@ -157,6 +157,18 @@ public class PoundageCustomizeVO extends BaseVO implements Serializable {
      */
     private String bankSeqNo;
 
+    public Integer getLedgerId() {
+        return ledgerId;
+    }
+
+    public void setLedgerId(Integer ledgerId) {
+        this.ledgerId = ledgerId;
+    }
+
+    public void setBankSeqNo(String bankSeqNo) {
+        this.bankSeqNo = bankSeqNo;
+    }
+
     public void setId(Integer value) {
         this.id = value;
     }

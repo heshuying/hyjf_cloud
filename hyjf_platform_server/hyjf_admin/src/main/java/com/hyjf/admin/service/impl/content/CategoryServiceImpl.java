@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl.content;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ContentCategoryClient;
 import com.hyjf.admin.service.content.CategoryService;
 import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.resquest.admin.CategoryBeanRequest;
@@ -67,8 +66,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<ContentHelpVO> getListByPcateIdAndcateId(Integer pid, Integer cid) {
-        return amConfigClient.getListByPcateIdAndcateId(pid,cid);
+    public List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO) {
+        return amConfigClient.getListByPcateIdAndcateId(categoryVO);
     }
 
     @Override

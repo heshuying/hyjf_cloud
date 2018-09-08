@@ -51,13 +51,9 @@ public class AccountBalanceMonitoringController {
                 response.setResultList(merchantAccountVOList);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            response.setRtn(Response.SUCCESS);
-            response.setMessage("查询到的数据为空！");
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**

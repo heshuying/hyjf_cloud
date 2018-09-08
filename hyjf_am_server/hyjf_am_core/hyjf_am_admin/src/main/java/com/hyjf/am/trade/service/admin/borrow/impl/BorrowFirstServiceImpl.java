@@ -6,14 +6,12 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -21,7 +19,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -135,7 +132,8 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
      */
     @Override
     public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
-        BorrowVO borrow = borrowFireRequest.getBorrowVO();
+        String borrowNid = borrowFireRequest.getBorrowNid();
+        Borrow borrow = getBorrowByBorrowNid(borrowNid);
         if (borrow != null) {
             // 插入时间
             int systemNowDateLong = GetDate.getNowTime10();
@@ -164,7 +162,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 是否可以进行借款
                     borrow.setBorrowStatus(1);
                     // 初审时间
-                    borrow.setVerifyTime(String.valueOf(GetDate.getNowTime10()));
+                    borrow.setVerifyTime(GetDate.getNowTime10());
                     // 发标的状态
                     borrow.setVerifyStatus(Integer.valueOf(borrowFireRequest.getVerifyStatus()));
                     // 状态
@@ -184,9 +182,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 BorrowExample borrowExample = new BorrowExample();
                 BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
                 borrowCra.andBorrowNidEqualTo(borrow.getBorrowNid());
-                Borrow updateBorrow = new Borrow();
-                BeanUtils.copyProperties(borrow, updateBorrow);
-                int updateCount = this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample);
+                int updateCount = this.borrowMapper.updateByExampleSelective(borrow, borrowExample);
                 if (updateCount > 0) {
                     // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
@@ -228,7 +224,11 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         }
     }
 
-    private void changeOntimeOfRedis(BorrowVO borrow) {
+    /**
+     * 修改定时发标redis
+     * @param borrow
+     */
+    private void changeOntimeOfRedis(Borrow borrow) {
         //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
@@ -237,5 +237,21 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             //非定时发标 删redis
             RedisUtils.del(RedisConstants.ON_TIME + borrow.getBorrowNid());
         }
+    }
+
+    /**
+     * 获取标的
+     * @param borrowNid
+     * @return
+     */
+    private Borrow getBorrowByBorrowNid(String borrowNid){
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list=this.borrowMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
     }
 }
