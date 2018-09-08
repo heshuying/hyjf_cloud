@@ -50,4 +50,16 @@ public class BorrowRecoverPlanServiceImpl implements BorrowRecoverPlanService {
         criteria.andNidEqualTo(tenderNid);
         return borrowRecoverPlanMapper.selectByExample(example);
     }
+
+    @Override
+    public List<BorrowRecoverPlan> selectBorrowRecoverPlanListByNid(String nid) {
+        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+        example.createCriteria().andNidEqualTo(nid);
+        example.setOrderByClause("recover_period asc");
+        List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(example);
+        if (null != borrowRecoverPlanList && borrowRecoverPlanList.size() > 0) {
+            return borrowRecoverPlanList;
+        }
+        return null;
+    }
 }

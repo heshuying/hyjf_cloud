@@ -272,7 +272,7 @@ public class AccountController extends BaseController {
      * @param accountId
      * @return
      */
-    @GetMapping("/updateAccountAfterWithdrawFail/{userId}/{accountId}")
+    @GetMapping("/updateAccountNumberByUserId/{userId}/{accountId}")
     public IntegerResponse updateAccountNumberByUserId(@PathVariable Integer userId,@PathVariable String accountId){
         IntegerResponse response = new IntegerResponse();
         try {

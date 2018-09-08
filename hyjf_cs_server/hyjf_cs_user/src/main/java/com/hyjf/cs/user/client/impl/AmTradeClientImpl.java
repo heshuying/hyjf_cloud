@@ -802,7 +802,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateAccountNumberByUserId(int userId, String accountId) {
-        String url = tradeService + "/account/updateAccountNumberByUserId/" + userId+"/accountId";
+        String url = tradeService + "/account/updateAccountNumberByUserId/" + userId+"/"+accountId;
         IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
         if(IntegerResponse.isSuccess(response)){
             return response.getResultInt();
