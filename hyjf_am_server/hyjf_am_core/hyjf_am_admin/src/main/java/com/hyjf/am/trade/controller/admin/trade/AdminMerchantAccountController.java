@@ -49,12 +49,9 @@ public class AdminMerchantAccountController {
                 List<MerchantAccountVO> configList = CommonUtils.convertBeanList(recordList, MerchantAccountVO.class);
                 result.setResultList(configList);
                 result.setRecordTotal(recordTotal);
-                result.setRtn(Response.SUCCESS);
-                return result;
             }
-            return null;
         }
-        return null;
+        return result;
     }
 
     /**
@@ -76,11 +73,9 @@ public class AdminMerchantAccountController {
             if(null != record){
                 BeanUtils.copyProperties(record, recordVo);
                 result.setResult(recordVo);
-                result.setRtn(Response.SUCCESS);
             }
-            return result;
         }
-        return null;
+        return result;
     }
     /**
      * 添加平台设置账户配置
@@ -95,6 +90,7 @@ public class AdminMerchantAccountController {
             resp.setRtn(Response.SUCCESS);
         }else{
             resp.setRtn(Response.FAIL);
+            resp.setMessage(Response.FAIL_MSG);
         }
         return resp;
     }
@@ -111,6 +107,7 @@ public class AdminMerchantAccountController {
             resp.setRtn(Response.SUCCESS);
         }else{
             resp.setRtn(Response.FAIL);
+            resp.setMessage(Response.FAIL_MSG);
         }
         return resp;
     }
