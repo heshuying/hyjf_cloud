@@ -50,7 +50,7 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 			Tree tr=new Tree();
 			tr.setIcon(adminSystem.getMenuIcon());
 			tr.setMenuPuuid(adminSystem.getMenuPuuid());
-			tr.setMenuSort(adminSystem.getMenuSort());
+			tr.setMenuSort(Integer.valueOf(adminSystem.getMenuSort()));
 			tr.setMenuUuid(adminSystem.getMenuUuid());
 			tr.setName(adminSystem.getMenuName());
 			tr.setPath(adminSystem.getMenuUrl());

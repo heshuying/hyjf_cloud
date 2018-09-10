@@ -1398,4 +1398,17 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	SmsTemplateVO findSmsTemById(Integer id);
+	AdminUserResponse adminUserSearch(AdminRequest adminRequest);
+
+	AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserInsertAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserUpdateAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
 }

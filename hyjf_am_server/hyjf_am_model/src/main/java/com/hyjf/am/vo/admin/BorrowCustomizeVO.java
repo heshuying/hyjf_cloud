@@ -12,6 +12,7 @@
 package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -120,7 +121,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	/**
 	 * 借款进度
 	 */
-	private String borrowAccountScale;
+	private Date borrowAccountScale;
 	/***
 	 * 复审用户
 	 */
@@ -234,7 +235,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 * @return the borrowAccountScale
 	 */
 
-	public String getBorrowAccountScale() {
+	public Date getBorrowAccountScale() {
 		return borrowAccountScale;
 	}
 
@@ -243,7 +244,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 *            the borrowAccountScale to set
 	 */
 
-	public void setBorrowAccountScale(String borrowAccountScale) {
+	public void setBorrowAccountScale(Date borrowAccountScale) {
 		this.borrowAccountScale = borrowAccountScale;
 	}
 
