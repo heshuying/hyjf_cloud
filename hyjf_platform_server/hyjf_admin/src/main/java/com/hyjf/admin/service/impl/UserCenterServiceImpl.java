@@ -38,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author nixiaoling
@@ -86,6 +83,10 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
         // 查询列表
         UserManagerResponse userManagerResponse = userCenterClient.selectUserMemberList(request);
+        if(StringUtils.isNotBlank(request.getInstCodeSrch())){
+            //如果用户来源查找不为空
+            userManagerResponse = searchByInstCode(userManagerResponse,request.getInstCodeSrch());
+        }
         if (null != userManagerResponse) {
             List<UserManagerVO> listUserMember = userManagerResponse.getResultList();
             if (!CollectionUtils.isEmpty(listUserMember)) {
@@ -107,6 +108,31 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         }
     }
 
+    /**
+     * 根据客户来源查找
+     * @param userManagerResponse
+     * @param instCodeSearch
+     * @return
+     */
+    private UserManagerResponse  searchByInstCode( UserManagerResponse userManagerResponse,String instCodeSearch){
+        //
+        userManagerResponse.setCount(0);
+        List<UserManagerVO> listUserMember = userManagerResponse.getResultList();
+        List<UserManagerVO> userManagerVOList = new ArrayList<UserManagerVO>();
+        if (!CollectionUtils.isEmpty(listUserMember)) {
+            for(UserManagerVO userManagerVO:listUserMember){
+                if(userManagerVO.getInstCode().equals(instCodeSearch)){
+                    userManagerVOList.add(userManagerVO);
+                }
+            }
+        }
+        if (!CollectionUtils.isEmpty(userManagerVOList)) {
+            userManagerResponse.setCount(userManagerVOList.size());
+        }
+        userManagerResponse.setResultList(userManagerVOList);
+
+        return userManagerResponse;
+    }
     /**
      * 根据机构编号获取机构列表
      *
