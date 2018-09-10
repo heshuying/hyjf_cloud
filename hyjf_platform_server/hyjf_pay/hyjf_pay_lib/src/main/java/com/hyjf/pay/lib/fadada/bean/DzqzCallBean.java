@@ -514,10 +514,11 @@ public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
     }
 
 	public void setCommonItem() {
-		this.app_id = fddSystemConfig.getFddAppId();
-		this.secret = fddSystemConfig.getFddAppSeret();
-		this.v = fddSystemConfig.getFddVersion();
-		this.url = fddSystemConfig.getFddVisitUrl();
+        // todo 在pay-server中处理
+//		this.app_id = fddSystemConfig.getFddAppId();
+//		this.secret = fddSystemConfig.getFddAppSeret();
+//		this.v = fddSystemConfig.getFddVersion();
+//		this.url = fddSystemConfig.getFddVisitUrl();
 	}
 
     public String getCustomer_name() {

@@ -32,17 +32,17 @@ public class BankCallSignUtils implements Serializable {
 	 */
 	private static final long serialVersionUID = -6267945484521034348L;
 
-	/** 商户客户号 **/
-	public static final String BANK_BANKCODE = paySystemConfig.getBankCode();
+	/** 商户客户号 todo **/
+	public static final String BANK_BANKCODE = "";
 
-	/** 商户公钥文件地址 **/
-	public static final String BANK_PUB_KEY_PATH = paySystemConfig.getBankPubkeyPath();
+	/** 商户公钥文件地址 todo **/
+	public static final String BANK_PUB_KEY_PATH = "";
 
-	/** 商户私钥文件地址 **/
-	public static final String BANK_PRI_KEY_PATH = paySystemConfig.getBankPrikeyPath();
+	/** 商户私钥文件地址 todo **/
+	public static final String BANK_PRI_KEY_PATH = "";
 
-	/** 商户私钥文件密码 **/
-	public static final String BANK_PRI_KEY_PASS = paySystemConfig.getBankPrikeyPass();
+	/** 商户私钥文件密码 todo **/
+	public static final String BANK_PRI_KEY_PASS = "";
 
 	static Logger logger = LoggerFactory.getLogger(BankCallSignUtils.class);
 
