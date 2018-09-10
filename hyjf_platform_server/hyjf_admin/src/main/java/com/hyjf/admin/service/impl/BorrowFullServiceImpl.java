@@ -175,8 +175,6 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         if (borrow == null || borrowInfo == null) {
             return "标的信息不存在。[借款编号：" + borrowNid + "]";
         } else {
-            borrowFullRequest.setBorrowVO(borrow);
-            borrowFullRequest.setBorrowInfoVO(borrowInfo);
             //如果标的未复审
             if (borrow.getReverifyStatus() == 0) {
                 // 借款人userId

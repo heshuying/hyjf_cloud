@@ -170,4 +170,12 @@ public interface BorrowService extends BaseService {
 	 * @date 2018/9/3 17:25
 	 */
 	public Borrow selectBorrowByNidAndNowTime(String borrowNid, Integer nowtime);
+
+	/**
+	 * 获取还款计算公式 add by liushouyi
+	 *
+	 * @param borrowStyle
+	 * @return
+	 */
+    List<BorrowStyleWithBLOBs> selectBorrowStyleWithBLOBs(String borrowStyle);
 }

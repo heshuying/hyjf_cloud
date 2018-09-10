@@ -4,13 +4,17 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
+import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.service.front.repay.BorrowRecoverPlanService;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +63,23 @@ public class BorrowRecoverPlanController extends BaseController{
 		List<BorrowRecoverPlan> borrowRecoverPlan=borrowRecoverPlanService.selectRecoverPlanListByTenderNid(tenderNid);
 		if (Validator.isNotNull(borrowRecoverPlan)){
 			response.setResultList(CommonUtils.convertBeanList(borrowRecoverPlan,BorrowRecoverPlanVO.class));
+		}
+		return response;
+	}
+
+	/**
+	 * 获取用户投资订单还款详情
+	 *
+	 * @param nid
+	 * @return
+	 */
+	@GetMapping("/select_borrow_recover_plan_list/{nid}")
+	public BorrowRepayPlanResponse selectBorrowRecoverPlanListByNid(@PathVariable String nid){
+		BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+		List<BorrowRecoverPlan> borrowRepayPlanList = borrowRecoverPlanService.selectBorrowRecoverPlanListByNid(nid);
+		if (!CollectionUtils.isEmpty(borrowRepayPlanList)) {
+			List<BorrowRepayPlanVO> voList = CommonUtils.convertBeanList(borrowRepayPlanList, BorrowRepayPlanVO.class);
+			response.setResultList(voList);
 		}
 		return response;
 	}

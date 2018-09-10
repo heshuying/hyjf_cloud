@@ -25,7 +25,7 @@ public class BorrowManinfoController extends BaseController {
     private BorrowManinfoService borrowManinfoService;
 
     /**
-     * 查询借款人公司信息
+     * 根据借款编号获取借款人信息
      * @author zhangyk
      * @date 2018/6/25 16:35
      */

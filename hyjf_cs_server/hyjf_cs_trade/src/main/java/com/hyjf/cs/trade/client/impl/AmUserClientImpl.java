@@ -674,4 +674,13 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
 }

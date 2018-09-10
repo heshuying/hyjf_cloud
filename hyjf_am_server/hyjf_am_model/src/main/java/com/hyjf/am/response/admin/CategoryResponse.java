@@ -35,6 +35,9 @@ public class CategoryResponse<T> extends Response {
     //flag：新增或修改或删除结果标识
     private Integer flag;
 
+    //flag：新增或修改或删除结果标识
+    private boolean success;
+
     public Integer getCount() {
         return count;
     }
@@ -97,5 +100,13 @@ public class CategoryResponse<T> extends Response {
 
     public void setHelpList(List<T> helpList) {
         this.helpList = helpList;
+    }
+
+    public boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

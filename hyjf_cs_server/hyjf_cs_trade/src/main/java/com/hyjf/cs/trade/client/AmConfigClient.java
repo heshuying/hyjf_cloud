@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
+import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -72,4 +73,11 @@ public interface AmConfigClient {
 	 * @date 2018/9/5 11:46
 	 */
 	VersionVO  getLastestVersion();
+
+	/**
+	 * 获取公司信息
+	 *
+	 * @return
+	 */
+    SiteSettingsVO selectSiteSetting();
 }

@@ -15,10 +15,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-import com.hyjf.am.vo.admin.TransferExceptionLogVO;
-import com.hyjf.am.vo.admin.UnderLineRechargeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -28,6 +25,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -37,6 +35,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
+import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -1898,4 +1897,101 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean resultBean);
+
+    /**
+     * 取得检证数据
+     * @param id
+     * @return
+     */
+    ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id);
+
+    /**
+     * 将状态更新成[2:处理中]
+     * @param record
+     * @return
+     */
+    int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record);
+
+    /**
+     * 取得成功时的信息
+     * @param ordId
+     * @return
+     */
+    List<ChinapnrLogVO> getChinapnrLog(String ordId);
+
+    /**
+     * 汇付提现后处理
+     * @param chinaPnrWithdrawRequest
+     * @return
+     */
+    boolean handlerAfterCash(ChinaPnrWithdrawRequest chinaPnrWithdrawRequest);
+
+    /**
+     * 更新提现表
+     * @param ordId
+     * @param reason
+     */
+    void updateAccountWithdrawByOrdId(String ordId, String reason);
+
+    /**
+     * 更新状态
+     * @param uuid
+     * @param status
+     */
+    void updateChinapnrExclusiveLogStatus(long uuid, String status);
+
+    /**
+     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderListByBorrowNid(String borrowNid);
+
+    /**
+     * 根据合同编号查询合同要素信息 add by liushouyi
+     *
+     * @param contractNo
+     * @return
+     */
+    List<NifaContractEssenceVO> selectNifaContractEssenceByContractNo(String contractNo);
+
+    /**
+     * 根据合同编号获取合同模版约定条款
+     *
+     * @param templetId
+     * @return
+     */
+    List<NifaContractTemplateVO> selectNifaContractTemplateByTemplateNid(String templetId);
+
+    /**
+     * 获取最新互金字段定义
+     *
+     * @return
+     */
+    List<NifaFieldDefinitionVO> selectNifaFieldDefinition();
+
+    /**
+     * 获取还款计算公式
+     *
+     * @param borrowStyle
+     * @return
+     */
+    List<BorrowStyleVO> selectBorrowStyleWithBLOBs(String borrowStyle);
+
+    /**
+     * 获取用户投资订单还款详情
+     *
+     * @param nid
+     * @return
+     */
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String nid);
+
+    /**
+     * 插入合同信息要素表
+     *
+     * @param nifaContractEssenceVO
+     * @return
+     */
+    Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO);
 }

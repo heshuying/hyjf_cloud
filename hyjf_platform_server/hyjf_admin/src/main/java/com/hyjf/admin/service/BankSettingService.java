@@ -3,12 +3,13 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -66,5 +67,5 @@ public interface BankSettingService {
      * @param request
      * @return
      */
-    String uploadFile(HttpServletRequest request, HttpServletResponse response);
+    LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request) throws Exception;
 }

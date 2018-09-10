@@ -48,15 +48,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Autowired
     private SmsProducer smsProducer;
-    @Autowired
-    private AccountCustomizeMapper accountCustomizeMapper;
 
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -614,6 +608,25 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria.andVerifyStatusEqualTo(3);
         criteria.andOntimeGreaterThan(0);
         criteria.andOntimeLessThan(nowtime);
+        return null;
+    }
+
+    /**
+     * 获取还款计算公式 add by liushouyi
+     *
+     * @param borrowStyle
+     * @return
+     */
+    @Override
+    public List<BorrowStyleWithBLOBs> selectBorrowStyleWithBLOBs(String borrowStyle) {
+        BorrowStyleExample example = new BorrowStyleExample();
+        BorrowStyleExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(CustomConstants.FLAG_STATUS_ENABLE);
+        cra.andNidEqualTo(borrowStyle);
+        List<BorrowStyleWithBLOBs> borrowStyleWithBLOBsList = borrowStyleMapper.selectByExampleWithBLOBs(example);
+        if (null != borrowStyleWithBLOBsList && borrowStyleWithBLOBsList.size() > 0) {
+            return borrowStyleWithBLOBsList;
+        }
         return null;
     }
 }

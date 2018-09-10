@@ -269,6 +269,7 @@ public class BorrowCommonController extends BaseController {
 				return bcr;
 			}
 		}
+
 		// 初审的时候未打上标签的不允许再进计划
 		if ("BORROW_FIRST".equals(form.getMoveFlag()) && StringUtils.isNotBlank(form.getIsEngineUsed()) && "1".equals(form.getIsEngineUsed())) {
 			Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
@@ -278,8 +279,38 @@ public class BorrowCommonController extends BaseController {
 				bcr.setMessage("该标的录标时未获取到标签，初审发标时不可再使用引擎进计划！");
 				return bcr;
 			}
-		}
 
+			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
+			BorrowInfo borrowInfo = this.borrowCommonService.getBorrowInfoByNid(form.getBorrowNid());
+			if (borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+				bcr.setRtn(Response.FAIL);
+				bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
+				return bcr;
+			}
+			// 标的进计划 产品额外加息不能>0 add by liuyang 20180729
+		}
+		if ("BORROW_LIST".equals(form.getMoveFlag())) {
+			boolean isEngineUsed = false;
+			Borrow borrow = this.borrowCommonService.getBorrow(form.getBorrowNid());
+			if (StringUtils.isBlank(form.getIsEngineUsed())) {
+				if (borrow != null && borrow.getIsEngineUsed() == 1) {
+					isEngineUsed = true;
+				}
+			} else if ("1".equals(form.getIsEngineUsed())) {
+				isEngineUsed = true;
+			}
+			if (isEngineUsed) {
+				// 标的进计划 产品额外加息不能>0 add by cwyang 20180729
+				if (StringUtils.isNotBlank(form.getBorrowExtraYield())) {
+					BigDecimal extrayield = new BigDecimal(form.getBorrowExtraYield());
+					if (extrayield.compareTo(BigDecimal.ZERO) > 0) {
+						bcr.setRtn(Response.FAIL);
+						bcr.setMessage("汇计划底层资产的标的不能设置产品额外加息。");
+						return bcr;
+					}
+				}
+			}
+		}
 		if (isExistsRecord) {
 			List<BorrowCommonNameAccountVO> borrowCommonNameAccountList = new ArrayList<BorrowCommonNameAccountVO>();
 			BorrowCommonNameAccountVO borrowCommonNameAccount = new BorrowCommonNameAccountVO();

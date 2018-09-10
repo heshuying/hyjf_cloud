@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.AccountChinapnrCustomizeMapper" >
+  
+  <select id="selectUserIdByUsrcustid" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    SELECT hac.user_id
+	FROM huiyingdai_account_chinapnr hac
+	WHERE hac.chinapnr_usrcustid = #{chinapnrUsrcustid}
+  </select>
+  
+</mapper> 

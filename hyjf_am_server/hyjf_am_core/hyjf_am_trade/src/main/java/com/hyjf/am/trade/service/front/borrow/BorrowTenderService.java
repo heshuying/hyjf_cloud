@@ -113,4 +113,12 @@ public interface BorrowTenderService {
      * @return
      */
     Boolean updateBorrowTender(BorrowTender borrowTender);
+
+    /**
+     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowTender> getBorrowTenderListByBorrowNid(String borrowNid);
 }

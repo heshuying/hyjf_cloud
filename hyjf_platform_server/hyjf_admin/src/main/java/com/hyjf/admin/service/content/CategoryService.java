@@ -104,7 +104,7 @@ public interface CategoryService {
      * @Param cid
      * @return
      */
-    List<ContentHelpVO> getListByPcateIdAndcateId(Integer pid, Integer cid);
+    List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO);
 
     /**
      * @Author walter.limeng

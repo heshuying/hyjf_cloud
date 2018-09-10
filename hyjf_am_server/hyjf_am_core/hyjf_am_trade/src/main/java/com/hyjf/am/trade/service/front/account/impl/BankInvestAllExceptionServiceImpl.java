@@ -564,7 +564,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				} else {
 					logger.info("==============变更borrowTenderTmp表状态失败!==============");
 				}
-				throw new Exception("====================投资信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
+				logger.info("====================投资信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
 			}
 		} else {
 			throw new Exception("=====================投资全部掉单处理没有找到匹配的标的信息,订单号: " + orderId + ", 请手动处理!==============");

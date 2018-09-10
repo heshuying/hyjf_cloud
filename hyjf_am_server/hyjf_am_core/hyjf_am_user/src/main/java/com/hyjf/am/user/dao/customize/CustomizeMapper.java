@@ -105,5 +105,6 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
 
-
+    @Autowired
+    protected AccountChinapnrCustomizeMapper accountChinapnrCustomizeMapper;
 }

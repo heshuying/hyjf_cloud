@@ -489,5 +489,14 @@ public class AutoMapper {
 
     @Resource
     protected NifaContractStatusMapper nifaContractStatusMapper;
+
+    @Resource
+    protected NifaContractEssenceMapper nifaContractEssenceMapper;
+
+    @Resource
+    protected NifaContractTemplateMapper nifaContractTemplateMapper;
+
+    @Resource
+    protected NifaFieldDefinitionMapper nifaFieldDefinitionMapper;
 }
 

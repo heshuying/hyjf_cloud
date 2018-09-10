@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -57,5 +58,17 @@ public class AdminCommonServiceImpl implements AdminCommonService {
     public List<DropDownVO> selectHjhInstConfigList() {
         List<HjhInstConfigVO> hjhInstConfigVOList = AmTradeClient.selectCommonHjhInstConfigList();
         return ConvertUtils.convertListToDropDown(hjhInstConfigVOList,"instCode","instName");
+    }
+
+    /**
+     * 项目类型下拉列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<DropDownVO> selectProjectType() {
+        List<BorrowProjectTypeVO> borrowProjectTypeVOList = AmTradeClient.selectBorrowProjectList();
+        return ConvertUtils.convertListToDropDown(borrowProjectTypeVOList,"borrowCd","borrowName");
     }
 }

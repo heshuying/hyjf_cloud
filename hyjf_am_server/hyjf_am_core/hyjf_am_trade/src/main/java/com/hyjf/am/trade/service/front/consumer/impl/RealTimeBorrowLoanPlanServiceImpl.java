@@ -822,448 +822,452 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	 */
 	private boolean updateRepayPlanInfo(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender,BigDecimal curServiceFee, BorrowFinmanNewCharge borrowFinmanNewCharge,boolean isLast) {
 		// 保存放款数据
-		boolean loanFlag = true;
-		try {
-			String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
-			Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
-			// 年利率
-			BigDecimal borrowApr = borrow.getBorrowApr();
-			// 月利率(算出管理费用[上限])
-			BigDecimal borrowMonthRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate());
-			// 月利率(算出管理费用[下限])
-			BigDecimal borrowManagerScaleEnd = Validator.isNull(borrowInfo.getBorrowManagerScaleEnd()) ? BigDecimal.ZERO : new BigDecimal(borrowInfo.getBorrowManagerScaleEnd());
-			// 差异费率
-			BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
-			// 初审时间
-			int borrowVerifyTime = borrow.getVerifyTime();
-			// 项目类型
-			Integer projectType = borrowInfo.getProjectType();
-			// 借款人ID
-			Integer borrowUserid = borrowInfo.getUserId();
-			String borrowNid = borrow.getBorrowNid();
-			String nid = borrow.getBorrowNid() + "_" + borrowInfo.getUserId() + "_1";
-			// 是否月标(true:月标, false:天标)
-			boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
-					|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
-			// 服务费率
-			BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate());
-			// 投资人的账户信息
-			int tenderUserId = borrowTender.getUserId();
-			// 投资金额
-			BigDecimal account = borrowTender.getAccount();
-			// 借款人的账户信息
-			Account tenderAccount = this.getAccountByUserId(tenderUserId);
-			if (tenderAccount == null || tenderAccount.getAccountId() == null) {
-				throw new RuntimeException("投资人未开户。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + borrowTender.getNid() + "]");
-			}
-			String ordId = borrowTender.getNid();// 投资订单号
-			
-			String accedeOrderId = borrowTender.getAccedeOrderId();
-			// 取出冻结订单信息
-			FreezeList freezeList = getFreezeList(ordId);
-			if (Validator.isNull(freezeList)) {
-				throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "投资订单号[" + ordId + "]");
-			}
-			// 若此笔订单已经解冻
-			if (freezeList.getStatus() == 1) {
-				throw new RuntimeException("冻结订单表(huiyingdai_freezeList)已经解冻！, " + "投资订单号[" + ordId + "]");
-			}
-			// 放款订单号
-			String loanOrderId = GetOrderIdUtils.getOrderId2(borrowTender.getUserId());
-			// 放款订单时间
-			String loanOrderDate = GetOrderIdUtils.getOrderDate();
-			// 业务授权码
-			String authCode = borrowTender.getAuthCode();
+		boolean loanFlag = false;
 
-			// 服务费
-			BigDecimal serviceFee = BigDecimal.ZERO;
-			// 每笔服务费都按照服务费率单独计算与服务费总额做比较，小于的情况下服务费按照比
-			if(borrowFinmanNewCharge.getChargeMode().intValue()==2){
-				serviceFee = getUserFeeByChargeMode(serviceFeeRate, account, borrowStyle, borrowPeriod, curServiceFee, borrowFinmanNewCharge.getServiceFeeTotal(),isLast);
-			}else{
-				serviceFee = getUserFee(serviceFeeRate, account, borrowStyle, borrowPeriod);
-			}
-			logger.info("借款编号：" + borrowNid + "当前收服务费: "+serviceFee+" 当前已收："+curServiceFee);
-			// 利息
-			BigDecimal interestTender = BigDecimal.ZERO;
-			// 本金
-			BigDecimal capitalTender = BigDecimal.ZERO;
-			// 本息
-			BigDecimal accountTender = BigDecimal.ZERO;
-			// 管理费
-			BigDecimal recoverFee = BigDecimal.ZERO;
-			// 估计还款时间
-			Integer recoverTime = null;
-			Integer nowTime = GetDate.getNowTime10();
-			// 计算利息
-			InterestInfo interestInfo = CalculatesUtil.getInterestInfo(account, borrowPeriod, borrowApr, borrowStyle, nowTime , borrowMonthRate, borrowManagerScaleEnd,
-					projectType, differentialRate, borrowVerifyTime);
-			if (interestInfo != null) {
-				interestTender = interestInfo.getRepayAccountInterest(); // 利息
-				capitalTender = interestInfo.getRepayAccountCapital(); // 本金
-				accountTender = interestInfo.getRepayAccount(); // 本息
-				recoverTime = interestInfo.getRepayTime(); // 估计还款时间
-				recoverFee = interestInfo.getFee(); // 总管理费
-			}
-			// 写入还款明细表(huiyingdai_borrow_recover)
-			BorrowRecover borrowRecover = new BorrowRecover();
-			borrowRecover.setStatus(0); // 状态
-			borrowRecover.setUserId(borrowTender.getUserId()); // 投资人
-			borrowRecover.setBorrowNid(borrowNid); // 借款编号
-			borrowRecover.setNid(ordId); // 投资订单号
-			borrowRecover.setBorrowUserid(borrowUserid); // 借款人
-			borrowRecover.setTenderId(borrowTender.getId()); // 投资表主键ID
-			borrowRecover.setRecoverStatus(0); // 还款状态
-			borrowRecover.setRecoverPeriod(isMonth ? borrowPeriod : 1); // 还款期数
-			borrowRecover.setRecoverTime(recoverTime); // 估计还款时间
-			borrowRecover.setRecoverAccount(accountTender); // 预还金额
-			borrowRecover.setRecoverInterest(interestTender); // 预还利息
-			borrowRecover.setRecoverCapital(capitalTender); // 预还本金
-			borrowRecover.setRecoverAccountYes(BigDecimal.ZERO); // 实还金额
-			borrowRecover.setRecoverInterestYes(BigDecimal.ZERO); // 实还利息
-			borrowRecover.setRecoverCapitalYes(BigDecimal.ZERO); // 实还本金
-			borrowRecover.setRecoverAccountWait(accountTender); // 未还金额
-			borrowRecover.setRecoverInterestWait(interestTender); // 未还利息
-			borrowRecover.setRecoverCapitalWait(capitalTender); // 未还本金
-			borrowRecover.setRecoverType("wait"); // 还款状态:等待
-			borrowRecover.setRecoverFee(recoverFee); // 账户管理费
-			borrowRecover.setRecoverFeeYes(BigDecimal.ZERO);
-			borrowRecover.setRecoverLateFee(BigDecimal.ZERO); // 逾期费用收入
-//			borrowRecover.setRecoverWeb(0); // 网站待还
-//			borrowRecover.setRecoverWebTime("");
-//			borrowRecover.setRecoverVouch(0); // 担保人还款
-			borrowRecover.setAdvanceStatus(0); // 提前还款
-//			borrowRecover.setAheadDays(0); // 提前还款天数
-			borrowRecover.setChargeDays(0); // 罚息天数
-			borrowRecover.setChargeInterest(BigDecimal.ZERO); // 罚息总额
-			borrowRecover.setLateDays(0); // 逾期天数
-			borrowRecover.setLateInterest(BigDecimal.ZERO); // 逾期利息
-//			borrowRecover.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-//			borrowRecover.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
-//			borrowRecover.setCreateTime(nowTime);
-			borrowRecover.setAddIp(borrowTender.getAddIp());
-			borrowRecover.setAuthCode(authCode);
-			borrowRecover.setRecoverServiceFee(serviceFee);
-			borrowRecover.setAccedeOrderId(accedeOrderId);//投资人还款明细加入计划订单号
-			boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
-			if (!borrowRecoverFlag) {
-				throw new RuntimeException("还款明细表(huiyingdai_borrow_tender)写入失败!" + "[投资订单号：" + ordId + "]");
-			}
-			// 更新投资详情表
-			borrowTender.setLoanOrdid(loanOrderId);
-			borrowTender.setLoanOrderDate(loanOrderDate);
-			borrowTender.setRecoverAccountWait(borrowRecover.getRecoverAccount()); // 待收总额
-			borrowTender.setRecoverAccountAll(borrowRecover.getRecoverAccount()); // 收款总额
-			borrowTender.setRecoverAccountInterestWait(borrowRecover.getRecoverInterest()); // 待收利息
-			borrowTender.setRecoverAccountInterest(borrowRecover.getRecoverInterest()); // 收款总利息
-			borrowTender.setRecoverAccountCapitalWait(borrowRecover.getRecoverCapital()); // 待收本金
-			borrowTender.setLoanAmount(account.subtract(serviceFee)); // 实际放款金额
-			borrowTender.setLoanFee(serviceFee); // 服务费
-			borrowTender.setRecoverFee(recoverFee);// 管理费
-			borrowTender.setStatus(0); // 状态
-										// 0，未放款，1，已放款
-//			borrowTender.setTenderStatus(0); // 投资状态
-//												// 0，未放款，1，已放款
-//			borrowTender.setApiStatus(0); // 放款状态
-//											// 0，未放款，1，已放款
-//			borrowTender.setWeb(0); // 写入网站收支明细
-			boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
-			if (!borrowTenderFlag) {
-				throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + ordId + "]");
-			}
-			// 更新借款表
-			borrow = this.getBorrowByNid(borrowNid);
-			borrow.setRepayAccountAll(borrow.getRepayAccountAll().add(borrowRecover.getRecoverAccount())); // 应还款总额
-			borrow.setRepayAccountInterest(borrow.getRepayAccountInterest().add(borrowRecover.getRecoverInterest())); // 总还款利息
-			borrow.setRepayAccountCapital(borrow.getRepayAccountCapital().add(borrowRecover.getRecoverCapital())); // 总还款本金
-			borrow.setRepayAccountWait(borrow.getRepayAccountWait().add(borrowRecover.getRecoverAccount())); // 未还款总额
-			borrow.setRepayAccountInterestWait(borrow.getRepayAccountInterestWait().add(borrowRecover.getRecoverInterest())); // 未还款利息
-			borrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().add(borrowRecover.getRecoverCapital())); // 未还款本金
-			borrow.setRepayLastTime(DateUtils.getRepayDate(borrowStyle, new Date(), borrowPeriod, borrowPeriod)); // 最后还款时间
-			borrow.setRepayNextTime(recoverTime); // 下次还款时间
-//			borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间 
-			boolean borrowFlags = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
-			if (!borrowFlags) {
-				throw new RuntimeException("借款详情(huiyingdai_borrow)更新失败!" + "[投资订单号：" + ordId + "]");
-			}
-			boolean isInsert = false;
-			// 插入每个标的总的还款信息
-			BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
-			if (borrowRepay == null) {
-				isInsert = true;
-				borrowRepay = new BorrowRepay();
-				borrowRepay.setStatus(0); // 状态
-				borrowRepay.setUserId(borrowUserid); // 借款人ID
-				borrowRepay.setBorrowNid(borrowNid); // 借款标号
-				borrowRepay.setNid(nid); // 标识
-				borrowRepay.setRepayType("wait"); // 还款状态(等待)
-				borrowRepay.setRepayFee(BigDecimal.ZERO); // 还款费用
-//				borrowRepay.setRepayDays(""); // 还款时间间距
-//				borrowRepay.setRepayStep(0); // 还款步骤
-//				borrowRepay.setRepayActionTime(""); // 执行还款的时间
-				borrowRepay.setRepayStatus(0); // 还款状态
-				borrowRepay.setRepayPeriod(isMonth ? borrowPeriod : 1); // 还款期数
-				borrowRepay.setRepayTime(recoverTime); // 估计还款时间
-//				borrowRepay.setRepayYestime(""); // 实际还款时间
-				borrowRepay.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
-				borrowRepay.setRepayAccount(BigDecimal.ZERO); // 预还金额
-				borrowRepay.setRepayInterest(BigDecimal.ZERO); // 预还利息
-				borrowRepay.setRepayCapital(BigDecimal.ZERO); // 预还本金
-				borrowRepay.setRepayAccountYes(BigDecimal.ZERO); // 实还金额
-				borrowRepay.setLateRepayDays(0); // 逾期的天数
-				borrowRepay.setRepayInterestYes(BigDecimal.ZERO); // 实还利息
-				borrowRepay.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
-				borrowRepay.setRepayCapitalWait(BigDecimal.ZERO);// 未还本金
-				borrowRepay.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
-//				borrowRepay.setRepayWeb(0); // 网站待还
-//				borrowRepay.setRepayWebTime(""); //
-//				borrowRepay.setRepayWebStep(0); // 提前还款
-//				borrowRepay.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
-//				borrowRepay.setRepayVouch(0); // 担保人还款
-				borrowRepay.setAdvanceStatus(0); // 进展
-//				borrowRepay.setLateRepayStatus(0); // 是否逾期还款
-				borrowRepay.setLateDays(0); // 逾期天数
-				borrowRepay.setLateInterest(BigDecimal.ZERO); // 逾期利息
-//				borrowRepay.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-//				borrowRepay.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
-				borrowRepay.setDelayDays(0); // 逾期天数
-				borrowRepay.setDelayInterest(BigDecimal.ZERO); // 逾期利息
-				borrowRepay.setDelayRemark(""); // 备注
-//				borrowRepay.setAddtime(String.valueOf(nowTime)); // 发标时间
-				borrowRepay.setAddIp(borrow.getAddIp()); // 发标ip
-//				borrowRepay.setCreateTime(nowTime); // 创建时间
-				borrowRepay.setChargeDays(0);
-				borrowRepay.setChargeInterest(BigDecimal.ZERO);
-			}
-			borrowRepay.setRepayFee(borrowRepay.getRepayFee().add(borrowRecover.getRecoverFee())); // 还款费用
-			borrowRepay.setRepayAccount(borrowRepay.getRepayAccount().add(borrowRecover.getRecoverAccount())); // 预还金额
-			borrowRepay.setRepayInterest(borrowRepay.getRepayInterest().add(borrowRecover.getRecoverInterest())); // 预还利息
-			borrowRepay.setRepayCapital(borrowRepay.getRepayCapital().add(borrowRecover.getRecoverCapital())); // 预还本金
-			boolean borrowRepayFlag = false;
-			if (isInsert) {
-				borrowRepayFlag = this.borrowRepayMapper.insertSelective(borrowRepay) > 0 ? true : false;
-			} else {
-				borrowRepayFlag = this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
-			}
-			if (!borrowRepayFlag) {
-				throw new RuntimeException("每个标的总的还款信息(huiyingdai_borrow_repay)" + (isInsert ? "插入" : "更新") + "失败!" + "[投资订单号：" + ordId + "]");
-			}
-			// 是否分期
-			if (isMonth) {
-				// 更新分期还款计划表(huiyingdai_borrow_recover_plan)
-				if (interestInfo != null && interestInfo.getListMonthly() != null) {
-					BorrowRecoverPlan recoverPlan = null;
-					InterestInfo monthly = null;
-					for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
-						monthly = interestInfo.getListMonthly().get(j);
-						recoverPlan = new BorrowRecoverPlan();
-						recoverPlan.setStatus(0); // 状态
-						recoverPlan.setUserId(tenderUserId); // 投资人id
-						recoverPlan.setBorrowNid(borrowNid); // 借款订单id
-						recoverPlan.setNid(ordId); // 投资订单号
-						recoverPlan.setBorrowUserid(borrowUserid); // 借款人ID
-						recoverPlan.setTenderId(borrowTender.getId()); // 借款人ID
-						recoverPlan.setRecoverStatus(0); //
-						recoverPlan.setRecoverPeriod(j + 1); // 还款期数
-						recoverPlan.setRecoverTime(monthly.getRepayTime()); // 估计还款时间
-						recoverPlan.setRecoverAccount(monthly.getRepayAccount()); // 预还金额
-						recoverPlan.setRecoverInterest(monthly.getRepayAccountInterest()); // 预还利息
-						recoverPlan.setRecoverCapital(monthly.getRepayAccountCapital()); // 预还本金
-						recoverPlan.setRecoverFee(monthly.getFee()); // 预还管理费
-						recoverPlan.setRecoverFeeYes(BigDecimal.ZERO);
-						recoverPlan.setRecoverYestime(""); // 实际还款时间
-						recoverPlan.setRecoverAccountYes(BigDecimal.ZERO); // 实还金额
-						recoverPlan.setRecoverInterestYes(BigDecimal.ZERO); // 实还利息
-						recoverPlan.setRecoverCapitalYes(BigDecimal.ZERO); // 实还本金
-						recoverPlan.setRecoverAccountWait(monthly.getRepayAccount()); // 未还金额
-						recoverPlan.setRecoverCapitalWait(monthly.getRepayAccountCapital()); // 未还本金
-						recoverPlan.setRecoverInterestWait(monthly.getRepayAccountInterest()); // 未还利息
-						recoverPlan.setRecoverType("wait"); // 等待
-						recoverPlan.setRecoverLateFee(BigDecimal.ZERO); // 逾期管理费
-//						recoverPlan.setRecoverWeb(0); // 网站待还
-//						recoverPlan.setRecoverWebTime(""); //
-//						recoverPlan.setRecoverVouch(0); // 担保人还款
-						recoverPlan.setAdvanceStatus(0); //
-//						recoverPlan.setAheadDays(0); // 提前还款天数
-						recoverPlan.setChargeDays(0); // 罚息天数
-						recoverPlan.setChargeInterest(BigDecimal.ZERO); // 罚息总额
-						recoverPlan.setLateDays(0); // 逾期天数
-						recoverPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
-//						recoverPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-//						recoverPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
-						recoverPlan.setDelayDays(0); // 延期天数
-						recoverPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
-						recoverPlan.setDelayRate(BigDecimal.ZERO); // 延期费率
-//						recoverPlan.setCreateTime(nowTime); // 创建时间
-						recoverPlan.setAddIp(borrowTender.getAddIp());
-						recoverPlan.setSendmail(0);
-						recoverPlan.setAccedeOrderId(accedeOrderId);
-						boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.insertSelective(recoverPlan) > 0 ? true : false;
-						if (!borrowRecoverPlanFlag) {
-							throw new RuntimeException("分期还款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
-						}
-						// 更新总的还款计划表(huiyingdai_borrow_repay_plan)
-						isInsert = false;
-						BorrowRepayPlan repayPlan = getBorrowRepayPlan(borrowNid, j + 1);
-						if (repayPlan == null) {
-							isInsert = true;
-							repayPlan = new BorrowRepayPlan();
-							repayPlan.setStatus(0); // 状态
-							repayPlan.setUserId(borrowUserid); // 借款人
-							repayPlan.setBorrowNid(borrowNid); // 借款订单id
-							repayPlan.setNid(nid); // 标识
-							repayPlan.setRepayType("wait"); // 还款类型
-							repayPlan.setRepayFee(BigDecimal.ZERO); // 还款费用
-//							repayPlan.setRepayDays(""); // 还款时间间距
-//							repayPlan.setRepayStep(0); // 还款步骤
-							repayPlan.setRepayActionTime(""); // 执行还款的时间
-							repayPlan.setRepayStatus(0); // 还款状态
-							repayPlan.setRepayPeriod(j + 1); // 还款期数
-							repayPlan.setRepayTime(recoverPlan.getRecoverTime()); // 估计还款时间
-//							repayPlan.setRepayYestime(""); // 实际还款时间
-							repayPlan.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
-							repayPlan.setRepayAccount(BigDecimal.ZERO); // 预还金额
-							repayPlan.setRepayInterest(BigDecimal.ZERO); // 预还利息
-							repayPlan.setRepayCapital(BigDecimal.ZERO); // 预还本金
-							repayPlan.setRepayAccountYes(BigDecimal.ZERO); // 实还金额
-							repayPlan.setRepayInterestYes(BigDecimal.ZERO); // 实还利息
-							repayPlan.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
-							repayPlan.setRepayCapitalWait(BigDecimal.ZERO); // 未还本金
-							repayPlan.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
-//							repayPlan.setRepayWeb(0); // 网站待还
-//							repayPlan.setRepayWebTime("");
-//							repayPlan.setRepayWebStep(0); // 提前还款
-//							repayPlan.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
-//							repayPlan.setRepayVouch(0); // 担保人还款
-							repayPlan.setAdvanceStatus(0); // 进展
-//							repayPlan.setLateRepayStatus(0); // 是否逾期还款
-							repayPlan.setLateDays(0); // 逾期天数
-							repayPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
-//							repayPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-//							repayPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
-							repayPlan.setLateRepayDays(0); // 逾期还款天数
-							repayPlan.setDelayDays(0); // 延期天数
-							repayPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
-							repayPlan.setDelayRemark(""); // 延期备注
-//							repayPlan.setAddtime(String.valueOf(nowTime)); // 借款成功时间
-							repayPlan.setAddIp(borrowTender.getAddIp());
-//							repayPlan.setCreateTime(nowTime); // 创建时间
-							repayPlan.setChargeDays(0);
-							repayPlan.setChargeInterest(BigDecimal.ZERO);
-						}
-						repayPlan.setRepayFee(repayPlan.getRepayFee().add(recoverPlan.getRecoverFee())); // 还款费用
-						repayPlan.setRepayAccount(repayPlan.getRepayAccount().add(recoverPlan.getRecoverAccount())); // 预还金额
-						repayPlan.setRepayInterest(repayPlan.getRepayInterest().add(recoverPlan.getRecoverInterest())); // 预还利息
-						repayPlan.setRepayCapital(repayPlan.getRepayCapital().add(recoverPlan.getRecoverCapital())); // 预还本金
-						boolean repayPlanFlag = false;
-						if (isInsert) {
-							repayPlanFlag = this.borrowRepayPlanMapper.insertSelective(repayPlan) > 0 ? true : false;
-						} else {
-							repayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(repayPlan) > 0 ? true : false;
-						}
-						if (!repayPlanFlag) {
-							throw new RuntimeException("总的还款计划表(huiyingdai_borrow_repay_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
-						}
-						logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
-						// 汇计划二期更新 分期的hyjf_hjh_debt_detail  12-8
-						HjhDebtDetail debtDetail = new HjhDebtDetail();
-						debtDetail.setUserId(borrowTender.getUserId());// 投资人用户ID
-	                    debtDetail.setUserName(borrowTender.getUserName());//投资人用户名
-	                    debtDetail.setBorrowUserId(borrowUserid);// 原标的的用户ID
-	                    debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标的借款人用户名
-	                    debtDetail.setBorrowNid(borrowNid);// 原标标的编号
-	                    debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
-	                    debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 加入计划订单号 borrow_tender表的accede_order_id
-	                    debtDetail.setInvestOrderId(ordId);// 投资订单日期
-	                    debtDetail.setOrderId(ordId);// 投资订单号
-	                    debtDetail.setOrderDate(borrowTender.getOrderDate());// 订单日期
-	                    debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
-	                    debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
-	                    debtDetail.setAccount(monthly.getRepayAccountCapital());// 投资金额或债转承接金额
-	                    debtDetail.setLoanCapital(monthly.getRepayAccountCapital());// 放款本金(应还本金)
-	                    debtDetail.setLoanInterest(monthly.getRepayAccountInterest());// 放款利息(应还利息)
-	                    debtDetail.setRepayPeriod(j + 1);// 还款期数
-	                    debtDetail.setRepayActionTime(0);// 实际还款日期
-	                    debtDetail.setRepayStatus(0);// 还款状态
-	                    debtDetail.setStatus(1);// 债权是否有效（0失效 1有效）
-	                    debtDetail.setClient(0);// 客户端0PC，1微信2安卓APP，3IOS APP，4其他
-	                    debtDetail.setRepayTime(monthly.getRepayTime());// 应还时间
-	                    debtDetail.setRepayInterestWait(monthly.getRepayAccountInterest()); // 待还利息
-	                    debtDetail.setRepayCapitalWait(monthly.getRepayAccountCapital()); // 待还本金
-	                    debtDetail.setManageFee(monthly.getFee()); // 账户管理费
-//	                    debtDetail.setCreateTime(GetDate.getNowTime10());// 创建时间
-	                    debtDetail.setLoanTime(GetDate.getNowTime10());// 放款时间
-	                    debtDetail.setCreateUserId(borrowTender.getUserId());// 创建人用户ID
-	                    debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名
-	                    debtDetail.setBorrowName(borrowInfo.getName());// 借款标题
-	                    debtDetail.setBorrowApr(borrowApr);// 原标年化利率
-	                    debtDetail.setBorrowPeriod(borrowPeriod);// 借款期限
-	                    debtDetail.setBorrowStyle(borrow.getBorrowStyle());// 还款方式
-	                    debtDetail.setDelayInterest(BigDecimal.ZERO);// 延期利息
-	                    debtDetail.setLateInterest(BigDecimal.ZERO);// 逾期利息
-	                    debtDetail.setDelayInterestAssigned(BigDecimal.ZERO);// 已承接延期利息
-	                    debtDetail.setLateInterestAssigned(BigDecimal.ZERO);// 已承接逾期利息
-	                    debtDetail.setDelFlag(0);//清算标识 0未清算 1清算
-						debtDetail.setCreditTimes(0);// 出让次数
-	                    boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
-	                    if (!debtDetailFlag) {
-	                        throw new Exception("投资人债权记录(hyjf_hjh_debt_detail)分期插入失败!第" + (j + 1) + "期[专属标投资订单号：" + ordId + "]");
-	                    }
-	                    logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
-					}
-				}
-			}else{
-			    // 不分期
-			    // 汇计划二期更新 不分期的hyjf_hjh_debt_detail  12-8
-			    logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
-                HjhDebtDetail debtDetail =new HjhDebtDetail();
-                debtDetail.setUserId(borrowTender.getUserId()); // 投资人用户ID
-                debtDetail.setUserName(borrowTender.getUserName());// 投资人用户名
-                debtDetail.setBorrowUserId(borrowUserid);// 原标借款人用户ID
-                debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标借款人用户名
-                debtDetail.setBorrowNid(borrowNid);// 原标标的编号
-                debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
-                debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 计划订单号 borrow_tender表的accede_order_id
-                debtDetail.setInvestOrderId(ordId);// 投资订单号
-                debtDetail.setOrderId(ordId);// 投资订单号
-                debtDetail.setOrderDate(borrowTender.getOrderDate());// 投资订单日期
-                debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
-                debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
-                debtDetail.setAccount(accountTender);// 放款总额(应还总额)
-                debtDetail.setLoanCapital(capitalTender); // 放款本金(应还本金)
-                debtDetail.setLoanInterest(interestTender);// 放款利息(应还利息)
-                debtDetail.setRepayPeriod(1);// 还款期数
-                debtDetail.setRepayActionTime(0);// 实际还款日期
-                debtDetail.setRepayStatus(0);// 还款状态
-                debtDetail.setStatus(1);// 债权是否有效（0失效 1有效）
-                debtDetail.setClient(0);// 客户端0PC，1微信2安卓APP，3IOS APP，4其他
-                debtDetail.setRepayTime(recoverTime);// 应还时间
-                debtDetail.setRepayInterestWait(interestTender); // 待还利息
-                debtDetail.setRepayCapitalWait(capitalTender); // 待还本金
-                debtDetail.setManageFee(recoverFee); // 账户管理费
-//                debtDetail.setCreateTime(GetDate.getNowTime10());// 创建时间
-                debtDetail.setLoanTime(GetDate.getNowTime10());// 放款时间
-                debtDetail.setCreateUserId(borrowTender.getUserId());// 创建人用户ID
-                debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名
-                debtDetail.setBorrowName(borrowInfo.getName());// 原标借款标题
-                debtDetail.setBorrowApr(borrowApr);// 原标借款利息
-                debtDetail.setBorrowPeriod(borrowPeriod); // 原标项目期限
-                debtDetail.setBorrowStyle(borrow.getBorrowStyle());// 原标还款方式
-                debtDetail.setDelayInterest(BigDecimal.ZERO);// 延期利息
-                debtDetail.setLateInterest(BigDecimal.ZERO);// 逾期利息
-                debtDetail.setDelayInterestAssigned(BigDecimal.ZERO);// 已承接延期利息
-                debtDetail.setLateInterestAssigned(BigDecimal.ZERO);// 已承接逾期利息
-                debtDetail.setDelFlag(0);// 清算标识 0未清算 1清算
-                boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
-                if (!debtDetailFlag) {
-                    throw new Exception("投资人债权记录(hyjf_hjh_debt_detail)插入失败!" + "[专属标投资订单号：" + ordId + "]");
-                }
-                logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			loanFlag = false;
+		String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
+		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
+		// 年利率
+		BigDecimal borrowApr = borrow.getBorrowApr();
+		// 月利率(算出管理费用[上限])
+		BigDecimal borrowMonthRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate());
+		// 月利率(算出管理费用[下限])
+		BigDecimal borrowManagerScaleEnd = Validator.isNull(borrowInfo.getBorrowManagerScaleEnd()) ? BigDecimal.ZERO : new BigDecimal(borrowInfo.getBorrowManagerScaleEnd());
+		// 差异费率
+		BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
+		// 初审时间
+		int borrowVerifyTime = borrow.getVerifyTime();
+		// 项目类型
+		Integer projectType = borrowInfo.getProjectType();
+		// 借款人ID
+		Integer borrowUserid = borrowInfo.getUserId();
+		String borrowNid = borrow.getBorrowNid();
+		String nid = borrow.getBorrowNid() + "_" + borrowInfo.getUserId() + "_1";
+		// 是否月标(true:月标, false:天标)
+		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+		// 服务费率
+		BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate());
+		// 投资人的账户信息
+		int tenderUserId = borrowTender.getUserId();
+		// 投资金额
+		BigDecimal account = borrowTender.getAccount();
+		// 借款人的账户信息
+		Account tenderAccount = this.getAccountByUserId(tenderUserId);
+		if (tenderAccount == null || tenderAccount.getAccountId() == null) {
+			throw new RuntimeException("投资人未开户。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + borrowTender.getNid() + "]");
 		}
+		String ordId = borrowTender.getNid();// 投资订单号
+		
+		String accedeOrderId = borrowTender.getAccedeOrderId();
+		// 取出冻结订单信息
+		FreezeList freezeList = getFreezeList(ordId);
+		if (Validator.isNull(freezeList)) {
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "投资订单号[" + ordId + "]");
+		}
+		// 若此笔订单已经解冻
+		if (freezeList.getStatus() == 1) {
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)已经解冻！, " + "投资订单号[" + ordId + "]");
+		}
+		// 放款订单号
+		String loanOrderId = GetOrderIdUtils.getOrderId2(borrowTender.getUserId());
+		// 放款订单时间
+		String loanOrderDate = GetOrderIdUtils.getOrderDate();
+		// 业务授权码
+		String authCode = borrowTender.getAuthCode();
+
+		// 服务费
+		BigDecimal serviceFee = BigDecimal.ZERO;
+		// 每笔服务费都按照服务费率单独计算与服务费总额做比较，小于的情况下服务费按照比
+		if(borrowFinmanNewCharge.getChargeMode().intValue()==2){
+			serviceFee = getUserFeeByChargeMode(serviceFeeRate, account, borrowStyle, borrowPeriod, curServiceFee, borrowFinmanNewCharge.getServiceFeeTotal(),isLast);
+		}else{
+			serviceFee = getUserFee(serviceFeeRate, account, borrowStyle, borrowPeriod);
+		}
+		logger.info("借款编号：" + borrowNid + "当前收服务费: "+serviceFee+" 当前已收："+curServiceFee);
+		// 利息
+		BigDecimal interestTender = BigDecimal.ZERO;
+		// 本金
+		BigDecimal capitalTender = BigDecimal.ZERO;
+		// 本息
+		BigDecimal accountTender = BigDecimal.ZERO;
+		// 管理费
+		BigDecimal recoverFee = BigDecimal.ZERO;
+		// 估计还款时间
+		Integer recoverTime = null;
+		Integer nowTime = GetDate.getNowTime10();
+		// 计算利息
+		InterestInfo interestInfo = CalculatesUtil.getInterestInfo(account, borrowPeriod, borrowApr, borrowStyle, nowTime , borrowMonthRate, borrowManagerScaleEnd,
+				projectType, differentialRate, borrowVerifyTime);
+		if (interestInfo != null) {
+			interestTender = interestInfo.getRepayAccountInterest(); // 利息
+			capitalTender = interestInfo.getRepayAccountCapital(); // 本金
+			accountTender = interestInfo.getRepayAccount(); // 本息
+			recoverTime = interestInfo.getRepayTime(); // 估计还款时间
+			recoverFee = interestInfo.getFee(); // 总管理费
+		}
+		// 写入还款明细表(huiyingdai_borrow_recover)
+		BorrowRecover borrowRecover = new BorrowRecover();
+		borrowRecover.setStatus(0); // 状态
+		borrowRecover.setUserId(borrowTender.getUserId()); // 投资人
+		borrowRecover.setUserName(borrowTender.getUserName());
+		borrowRecover.setBorrowNid(borrowNid); // 借款编号
+		borrowRecover.setNid(ordId); // 投资订单号
+		borrowRecover.setBorrowUserid(borrowUserid); // 借款人
+		borrowRecover.setBorrowUserName(borrow.getBorrowUserName());
+		borrowRecover.setTenderId(borrowTender.getId()); // 投资表主键ID
+		borrowRecover.setRecoverStatus(0); // 还款状态
+		borrowRecover.setRecoverPeriod(isMonth ? borrowPeriod : 1); // 还款期数
+		borrowRecover.setRecoverTime(recoverTime); // 估计还款时间
+		borrowRecover.setRecoverAccount(accountTender); // 预还金额
+		borrowRecover.setRecoverInterest(interestTender); // 预还利息
+		borrowRecover.setRecoverCapital(capitalTender); // 预还本金
+		borrowRecover.setRecoverAccountYes(BigDecimal.ZERO); // 实还金额
+		borrowRecover.setRecoverInterestYes(BigDecimal.ZERO); // 实还利息
+		borrowRecover.setRecoverCapitalYes(BigDecimal.ZERO); // 实还本金
+		borrowRecover.setRecoverAccountWait(accountTender); // 未还金额
+		borrowRecover.setRecoverInterestWait(interestTender); // 未还利息
+		borrowRecover.setRecoverCapitalWait(capitalTender); // 未还本金
+		borrowRecover.setRecoverType("wait"); // 还款状态:等待
+		borrowRecover.setRecoverFee(recoverFee); // 账户管理费
+		borrowRecover.setRecoverFeeYes(BigDecimal.ZERO);
+		borrowRecover.setRecoverLateFee(BigDecimal.ZERO); // 逾期费用收入
+//		borrowRecover.setRecoverWeb(0); // 网站待还
+//		borrowRecover.setRecoverWebTime("");
+//		borrowRecover.setRecoverVouch(0); // 担保人还款
+		borrowRecover.setAdvanceStatus(0); // 提前还款
+//		borrowRecover.setAheadDays(0); // 提前还款天数
+		borrowRecover.setChargeDays(0); // 罚息天数
+		borrowRecover.setChargeInterest(BigDecimal.ZERO); // 罚息总额
+		borrowRecover.setLateDays(0); // 逾期天数
+		borrowRecover.setLateInterest(BigDecimal.ZERO); // 逾期利息
+//		borrowRecover.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
+//		borrowRecover.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
+//		borrowRecover.setCreateTime(nowTime);
+		borrowRecover.setAddIp(borrowTender.getAddIp());
+		borrowRecover.setAuthCode(authCode);
+		borrowRecover.setRecoverServiceFee(serviceFee);
+		borrowRecover.setAccedeOrderId(accedeOrderId);//投资人还款明细加入计划订单号
+		boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
+		if (!borrowRecoverFlag) {
+			throw new RuntimeException("还款明细表(huiyingdai_borrow_tender)写入失败!" + "[投资订单号：" + ordId + "]");
+		}
+		// 更新投资详情表
+		borrowTender.setLoanOrdid(loanOrderId);
+		borrowTender.setLoanOrderDate(loanOrderDate);
+		borrowTender.setRecoverAccountWait(borrowRecover.getRecoverAccount()); // 待收总额
+		borrowTender.setRecoverAccountAll(borrowRecover.getRecoverAccount()); // 收款总额
+		borrowTender.setRecoverAccountInterestWait(borrowRecover.getRecoverInterest()); // 待收利息
+		borrowTender.setRecoverAccountInterest(borrowRecover.getRecoverInterest()); // 收款总利息
+		borrowTender.setRecoverAccountCapitalWait(borrowRecover.getRecoverCapital()); // 待收本金
+		borrowTender.setLoanAmount(account.subtract(serviceFee)); // 实际放款金额
+		borrowTender.setLoanFee(serviceFee); // 服务费
+		borrowTender.setRecoverFee(recoverFee);// 管理费
+		borrowTender.setStatus(0); // 状态
+									// 0，未放款，1，已放款
+//		borrowTender.setTenderStatus(0); // 投资状态
+//											// 0，未放款，1，已放款
+//		borrowTender.setApiStatus(0); // 放款状态
+//										// 0，未放款，1，已放款
+//		borrowTender.setWeb(0); // 写入网站收支明细
+		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
+		if (!borrowTenderFlag) {
+			throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + ordId + "]");
+		}
+		// 更新借款表
+		borrow = this.getBorrowByNid(borrowNid);
+		borrow.setRepayAccountAll(borrow.getRepayAccountAll().add(borrowRecover.getRecoverAccount())); // 应还款总额
+		borrow.setRepayAccountInterest(borrow.getRepayAccountInterest().add(borrowRecover.getRecoverInterest())); // 总还款利息
+		borrow.setRepayAccountCapital(borrow.getRepayAccountCapital().add(borrowRecover.getRecoverCapital())); // 总还款本金
+		borrow.setRepayAccountWait(borrow.getRepayAccountWait().add(borrowRecover.getRecoverAccount())); // 未还款总额
+		borrow.setRepayAccountInterestWait(borrow.getRepayAccountInterestWait().add(borrowRecover.getRecoverInterest())); // 未还款利息
+		borrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().add(borrowRecover.getRecoverCapital())); // 未还款本金
+		borrow.setRepayLastTime(DateUtils.getRepayDate(borrowStyle, new Date(), borrowPeriod, borrowPeriod)); // 最后还款时间
+		borrow.setRepayNextTime(recoverTime); // 下次还款时间
+//		borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间 
+		boolean borrowFlags = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
+		if (!borrowFlags) {
+			throw new RuntimeException("借款详情(huiyingdai_borrow)更新失败!" + "[投资订单号：" + ordId + "]");
+		}
+		boolean isInsert = false;
+		// 插入每个标的总的还款信息
+		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
+		if (borrowRepay == null) {
+			isInsert = true;
+			borrowRepay = new BorrowRepay();
+			borrowRepay.setStatus(0); // 状态
+			borrowRepay.setUserId(borrowUserid); // 借款人ID
+			borrowRepay.setUserName(borrow.getBorrowUserName());
+			borrowRepay.setBorrowNid(borrowNid); // 借款标号
+			borrowRepay.setNid(nid); // 标识
+			borrowRepay.setRepayType("wait"); // 还款状态(等待)
+			borrowRepay.setRepayFee(BigDecimal.ZERO); // 还款费用
+//			borrowRepay.setRepayDays(""); // 还款时间间距
+//			borrowRepay.setRepayStep(0); // 还款步骤
+//			borrowRepay.setRepayActionTime(""); // 执行还款的时间
+			borrowRepay.setRepayStatus(0); // 还款状态
+			borrowRepay.setRepayPeriod(isMonth ? borrowPeriod : 1); // 还款期数
+			borrowRepay.setRepayTime(recoverTime); // 估计还款时间
+//			borrowRepay.setRepayYestime(""); // 实际还款时间
+			borrowRepay.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
+			borrowRepay.setRepayAccount(BigDecimal.ZERO); // 预还金额
+			borrowRepay.setRepayInterest(BigDecimal.ZERO); // 预还利息
+			borrowRepay.setRepayCapital(BigDecimal.ZERO); // 预还本金
+			borrowRepay.setRepayAccountYes(BigDecimal.ZERO); // 实还金额
+			borrowRepay.setLateRepayDays(0); // 逾期的天数
+			borrowRepay.setRepayInterestYes(BigDecimal.ZERO); // 实还利息
+			borrowRepay.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
+			borrowRepay.setRepayCapitalWait(BigDecimal.ZERO);// 未还本金
+			borrowRepay.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
+//			borrowRepay.setRepayWeb(0); // 网站待还
+//			borrowRepay.setRepayWebTime(""); //
+//			borrowRepay.setRepayWebStep(0); // 提前还款
+//			borrowRepay.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
+//			borrowRepay.setRepayVouch(0); // 担保人还款
+			borrowRepay.setAdvanceStatus(0); // 进展
+//			borrowRepay.setLateRepayStatus(0); // 是否逾期还款
+			borrowRepay.setLateDays(0); // 逾期天数
+			borrowRepay.setLateInterest(BigDecimal.ZERO); // 逾期利息
+//			borrowRepay.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
+//			borrowRepay.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
+			borrowRepay.setDelayDays(0); // 逾期天数
+			borrowRepay.setDelayInterest(BigDecimal.ZERO); // 逾期利息
+			borrowRepay.setDelayRemark(""); // 备注
+//			borrowRepay.setAddtime(String.valueOf(nowTime)); // 发标时间
+			borrowRepay.setAddIp(borrow.getAddIp()); // 发标ip
+//			borrowRepay.setCreateTime(nowTime); // 创建时间
+			borrowRepay.setChargeDays(0);
+			borrowRepay.setChargeInterest(BigDecimal.ZERO);
+		}
+		borrowRepay.setRepayFee(borrowRepay.getRepayFee().add(borrowRecover.getRecoverFee())); // 还款费用
+		borrowRepay.setRepayAccount(borrowRepay.getRepayAccount().add(borrowRecover.getRecoverAccount())); // 预还金额
+		borrowRepay.setRepayInterest(borrowRepay.getRepayInterest().add(borrowRecover.getRecoverInterest())); // 预还利息
+		borrowRepay.setRepayCapital(borrowRepay.getRepayCapital().add(borrowRecover.getRecoverCapital())); // 预还本金
+		boolean borrowRepayFlag = false;
+		if (isInsert) {
+			borrowRepayFlag = this.borrowRepayMapper.insertSelective(borrowRepay) > 0 ? true : false;
+		} else {
+			borrowRepayFlag = this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
+		}
+		if (!borrowRepayFlag) {
+			throw new RuntimeException("每个标的总的还款信息(huiyingdai_borrow_repay)" + (isInsert ? "插入" : "更新") + "失败!" + "[投资订单号：" + ordId + "]");
+		}
+		// 是否分期
+		if (isMonth) {
+			// 更新分期还款计划表(huiyingdai_borrow_recover_plan)
+			if (interestInfo != null && interestInfo.getListMonthly() != null) {
+				BorrowRecoverPlan recoverPlan = null;
+				InterestInfo monthly = null;
+				for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
+					monthly = interestInfo.getListMonthly().get(j);
+					recoverPlan = new BorrowRecoverPlan();
+					recoverPlan.setStatus(0); // 状态
+					recoverPlan.setUserId(tenderUserId); // 投资人id
+					recoverPlan.setUserName(borrowTender.getUserName());
+					recoverPlan.setBorrowNid(borrowNid); // 借款订单id
+					recoverPlan.setNid(ordId); // 投资订单号
+					recoverPlan.setBorrowUserid(borrowUserid); // 借款人ID
+					recoverPlan.setBorrowUserName(borrow.getBorrowUserName());
+					recoverPlan.setTenderId(borrowTender.getId()); // 借款人ID
+					recoverPlan.setRecoverStatus(0); //
+					recoverPlan.setRecoverPeriod(j + 1); // 还款期数
+					recoverPlan.setRecoverTime(monthly.getRepayTime()); // 估计还款时间
+					recoverPlan.setRecoverAccount(monthly.getRepayAccount()); // 预还金额
+					recoverPlan.setRecoverInterest(monthly.getRepayAccountInterest()); // 预还利息
+					recoverPlan.setRecoverCapital(monthly.getRepayAccountCapital()); // 预还本金
+					recoverPlan.setRecoverFee(monthly.getFee()); // 预还管理费
+					recoverPlan.setRecoverFeeYes(BigDecimal.ZERO);
+					recoverPlan.setRecoverYestime(""); // 实际还款时间
+					recoverPlan.setRecoverAccountYes(BigDecimal.ZERO); // 实还金额
+					recoverPlan.setRecoverInterestYes(BigDecimal.ZERO); // 实还利息
+					recoverPlan.setRecoverCapitalYes(BigDecimal.ZERO); // 实还本金
+					recoverPlan.setRecoverAccountWait(monthly.getRepayAccount()); // 未还金额
+					recoverPlan.setRecoverCapitalWait(monthly.getRepayAccountCapital()); // 未还本金
+					recoverPlan.setRecoverInterestWait(monthly.getRepayAccountInterest()); // 未还利息
+					recoverPlan.setRecoverType("wait"); // 等待
+					recoverPlan.setRecoverLateFee(BigDecimal.ZERO); // 逾期管理费
+//					recoverPlan.setRecoverWeb(0); // 网站待还
+//					recoverPlan.setRecoverWebTime(""); //
+//					recoverPlan.setRecoverVouch(0); // 担保人还款
+					recoverPlan.setAdvanceStatus(0); //
+//					recoverPlan.setAheadDays(0); // 提前还款天数
+					recoverPlan.setChargeDays(0); // 罚息天数
+					recoverPlan.setChargeInterest(BigDecimal.ZERO); // 罚息总额
+					recoverPlan.setLateDays(0); // 逾期天数
+					recoverPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
+//					recoverPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
+//					recoverPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
+					recoverPlan.setDelayDays(0); // 延期天数
+					recoverPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
+					recoverPlan.setDelayRate(BigDecimal.ZERO); // 延期费率
+//					recoverPlan.setCreateTime(nowTime); // 创建时间
+					recoverPlan.setAddIp(borrowTender.getAddIp());
+					recoverPlan.setSendmail(0);
+					recoverPlan.setAccedeOrderId(accedeOrderId);
+					boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.insertSelective(recoverPlan) > 0 ? true : false;
+					if (!borrowRecoverPlanFlag) {
+						throw new RuntimeException("分期还款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+					}
+					// 更新总的还款计划表(huiyingdai_borrow_repay_plan)
+					isInsert = false;
+					BorrowRepayPlan repayPlan = getBorrowRepayPlan(borrowNid, j + 1);
+					if (repayPlan == null) {
+						isInsert = true;
+						repayPlan = new BorrowRepayPlan();
+						repayPlan.setStatus(0); // 状态
+						repayPlan.setUserId(borrowUserid); // 借款人
+						repayPlan.setUserName(borrow.getBorrowUserName());
+						repayPlan.setBorrowNid(borrowNid); // 借款订单id
+						repayPlan.setNid(nid); // 标识
+						repayPlan.setRepayType("wait"); // 还款类型
+						repayPlan.setRepayFee(BigDecimal.ZERO); // 还款费用
+//						repayPlan.setRepayDays(""); // 还款时间间距
+//						repayPlan.setRepayStep(0); // 还款步骤
+						repayPlan.setRepayActionTime(""); // 执行还款的时间
+						repayPlan.setRepayStatus(0); // 还款状态
+						repayPlan.setRepayPeriod(j + 1); // 还款期数
+						repayPlan.setRepayTime(recoverPlan.getRecoverTime()); // 估计还款时间
+//						repayPlan.setRepayYestime(""); // 实际还款时间
+						repayPlan.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
+						repayPlan.setRepayAccount(BigDecimal.ZERO); // 预还金额
+						repayPlan.setRepayInterest(BigDecimal.ZERO); // 预还利息
+						repayPlan.setRepayCapital(BigDecimal.ZERO); // 预还本金
+						repayPlan.setRepayAccountYes(BigDecimal.ZERO); // 实还金额
+						repayPlan.setRepayInterestYes(BigDecimal.ZERO); // 实还利息
+						repayPlan.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
+						repayPlan.setRepayCapitalWait(BigDecimal.ZERO); // 未还本金
+						repayPlan.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
+//						repayPlan.setRepayWeb(0); // 网站待还
+//						repayPlan.setRepayWebTime("");
+//						repayPlan.setRepayWebStep(0); // 提前还款
+//						repayPlan.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
+//						repayPlan.setRepayVouch(0); // 担保人还款
+						repayPlan.setAdvanceStatus(0); // 进展
+//						repayPlan.setLateRepayStatus(0); // 是否逾期还款
+						repayPlan.setLateDays(0); // 逾期天数
+						repayPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
+//						repayPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
+//						repayPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
+						repayPlan.setLateRepayDays(0); // 逾期还款天数
+						repayPlan.setDelayDays(0); // 延期天数
+						repayPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
+						repayPlan.setDelayRemark(""); // 延期备注
+//						repayPlan.setAddtime(String.valueOf(nowTime)); // 借款成功时间
+						repayPlan.setAddIp(borrowTender.getAddIp());
+//						repayPlan.setCreateTime(nowTime); // 创建时间
+						repayPlan.setChargeDays(0);
+						repayPlan.setChargeInterest(BigDecimal.ZERO);
+					}
+					repayPlan.setRepayFee(repayPlan.getRepayFee().add(recoverPlan.getRecoverFee())); // 还款费用
+					repayPlan.setRepayAccount(repayPlan.getRepayAccount().add(recoverPlan.getRecoverAccount())); // 预还金额
+					repayPlan.setRepayInterest(repayPlan.getRepayInterest().add(recoverPlan.getRecoverInterest())); // 预还利息
+					repayPlan.setRepayCapital(repayPlan.getRepayCapital().add(recoverPlan.getRecoverCapital())); // 预还本金
+					boolean repayPlanFlag = false;
+					if (isInsert) {
+						repayPlanFlag = this.borrowRepayPlanMapper.insertSelective(repayPlan) > 0 ? true : false;
+					} else {
+						repayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(repayPlan) > 0 ? true : false;
+					}
+					if (!repayPlanFlag) {
+						throw new RuntimeException("总的还款计划表(huiyingdai_borrow_repay_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+					}
+					logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
+					// 汇计划二期更新 分期的hyjf_hjh_debt_detail  12-8
+					HjhDebtDetail debtDetail = new HjhDebtDetail();
+					debtDetail.setUserId(borrowTender.getUserId());// 投资人用户ID
+                    debtDetail.setUserName(borrowTender.getUserName());//投资人用户名
+                    debtDetail.setBorrowUserId(borrowUserid);// 原标的的用户ID
+                    debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标的借款人用户名
+                    debtDetail.setBorrowNid(borrowNid);// 原标标的编号
+                    debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
+                    debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 加入计划订单号 borrow_tender表的accede_order_id
+                    debtDetail.setInvestOrderId(ordId);// 投资订单日期
+                    debtDetail.setOrderId(ordId);// 投资订单号
+                    debtDetail.setOrderDate(borrowTender.getOrderDate());// 订单日期
+                    debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
+                    debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
+                    debtDetail.setAccount(monthly.getRepayAccountCapital());// 投资金额或债转承接金额
+                    debtDetail.setLoanCapital(monthly.getRepayAccountCapital());// 放款本金(应还本金)
+                    debtDetail.setLoanInterest(monthly.getRepayAccountInterest());// 放款利息(应还利息)
+                    debtDetail.setRepayPeriod(j + 1);// 还款期数
+                    debtDetail.setRepayActionTime(0);// 实际还款日期
+                    debtDetail.setRepayStatus(0);// 还款状态
+                    debtDetail.setStatus(1);// 债权是否有效（0失效 1有效）
+                    debtDetail.setClient(0);// 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+                    debtDetail.setRepayTime(monthly.getRepayTime());// 应还时间
+                    debtDetail.setRepayInterestWait(monthly.getRepayAccountInterest()); // 待还利息
+                    debtDetail.setRepayCapitalWait(monthly.getRepayAccountCapital()); // 待还本金
+                    debtDetail.setManageFee(monthly.getFee()); // 账户管理费
+//                    debtDetail.setCreateTime(GetDate.getNowTime10());// 创建时间
+                    debtDetail.setLoanTime(GetDate.getNowTime10());// 放款时间
+                    debtDetail.setCreateUserId(borrowTender.getUserId());// 创建人用户ID
+                    debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名
+                    debtDetail.setBorrowName(borrowInfo.getName());// 借款标题
+                    debtDetail.setBorrowApr(borrowApr);// 原标年化利率
+                    debtDetail.setBorrowPeriod(borrowPeriod);// 借款期限
+                    debtDetail.setBorrowStyle(borrow.getBorrowStyle());// 还款方式
+                    debtDetail.setDelayInterest(BigDecimal.ZERO);// 延期利息
+                    debtDetail.setLateInterest(BigDecimal.ZERO);// 逾期利息
+                    debtDetail.setDelayInterestAssigned(BigDecimal.ZERO);// 已承接延期利息
+                    debtDetail.setLateInterestAssigned(BigDecimal.ZERO);// 已承接逾期利息
+                    debtDetail.setDelFlag(0);//清算标识 0未清算 1清算
+					debtDetail.setCreditTimes(0);// 出让次数
+                    boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
+                    if (!debtDetailFlag) {
+                        throw new RuntimeException("投资人债权记录(hyjf_hjh_debt_detail)分期插入失败!第" + (j + 1) + "期[专属标投资订单号：" + ordId + "]");
+                    }
+                    logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
+				}
+			}
+		}else{
+		    // 不分期
+		    // 汇计划二期更新 不分期的hyjf_hjh_debt_detail  12-8
+		    logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
+            HjhDebtDetail debtDetail =new HjhDebtDetail();
+            debtDetail.setUserId(borrowTender.getUserId()); // 投资人用户ID
+            debtDetail.setUserName(borrowTender.getUserName());// 投资人用户名
+            debtDetail.setBorrowUserId(borrowUserid);// 原标借款人用户ID
+            debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标借款人用户名
+            debtDetail.setBorrowNid(borrowNid);// 原标标的编号
+            debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
+            debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 计划订单号 borrow_tender表的accede_order_id
+            debtDetail.setInvestOrderId(ordId);// 投资订单号
+            debtDetail.setOrderId(ordId);// 投资订单号
+            debtDetail.setOrderDate(borrowTender.getOrderDate());// 投资订单日期
+            debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
+            debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
+            debtDetail.setAccount(accountTender);// 放款总额(应还总额)
+            debtDetail.setLoanCapital(capitalTender); // 放款本金(应还本金)
+            debtDetail.setLoanInterest(interestTender);// 放款利息(应还利息)
+            debtDetail.setRepayPeriod(1);// 还款期数
+            debtDetail.setRepayActionTime(0);// 实际还款日期
+            debtDetail.setRepayStatus(0);// 还款状态
+            debtDetail.setStatus(1);// 债权是否有效（0失效 1有效）
+            debtDetail.setClient(0);// 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+            debtDetail.setRepayTime(recoverTime);// 应还时间
+            debtDetail.setRepayInterestWait(interestTender); // 待还利息
+            debtDetail.setRepayCapitalWait(capitalTender); // 待还本金
+            debtDetail.setManageFee(recoverFee); // 账户管理费
+//            debtDetail.setCreateTime(GetDate.getNowTime10());// 创建时间
+            debtDetail.setLoanTime(GetDate.getNowTime10());// 放款时间
+            debtDetail.setCreateUserId(borrowTender.getUserId());// 创建人用户ID
+            debtDetail.setCreateUserName(borrowTender.getUserName());// 创建人用户名
+            debtDetail.setBorrowName(borrowInfo.getName());// 原标借款标题
+            debtDetail.setBorrowApr(borrowApr);// 原标借款利息
+            debtDetail.setBorrowPeriod(borrowPeriod); // 原标项目期限
+            debtDetail.setBorrowStyle(borrow.getBorrowStyle());// 原标还款方式
+            debtDetail.setDelayInterest(BigDecimal.ZERO);// 延期利息
+            debtDetail.setLateInterest(BigDecimal.ZERO);// 逾期利息
+            debtDetail.setDelayInterestAssigned(BigDecimal.ZERO);// 已承接延期利息
+            debtDetail.setLateInterestAssigned(BigDecimal.ZERO);// 已承接逾期利息
+            debtDetail.setDelFlag(0);// 清算标识 0未清算 1清算
+            boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
+            if (!debtDetailFlag) {
+                throw new RuntimeException("投资人债权记录(hyjf_hjh_debt_detail)插入失败!" + "[专属标投资订单号：" + ordId + "]");
+            }
+            logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
+		}
+	
+		loanFlag = true;
 		return loanFlag;
 	}
 	
