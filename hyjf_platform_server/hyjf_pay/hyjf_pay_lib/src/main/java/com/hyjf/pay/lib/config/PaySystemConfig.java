@@ -21,6 +21,22 @@ public class PaySystemConfig {
     @Value("${hyjf.chinapnr.callback.url}")
     public  String chinapnrCallBack;
 
+    /** 银行代码 */
+    @Value("${hyjf.bank.bankcode}")
+    private String bankCode;
+
+    /** 公钥地址 */
+    @Value("${hyjf.bank.pubkey.path}")
+    private String bankPubkeyPath;
+
+    /** 私钥地址 */
+    @Value("${hyjf.bank.prikey.path}")
+    private String bankPrikeyPath;
+
+    /** 私钥密码 */
+    @Value("${hyjf.bank.prikey.pass}")
+    private String bankPrikeyPass;
+
     public String getChinapnrCallBack() {
         return chinapnrCallBack;
     }
@@ -59,5 +75,37 @@ public class PaySystemConfig {
 
     public void setBankUrl(String bankUrl) {
         this.bankUrl = bankUrl;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getBankPubkeyPath() {
+        return bankPubkeyPath;
+    }
+
+    public void setBankPubkeyPath(String bankPubkeyPath) {
+        this.bankPubkeyPath = bankPubkeyPath;
+    }
+
+    public String getBankPrikeyPath() {
+        return bankPrikeyPath;
+    }
+
+    public void setBankPrikeyPath(String bankPrikeyPath) {
+        this.bankPrikeyPath = bankPrikeyPath;
+    }
+
+    public String getBankPrikeyPass() {
+        return bankPrikeyPass;
+    }
+
+    public void setBankPrikeyPass(String bankPrikeyPass) {
+        this.bankPrikeyPass = bankPrikeyPass;
     }
 }
