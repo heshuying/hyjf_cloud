@@ -3,6 +3,8 @@ package com.hyjf.pay.lib.fadada.util;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +13,14 @@ import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
+import org.springframework.web.client.RestTemplate;
 
 public class DzqzCallUtil {
 
    private static Logger log = LoggerFactory.getLogger(DzqzCallUtil.class);
+
+    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+    private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
     public static DzqzCallBean callApiBg(DzqzCallBean bean){
         DzqzCallBean ret = null;
@@ -32,16 +38,16 @@ public class DzqzCallUtil {
             bean.setTxTime(txTime);
             bean.setLogordid(orderId);
             bean.convert();
-            //   todo xiashuqing 20180615
-            //String payurl = PropUtils.getSystem(DzqzConstant.HYJF_PAY_FDD_URL);
-            String payurl = "";
-            if (Validator.isNull(payurl)) {
+
+            String payUrl =  paySystemConfig.getBankUrl();
+            if (Validator.isNull(payUrl)) {
                 throw new Exception("接口工程URL不能为空");
             }
             Map<String, String> allParams = bean.getAllParams();
 
             // 调用法大大接口
-            String result = HttpDeal.post(payurl + DzqzConstant.REQUEST_MAPPING_CALLAPIBG, allParams);
+            String result = restTemplate.postForEntity(payUrl, allParams, String.class).getBody();
+
             if (Validator.isNotNull(result)) {
                 // 将返回字符串转换成DzqzCallBean
                 ret = JSONObject.parseObject(result, DzqzCallBean.class);
