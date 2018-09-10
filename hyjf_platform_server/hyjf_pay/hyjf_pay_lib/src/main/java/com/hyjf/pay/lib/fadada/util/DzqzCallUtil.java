@@ -5,12 +5,10 @@ import java.util.TreeMap;
 
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.pay.lib.config.FddSystemConfig;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
