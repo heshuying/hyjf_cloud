@@ -50,6 +50,7 @@ public class DzqzCallController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, value = DzqzCallDefine.FDD_CALL_APIBG)
     public String callApiBg(HttpServletRequest request, @ModelAttribute DzqzCallBean bean) throws Exception {
         log.info("--------------开始调用pay工程-------------");
+        log.info("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
         String ret = "";
         String orderId = "";
         try {

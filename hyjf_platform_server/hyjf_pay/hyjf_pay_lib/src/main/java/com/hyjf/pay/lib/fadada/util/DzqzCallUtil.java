@@ -45,7 +45,7 @@ public class DzqzCallUtil {
             Map<String, String> allParams = bean.getAllParams();
 
             // 调用法大大接口
-            String result = restTemplate.postForEntity(payUrl, allParams, String.class).getBody();
+            String result = restTemplate.postForEntity(payUrl + "/callApiBg", allParams, String.class).getBody();
 
             if (Validator.isNotNull(result)) {
                 // 将返回字符串转换成DzqzCallBean
