@@ -32,7 +32,7 @@
 			WHERE a.source_id = b.source_id
 			  AND b.utm_id = c.utm_id
 			  AND c.user_id = #{userId}
-			limit 1
+			limit 1) t
 	</select>
 
 </mapper>
