@@ -22,19 +22,19 @@ public class PaySystemConfig {
     public  String chinapnrCallBack;
 
     /** 银行代码 */
-    @Value("${hyjf.bank.bankcode}")
+   // @Value("${hyjf.bank.bankcode}")  todo
     private String bankCode;
 
     /** 公钥地址 */
-    @Value("${hyjf.bank.pubkey.path}")
+   // @Value("${hyjf.bank.pubkey.path}") todo
     private String bankPubkeyPath;
 
     /** 私钥地址 */
-    @Value("${hyjf.bank.prikey.path}")
+   //@Value("${hyjf.bank.prikey.path}") todo
     private String bankPrikeyPath;
 
     /** 私钥密码 */
-    @Value("${hyjf.bank.prikey.pass}")
+    //@Value("${hyjf.bank.prikey.pass}") todo
     private String bankPrikeyPass;
 
     public String getChinapnrCallBack() {
