@@ -102,16 +102,11 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeVO getRecord(BorrowProjectTypeVO record){
-        BorrowProjectTypeVO result = new BorrowProjectTypeVO();
-        BorrowProjectTypeExample example = new BorrowProjectTypeExample();
-        BorrowProjectTypeExample.Criteria cra = example.createCriteria();
-        cra.andBorrowCdEqualTo(record.getBorrowCd());
-        List<BorrowProjectType> BorrowTypeList = borrowProjectTypeMapper.selectByExample(example);
-        if (BorrowTypeList != null && BorrowTypeList.size() > 0) {
-            BeanUtils.copyProperties(BorrowTypeList.get(0),result);
-            return result;
+        BorrowProjectTypeVO borrowProjectType = borrowProjectTypeCustomizeMapper.selectByBorrowCd(record);
+        if (borrowProjectType != null ) {
+            return borrowProjectType;
         }
-        return result;
+        return null;
     }
     /**
      * 根据项目编号查询还款方式
@@ -268,7 +263,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         HjhAssetType record = new HjhAssetType();
 //        String userId = ShiroUtil.getLoginUserId();
         //更新用户id
-        record.setUpdateUser(Integer.valueOf(form.getCreateUserId()));
+        record.setUpdateUser(Integer.valueOf(form.getUpdateUserId()));
         int nowTime = GetDate.getNowTime10();
         //更新时间
         record.setUpdateTime(new Date());
