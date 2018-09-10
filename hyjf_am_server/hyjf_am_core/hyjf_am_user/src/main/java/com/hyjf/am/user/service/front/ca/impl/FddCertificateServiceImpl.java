@@ -104,6 +104,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             bean.setMobile(user.getMobile());
             // 调用接口
             DzqzCallBean result = DzqzCallUtil.callApiBg(bean);
+            logger.info("调用CA认证结果:[{}]",result);
             if (result != null) {
                 logger.info("CA认证成功:用户ID:[" + userId + "].");
                 if ("success".equals(result.getResult())) {
@@ -155,6 +156,8 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                         throw new Exception(throwInfo);
                     }
                 }
+            }else{
+                logger.info("CA认证失败，结果：【" + result + "】:用户ID:[" + userId + "].");
             }
         } else {
             // 企业用户CA认证
@@ -179,6 +182,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             bean.setMobile(user.getMobile());
             // 调用接口
             DzqzCallBean result = DzqzCallUtil.callApiBg(bean);
+            logger.info("调用CA认证结果:[{}]",result);
             if (result != null) {
                 // CA认证成功后,更新用户表
                 if ("success".equals(result.getResult())) {
