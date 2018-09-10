@@ -92,7 +92,7 @@ public class BorrowProjectTypeController extends BaseController {
         } else {
             record.setModifyFlag("N");
         }
-        record.setMethodName(adminRequest.getMethodName());
+//        record.setMethodName(adminRequest.getMethodName());
         record.setRepayNames(selectRepay);
         // 回显checkbox标签
         List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
@@ -195,6 +195,7 @@ public class BorrowProjectTypeController extends BaseController {
     public AdminResult updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
         AdminSystemVO user = getUser(request);
         adminRequest.setUpdateUserId(user.getId());
+//        adminRequest.setUpdateUserId(String.valueOf(3));
         //优惠券类型转换
         if(StringUtils.isNotBlank(adminRequest.getCoupon())&&adminRequest.getCoupon().equals("0")){
             adminRequest.setInterestCoupon(1);
@@ -241,8 +242,14 @@ public class BorrowProjectTypeController extends BaseController {
         }
         if (StringUtils.isNotEmpty(adminRequest.getBorrowCd())) {
             this.borrowProjectTypeService.updateRecord(adminRequest);
+            response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
         }
-         response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
         return new AdminResult<BorrowProjectTypeResponse>(response);
     }
 

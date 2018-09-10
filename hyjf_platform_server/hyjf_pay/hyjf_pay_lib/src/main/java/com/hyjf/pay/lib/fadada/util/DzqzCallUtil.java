@@ -38,7 +38,7 @@ public class DzqzCallUtil {
             bean.setLogordid(orderId);
             bean.convert();
 
-            String payUrl = fddSystemConfig.getFddUrl();
+            String payUrl = fddSystemConfig.getFddPayUrl();
             if (Validator.isNull(payUrl)) {
                 throw new Exception("接口工程URL不能为空");
             }

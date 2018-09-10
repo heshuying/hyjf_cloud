@@ -69,4 +69,28 @@
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
+
+    <select id="selectByBorrowCd" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
+        SELECT
+        typ.borrow_project_type,
+        typ.borrow_cd,
+        typ.borrow_name,
+        typ.borrow_class,
+        typ.invest_start,
+        typ.invest_end,
+        typ.increase_money,
+        typ.interest_coupon,
+        typ.taste_money,
+        typ.invest_user_type,
+        typ.status,
+        typ.remark,
+        typ.create_user_id,
+        typ.update_user_id,
+        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name,
+        typ.increase_interest_flag
+        FROM
+        ht_borrow_project_type typ
+        LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
+        where typ.borrow_cd=#{borrowCd}
+    </select>
 </mapper>
