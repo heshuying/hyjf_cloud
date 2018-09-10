@@ -118,7 +118,7 @@ public class OperationReportController extends BaseController {
 			response.setCount(count);
 			if (count != null && count > 0) {
 				if(request.getCurrPage()>0){
-					Paginator paginator = new Paginator(request.getCurrPage(), count);
+					Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
 					map.put("limitStart", paginator.getOffset());
 					map.put("limitEnd", paginator.getLimit());
 				}
