@@ -91,7 +91,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                     bankConfig = bankConfigs.get(0);
                 }
                 // 应前台要求，logo路径给绝对路径
-                bankCardBean.setLogo(CustomConstants.HOST + bankConfig.getAppLogo());
+                bankCardBean.setLogo(systemConfig.getWebHost()+ bankConfig.getAppLogo());
                 // 银行名称 汉字
                 bankCardBean.setBank(bankConfig.getName());
                 bankCardBean.setCardNo(bank.getAccount());

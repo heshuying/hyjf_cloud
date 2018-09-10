@@ -58,7 +58,8 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/check")
+    @ApiOperation(value = "检查参数")
+    @PostMapping("/check")
     public WebResult check(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         // 交易金额
         String transAmt = request.getParameter("getcash");
@@ -93,7 +94,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户提现")
     @ApiImplicitParam(name = "param", value = "{money:String,cardId:String,cashchl:String}", dataType = "Map")
-    @RequestMapping("/cash")
+    @PostMapping("/cash")
     public WebResult cash(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> map, HttpServletRequest request) {
         WebResult result = new WebResult();
         UserVO user = chinapnrService.getUserByUserId(userId);
