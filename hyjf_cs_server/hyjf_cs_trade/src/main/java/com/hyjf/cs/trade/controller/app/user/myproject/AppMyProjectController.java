@@ -3,9 +3,6 @@ package com.hyjf.cs.trade.controller.app.user.myproject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -27,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -324,6 +323,7 @@ public class AppMyProjectController extends BaseTradeController {
         params.setNowTime((int)(System.currentTimeMillis() / 1000));
         params.setLimitStart(0);
         params.setLimitEnd(1);
+        params.setNowDate(GetDate.getNowTime());
         Integer count = appMyProjectService.selectTenderToCreditListCount(params);
         if (count>0) {
             return true;
