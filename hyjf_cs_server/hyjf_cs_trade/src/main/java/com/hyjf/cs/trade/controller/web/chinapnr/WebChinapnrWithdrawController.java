@@ -93,7 +93,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "用户提现")
-    @ApiImplicitParam(name = "param", value = "{money:String,cardId:String,cashchl:String}", dataType = "Map")
+    @ApiImplicitParam(name = "map", value = "{withdrawmoney:String,widCard:String,cashchl:String}", dataType = "Map")
     @PostMapping("/cash")
     public WebResult cash(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> map, HttpServletRequest request) {
         WebResult result = new WebResult();

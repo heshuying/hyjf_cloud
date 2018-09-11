@@ -85,13 +85,9 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                 BankCardBean bankCardBean = new BankCardBean();
                 bankCardBean.setId(bank.getUserId());
                 bankCardBean.setBank(bank.getBank());
-                List<BankConfigVO> bankConfigs = amConfigClient.getBankConfigRecordList(bank.getBank());
-                BankConfigVO bankConfig = new BankConfigVO();
-                if(null!=bankConfigs||bankConfigs.size()>0){
-                    bankConfig = bankConfigs.get(0);
-                }
+                BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(bank.getBank());
                 // 应前台要求，logo路径给绝对路径
-                bankCardBean.setLogo(systemConfig.getWebHost()+ bankConfig.getAppLogo());
+                bankCardBean.setLogo(systemConfig.getFrontHost()+ bankConfig.getAppLogo());
                 // 银行名称 汉字
                 bankCardBean.setBank(bankConfig.getName());
                 bankCardBean.setCardNo(bank.getAccount());
@@ -144,7 +140,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         // 投标金额大于可用余额
         CheckUtil.check(account != null&& transAmt.compareTo(account.getBalance()) <= 0,MsgEnum.STATUS_CE000015);
         // 检查参数(银行卡ID是否数字)
-        CheckUtil.check(Validator.isNotNull(bankId) && !StringUtils.isNumeric(bankId),MsgEnum.ERR_AMT_WITHDRAW_CARD);
+        CheckUtil.check(Validator.isNotNull(bankId) && StringUtils.isNumeric(bankId),MsgEnum.ERR_AMT_WITHDRAW_CARD);
     }
 
     @Override
