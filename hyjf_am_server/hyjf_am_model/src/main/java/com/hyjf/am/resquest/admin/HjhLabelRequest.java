@@ -5,11 +5,13 @@ package com.hyjf.am.resquest.admin;
 
 import java.io.Serializable;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author libin
  * @version HjhLabelRequest.java, v0.1 2018年6月30日 下午1:58:35
  */
-public class HjhLabelRequest implements Serializable {
+public class HjhLabelRequest extends BasePage implements Serializable {
 
 	/**
 	 * serialVersionUID
