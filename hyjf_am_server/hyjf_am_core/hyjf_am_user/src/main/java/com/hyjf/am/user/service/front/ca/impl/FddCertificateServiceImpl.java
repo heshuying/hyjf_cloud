@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.front.ca.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.User;
@@ -41,6 +42,9 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
 
     @Autowired
     FddCertificateProducer fddProducer;
+
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 法大大CA认证
@@ -91,8 +95,8 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             bean.setUserId(userId);
             bean.setLogordid(GetOrderIdUtils.getOrderId0(userId));
             bean.setTxCode("syncPerson_auto");
-            bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
-            bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+            bean.setApp_id(systemConfig.getFaaAppUrl());
+            bean.setV(systemConfig.getFddVersion());
             bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
             // 客户姓名
             bean.setCustomer_name(userInfo.getTruename());
