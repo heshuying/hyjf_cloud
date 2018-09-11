@@ -35,7 +35,6 @@ public class DzqzCallController extends BaseController {
 
     /**
      * 接口调用（后台）
-     * @param request
      * @param bean
      * @return
      * @throws Exception
@@ -80,7 +79,7 @@ public class DzqzCallController extends BaseController {
             }
         } catch (Exception e) {
             log.info("---------------调用法大大接口异常，txcode:" + bean.getTxCode() + ",logordid:" + orderId);
-            e.printStackTrace();
+            log.error("法大大接口异常:【{}】",e);
         } finally {
             log.info("---------------调用法大大接口完毕，txcode:" + bean.getTxCode() + ",logordid:" + orderId);
         }
