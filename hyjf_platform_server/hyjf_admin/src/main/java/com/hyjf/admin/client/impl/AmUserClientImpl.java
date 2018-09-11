@@ -2286,5 +2286,24 @@ public class AmUserClientImpl implements AmUserClient {
                 .getBody();
         return response;
 	}
+	/**
+	 * 根据推荐人id查找用信息
+	 *
+	 * @param userId
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId) {
+		SpreadsUserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/userManager/selectSpreadsUserBySpreadUserId/" + userId,
+						SpreadsUserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 
 }

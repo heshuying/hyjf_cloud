@@ -19,41 +19,29 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.RSAHelper;
 import com.hyjf.common.util.RSAKeyUtil;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 public class BankCallSignUtils implements Serializable {
+    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 	private static Logger log = LoggerFactory.getLogger(BankCallSignUtils.class);
 	/**
 	 * 序列化id
 	 */
 	private static final long serialVersionUID = -6267945484521034348L;
 
-	/** THIS_CLASS */
-	private static final String THIS_CLASS = BankCallSignUtils.class.getName();
-
-	/** 商户客户号 **/
-	//todo
-	//public static final String BANK_BANKCODE = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
+	/** 商户客户号 todo **/
 	public static final String BANK_BANKCODE = "";
 
-	/** 商户公钥文件地址 **/
-	//todo
-	//public static final String BANK_PUB_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PUB_KEY_PATH);
+	/** 商户公钥文件地址 todo **/
 	public static final String BANK_PUB_KEY_PATH = "";
 
-	/** 商户私钥文件地址 **/
-	//todo
-	//public static final String BANK_PRI_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PATH);
+	/** 商户私钥文件地址 todo **/
 	public static final String BANK_PRI_KEY_PATH = "";
 
-	/** 服务端公钥地址 **/
-	//todo
-	//public static final String BANK_PRI_SERVER_KEY_PATH = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PATH);
-	public static final String BANK_PRI_SERVER_KEY_PATH = "";
-	//todo
-	/** 商户私钥文件地址 **/
-	//public static final String BANK_PRI_KEY_PASS = PropUtils.getSystem(BankCallConstant.BANK_PRI_KEY_PASS);
+	/** 商户私钥文件密码 todo **/
 	public static final String BANK_PRI_KEY_PASS = "";
 
 	static Logger logger = LoggerFactory.getLogger(BankCallSignUtils.class);

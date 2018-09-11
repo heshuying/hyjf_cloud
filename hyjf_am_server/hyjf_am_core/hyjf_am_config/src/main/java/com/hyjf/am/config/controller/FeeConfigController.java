@@ -31,7 +31,7 @@ public class FeeConfigController extends BaseConfigController{
      * 获取用户的提现费率
      * @return
      */
-    @PostMapping("/getFeeConfig/{bankCode}")
+    @GetMapping("/getFeeConfig/{bankCode}")
     public FeeConfigResponse getFeeConfig(@PathVariable String bankCode){
         FeeConfigResponse response = new FeeConfigResponse();
         List<FeeConfig> feeConfigs = feeConfigService.getFeeConfigs(bankCode);

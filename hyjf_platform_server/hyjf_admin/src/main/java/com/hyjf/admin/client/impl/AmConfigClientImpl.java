@@ -2116,4 +2116,73 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    @Override
+   	public AdminUserResponse adminUserSearch(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/searchAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/moveToInfoAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUserInsertAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/insertAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUserUpdateAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/updateAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/deleteRecordAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/resetPwdAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
+
+   	@Override
+   	public AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest) {
+           String url = "http://AM-ADMIN/am-config/admin/checkAction";
+           AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
+           if (response != null) {
+               return response;
+           }
+           return null;
+   	}
 }

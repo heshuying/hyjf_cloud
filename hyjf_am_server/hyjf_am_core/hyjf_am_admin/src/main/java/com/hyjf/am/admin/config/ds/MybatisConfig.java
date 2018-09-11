@@ -1,11 +1,8 @@
 package com.hyjf.am.admin.config.ds;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
+import com.hyjf.common.constants.CommonConstant;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -26,9 +23,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder.DbType;
-import com.hyjf.am.admin.interceptor.SyncAccountInterceptor;
-import com.hyjf.common.constants.CommonConstant;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 @Configuration
 @MapperScan("com.hyjf.am.*.dao.mapper")
@@ -63,9 +61,27 @@ public class MybatisConfig {
 		return DataSourceBuilder.create().type(dataSourceType).build();
 	}
 
-	@Bean(name = "readDataSource1")
-	@ConfigurationProperties(prefix = "datasource.read1")
-	public DataSource readDataSource1() {
+	@Bean(name = "readTradeDataSource")
+	@ConfigurationProperties(prefix = "datasource.read-trade")
+	public DataSource readTradeDataSource() {
+		return DataSourceBuilder.create().type(dataSourceType).build();
+	}
+
+	@Bean(name = "readMarketDataSource")
+	@ConfigurationProperties(prefix = "datasource.read-market")
+	public DataSource readMarketDataSource() {
+		return DataSourceBuilder.create().type(dataSourceType).build();
+	}
+
+	@Bean(name = "readUserDataSource")
+	@ConfigurationProperties(prefix = "datasource.read-user")
+	public DataSource readUserDataSource() {
+		return DataSourceBuilder.create().type(dataSourceType).build();
+	}
+
+	@Bean(name = "readConfigDataSource")
+	@ConfigurationProperties(prefix = "datasource.read-config")
+	public DataSource readConfigDataSource() {
 		return DataSourceBuilder.create().type(dataSourceType).build();
 	}
 
@@ -79,23 +95,35 @@ public class MybatisConfig {
 											   @Qualifier("writeUserDataSource") DataSource writeUserDataSource,
 											   @Qualifier("writeConfigDataSource") DataSource writeConfigDataSource,
 											   @Qualifier("writeMarketDataSource") DataSource writeMarketDataSource,
-											   @Qualifier("readDataSource1") DataSource readDataSource1) {
+											   @Qualifier("readTradeDataSource") DataSource readTradeDataSource,
+											   @Qualifier("readMarketDataSource") DataSource readMarketDataSource,
+											   @Qualifier("readUserDataSource") DataSource readUserDataSource,
+											   @Qualifier("readConfigDataSource") DataSource readConfigDataSource) {
 
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
 		targetDataSources.put(DbType.WRITETRADE.name(), writeTradeDataSource);
 		targetDataSources.put(DbType.WRITEUSER.name(), writeUserDataSource);
 		targetDataSources.put(DbType.WRITECONFIG.name(), writeConfigDataSource);
 		targetDataSources.put(DbType.WRITEMARKET.name(), writeMarketDataSource);
-		targetDataSources.put(DbType.READ1.name(), readDataSource1);
+		targetDataSources.put(DbType.READTRADE.name(), readTradeDataSource);
+		targetDataSources.put(DbType.READUSER.name(), readUserDataSource);
+		targetDataSources.put(DbType.READCONFIG.name(), readConfigDataSource);
+		targetDataSources.put(DbType.READMARKET.name(), readMarketDataSource);
 
 		// 将数据源的 key 放到数据源上下文的 key 集合中，用于切换时判断数据源是否有效
         DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITETRADE.name());
 		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITEUSER.name());
 		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITECONFIG.name());
 		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.WRITEMARKET.name());
-        DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READ1.name());
+        DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READTRADE.name());
+		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READUSER.name());
+		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READCONFIG.name());
+		DynamicDataSourceContextHolder.dataSourceKeys.add(DbType.READMARKET.name());
         // 将 Slave 数据源的 key 放在集合中，用于轮循
-        DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READ1.name());
+        DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READTRADE.name());
+		DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READUSER.name());
+		DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READCONFIG.name());
+		DynamicDataSourceContextHolder.slaveDataSourceKeys.add(DbType.READMARKET.name());
 
 
 		DynamicDataSource dataSource = new DynamicDataSource();

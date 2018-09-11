@@ -2,7 +2,7 @@ package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.beans.request.MerchantAccountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/12.
@@ -37,7 +38,7 @@ public class AccountConfigController extends BaseController {
     @ApiOperation(value = "查询配置中心账户平台设置", notes = "查询配置中心账户平台设置")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountConfigInit(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult<MerchantAccountResponse> accountConfigInit(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
         //可以直接使用
         BeanUtils.copyProperties(merchantAccountRequestBean, request);
@@ -49,13 +50,13 @@ public class AccountConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<MerchantAccountResponse>(response) ;
     }
 
     @ApiOperation(value = "查询配置中心账户平台设置列表检索", notes = "查询配置中心账户平台设置列表检索")
     @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<MerchantAccountVO>> accountConfigSearch(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
+    public AdminResult<MerchantAccountResponse> accountConfigSearch(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
         //可以直接使用
         BeanUtils.copyProperties(merchantAccountRequestBean, request);
@@ -67,7 +68,7 @@ public class AccountConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<MerchantAccountResponse>(response) ;
     }
     @ApiOperation(value = "账户平台设置详情页面", notes = "账户平台设置详情页面")
     @PostMapping("/infoAction")
@@ -141,17 +142,22 @@ public class AccountConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
+    @ApiOperation(value = "账户平台设置 子账户检索", notes = "账户平台设置 子账户检索")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult<MerchantAccountVO>  checkAccountConfig(@RequestParam(value="name")String name,@RequestParam(value="param")String param,@RequestParam(value = "ids", required = false) String ids) {
-        MerchantAccountResponse prs =new MerchantAccountResponse();
+    public AdminResult<MerchantAccountVO>  checkAccountConfig(@RequestBody Map<String,Object> map) {
+        String name =(String) map.get("name");
+        String param =(String) map.get("param");
+        String ids = (String)map.get("ids");
+        AdminResult prs =new AdminResult();
         // 子账户名称
         if ("subAccountName".equals(name)) {
             // 根据子账户名称检索,是否重复
             int count = merchantAccountService.countAccountListInfoBySubAccountName(ids, param);
             if (count > 0) {
-                return new AdminResult<>(SUCCESS,"{label}子账户名称重复了！");
+                prs.setStatus(BaseResult.FAIL);
+                prs.setStatusDesc("{label}子账户名称重复了！");
+                return prs;
             }
         }
         // 子账户代号
@@ -159,11 +165,14 @@ public class AccountConfigController extends BaseController {
             // 根据子账户代号检索,是否重复
             int result = merchantAccountService.countAccountListInfoBySubAccountCode(ids, param);
             if (result > 0) {
-                return new AdminResult<>(SUCCESS,"{label}子账户代号重复了！");
+                prs.setStatus(BaseResult.FAIL);
+                prs.setStatusDesc("{label}子账户代号重复了！");
+                return prs;
             }
         }
         // 没有错误时,返回y
-        return new AdminResult<>(SUCCESS,"y");
+        prs.setStatusDesc("y");
+        return prs;
     }
     /**
      * 画面校验

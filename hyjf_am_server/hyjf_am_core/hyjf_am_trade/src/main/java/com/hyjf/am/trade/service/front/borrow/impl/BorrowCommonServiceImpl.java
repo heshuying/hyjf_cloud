@@ -54,9 +54,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
-//    @Autowired
-//    @Qualifier("myAmqpTemplate")
-//    private RabbitTemplate rabbitTemplate;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -237,12 +234,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	private void changeOntimeOfRedis(BorrowWithBLOBs borrow) {
 		if (borrow.getVerifyStatus() == 3){
 			//定时发标 写定时发标时间 redis 有效期10天 
-			RedisUtils.set(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME, String.valueOf(borrow.getOntime()), 864000);
+			RedisUtils.set(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
 		} else{
 			//非定时发标 删redis
-			RedisUtils.del(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME);
+			RedisUtils.del(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid());
 		}
 	}
 

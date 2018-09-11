@@ -6,6 +6,7 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author nxl
@@ -19,7 +20,7 @@ public class AccountDetailRequest extends BasePage {
     private String typeSearch;
     private String remarkSrch;// 备注查询
     //推荐人id
-    private String referrerId;
+    private List<Integer> referrerId;
 
     /**
      * account_list 主键
@@ -361,11 +362,11 @@ public class AccountDetailRequest extends BasePage {
         this.remarkSrch = remarkSrch;
     }
 
-    public String getReferrerId() {
+    public List<Integer> getReferrerId() {
         return referrerId;
     }
 
-    public void setReferrerId(String referrerId) {
+    public void setReferrerId(List<Integer> referrerId) {
         this.referrerId = referrerId;
     }
 

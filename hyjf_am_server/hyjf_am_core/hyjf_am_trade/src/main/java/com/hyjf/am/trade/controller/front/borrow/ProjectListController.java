@@ -27,11 +27,13 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +58,16 @@ public class ProjectListController extends BaseController {
     public ProjectListResponse searchProjectList(@RequestBody @Valid ProjectListRequest request){
         ProjectListResponse projectListResponse = new ProjectListResponse();
         List<WebProjectListCustomize> list = projectListService.searchProjectList(request);
+        // add by nxl 判断是否为产品加息 start
+        if(null!=list&&list.size()>0){
+            for(WebProjectListCustomize webProjectListCustomize:list){
+                int intFlg = Integer.parseInt(webProjectListCustomize.getIncreaseInterestFlag());
+                BigDecimal dbYield=new BigDecimal(webProjectListCustomize.getBorrowExtraYield());
+                boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
+                webProjectListCustomize.setIncrease(booleanVal);
+            }
+        }
+        // add by nxl 判断是否为产品加息 end
         if(!CollectionUtils.isEmpty(list)){
             List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
             projectListResponse.setResultList(webProjectListCustomizeVO);

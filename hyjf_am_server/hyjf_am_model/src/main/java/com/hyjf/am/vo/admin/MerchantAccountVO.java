@@ -188,5 +188,4 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
     }
-
 }

@@ -4527,8 +4527,59 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
 
+    @Override
+    public ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id) {
+        String url = "http://AM-TRADE/am-trade/chinapnr/selectChinapnrExclusiveLog/"+id ;
+        ChinapnrExclusiveLogWithBLOBsResponse response = restTemplate.getForEntity(url,ChinapnrExclusiveLogWithBLOBsResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLog", record, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<ChinapnrLogVO> getChinapnrLog(String ordId) {
+        String url = "http://AM-TRADE/am-trade/chinapnr/getChinapnrLog/"+ordId ;
+        ChinapnrLogResponse response = restTemplate.getForEntity(url,ChinapnrLogResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean handlerAfterCash(ChinaPnrWithdrawRequest chinaPnrWithdrawRequest) {
+        BooleanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/chinapnr/handlerAfterCash", chinaPnrWithdrawRequest, BooleanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultBoolean();
+        }
+        return false;
+
+    }
+
+    @Override
+    public void updateAccountWithdrawByOrdId(String ordId, String reason) {
+        String url = "http://AM-TRADE/am-trade/chinapnr/updateAccountWithdrawByOrdId/"+ordId+"/"+ reason;
+        restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
+        String url = "http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
+        restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+    }
+
     /**
-     * 借款人还款表
+     * 借款人还款表 add by liushouyi
      *
      * @param borrowNid
      * @param repayPeriod
@@ -4545,7 +4596,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 合同状态变更数据生成
+     * 合同状态变更数据生成 add by liushouyi
      *
      * @param borrowNid
      * @param repayPeriod
@@ -4562,7 +4613,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 出借人回款记录生成
+     * 出借人回款记录生成 add by liushouyi
      *
      * @param borrowNid
      * @param repayPeriod

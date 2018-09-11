@@ -3,6 +3,8 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.BasePage;
 
+import java.util.Date;
+
 public class AssetManageBeanRequest extends BasePage {
     // 用户id
     public Integer userId;
@@ -36,6 +38,8 @@ public class AssetManageBeanRequest extends BasePage {
     private String successStatus;
 
     private String creditCapitalAssigned;
+
+    private Date nowDate;
 
     public Integer getUserId() {
         return userId;
@@ -174,5 +178,13 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setCreditCapitalAssigned(String creditCapitalAssigned) {
         this.creditCapitalAssigned = creditCapitalAssigned;
+    }
+
+    public Date getNowDate() {
+        return nowDate;
+    }
+
+    public void setNowDate(Date nowDate) {
+        this.nowDate = nowDate;
     }
 }

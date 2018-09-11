@@ -4,7 +4,6 @@
 package com.hyjf.cs.user.controller.api.authquery;
 
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.user.bean.AutoStateQueryRequest;
 import com.hyjf.cs.user.bean.AutoStateQueryResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -33,13 +32,15 @@ public class AutoStateQueryController extends BaseUserController {
     AutoStateQueryService autoStateQueryService;
 
     @ApiOperation(value = " 授权状态查询",notes = " 授权状态查询")
-    @PostMapping(value = "query.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "query.do")
     public  AutoStateQueryResultBean queryStatus(@RequestBody @Valid AutoStateQueryRequest autoStateQuery) {
         AutoStateQueryResultBean resultBean = autoStateQueryService.queryStatus(autoStateQuery);
         if (null != resultBean) {
             return resultBean;
         } else {
-            throw new CheckException(MsgEnum.STATUS_CE999999);
+            resultBean.setStatusForResponse(MsgEnum.STATUS_CE999999.getCode());
+            resultBean.setStatusDesc("授权状态查询接口失败！");
+            return resultBean;
         }
 
     }

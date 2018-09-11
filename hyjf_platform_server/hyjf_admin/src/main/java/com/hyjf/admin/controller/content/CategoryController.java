@@ -170,12 +170,18 @@ public class CategoryController extends BaseController {
 				// 一级菜单等于ca.id即满足条件
 				Integer tip = categoryService.getCountByPcateIdAndcateId(record.getId(), null);
 				record.setTip(tip + "");
+				if(tip != 0){
+                    response.setSuccess(false);
+                    response.setMessage("该主分类下还有未删除的子分类,请先删除子分类");
+                }else{
+                    response.setSuccess(true);
+                }
 			} else if (record.getLevel() == 1) {
 				// 二级菜单没有验证
-				Integer tip = categoryService.getCountByPcateIdAndcateId(record.getPid(), record.getId());
-				record.setTip(tip + "");
+                response.setSuccess(true);
 			}
-			response.setData(record);
+            response.setRecordList(null);
+            response.setParentList(null);
 		} else {
 			response.setRtn(Response.ERROR);
 			response.setMessage("删除ID不可为空！");

@@ -469,10 +469,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         //判断该设备号的发送次数（暂时不做）
         // 判断最大发送数max_phone_count（当日该手机号发送的次数）
-        String count = RedisUtils.get(sendSmsVo.getMobile() + ":MaxPhoneCount");
+        String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+sendSmsVo.getMobile());
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(sendSmsVo.getMobile() + ":MaxPhoneCount", "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+sendSmsVo.getMobile(), "0");
         }
         if (Integer.valueOf(count) > smsConfig.getMaxPhoneCount()) {
             throw new CheckException("2006","该手机号短信请求次数超限，请明日再试");

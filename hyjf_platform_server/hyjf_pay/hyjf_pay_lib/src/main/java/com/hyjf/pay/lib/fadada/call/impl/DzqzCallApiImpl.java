@@ -41,8 +41,9 @@ public class DzqzCallApiImpl implements DzqzCallApi{
      */
     @Override
     public String syncPerson_auto(DzqzCallBean bean) {
+        log.info("app_id:[{}],Secret:[{}],version:[{}],url:[{}]",bean.getApp_id(), bean.getSecret(), bean.getV(), bean.getUrl());
         FddClientBase clientbase = new FddClientBase(bean.getApp_id(), bean.getSecret(), bean.getV(), bean.getUrl());
-
+        log.info("customer_name:[{}],email:[{}],idCard:[{}],ident_type:[{}],mobile:[{}]",bean.getCustomer_name(),bean.getEmail(),bean.getIdCard(),bean.getIdent_type(),bean.getMobile());
         String response = clientbase.invokeSyncPersonAuto(bean.getCustomer_name(),bean.getEmail(),bean.getIdCard(),bean.getIdent_type(),bean.getMobile());
         return response;
     }

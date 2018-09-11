@@ -326,4 +326,12 @@ public interface AmUserClient {
 	 * @Author : huanghui
 	 */
 	BankOpenAccountVO getBankOpenAccountByAccountId(String account);
+
+
+	/**
+	 * 根据汇付账户查询user_id
+	 * @param chinapnrUsrcustid
+	 * @return
+	 */
+	Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid);
 }

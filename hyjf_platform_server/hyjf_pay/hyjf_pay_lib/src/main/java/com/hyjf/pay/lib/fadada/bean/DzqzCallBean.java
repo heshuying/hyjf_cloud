@@ -1,5 +1,8 @@
 package com.hyjf.pay.lib.fadada.bean;
 
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.pay.lib.config.FddSystemConfig;
+
 import java.io.File;
 import java.io.Serializable;
 
@@ -8,7 +11,6 @@ import java.io.Serializable;
  * 电子签章参数类
  */
 public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
-
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
     /**
@@ -509,22 +511,13 @@ public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
         this.file = file;
     }
 
-    public void setCommonItem(){
-        //   todo xiashuqing 20180615
-//        String appId = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_ID);
-//        String secret = PropUtils.getSystem(DzqzConstant.HYJF_FDD_APP_SECRET);
-//        String version = PropUtils.getSystem(DzqzConstant.HYJF_FDD_VERSION);
-//        String url = PropUtils.getSystem(DzqzConstant.HYJF_FDD_URL);
-        String appId = "";
-        String secret = "";
-        String version = "";
-        String url = "";
-
-       this.app_id = appId;
-       this.secret =secret;
-       this.v = version;
-       this.url = url;
-    }
+	public void setCommonItem() {
+        // todo 在pay-server中处理
+//		this.app_id = fddSystemConfig.getFddAppId();
+//		this.secret = fddSystemConfig.getFddAppSeret();
+//		this.v = fddSystemConfig.getFddVersion();
+//		this.url = fddSystemConfig.getFddVisitUrl();
+	}
 
     public String getCustomer_name() {
         return customer_name;

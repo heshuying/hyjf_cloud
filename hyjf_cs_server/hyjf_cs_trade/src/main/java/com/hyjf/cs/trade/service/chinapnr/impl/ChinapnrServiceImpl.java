@@ -5,8 +5,11 @@ package com.hyjf.cs.trade.service.chinapnr.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.ChinaPnrWithdrawRequest;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
+import com.hyjf.am.vo.trade.ChinapnrLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.AccountBankVO;
@@ -52,6 +55,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
 
     @Autowired
     SystemConfig systemConfig;
+
     @Override
     public Map<String, Object> toWithdraw(Integer userId) {
         Map<String,Object> map = new HashMap<>();
@@ -81,13 +85,9 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                 BankCardBean bankCardBean = new BankCardBean();
                 bankCardBean.setId(bank.getUserId());
                 bankCardBean.setBank(bank.getBank());
-                List<BankConfigVO> bankConfigs = amConfigClient.getBankConfigRecordList(bank.getBank());
-                BankConfigVO bankConfig = new BankConfigVO();
-                if(null!=bankConfigs||bankConfigs.size()>0){
-                    bankConfig = bankConfigs.get(0);
-                }
+                BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(bank.getBank());
                 // 应前台要求，logo路径给绝对路径
-                bankCardBean.setLogo(CustomConstants.HOST + bankConfig.getAppLogo());
+                bankCardBean.setLogo(systemConfig.getFrontHost()+ bankConfig.getAppLogo());
                 // 银行名称 汉字
                 bankCardBean.setBank(bankConfig.getName());
                 bankCardBean.setCardNo(bank.getAccount());
@@ -140,7 +140,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         // 投标金额大于可用余额
         CheckUtil.check(account != null&& transAmt.compareTo(account.getBalance()) <= 0,MsgEnum.STATUS_CE000015);
         // 检查参数(银行卡ID是否数字)
-        CheckUtil.check(Validator.isNotNull(bankId) && !StringUtils.isNumeric(bankId),MsgEnum.ERR_AMT_WITHDRAW_CARD);
+        CheckUtil.check(Validator.isNotNull(bankId) && StringUtils.isNumeric(bankId),MsgEnum.ERR_AMT_WITHDRAW_CARD);
     }
 
     @Override
@@ -217,6 +217,91 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
             throw new CheckException("1","请不要重复操作");
         }
         return null;
+    }
+
+    @Override
+    public ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id) {
+        return amTradeClient.selectChinapnrExclusiveLog(id);
+    }
+
+    @Override
+    public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record) {
+        return amTradeClient.updateChinapnrExclusiveLog(record);
+    }
+
+    @Override
+    public String checkCashResult(String ordId) {
+        if (Validator.isNull(ordId)) {
+            return null;
+        }
+        // 调用汇付接口(交易状态查询)
+        ChinapnrBean bean = new ChinapnrBean();
+        // 版本号(必须)
+        bean.setVersion(ChinaPnrConstant.VERSION_10);
+        // 消息类型(必须)
+        bean.setCmdId(ChinaPnrConstant.CMDID_QUERYTRANSSTAT);
+        // 订单号(必须)
+        bean.setOrdId(ordId);
+        // 订单日期(必须)
+        bean.setOrdDate(GetOrderIdUtils.getOrderDate());
+        // 交易查询类型
+        bean.setQueryTransType("CASH");
+        // 写log用参数
+        bean.setLogUserId(0);
+        // 备注
+        bean.setLogRemark("交易状态查询(取现)");
+        // PC
+        bean.setLogClient("0");
+        // 调用汇付接口
+        ChinapnrBean chinapnrBean = ChinapnrUtil.callApiBg(bean);
+        if (chinapnrBean != null) {
+            return chinapnrBean.getTransStat();
+        }
+        return null;
+    }
+
+    @Override
+    public JSONObject getMsgData(String ordId) {
+        if (Validator.isNull(ordId)) {
+            return null;
+        }
+
+        List<String> respCode = new ArrayList<String>();
+        respCode.add(ChinaPnrConstant.RESPCODE_SUCCESS);
+        respCode.add(ChinaPnrConstant.RESPCODE_CHECK);
+        List<ChinapnrLogVO> list =  amTradeClient.getChinapnrLog(ordId);
+        if (list != null && list.size() > 0) {
+            String msgData = list.get(0).getMsgdata();
+            if (Validator.isNotNull(msgData)) {
+                try {
+                    JSONObject jo = JSONObject.parseObject(msgData);
+                    return jo;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
+        return amUserClient.selectUserIdByUsrcustid(chinapnrUsrcustid);
+    }
+
+    @Override
+    public synchronized boolean handlerAfterCash(ChinaPnrWithdrawRequest chinaPnrWithdrawRequest) {
+        return amTradeClient.handlerAfterCash(chinaPnrWithdrawRequest);
+    }
+
+    @Override
+    public void updateAccountWithdrawByOrdId(String ordId, String reason) {
+        amTradeClient.updateAccountWithdrawByOrdId(ordId,reason);
+    }
+
+    @Override
+    public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
+        amTradeClient.updateChinapnrExclusiveLogStatus(uuid,status);
     }
 
     private boolean updateBeforeCash(ChinapnrBean bean, Map<String, String> params, AccountBankVO accountBank) {

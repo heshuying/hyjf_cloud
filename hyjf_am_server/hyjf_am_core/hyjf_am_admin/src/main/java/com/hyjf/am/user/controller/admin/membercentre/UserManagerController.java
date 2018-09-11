@@ -773,4 +773,23 @@ public class UserManagerController extends BaseController {
         }
         return response;
     }
+    /**
+     * 根据推荐人id查找用信息
+     * @param spreadUserId
+     * @return
+     */
+    @RequestMapping("/selectSpreadsUserBySpreadUserId/{spreadUserId}")
+    public SpreadsUserResponse selectSpreadsUserBySpreadUserId(@PathVariable int spreadUserId) {
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        String returnCode = Response.FAIL;
+        List<SpreadsUser> spreadsUserList = userManagerService.selectSpreadBySpreadUserId(spreadUserId);
+        SpreadsUserVO spreadsUserVO = new SpreadsUserVO();
+        if (null != spreadsUserList&&spreadsUserList.size()>0) {
+            List<SpreadsUserVO> spreadsUserVOList = CommonUtils.convertBeanList(spreadsUserList, SpreadsUserVO.class);
+            response.setResultList(spreadsUserVOList);
+            returnCode = Response.SUCCESS;
+        }
+        response.setRtn(returnCode);
+        return response;
+    }
 }

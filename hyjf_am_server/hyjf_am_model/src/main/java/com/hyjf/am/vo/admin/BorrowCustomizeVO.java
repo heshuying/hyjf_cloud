@@ -12,6 +12,7 @@
 package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -89,7 +90,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	/**
 	 * 发布时间
 	 */
-	private String addtime;
+	private Date addtime;
 	/**
 	 * 状态
 	 */
@@ -489,7 +490,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 * @return the addtime
 	 */
 
-	public String getAddtime() {
+	public Date getAddtime() {
 		return addtime;
 	}
 
@@ -498,7 +499,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 *            the addtime to set
 	 */
 
-	public void setAddtime(String addtime) {
+	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
 	}
 
