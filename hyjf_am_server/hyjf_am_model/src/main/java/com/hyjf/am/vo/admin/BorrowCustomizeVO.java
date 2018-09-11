@@ -90,7 +90,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	/**
 	 * 发布时间
 	 */
-	private String addtime;
+	private Date addtime;
 	/**
 	 * 状态
 	 */
@@ -121,7 +121,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	/**
 	 * 借款进度
 	 */
-	private Date borrowAccountScale;
+	private String borrowAccountScale;
 	/***
 	 * 复审用户
 	 */
@@ -235,7 +235,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 * @return the borrowAccountScale
 	 */
 
-	public Date getBorrowAccountScale() {
+	public String getBorrowAccountScale() {
 		return borrowAccountScale;
 	}
 
@@ -244,7 +244,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 *            the borrowAccountScale to set
 	 */
 
-	public void setBorrowAccountScale(Date borrowAccountScale) {
+	public void setBorrowAccountScale(String borrowAccountScale) {
 		this.borrowAccountScale = borrowAccountScale;
 	}
 
@@ -490,7 +490,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 * @return the addtime
 	 */
 
-	public String getAddtime() {
+	public Date getAddtime() {
 		return addtime;
 	}
 
@@ -499,7 +499,7 @@ public class BorrowCustomizeVO  extends BaseVO implements Serializable{
 	 *            the addtime to set
 	 */
 
-	public void setAddtime(String addtime) {
+	public void setAddtime(Date addtime) {
 		this.addtime = addtime;
 	}
 
