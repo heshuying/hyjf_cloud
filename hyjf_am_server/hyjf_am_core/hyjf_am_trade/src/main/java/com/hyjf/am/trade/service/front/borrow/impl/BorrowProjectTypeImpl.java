@@ -221,6 +221,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BeanUtils.copyProperties(form, record);
         Date sysDate = new Date();
         record.setUpdateUserId(Integer.valueOf(form.getUpdateUserId()));
+        record.setStatus(Integer.valueOf(form.getStatus()));
         record.setUpdateTime(sysDate);
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();

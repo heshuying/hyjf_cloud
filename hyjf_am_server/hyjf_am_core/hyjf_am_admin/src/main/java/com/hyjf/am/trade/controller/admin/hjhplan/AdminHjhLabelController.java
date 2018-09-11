@@ -88,10 +88,10 @@ public class AdminHjhLabelController {
 		Paginator paginator;
 		if(request.getLimit() == 0){
 			// 前台传分页
-			paginator = new Paginator(request.getPaginatorPage(), count);
+			paginator = new Paginator(request.getCurrPage(), count);
 		} else {
 			// 前台未传分页那默认10
-			paginator = new Paginator(request.getPaginatorPage(), count,request.getLimit());
+			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
 		List<HjhLabelCustomizeVO> list = adminHjhLabelService.selectHjhLabelList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
