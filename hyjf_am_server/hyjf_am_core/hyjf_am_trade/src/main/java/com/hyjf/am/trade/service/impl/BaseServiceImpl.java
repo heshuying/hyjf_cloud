@@ -516,4 +516,116 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
             return false;
         }
     }
+
+    /**
+     * 获取还款信息详情
+     *
+     * @param borrowNid
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    @Override
+    public BorrowRepay selectBorrowRepay(String borrowNid) {
+        BorrowRepayExample example = new BorrowRepayExample();
+        BorrowRepayExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> borrowRepayList = this.borrowRepayMapper.selectByExample(example);
+        if (null != borrowRepayList && borrowRepayList.size() > 0) {
+            return borrowRepayList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户投资信息
+     *
+     * @param borrowNid
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    @Override
+    public List<BorrowTender> selectBorrowTenderListByBorrowNid(String borrowNid) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
+        if (null == borrowTenderList || borrowTenderList.size() <= 0) {
+            return null;
+        }
+        return borrowTenderList;
+    }
+
+    /**
+     * 根据订单号获取用户放款信息
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public BorrowRecover selectBorrowRecoverByNid(String nid) {
+        // 获取用户放款信息
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        example.createCriteria().andNidEqualTo(nid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
+        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
+            return borrowRecoverList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据订单编号获取互金合同信息
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public NifaContractStatus selectNifaContractStatusByNid(String nid) {
+        NifaContractStatusExample example = new NifaContractStatusExample();
+        example.createCriteria().andContractNoEqualTo(nid);
+        List<NifaContractStatus> nifaContractStatusList = this.nifaContractStatusMapper.selectByExample(example);
+        if (null != nifaContractStatusList && nifaContractStatusList.size() > 0) {
+            return nifaContractStatusList.get(0);
+        }
+        return null;
+    }
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, Integer repayPeriod) {
+        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+        BorrowRecoverPlanExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andRecoverPeriodEqualTo(repayPeriod);
+        List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(example);
+        if (null != borrowRecoverPlanList && borrowRecoverPlanList.size() > 0) {
+            return borrowRecoverPlanList;
+        }
+        return null;
+    }
+
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRecover> selectBorrowRecoverList(String borrowNid, Integer repayPeriod) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andRecoverPeriodEqualTo(repayPeriod);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
+        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
+            return borrowRecoverList;
+        }
+        return null;
+    }
 }

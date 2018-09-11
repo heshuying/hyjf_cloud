@@ -4526,4 +4526,55 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return 0;
     }
+
+    /**
+     * 借款人还款表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_repay_info/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 合同状态变更数据生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_contract_status/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 出借人回款记录生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_received_payments/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
 }

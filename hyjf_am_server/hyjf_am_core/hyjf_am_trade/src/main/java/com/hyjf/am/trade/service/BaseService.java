@@ -134,4 +134,55 @@ public interface BaseService {
      * @return
      */
     boolean writeZip(StringBuffer sb, String zipName);
+
+    /**
+     * 查询还款计划总表
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowRepay selectBorrowRepay(String borrowNid);
+
+    /**
+     * 获取用户投资信息
+     *
+     * @param borrowNid
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    List<BorrowTender> selectBorrowTenderListByBorrowNid(String borrowNid);
+
+    /**
+     * 根据订单号获取用户放款信息
+     *
+     * @param nid
+     * @return
+     */
+    BorrowRecover selectBorrowRecoverByNid(String nid);
+
+    /**
+     * 根据订单编号获取互金合同信息
+     *
+     * @param nid
+     * @return
+     */
+    NifaContractStatus selectNifaContractStatusByNid(String nid);
+
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    List<BorrowRecover> selectBorrowRecoverList(String borrowNid, Integer repayPeriod);
 }
