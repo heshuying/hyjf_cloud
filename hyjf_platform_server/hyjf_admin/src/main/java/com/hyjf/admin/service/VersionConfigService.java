@@ -47,7 +47,7 @@ public interface VersionConfigService {
      * 删除保证金配置
      * @return
      */
-    public AdminVersionResponse deleteVersionConfig(Integer id);
+    public AdminVersionResponse deleteVersionConfig(List<Integer> id);
     /**
      * 校验版本号是否唯一
      * @return

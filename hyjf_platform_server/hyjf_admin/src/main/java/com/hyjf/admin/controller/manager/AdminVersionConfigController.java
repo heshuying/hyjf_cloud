@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -147,8 +148,9 @@ public class AdminVersionConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionResponse adminResponse= null;
-        if(null != versionRequestBean.getId()&&versionRequestBean.getId().intValue()>0){
-            adminResponse = adminVersionConfigService.deleteVersionConfig(versionRequestBean.getId());
+        List<Integer> ids = versionRequestBean.getDelids();
+        if(!CollectionUtils.isEmpty(ids)){
+            adminResponse = adminVersionConfigService.deleteVersionConfig(ids);
         }
         if(adminResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
