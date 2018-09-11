@@ -35,7 +35,9 @@ public interface AmConfigClient {
 	 */
 	List<BankConfigVO> getBankConfigRecordList(String bankName);
 
-	/**
+    BankConfigVO selectBankConfigByCode(String code);
+
+    /**
 	 * 查询江西银行配置（快捷支付）
 	 * @return
 	 */

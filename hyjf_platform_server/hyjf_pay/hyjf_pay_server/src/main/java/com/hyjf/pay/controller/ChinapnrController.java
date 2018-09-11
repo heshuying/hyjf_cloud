@@ -63,8 +63,8 @@ public class ChinapnrController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/callapi")
-    public ModelAndView callApi(@ModelAttribute ChinapnrBean bean) throws Exception {
+    @RequestMapping(value = "/callapi.json")
+    public ModelAndView callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
         logger.info(THIS_CLASS, methodName, "[调用接口开始]");
         ModelAndView modelAndView = new ModelAndView("/chinapnr/chinapnr_send");
@@ -131,7 +131,7 @@ public class ChinapnrController extends BaseController {
      * @return
      */
     @PostMapping(value = "/return")
-    public ModelAndView result(@ModelAttribute ChinapnrBean bean) {
+    public ModelAndView result(@RequestBody ChinapnrBean bean) {
 
         String methodName = "result";
         logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始]");
@@ -249,7 +249,7 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callback")
-    public String callBack(HttpServletRequest request, @ModelAttribute ChinapnrBean bean) {
+    public String callBack(HttpServletRequest request, @RequestBody ChinapnrBean bean) {
         String methodName = "callBack";
         logger.info(THIS_CLASS, methodName, "[接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         bean.convert();
@@ -399,7 +399,7 @@ public class ChinapnrController extends BaseController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/bindReturn")
-    public ModelAndView bindResult(@ModelAttribute ChinapnrBean bean) {
+    public ModelAndView bindResult(@RequestBody ChinapnrBean bean) {
         // TODO: 2018/7/12 暂时没有，不处理
         String methodName = "result";
         logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");

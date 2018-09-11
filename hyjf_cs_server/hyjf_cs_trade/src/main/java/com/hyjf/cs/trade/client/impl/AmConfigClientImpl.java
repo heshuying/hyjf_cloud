@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
@@ -77,7 +78,22 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
-	/**
+    /**
+     * 根据银行Code查询银行配置
+     * @return
+     */
+    @Override
+    public BankConfigVO selectBankConfigByCode(String code){
+		BankConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByCode/"+ code, BankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
 	 * 查询江西银行配置（快捷支付）
 	 * @return
 	 */
