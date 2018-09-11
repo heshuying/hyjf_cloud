@@ -1,12 +1,12 @@
 package com.hyjf.am.admin.config.ds;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DynamicDataSourceContextHolder {
 	
@@ -15,7 +15,7 @@ public class DynamicDataSourceContextHolder {
 
 	// 列举数据源的key
 	public enum DbType {
-        WRITETRADE, WRITEUSER, WRITECONFIG, WRITEMARKET, READ1
+        WRITETRADE, WRITEUSER, WRITECONFIG, WRITEMARKET, READTRADE, READUSER, READCONFIG, READMARKET
     }
 
     /**
@@ -78,24 +78,40 @@ public class DynamicDataSourceContextHolder {
     /**
      * 当使用只读数据源时通过轮循方式选择要使用的数据源
      */
-    public static void useSlaveDataSource() {
-        lock.lock();
+//    public static void useSlaveDataSource() {
+//        lock.lock();
+//
+//        try {
+//            int datasourceKeyIndex = counter % slaveDataSourceKeys.size();
+//            CONTEXT_HOLDER.set(slaveDataSourceKeys.get(datasourceKeyIndex));
+//            if(counter < 0) {
+//            	counter = 0;
+//            }else {
+//                counter++;
+//            }
+//        } catch (Exception e) {
+//            logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
+//            useMasterTradeDataSource();
+//            e.printStackTrace();
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
 
-        try {
-            int datasourceKeyIndex = counter % slaveDataSourceKeys.size();
-            CONTEXT_HOLDER.set(slaveDataSourceKeys.get(datasourceKeyIndex));
-            if(counter < 0) {
-            	counter = 0;
-            }else {
-                counter++;
-            }
-        } catch (Exception e) {
-            logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
-            useMasterTradeDataSource();
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
-        }
+    public static void useSlaveTradeDataSource(){
+        CONTEXT_HOLDER.set(DbType.READTRADE.name());
+    }
+
+    public static void useSlaveUserDataSource(){
+        CONTEXT_HOLDER.set(DbType.READUSER.name());
+    }
+
+    public static void useSlaveConfigDataSource(){
+        CONTEXT_HOLDER.set(DbType.READCONFIG.name());
+    }
+
+    public static void useSlaveMarketDataSource(){
+        CONTEXT_HOLDER.set(DbType.READMARKET.name());
     }
 
     /**
