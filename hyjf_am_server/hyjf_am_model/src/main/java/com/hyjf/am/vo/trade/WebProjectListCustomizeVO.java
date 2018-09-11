@@ -68,7 +68,10 @@ public class WebProjectListCustomizeVO extends BaseVO {
     private String creditDiscount;
 
     private BigDecimal creditCapitalAssigned;
-
+    // add by nxl 20180730 产品加息标志位(0:不加息,1:加息)
+    private String increaseInterestFlag;
+    // add by nxl 20180730 是否为产品加息
+    private  boolean isIncrease;
     /**
      * 构造方法
      */
@@ -290,5 +293,21 @@ public class WebProjectListCustomizeVO extends BaseVO {
 
     public void setBorrowDesc(String borrowDesc) {
         this.borrowDesc = borrowDesc;
+    }
+
+    public String getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(String increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public boolean isIncrease() {
+        return isIncrease;
+    }
+
+    public void setIncrease(boolean increase) {
+        isIncrease = increase;
     }
 }

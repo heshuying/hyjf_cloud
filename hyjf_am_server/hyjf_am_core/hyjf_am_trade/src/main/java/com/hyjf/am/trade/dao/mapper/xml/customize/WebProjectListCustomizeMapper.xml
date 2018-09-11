@@ -86,6 +86,8 @@
         <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
         <result column="credit_capital_assigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
         <result column="borrow_desc" property="borrowDesc" jdbcType="VARCHAR"/>
+        <!-- add by nxl 20180727 产品加息标志位-->
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="HjhPlanMap" type="com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize">
@@ -227,16 +229,24 @@
         <result column="status_orginal" property="statusOrginal" />
         <!--标的审核状态-->
         <result column="project_status" property="projectStatus"></result>
-
+        <!-- add by nxl 20180727 产品加息标志位-->
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
     </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
         SELECT
             htb.borrow_nid,
+            hbi.`name` AS borrow_name,
+            hbi.is_new,
             htb.borrow_nid AS project_name,
             htb.borrow_style AS borrow_style,
+            htb.project_type,
+            htbpt.borrow_name AS borrow_type,
             htb.borrow_apr,
             htb.borrow_period,
+            hbi.borrow_extra_yield,
+            <!-- add by nxl 查找产品加息标志位(0:不加息,1:加息)-->
+            htb.increase_interest_flag,
             CASE WHEN htb.borrow_style = 'endday'
             THEN '天' ELSE '个月' END AS borrow_period_type,
             htb.account AS borrow_account,
@@ -418,6 +428,8 @@
         htbi.borrow_income_description,
         htbi.borrow_publisher,
         htbi.borrow_extra_yield,
+        <!-- add by nxl 添加产品加息标志位查询-->
+        hydb.increase_interest_flag,
         htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,
