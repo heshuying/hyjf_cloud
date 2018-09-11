@@ -646,7 +646,6 @@ WHERE
 		  CONCAT( b.borrow_apr, '%' ) borrow_apr,
 		  FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 		  b.STATUS AS `status`,
-		  FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS addtime,
 		  b.reverify_user_name,
 		  bb.repay_org_name,
 		  CASE

@@ -1,6 +1,8 @@
 package com.hyjf.am.vo.task.autoreview;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Auther: walter.limeng
@@ -151,7 +153,7 @@ public class BorrowCommonCustomizeVO implements Serializable {
     private String borrowAccountWait;
     private String borrowAccountScale;
     private String status;
-    private String addtime;
+    private Date addtime;
     private String verifyOverTime;
     private String ontime;
     private String bookingBeginTime;
@@ -583,7 +585,7 @@ public class BorrowCommonCustomizeVO implements Serializable {
      * @return the addtime
      */
 
-    public String getAddtime() {
+    public Date getAddtime() {
         return addtime;
     }
 
@@ -592,7 +594,7 @@ public class BorrowCommonCustomizeVO implements Serializable {
      *            the addtime to set
      */
 
-    public void setAddtime(String addtime) {
+    public void setAddtime(Date addtime) {
         this.addtime = addtime;
     }
 

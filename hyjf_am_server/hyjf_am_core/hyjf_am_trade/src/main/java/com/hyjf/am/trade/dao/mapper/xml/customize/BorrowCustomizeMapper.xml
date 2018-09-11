@@ -646,7 +646,6 @@ WHERE
 		  CONCAT( b.borrow_apr, '%' ) borrow_apr,
 		  FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 		  b.STATUS AS `status`,
-		  FROM_UNIXTIME( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS addtime,
 		  b.reverify_user_name,
 		  bb.repay_org_name,
 		  CASE
@@ -673,8 +672,8 @@ WHERE
 		  <!--ADD  BY  zhangyk   增加初审时间显示 START -->
 		  CASE WHEN b.verify_time <![CDATA[ <>]]> 0 AND b.verify_time IS NOT NULL THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS verify_time,
 		  <!--ADD  BY  zhangyk   增加初审时间显示 END -->
-		  b.borrow_account_scale,
-		  b.create_time as addtime
+		  b.create_time as addtime,
+		  b.borrow_account_scale
 		  FROM
 		  ht_borrow b
 		  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
