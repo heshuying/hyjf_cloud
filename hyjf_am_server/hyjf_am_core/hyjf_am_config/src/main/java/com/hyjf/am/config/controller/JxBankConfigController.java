@@ -47,7 +47,7 @@ public class JxBankConfigController {
      * @param bankId 主键id
      * @return
      */
-    @GetMapping("/getJxBankConfigByBankId1/{bankId}")
+    @GetMapping("/getJxBankConfigByBankId/{bankId}")
     public JxBankConfigResponse getBankConfigByBankId(@PathVariable Integer bankId){
         JxBankConfigResponse response = new JxBankConfigResponse();
         List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(bankId);
