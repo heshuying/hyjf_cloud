@@ -54,9 +54,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
-//    @Autowired
-//    @Qualifier("myAmqpTemplate")
-//    private RabbitTemplate rabbitTemplate;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -88,7 +85,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			List<BorrowInfo> borrowList = this.borrowInfoMapper.selectByExample(borrowExample);
 			if (borrowList != null && borrowList.size() > 0) {
-				return false;
+				return true;
 			}
 			String redisBorrowPreNid = "";
 			if(borrowPreNid.length()==11){
@@ -99,11 +96,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				
 			if (redisBorrowPreNid != null && redisBorrowPreNid.length() != 0) {
 				if (Long.valueOf(redisBorrowPreNid) >= Long.valueOf(borrowPreNid)) {
-					return false;
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**

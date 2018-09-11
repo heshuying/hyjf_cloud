@@ -29,12 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -42,7 +39,6 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
-import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
@@ -272,7 +268,7 @@ public class BorrowCommonController extends BaseController {
 //		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 		boolean borrowPreNidFlag = borrowCommonService.isExistsBorrowPreNidRecord(borrowPreNid.get("borrowPreNid"));
-		return new AdminResult<>(borrowPreNidFlag);
+		return new AdminResult<>(!borrowPreNidFlag);
 
 	}
 
@@ -1769,7 +1765,7 @@ public class BorrowCommonController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/exportOptAction")
+	@PostMapping("/exportOptAction")
 	public void exportOptAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowBeanRequest form) throws Exception {
 		form.setPageSize(-1);
 		form.setCurrPage(-1);
