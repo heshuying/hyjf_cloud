@@ -1579,7 +1579,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @return
      */
     @Override
-    public AdminVersionResponse deleteVersionConfig(Integer id) {
+    public AdminVersionResponse deleteVersionConfig(List<Integer> id) {
         String url = "http://AM-CONFIG/am-config/config/versionconfig/delete";
         AdminVersionResponse response = restTemplate.postForEntity(url, id, AdminVersionResponse.class).getBody();
         if (response != null) {

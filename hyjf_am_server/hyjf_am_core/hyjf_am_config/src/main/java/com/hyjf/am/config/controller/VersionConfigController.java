@@ -120,7 +120,7 @@ public class VersionConfigController extends BaseConfigController{
      * @param id
      */
     @RequestMapping("/delete")
-    public AdminVersionResponse deleteVersionConfig(@RequestBody Integer id) {
+    public AdminVersionResponse deleteVersionConfig(@RequestBody List<Integer> id) {
         AdminVersionResponse resp = new AdminVersionResponse();
         try{
             this.versionConfigService.deleteVersionConfig(id);
