@@ -329,7 +329,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectList() {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_project";
+        String url = "http://AM-ADMIN/am-trade/borrow_regist/select_borrow_project";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url, BorrowProjectTypeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -5486,7 +5486,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> selectCommonHjhInstConfigList() {
-        String url = "http://AM-TRADE/am-trade/admin_common/select_inst_config";
+        String url = "http://AM-ADMIN/am-trade/admin_common/select_inst_config";
         HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
