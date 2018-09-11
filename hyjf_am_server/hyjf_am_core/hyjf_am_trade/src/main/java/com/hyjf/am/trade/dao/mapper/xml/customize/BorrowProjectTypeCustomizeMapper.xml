@@ -9,6 +9,7 @@
     <resultMap id="getProjectTypeListMap" type="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         <result column="borrow_project_type" property="borrowProjectType" jdbcType="VARCHAR" />
         <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR" />
+        <result column="method_name" property="methodName" jdbcType="VARCHAR" />
         <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
         <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
         <result column="invest_start" property="investStart" jdbcType="VARCHAR" />
@@ -86,7 +87,7 @@
         typ.remark,
         typ.create_user_id,
         typ.update_user_id,
-        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name,
+        GROUP_CONCAT("", pr.repay_method, "") AS method_name,
         typ.increase_interest_flag
         FROM
         ht_borrow_project_type typ
