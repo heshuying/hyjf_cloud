@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.BorrowProjectTypeClient;
 import com.hyjf.admin.service.BorrowProjectTypeService;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
@@ -109,8 +108,8 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      * @param record
      */
     @Override
-    public void updateRecord(BorrowProjectTypeRequest record){
-        amTradeClient.updateRecord(record);
+    public BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record){
+        return amTradeClient.updateRecord(record);
     }
     /**
      *  汇直投项目类型维护删除

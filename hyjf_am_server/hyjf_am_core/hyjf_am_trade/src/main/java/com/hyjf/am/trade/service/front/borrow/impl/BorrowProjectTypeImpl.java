@@ -220,6 +220,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BorrowProjectType record = new BorrowProjectType();
         BeanUtils.copyProperties(form, record);
         Date sysDate = new Date();
+        record.setUpdateUserId(Integer.valueOf(form.getUpdateUserId()));
         record.setUpdateTime(sysDate);
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
@@ -261,10 +262,8 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         cra.andInstCodeEqualTo(CustomConstants.INST_CODE_HYJF);
 
         HjhAssetType record = new HjhAssetType();
-//        String userId = ShiroUtil.getLoginUserId();
         //更新用户id
-        record.setUpdateUser(Integer.valueOf(form.getUpdateUserId()));
-        int nowTime = GetDate.getNowTime10();
+        record.setUpdateUser(form.getUpdateUserId());
         //更新时间
         record.setUpdateTime(new Date());
         //名称
