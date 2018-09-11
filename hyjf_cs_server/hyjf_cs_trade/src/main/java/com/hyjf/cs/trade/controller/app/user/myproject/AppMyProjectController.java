@@ -197,7 +197,7 @@ public class AppMyProjectController extends BaseTradeController {
             // 判断债权能否债转
             if (canDoTransfer(entity.getBorrowNid(), nid, userId)) {
                 vo.setIsDisplay("1");
-                String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/transfer/" +assignNid + "?borrowId=" + entity.getBorrowNid()
+                String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/borrow/transfer/setting?borrowId=" + entity.getBorrowNid()
                         + "&tenderId=" + nid;
                 vo.setUrl(url);
             } else {
