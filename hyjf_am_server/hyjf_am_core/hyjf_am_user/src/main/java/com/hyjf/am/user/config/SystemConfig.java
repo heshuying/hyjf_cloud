@@ -11,7 +11,10 @@ public class SystemConfig {
 
     @Value("${hyjf.fdd.version}")
     public String fddVersion;
-
+    @Value("${hyjf.fdd.app.secret}")
+    public String fddSecret;
+    @Value("${hyjf.fdd.url}")
+    public String fddUrl;
     public String getFaaAppUrl() {
         return faaAppUrl;
     }
@@ -26,5 +29,21 @@ public class SystemConfig {
 
     public void setFddVersion(String fddVersion) {
         this.fddVersion = fddVersion;
+    }
+
+    public String getFddSecret() {
+        return fddSecret;
+    }
+
+    public void setFddSecret(String fddSecret) {
+        this.fddSecret = fddSecret;
+    }
+
+    public String getFddUrl() {
+        return fddUrl;
+    }
+
+    public void setFddUrl(String fddUrl) {
+        this.fddUrl = fddUrl;
     }
 }

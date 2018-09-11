@@ -97,9 +97,13 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             bean.setTxCode("syncPerson_auto");
             bean.setApp_id(systemConfig.getFaaAppUrl());
             bean.setV(systemConfig.getFddVersion());
+            bean.setSecret(systemConfig.getFddSecret());
+            bean.setUrl(systemConfig.getFddUrl());
             bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
             // 客户姓名
             bean.setCustomer_name(userInfo.getTruename());
+            // email
+            bean.setEmail(email);
             bean.setEmail(StringUtils.isNotBlank(user.getEmail()) ? user.getEmail() : "");
             // 证件类型
             bean.setIdent_type("0");
