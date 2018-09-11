@@ -1,19 +1,5 @@
 package com.hyjf.pay.controller;
 
-import java.lang.reflect.Method;
-import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
@@ -26,8 +12,16 @@ import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
 import com.hyjf.pay.mq.FddProducer;
 import com.hyjf.pay.mq.Producer;
 import com.hyjf.pay.service.DzqzPayLogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.TreeMap;
+
+@RestController
 @RequestMapping(DzqzCallDefine.FDD_REQUEST_MAPPING)
 public class DzqzCallController extends BaseController {
 
@@ -41,14 +35,12 @@ public class DzqzCallController extends BaseController {
 
     /**
      * 接口调用（后台）
-     * @param request
      * @param bean
      * @return
      * @throws Exception
      */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = DzqzCallDefine.FDD_CALL_APIBG)
-    public String callApiBg(HttpServletRequest request, @ModelAttribute DzqzCallBean bean) throws Exception {
+    @PostMapping(value = DzqzCallDefine.FDD_CALL_APIBG)
+    public String callApiBg(@RequestBody DzqzCallBean bean) {
         log.info("--------------开始调用pay工程-------------");
         log.info("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
         String ret = "";
@@ -87,7 +79,7 @@ public class DzqzCallController extends BaseController {
             }
         } catch (Exception e) {
             log.info("---------------调用法大大接口异常，txcode:" + bean.getTxCode() + ",logordid:" + orderId);
-            e.printStackTrace();
+            log.error("法大大接口异常:【{}】",e);
         } finally {
             log.info("---------------调用法大大接口完毕，txcode:" + bean.getTxCode() + ",logordid:" + orderId);
         }
@@ -101,8 +93,7 @@ public class DzqzCallController extends BaseController {
      * @return
      * @throws Exception
      */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = DzqzCallDefine.FDD_CALL_API_SIGNNODIFY)
+    @PostMapping(value = DzqzCallDefine.FDD_CALL_API_SIGNNODIFY)
     public String callApiSignNodify(HttpServletRequest request, @ModelAttribute DzqzCallBean bean) throws Exception {
         String orderId = bean.getTransaction_id();
         String transType = request.getParameter("transType");

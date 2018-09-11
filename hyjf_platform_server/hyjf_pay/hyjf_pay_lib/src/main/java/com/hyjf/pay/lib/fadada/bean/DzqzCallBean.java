@@ -11,8 +11,6 @@ import java.io.Serializable;
  * 电子签章参数类
  */
 public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
-    private static FddSystemConfig fddSystemConfig = SpringUtils.getBean(FddSystemConfig.class);
-
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
     /**

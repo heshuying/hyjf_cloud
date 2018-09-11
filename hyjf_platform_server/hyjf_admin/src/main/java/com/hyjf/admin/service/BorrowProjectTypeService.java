@@ -64,7 +64,7 @@ public interface BorrowProjectTypeService {
      *
      * @param record
      */
-    public void updateRecord(BorrowProjectTypeRequest record);
+    public BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record);
     /**
      *  汇直投项目类型维护删除
      * @param adminRequest

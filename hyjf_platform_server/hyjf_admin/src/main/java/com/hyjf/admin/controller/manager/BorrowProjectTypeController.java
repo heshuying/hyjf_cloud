@@ -209,13 +209,14 @@ public class BorrowProjectTypeController extends BaseController {
             adminRequest.setInterestCoupon(1);
             adminRequest.setTasteMoney(1);
         }
-        BorrowProjectTypeResponse response =  new BorrowProjectTypeResponse();
+        BorrowProjectTypeResponse response = null;
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
         //表单字段校验
         String message = this.validatorFieldCheck(model, adminRequest);
         if (StringUtils.isNotBlank(message)) {
+            response =  new BorrowProjectTypeResponse();
             List<BorrowProjectRepayVO> selectRepay = new ArrayList<>();
             if (StringUtils.isNotEmpty(adminRequest.getMethodName())) {
                 String name[] = adminRequest.getMethodName().split(",");
@@ -241,8 +242,7 @@ public class BorrowProjectTypeController extends BaseController {
             return new AdminResult<BorrowProjectTypeResponse>(response);
         }
         if (StringUtils.isNotEmpty(adminRequest.getBorrowCd())) {
-            this.borrowProjectTypeService.updateRecord(adminRequest);
-            response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
+            response = this.borrowProjectTypeService.updateRecord(adminRequest);
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -250,6 +250,7 @@ public class BorrowProjectTypeController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+        response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
         return new AdminResult<BorrowProjectTypeResponse>(response);
     }
 
