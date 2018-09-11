@@ -88,7 +88,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			List<BorrowInfo> borrowList = this.borrowInfoMapper.selectByExample(borrowExample);
 			if (borrowList != null && borrowList.size() > 0) {
-				return true;
+				return false;
 			}
 			String redisBorrowPreNid = "";
 			if(borrowPreNid.length()==11){
@@ -99,11 +99,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				
 			if (redisBorrowPreNid != null && redisBorrowPreNid.length() != 0) {
 				if (Long.valueOf(redisBorrowPreNid) >= Long.valueOf(borrowPreNid)) {
-					return true;
+					return false;
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
