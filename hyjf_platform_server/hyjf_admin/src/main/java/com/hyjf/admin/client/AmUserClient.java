@@ -1126,5 +1126,11 @@ public interface AmUserClient {
     Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
 
 	int isExistsUser(String userId);
-
+    /**
+     * 根据推荐人id查找用信息
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
+    List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
 }

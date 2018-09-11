@@ -189,4 +189,10 @@ public interface UserCenterService {
      * @exception:
      */
     String getAreaByIdCard(String idCard);
+    /**
+     * 根据推荐人id查找用信息
+     * @param userId
+     * @return
+     */
+    List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
 }

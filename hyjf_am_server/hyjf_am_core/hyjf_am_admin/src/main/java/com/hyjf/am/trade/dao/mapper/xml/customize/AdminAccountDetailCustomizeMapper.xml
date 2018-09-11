@@ -84,9 +84,12 @@
 		<if test="userId != null and userId != 0">
 			AND l.user_id = #{userId}
 		</if>
-		<!--<if test="referrerName != null and referrerName != ''">
-			AND u2.username = #{referrerName}
-		</if>-->
+		<if test="referrerId != null and referrerId.size > 0 ">
+			AND l.user_id IN
+			<foreach collection="referrerId" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
 		<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
 			AND t.id = #{tradeTypeSearch}
 		</if>

@@ -26,11 +26,9 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -76,6 +74,42 @@ public class AccountDetailController extends BaseController {
     @ResponseBody
     public AdminResult<ListResult<AccountDetailCustomizeVO>> queryAccountDetail(@RequestBody AccountDetailRequestBean accountDetailRequestBean) {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
+        //根据用户名查找
+        if(StringUtils.isNotBlank(accountDetailRequestBean.getUsername())){
+            UserVO userVO = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getUsername());
+            if(null!=userVO){
+                requestAccountDetail.setUserId(userVO.getUserId());
+            }else{
+                return new AdminResult<>(FAIL,"用户不存在!");
+            }
+        }
+        //根据推荐人查找
+        if(StringUtils.isNotBlank(accountDetailRequestBean.getReferrerName())){
+            //根据推荐人姓名查找推荐人id
+            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getReferrerName());
+            //根据推人id查找用户id
+            List<SpreadsUserVO> spreadsUserVOList = userCenterService.selectSpreadsUserBySpreadUserId(userReferrerSearch.getUserId());
+            if(CollectionUtils.isNotEmpty(spreadsUserVOList)){
+                List<Integer> listSpreadUserId = new ArrayList<Integer>();
+                StringBuffer spreadUserIds = new StringBuffer();
+                for(SpreadsUserVO ss:spreadsUserVOList){
+                    //如果两种情况共存的情况下(推荐人姓名&用户姓名)
+                    if(StringUtils.isNotBlank(accountDetailRequestBean.getUsername())){
+                        UserVO userVO = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getUsername());
+                        if(ss.getUserId().equals(userVO.getUserId())){
+                            listSpreadUserId.add(ss.getUserId());
+                        }else{
+                            listSpreadUserId.add(0);
+                        }
+                    }else{
+                        listSpreadUserId.add(ss.getUserId());
+                    }
+                }
+                requestAccountDetail.setReferrerId(listSpreadUserId);
+            }else{
+                return new AdminResult<>(FAIL,"推荐人不存在!");
+            }
+        }
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
         if(accountDetailResponse==null) {
@@ -85,7 +119,6 @@ public class AccountDetailController extends BaseController {
             return new AdminResult<>(FAIL, accountDetailResponse.getMessage());
         }
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-        List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if (null != listAccountDetail && listAccountDetail.size() > 0) {
             for (AccountDetailVO accountDetailVO : listAccountDetail) {
                 //根据用户id获取用户信息
@@ -103,16 +136,16 @@ public class AccountDetailController extends BaseController {
                     accountDetailVO.setReferrerName(userSpreads.getUsername());
                     accountDetailVO.setReferrerId(userSpreads.getUserId().toString());
                 }
-                //根据筛选条件判断
+               /* //根据筛选条件判断
                 AccountDetailVO accountDetailVoDefine = SearchParan(accountDetailRequestBean,accountDetailVO);
                 if(null!=accountDetailVoDefine){
                     listAccountDtaileShow.add(accountDetailVoDefine);
-                }
+                }*/
             }
         }
         List<AccountDetailCustomizeVO> accountDetailCustomizeVOList = new ArrayList<AccountDetailCustomizeVO>();
-        if(null!=listAccountDtaileShow&&listAccountDtaileShow.size()>0){
-            accountDetailCustomizeVOList = CommonUtils.convertBeanList(listAccountDtaileShow, AccountDetailCustomizeVO.class);
+        if(null!=listAccountDetail&&listAccountDetail.size()>0){
+            accountDetailCustomizeVOList = CommonUtils.convertBeanList(listAccountDetail, AccountDetailCustomizeVO.class);
         }
         return new AdminResult<ListResult<AccountDetailCustomizeVO>>(ListResult.build(accountDetailCustomizeVOList, accountDetailResponse.getRecordTotal())) ;
     }

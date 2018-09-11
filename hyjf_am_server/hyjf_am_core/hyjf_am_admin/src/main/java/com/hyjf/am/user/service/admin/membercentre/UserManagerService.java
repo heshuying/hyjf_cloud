@@ -265,4 +265,11 @@ public interface UserManagerService extends BaseService {
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
 
     UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
+
+    /**
+     * 根据推荐人id查找用信息
+     * @param spreadUserId
+     * @return
+     */
+    List<SpreadsUser> selectSpreadBySpreadUserId(Integer spreadUserId);
 }
