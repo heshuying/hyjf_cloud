@@ -54,9 +54,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
-//    @Autowired
-//    @Qualifier("myAmqpTemplate")
-//    private RabbitTemplate rabbitTemplate;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
