@@ -2271,6 +2271,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    @Override
+    public int selectRepaymentListTotalWeb(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectRepaymentListTotalWeb";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getRepayMentCount();
+        }
+        return 0;
+    }
+
+    /**
      * 获取用户债权转让列表总数
      * @param request
      * @return

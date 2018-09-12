@@ -918,6 +918,12 @@ public interface AmTradeClient {
      */
     int selectRepaymentListTotal(AssetManageBeanRequest request);
     /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotalWeb(AssetManageBeanRequest request);
+    /**
      * 获取用户债权转让列表总数
      * @param request
      * @return

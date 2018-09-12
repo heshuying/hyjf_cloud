@@ -565,9 +565,50 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("investDesc","恭喜您，投资成功！");
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         logger.info("获取投资成功结果为:"+borrowTender);
+
+
+
         if(borrowTender!=null){
+            BigDecimal earnings = new BigDecimal("0");
             // 本金收益  历史回报
-            BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(borrowTender.getAccount(),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+            //BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(borrowTender.getAccount(),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+            // 计算历史回报
+            String interest = null;
+            String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
+            Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
+            BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
+            String account = String.valueOf(borrowTender.getAccount());
+            switch (borrowStyle) {
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                            BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
+                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                default:
+                    break;
+            }
+            // 产品加息预期收益
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account , borrow.getBorrowExtraYield());
+                BigDecimal oldEarnings = new BigDecimal(interest);
+                earnings = incEarnings.add(oldEarnings);
+            }
             data.put("income",df.format(earnings));
             // 本金
             data.put("account",df.format(borrowTender.getAccount()));
@@ -658,15 +699,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponAvailableCount(0);
         }
 
+        // 设置产品加息 显示收益率
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield()));
+        }
+
         // 如果投资金额不为空
         if ((!StringUtils.isBlank(money) && Long.parseLong(money) > 0) || (couponConfig != null && (couponConfig.getCouponType() == 3 || couponConfig.getCouponType() == 1))) {
 
             String borrowStyle = borrow.getBorrowStyle();
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
-            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+/*            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
                 borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
-            }
+            }*/
             BigDecimal couponInterest = BigDecimal.ZERO;
             /** 叠加收益率开始*/
             if (couponConfig != null) {
@@ -700,11 +746,52 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponConfig(couponConfig);
         }
 
+        // 产品加息预期收益
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            if (couponConfig != null && couponConfig.getCouponType() == 3){
+                money = new BigDecimal(money).subtract(couponConfig.getCouponQuota()).toString();
+            }
+            BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
+            BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
+            investInfo.setEarnings(df.format(incEarnings.add(oldEarnings)));
+        }
+
         WebResult<TenderInfoResult> result = new WebResult();
         result.setData(investInfo);
         return result;
     }
-
+    /**
+     * 计算产品加息预期收益
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private BigDecimal increaseCalculate(Integer borrowPeriod,String borrowStyle,String money,BigDecimal borrowApr) {
+        BigDecimal earnings = new BigDecimal("0");
+        switch (borrowStyle) {
+            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                // 计算历史回报
+                earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2,
+                        BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+                earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+                earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                        BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+                earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
+                earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            default:
+                break;
+        }
+        return earnings;
+    }
     /**
      * 获取APP端投资信息
      *
