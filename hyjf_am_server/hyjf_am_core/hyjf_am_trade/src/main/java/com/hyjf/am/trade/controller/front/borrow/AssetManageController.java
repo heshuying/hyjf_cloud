@@ -104,6 +104,21 @@ public class AssetManageController extends BaseController {
         response.setRepayMentCount(repayMentCount);
         return response;
     }
+    /**
+     * @Description 获取用户已回款债权列表数量(产品加息需求迁移时添加)
+     * @Author sunpeikai
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectRepaymentListTotalWeb")
+    public AssetManageResponse selectRepaymentListTotalWeb(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        int repayMentCount = this.assetManageService.selectRepaymentListTotalWeb(request);
+
+        response.setRepayMentCount(repayMentCount);
+        return response;
+    }
 
     /**
      * @Description 获取用户转让列表
