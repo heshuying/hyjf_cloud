@@ -6,6 +6,8 @@ package com.hyjf.am.trade.mq.consumer;
 import java.util.List;
 import java.util.UUID;
 
+import com.hyjf.am.trade.dao.model.auto.NifaContractEssence;
+import com.hyjf.am.trade.mq.producer.nifa.NifaContractEssenceMessageProducer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -59,6 +61,9 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
     
 	@Autowired
 	MailProducer mailProducer;
+
+	@Autowired
+	NifaContractEssenceMessageProducer nifaContractEssenceMessageProducer;
 
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
@@ -164,6 +169,14 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				        }catch (MQException e){
 				            logger.error("发送运营数据更新MQ失败,放款标的:" + borrowApicron.getBorrowNid());
 				        }
+				        // 发送mq到生成互金合同要素信息
+						try {
+							JSONObject param = new JSONObject();
+							param.put("borrowNid", borrowApicron.getBorrowNid());
+				        	nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+						} catch (Exception e) {
+							logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+						}
 					}
 				}
 			} catch (Exception e) {
