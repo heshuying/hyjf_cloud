@@ -90,10 +90,10 @@
 				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[<=]]> #{assignRepayNextTimeEnd}
 			</if>
 			<if test="addTimeStart != null and addTimeStart != ''">
-				AND DATE_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{addTimeStart},'%Y-%m-%d')
+				AND hct.create_time <![CDATA[>=]]> CONCAT(#{addTimeStart},' 00:00:00')
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND DA_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{addTimeEnd},  '%Y-%m-%d')
+				AND  hct.create_time <![CDATA[<=]]> CONCAT(#{addTimeEnd},  ' 23:59:59')
 			</if>
 		</where>
 	</sql>
@@ -145,7 +145,7 @@
 	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderVO">
 		SELECT
 		ct.assign_nid              AS assignNid,
-		ct.client             	 AS client,
+		bc.client             	 AS client,
 		ct.credit_nid              AS creditNid,
 		ct.bid_nid                 AS bidNid,
 		ct.credit_user_name      AS creditUserName,
@@ -210,7 +210,7 @@
 			</if>
 			<!-- 承接人-->
 			<if test="creditUserName != null and creditUserName != ''">
-				AND bt.create_user_name LIKE CONCAT('%', #{creditUserName}, '%')
+				AND ct.credit_user_name LIKE CONCAT('%', #{creditUserName}, '%')
 			</if>
 			<!-- 订单号-->
 			<if test="assignNid != null and assignNid != ''">
@@ -293,5 +293,34 @@
 		SELECT SUM(credit_fee) AS creditFee
 			FROM huiyingdai_credit_tender
 		  WHERE credit_nid = #{creditNid}
+	</select>
+
+
+
+	<!-- 获取用户转让记录详情 -->
+	<select id="getCreditTenderAssignPay" resultType="String" parameterType="java.util.Map">
+		SELECT
+		CASE WHEN hbc.credit_capital_assigned = 0 THEN 0.00
+		ELSE
+		(select  sum(hct.assign_pay)-sum(hct.credit_fee) from ht_credit_tender hct
+		where 1=1
+		<!-- 债转编号-->
+		<if test="creditNid != null and creditNid !=''">
+			AND hct.credit_nid = #{creditNid}
+		</if>
+		)
+		END AS assignPay
+
+		FROM
+		ht_borrow_credit hbc
+		<where>
+			<if test="userId != null and userId != ''">
+				AND hbc.credit_user_id = #{userId}
+			</if>
+			<!-- 债转编号-->
+			<if test="creditNid != null and creditNid !=''">
+				AND hbc.credit_nid = #{creditNid}
+			</if>
+		</where>
 	</select>
 </mapper>

@@ -16,9 +16,9 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
-    <result column="add_user" property="addUser" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
-    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" extends="BaseResultMap" >
@@ -85,7 +85,8 @@
   </sql>
   <sql id="Base_Column_List" >
     uuid, order_id, recover_id, `type`, `status`, respcode, trans_amt, account_id, seq_no, 
-    cus_id, acct_id, user_id, remark, del_flag, add_user, update_user, add_time, update_time
+    cus_id, acct_id, user_id, remark, del_flag, create_user, update_user, create_time, 
+    update_time
   </sql>
   <sql id="Blob_Column_List" >
     content, `result`
@@ -152,15 +153,15 @@
       `status`, respcode, trans_amt, 
       account_id, seq_no, cus_id, 
       acct_id, user_id, remark, 
-      del_flag, add_user, update_user, 
-      add_time, update_time, content, 
+      del_flag, create_user, update_user, 
+      create_time, update_time, content, 
       `result`)
     values (#{orderId,jdbcType=VARCHAR}, #{recoverId,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, 
       #{status,jdbcType=TINYINT}, #{respcode,jdbcType=VARCHAR}, #{transAmt,jdbcType=DECIMAL}, 
       #{accountId,jdbcType=VARCHAR}, #{seqNo,jdbcType=VARCHAR}, #{cusId,jdbcType=VARCHAR}, 
       #{acctId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=TINYINT}, #{addUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
-      #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, 
+      #{delFlag,jdbcType=TINYINT}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}, 
       #{result,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.TransferExceptionLogWithBLOBs" >
@@ -208,14 +209,14 @@
       <if test="delFlag != null" >
         del_flag,
       </if>
-      <if test="addUser != null" >
-        add_user,
+      <if test="createUser != null" >
+        create_user,
       </if>
       <if test="updateUser != null" >
         update_user,
       </if>
-      <if test="addTime != null" >
-        add_time,
+      <if test="createTime != null" >
+        create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -267,14 +268,14 @@
       <if test="delFlag != null" >
         #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="addUser != null" >
-        #{addUser,jdbcType=VARCHAR},
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="updateUser != null" >
         #{updateUser,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        #{addTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -338,14 +339,14 @@
       <if test="record.delFlag != null" >
         del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
-      <if test="record.addUser != null" >
-        add_user = #{record.addUser,jdbcType=VARCHAR},
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=VARCHAR},
       </if>
       <if test="record.updateUser != null" >
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
-      <if test="record.addTime != null" >
-        add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -377,9 +378,9 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      add_user = #{record.addUser,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       content = #{record.content,jdbcType=LONGVARCHAR},
       `result` = #{record.result,jdbcType=LONGVARCHAR}
@@ -403,9 +404,9 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
-      add_user = #{record.addUser,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
       update_user = #{record.updateUser,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -453,14 +454,14 @@
       <if test="delFlag != null" >
         del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
-      <if test="addUser != null" >
-        add_user = #{addUser,jdbcType=VARCHAR},
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="updateUser != null" >
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
-      <if test="addTime != null" >
-        add_time = #{addTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -489,9 +490,9 @@
       user_id = #{userId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      add_user = #{addUser,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       content = #{content,jdbcType=LONGVARCHAR},
       `result` = #{result,jdbcType=LONGVARCHAR}
@@ -512,9 +513,9 @@
       user_id = #{userId,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       del_flag = #{delFlag,jdbcType=TINYINT},
-      add_user = #{addUser,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
       update_user = #{updateUser,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>

@@ -3,30 +3,31 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowBail;
-import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -34,6 +35,10 @@ import java.util.Map;
  */
 @Service
 public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFirstService {
+
+    @Resource
+    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
+
     /**
      * 借款初审总条数
      *
@@ -127,7 +132,8 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
      */
     @Override
     public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
-        BorrowVO borrow = borrowFireRequest.getBorrowVO();
+        String borrowNid = borrowFireRequest.getBorrowNid();
+        Borrow borrow = getBorrowByBorrowNid(borrowNid);
         if (borrow != null) {
             // 插入时间
             int systemNowDateLong = GetDate.getNowTime10();
@@ -156,7 +162,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 是否可以进行借款
                     borrow.setBorrowStatus(1);
                     // 初审时间
-                    borrow.setVerifyTime(String.valueOf(GetDate.getNowTime10()));
+                    borrow.setVerifyTime(GetDate.getNowTime10());
                     // 发标的状态
                     borrow.setVerifyStatus(Integer.valueOf(borrowFireRequest.getVerifyStatus()));
                     // 状态
@@ -176,9 +182,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 BorrowExample borrowExample = new BorrowExample();
                 BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
                 borrowCra.andBorrowNidEqualTo(borrow.getBorrowNid());
-                Borrow updateBorrow = new Borrow();
-                BeanUtils.copyProperties(borrow, updateBorrow);
-                int updateCount = this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample);
+                int updateCount = this.borrowMapper.updateByExampleSelective(borrow, borrowExample);
                 if (updateCount > 0) {
                     // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
@@ -189,7 +193,42 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         return false;
     }
 
-    private void changeOntimeOfRedis(BorrowVO borrow) {
+    /**
+     * 根据流程配置判断是否发送mq到自动初审
+     *
+     * @param borrowNid
+     */
+    @Override
+    public void sendToMQAutoPreAudit(String borrowNid) {
+        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+        if (null == borrowInfo) {
+            logger.error("未能获取到借款详情、无法发送MQ自动初审！借款编号：" + borrowNid);
+            return;
+        }
+        HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
+        if (null == hjhAssetBorrowType || null == hjhAssetBorrowType.getAutoBail()) {
+            logger.error("未能获取到流程配置、无法发送MQ自动初审！借款编号：" + borrowNid);
+            return;
+        }
+        // 判断是否设定自动初审
+        if (hjhAssetBorrowType.getAutoBail() == 1) {
+            try {
+                JSONObject params = new JSONObject();
+                params.put("instCode",borrowInfo.getInstCode());
+                params.put("borrowNid", borrowNid);
+                autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            } catch (Exception e) {
+                logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 修改定时发标redis
+     * @param borrow
+     */
+    private void changeOntimeOfRedis(Borrow borrow) {
         //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
@@ -198,5 +237,21 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             //非定时发标 删redis
             RedisUtils.del(RedisConstants.ON_TIME + borrow.getBorrowNid());
         }
+    }
+
+    /**
+     * 获取标的
+     * @param borrowNid
+     * @return
+     */
+    private Borrow getBorrowByBorrowNid(String borrowNid){
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list=this.borrowMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
     }
 }

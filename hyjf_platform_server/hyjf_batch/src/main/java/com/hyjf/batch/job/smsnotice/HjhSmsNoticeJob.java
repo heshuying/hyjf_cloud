@@ -23,4 +23,5 @@ public class HjhSmsNoticeJob extends BaseJob implements Job {
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/hjhSmsNotice/overdueSmsNotice", String.class);
         logger.info("HjhSmsNoticeJob: {} execute...", context.getJobDetail().getKey().getName());
     }
+
 }

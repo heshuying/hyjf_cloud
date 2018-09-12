@@ -20,7 +20,7 @@ public interface AdminCouponUserService {
 
     List<CouponUserCustomize> getRecordList(CouponUserBeanRequest request, int offset, int limit);
 
-    int deleteCouponUserById(int id, String remark, String userId);
+    int deleteCouponUserById(CouponUserBeanRequest couponUserBeanRequest);
 
     int insertCouponUser(CouponUserRequest request);
 

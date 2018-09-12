@@ -606,7 +606,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName) {
-		String url = "http://AM-USER/am-user/corpOpenAccountRecord/selectUserBusiNameByUsername/" + userName;
+		String url = "http://AM-USER/am-user/user/selectUserBusiNameByUsername/" + userName;
 		CorpOpenAccountRecordResponse response = restTemplate.getForEntity(url, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -622,5 +622,65 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/accountbank/getAccountBankByUserId/" + userId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountChinapnrVO getAccountChinapnr(Integer userId) {
+		AccountChinapnrResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountBankVO getBankInfo(Integer userId, int bankId) {
+		String url = "http://AM-USER/am-user/accountbank/getBankInfo/" + userId+"/"+bankId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过account 获取用户开户信息
+	 * @param account
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccountId(String account) {
+		String url = urlBase + "bankopen/getBankOpenAccountByAccountId/" + account;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer selectUserIdByUsrcustid(Long chinapnrUsrcustid) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/chinapnr/selectUserIdByUsrcustid/"+chinapnrUsrcustid, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 }

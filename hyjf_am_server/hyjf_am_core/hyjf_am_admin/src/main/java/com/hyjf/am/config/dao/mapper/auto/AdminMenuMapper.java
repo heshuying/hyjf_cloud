@@ -1,11 +1,9 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.config.dao.model.auto.AdminMenu;
 import com.hyjf.am.config.dao.model.auto.AdminMenuExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AdminMenuMapper {
     int countByExample(AdminMenuExample example);

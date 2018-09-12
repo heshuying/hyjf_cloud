@@ -15,5 +15,11 @@ public interface BorrowProjectTypeCustomizeMapper {
      * @return
      */
     public List<BorrowProjectTypeVO>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectType);
+    /**
+     * 根据borrowCd查询
+     * @param record
+     * @return
+     */
+    BorrowProjectTypeVO selectByBorrowCd(BorrowProjectTypeVO record);
 
 }

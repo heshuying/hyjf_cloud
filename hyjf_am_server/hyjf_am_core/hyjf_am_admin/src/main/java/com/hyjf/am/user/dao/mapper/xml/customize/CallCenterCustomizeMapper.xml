@@ -53,49 +53,48 @@
 		<result column="vip_exp_date" property="vipExpDate" jdbcType="VARCHAR" />
 		<result column="is_set_password" property="isSetPassword"  jdbcType="INTEGER" />
 	</resultMap>
-<!-- 复投用户筛选 -->
-<select id="findNoServiceFuTouUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
-	SELECT
-		hydu.user_id,
-		hydu.username,
-		hydu.mobile
-	FROM
-		ht_user  hydu
+	<!-- 复投用户筛选 -->
+	<select id="findNoServiceFuTouUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
+		SELECT
+			hydu.user_id,
+			hydu.username,
+			hydu.mobile
+		FROM
+			ht_user  hydu
+			<!-- #关联用户信息 -->
+			JOIN ht_user_info info ON hydu.user_id = info.user_id
+		WHERE
+			NOT EXISTS (
+				SELECT
+					1
+				FROM
+					ht_callcenter_service_users csu
+				WHERE
+					hydu.username = csu.username
+				AND csu.assigned != 0
+			)
 		<!-- #关联用户信息 -->
-		JOIN ht_user_info info ON hydu.user_id = info.user_id 
-	WHERE
-		NOT EXISTS (
-			SELECT
-				1
-			FROM
-				ht_callcenter_service_users csu
-			WHERE
-				hydu.username = csu.username
-			AND csu.assigned != 0
+		AND info.attribute = 0
+		<!-- #6个月内注册的用户不传 -->
+		AND hydu.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(
+			DATE_ADD(NOW(), INTERVAL - 6 MONTH)
 		)
-	<!-- #关联用户信息 -->
-	AND info.attribute = 0
-	<!-- #6个月内注册的用户不传 -->
-	AND hydu.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(
-		DATE_ADD(NOW(), INTERVAL - 6 MONTH)
-	) 
-	<!-- #有投资是在还款中 此处跨库关联 -->
-	AND EXISTS (
-    SELECT
-      tender.user_id
-    FROM
-      hyjf_trade.ht_borrow_tender tender
-	JOIN
-      hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
-	JOIN
-	  ht_user  hydu ON tender.user_id = hydu.user_id
-    WHERE  borrow.`status` = 4
-	)
-	<if test="limitStart != null and limitSize !=null">
-		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
-	</if>
-</select>
-
+		<!-- #有投资是在还款中 此处跨库关联 -->
+		AND EXISTS (
+		SELECT
+		  	tender.user_id
+		FROM
+			hyjf_trade.ht_borrow_tender tender
+		JOIN
+			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+		JOIN
+		  	ht_user  hydu ON tender.user_id = hydu.user_id
+		WHERE  borrow.`status` = 4
+		)
+		<if test="limitStart != null and limitSize !=null">
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
+		</if>
+	</select>
 
 	<!-- 流失用户筛选 -->
 	<select id="findNoServiceLiuShiUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
@@ -108,7 +107,7 @@
 		<!-- #关联用户信息 -->
 		JOIN ht_user_info info ON hydu.user_id = info.user_id 
 		<!-- #关联用户账户的信息 -->
-		JOIN hyjf_trade.ht_account  account ON account.user_id = hydu.user_id 
+		JOIN hyjf_trade.ht_account  account ON account.user_id = hydu.user_id
 		WHERE
 			NOT EXISTS (
 				SELECT
@@ -128,11 +127,11 @@
 	    SELECT
 	      tender.user_id
 	    FROM
-	      hyjf_trade.ht_borrow_tender tender
+			hyjf_trade.ht_borrow_tender tender
 		JOIN
-	      hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
 		JOIN
-		  ht_user  hydu ON tender.user_id = hydu.user_id
+		  	ht_user  hydu ON tender.user_id = hydu.user_id
 	    WHERE  borrow.`status` = 4
 		) 
 		<!-- #累计投资金额≥5000 -->
@@ -147,201 +146,5 @@
 		<if test="limitStart != null and limitSize !=null">
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
 		</if>
-	</select>
-	
-
-	<select id="findNoServiceUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
-		SELECT
-			hydu.user_id,
-			hydu.username,
-			hydu.mobile
-		FROM
-			ht_user hydu
-		WHERE 
-			NOT EXISTS (SELECT 1 
-						FROM ht_callcenter_service_users csu 
-						WHERE hydu.username = csu.username 
-						AND csu.assigned != 0)
-		ORDER BY hydu.reg_time DESC
-		<if test="limitStart != null and limitSize !=null">
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitSize,jdbcType=INTEGER}
-		</if>
-	</select>
-	
-	
-	<sql id="Where_Clause">
-		<where>
-			<if test="userId != null and userId !=''">
-				AND t.user_id = #{userId}
-			</if>
-<!-- 			<if test="borrowerType != null and borrowerType !=''">
-				AND t.borrower_type = #{borrowerType}
-			</if> -->
-			<if test="userName != null and userName !=''">
-				AND t.user_name LIKE CONCAT('%', #{userName}, '%')
-			</if>
-<!-- 			<if test="realName != null and realName != ''">
-				AND t.real_name LIKE CONCAT('%', #{realName}, '%')
-			</if> -->
-<!-- 			<if test="recommendName != null and recommendName != ''">
-				AND t.recommend_name LIKE CONCAT('%', #{recommendName}, '%')
-			</if> -->
-			<if test="mobile != null and mobile != ''">
-				AND t.mobile LIKE CONCAT('%', #{mobile}, '%')
-			</if>
-<!-- 			<if test="userRole != null and userRole != ''">
-				AND t.role_id = #{userRole,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="userType != null and userType != ''">
-				AND t.type_id = #{userType,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="userProperty != null and userProperty != ''">
-				AND t.attribute = #{userProperty,jdbcType=INTEGER}
-			</if> -->
-			<!-- 无法判断江西银行开户状态 -->
-			<!-- <if test="accountStatus != null and accountStatus != ''">
-				AND t.open_account = #{accountStatus,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="accountStatus != null and accountStatus != ''">
-				AND t.bank_open_account = #{accountStatus,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="userStatus != null and userStatus != ''">
-				AND t.`status` = #{userStatus,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="registPlat != null and registPlat != ''">
-				AND t.reg_esb = #{registPlat,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="is51 != null and is51 != ''">
-				AND t.is51_cd = #{is51,jdbcType=INTEGER}
-			</if> -->
-<!-- 			<if test="vipType != null and vipType == 1">
-				AND t.vipid IS NULL
-			</if>
-			<if test="vipType != null and vipType == 2">
-				AND t.vipid IS NOT NULL
-			</if> -->
-<!-- 			<if test="regTimeStart != null and regTimeStart != '' ">
-				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
-			</if>
-			<if test="regTimeEnd != null and regTimeEnd != ''">
-				AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
-			</if> -->
-<!-- 			<if test="combotreeListSrch != null and combotreeListSrch != ''">
-				AND od.id in
-				<foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
-					#{dep}
-				</foreach>
-			</if> -->
-		</where>
-	</sql>
-	<select id="findBasicUsersList" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
-		SELECT
-			t.*,
-		    `od3`.`name` AS `regionName`,
-			`od2`.`name` AS `branchName`,
-			`od`.`name` AS `departmentName`
-		FROM
-			(
-				SELECT
-					hydu.user_id,
-					hydu.username AS user_name,
-					hydui.truename AS real_name,
-					hydu.mobile,
-					hydu.user_type AS user_type,
-					hydui.role_id AS user_role,
-					hydui.attribute AS user_property,
-					hydui.birthday,
-					hydui.sex,
-					hydui.idcard,
-					concat( province,city,area) as regist_area,
-					hydu.open_account AS account_status,
-					hydu.`status` AS user_status,
-					hydu.reg_esb AS regist_plat,
-					hydu.reg_time as regTime,
-					hydur.username AS recommend_name,
-					FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d %H:%i:%s' ) AS reg_time,
-					CASE WHEN hydui.attribute = 2 OR hydui.attribute = 3 THEN hydu.user_id ELSE hydsu.spreads_user_id END AS hyd_id,
-					hydui.borrower_type,
-					hydu.bank_open_account bank_open_account,
-					hboa.create_time AS bank_open_time,
-					hboa.account AS bank_account
-				FROM
-					ht_user hydu 
-				LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-				LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-				LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
-				LEFT JOIN ht_bank_open_account hboa ON hydu.user_id = hboa.user_id
-				) t
-		LEFT JOIN oa_users ou ON ou.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
-		LEFT JOIN oa_department od2 ON od2.id = od.parentid
-		LEFT JOIN oa_department od3 ON od3.id = od2.parentid
-		<include refid="Where_Clause" />
-		ORDER BY t.reg_time DESC
-		<if test="limitStart != null and limitEnd !=null" >
-	     		LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    	</if>
-	</select>
-
-    <select id="findUserDetailById" resultMap="CallcenterUserBaseCustomize" parameterType="com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest">
-		SELECT
-			hydu.user_id,
-			hydu.username AS user_name,
-			hydurefer.username AS recommend_name,
-			hydd.`name` AS depart_name,
-			hydup.source_name AS regist_pid_name,
-			hydu.reg_ip AS regist_ip,
-			from_unixtime(
-				hydu.reg_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS regist_time,
-
-			from_unixtime(
-				hydac.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS open_account_time,
-			hyduc.rl_name AS em_name,
-			hyduc.rl_phone AS em_phone,
-			hydu.email,
-			hydui.email_isApprove AS email_status,
-			hydu.mobile,
-			hydui.mobile_isApprove AS mobile_status,
-			hydui.truename AS real_name,
-			hydui.truename_isApprove AS real_name_status,
-			hydu.`status` AS account_status,
-			hydac.chinapnr_usrid AS account,
-			hydac.chinapnr_usrcustid AS customer_account,
-			hydui.idcard AS id_card,
-			hydui.borrower_type,
-			hydu.is_set_password AS is_set_password,
-			hydu.reg_esb AS regist_plat,
-			hydu.account_esb AS open_account_plat,
-			hydui.role_id  AS role,
-			hydui.attribute AS user_property,
-			hyduc.relation AS em_relation,
-			hydu.user_type AS  user_type
-		FROM
-			ht_user hydu
-		LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-		LEFT JOIN ht_user_contact hyduc ON hydu.user_id = hyduc.user_id
-		LEFT JOIN ht_account_chinapnr hydac ON hydac.user_id = hydu.user_id
-		LEFT JOIN ht_utm_reg hydur ON hydur.user_id = hydu.user_id
-		LEFT JOIN ht_utm hydutm ON hydur.utm_id = hydutm.utm_id
-		LEFT JOIN ht_utm_plat hydup ON hydup.source_id = hydutm.source_id
-		LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-		LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
-		LEFT JOIN oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21') 
-		LEFT JOIN oa_department hydd ON hydd.id = oau.departmentid 
-		WHERE
-		hydu.user_id =#{userId,jdbcType=INTEGER}
-	</select>
-
-	<select id="getCouponContent" resultType="String">
-		SELECT
-			IF(vi.vip_level=1,"欢迎礼包","升级礼包")
-		FROM
-			ht_vip_auth va
-		LEFT JOIN ht_vip_info vi ON va.vip_id=vi.id
-		WHERE va.coupon_code = #{couponSource}
 	</select>
 </mapper>

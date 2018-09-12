@@ -3,37 +3,36 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AutoBailMessageProducer;
+import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -41,6 +40,12 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  */
 @Service
 public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRegistService {
+
+    @Resource
+    private AutoBailMessageProducer autoBailMessageProducer;
+
+    @Resource
+    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
 
     /**
      * 获取项目类型
@@ -114,11 +119,12 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
     /**
      * 标的备案
+     *
      * @param request
      * @return
      */
     @Override
-    public Response updateBorrowRegist(BorrowRegistUpdateRequest request){
+    public Response updateBorrowRegist(BorrowRegistUpdateRequest request) {
         Response result = new Response();
         // 从请求实体类中获取相应的标的详情
         // 标的
@@ -207,6 +213,21 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                         if (debtEntrustedRegistedFlag) {
                             result.setRtn(Response.SUCCESS);
                             result.setMessage("备案成功！");
+                            // 三方资产手动备案的更新资产状态
+                            if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+                                HjhPlanAsset hjhPlanAsset = selectHjhPlanAssetByBorrowNid(borrowNid);
+                                if (null == hjhPlanAsset) {
+                                    result.setRtn(Response.SUCCESS);
+                                    result.setMessage("备案成功后，资产相应的状态获取失败,请联系客服！");
+                                } else {
+                                    // 三方资产更新资产表状态
+                                    boolean updateResult = this.updateRecordBorrow(hjhPlanAsset);
+                                    if (!updateResult) {
+                                        result.setRtn(Response.SUCCESS);
+                                        result.setMessage("备案成功后，更新资产相应的状态失败,请联系客服！");
+                                    }
+                                }
+                            }
                         } else {
                             result.setRtn(Response.FAIL);
                             result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
@@ -216,12 +237,54 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                         if (debtRegistedFlag) {
                             result.setRtn(Response.SUCCESS);
                             result.setMessage("备案成功！");
+                            // 判断是否是自动审核保证金发送MQ
+                            HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
+                            if (CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+                                // 成功后到保证金审核
+                                // 消息队列名称需要新建指向手动录标的保证金审核
+                                if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoBail() && hjhAssetBorrowType.getAutoBail() == 1) {
+                                    try {
+                                        JSONObject params = new JSONObject();
+                                        params.put("borrowNid", borrow.getBorrowNid());
+                                        params.put("instCode",borrowInfo.getInstCode());
+                                        autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                                    } catch (Exception e) {
+                                        logger.error("发送MQ到审核保证金失败，borrowNid：" + borrowNid);
+                                        e.printStackTrace();
+                                    }
+                                }
+                            } else {
+                                HjhPlanAsset hjhPlanAsset = selectHjhPlanAssetByBorrowNid(borrowNid);
+                                if (null == hjhPlanAsset) {
+                                    result.setRtn(Response.SUCCESS);
+                                    result.setMessage("备案成功后，资产相应的状态获取失败,请联系客服！");
+                                } else {
+                                    // 三方资产更新资产表状态
+                                    boolean updateResult = this.updateRecordBorrow(hjhPlanAsset);
+                                    if (updateResult) {
+                                        // 成功后到初审队列
+                                        try {
+                                            JSONObject params = new JSONObject();
+                                            params.put("borrowNid", borrow.getBorrowNid());
+                                            params.put("instCode",borrowInfo.getInstCode());
+                                            autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                                        } catch (Exception e) {
+                                            logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        result.setRtn(Response.SUCCESS);
+                                        result.setMessage("备案成功后，更新资产相应的状态失败,请联系客服！");
+                                    }
+                                }
+                            }
                         } else {
                             result.setRtn(Response.FAIL);
                             result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
                         }
                     }
                 } else {
+                    logger.info("标的备案失败，标的号：{}，银行返回失败码：{}", borrowNid, retCode);
                     // 调用银行接口失败
                     this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                     String message = registResult.getRetMsg();
@@ -229,7 +292,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                     result.setMessage(StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                 }
             } catch (Exception e) {
-                logger.error("标的备案失败,编号："+ borrow.getBorrowNid(),e);
+                logger.error("标的备案失败,编号：" + borrow.getBorrowNid(), e);
                 this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                 result.setRtn(Response.FAIL);
                 result.setMessage("银行备案接口调用失败！");
@@ -243,6 +306,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
     /**
      * 受托白名单查询
+     *
      * @param instCode
      * @param entrustedAccountId
      * @return
@@ -264,6 +328,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
     /**
      * 更新相应的标的信息
+     *
      * @param borrow
      * @param status
      * @param registStatus
@@ -287,6 +352,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
     /**
      * 更新标的信息(受托支付备案)
+     *
      * @param borrow
      * @param status
      * @param registStatus
@@ -306,5 +372,30 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         updateBorrow.setRegistTime(nowDate);
         boolean flag = this.borrowMapper.updateByExampleSelective(updateBorrow, example) > 0 ? true : false;
         return flag;
+    }
+
+    /**
+     * 资产备案成功后更新资产表
+     *
+     * @param hjhPlanAsset
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    private boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset) {
+
+        HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
+        hjhPlanAssetnew.setId(hjhPlanAsset.getId());
+        // 受托支付，更新为待授权
+        if (hjhPlanAsset.getEntrustedFlg() != null && hjhPlanAsset.getEntrustedFlg().intValue() == 1) {
+            //4 待授权
+            hjhPlanAssetnew.setStatus(4);
+        } else {
+            //初审中
+            hjhPlanAssetnew.setStatus(5);
+        }
+        //获取当前时间
+        hjhPlanAssetnew.setUpdateTime(new Date());
+        hjhPlanAssetnew.setUpdateUserId(1);
+        return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew) > 0;
     }
 }

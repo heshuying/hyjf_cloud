@@ -95,10 +95,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		int userId = userVO.getUserId();
 		String codeSalt = userVO.getSalt();
+		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
 		// 页面传来的密码
-		String password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
-
+		String password = "";
+		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+			password = MD5Utils.MD5(loginPassword + codeSalt);
+		}else {
+			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+		}
 		if (password.equals(passwordDb)) {
 			// 是否禁用
 			if (userVO.getStatus() == 1) {
@@ -557,14 +562,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +"/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT + packageStr(request));
+						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
 			}
 		}
 		{
@@ -596,7 +601,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 						hasQuick = true;
 						result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_YES);
 					}
-					BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(accountBank.getBank());
+					BankConfigVO bankConfig = amConfigClient.getBankConfigByCode(accountBank.getBank());
 					if (bankConfig != null) {
 						result.setBankCardAccount(bankConfig.getName());
 						result.setBankCardAccountLogoUrl(imghost + bankConfig.getAppLogo());
@@ -747,7 +752,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 			// 自动投标授权URL
 			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
-					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+"?1=1"));
+					+ "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_AUTHINVES+ packageStrForm(request)));
 			// 缴费授权Url
 			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));

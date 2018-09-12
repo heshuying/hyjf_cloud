@@ -10,10 +10,8 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.AccountListResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -22,6 +20,7 @@ import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -76,21 +75,6 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
-
-    /**
-     * 根据筛选条件查询绑定日志count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getBindLogCount(BindLogListRequest request);
-    /**
-     * 根据筛选条件查询绑定日志list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<BindLogVO> searchBindLogList(BindLogListRequest request);
 
     /**
      * 根据userId查询Account列表，按理说只能取出来一个Account，但是service需要做个数判断，填写不同的msg，所以返回List
@@ -1888,7 +1872,7 @@ public interface AmTradeClient {
 
     CouponConfigResponse updateAuditInfo(CouponConfigRequest couponConfigRequest);
 
-    CouponUserResponse getIssueNumber(CouponUserRequest cur);
+    CouponUserResponse getIssueNumber(String couponCode);
 
     CouponTenderResponse countRecordHzt(CouponTenderRequest couponTenderRequest);
 
@@ -2529,7 +2513,7 @@ public interface AmTradeClient {
 
     CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
 
-    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+    CouponUserCustomizeResponse deleteById(CouponUserBeanRequest couponUserBeanRequest);
 
     List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
 
@@ -2837,5 +2821,189 @@ public interface AmTradeClient {
      * @return
      */
     NifaReportLogResponse selectNifaReportLogById(int logId);
+
+    /**
+     * 查询账户信息
+     * @param status
+     * @return
+     */
+    MerchantAccountResponse selectMerchantAccountList(Integer status);
+
+    /**
+     * 获取转账列表
+     * @param form
+     * @return
+     */
+    MerchantTransferResponse selectMerchantTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 根据id获取转账信息
+     * @param id
+     * @return
+     */
+    MerchantAccountVO selectMerchantAccountById(Integer id);
+
+    /**
+     * 插入转账信息
+     * @param form
+     * @return
+     */
+    boolean insertTransfer(MerchantTransferListRequest form);
+
+    /**
+     * 更新转账信息
+     * @param orderId
+     * @param status
+     * @param message
+     * @return
+     */
+    int updateMerchantTransfer(String orderId, int status, String message);
+
+    /**
+     * 还款计划数量查询
+     * @param request
+     * @return
+     */
+    Integer countBorrowRepaymentPlan(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划列表查询
+     * @param request
+     * @return
+     */
+    List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
+
+    /**
+     * 还款计划统计查询
+     * @param request
+     * @return
+     */
+    BorrowRepaymentPlanCustomizeVO sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
+
+    /**
+     * 根据id查询受托支付白名单详情
+     * @param id
+     * @return
+     */
+    STZHWhiteListResponse selectSTZHWhiteById(Integer id);
+
+    /**
+     * 加载优惠券配置列表
+     * @param request
+     * @return
+     */
+    CouponConfigCustomizeResponse getConfigCustomizeList(CouponConfigRequest request);
+
+    /**
+     * 根据参数获取 HjhRegionVO
+     * @param form
+     * @return
+     */
+    HjhAllocationEngineVO getPlanConfigRecordByPlanNidLabelName(AllocationEngineRuquest form);
+
+    /**
+     * 根据债转编号和出让人id查询assignPay
+     * @author zhangyk
+     * @date 2018/9/4 10:30
+     */
+    String selectTenderCreditAssignPay(Map<String,String> map);
+
+    /**
+     * 取得新规的模板编号
+     * @param protocolType
+     * @return
+     */
+    String getNewTempletId(Integer protocolType);
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    FddTempletCustomizeResponse getRecordInfoById(Integer id);
+    int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request);
+
+    int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
+
+    List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
+
+    int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
+
+    List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);
+
+	List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
+
+	Integer countRecordLog(ProtocolLogRequest request);
+
+    /**
+     * 统计全部个数
+     *
+     * @return
+     */
+    Integer countRecord(AdminProtocolRequest request);
+
+    List<ProtocolTemplateCommonVO> getRecordList(AdminProtocolRequest request);
+
+    /**
+     * 根据协议id查询协议和版本
+     *
+     * @return
+     */
+    ProtocolTemplateCommonVO getProtocolTemplateById(AdminProtocolRequest request);
+
+    /**
+     * 查询协议模板数量
+     *
+     * @return
+     */
+    Integer getProtocolTemplateNum(AdminProtocolRequest request);
+
+    /**
+     * 判断删除的协议中是否存在当前协议模板名称Agreement006
+     *
+     * @return
+     */
+    ProtocolTemplateVO getProtocolTemplateByProtocolName(AdminProtocolRequest request);
+
+    /**
+     * 保存 协议模板、协议版本、协议日志
+     *
+     * @return
+     */
+    Integer insert(AdminProtocolRequest request);
+
+    /**
+     * 修改 协议模板
+     *
+     * @return
+     */
+    Integer updateProtocolTemplate(AdminProtocolRequest request);
+
+    /**
+     * 修改 之前的版本的启用状态改成不启用
+     *
+     * @return
+     */
+    Integer updateDisplayFlag(AdminProtocolRequest request);
+
+    /**
+     * 删除协议模板
+     *
+     * @return
+     */
+    AdminProtocolResponse deleteProtocolTemplate(AdminProtocolRequest request);
+
+    List<ProtocolTemplateVO> getNewInfo();
+
+    ProtocolVersionVO byIdProtocolVersion(Integer id);
+
+    ProtocolTemplateVO byIdTemplateBy(String protocolId);
+
+    int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest);
+
+    boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest);
+
+    Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 }
 

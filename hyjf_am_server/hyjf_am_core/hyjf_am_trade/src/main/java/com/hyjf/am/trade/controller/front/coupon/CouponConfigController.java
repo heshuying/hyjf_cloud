@@ -112,6 +112,20 @@ public class CouponConfigController extends BaseController {
         return ccr;
     }
 
+    /**
+     * 加载优惠券配置列表
+     * @return
+     */
+    @PostMapping("/getConfigCustomizeList")
+    public CouponConfigCustomizeResponse getConfigCustomizeList() {
+        CouponConfigCustomizeResponse response = new CouponConfigCustomizeResponse();
+        List<CouponConfigCustomize> customizeList = couponConfigService.getConfigCustomizeList(new CouponConfigCustomize());
+        if (!CollectionUtils.isEmpty(customizeList)) {
+            List<CouponConfigCustomizeVO> customizeVOS = CommonUtils.convertBeanList(customizeList,CouponConfigCustomizeVO.class);
+            response.setResultList(customizeVOS);
+        }
+        return response;
+    }
 
     /**
      * 保存优惠券配置信息
@@ -126,6 +140,7 @@ public class CouponConfigController extends BaseController {
                 CouponConfig couponConfig = new CouponConfig();
                 BeanUtils.copyProperties(configRequest, couponConfig);
                 couponConfig.setId(Integer.valueOf(configRequest.getId()));
+                couponConfig.setUpdateTime(GetDate.getDate());
                 int result = couponConfigService.saveCouponConfig(couponConfig);
                 if (result > 0) {
                     ccr.setRtn(Response.SUCCESS);
@@ -151,18 +166,16 @@ public class CouponConfigController extends BaseController {
         try {
             CouponConfig couponConfig = new CouponConfig();
             BeanUtils.copyProperties(couponConfigRequest, couponConfig);
-            Map<String, Object> resultMap = couponConfigService.insertAction(couponConfig);
-            if ((Boolean) resultMap.get("success")) {
-                return ccr;
+            int result = couponConfigService.insertAction(couponConfig);
+            if (result > 0) {
+                ccr.setRtn(Response.SUCCESS);
             } else {
-                ccr.setRtn("failed");
-                ccr.setMessage((String) resultMap.get("msg"));
-                return ccr;
+                ccr.setRtn(Response.FAIL);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        ccr.setMessage("校验失败");
         return ccr;
     }
 
@@ -176,19 +189,16 @@ public class CouponConfigController extends BaseController {
         CouponConfigResponse response = new CouponConfigResponse();
         try {
             if (StringUtils.isNotEmpty(couponConfigRequest.getId())) {
-                Map<String, Object> resultMap = couponConfigService.deleteCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
-                if ((Boolean) resultMap.get("success")) {
-                    return response;
+                int result = couponConfigService.deleteCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
+                if (result > 0) {
+                    response.setRtn(Response.SUCCESS);
                 } else {
-                    response.setRtn("failed");
-                    response.setMessage((String) resultMap.get("msg"));
-                    return response;
+                    response.setRtn(Response.FAIL);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        response.setMessage("校验失败");
         return response;
     }
 
@@ -207,14 +217,14 @@ public class CouponConfigController extends BaseController {
                 BeanUtils.copyProperties(ccf, configVO);
                 ccr.setResult(configVO);
             }
-            return ccr;
+            ccr.setMessage("优惠券信息为空");
         }
         return ccr;
     }
 
 
     /**
-     * 修改优惠券信息
+     * 审核
      * @param request
      * @return
      */
@@ -226,7 +236,7 @@ public class CouponConfigController extends BaseController {
         couponConfig.setAuditUser(request.getAuditUser());
         couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
         couponConfig.setAuditTime((int)nowTime);
-        couponConfig.setUpdateTime(GetDate.getTimestamp(nowTime));
+        couponConfig.setUpdateTime(GetDate.getDate());
         int result = couponConfigService.saveCouponConfig(couponConfig);
         if (result > 0) {
             configResponse.setRtn(Response.SUCCESS);

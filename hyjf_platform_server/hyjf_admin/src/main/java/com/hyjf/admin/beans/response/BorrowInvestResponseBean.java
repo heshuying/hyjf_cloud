@@ -34,6 +34,12 @@ public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "投资方式")
     private List<DropDownVO> investTypeList;
 
+    @ApiModelProperty(value = "资产来源下拉框")
+    private List<DropDownVO> hjhInstConfigList;
+
+    @ApiModelProperty(value = "产品类型下拉框")
+    private List<DropDownVO> borrowProjectTypeList;
+
     @ApiModelProperty(value = "投资人债券明细")
     List<InvestorDebtBean> detailList;
 
@@ -113,5 +119,21 @@ public class BorrowInvestResponseBean {
 
     public void setFileDomainUrl(String fileDomainUrl) {
         this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public List<DropDownVO> getHjhInstConfigList() {
+        return hjhInstConfigList;
+    }
+
+    public void setHjhInstConfigList(List<DropDownVO> hjhInstConfigList) {
+        this.hjhInstConfigList = hjhInstConfigList;
+    }
+
+    public List<DropDownVO> getBorrowProjectTypeList() {
+        return borrowProjectTypeList;
+    }
+
+    public void setBorrowProjectTypeList(List<DropDownVO> borrowProjectTypeList) {
+        this.borrowProjectTypeList = borrowProjectTypeList;
     }
 }

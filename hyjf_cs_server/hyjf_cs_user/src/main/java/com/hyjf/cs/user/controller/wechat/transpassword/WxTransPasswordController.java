@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -60,9 +61,10 @@ public class WxTransPasswordController extends BaseUserController {
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost()  + request.getContextPath() +  "/wx/transpassword/passwordBgreturn?sign=" + sign;
+        String bgRetUrl = systemConfig.getWeChatHost()  + request.getContextPath() +  "/hyjf-wechat/wx/transpassword/passwordBgreturn?sign=" + sign;
         // 同步调用路径
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign ;
         String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
@@ -76,56 +78,6 @@ public class WxTransPasswordController extends BaseUserController {
         result.setData(data);
         return result;
     }
-
-    /**
-     * 设置交易密码同步回调
-     *
-     * @param request
-     * @param
-     * @return
-     */
-/*    @ApiOperation(value = "设置交易密码同步回调")
-    @GetMapping(value = "/passwordReturn")
-    public ModelAndView passwordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
-
-        bean.convert();
-        String sign = request.getParameter("sign");
-        String userIdStr = bean.getLogUserId();
-        Integer userId = 0;
-        if(Validator.isNotNull(userIdStr)){
-            userId = Integer.parseInt(userIdStr);
-        }else{
-            userId = (Integer)request.getAttribute("userId");
-        }
-        UserVO user = passWordService.getUsersById(userId);
-        //判断用户是否设置了交易密码
-        boolean flag = user.getIsSetPassword() == 1 ? true : false ;
-        if(flag){
-            return getSuccessModelAndView(sign);
-        }
-        BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
-        // 调用查询电子账户密码是否设置
-        BankCallBean selectbean = new BankCallBean();
-        selectbean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET_QUERY);
-        selectbean.setChannel(BankCallConstant.CHANNEL_PC);
-        // 电子账号
-        selectbean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
-        // 操作者ID
-        selectbean.setLogUserId(String.valueOf(userId));
-        selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        selectbean.setLogClient(0);
-        // 返回参数
-        BankCallBean retBean = null;
-        // 调用接口
-        retBean = BankCallUtils.callApiBg(selectbean);
-        if("1".equals(retBean.getPinFlag())){
-            // 是否设置密码中间状态
-            this.passWordService.updateUserIsSetPassword(userId);
-            return getSuccessModelAndView(sign);
-        }
-        return getErrorModelAndView(ResultEnum.USER_ERROR_207,sign,null,null);
-    }*/
 
     /**
      * 设置交易密码异步回调
@@ -180,12 +132,13 @@ public class WxTransPasswordController extends BaseUserController {
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 调用设置密码接口
-        BankCallBean bean = new BankCallBean();
+        String txcode = "";
+        BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
         String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
         // 异步调用路
-        String bgRetUrl = systemConfig.getWeChatHost() + request.getContextPath() +  "/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
+        String bgRetUrl = systemConfig.getWeChatHost() + request.getContextPath() +  "/hyjf-wechat/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
         bean.setSuccessfulUrl(success);
         // 页面同步返回 URL
         bean.setRetUrl(retUrl);
@@ -196,34 +149,6 @@ public class WxTransPasswordController extends BaseUserController {
         result.setData(data);
         return result;
     }
-
-    /**
-     * 重置交易密码同步回调
-     *
-     * @param request
-     * @param
-     * @return
-     */
-  /*  @ApiOperation(value = "重置交易密码同步回调")
-    @GetMapping(value = "/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request, BankCallBean bean) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean=new BaseMapBean();
-        String sign = request.getParameter("sign");
-        String isSuccess = request.getParameter("isSuccess");
-        // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())||!"1".equals(isSuccess)) {
-            //重置交易密码回调,返回失败
-            return getErrorModelAndView(ResultEnum.USER_ERROR_215, sign, null, bean.getRetCode());
-        }
-        baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
-        baseMapBean.set(CustomConstants.APP_STATUS_DESC, "交易密码修改成功");
-        baseMapBean.setCallBackAction(systemConfig.getWeChatHost()+ "/user/setting/bankPassword/result/success");
-        baseMapBean.setJumpFlag(BaseMapBean.JUMP_FLAG_NO);
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
-    }*/
 
     /**
      * 重置交易密码异步回调
@@ -239,36 +164,4 @@ public class WxTransPasswordController extends BaseUserController {
         result.setStatus(true);
         return result;
     }
-
- /*   private ModelAndView getSuccessModelAndView(String sign) {
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean = new BaseMapBean();
-        baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.SUCCESS.getStatus());
-        baseMapBean.set(CustomConstants.APP_STATUS_DESC, ResultEnum.SUCCESS.getStatusDesc());
-        baseMapBean.set(CustomConstants.APP_SIGN, sign);
-        baseMapBean.setCallBackAction(systemConfig.getWeChatHost()+ "/user/setting/bankPassword/result/success");
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
-    }
-
-    private ModelAndView getErrorModelAndView(ResultEnum param, String sign, String retCodeSet,
-                                              String retCodeUpd) {
-        ModelAndView modelAndView = new ModelAndView("/jumpHTML");
-        BaseMapBean baseMapBean = new BaseMapBean();
-        if (StringUtils.isNotBlank(retCodeSet)) {
-            baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.FAIL.getStatus());
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "交易密码设置失败,失败原因：" + passWordService.getBankRetMsg(retCodeSet));
-        } else if (StringUtils.isNotBlank(retCodeUpd)) {
-            baseMapBean.set(CustomConstants.APP_STATUS, ResultEnum.FAIL.getStatus());
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "交易密码修改失败,失败原因：" + passWordService.getBankRetMsg(retCodeUpd));
-        }
-        else {
-            baseMapBean.set(CustomConstants.APP_STATUS, param.getStatus());
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, param.getStatusDesc());
-        }
-        baseMapBean.set(CustomConstants.APP_SIGN, sign);
-        baseMapBean.setCallBackAction(systemConfig.getWeChatHost()+ "/user/setting/bankPassword/result/failed");
-        modelAndView.addObject("callBackForm", baseMapBean);
-        return modelAndView;
-    }*/
 }

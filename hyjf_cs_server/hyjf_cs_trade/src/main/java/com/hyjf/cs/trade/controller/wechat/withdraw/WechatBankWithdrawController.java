@@ -1,9 +1,7 @@
 package com.hyjf.cs.trade.controller.wechat.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -17,7 +15,6 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.BankCardUtil;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
@@ -87,6 +84,19 @@ public class WechatBankWithdrawController extends BaseTradeController {
         WxQueryWIthdrawInfoVO vo = new WxQueryWIthdrawInfoVO();
 
 
+
+
+        AccountVO account = bankWithdrawService.getAccountByUserId(userId);
+        CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
+
+
+        //获取企业用户标识（0普通用户1企业用户企业用户）
+        UserVO users = bankWithdrawService.getUsers(userId);
+        CheckUtil.check(null!=users,MsgEnum.ERR_USER_NOT_EXISTS);
+        CheckUtil.check(users.getIsSetPassword()==1,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        CheckUtil.check(users.getBankOpenAccount()==1,MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        vo.setIsSetPassWord(users.getIsSetPassword());
+
         BankCardVO bank = bankWithdrawService.getBankCardVOByUserId(userId);
         CheckUtil.check(null!=bank,MsgEnum.ERR_CARD_NOT_BIND);
 
@@ -102,16 +112,6 @@ public class WechatBankWithdrawController extends BaseTradeController {
             phoneNum = user.getMobile();
         }
         vo.setMobile(phoneNum);
-
-        AccountVO account = bankWithdrawService.getAccountByUserId(userId);
-        CheckUtil.check(null!=account,MsgEnum.ERR_USER_NOT_EXISTS);
-
-
-        //获取企业用户标识（0普通用户1企业用户企业用户）
-        UserVO users = bankWithdrawService.getUsers(userId);
-        CheckUtil.check(null!=users,MsgEnum.ERR_USER_NOT_EXISTS);
-        CheckUtil.check(users.getIsSetPassword()==1,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
-        vo.setIsSetPassWord(users.getIsSetPassword());
         if(users != null){
             vo.setUserType(users.getUserType());
         }
@@ -179,7 +179,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/withdraw.do")
-    public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
+    public WeChatResult userBankWithdraw(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,
                                          HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
         logger.info("weChat端提现接口, userId is :{}", userId);
@@ -194,9 +194,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
         CheckUtil.check(1==userVO.getBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
-        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/withdraw/bgreturn.do";
-        String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
+        String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed?sign="+sign;
+        String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
+        String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success?sign="+sign;
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         Map<String,Object> map = new HashMap<>();
         try {

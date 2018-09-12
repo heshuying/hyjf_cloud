@@ -30,4 +30,10 @@ public class AccountSynchronizeBatchController {
         accountSynchronizeBatchService.accountSynchronize();
     }
 
+    @RequestMapping("/mobileSynchronize")
+    public void mobileSynchronize() {
+        logger.info("手机号(每日)定时任务开始....");
+        accountSynchronizeBatchService.accountSynchronize();
+    }
+
 }

@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
 import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface MspAbnormalcreditMapper {
     int countByExample(MspAbnormalcreditExample example);

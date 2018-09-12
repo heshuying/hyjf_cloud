@@ -552,6 +552,8 @@ public class BorrowCommonBean implements Serializable {
 	 * 个贷审核信息 户口本 0未审核 1已审核
 	 */
 	private String isAccountBook;
+	//2180705 add by nxl 添加借款人地址(互金需求)
+	private String address;
 	
 	// ----------------------借款人------------------------
 
@@ -728,8 +730,10 @@ public class BorrowCommonBean implements Serializable {
 	 * 企贷审核信息 供销合同 0未审核 1已审核
 	 */
     private String comIsSupplyContract;
-	
-	
+
+	//20180705 add by nxl 添加企业组织机构代码和企业注册地(互金需求)
+	private String corporateCode;
+	private String registrationAddress;
 	// ----------------------企业用户信息 borrow users------------------------
 	// ----------------------房产信息------------------------
 	/**
@@ -3504,5 +3508,29 @@ public class BorrowCommonBean implements Serializable {
 
 	public void setComIsPunished(String comIsPunished) {
 		this.comIsPunished = comIsPunished;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCorporateCode() {
+		return corporateCode;
+	}
+
+	public void setCorporateCode(String corporateCode) {
+		this.corporateCode = corporateCode;
+	}
+
+	public String getRegistrationAddress() {
+		return registrationAddress;
+	}
+
+	public void setRegistrationAddress(String registrationAddress) {
+		this.registrationAddress = registrationAddress;
 	}
 }

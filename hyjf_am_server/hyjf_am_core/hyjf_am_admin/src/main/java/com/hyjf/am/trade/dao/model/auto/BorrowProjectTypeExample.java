@@ -1214,6 +1214,66 @@ public class BorrowProjectTypeExample {
             addCriterion("taste_money not between", value1, value2, "tasteMoney");
             return (Criteria) this;
         }
+
+        public Criteria andIncreaseInterestFlagIsNull() {
+            addCriterion("increase_interest_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagIsNotNull() {
+            addCriterion("increase_interest_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagEqualTo(Integer value) {
+            addCriterion("increase_interest_flag =", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotEqualTo(Integer value) {
+            addCriterion("increase_interest_flag <>", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagGreaterThan(Integer value) {
+            addCriterion("increase_interest_flag >", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("increase_interest_flag >=", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagLessThan(Integer value) {
+            addCriterion("increase_interest_flag <", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("increase_interest_flag <=", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagIn(List<Integer> values) {
+            addCriterion("increase_interest_flag in", values, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotIn(List<Integer> values) {
+            addCriterion("increase_interest_flag not in", values, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagBetween(Integer value1, Integer value2) {
+            addCriterion("increase_interest_flag between", value1, value2, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("increase_interest_flag not between", value1, value2, "increaseInterestFlag");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -120,7 +120,6 @@ public class AppBorrowTenderController extends BaseTradeController {
     public JSONObject getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
-        //ModelAndView mv = borrowTenderService.getAppTenderUrl(tender);
         String url = borrowTenderService.getAppTenderUrl(tender);
         JSONObject result = new JSONObject();
         result.put("tenderUrl", url);

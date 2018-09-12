@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author fuqiang
+ * @author yinhui
  * @version CouponDJController, v0.1 2018/7/18 18:18
  */
 @Api(tags = "数据中心-优惠券--代金券")

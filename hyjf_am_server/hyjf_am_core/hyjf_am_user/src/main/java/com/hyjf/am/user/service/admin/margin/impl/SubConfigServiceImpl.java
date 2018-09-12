@@ -29,6 +29,24 @@ public class SubConfigServiceImpl extends BaseServiceImpl implements SubConfigSe
             UserInfoCustomizeVO vo = new UserInfoCustomizeVO();
             if (map.get("user_id")!=null) {
                 vo.setUserId(Integer.parseInt(String.valueOf(map.get("user_id"))));
+                vo.setUserName((String)map.get("username"));
+                vo.setTrueName((String)map.get("truename"));
+                vo.setRoleId((Integer)map.get("role_id"));
+                if((Boolean) map.get("user_type")){
+                    vo.setStatus(1);
+                }
+                if(!(Boolean) map.get("user_type")){
+                    vo.setStatus(0);
+                }
+                vo.setCooperateNum((String)map.get("cooperateNum"));
+                vo.setAccount((String)map.get("account"));
+                vo.setOpen((String)map.get("OPEN"));
+                if((Boolean) map.get("status")){
+                    vo.setStatus(1);
+                }
+                if(!(Boolean) map.get("status")){
+                    vo.setStatus(0);
+                }
                 res.setResult(vo);
                 return res;
             }

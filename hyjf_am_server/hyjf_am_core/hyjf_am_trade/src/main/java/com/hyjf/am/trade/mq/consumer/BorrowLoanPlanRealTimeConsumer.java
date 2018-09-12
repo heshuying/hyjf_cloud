@@ -4,7 +4,9 @@
 package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
+import java.util.UUID;
 
+import com.hyjf.am.trade.mq.producer.nifa.NifaContractEssenceMessageProducer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -17,6 +19,8 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -31,7 +35,6 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,7 +44,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version BorrowLoanPlanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-//@Component
+@Component
+@Profile("test")
 public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanPlanRealTimeConsumer.class);
@@ -55,10 +59,13 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	@Autowired
 	private MailProducer mailProducer;
 
+	@Autowired
+	NifaContractEssenceMessageProducer nifaContractEssenceMessageProducer;
+
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 //		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
@@ -140,7 +147,15 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 						if (!batchDetailFlag) {
 							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}
-						
+
+						// 发送mq到生成互金合同要素信息
+						try {
+							JSONObject param = new JSONObject();
+							param.put("borrowNid", borrowApicron.getBorrowNid());
+							nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+						} catch (Exception e) {
+							logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+						}
 					}
 				}
 			} catch (Exception e) {

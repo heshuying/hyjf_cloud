@@ -90,7 +90,7 @@
     <!-- *****************************************查找江西银行卡信息记录***************************************** -->
     <resultMap id="BankCardListNewPOMap" type="com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize">
         <id column="user_id" property="userId" jdbcType="INTEGER" />
-        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="username" property="userName" jdbcType="VARCHAR" />
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR" />
         <result column="real_name" property  ="realName" jdbcType="VARCHAR" />

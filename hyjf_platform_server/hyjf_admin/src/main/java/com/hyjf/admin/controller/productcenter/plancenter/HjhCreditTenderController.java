@@ -182,7 +182,7 @@ public class HjhCreditTenderController extends BaseController{
     		jsonObject.put("status", SUCCESS);
     	} else {
 			jsonObject.put("msg", "查询为空");
-			jsonObject.put("status", FAIL);
+			jsonObject.put("status", SUCCESS);
 		}
     	return jsonObject;
 	}

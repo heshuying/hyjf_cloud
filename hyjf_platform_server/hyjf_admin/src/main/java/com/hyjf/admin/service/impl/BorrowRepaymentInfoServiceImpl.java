@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentInfoService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -50,12 +50,17 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
         // 默认当天
         Date endDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
-        request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
         //modify by cwyang 搜索条件存在标的号时，不加时间限制  20180510
         if(StringUtils.isNotBlank(request.getBorrowNid())){
             request.setYesTimeStartSrch(null);
             request.setYesTimeEndSrch(null);
+        }else{
+            if(request.getYesTimeStartSrch() == null||"".equals(request.getYesTimeStartSrch())){
+                request.setYesTimeStartSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
+            }
+            if(request.getYesTimeEndSrch() == null||"".equals(request.getYesTimeEndSrch())){
+                request.setYesTimeEndSrch(simpleDateFormat.format(DateUtils.addDays(endDate, 0)));
+            }
         }
 
         if(request.getYesTimeStartSrch() != null&&!"".equals(request.getYesTimeStartSrch())) {
@@ -96,6 +101,9 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
             bean.setRecordList(recordList);
             BorrowRepaymentInfoCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentInfo(request);
             bean.setSumObject(sumObject);
+        }else{
+            bean.setRecordList(new ArrayList<BorrowRepaymentInfoCustomizeVO>());
+            bean.setSumObject(new BorrowRepaymentInfoCustomizeVO());
         }
 
         return bean;

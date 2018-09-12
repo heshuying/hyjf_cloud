@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AdminPoundageCustomizeMapper">
+
+    <resultMap id="RM_Poundage" type="com.hyjf.am.trade.dao.model.customize.AdminPoundageCustomize">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="ledgerId" column="ledger_id"/>
+        <result property="amount" column="amount"/>
+        <result property="quantity" column="quantity"/>
+        <result property="poundageTime" column="poundage_time"/>
+        <result property="status" column="status"/>
+        <result property="addTime" column="add_time"/>
+        <result property="nid" column="nid"/>
+        <result property="seqNo" column="seq_no"/>
+        <result property="txDate" column="tx_date"/>
+        <result property="txTime" column="tx_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="creater" column="creater"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updater" column="updater"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="Poundage_columns">
+	    <![CDATA[
+
+		id,user_id,ledger_id,amount,quantity,poundage_time,status,add_time,create_time,creater,update_time,updater
+
+        ]]>
+	</sql>
+
+    <!-- mysql 分页尾 -->
+    <sql id="pagination_Tail">
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </sql>
+
+    <sql id="Poundage_findPage_where">
+        <where>
+            <if test="idSer != null and idSer != ''">
+                AND Poundage.id = #{idSer}
+            </if>
+            <if test="ledgerIdSer != null and ledgerIdSer != ''">
+                AND Poundage.ledger_id = #{ledgerIdSer}
+            </if>
+            <if test="amountSer != null and amountSer != ''">
+                AND Poundage.amount = #{amountSer}
+            </if>
+            <if test="quantitySer != null and quantitySer != ''">
+                AND Poundage.quantity = #{quantitySer}
+            </if>
+            <if test="poundageTimeStart != null and poundageTimeStart != ''">
+                AND FROM_UNIXTIME(Poundage.poundage_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]>
+                STR_TO_DATE(CONCAT(#{poundageTimeStart},'00:00:00'
+                ),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="poundageTimeEnd != null and poundageTimeEnd != ''">
+                AND FROM_UNIXTIME(Poundage.poundage_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]>
+                STR_TO_DATE(CONCAT(#{poundageTimeEnd},'23:59:59'
+                ),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="statusSer != null">
+                AND Poundage.status = #{statusSer}
+            </if>
+            <if test="addTimeStart != null and addTimeStart != ''">
+                AND FROM_UNIXTIME(Poundage.add_time, '%Y-%m-%d %H:%i:%S') <![CDATA[>=]]>
+                STR_TO_DATE(CONCAT(#{addTimeStart},'00:00:00'
+                ),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="addTimeEnd != null and addTimeEnd != ''">
+                AND FROM_UNIXTIME(Poundage.add_time, '%Y-%m-%d %H:%i:%S') <![CDATA[<=]]>
+                STR_TO_DATE(CONCAT(#{addTimeEnd},'23:59:59'
+                ),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="nidSer != null and nidSer != ''">
+                AND Poundage.nid LIKE CONCAT('%', #{nidSer}, '%')
+            </if>
+            <if test="seqNoSer != null and seqNoSer != ''">
+                AND Poundage.seq_no LIKE CONCAT('%', #{seqNoSer}, '%')
+            </if>
+            <if test="bankSeqNoSer != null and bankSeqNoSer != ''">
+                AND concat(cast(Poundage.tx_date*1000000 +Poundage.tx_time as char),Poundage.seq_no) LIKE CONCAT('%', #{bankSeqNoSer}, '%')
+            </if>
+            <if test="createTimeSer != null and createTimeSer != ''">
+                AND Poundage.create_time = #{createTimeSer}
+            </if>
+            <if test="createrSer != null and createrSer != ''">
+                AND Poundage.creater = #{createrSer}
+            </if>
+            <if test="updateTimeSer != null and updateTimeSer != ''">
+                AND Poundage.update_time = #{updateTimeSer}
+            </if>
+            <if test="updaterSer != null and updaterSer != ''">
+                AND Poundage.updater = #{updaterSer}
+            </if>
+            <if test="userNameSer != null and userNameSer != ''">
+                AND hsclc.username LIKE CONCAT('%', #{userNameSer}, '%')
+            </if>
+            <if test="realNameSer != null and realNameSer != ''">
+                AND hsclc.truename LIKE CONCAT('%', #{realNameSer}, '%')
+            </if>
+            <if test="accountSer != null and accountSer != ''">
+                AND hsclc.account LIKE CONCAT('%', #{accountSer}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="getPoundageCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM ht_poundage Poundage
+        LEFT JOIN ht_sub_commission_list_config hsclc ON hsclc.user_id = Poundage.user_id
+        <include refid="Poundage_findPage_where"/>
+    </select>
+
+    <select id="getPoundageList" resultMap="RM_Poundage">
+        SELECT
+        Poundage.*,
+        hsclc.username AS userName,
+        hsclc.truename AS realName,
+        hsclc.account,
+        (CASE Poundage.status WHEN 3 THEN 2 ELSE Poundage.status END) statusOrder
+        FROM ht_poundage Poundage
+        LEFT JOIN ht_sub_commission_list_config hsclc ON hsclc.user_id = Poundage.user_id
+        <include refid="Poundage_findPage_where"/>
+        ORDER BY statusOrder,Poundage.poundage_time DESC,Poundage.add_time DESC,Poundage.id DESC
+        <include refid="pagination_Tail"/>
+    </select>
+
+    <select id="getPoundageById" resultMap="RM_Poundage">
+		SELECT
+		Poundage.*,
+		hsclc.username AS userName,
+		hsclc.truename AS realName,
+		hsclc.account
+		FROM ht_poundage Poundage
+		LEFT JOIN ht_sub_commission_list_config hsclc ON hsclc.user_id = Poundage.user_id
+		WHERE
+			Poundage.id = #{id}
+	</select>
+    <update id="updatePoundage">
+        UPDATE ht_poundage SET
+        <if test="status != null">
+            status = #{status} ,
+        </if>
+        <if test="nid != null and nid != ''">
+            nid = #{nid} ,
+        </if>
+        <if test="seqNo != null and seqNo != ''">
+            seq_no = #{seqNo} ,
+        </if>
+        <if test="txDate != null">
+            tx_date = #{txDate} ,
+        </if>
+        <if test="txTime != null">
+            tx_time = #{txTime} ,
+        </if>
+        <if test="addTime != null and addTime != ''">
+            add_time = #{addTime} ,
+        </if>
+            update_time = #{updateTime} , updater = #{updater}
+        WHERE
+        id = #{id}
+    </update>
+    <select id="getPoundageSum" resultMap="RM_Poundage">
+        SELECT
+        sum(amount) AS amount,
+        sum(quantity) AS quantity
+        FROM ht_poundage Poundage
+        LEFT JOIN ht_sub_commission_list_config hsclc ON hsclc.user_id = Poundage.user_id
+        <include refid="Poundage_findPage_where"/>
+    </select>
+</mapper>
+

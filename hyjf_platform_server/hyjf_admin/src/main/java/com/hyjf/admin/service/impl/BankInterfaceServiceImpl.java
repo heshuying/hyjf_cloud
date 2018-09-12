@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.BankInterfaceClient;
 import com.hyjf.admin.service.BankInterfaceService;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.resquest.admin.BankInterfaceRequest;

@@ -2,13 +2,9 @@ package com.hyjf.common.util;
 
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  *
@@ -17,21 +13,72 @@ import java.util.StringTokenizer;
  * @version 1.0
  */
 public class GetDate extends PropertyEditorSupport {
+
+
+	private static ThreadLocal<Map<String,SimpleDateFormat>> dateFormatThreadLocal = new ThreadLocal<>();
+
+	/**
+	 * 根据时间处理格式获取转换器
+	 * @author zhangyk
+	 * @date 2018/9/7 18:29
+	 */
+	private static SimpleDateFormat getDateFormat(String format){
+		Map<String,SimpleDateFormat>  dateFormatMap = dateFormatThreadLocal.get();
+		SimpleDateFormat simpleDateFormat = null;
+		if (dateFormatMap == null){
+			dateFormatMap = new HashMap<>();
+			simpleDateFormat = new SimpleDateFormat(format);
+			dateFormatMap.put(format,simpleDateFormat);
+			dateFormatThreadLocal.set(dateFormatMap);
+		}else{
+			simpleDateFormat = dateFormatMap.get(format);
+			if (simpleDateFormat == null){
+				simpleDateFormat = new SimpleDateFormat(format);
+				dateFormatMap.put(format,simpleDateFormat);
+			}
+		}
+		return simpleDateFormat;
+	}
+
+	public static final String date_sdf_key = "yyyy-MM-dd";
+
+	public static final String yyyyMMdd_key = "yyyyMMdd";
+
+	public static final String date_sdf_wz_key = "yyyy年MM月dd日";
+
+	public static final String time_sdf_key = "yyyy-MM-dd HH:mm";
+
+	public static final String yyyymmddhhmmss_key = "yyyyMMddHHmmss";
+
+	public static final String yyyymmddhhmmssSS_key = "yyyyMMddHHmmssSS";
+
+	public static final String short_time_sdf_key = "HH:mm";
+
+	public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
+
+	public static final String datetimeFormathhmm_key = "yyyy-MM-dd HH:mm";
+
+	public static final String datesdf_key = "yyyy.MM.dd";
+
+	public static final String yyyyMM_key = "yyyy-MM";
+
+
+
+
+
+
 	// 各种时间格式
-	public static final SimpleDateFormat date_sdf = new SimpleDateFormat("yyyy-MM-dd");
-	// 各种时间格式
-	public static final SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
-	// 各种时间格式
-	public static final SimpleDateFormat date_sdf_wz = new SimpleDateFormat("yyyy年MM月dd日");
-	public static final SimpleDateFormat time_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat("yyyyMMddHHmmss");
-	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat("yyyyMMddHHmmssSS");
-	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat("HH:mm");
-	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	
-	public static final SimpleDateFormat datesdf = new SimpleDateFormat("yyyy.MM.dd");
-	
+	public static final SimpleDateFormat date_sdf = new SimpleDateFormat(date_sdf_key);
+	public static final SimpleDateFormat yyyyMMdd = new SimpleDateFormat(yyyyMMdd_key);
+	public static final SimpleDateFormat date_sdf_wz = new SimpleDateFormat(date_sdf_wz_key);
+	public static final SimpleDateFormat time_sdf = new SimpleDateFormat(time_sdf_key);
+	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat(yyyymmddhhmmss_key);
+	public static final SimpleDateFormat yyyymmddhhmmssSS = new SimpleDateFormat(yyyymmddhhmmssSS_key);
+	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat(short_time_sdf_key);
+	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat(datetimeFormat_key);
+	public static final SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat(datetimeFormathhmm_key);
+	public static final SimpleDateFormat datesdf = new SimpleDateFormat(datesdf_key);
+
 	// 以毫秒表示的时间
 	private static final long DAY_IN_MILLIS = 24 * 3600 * 1000;
 	private static final long HOUR_IN_MILLIS = 3600 * 1000;
@@ -65,7 +112,7 @@ public class GetDate extends PropertyEditorSupport {
 	 */
 	public static Date countDate(String date, int ymd, int cout) {
 		GregorianCalendar gc = new GregorianCalendar();
-		Date d = str2Date(date, datetimeFormat);
+		Date d = str2Date(date, getDateFormat(datetimeFormat_key));
 		gc.setTime(d);
 		gc.add(ymd, cout);
 		gc.set(gc.get(Calendar.YEAR), gc.get(Calendar.MONTH), gc.get(Calendar.DATE));
@@ -98,7 +145,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return yyyy-MM-dd
 	 */
 	public static String getCountDate(int ymd, int cout) {
-		return GetDate.date2Str(GetDate.countDate(ymd, cout), GetDate.date_sdf);
+		return GetDate.date2Str(GetDate.countDate(ymd, cout), GetDate.getDateFormat(date_sdf_key));
 	}
 
 	/**
@@ -110,7 +157,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static String countDateYYYYMMDDHHMMSS(String date, int ymd, int cout) {
-		return GetDate.date2Str(GetDate.countDate(date, ymd, cout), GetDate.datetimeFormat);
+		return GetDate.date2Str(GetDate.countDate(date, ymd, cout), GetDate.getDateFormat(datetimeFormat_key));
 	}
 
 	/**
@@ -153,12 +200,12 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Date countDateYYYYMMDD(int ymd, int cout) {
-		return GetDate.str2Date(GetDate.date2Str(GetDate.countDate(ymd, cout), GetDate.date_sdf), GetDate.date_sdf);
+		return GetDate.str2Date(GetDate.date2Str(GetDate.countDate(ymd, cout), getDateFormat(date_sdf_key)), getDateFormat(date_sdf_key));
 	}
 
 	// 指定模式的时间格式
 	private static SimpleDateFormat getSDFormat(String pattern) {
-		return new SimpleDateFormat(pattern);
+		return getDateFormat(pattern);
 	}
 
 	/**
@@ -226,13 +273,13 @@ public class GetDate extends PropertyEditorSupport {
 		if (null != time) {
 			date = new Date(time.getTime());
 		}
-		return date2Str(date_sdf);
+		return date2Str(getDateFormat(date_sdf_key));
 	}
 
 	/**
 	 * 时间戳转换为字符串
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestamptoStrYYYYMMDDHHMM(String timeParam) {
@@ -240,7 +287,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, datetimeFormathhmm);
+			return date2Str(date, getDateFormat(datetimeFormathhmm_key));
 		}
 		return "";
 	}
@@ -248,7 +295,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 时间戳转换为字符串
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestamptoStrYYYYMMDDHHMMSS(String timeParam) {
@@ -256,7 +303,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, datetimeFormat);
+			return date2Str(date, getDateFormat(datetimeFormat_key));
 		}
 		return "";
 	}
@@ -264,7 +311,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 时间戳转换为字符串（yyyy-MM-dd）
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String times10toStrYYYYMMDD(Integer timeParam) {
@@ -272,7 +319,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, date_sdf);
+			return date2Str(date, getDateFormat(date_sdf_key));
 		}
 		return "";
 	}
@@ -280,7 +327,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 10位时间戳转换为字符串（）
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestamptoNUMStrYYYYMMDDHHMMSS(Integer timeParam) {
@@ -288,7 +335,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, datetimeFormat);
+			return date2Str(date, getDateFormat(datetimeFormat_key));
 		}
 		return "";
 	}
@@ -297,7 +344,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 时间戳转换为字符串  (yyyy-MM-dd)
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestamptoStrYYYYMMDD(Integer timeParam) {
@@ -305,7 +352,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, date_sdf);
+			return date2Str(date, getDateFormat(date_sdf_key));
 		}
 		return "";
 	}
@@ -313,7 +360,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 时间戳转换为字符串  (yyyy-MM-dd)
 	 *
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestamptoStrYYYYMMDDHHMMSS(Integer timeParam) {
@@ -321,7 +368,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, date_sdf);
+			return date2Str(date, getDateFormat(date_sdf_key));
 		}
 		return "";
 	}
@@ -329,7 +376,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 时间戳转换为字符串  (yyyy.MM.dd)
 	 * @author LiBin
-	 * @param time
+	 * @param timeParam
 	 * @return
 	 */
 	public static String timestampToStrYYYYMMDD(String timeParam) {
@@ -337,7 +384,7 @@ public class GetDate extends PropertyEditorSupport {
 		Date date = null;
 		if (null != time) {
 			date = new Date(time.getTime());
-			return date2Str(date, datesdf);
+			return date2Str(date, getDateFormat(datesdf_key));
 		}
 		return "";
 	}
@@ -350,7 +397,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Timestamp str2Timestamp(String str) {
-		Date date = str2Date(str, date_sdf);
+		Date date = str2Date(str, getDateFormat(date_sdf_key));
 		return new Timestamp(date.getTime());
 	}
 
@@ -378,9 +425,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 日期转换为字符串
 	 *
-	 * @param date
-	 *            日期
-	 * @param format
+	 * @param date_sdf
 	 *            日期格式
 	 * @return 字符串
 	 */
@@ -400,7 +445,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static String dataformat(String data, String format) {
-		SimpleDateFormat sformat = new SimpleDateFormat(format);
+		SimpleDateFormat sformat = getDateFormat(format);//new SimpleDateFormat(format);
 		Date date = null;
 		try {
 			date = sformat.parse(data);
@@ -415,7 +460,7 @@ public class GetDate extends PropertyEditorSupport {
 	 *
 	 * @param date
 	 *            日期
-	 * @param format
+	 * @param date_sdf
 	 *            日期格式
 	 * @return 字符串
 	 */
@@ -423,23 +468,21 @@ public class GetDate extends PropertyEditorSupport {
 		if (null == date) {
 			return null;
 		}
-		synchronized (date_sdf){
+		//synchronized (date_sdf){
 			return date_sdf.format(date);
-		}
+		//}
 	}
 
 	/**
 	 * 日期转换为字符串
 	 *
-	 * @param date
-	 *            日期
 	 * @param format
 	 *            日期格式
 	 * @return 字符串
 	 */
 	public static String getDate(String format) {
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		SimpleDateFormat sdf = getDateFormat(format);//new SimpleDateFormat(format);
 		return sdf.format(date);
 	}
 
@@ -498,8 +541,8 @@ public class GetDate extends PropertyEditorSupport {
 
 	public static Timestamp gettimestamp() {
 		Date dt = new Date();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String nowTime = df.format(dt);
+		//DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String nowTime = getDateFormat(datetimeFormat_key).format(dt);
 		Timestamp buydate = Timestamp.valueOf(nowTime);
 		return buydate;
 	}
@@ -557,7 +600,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 默认日期按“年-月-日“格式显示
 	 */
 	public static String formatDate() {
-		return date_sdf.format(getCalendar().getTime());
+		return getDateFormat(date_sdf_key).format(getCalendar().getTime());
 	}
 
 	/**
@@ -584,7 +627,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“年-月-日“格式显示
 	 */
 	public static String formatDate(Calendar cal) {
-		return date_sdf.format(cal.getTime());
+		return getDateFormat(date_sdf_key).format(cal.getTime());
 	}
 
 	/**
@@ -595,7 +638,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“年-月-日“格式显示
 	 */
 	public static String formatDate(Date date) {
-		return date_sdf.format(date);
+		return getDateFormat(date_sdf_key).format(date);
 	}
 
 	/**
@@ -609,7 +652,7 @@ public class GetDate extends PropertyEditorSupport {
 		if (millis == 0L) {
 			return "";
 		}
-		return date_sdf.format(new Date(millis));
+		return getDateFormat(date_sdf_key).format(new Date(millis));
 	}
 
 	/**
@@ -623,7 +666,7 @@ public class GetDate extends PropertyEditorSupport {
 		if (millis == 0L) {
 			return "";
 		}
-		return datetimeFormat.format(new Date(millis));
+		return getDateFormat(datetimeFormat_key).format(new Date(millis));
 	}
 
 	/**
@@ -674,7 +717,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 默认日期按“年-月-日 时：分“格式显示
 	 */
 	public static String formatTime() {
-		return time_sdf.format(getCalendar().getTime());
+		return getDateFormat(time_sdf_key).format(getCalendar().getTime());
 	}
 
 	/**
@@ -685,7 +728,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 默认日期按“年-月-日 时：分：秒“格式显示
 	 */
 	public static String formatTime2() {
-		return datetimeFormat.format(getCalendar().getTime());
+		return getDateFormat(datetimeFormat_key).format(getCalendar().getTime());
 	}
 
 	/**
@@ -696,7 +739,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定毫秒数表示日期按“年-月-日 时：分“格式显示
 	 */
 	public static String formatTime(long millis) {
-		return time_sdf.format(new Date(millis));
+		return getDateFormat(time_sdf_key).format(new Date(millis));
 	}
 
 	/**
@@ -707,7 +750,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“年-月-日 时：分“格式显示
 	 */
 	public static String formatTime(Calendar cal) {
-		return time_sdf.format(cal.getTime());
+		return getDateFormat(time_sdf_key).format(cal.getTime());
 	}
 
 	/**
@@ -718,7 +761,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“年-月-日 时：分“格式显示
 	 */
 	public static String formatTime(Date date) {
-		return time_sdf.format(date);
+		return getDateFormat(time_sdf_key).format(date);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////
@@ -732,7 +775,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 默认日期按“时：分“格式显示
 	 */
 	public static String formatShortTime() {
-		return short_time_sdf.format(getCalendar().getTime());
+		return getDateFormat(short_time_sdf_key).format(getCalendar().getTime());
 	}
 
 	/**
@@ -743,7 +786,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定毫秒数表示日期按“时：分“格式显示
 	 */
 	public static String formatShortTime(long millis) {
-		return short_time_sdf.format(new Date(millis));
+		return getDateFormat(short_time_sdf_key).format(new Date(millis));
 	}
 
 	/**
@@ -754,7 +797,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“时：分“格式显示
 	 */
 	public static String formatShortTime(Calendar cal) {
-		return short_time_sdf.format(cal.getTime());
+		return getDateFormat(short_time_sdf_key).format(cal.getTime());
 	}
 
 	/**
@@ -765,7 +808,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期按“时：分“格式显示
 	 */
 	public static String formatShortTime(Date date) {
-		return short_time_sdf.format(date);
+		return getDateFormat(short_time_sdf_key).format(date);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////
@@ -784,7 +827,7 @@ public class GetDate extends PropertyEditorSupport {
 	 *            转换的匹配格式
 	 * @return 如果转换成功则返回转换后的日期
 	 * @throws ParseException
-	 * @throws AIDateFormatException
+	 * @throws ParseException
 	 */
 	public static Date parseDate(String src, String pattern) throws ParseException {
 		return getSDFormat(pattern).parse(src);
@@ -800,7 +843,7 @@ public class GetDate extends PropertyEditorSupport {
 	 *            转换的匹配格式
 	 * @return 如果转换成功则返回转换后的日期
 	 * @throws ParseException
-	 * @throws AIDateFormatException
+	 * @throws ParseException
 	 */
 	public static Calendar parseCalendar(String src, String pattern) throws ParseException {
 
@@ -826,7 +869,7 @@ public class GetDate extends PropertyEditorSupport {
 	 *            转换的匹配格式
 	 * @return 如果转换成功则返回转换后的时间戳
 	 * @throws ParseException
-	 * @throws AIDateFormatException
+	 * @throws ParseException
 	 */
 	public static Timestamp parseTimestamp(String src, String pattern) throws ParseException {
 		Date date = parseDate(src, pattern);
@@ -885,9 +928,9 @@ public class GetDate extends PropertyEditorSupport {
 		if (text!=null && !"".equals(text)) {
 			try {
 				if (text.indexOf(":") == -1 && text.length() == 10) {
-					setValue(date_sdf.parse(text));
+					setValue(getDateFormat(date_sdf_key).parse(text));
 				} else if (text.indexOf(":") > 0 && text.length() == 19) {
-					setValue(datetimeFormat.parse(text));
+					setValue(getDateFormat(datetimeFormat_key).parse(text));
 				} else {
 					throw new IllegalArgumentException("Could not parse date, date format is error ");
 				}
@@ -990,7 +1033,7 @@ public class GetDate extends PropertyEditorSupport {
 	@Deprecated
 	public static Date getNowTime2(){
 		Date date=new Date();
-		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat temp = getDateFormat(datetimeFormat_key); //new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date1=temp.format(date);
 		Date date2= null;
 		try {
@@ -1097,8 +1140,8 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Date getDayStartOfSomeDay(Date date){
-	    String dayStartString = date_sdf.format(date) + " 00:00:00";
-	    SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    String dayStartString = getDateFormat(date_sdf_key).format(date) + " 00:00:00";
+	    SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date2 = null;
         try{
             date2 = d.parse(dayStartString);
@@ -1118,8 +1161,8 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static int getDayStart11(Date date){
-		String dayStartString = date_sdf.format(date) + " 00:00:00";
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dayStartString = getDateFormat(date_sdf_key).format(date) + " 00:00:00";
+		SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date2 = null;
 		try{
 			date2 = d.parse(dayStartString);
@@ -1141,7 +1184,7 @@ public class GetDate extends PropertyEditorSupport {
 	 */
    public static int getDayStart10(String date){
         String dayStartString = date + " 00:00:00";
-        SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date2 = null;
         try{
             date2 = d.parse(dayStartString);
@@ -1161,8 +1204,8 @@ public class GetDate extends PropertyEditorSupport {
     * @return
     */
    public static int getDayStart10(Date date){
-       String dayStartString = date_sdf.format(date) + " 00:00:00";
-       SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       String dayStartString = getDateFormat(date_sdf_key).format(date) + " 00:00:00";
+       SimpleDateFormat d =  getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        Date date2 = null;
        try{
            date2 = d.parse(dayStartString);
@@ -1183,7 +1226,7 @@ public class GetDate extends PropertyEditorSupport {
     */
    public static int getDayEnd10(String date){
        String dayStartString = date + " 23:59:59";
-       SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
        Date date2 = null;
        try{
            date2 = d.parse(dayStartString);
@@ -1204,7 +1247,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
     public static String getDayStart(Date date){
-        String dayStartString = date_sdf.format(date) + " 00:00:00";
+        String dayStartString = getDateFormat(date_sdf_key).format(date) + " 00:00:00";
         return dayStartString;
     }
 
@@ -1216,8 +1259,8 @@ public class GetDate extends PropertyEditorSupport {
     * @return
     */
    public static int getDayEnd10(Date date){
-        String dayStartString = date_sdf.format(date) + " 23:59:59";
-        SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dayStartString = getDateFormat(date_sdf_key).format(date) + " 23:59:59";
+        SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date2 = null;
         try{
             date2 = d.parse(dayStartString);
@@ -1237,7 +1280,7 @@ public class GetDate extends PropertyEditorSupport {
     * @return
     */
    public static String getDayEnd(Date date){
-       String dayEndString = date_sdf.format(date) + " 23:59:59";
+       String dayEndString = getDateFormat(date_sdf_key).format(date) + " 23:59:59";
        return dayEndString;
        
    }
@@ -1252,8 +1295,8 @@ public class GetDate extends PropertyEditorSupport {
 		if (dateParam == null || "".equals(dateParam)) {
 			return 0;
 		}
-		SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMddHHmmss");
-		Date date = str2Date(dateParam, datetimeFormathhmm);
+		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date date = str2Date(dateParam, getDateFormat(yyyymmddhhmmss_key));
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}
@@ -1267,8 +1310,8 @@ public class GetDate extends PropertyEditorSupport {
 		if (dateParam == null || "".equals(dateParam)) {
 			return 0;
 		}
-		SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date date = str2Date(dateParam, datetimeFormathhmm);
+		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date = str2Date(dateParam, getDateFormat(time_sdf_key));
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}
@@ -1283,8 +1326,8 @@ public class GetDate extends PropertyEditorSupport {
 		if (dateParam == null || "".equals(dateParam)) {
 			return 0;
 		}
-		SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = str2Date(dateParam, datetimeFormathhmm);
+		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = str2Date(dateParam, getDateFormat(datetimeFormat_key));
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}
@@ -1299,8 +1342,8 @@ public class GetDate extends PropertyEditorSupport {
 		if (dateParam == null || "".equals(dateParam)) {
 			return 0;
 		}
-		SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = str2Date(dateParam, datetimeFormathhmm);
+		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = str2Date(dateParam, getDateFormat(date_sdf_key));
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	} 
@@ -1314,8 +1357,8 @@ public class GetDate extends PropertyEditorSupport {
 		if (dateParam == null || "".equals(dateParam)) {
 			return 0;
 		}
-		SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMdd");
-		Date date = str2Date(dateParam, datetimeFormathhmm);
+		//SimpleDateFormat datetimeFormathhmm = new SimpleDateFormat("yyyyMMdd");
+		Date date = str2Date(dateParam, getDateFormat(yyyyMMdd_key));
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
 		return Integer.valueOf(String.valueOf(timestamp));
 	}
@@ -1331,7 +1374,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @throws ParseException
 	 */
 	public static int daysBetween(Date smdate, Date bdate) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		smdate = sdf.parse(sdf.format(smdate));
 		bdate = sdf.parse(sdf.format(bdate));
 		Calendar cal = Calendar.getInstance();
@@ -1356,9 +1399,9 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		SimpleDateFormat fmt = null;
 		if(dateParam.length() > 10){
-			fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			fmt = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		}else{
-			fmt = new SimpleDateFormat("yyyy-MM-dd");
+			fmt = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		}
 		Date date = str2Date(dateParam, fmt);
 		long timestamp = new Timestamp(date.getTime()).getTime() / 1000;
@@ -1371,7 +1414,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * 字符串的日期格式的计算
 	 */
 	public static int daysBetween(String smdate, String bdate) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(smdate));
 		long time1 = cal.getTimeInMillis();
@@ -1426,13 +1469,13 @@ public class GetDate extends PropertyEditorSupport {
 	public static String getDateTimeMyTimeInMillis(Integer milliseconds) {
 		// 时间转换
 		Date date = new Date((long) milliseconds * 1000);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
 
 	public static String getDateTimeMyTimeInMillis(Date date) {
 		// 时间转换
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
 
@@ -1444,8 +1487,8 @@ public class GetDate extends PropertyEditorSupport {
 	public static String getDateTimeMyTime(Integer milliseconds) {
 		// 时间转换
 		Date date = new Date((long) milliseconds * 1000);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.format(date);
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return getDateFormat(datetimeFormat_key).format(date);
 	}
 
 	/**
@@ -1456,7 +1499,7 @@ public class GetDate extends PropertyEditorSupport {
 	public static String getDateMyTimeInMillis(Integer milliseconds) {
 		// 时间转换
 		Date date = new Date((long) milliseconds * 1000);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		return sdf.format(date);
 	}
 
@@ -1468,8 +1511,8 @@ public class GetDate extends PropertyEditorSupport {
 	public static String getDateMyTimeInMillisYYYYMMDD(Integer milliseconds) {
 		// 时间转换
 		Date date = new Date((long) milliseconds * 1000);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		return sdf.format(date);
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		return getDateFormat(yyyyMMdd_key).format(date);
 	}
 	/**
 	 * 获取次日零时时间
@@ -1477,7 +1520,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Integer getTomorrowTimeInMillis() {
-		String dates = GetDate.getDayStart(GetDate.date2Str(GetDate.countDateYYYYMMDD(5, 1), GetDate.date_sdf));
+		String dates = GetDate.getDayStart(GetDate.date2Str(GetDate.countDateYYYYMMDD(5, 1), GetDate.getDateFormat(date_sdf_key)));
 		int time = (int) (GetDate.str2Timestamp(dates).getTime() / 1000);
 		return time;
 	}
@@ -1526,7 +1569,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 根据格式字符串返回字符串
 	 */
 	public static String dateToString2(Date date, String format) {
-		SimpleDateFormat d = new SimpleDateFormat(format);
+		SimpleDateFormat d = getDateFormat(format);//new SimpleDateFormat(format);
 		String date2 = d.format(date);
 		return date2;
 	}
@@ -1539,7 +1582,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Integer getSearchStartTime(Date date) {
-		return GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(GetDate.date2Str(date, GetDate.date_sdf)));
+		return GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(GetDate.date2Str(date, GetDate.getDateFormat(date_sdf_key))));
 	}
 
 	/**
@@ -1550,7 +1593,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Integer getSearchEndTime(Date date) {
-		return GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayEnd(GetDate.date2Str(date, GetDate.date_sdf)));
+		return GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayEnd(GetDate.date2Str(date, GetDate.getDateFormat(date_sdf_key))));
 	}
 
 	/**
@@ -1602,7 +1645,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 根据格式字符串返回字符串
 	 */
 	public static String dateToString(Date date) {
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date2 = d.format(date);
 		return date2;
 	}
@@ -1615,7 +1658,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 根据格式字符串返回字符串
 	 */
 	public static String dateToString2(Date date) {
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat d = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		String date2 = d.format(date);
 		return date2;
 	}
@@ -1630,7 +1673,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 根据格式字符串返回字符串
 	 */
 	public static String dateToString3(Date date, String format) {
-		SimpleDateFormat d = new SimpleDateFormat(format);
+		SimpleDateFormat d = getDateFormat(format);//new SimpleDateFormat(format);
 		String date2 = d.format(date);
 		return date2;
 	}
@@ -1643,7 +1686,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 20150821131919
 	 */
 	public static Date stringToDate(String date) {
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat d = getDateFormat(datetimeFormat_key);//new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date2 = null;
 		try {
 			date2 = d.parse(date);
@@ -1662,7 +1705,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 20150821
 	 */
 	public static Date stringToDate2(String date) {
-		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat d = getDateFormat(date_sdf_key);//new SimpleDateFormat("yyyy-MM-dd");
 		Date date2 = null;
 		try {
 			date2 = d.parse(date);
@@ -1680,7 +1723,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 根据格式字符串返回值
 	 */
 	public static Date stringToDate3(String date, String format) {
-		SimpleDateFormat d = new SimpleDateFormat(format);
+		SimpleDateFormat d = getDateFormat(format);//new SimpleDateFormat(format);
 		Date date2 = null;
 		try {
 			date2 = d.parse(date);
@@ -1723,8 +1766,8 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 计算两个日期内的自然日数量
 	 * 
-	 * @param begin开始日期
-	 * @param end结束日期
+	 * @param begin 开始日期
+	 * @param end 结束日期
 	 * @return
 	 */
 	public static Integer countDate(Date begin, Date end) {
@@ -1888,7 +1931,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static String dateToDateFormatStr(Date date, String format) {
-		SimpleDateFormat d = new SimpleDateFormat(format);
+		SimpleDateFormat d = getDateFormat(format);//new SimpleDateFormat(format);
 		String date2 = d.format(date);
 		return date2;
 	}
@@ -1902,7 +1945,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return
 	 */
 	public static Date stringToFormatDate(String date, String format) {
-		SimpleDateFormat d = new SimpleDateFormat(format);
+		SimpleDateFormat d = getDateFormat(format);//new SimpleDateFormat(format);
 		Date date2 = null;
 		try {
 			date2 = d.parse(date);
@@ -1953,8 +1996,8 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定日期的时间戳
 	 */
 	public static int getTime10(Date date) {
-		return (int) date.getTime()/1000;
-	}
+		return (int) (date.getTime()/1000);
+}
 
 	/**
 	 * 返回距离某个日期多少年(不满按一年计算)
@@ -1965,7 +2008,7 @@ public class GetDate extends PropertyEditorSupport {
 		Calendar calendar1 = Calendar.getInstance();
 		int yearNow = calendar1.get(Calendar.YEAR);
 		int monthNow = calendar1.get(Calendar.MONTH) + 1;
-		Date date = stringToDate3(dateStart, "yyyy-MM");
+		Date date = stringToDate3(dateStart, yyyyMM_key);
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.setTime(date);
 		int yearDate = calendar2.get(Calendar.YEAR);
@@ -1998,7 +2041,7 @@ public class GetDate extends PropertyEditorSupport {
 	 * @return 指定毫秒数表示的日期
 	 */
 	public static int getIntYYMMDD(Date repayEndDate) {
-		String enddateStr = new SimpleDateFormat("yyyyMMdd").format(repayEndDate);
+		String enddateStr = getDateFormat(yyyyMMdd_key).format(repayEndDate);
 		return Integer.parseInt(enddateStr);
 	}
 

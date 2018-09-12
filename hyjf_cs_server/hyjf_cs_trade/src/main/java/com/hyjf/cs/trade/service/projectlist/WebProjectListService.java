@@ -3,10 +3,7 @@ package com.hyjf.cs.trade.service.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
-import com.hyjf.cs.trade.bean.WebBorrowRequestBean;
-import com.hyjf.cs.trade.bean.WebCreditRequestBean;
-import com.hyjf.cs.trade.bean.WebPlanRequestBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.Map;
@@ -42,6 +39,12 @@ public interface WebProjectListService extends BaseTradeService {
      */
     public WebResult getBorrowInvest(BorrowInvestReqBean form, String userId);
 
+    /**
+     * 查询定时散标倒计时信息
+     * @author zhangyk
+     * @date 2018/9/3 14:48
+     */
+    public OntimeCheckBean getBorrowOntime(String borrowNid);
 
     /**
      * 获取散标专区债转列表

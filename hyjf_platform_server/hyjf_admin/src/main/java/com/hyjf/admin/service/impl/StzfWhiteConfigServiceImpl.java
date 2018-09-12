@@ -3,15 +3,17 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
-import com.hyjf.admin.client.StzfWhiteConfigClient;
 import com.hyjf.admin.service.StzfWhiteConfigService;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -22,6 +24,8 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 
 	@Autowired
 	private AmTradeClient amTradeClient;
+	@Autowired
+	private AmAdminClient amAdminClient;
 
 	@Override
 	public STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
@@ -42,4 +46,19 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	public HjhInstConfigVO selectHjhInstConfig(String instcode) {
 		return amTradeClient.selectHjhInstConfig(instcode);
 	}
+
+    @Override
+    public STZHWhiteListResponse selectSTZHWhiteById(Integer id) {
+        return amTradeClient.selectSTZHWhiteById(id);
+    }
+
+	@Override
+	public List<HjhInstConfigVO> getRegionList() {
+		return amTradeClient.selectHjhInstConfigList();
+	}
+
+    @Override
+    public STZHWhiteListResponse getUserByUserName(STZHWhiteListRequestBean requestBean) {
+        return amAdminClient.getUserByUserName(requestBean);
+    }
 }

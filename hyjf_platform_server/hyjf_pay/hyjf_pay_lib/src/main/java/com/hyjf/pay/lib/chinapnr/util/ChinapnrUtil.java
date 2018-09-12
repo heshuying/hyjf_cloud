@@ -9,6 +9,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.config.PaySystemConfig;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +91,52 @@ public class ChinapnrUtil {
 
         return modelAndView;
     }
+
+    /**
+     * 调用接口(页面)
+     *
+     * @param bean
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings({ "unchecked" })
+    public static Map<String, Object> callApiMap(ChinapnrBean bean) throws Exception {
+        String methodName = "callApi";
+        log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        try {
+            // 取出调用汇付接口的url
+            String payurl = paySystemConfig.getPayUrl();
+            if (Validator.isNull(payurl)) {
+                throw new Exception("接口工程URL不能为空");
+            }
+            Map<String, String> allParams = bean.getAllParams();
+            allParams.put("LogUserId", bean.getLogUserId() == null ? "" : String.valueOf(bean.getLogUserId()));
+            allParams.put("LogRemark", bean.getLogRemark() == null ? "" : bean.getLogRemark());
+            allParams.put("LogType", bean.getLogType() == null ? "" : bean.getLogType());
+            allParams.put("LogBorrowNid", bean.getLogBorrowNid() == null ? "" : bean.getLogBorrowNid());
+            allParams.put("LogIp", bean.getLogIp() == null ? "" : bean.getLogIp());
+            // 调用汇付接口
+            String result = restTemplate
+                    .postForEntity(payurl + REQUEST_MAPPING_CALLAPI, allParams, String.class).getBody();
+            // 将返回字符串转换成Map
+            if (Validator.isNotNull(result)) {
+                Map<String, ?> map = JSONObject.parseObject(result, Map.class);
+                Map<String, ?> bankForm = (Map)map.get("bankForm");
+                JSONObject allParam = JSONObject.parseObject((String)bankForm.get("json"),JSONObject.class);
+                Map<String, Object> retMap = new HashedMap();
+                retMap.put("allParams",allParam);
+                retMap.put("action",bankForm.get("action"));
+                return retMap;
+            }
+        } catch (Exception e) {
+            log.error(String.valueOf(e));
+            throw e;
+        } finally {
+            log.debug( "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        }
+        return null;
+    }
+
 
     /**
      * 调用接口

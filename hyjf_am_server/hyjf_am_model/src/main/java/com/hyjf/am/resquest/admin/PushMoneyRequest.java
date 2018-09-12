@@ -6,6 +6,7 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModel;
@@ -18,7 +19,7 @@ import java.io.Serializable;
  * @version PushMoneyRequest, v0.1 2018/7/10 19:26
  */
 @ApiModel(value = "直投提成请求参数")
-public class PushMoneyRequest extends BasePage implements Serializable {
+public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	@ApiModelProperty(value = "项目编号(检索用)")
 	public String borrowNid;
@@ -100,6 +101,34 @@ public class PushMoneyRequest extends BasePage implements Serializable {
 	public int limitStart;
 
 	public int limitEnd;
+
+	/**
+	 * 当前页码
+	 */
+	@ApiModelProperty(value = "当前页")
+	private int currPage;
+
+	/**
+	 * 当前页条数
+	 */
+	@ApiModelProperty(value = "当前页条数")
+	private int pageSize = 10;
+
+	public int getCurrPage() {
+		return currPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
 	public int getLimit() {
 		return limit;

@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
@@ -63,13 +64,14 @@ public class WechatRechargeController extends BaseTradeController{
 		String mobile = request.getParameter("mobile");
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/failed/?sign="+sign+"&txAmount="+money;
-		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/success/?sign="+sign+"&txAmount="+money;
+		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
+		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&txAmount="+money;
 		String bgRetUrl = systemConfig.getWechatHost() + "/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
 		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
+		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		Map<String,Object> map = new HashMap<>();
 		try {

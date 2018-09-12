@@ -105,22 +105,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowSendType" >
-    <selectKey resultType="java.lang.String" keyProperty="sendCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_send_type (send_name, after_time, remark, 
-      del_flag, create_time, update_time
-      )
-    values (#{sendName,jdbcType=VARCHAR}, #{afterTime,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into ht_borrow_send_type (send_cd, send_name, after_time, 
+      remark, del_flag, create_time, 
+      update_time)
+    values (#{sendCd,jdbcType=VARCHAR}, #{sendName,jdbcType=VARCHAR}, #{afterTime,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowSendType" >
-    <selectKey resultType="java.lang.String" keyProperty="sendCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_borrow_send_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sendCd != null" >
+        send_cd,
+      </if>
       <if test="sendName != null" >
         send_name,
       </if>
@@ -141,6 +138,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sendCd != null" >
+        #{sendCd,jdbcType=VARCHAR},
+      </if>
       <if test="sendName != null" >
         #{sendName,jdbcType=VARCHAR},
       </if>

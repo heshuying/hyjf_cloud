@@ -39,7 +39,7 @@ public class OperationLogController extends BaseConfigController {
         //查询版本配置列表条数
         int recordTotal = this.operationLogService.selectOperationLogCountByPage(map);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator((int)map.get("paginatorPage"), recordTotal);
+            Paginator paginator = new Paginator((int)map.get("currPage"), recordTotal,(int)map.get("pageSize"));
             //查询记录
             List<FeerateModifyLog> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -51,7 +51,10 @@ public class OperationLogController extends BaseConfigController {
                 response.setResultList(feerateModifyLogVOList);
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
+            response.setRtn(Response.SUCCESS);
+            response.setMessage("查询的数据为空！");
             return response;
         }
         return null;

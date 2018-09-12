@@ -1,5 +1,6 @@
 <project name="hyjf-am-trade" basedir="." default="main">
-	<target name="main" description="Generate the files">
+	
+	<target name="copytrade" description="copy auto generator files">
 		<delete includeEmptyDirs="true">
 			<fileset
 				dir="${basedir}/src/main/java/com/hyjf/am/trade/dao/mapper/xml/auto"
@@ -11,5 +12,141 @@
 				dir="${basedir}/src/main/java/com/hyjf/am/trade/dao/model/auto"
 				includes="**/*.java" />
 		</delete>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/trade/dao/mapper/xml/auto">
+			<fileset dir="../hyjf_am_trade/src/main/java/com/hyjf/am/trade/dao/mapper/xml/auto">
+    			<include name="**/*.xml"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/trade/dao/mapper/auto">
+			<fileset dir="../hyjf_am_trade/src/main/java/com/hyjf/am/trade/dao/mapper/auto">
+    			<include name="**/*.java"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/trade/dao/model/auto">
+			<fileset dir="../hyjf_am_trade/src/main/java/com/hyjf/am/trade/dao/model/auto">
+    			<include name="**/*.java"/>
+  			</fileset>
+		</copy>
 	</target>
+	
+	<target name="copyuser" description="copy auto generator files">
+		<delete includeEmptyDirs="true">
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/xml/auto"
+				includes="**/*.xml" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/auto"
+				includes="**/*.java" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/user/dao/model/auto"
+				includes="**/*.java" />
+		</delete>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/xml/auto">
+			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/mapper/xml/auto">
+    			<include name="**/*.xml"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/mapper/auto">
+			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/mapper/auto">
+    			<include name="**/*.java"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/user/dao/model/auto">
+			<fileset dir="../hyjf_am_user/src/main/java/com/hyjf/am/user/dao/model/auto">
+    			<include name="**/*.java"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	</target>
+	
+	
+	<target name="copyconfig" description="copy auto generator files">
+		<delete includeEmptyDirs="true">
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto"
+				includes="**/*.xml" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/auto"
+				includes="**/*.java" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/config/dao/model/auto"
+				includes="**/*.java" />
+		</delete>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto">
+			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/mapper/xml/auto">
+    			<include name="**/*.xml"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/mapper/auto">
+			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/mapper/auto">
+    			<include name="**/*.java"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/config/dao/model/auto">
+			<fileset dir="../hyjf_am_config/src/main/java/com/hyjf/am/config/dao/model/auto">
+    			<include name="**/*.java"/>
+    			<exclude name="ROaUsers*"/>
+    			<exclude name="ROaDepartment*"/>
+    			<exclude name="RUser*"/>
+  			</fileset>
+		</copy>
+	</target>
+	
+	
+	<target name="copymarket" description="copy auto generator files">
+		<delete includeEmptyDirs="true">
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/market/dao/mapper/xml/auto"
+				includes="**/*.xml" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/market/dao/mapper/auto"
+				includes="**/*.java" />
+			<fileset
+				dir="${basedir}/src/main/java/com/hyjf/am/market/dao/model/auto"
+				includes="**/*.java" />
+		</delete>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/market/dao/mapper/xml/auto">
+			<fileset dir="../hyjf_am_market/src/main/java/com/hyjf/am/market/dao/mapper/xml/auto">
+    			<include name="**/*.xml"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/market/dao/mapper/auto">
+			<fileset dir="../hyjf_am_market/src/main/java/com/hyjf/am/market/dao/mapper/auto">
+    			<include name="**/*.java"/>
+  			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/src/main/java/com/hyjf/am/market/dao/model/auto">
+			<fileset dir="../hyjf_am_market/src/main/java/com/hyjf/am/market/dao/model/auto">
+    			<include name="**/*.java"/>
+  			</fileset>
+		</copy>
+	</target>
+	
+	
 </project>

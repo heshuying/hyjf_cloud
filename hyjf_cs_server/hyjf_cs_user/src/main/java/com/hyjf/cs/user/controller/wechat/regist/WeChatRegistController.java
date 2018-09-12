@@ -404,7 +404,6 @@ public class WeChatRegistController extends BaseUserController {
                     ret.put("successUrl",baseMapBean.getUrl());
                     return ret;
                 }
-                // add by zhangjinpeng 注册送888元新手红包 end
                 BaseMapBean baseMapBean=new BaseMapBean();
                 baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
                 baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));

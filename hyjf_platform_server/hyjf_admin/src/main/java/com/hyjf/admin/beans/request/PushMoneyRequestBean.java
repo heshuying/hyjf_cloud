@@ -3,8 +3,7 @@
  */
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.admin.beans.BaseRequest;
-import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +13,7 @@ import java.io.Serializable;
  * @author zdj
  * @version PushMoneyRequestBean.java, v0.1 2018年7月13日 下午3:11:08
  */
-public class PushMoneyRequestBean extends Request implements Serializable{
+public class PushMoneyRequestBean extends PushMoneyVO implements Serializable{
 
 	/**
 	 * serialVersionUID
@@ -53,8 +52,6 @@ public class PushMoneyRequestBean extends Request implements Serializable{
 	@ApiModelProperty(value = "检索条件-放款结束时间")
 	private String recoverLastTimeEnd;
 
-	@ApiModelProperty(value = "检索条件-项目类型")
-	private int projectType;
 	/**
 	 * 翻页机能用的隐藏变量
 	 */
@@ -177,11 +174,4 @@ public class PushMoneyRequestBean extends Request implements Serializable{
 		this.recoverLastTimeEnd = recoverLastTimeEnd;
 	}
 
-	public int getProjectType() {
-		return projectType;
-	}
-
-	public void setProjectType(int projectType) {
-		this.projectType = projectType;
-	}
 }

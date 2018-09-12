@@ -11,6 +11,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
@@ -24,7 +25,9 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,37 +150,6 @@ public class WeChatAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动债转同步回调
-     * @param userId
-     * @param sign
-     * @param bean
-     * @param request
-     * @return
-     */
-/*
-    @ApiOperation(value = "用户授权自动债转同步回调")
-    @PostMapping(value = "/userAuthCreditReturn")
-    public ModelAndView userAuthCreditReturn(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,@ModelAttribute BankCallBean bean, HttpServletRequest request) {
-        bean.convert();
-        HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
-        // 返回失败
-        if (bean.getRetCode() != null && !BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            return getErrorModelAndView(ResultEnum.USER_ERROR_204, sign,"1", hjhUserAuth);
-        }
-        // 投资人签约状态查询
-        BankCallBean retBean = autoPlusService.getUserAuthQUery(userId, BankCallConstant.QUERY_TYPE_2);
-        if(hjhUserAuth==null){
-            hjhUserAuth = new HjhUserAuthVO();
-        }
-        hjhUserAuth.setAutoCreditStatus(1);
-        if ("1".equals(retBean.getState())) {
-            return getSuccessModelAndView(sign, "1", hjhUserAuth);
-        }
-        return getErrorModelAndView(ResultEnum.USER_ERROR_205, sign, "1", hjhUserAuth);
-    }
-*/
-
-    /**
      * 用户授权自动债转异步回调
      * @param bean
      * @return
@@ -244,36 +215,6 @@ public class WeChatAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资同步回调
-     * @param bean
-     * @param userId
-     * @param sign
-     * @param request
-     * @return
-     */
-    /*@ApiOperation(value = "用户授权自动投资同步回调")
-    @PostMapping(value = "/userAuthInvesReturn")
-    public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
-        bean.convert();
-        HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
-        // 返回失败
-        if (bean.getRetCode() != null && !BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            return getErrorModelAndView(ResultEnum.USER_ERROR_204, sign, "0", hjhUserAuth);
-        }
-        // 投资人签约状态查询
-        BankCallBean retBean = autoPlusService.getUserAuthQUery(userId, BankCallConstant.QUERY_TYPE_1);
-
-        if ("1".equals(retBean.getState())) {
-            if(hjhUserAuth==null){
-                hjhUserAuth = new HjhUserAuthVO();
-            }
-            hjhUserAuth.setAutoInvesStatus(1);
-            return getSuccessModelAndView(sign, "0", hjhUserAuth);
-        }
-        return getErrorModelAndView(ResultEnum.USER_ERROR_204, sign, "0", hjhUserAuth);
-    }*/
-
-    /**
      * @Author: zhangqingqing
      * @Desc :用户授权自动投资异步回调
      * @Param: * @param bean
@@ -282,8 +223,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
-    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/userAuthInvesBgreturn")
+    public String userAuthInvesBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;
     }
@@ -314,23 +255,21 @@ public class WeChatAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 组装跳转成功页面MV
-     * @param sign
-     * @param type
-     * @param hjhUserAuth
-     * @return
+     * @Description 调用银行失败原因
+     * @Author
      */
-    private WeChatResult getSuccessModelAndView(String sign, String type, HjhUserAuthVO hjhUserAuth) {
-        WeChatResult<Object> result = new WeChatResult<>();
-        BaseMapBean baseMapBean = new BaseMapBean();
-        baseMapBean.set(CustomConstants.APP_SIGN, sign);
-        baseMapBean.set("autoInvesStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoInvesStatus()==null?"0":hjhUserAuth.getAutoInvesStatus()+ "");
-        baseMapBean.set("autoCreditStatus", hjhUserAuth==null?"0":hjhUserAuth.getAutoCreditStatus()==null?"0":hjhUserAuth.getAutoCreditStatus() + "");
-        baseMapBean.set("userAutoType", type);
-        baseMapBean.setCallBackAction(CustomConstants.HOST + CommonConstant.JUMP_HTML_SUCCESS_PATH);
-        Map<String,Object> map = new HashMap<>();
-        map.put("callBackForm", baseMapBean);
+    @ApiOperation(value = "调用银行失败原因", notes = "查询调用银行失败原因")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ResponseBody
+    public AppResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
+        AppResult<Object> result = new AppResult<Object>();
+        String retMsg = autoPlusService.getFailedMess(param.get("logOrdId"));
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
         result.setData(map);
+        result.setStatus("000");
         return result;
     }
 

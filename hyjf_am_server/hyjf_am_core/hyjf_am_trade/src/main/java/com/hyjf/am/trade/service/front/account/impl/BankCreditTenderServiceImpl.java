@@ -584,7 +584,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					AccountWebListVO accountWebList = new AccountWebListVO();
 					accountWebList.setOrdid(assignOrderId);
 					accountWebList.setBorrowNid(creditTender.getBidNid());
-					accountWebList.setAmount(creditTender.getCreditFee());
+					accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
 					accountWebList.setType(1);
 					accountWebList.setTrade("CREDITFEE");
 					accountWebList.setTradeType("债转服务费");

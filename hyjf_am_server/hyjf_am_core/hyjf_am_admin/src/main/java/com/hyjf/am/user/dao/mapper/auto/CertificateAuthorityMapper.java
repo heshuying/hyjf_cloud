@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface CertificateAuthorityMapper {
     int countByExample(CertificateAuthorityExample example);

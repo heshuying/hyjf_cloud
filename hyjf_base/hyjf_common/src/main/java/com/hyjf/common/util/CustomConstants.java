@@ -603,6 +603,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 还款前三天短信提醒 */
     public static final String PARAM_TPL_HUANKUANTIXING = "TPL_HUANKUANTIXING";
 
+    /** 资金相关-产品加息放款 */
+    public static final String PARAM_TPL_JIAXIFANGKUAN = "TPL_JIAXIFANGKUAN";
+
     /** 还款日当天提醒 */
     public static final String PARAM_TPL_HUANKUANGUOQI = "TPL_HUANKUANGUOQI";
 
@@ -650,6 +653,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 汇添金计划未满 */
     public static final String HTJ_PARAM_TPL_JHWM = "JYTZ_HTJ_FAILED";
+
+    /** 消息推送模板-加息放款 */
+    public static final String JYTZ_TPL_JIAXIFANGKUAN = "JYTZ_TPL_JIAXIFANGKUAN";
 
     /** 项目结标提醒-项目到期 */
     public static final String PARAM_TPL_XMDQ = "TPL_XMDQ";
@@ -1355,6 +1361,8 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /**************************************REDIS用key常量****************************/
     public static final String UNDERLINE = "_";
+
+    public static final String COLON = ":";
     /** 定时发标时间key名 */
     public static final String REDIS_KEY_ONTIME = "ontime";
     /** 定时发标状态修改锁key名 */
@@ -1460,4 +1468,18 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
      */
     public static final Integer COUPON_TENDER_TYPE_HZT = 1;
 
+    /**
+     * 充值状态
+     */
+    public static final String RECHARGE_STATUS = "RECHARGE_STATUS";
+
+    /**
+     * 托管机构
+     */
+    public static final String BANK_TYPE = "BANK_TYPE";
+
+    /**
+     * 用户类型
+     */
+    public static final String USER_PROPERTY = "USER_PROPERTY";
 }

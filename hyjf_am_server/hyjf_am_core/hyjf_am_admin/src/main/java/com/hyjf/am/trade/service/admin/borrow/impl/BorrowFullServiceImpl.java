@@ -3,32 +3,12 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeHistory;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowFullCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFullService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
@@ -40,6 +20,15 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -145,10 +134,10 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
      */
     @Override
     public Response updateBorrowFull(BorrowFullRequest borrowFullRequest) {
-        BorrowVO borrow = borrowFullRequest.getBorrowVO();
-        BorrowInfoVO borrowInfo = borrowFullRequest.getBorrowInfoVO();
         // 标的编号
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
+        // 标的
+        Borrow borrow = getBorrowByBorrowNid(borrowNid);
         // 借款人userId
         Integer borrowUserId = borrow.getUserId();
         // 借款人用户名
@@ -156,7 +145,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         // 借款期数
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
         // 项目类型
-        Integer projectType = borrowInfo.getProjectType();
+        Integer projectType = borrow.getProjectType();
         // 项目还款方式
         String borrowStyle = borrow.getBorrowStyle();
         // 是否月标(true:月标, false:天标)
@@ -186,7 +175,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                 BorrowExample borrowExample = new BorrowExample();
                 borrowExample.createCriteria().andIdEqualTo(borrow.getId()).andReverifyStatusEqualTo(borrow.getReverifyStatus());
                 // 复审时间
-                borrow.setReverifyTime(String.valueOf(nowTime));
+                borrow.setReverifyTime(nowTime);
                 // 复审人ID
                 borrow.setReverifyUserid(borrowFullRequest.getCurrUserId());
                 // 复审用户名
@@ -197,8 +186,8 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                 borrow.setStatus(3);
                 // 复审备注
                 borrow.setReverifyRemark(borrowFullRequest.getReverifyRemark());
-                // 借款成功时间
-                borrow.setBorrowSuccessTime(nowTime);
+                // 借款成功时间 该字段已删除
+//                borrow.setBorrowSuccessTime(nowTime);
                 // 更新时间
                 borrow.setUpdatetime(GetDate.getNowTime());
                 Borrow updateBorrow = new Borrow();
@@ -506,5 +495,21 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         } else {
             return new Response(Response.FAIL, "标的编号为空！");
         }
+    }
+
+    /**
+     * 获取标的
+     * @param borrowNid
+     * @return
+     */
+    private Borrow getBorrowByBorrowNid(String borrowNid){
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list=this.borrowMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
     }
 }

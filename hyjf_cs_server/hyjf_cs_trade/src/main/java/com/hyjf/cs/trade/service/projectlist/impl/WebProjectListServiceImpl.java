@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
@@ -9,6 +10,7 @@ import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -21,7 +23,10 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
@@ -35,12 +40,15 @@ import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
+import org.apache.rocketmq.client.producer.MQProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +95,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private SmsProducer smsProducer;
 
     @Autowired
     private WebProjectListClient webProjectListClient;
@@ -298,9 +309,18 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if ("13".equals(borrow.getType())) {
+/*        if ("13".equals(borrow.getType())) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+        }*/
+        // add by nxl 设置项目加息收益
+        BigDecimal borrowExtraYield = new BigDecimal(StringUtils.isNotBlank(borrow.getBorrowExtraYield())?borrow.getBorrowExtraYield():"0");
+        int intFlg = Integer.parseInt(StringUtils.isNotBlank(borrow.getIncreaseInterestFlag())?borrow.getIncreaseInterestFlag():"0");
+        boolean isIncrease = Validator.isIncrease(intFlg,borrowExtraYield);
+        if(isIncrease){
+            borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+            borrow.setIncreaseInterestFlag(String.valueOf(isIncrease));
         }
+        // mod by nxl 设置项目加息收益 End
 
         switch (borrowStyle) {
             case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“
@@ -517,7 +537,170 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         return result;
     }
 
-    private void createProjectInvestPage(WebResult result,WebBorrowInvestResult info, BorrowInvestReqBean form, String userId) {
+
+    /**
+     * 查询定时散标倒计时信息
+     * @author zhangyk
+     * @date 2018/9/3 14:49
+     */
+    @Override
+    public OntimeCheckBean getBorrowOntime(String borrowNid) {
+        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_REQUIRED,"标的编号");
+
+        String SEPARATE = CustomConstants.COLON;
+        // 标的状态key
+        String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
+        // 标的定时key
+        String onTimeKey = CustomConstants.REDIS_KEY_ONTIME + SEPARATE + borrowNid;
+        // 标的定时独占锁key
+        String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
+        String status = RedisUtils.get(onTimeStatusKey);
+        OntimeCheckBean ontimeCheckBean  = new OntimeCheckBean();
+        if (StringUtils.isNotBlank(status) && "0".equals(status)){
+            ontimeCheckBean.setStatus(0);
+            return ontimeCheckBean;
+        }
+        Integer ontime ;
+        String ontimeStr = RedisUtils.get(onTimeKey);
+        if (StringUtils.isBlank(ontimeStr)){
+            ontime = null;
+        }else{
+            ontime = Integer.valueOf(ontimeStr);
+        }
+
+        //Redis中取得定时时间,时间check
+        if (ontime != null){
+            //取得服务器时间
+            Integer nowtime = GetDate.getNowTime10();
+            //未到发标时间时，失败返回发标时间
+            if (nowtime < ontime) {
+                ontimeCheckBean.setStatus(-1);
+                ontimeCheckBean.setStatusInfo("未到发标时间！");
+                ontimeCheckBean.setOntime(ontime);
+                ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+                return ontimeCheckBean;
+            }else{
+                //到时删除Redis中的定时时间
+                RedisUtils.del(onTimeKey);
+            }
+        }
+
+        try {
+
+            //修改标的状态被占用(有效期10秒)
+            if (!RedisUtils.tranactionSet(onTimeLockKey, 10)){
+                ontimeCheckBean.setStatus(-2);
+                ontimeCheckBean.setStatusInfo("锁等待中！");
+                ontimeCheckBean.setOntime(ontime);
+                ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+                return ontimeCheckBean;
+            }
+
+            //设定 redis的标的定时状态 为 1 锁定更改中(有效期同batch执行周期，5分钟)
+            RedisUtils.set(onTimeStatusKey, "1", 300);
+
+            //该标的非自动发标标的或者未到发标时间(DB验证)
+            BorrowVO borrowVO = amTradeClient.getBorrowByNidAndNowTime(borrowNid,GetDate.getNowTime10()); // this.borrowService.getOntimeIdByNid(borrowNid, GetDate.getNowTime10());
+            if (borrowVO == null) {
+                //删除 redis的标的定时独占锁
+                RedisUtils.del(onTimeLockKey);
+                ontimeCheckBean.setStatus(-3);
+                ontimeCheckBean.setStatusInfo("该标的非自动发标标的或者未到发标时间！");
+                ontimeCheckBean.setOntime(ontime);
+                ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+                return ontimeCheckBean;
+            }
+
+            // Redis的投资余额校验
+            if (RedisUtils.get(borrowNid) != null) {
+                logger.error(borrowNid + " 定时发标异常：标的编号在redis已经存在");
+                ontimeCheckBean.setStatus(-5);
+                ontimeCheckBean.setStatusInfo("定时标的状态异常");
+                ontimeCheckBean.setOntime(ontime);
+                ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+                return ontimeCheckBean;
+            }
+
+            //修改标的状态发标
+            logger.info("修改数据库中标的发标状态");
+            boolean flag = this.updateOntimeSendBorrow(borrowNid);
+            if (!flag) {
+                //删除 redis的标的定时独占锁
+                RedisUtils.del(onTimeLockKey);
+                ontimeCheckBean.setStatus(-4);
+                ontimeCheckBean.setStatusInfo("定时标的状态修改失败！");
+                ontimeCheckBean.setOntime(ontime);
+                ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+                return ontimeCheckBean;
+            }
+            logger.info("定时标的【" + borrowNid + "】发标完成。（web）");
+
+            //设定  redis的标的定时状态 为 0 标的状态修改成功开标(有效期同batch执行周期，5分钟)
+            RedisUtils.set(onTimeStatusKey,"0",300);
+
+            //删除 redis的标的定时独占锁
+            RedisUtils.del(onTimeLockKey);
+
+            ontimeCheckBean.setStatus(0);
+        } catch (Exception e) {
+            //删除 redis的标的定时独占锁
+            RedisUtils.del(onTimeLockKey);
+            ontimeCheckBean.setStatus(-5);
+            ontimeCheckBean.setStatusInfo("未知异常！");
+            ontimeCheckBean.setOntime(ontime);
+            ontimeCheckBean.setNowtime(GetDate.getNowTime10());
+            return ontimeCheckBean;
+        }
+
+        return ontimeCheckBean;
+    }
+
+
+    private boolean updateOntimeSendBorrow(String borrowNid) {
+
+        // 当前时间
+        int nowTime = GetDate.getNowTime10();
+        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        // DB验证
+        // 有投资金额发生异常
+        BigDecimal zero = new BigDecimal("0");
+        BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
+        if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
+            logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+            return false;
+        }
+        borrow.setBorrowEndTime(String.valueOf(nowTime + borrow.getBorrowValidTime() * 86400));
+        // 是否可以进行借款
+        borrow.setBorrowStatus(1);
+        // 是否可以进行借款
+        borrow.setBorrowFullStatus(0);
+        // 状态
+        borrow.setStatus(2);
+        // 初审时间
+        borrow.setVerifyTime(String.valueOf(nowTime));
+        // 剩余可投资金额
+        borrow.setBorrowAccountWait(borrow.getAccount());
+        boolean flag = amTradeClient.updateBorrowByBorrowNid(borrow);
+        if (flag) {
+            // 写入redis
+            RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
+            // 发送发标短信
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("val_title", borrow.getBorrowNid());
+            SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
+            try {
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                return true;
+            }catch (Exception e){
+                logger.error("开标短信发送失败");
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private void createProjectInvestPage(WebResult result, WebBorrowInvestResult info, BorrowInvestReqBean form, String userId) {
         String borrowNid = form.getBorrowNid();
         Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");

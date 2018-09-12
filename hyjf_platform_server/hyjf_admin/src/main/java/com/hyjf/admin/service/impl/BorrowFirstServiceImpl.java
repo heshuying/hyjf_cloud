@@ -200,7 +200,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         borrowVO.setBorrowValidTime(borrowInfoVO.getBorrowValidTime());
 
         BorrowFireRequest borrowFireRequest = new BorrowFireRequest();
-        borrowFireRequest.setBorrowVO(borrowVO);
+        borrowFireRequest.setBorrowNid(borrowNid);
         borrowFireRequest.setVerifyStatus(verifyStatus);
         borrowFireRequest.setOntime(ontime);
 

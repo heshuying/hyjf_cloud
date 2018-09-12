@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.trade.dao.model.auto.CouponTender;
 import com.hyjf.am.trade.dao.model.auto.CouponTenderExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface CouponTenderMapper {
     int countByExample(CouponTenderExample example);

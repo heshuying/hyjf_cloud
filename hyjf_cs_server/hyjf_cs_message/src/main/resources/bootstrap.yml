@@ -4,13 +4,13 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      profile: test
       name: cs-message
   boot:
     admin:
       client:
         url: http://micoserver:18080
-
+  profiles:
+    active: dev
 server:
   port: 8084
 
@@ -25,7 +25,7 @@ management:
       show-details: ALWAYS
 
 logging:
-  file: am-message.log
+  file: cs-message.log
 #swagger启用开关
 swagger:
  enable: true

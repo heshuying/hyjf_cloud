@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.user.dao.mapper.auto.AccountBankMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.AccountBank" >
-    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="bank_status" property="bankStatus" jdbcType="TINYINT" />
     <result column="account" property="account" jdbcType="VARCHAR" />
     <result column="bank" property="bank" jdbcType="VARCHAR" />
@@ -77,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    user_id, bank_status, account, bank, branch, province, city, area, card_type, respcode, 
-    respdesc, create_ip, update_ip, create_time, update_time
+    id, user_id, bank_status, account, bank, branch, province, city, area, card_type, 
+    respcode, respdesc, create_ip, update_ip, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.AccountBankExample" >
     select
@@ -101,11 +102,11 @@
     select 
     <include refid="Base_Column_List" />
     from ht_account_bank
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from ht_account_bank
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.AccountBankExample" >
     delete from ht_account_bank
@@ -114,26 +115,31 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_account_bank (bank_status, account, bank, 
-      branch, province, city, area, 
-      card_type, respcode, respdesc, 
-      create_ip, update_ip, create_time, 
-      update_time)
-    values (#{bankStatus,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
-      #{branch,jdbcType=VARCHAR}, #{province,jdbcType=CHAR}, #{city,jdbcType=CHAR}, #{area,jdbcType=INTEGER}, 
-      #{cardType,jdbcType=VARCHAR}, #{respcode,jdbcType=VARCHAR}, #{respdesc,jdbcType=VARCHAR}, 
-      #{createIp,jdbcType=VARCHAR}, #{updateIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_account_bank (user_id, bank_status, account, 
+      bank, branch, province, 
+      city, area, card_type, 
+      respcode, respdesc, create_ip, 
+      update_ip, create_time, update_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{bankStatus,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, 
+      #{bank,jdbcType=VARCHAR}, #{branch,jdbcType=VARCHAR}, #{province,jdbcType=CHAR}, 
+      #{city,jdbcType=CHAR}, #{area,jdbcType=INTEGER}, #{cardType,jdbcType=VARCHAR}, 
+      #{respcode,jdbcType=VARCHAR}, #{respdesc,jdbcType=VARCHAR}, #{createIp,jdbcType=VARCHAR}, 
+      #{updateIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ht_account_bank
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="bankStatus != null" >
         bank_status,
       </if>
@@ -178,6 +184,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="bankStatus != null" >
         #{bankStatus,jdbcType=TINYINT},
       </if>
@@ -231,6 +240,9 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update ht_account_bank
     <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
@@ -283,7 +295,8 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update ht_account_bank
-    set user_id = #{record.userId,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
       bank_status = #{record.bankStatus,jdbcType=TINYINT},
       account = #{record.account,jdbcType=VARCHAR},
       bank = #{record.bank,jdbcType=VARCHAR},
@@ -305,6 +318,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
     update ht_account_bank
     <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
       <if test="bankStatus != null" >
         bank_status = #{bankStatus,jdbcType=TINYINT},
       </if>
@@ -348,11 +364,12 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.AccountBank" >
     update ht_account_bank
-    set bank_status = #{bankStatus,jdbcType=TINYINT},
+    set user_id = #{userId,jdbcType=INTEGER},
+      bank_status = #{bankStatus,jdbcType=TINYINT},
       account = #{account,jdbcType=VARCHAR},
       bank = #{bank,jdbcType=VARCHAR},
       branch = #{branch,jdbcType=VARCHAR},
@@ -366,6 +383,6 @@
       update_ip = #{updateIp,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.ProtocolTemplate;
 import com.hyjf.am.trade.dao.model.auto.ProtocolTemplateExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProtocolTemplateMapper {
     int countByExample(ProtocolTemplateExample example);
@@ -28,8 +27,4 @@ public interface ProtocolTemplateMapper {
     int updateByPrimaryKeySelective(ProtocolTemplate record);
 
     int updateByPrimaryKey(ProtocolTemplate record);
-
-    List<ProtocolTemplate> getdisplayNameDynamic();
-
-    ProtocolTemplate selectTemplateById(String protocolId);
 }

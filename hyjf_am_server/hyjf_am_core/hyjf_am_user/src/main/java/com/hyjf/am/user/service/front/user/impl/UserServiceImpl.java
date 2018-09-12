@@ -504,6 +504,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 	}
 
+	/**
+	 *
+	 * 根据用户id查询用户签约授权信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public HjhUserAuth getHjhUserAuth(Integer userId) {
+		HjhUserAuthExample example = new HjhUserAuthExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<HjhUserAuth> list = hjhUserAuthMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public void insertSelective(HjhUserAuthLog hjhUserAuthLog){
 		hjhUserAuthLogMapper.insertSelective(hjhUserAuthLog);
@@ -561,7 +579,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			this.updateByPrimaryKeySelective(hjhUserAuthLog);
 		}
 		// 这里同步异步一起进来会导致重复插入的异常，加一个同步锁
-		HjhUserAuth hjhUserAuth=this.getHjhUserAuthByUserId(userId);
+		HjhUserAuth hjhUserAuth=this.getHjhUserAuth(userId);
 		// 更新用户签约授权状态信息表
 		if (hjhUserAuth == null) {
 			User user= this.findUserByUserId(userId);
@@ -860,6 +878,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UserEvalationResult insertUserEvalationResult(Integer userId,String userAnswer,Integer countScore,String behaviorId) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
@@ -890,6 +911,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			if (user != null){
 				// 已测评
 				user.setIsEvaluationFlag(1);
+				user.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(),1,1), 5,-1));
 				// 更新用户是否测评标志位
 				this.userMapper.updateByPrimaryKey(user);
 			}
@@ -1428,6 +1450,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	@Override
 	public UserEvalationResult skipEvaluate(Integer userId, Integer countScore) {
 		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		if(null==userEvalationResult){
+			userEvalationResult = new UserEvalationResult();
+		}
 		deleteUserEvalationResultByUserId(userId);
 		Evalation evalation = getEvalationByCountScore(countScore.shortValue());
 		userEvalationResult.setUserId(userId);
@@ -1562,5 +1587,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return 0;
 		}
 		return 1;
+	}
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public User selectUserInfoByUsername(String userName) {
+		UserExample example = new UserExample();
+		UserExample.Criteria crt = example.createCriteria();
+		crt.andUsernameEqualTo(userName);
+		List<User> list = this.usersMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 }

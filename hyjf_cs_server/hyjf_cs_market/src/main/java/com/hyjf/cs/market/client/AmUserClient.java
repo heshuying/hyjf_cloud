@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -238,4 +239,18 @@ public interface AmUserClient {
      * @return
      */
     List<Integer> getQianleUser();
+
+    /**
+     * 保存短信信息
+     * @param mobile
+     * @param checkCode
+     * @param validCodeType
+     * @param status
+     * @param platform
+     * @return
+     */
+    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+    int onlyCheckMobileCode(String mobile, String code);
+
 }

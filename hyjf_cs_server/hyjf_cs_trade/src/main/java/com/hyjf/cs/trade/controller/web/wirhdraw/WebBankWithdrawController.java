@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -56,7 +57,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
         WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
-        if(null==user||0==user.getIsSetPassword()||!user.isBankOpenAccount()){
+        if(null==user||!user.isBankOpenAccount()){
             return new WebResult<>();
         }
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
@@ -82,9 +83,9 @@ public class WebBankWithdrawController extends BaseTradeController {
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        String retUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawError";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
         String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
-        String successfulUrl = super.getFrontHost(systemConfig,BankCallConstant.CHANNEL_PC)+"/user/withdrawSuccess";
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
                 bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip, retUrl, bgRetUrl, successfulUrl);
 

@@ -10,19 +10,6 @@ import java.util.List;
  * @version CallCenterCustomizeMapper, v0.1 2018/5/8 14:14
  */
 public interface CallCenterCustomizeMapper {
-
-    /**
-     * @param
-     * @return
-     */
-    List<CallcenterUserBaseCustomize> findNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-
-    /**
-     * @param
-     * @return
-     */
-    List<CallcenterUserBaseCustomize> findNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-
     /**
      * @param
      * @return

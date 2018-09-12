@@ -50,9 +50,9 @@ public class AutoPreAuditConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.ASSET_PUSH_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_PREAUDIT_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.ASSET_PUST_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.BORROW_PREAUDIT_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -113,14 +113,14 @@ public class AutoPreAuditConsumer extends Consumer {
 
                 //判断该资产是否可以自动初审，是否关联计划
                 HjhAssetBorrowTypeVO hjhAssetBorrowType = apiAssetClient.selectAssetBorrowType(hjhPlanAssetVO.getInstCode(), hjhPlanAssetVO.getAssetType());
-                boolean flag = autoRecordService.updateRecordBorrow(hjhPlanAssetVO,hjhAssetBorrowType);
+                boolean flag = autoPreAuditService.updateRecordBorrow(hjhPlanAssetVO,hjhAssetBorrowType);
                 if (!flag) {
                     logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAssetVO.getAssetId() + "]");
                 }else{
                     // 成功后到关联计划队列
                     MQBorrow mqBorrow = new MQBorrow();
                     mqBorrow.setBorrowNid(hjhPlanAssetVO.getBorrowNid());
-                    autoPreAuditService.sendToMQ(mqBorrow,  MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP);
+                    autoPreAuditService.sendToMQ(mqBorrow,  MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC);
                 }
 
                 logger.info(hjhPlanAssetVO.getAssetId()+" 结束自动初审");

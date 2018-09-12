@@ -593,11 +593,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (flag == 1) {//还款申请查询
 			crt.andRepayStatusEqualTo(0);
 			crt.andDelFlagEqualTo(0);
-			crt.andRepayAccountGreaterThan(BigDecimal.ZERO);
+			crt.andRepayAccountGreaterThanOrEqualTo(BigDecimal.ZERO);
 		}else{
 			crt.andRepayStatusNotEqualTo(1);
 			crt.andDelFlagEqualTo(0);
-			crt.andRepayAccountGreaterThan(BigDecimal.ZERO);
+			crt.andRepayAccountGreaterThanOrEqualTo(BigDecimal.ZERO);
 		}
 		List<HjhDebtCreditRepay> creditRepayList = this.hjhDebtCreditRepayMapper.selectByExample(example);
 		return creditRepayList;
@@ -2205,7 +2205,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
@@ -3132,7 +3132,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountWebList.setOrdid(creditRepay.getAssignOrderId() + "_" + periodNow);// 订单号
 			accountWebList.setBorrowNid(borrowNid); // 投资编号
 			accountWebList.setUserId(repayUserId); // 借款人
-			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费

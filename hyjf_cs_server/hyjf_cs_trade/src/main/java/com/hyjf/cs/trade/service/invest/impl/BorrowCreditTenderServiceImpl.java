@@ -17,13 +17,12 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -33,6 +32,7 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -90,6 +91,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
     private static String oldOrNewDate = "2016-12-27 20:00:00";
+    private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
     /**
      * 债转投资
@@ -250,13 +252,18 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
-        // 投资金额
-        data.put("assignCapital",bean.getAssignCapital());
-        // 历史回报
-        data.put("assignInterest",bean.getAssignInterest());
-        WebResult<Map<String, Object>> result = new WebResult();
-        result.setData(data);
-        return result;
+        if(bean!=null){
+            // 投资金额
+            data.put("assignCapital",bean.getAssignCapital());
+            // 历史回报
+            data.put("assignInterest",bean.getAssignInterest());
+            WebResult<Map<String, Object>> result = new WebResult();
+            result.setData(data);
+            return result;
+        }else{
+            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_FIND_CREDIT_SUCCESS_MESS_ERROR);
+        }
+
     }
 
     /**
@@ -279,6 +286,129 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             ret.put(CustomConstants.MSG, "系统异常,请稍后再试!");
         }
         return ret;
+    }
+
+    /**
+     * App页面投资可债转输入投资金额后获取收益
+     *
+     * @param tender
+     * @param creditNid
+     * @param assignCapital
+     * @return
+     */
+    @Override
+    public AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital) {
+        String money = tender.getMoney();
+        String investType = tender.getBorrowNid().substring(0, 3);
+        AppInvestInfoResultVO result = new AppInvestInfoResultVO();
+        // 查询债转信息
+        TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
+        if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
+            money = "0";
+            result.setRealAmount("");
+            result.setButtonWord("确认");
+        } else {
+            result.setRealAmount("");
+            result.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
+        }
+        result.setBorrowNid(creditNid);
+        result.setBorrowType(investType);
+        result.setProspectiveEarnings("");
+        result.setInterest("");
+        result.setStandardValues("0");
+        if(creditAssign!=null){
+            AccountVO account = this.getAccountByUserId(tender.getUserId());
+            BigDecimal balance = account.getBankBalance();
+            result.setBalance(CommonUtils.formatAmount(null, balance));
+            result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+            result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+            // 待承接垫付利息
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignPayInterest());
+            // 待承接金额
+            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital());
+            result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
+            result.setCouponDescribe("");
+            result.setCouponId("");
+            result.setCouponQuota("");
+            result.setEndTime("");
+            result.setInitMoney("");
+            result.setIsThereCoupon("0");
+            result.setCouponName("");
+            result.setCouponType("");
+            result.setCouponAvailableCount("");
+            result.setAssignPay("");
+            result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
+            if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
+                // 实际支付金额
+                result.setRealAmount("实际支付金额:" + creditAssign.getAssignPay());
+                // 历史回报
+                result.setProspectiveEarnings(creditAssign.getAssignInterest()+"元");
+                //BigDecimal assignInterest = new BigDecimal(bean.getAssignInterest()).add(new BigDecimal(money));
+                //result.setProspectiveEarnings(assignInterest+"元");
+                //备注
+                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: " + creditAssign.getAssignInterest() +"元");
+                //折让率
+                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                //历史回报
+                result.setDesc1("历史回报: "+creditAssign.getAssignInterest()+"元");
+                // 实际支付金额
+                result.setAssignPay(creditAssign.getAssignPay());
+                // 认购本金
+                result.setAssignCapital(DF_FOR_VIEW.format(new BigDecimal(creditAssign.getAssignCapital())) + "元");
+                // 垫付利息
+                result.setAssignInterestAdvance(creditAssign.getAssignInterestAdvance() + "元");
+                // 垫付利息
+                result.setPaymentOfInterest(creditAssign.getAssignInterestAdvance() + "元");
+                // 实际支付计算式
+                result.setAssignPayText(creditAssign.getAssignPayText());
+                // 折价率
+                result.setCreditDiscount(creditAssign.getCreditDiscount() + "%");
+                //按钮上的文字
+                result.setButtonWord("实际支付"+creditAssign.getAssignPay()+"元");
+            } else {
+                result.setCreditDiscount("");
+                // 认购本金
+                result.setAssignCapital("0.00" + "元");
+                // 垫付利息
+                result.setAssignInterestAdvance("0.00" + "元");
+                // 垫付利息
+                result.setPaymentOfInterest("0.00" + "元");
+                //备注
+                result.setDesc("折让率: "+creditAssign.getCreditDiscount()+"%      历史回报: 0.00元");
+                //折让率
+                result.setDesc0("折让率: "+creditAssign.getCreditDiscount()+"%");
+                //历史回报
+                result.setDesc1("历史回报: "+"0.00元");
+                // 实际支付计算式
+                result.setAssignPayText("");
+                // 实际支付金额
+                result.setAssignPay("0.00");
+                // 历史回报
+                result.setProspectiveEarnings("0.00元");
+            }
+            result.setInvestmentDescription("承接金额应大于1元");
+            result.setAnnotation("注: 实际支付金额=认购本金（1-折让率）+垫付利息");
+            // 折比率
+            BigDecimal creditDiscount = new BigDecimal(1).subtract(new BigDecimal(creditAssign.getCreditDiscount()).divide(new BigDecimal(100)));
+            BigDecimal sum = capitalWait.multiply(creditDiscount).add(interestAdvanceWait);
+            BigDecimal max = new BigDecimal(0);
+            //modify by cwyang 被除数不得为0
+            if (sum.compareTo(new BigDecimal(0)) > 0) {
+                max = capitalWait.multiply(balance).divide(sum, 8, RoundingMode.DOWN);
+            }
+            if (max.compareTo(capitalWait) > 0) {
+                // 全投金额
+                result.setInvestAllMoney((String.valueOf(capitalWait.intValue())));
+            } else {
+                // 全投金额
+                result.setInvestAllMoney(String.valueOf(max.intValue()));
+            }
+        }else{
+            result.setStatusDesc(CustomConstants.APP_STATUS_DESC_FAIL);
+            // 全投金额
+            result.setInvestAllMoney("0");
+        }
+        return result;
     }
 
     /**
@@ -846,7 +976,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
-                        accountWebList.setAmount(creditTender.getCreditFee());
+                        accountWebList.setAmount(Double.valueOf(creditTender.getCreditFee().toString()));
                         accountWebList.setType(1);
                         accountWebList.setTrade("CREDITFEE");
                         accountWebList.setTradeType("债转服务费");

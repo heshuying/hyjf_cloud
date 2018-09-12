@@ -23,20 +23,6 @@ public interface CallCenterBankService extends BaseService{
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
 
     /**
-     * 查询呼叫中心未分配客服的用户（复投用户筛选）
-     * @param callCenterUserInfoRequest
-     * @return
-     */
-    List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-
-    /**
-     * 查询呼叫中心未分配客服的用户（流失用户筛选）
-     * @param callCenterUserInfoRequest
-     * @return
-     */
-    List<CallcenterUserBaseCustomize> getNoServiceLiuShiUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);
-
-    /**
      * 查询呼叫中心未分配客服的用户
      * @param callCenterUserInfoRequest
      * @return

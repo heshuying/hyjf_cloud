@@ -58,7 +58,7 @@ public class ProjectConstant {
     /**
      * 加入条件
      */
-    public  static  final String PLAN_ADD_CONDITION = "{0}元起，以{1}元的倍数递增";
+    public  static  final String PLAN_ADD_CONDITION = "加入金额{0}元起，且以{1}元的倍数递增";
 
     /**
      * 交易详情类请求地址

@@ -60,7 +60,17 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
             127.0.0.1       api.xiasq.com
             127.0.0.1       wechat.xiasq.com
         目前是根据域名区分请求渠道，不添加host文件会无法访问  
-        
+       
+###swagger页面
+``` 
+ADMIN页面：http://47.104.249.145:9093/swagger-ui.html
+CALLCENTER页面:http://47.104.203.75:9094/swagger-ui.html
+CS-MARKET页面：http://47.104.203.75:8083/swagger-ui.html
+CS-MESSAGE页面:http://47.104.203.75:8084/swagger-ui.html
+CS-TRADE页面:http://47.104.203.75:8082/swagger-ui.html
+CS-USER页面:http://47.104.203.75:8081/swagger-ui.html
+BATCH页面：http://47.104.203.75:9091
+```
 ### 微服务架构
    ![调用链](pic2.png)    
        

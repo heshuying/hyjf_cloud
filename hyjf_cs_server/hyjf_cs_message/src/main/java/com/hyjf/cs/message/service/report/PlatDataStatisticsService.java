@@ -54,7 +54,7 @@ public interface PlatDataStatisticsService extends BaseService {
      */
     OperationMongoGroupEntity findOneOperationMongoGroupEntity();
     /**
-     * mogo查询多个OperationReportEntity
+     * mogo查询多个OperationReportEntity  获取12个月的数据
      * @return
      */
     List<OperationReportEntity> findOperationReportEntityList();

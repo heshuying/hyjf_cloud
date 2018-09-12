@@ -112,7 +112,7 @@ public class AutoTenderExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "异常处理", notes = "异常处理")
-    @PostMapping(value = "/tenderExceptionAction",produces="application/json; charset=utf-8")
+    @PostMapping(value = "/tenderExceptionAction")
     @ResponseBody
     public AdminResult tenderExceptionAction(@RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
         String returnMsg = autoTenderExceptionService.tenderExceptionAction(tenderExceptionSolveRequestBean);

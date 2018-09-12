@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -47,7 +47,7 @@
         <!-- 表结构 -->
 
         <table tableName="ht_account_bank" domainObjectName="AccountBank">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -332,7 +332,6 @@
         </table>
 
         <table tableName="ht_user_login_log" domainObjectName="UserLoginLog">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_plat" domainObjectName="UserPlat">
@@ -547,12 +546,10 @@
         </table>
 
         <table tableName="ht_borrow_finhxfman_charge" domainObjectName="BorrowFinhxfmanCharge">
-            <generatedKey column="man_charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_finman_new_charge" domainObjectName="BorrowFinmanNewCharge">
-            <generatedKey column="man_charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="asset_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="charge_mode" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="late_free_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -562,7 +559,6 @@
         </table>
 
         <table tableName="ht_borrow_finser_charge" domainObjectName="BorrowFinserCharge">
-            <generatedKey column="charge_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="project_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -583,6 +579,7 @@
             <columnOverride column="asset_attributes" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="bank_regist_days" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_new" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_log" domainObjectName="BorrowLog">
@@ -618,6 +615,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_recover" domainObjectName="BorrowRecover">
@@ -664,7 +662,6 @@
         </table>
 
         <table tableName="ht_borrow_send_type" domainObjectName="BorrowSendType">
-            <generatedKey column="send_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1671,7 +1668,6 @@
         </table>
 
         <table tableName="ht_param_name" domainObjectName="ParamName">
-            <generatedKey column="name_cd" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1710,7 +1706,7 @@
         </table>
 
         <table tableName="ht_sms_notice_config" domainObjectName="SmsNoticeConfig">
-            <generatedKey column="name" sqlStatement="MySql" type="post" identity="true" />
+			<generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1856,5 +1852,38 @@
         <table tableName="ht_sms_count" domainObjectName="SmsCount">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
+        <table tableName="ht_under_line_recharge" domainObjectName="UnderLineRecharge">
+           <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+           <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_protocol_log" domainObjectName="ProtocolLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="operation" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_protocol_version" domainObjectName="ProtocolVersion">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="display_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+        </table>
+
+        <table tableName="ht_config_r_user" domainObjectName="ConfigRUser">
+            <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_r_oa_department" domainObjectName="UserROaDepartment">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="ishead" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="ishr" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="isfinance" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="cuttype" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="listorder" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_r_oa_users" domainObjectName="UserROaUsers">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

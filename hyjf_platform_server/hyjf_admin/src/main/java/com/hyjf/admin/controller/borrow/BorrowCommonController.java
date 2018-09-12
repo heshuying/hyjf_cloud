@@ -29,12 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -42,7 +39,6 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
-import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
@@ -272,7 +268,7 @@ public class BorrowCommonController extends BaseController {
 //		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 		boolean borrowPreNidFlag = borrowCommonService.isExistsBorrowPreNidRecord(borrowPreNid.get("borrowPreNid"));
-		return new AdminResult<>(borrowPreNidFlag);
+		return new AdminResult<>(!borrowPreNidFlag);
 
 	}
 
@@ -959,6 +955,17 @@ public class BorrowCommonController extends BaseController {
 							resultMap.put("isAccountBook", this.getValue(hssfRow.getCell(1)));
 						}	
 						/** 原个人勾选内容改上传 end */
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
+						else if(rowNum == 87){//(企业)企业注册地
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
+						}
+						else if(rowNum == 88){//(个人)借款人地址
+							resultMap.put("address", this.getValue(hssfRow.getCell(1)));
+						}
+						else if(rowNum == 89){//(企业)企业组织机构代码
+							resultMap.put("corporateCode", this.getValue(hssfRow.getCell(1)));
+						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 end
 					}
 				}
 			}
@@ -989,7 +996,7 @@ public class BorrowCommonController extends BaseController {
 				HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName);
 
 				int rowNum = 0;
-				for (int i = 0; i < 87; i++) {
+				for (int i = 0; i < 90; i++) {
 					// 新建一行
 					Row row = sheet.createRow(rowNum);
 
@@ -1580,6 +1587,29 @@ public class BorrowCommonController extends BaseController {
 								cell.setCellValue("");
 							}
 						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
+						else if(rowNum == 87){//企业注册地
+							if (celLength == 0) {
+								cell.setCellValue("(企业)企业注册地");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						else if(rowNum == 88){//借款人地址
+							if (celLength == 0) {
+								cell.setCellValue("(个人)借款人地址");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						else if(rowNum == 89){//企业注册地
+							if (celLength == 0) {
+								cell.setCellValue("(企业)企业组织机构代码");
+							}else if (celLength == 1) {
+								cell.setCellValue("");
+							}
+						}
+						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 end
 					}
 					//行++
 					rowNum++;
@@ -1735,7 +1765,7 @@ public class BorrowCommonController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/exportOptAction")
+	@PostMapping("/exportOptAction")
 	public void exportOptAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowBeanRequest form) throws Exception {
 		form.setPageSize(-1);
 		form.setCurrPage(-1);

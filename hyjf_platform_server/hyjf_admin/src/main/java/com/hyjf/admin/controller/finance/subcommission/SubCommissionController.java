@@ -77,7 +77,7 @@ public class SubCommissionController extends BaseController {
     @ApiOperation(value = "转账状态下拉框数据",notes = "转账状态下拉框数据")
     @PostMapping(value = "/gettransferstatus")
     public AdminResult<ListResult<DropDownVO>> getSelectorData(){
-        List<DropDownVO> status = adminCommonService.getParamNameList("TRANSFER_STATUS");
+        List<DropDownVO> status = adminCommonService.getParamNameList("FS_TRANSFER_STATUS");
         return new AdminResult<>(ListResult.build(status,0));
     }
 

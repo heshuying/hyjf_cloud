@@ -309,6 +309,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setStatusDesc(MsgEnum.ERR_USER_UNUSUAL.getMsg());
             return result;
         }
+        // 判断用户是否开户
+        if (!user.isBankOpenAccount()) {
+            result.setStatus(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getCode());
+            result.setStatusDesc(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getMsg());
+            return result;
+        }
         // 查询页面上可以挂载的银行列表
         BankCardVO banks = bindCardClient.selectBankCardByUserId(userId);
         if (banks == null) {

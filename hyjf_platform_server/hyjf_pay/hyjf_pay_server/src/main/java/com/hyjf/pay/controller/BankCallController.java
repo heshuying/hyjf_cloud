@@ -77,8 +77,8 @@ public class BankCallController extends BaseController {
                 throw new RuntimeException("页面调用前,保存请求数据失败！订单号：" + bean.getLogOrderId());
             }
             // 设置返回URL
-            /*if (Validator.isNotNull(bean.getRetUrl())) {
-                String retUrl =  systemConfig.getReturnUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
+          /*  if (Validator.isNotNull(bean.getRetUrl())) {
+                String retUrl = systemConfig.getCallbackSuccessUrl() + StringPool.QUESTION + BankCallConstant.PARAM_LOGORDERID + StringPool.EQUAL + bean.getLogOrderId() + StringPool.AMPERSAND
                         + BankCallConstant.PARAM_LOGUSERID + StringPool.EQUAL + bean.getLogUserId();
                 bean.setRetUrl(retUrl);
                 bean.set(BankCallConstant.PARAM_RETURL, retUrl);

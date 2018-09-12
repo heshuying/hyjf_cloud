@@ -38,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author nixiaoling
@@ -570,5 +567,14 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
             return idCardCustomizeResponse.getArea();
         }
         return "";
+    }
+    /**
+     * 根据推荐人id查找用信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId){
+        return userCenterClient.selectSpreadsUserBySpreadUserId(userId);
     }
 }

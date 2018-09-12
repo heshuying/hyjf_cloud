@@ -17,7 +17,7 @@ public interface BankTenderCancelService {
 
     List<BorrowTenderTmp> getBorrowTenderTmpsForTenderCancel();
 
-    boolean updateBidCancelRecord(TenderCancelRequest para);
+    void updateBidCancelRecord(TenderCancelRequest para);
 
     boolean updateTenderCancelExceptionData(BorrowTenderTmp borrowTenderTmp);
 }

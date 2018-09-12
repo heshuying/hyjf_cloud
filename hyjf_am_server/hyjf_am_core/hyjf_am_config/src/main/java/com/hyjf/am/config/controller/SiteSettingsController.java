@@ -62,4 +62,21 @@ public class SiteSettingsController extends BaseConfigController{
         response.setRtn(AdminResponse.SUCCESS);
         return response;
     }
+
+    /**
+     * 通过网站设置获取公司信息
+     *
+     * @return
+     */
+    @RequestMapping("/select_site_setting")
+    public SiteSettingsResponse selectSiteSetting(){
+        SiteSettingsResponse response = new SiteSettingsResponse();
+        SiteSettingsVO siteSettingsVO = new SiteSettingsVO();
+        SiteSetting siteSettings = siteSettingsService.selectSiteSetting();
+        if (siteSettings != null) {
+            BeanUtils.copyProperties(siteSettings, siteSettingsVO);
+        }
+        response.setResult(siteSettingsVO);
+        return response;
+    }
 }

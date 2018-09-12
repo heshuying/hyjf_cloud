@@ -16,6 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
+import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -259,14 +260,17 @@ public class BorrowController extends BaseController {
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
+		logger.info("原子层  散标投资 开始操作数据库表");
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
 			result.setResultInt(1);
+			logger.info("原子层  散标投资 操作数据库表成功");
 			return result;
 		}catch (Exception e){
 			e.printStackTrace();
 			result.setResultInt(0);
+			logger.info("原子层  散标投资 操作数据库表失败");
 			return result;
 		}
 	}
@@ -337,5 +341,39 @@ public class BorrowController extends BaseController {
 		}
 		return response;
 	}
+
+	/**
+	 * 根据nid和系统时间查询borrow
+	 * @author zhangyk
+	 * @date 2018/9/3 17:31
+	 */
+	@GetMapping("/getByNidAndNowTime/{borrowNid}/{nowTime}")
+	public BorrowResponse getByNidAndNowTime(@PathVariable String borrowNid, @PathVariable Integer nowTime){
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.selectBorrowByNidAndNowTime(borrowNid,nowTime);
+		if (null != borrow){
+			response.setResult(CommonUtils.convertBean(borrow,BorrowVO.class));
+		}
+		return response;
+	}
+
+    /**
+     * 获取还款计算公式
+	 *
+     * @author liushouyi
+     * @param borrowStyle
+     * @return
+     */
+	@GetMapping("/select_borrow_style_with_blobs/{borrowStyle}")
+	public BorrowStyleResponse selectBorrowStyleWithBLOBs(@PathVariable String borrowStyle){
+		BorrowStyleResponse response = new BorrowStyleResponse();
+		List<BorrowStyleWithBLOBs> borrowStyleWithBLOBs = borrowService.selectBorrowStyleWithBLOBs(borrowStyle);
+		if (!CollectionUtils.isEmpty(borrowStyleWithBLOBs)) {
+			List<BorrowStyleVO> voList = CommonUtils.convertBeanList(borrowStyleWithBLOBs, BorrowStyleVO.class);
+			response.setResultList(voList);
+		}
+		return response;
+	}
+
 
 }

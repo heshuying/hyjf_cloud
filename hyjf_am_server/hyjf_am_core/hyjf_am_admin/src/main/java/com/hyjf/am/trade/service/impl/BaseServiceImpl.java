@@ -6,33 +6,17 @@ package com.hyjf.am.trade.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
-import com.hyjf.am.trade.dao.model.auto.RUser;
-import com.hyjf.am.trade.dao.model.auto.RUserExample;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -409,4 +393,92 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
         return balance;
     }
+
+    /**
+     * 根据借款编号查询资产信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid){
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<HjhPlanAsset> hjhPlanAssetList = this.hjhPlanAssetMapper.selectByExample(example);
+        if (null != hjhPlanAssetList && hjhPlanAssetList.size() > 0 ) {
+            return hjhPlanAssetList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据借款机构编号和借款类型获取该机构流程配置
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    @Override
+    public HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType) {
+        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+        HjhAssetBorrowtypeExample.Criteria crt = example.createCriteria();
+        crt.andInstCodeEqualTo(instCode);
+        crt.andAssetTypeEqualTo(assetType);
+        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
+        if(list.size() > 0){
+            return list.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * 判断是否属于线下充值类型.
+     * 	优先从Redis中取数据,当Redis中的数据为空时,从数据表中读取数据
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean getIsRechargeTransType(String tranType) {
+        //从Redis获取线下充值类型List
+        String codeStringList = RedisUtils.get(RedisConstants.UNDER_LINE_RECHARGE_TYPE);
+        JSONArray redisCodeList = JSONArray.parseArray(codeStringList);
+
+        if (StringUtils.isBlank(codeStringList) || redisCodeList.size() <= 0){
+            logger.info(this.getClass().getName(), "---------------------------线下充值类型Redis为空!-------------------------");
+
+            UnderLineRechargeRequest request = new UnderLineRechargeRequest();
+            UnderLineRechargeExample example = new UnderLineRechargeExample();
+            UnderLineRechargeExample.Criteria criteria = example.createCriteria();
+
+            // 启用状态的
+            criteria.andStatusEqualTo(0);
+
+            List<UnderLineRecharge> codeList = this.underLineRechargeMapper.selectByExample(example);
+            if (codeList.isEmpty()){
+                logger.info(this.getClass().getName(), "---------------------------线下充值类型数据库未配置!-------------------------");
+                return false;
+            }else {
+                for (UnderLineRecharge code : codeList){
+                    if (code.getCode().equals(tranType)){
+                        return true;
+                    }else {
+                        continue;
+                    }
+                }
+            }
+        }else {
+
+            for(Object code : redisCodeList) {
+                if (code.equals(tranType)){
+                    return true;
+                }else {
+                    continue;
+                }
+            }
+        }
+        return false;
+    }
+
 }

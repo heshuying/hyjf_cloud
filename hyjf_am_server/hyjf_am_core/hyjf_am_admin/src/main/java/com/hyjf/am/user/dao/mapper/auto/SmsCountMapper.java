@@ -1,11 +1,9 @@
 package com.hyjf.am.user.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.user.dao.model.auto.SmsCount;
 import com.hyjf.am.user.dao.model.auto.SmsCountExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface SmsCountMapper {
     int countByExample(SmsCountExample example);

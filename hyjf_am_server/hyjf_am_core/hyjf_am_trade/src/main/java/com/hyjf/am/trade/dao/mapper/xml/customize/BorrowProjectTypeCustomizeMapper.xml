@@ -9,6 +9,7 @@
     <resultMap id="getProjectTypeListMap" type="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         <result column="borrow_project_type" property="borrowProjectType" jdbcType="VARCHAR" />
         <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR" />
+        <result column="method_name" property="methodName" jdbcType="VARCHAR" />
         <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
         <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
         <result column="invest_start" property="investStart" jdbcType="VARCHAR" />
@@ -22,6 +23,7 @@
         <result column="repay_name" property="repayName" jdbcType="VARCHAR" />
         <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
         <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="INTEGER" />
     </resultMap>
     <select id="selectProjectTypeList" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         SELECT
@@ -39,17 +41,57 @@
         typ.remark,
         typ.create_user_id,
         typ.update_user_id,
-        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name
+        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name,
+        typ.increase_interest_flag
         FROM
         ht_borrow_project_type typ
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         GROUP BY
-        pr.borrow_class
+        pr.borrow_class	,
+        typ.borrow_project_type,
+        typ.id,
+        typ.borrow_cd,
+        typ.borrow_name,
+        typ.borrow_class,
+        typ.invest_start,
+        typ.invest_end,
+        typ.increase_money,
+        typ.interest_coupon,
+        typ.taste_money,
+        typ.invest_user_type,
+        typ. status,
+        typ.remark,
+        typ.create_user_id,
+        typ.update_user_id
         <include refid="Where_Clause" />
         ORDER BY
         typ.id
         <if test="limitStart >= 0" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>
+    </select>
+
+    <select id="selectByBorrowCd" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
+        SELECT
+        typ.borrow_project_type,
+        typ.borrow_cd,
+        typ.borrow_name,
+        typ.borrow_class,
+        typ.invest_start,
+        typ.invest_end,
+        typ.increase_money,
+        typ.interest_coupon,
+        typ.taste_money,
+        typ.invest_user_type,
+        typ.status,
+        typ.remark,
+        typ.create_user_id,
+        typ.update_user_id,
+        GROUP_CONCAT("", pr.repay_method, "") AS method_name,
+        typ.increase_interest_flag
+        FROM
+        ht_borrow_project_type typ
+        LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
+        where typ.borrow_cd=#{borrowCd}
     </select>
 </mapper>

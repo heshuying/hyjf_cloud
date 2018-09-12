@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "批次中心-批次放款")
 @RestController
-@RequestMapping("/am-trade/adminBatchBorrowRecover")
+@RequestMapping("/am-admin/adminBatchBorrowRecover")
 public class AdminBatchBorrowRecoverController extends BaseController {
 
     @Autowired
@@ -76,8 +76,8 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     public BatchBorrowRecoverReponse getListSum(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
-
         BatchBorrowRecoverVo result =  batchBorrowRecoverService.getListSum(request);
+        logger.info("====================开始调用列表求和------");
         reponse.setResult(result);
         return reponse;
     }

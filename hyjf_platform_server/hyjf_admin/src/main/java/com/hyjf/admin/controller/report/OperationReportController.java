@@ -11,7 +11,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.vo.datacollect.MonthlyOperationReportVO;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.datacollect.OperationSelectVO;
 import com.hyjf.am.vo.datacollect.QuarterOperationReportVO;
@@ -32,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -64,33 +62,9 @@ public class OperationReportController extends BaseController {
         }
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
-    @ApiOperation(value = "获取已发布运营报告接口", notes = "获取已发布运营报告接口-app和web端使用")
-    @PostMapping("/listbyrelease")
-    public AdminResult<ListResult<OperationReportVO>> listByRelease(@RequestBody OperationReportRequest request) {
-        OperationReportResponse response = operationReportService.listByRelease(request);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
 
-    @ApiOperation(value = "获取报表明细", notes = "获取报表明细-app和web端使用")
-    @PostMapping("/reportinfo/{id}")
-    public AdminResult<ListResult<OperationReportVO>> reportInfo(@PathVariable String id) {
-        OperationReportResponse response = operationReportService.reportInfo(id);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
     @ApiOperation(value = "进入季度报告页面", notes = "进入季度报告页面")
-    @PostMapping("/initQuarter/{operationReportType}/{year}")
+    @GetMapping("/initQuarter/{operationReportType}/{year}")
     public AdminResult<OperationReportResponse> initQuarter(@PathVariable Integer operationReportType, @PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -112,33 +86,16 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "月度报告新增和公用修改頁面", notes = "月度报告新增和公用修改頁面")
-    @PostMapping("/initupdatepage/{id}/{month}/{year}")
-    public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id,@PathVariable String month,@PathVariable String year){
+    @GetMapping("/initupdatepage/{id}")
+    public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id){
         OperationReportResponse response = new OperationReportResponse();
-        MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
-        OperationReportVO operationReport = new OperationReportVO();
         if (StringUtils.isNotEmpty(id)) {
             response = operationReportService.selectOperationreportCommon(id);
-        } else {
-            if (StringUtils.isNotEmpty(month)) {
-                monthlyOperationReport.setMonth(Integer.parseInt(month));
-            } else {
-                monthlyOperationReport.setMonth(1);
-            }
-            if (StringUtils.isNotEmpty(year)) {
-                operationReport.setYear(year);
-            } else {
-                int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-                operationReport.setYear(String.valueOf(nowYear));
-            }
-            operationReport.setOperationReportType(1);
-            response.setOperationReport(operationReport);
-            response.setMonthlyOperationReport(monthlyOperationReport);
         }
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "进入上半年度报告页面", notes = "进入上半年度报告页面")
-    @PostMapping("/inithalfyear/{year}")
+    @GetMapping("/inithalfyear/{year}")
     public AdminResult<OperationReportResponse> initHalfYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -152,7 +109,7 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "进入年度报告页面", notes = "进入年度报告页面")
-    @PostMapping("/inityear/{year}")
+    @GetMapping("/inityear/{year}")
     public AdminResult<OperationReportResponse> initYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -166,7 +123,7 @@ public class OperationReportController extends BaseController {
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "删除信息", notes = "删除信息")
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public AdminResult<OperationReportResponse> delete(@PathVariable String id){
         OperationReportResponse response = operationReportService.delete(id);
         return new AdminResult<>(response);
@@ -179,8 +136,8 @@ public class OperationReportController extends BaseController {
     }
 
     @ApiOperation(value = "运营报告下拉框初始化", notes = "运营报告下拉框初始化")
-    @PostMapping("/infomonthoperation")
-    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(@RequestBody OperationReportRequest request){
+    @GetMapping ("/infomonthoperation")
+    public AdminResult<ListResult<OperationSelectVO>> infoMonthOperation(){
         //下拉框初始化
         List<OperationSelectVO> selectList = initSelect();
         return new AdminResult(selectList);
@@ -216,7 +173,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> monthPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.monthPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
 
@@ -225,7 +181,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> yearPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.yearPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
 
@@ -234,7 +189,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> quarterPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.quarterPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "半年度新增修改页面预览", notes = "半年度新增修改页面预览")
@@ -242,7 +196,6 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> halfPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.halfPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getAdminFrontHost());
         return new AdminResult<>(response);
     }
     /**

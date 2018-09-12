@@ -33,4 +33,12 @@ public interface AdminCommonService {
      * @return
      */
     List<DropDownVO> selectHjhInstConfigList();
+
+    /**
+     * 项目类型下拉列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<DropDownVO> selectProjectType();
 }

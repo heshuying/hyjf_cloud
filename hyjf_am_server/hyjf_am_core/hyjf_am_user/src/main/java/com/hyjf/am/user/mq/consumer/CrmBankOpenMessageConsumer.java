@@ -90,8 +90,10 @@ public class CrmBankOpenMessageConsumer extends Consumer{
                 Map<String,Integer> msgMap = JSONObject.parseObject(msgBody, Map.class);
                 logger.info("【crm开户同步】接收到的用户ID：" + msgMap.get("userId"));
                 CloseableHttpResponse result = null;
+                logger.info(msgMap.get("userId")+"");
                 try {
-                    result = postJson(crmInsertUrl, buildData(msgMap.get("userId")).toJSONString());
+                    Integer userId = Integer.parseInt(String.valueOf(msgMap.get("userId")).trim());
+                    result = postJson(crmInsertUrl, buildData(userId).toJSONString());
                 } catch (Exception e) {
                     logger.error("【crm开户同步】异常，重新投递", e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;

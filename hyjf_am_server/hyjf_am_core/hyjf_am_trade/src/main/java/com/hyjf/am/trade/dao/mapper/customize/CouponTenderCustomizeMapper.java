@@ -191,4 +191,6 @@ public interface CouponTenderCustomizeMapper {
      * @return List<CouponBackMoneyCustomize>
      */
     List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderDetailVo selectCouponTenderDetailCustomize(Map<String, Object> paramMap);
 }

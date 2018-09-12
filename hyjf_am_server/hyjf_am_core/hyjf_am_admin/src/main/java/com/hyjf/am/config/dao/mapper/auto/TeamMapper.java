@@ -1,11 +1,9 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.config.dao.model.auto.Team;
 import com.hyjf.am.config.dao.model.auto.TeamExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface TeamMapper {
     int countByExample(TeamExample example);

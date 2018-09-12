@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -148,6 +149,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			SyncUserInfoRequestBean bean = (SyncUserInfoRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getTimestamp();
 			logger.info("sign is :{}", sign);
+		}else if(BaseDefine.METHOD_SERVER_WITHDRAW.equals(methodName)){
+			// 用户提现
+			UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
+			sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -227,8 +232,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public BankCallBean callSendCode(Integer userId, String mobile, String srvTxCode ,String client, String cardNo) {
-		// 调用存管接口发送验证码
-		BankCallBean retBean = null;
 		BankCallBean bean = new BankCallBean();
 		// 交易代码cardBind
 		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);
@@ -247,14 +250,14 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
 		// 请求用户名
 		bean.setLogUserId(String.valueOf(userId));
-
+		// 调用存管接口发送验证码
+		BankCallBean retBean = null;
 		try {
 			retBean  = BankCallUtils.callApiBg(bean);
 		} catch (Exception e) {
 			logger.info("请求银行接口失败", e);
 			return null;
 		}
-
 		if (Validator.isNull(retBean)) {
 			return null;
 		}
@@ -267,7 +270,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			return null;
 		}
 		// 业务授权码
-
 		if (Validator.isNotNull(retBean.getSrvAuthCode())) {
 			BankSmsLogRequest request = new BankSmsLogRequest();
 			request.setSrvAuthCode(retBean.getSrvAuthCode());
@@ -285,9 +287,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			request.setSrvTxCode(bean.getTxCode());
 			request.setUserId(Integer.parseInt(bean.getLogUserId()));
 			String srvAuthCode = amUserClient.selectBankSmsLog(request);
-			CheckUtil.check(Validator.isNotNull(srvAuthCode), MsgEnum.ERR_CARD_SAVE);
-			retBean.setSrvAuthCode(srvAuthCode);
-			return retBean;
+			if (Validator.isNull(srvAuthCode)) {
+				return null;
+			} else {
+				retBean.setSrvAuthCode(srvAuthCode);
+				return retBean;
+			}
 
 		}
 	}
@@ -812,4 +817,16 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		return sbUrl.toString();
 	}
 
+	@Override
+	public ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status) {
+		AutoPlusRetBean repwdResult = new AutoPlusRetBean();
+		BaseResultBean resultBean = new BaseResultBean();
+		resultBean.setStatusForResponse(status);
+		repwdResult.setCallBackAction(payRequestBean.getRetUrl());
+		repwdResult.set("chkValue", resultBean.getChkValue());
+		repwdResult.set("status", resultBean.getStatus());
+		repwdResult.setAcqRes(payRequestBean.getAcqRes());
+		modelAndView.addObject("callBackForm", repwdResult);
+		return modelAndView;
+	}
 }

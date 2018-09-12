@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -80,8 +81,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private AmMongoClient amMongoClient;
-    @Autowired
     private CouponService couponService;
     @Autowired
     private SystemConfig systemConfig;
@@ -90,13 +89,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
-    private UtmRegProducer utmRegProducer;
-    @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private CouponTenderProducer couponTenderProducer;
     @Autowired
     private HjhTenderService hjhTenderService;
+    @Autowired
+    private BorrowCreditTenderService borrowTenderService;
 
     /**
      * @param request
@@ -153,9 +152,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 投资检查参数
-        this.checkParam(request, borrow, account, userInfo);
+        this.checkParam(request, borrow, account, userInfo ,borrowInfoVO);
         // 检查金额
-        this.checkTenderMoney(request, borrow, cuc, tenderAccount);
+        this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        logger.info("所有参数都已检查通过!");
         // 开始真正的投资逻辑
         return tender(request, borrow, account, cuc);
     }
@@ -197,17 +197,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 投资用户名
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
-        //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fail?logOrdId="+callBean.getLogOrderId();
-        //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId="+callBean.getLogOrderId()+"&couponGrantId="+request.getCouponGrantId();
 
+        //错误页
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        //成功页
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
+        if(request.getToken() != null && !"".equals(request.getToken())){
+            retUrl += "&token=1";
+            successUrl += "&token=1";
+        }
+        if(request.getSign() != null && !"".equals(request.getSign())){
+            retUrl += "&sign=" + request.getSign();
+            successUrl += "&sign=" + request.getSign();
+        }
         // 异步调用路
         String bgRetUrl = "";
         if(cuc != null){
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + cuc.getId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + cuc.getId();
         }else{
-            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?couponGrantId=" + request.getCouponGrantId();
+            bgRetUrl = systemConfig.getWebHost() + "tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
         }
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
@@ -280,22 +289,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             // 剩余可投只剩
             if (accountBigDecimal.compareTo(new BigDecimal(balance)) != 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_MONEY_LESS_NEED_BUY_ALL,balance);
             }
         } else {// 项目的剩余金额大于最低起投金额
             if (accountBigDecimal.compareTo(new BigDecimal(min)) == -1) {
                 if (accountBigDecimal.compareTo(BigDecimal.ZERO) == 0) {
                     if (cuc != null && cuc.getCouponType() != 3 && cuc.getCouponType() != 1) {
-                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
                     }
                 } else {
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MIN_INVESTMENT,min);
                 }
             } else {
                 Integer max = borrow.getTenderAccountMax();
                 if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
                     // "项目最大投资额为" + max + "元", "1"
-                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,max);
                 }
             }
         }
@@ -317,7 +326,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 投资递增金额须为" + borrowDetail.getIncreaseMoney() + " 元的整数倍
             if (borrow.getBorrowIncreaseMoney() != null && (accountInt - min) % borrow.getBorrowIncreaseMoney() != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1 && accountInt < borrow.getTenderAccountMax()) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING);
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING,borrow.getBorrowIncreaseMoney());
             }
         }
     }
@@ -359,7 +368,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param account
      * @param userInfo
      */
-    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, UserInfoVO userInfo) {
+    private void checkParam(TenderRequest request, BorrowVO borrow, BankOpenAccountVO account, UserInfoVO userInfo ,BorrowInfoVO borrowInfoVO) {
         Integer userId = request.getUser().getUserId();
         // 借款人不存在
         if (borrow.getUserId() == null) {
@@ -405,25 +414,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(request.getPlatform()==null){
             throw new CheckException(MsgEnum.STATUS_ZC000018);
         }
-        if ("2".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionAndroid())) {
+        if ("2".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionAndroid())) {
             String tmpInfo = "";
-            if ("1".equals(borrow.getCanTransactionPc())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if ("1".equals(borrow.getCanTransactionIos())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionIos())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_IOS);
             }
-            if ("1".equals(borrow.getCanTransactionWei())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
-        } else if ("3".equals(request.getPlatform()) && "0".equals(borrow.getCanTransactionIos())) {
-            if ("1".equals(borrow.getCanTransactionPc())) {
+        } else if ("3".equals(request.getPlatform()) && "0".equals(borrowInfoVO.getCanTransactionIos())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionPc())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_PC);
             }
-            if ("1".equals(borrow.getCanTransactionAndroid())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionAndroid())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_ANDROID);
             }
-            if ("1".equals(borrow.getCanTransactionWei())) {
+            if ("1".equals(borrowInfoVO.getCanTransactionWei())) {
                 throw new CheckException(MsgEnum.ERR_TENDER_ALLOWED_WEI);
             }
         }
@@ -466,6 +475,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
         logger.info("开始调用散标投资异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
         // 用户Userid
+        if(couponGrantId==null||couponGrantId.equals("null") ||couponGrantId.equals("")){
+            couponGrantId = "0";
+        }
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 投资结果返回码
         String respCode = bean.getRetCode();
@@ -506,7 +518,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             result.setMessage("回调时,borrowNid为空.");
             return result;
         }
-        // 开始投资逻辑
+        // 开始投资逻辑开始调用散标投资异步方法
         this.userBorrowTender(borrow, bean, couponGrantId);
         result.setStatus(true);
         return result;
@@ -542,6 +554,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId) {
         Map<String, Object> data = new HashedMap();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         // 查看tmp表
         BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
@@ -552,11 +565,53 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         data.put("investDesc","恭喜您，投资成功！");
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         logger.info("获取投资成功结果为:"+borrowTender);
+
+
+
         if(borrowTender!=null){
+            BigDecimal earnings = new BigDecimal("0");
             // 本金收益  历史回报
-            data.put("income",borrowTender.getRecoverAccountWait());
+            //BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(borrowTender.getAccount(),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+            // 计算历史回报
+            String interest = null;
+            String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
+            Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
+            BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
+            String account = String.valueOf(borrowTender.getAccount());
+            switch (borrowStyle) {
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                            BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
+                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    interest = df.format(earnings);
+                    break;
+                default:
+                    break;
+            }
+            // 产品加息预期收益
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account , borrow.getBorrowExtraYield());
+                BigDecimal oldEarnings = new BigDecimal(interest);
+                earnings = incEarnings.add(oldEarnings);
+            }
+            data.put("income",df.format(earnings));
             // 本金
-            data.put("account",borrowTender.getAccount());
+            data.put("account",df.format(borrowTender.getAccount()));
 
             // 查询优惠券信息
             CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -567,12 +622,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if(borrowTenderCpn!=null){
                     data.put("couponQuota",borrowTenderCpn.getAccount());
                     data.put("couponType",couponUser.getCouponType());
-                    data.put("couponAll",borrowTenderCpn.getRecoverAccountAll());
-                    data.put("couponInterest",borrowTenderCpn.getRecoverAccountInterestWait());
+                    data.put("couponInterest",couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod()));
                 }else{
                     data.put("couponQuota","");
                     data.put("couponType","");
-                    data.put("couponAll","");
                     data.put("couponInterest","");
                 }
             }else{
@@ -586,6 +639,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         result.setData(data);
         return result;
     }
+
+
 
     /**
      * 获取投资信息
@@ -644,15 +699,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponAvailableCount(0);
         }
 
+        // 设置产品加息 显示收益率
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield()));
+        }
+
         // 如果投资金额不为空
         if ((!StringUtils.isBlank(money) && Long.parseLong(money) > 0) || (couponConfig != null && (couponConfig.getCouponType() == 3 || couponConfig.getCouponType() == 1))) {
 
             String borrowStyle = borrow.getBorrowStyle();
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
-            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
+/*            if (borrow.getProjectType() == 13 && borrow.getBorrowExtraYield() != null && borrow.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
                 borrowApr = borrowApr.add(borrow.getBorrowExtraYield());
-            }
+            }*/
             BigDecimal couponInterest = BigDecimal.ZERO;
             /** 叠加收益率开始*/
             if (couponConfig != null) {
@@ -671,31 +731,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
             }
             /** 叠加收益率结束 */
-            // 周期
-            Integer borrowPeriod = borrow.getBorrowPeriod();
-            BigDecimal earnings = new BigDecimal("0");
-            switch (borrowStyle) {
-                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
-                    // 计算历史回报
-                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2,
-                            BigDecimal.ROUND_DOWN);
-                    break;
-                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
-                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
-                    break;
-                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
-                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
-                            BigDecimal.ROUND_DOWN);
-                    break;
-                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
-                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
-                    break;
-                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
-                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
-                    break;
-                default:
-                    break;
-            }
+            // 计算收益
+            BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+
             investInfo.setEarnings(df.format(earnings));
             if (couponConfig != null && couponConfig.getCouponType() == 3) {
                 investInfo.setCapitalInterest(df.format(earnings.add(couponConfig.getCouponQuota()).subtract(couponInterest)));
@@ -708,11 +746,52 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponConfig(couponConfig);
         }
 
+        // 产品加息预期收益
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+            if (couponConfig != null && couponConfig.getCouponType() == 3){
+                money = new BigDecimal(money).subtract(couponConfig.getCouponQuota()).toString();
+            }
+            BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
+            BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
+            investInfo.setEarnings(df.format(incEarnings.add(oldEarnings)));
+        }
+
         WebResult<TenderInfoResult> result = new WebResult();
         result.setData(investInfo);
         return result;
     }
-
+    /**
+     * 计算产品加息预期收益
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private BigDecimal increaseCalculate(Integer borrowPeriod,String borrowStyle,String money,BigDecimal borrowApr) {
+        BigDecimal earnings = new BigDecimal("0");
+        switch (borrowStyle) {
+            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                // 计算历史回报
+                earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2,
+                        BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+                earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+                earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                        BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+                earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
+                earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            default:
+                break;
+        }
+        return earnings;
+    }
     /**
      * 获取APP端投资信息
      *
@@ -730,10 +809,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
-
+        String creditNid = tender.getBorrowNid().substring(3);
+        logger.info("investType:[{}]",investType);
+        String money = tender.getMoney();
         // 转让的
-        if ("HZR".equals(investType) && StringUtils.isNotEmpty(tender.getCreditNid())) {
-            return null;
+        if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
+            AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getAssignCapital());
+            return result;
         }
         // 计划的
         if ("HJH".equals(investType)) {
@@ -742,12 +824,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {
             // 查询项目信息
-            String money = tender.getAccount();
             // 优惠券总张数
             Integer recordTotal = 0;
             // 可用优惠券张数
             Integer couponAvailableCount;
-
+            logger.info("entry 散标  borrowNid:[{}]",tender.getBorrowNid());
             BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
             if (null == borrow) {
                 // 标的不存在
@@ -911,12 +992,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
 
             }
-            investInfo.setCapitalInterest("历史回报: 0元");
+            investInfo.setCapitalInterest("历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) +"元");
             investInfo.setConfirmCouponDescribe("加息券:  无");
             investInfo.setRealAmount("");
             investInfo.setCouponType("");
 
             investInfo.setDesc("历史年回报率: " + borrow.getBorrowApr() + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
+            investInfo.setDesc1("历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
             investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "%");
             investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
             investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
@@ -930,7 +1012,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             BigDecimal balance = account.getBankBalance();
             investInfo.setBalance(CommonUtils.formatAmount(null, balance));
             investInfo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
-            investInfo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
+            investInfo.setIncreaseMoney(String.valueOf(borrowInfo.getBorrowIncreaseMoney()));
             investInfo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
             // 可用余额的递增部分
             BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
@@ -961,20 +1043,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             investInfo.setBorrowAccountWait(CommonUtils.formatAmount(borrow.getBorrowAccountWait()) + "");
             investInfo.setAnnotation("");
-
             // 设置无用的东西 不给app返回null
-
             investInfo.setEndTime("");
-            investInfo.setDesc1("");
             investInfo.setButtonWord("");
             investInfo.setStandardValues("");
-
             // 投资协议
+            if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
+                investInfo.setRealAmount("");
+                investInfo.setButtonWord("确认");
+            } else {
+                investInfo.setRealAmount("");
+                investInfo.setButtonWord("确认投资"+CommonUtils.formatAmount(null, money)+"元");
+            }
             this.setProtocolsToResultVO(investInfo, investType);
 
-            // 前端要求改成bean，不要封装
-/*        AppResult<AppInvestInfoResultVO> result = new AppResult();
-        result.setData(investInfo);*/
             return investInfo;
         }
         return null;
@@ -1007,6 +1089,131 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         logger.info("url:[{}]",url);
         //ModelAndView mv = new ModelAndView("redirect:"+url);
         return url;
+    }
+
+    /**
+     * 微信端获取投资信息
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public AppInvestInfoResultVO getInvestInfoWeChat(TenderRequest tender) {
+
+        AppInvestInfoResultVO vo = new AppInvestInfoResultVO();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        BigDecimal couponInterest = BigDecimal.ZERO;
+        BigDecimal borrowInterest = new BigDecimal(0);
+        String money = tender.getMoney();
+        // 优惠券总张数
+        Integer recordTotal = 0;
+        // 可用优惠券张数
+        Integer couponAvailableCount;
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
+        if (null == borrow) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        vo.setBorrowApr(borrow.getBorrowApr() + "%");
+        vo.setBorrowNid(tender.getBorrowNid());
+
+        //设置是否有可用优惠券
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(tender.getBorrowNid());
+        request.setUserId(String.valueOf(tender.getUserId()));
+        request.setPlatform(tender.getPlatform());
+        // 可用优惠券张数
+        couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
+        // 优惠券总张数
+        recordTotal = amTradeClient.getUserCouponCount(tender.getUserId(), "0");
+        if (couponAvailableCount > 0) {
+            vo.setIsThereCoupon("1");
+            vo.setCouponDescribe("请选择");
+        } else if (couponAvailableCount == 0 && recordTotal > 0) {
+            vo.setIsThereCoupon("1");
+            vo.setCouponDescribe("暂无可用");
+        } else {
+            vo.setIsThereCoupon("0");
+            vo.setCouponDescribe("无可用");
+        }
+        BigDecimal borrowAccountWait = borrow.getBorrowAccountWait();
+        // 去最小值 最大可投和 项目可投
+        if (borrowInfo.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
+            BigDecimal TenderAccountMax = new BigDecimal(borrowInfo.getTenderAccountMax());
+            if (TenderAccountMax.compareTo(borrowAccountWait) == -1) {
+                vo.setBorrowAccountWait(CommonUtils.formatAmount(null, TenderAccountMax));
+            } else {
+                vo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+            }
+        } else {
+            vo.setBorrowAccountWait(CommonUtils.formatAmount(null, borrowAccountWait));
+        }
+        String balanceWait = borrow.getBorrowAccountWait() + "";
+        if (balanceWait == null || balanceWait.equals("")) {
+            balanceWait = "0";
+        }
+        logger.info("剩余金额为:{}  最小起投{} ",balanceWait,borrowInfo.getTenderAccountMin());
+        // 剩余可投小于起投，计算收益按照剩余可投计算
+        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrowInfo.getTenderAccountMin())) < 1) {
+            money = new BigDecimal(balanceWait).intValue() + "";
+        }
+
+        //計算本金收益
+        BigDecimal earnings = new BigDecimal("0");
+        if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
+            earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
+            vo.setInterest(CommonUtils.formatAmount(null, earnings));
+            logger.info("散标本金预期收益:  {}", earnings);
+        }
+
+        if (tender.getCouponGrantId()==null||tender.getCouponGrantId()-0==0) {
+            //未选择优惠券
+            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
+        } else {
+            //选择优惠券计算优惠券收益
+            CouponUserVO couponConfig = amTradeClient.getCouponUser(tender.getCouponGrantId(), tender.getUserId());
+            if (couponConfig != null && couponConfig.getId() > 0) {
+                couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
+            }
+            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+
+        }
+
+        vo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
+        vo.setIncreaseMoney(String.valueOf(borrowInfo.getBorrowIncreaseMoney()));
+        vo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
+        // 可用余额的递增部分
+        AccountVO account = amTradeClient.getAccount(tender.getUserId());
+        BigDecimal balance = account.getBankBalance();
+        vo.setUserBalance(CommonUtils.formatAmount(null,balance));
+        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
+                .multiply(new BigDecimal(borrowInfo.getBorrowIncreaseMoney())).add(new BigDecimal(borrowInfo.getTenderAccountMin()));
+        if (balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
+            // 可用余额<起投金额 时 investAllMoney 传 -1
+            // 全投金额
+            vo.setInvestAllMoney("-1");
+        } else {
+            String borrowAccountWaitStr = vo.getBorrowAccountWait().replace(",", "");
+            if (new BigDecimal(borrowInfo.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                vo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
+            } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
+                // 全投金额
+                vo.setInvestAllMoney(tmpmoney + "");
+            } else {
+                // 全投金额
+                vo.setInvestAllMoney(vo.getBorrowAccountWait() + "");
+            }
+        }
+        vo.setBorrowAccountWait(borrow.getBorrowAccountWait().intValue()+"");
+        return vo;
     }
 
     /**
@@ -1163,7 +1370,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.borrowTender(borrow, bean);
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
-        if (StringUtils.isNotEmpty(couponGrantId)) {
+        if (StringUtils.isNotEmpty(couponGrantId) && !"0".equals(couponGrantId)) {
             // 开始使用优惠券
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -1213,9 +1420,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         tenderBg.setTxDate(bean.getTxDate());
         tenderBg.setTxTime(bean.getTxTime());
         tenderBg.setSeqNo(bean.getSeqNo());
+        UserVO user = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
         UserInfoVO userInfo = amUserClient.findUsersInfoById(Integer.parseInt(bean.getLogUserId()));
         tenderBg.setTenderUserAttribute(userInfo.getAttribute());
         tenderBg.setClient(bean.getLogClient());
+        tenderBg.setUserName(user.getUsername());
         Integer attribute = null;
         if (userInfo != null) {
             // 获取投资用户的用户属性
@@ -1298,8 +1507,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
-
+        // 开始调用原子层操作主表
+        logger.info("开始操作原子层主表");
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
+        logger.info("操作原子层主表结束 结果 {} ",insertFlag);
         if (insertFlag) {
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计投资追加
@@ -1394,74 +1605,35 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计投资
         // 投资人信息
-        UserVO users = amUserClient.findUserById(userId);
-        if (users != null) {
-            // 更新渠道统计用户累计投资 从mongo里面查询
-            AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
-            if (appChannelStatisticsDetails != null) {
-                Map<String, Object> params = new HashMap<String, Object>();
-                // 认购本金
-                params.put("accountDecimal", accountDecimal);
-                // 投资时间
-                params.put("investTime", nowTime);
-                // 项目类型
-                if (borrow.getProjectType() == 13) {
-                    params.put("projectType", "汇金理财");
-                } else {
-                    params.put("projectType", "汇直投");
-                }
-                // 首次投标项目期限
-                String investProjectPeriod = "";
-                String borrowStyle = borrow.getBorrowStyle();
-                if ("endday".equals(borrowStyle)) {
-                    investProjectPeriod = borrow.getBorrowPeriod() + "天";
-                } else {
-                    investProjectPeriod = borrow.getBorrowPeriod() + "月";
-                }
-                params.put("investProjectPeriod", investProjectPeriod);
-                //根据investFlag标志位来决定更新哪种投资
-                params.put("investFlag", checkIsNewUserCanInvest(userId));
-                //压入消息队列
-                try {
-                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                } catch (MQException e) {
-                    e.printStackTrace();
-                    logger.error("渠道统计用户累计投资推送消息队列失败！！！");
-                }
-            } else {
-                // 更新huiyingdai_utm_reg的首投信息
-                UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
-                if (utmReg != null) {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("id", utmReg.getId());
-                    params.put("accountDecimal", accountDecimal);
-                    // 投资时间
-                    params.put("investTime", nowTime);
-                    // 项目类型
-                    params.put("projectType", "汇计划");
-                    String investProjectPeriod = "";
-                    // 首次投标项目期限// 还款方式
-                    String borrowStyle = borrow.getBorrowStyle();
-                    if ("endday".equals(borrowStyle)) {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "天";
-                    } else {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "月";
-                    }
-                    // 首次投标项目期限
-                    params.put("investProjectPeriod", investProjectPeriod);
-                    // 更新渠道统计用户累计投资
-                    try {
-                        if(this.checkIsNewUserCanInvest(userId)){
-                            utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        }
-                    } catch (MQException e) {
-                        e.printStackTrace();
-                        logger.error("更新huiyingdai_utm_reg的首投信息失败");
-                    }
-                }
-            }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        // 认购本金
+        params.put("accountDecimal", accountDecimal);
+        // 投资时间
+        params.put("investTime", nowTime);
+        // 项目类型
+        if (borrow.getProjectType() == 13) {
+            params.put("projectType", "汇金理财");
+        } else {
+            params.put("projectType", "汇直投");
         }
+        // 首次投标项目期限
+        String investProjectPeriod = "";
+        String borrowStyle = borrow.getBorrowStyle();
+        if ("endday".equals(borrowStyle)) {
+            investProjectPeriod = borrow.getBorrowPeriod() + "天";
+        } else {
+            investProjectPeriod = borrow.getBorrowPeriod() + "月";
+        }
+        params.put("investProjectPeriod", investProjectPeriod);
+        //压入消息队列
+        try {
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+        }
+
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
 }

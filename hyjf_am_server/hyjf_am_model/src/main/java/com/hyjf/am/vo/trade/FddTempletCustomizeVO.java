@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.vo.trade;
 
-import java.util.Date;
-
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 
 /**
  * @author fuqiang
@@ -17,13 +19,13 @@ public class FddTempletCustomizeVO extends BaseVO {
 	private String templetId;
 
 	private Integer protocolType;
-
+	@ApiModelProperty(value = "是否开启")
 	private Integer isActive;
 
 	private Integer caFlag;
 
 	private Integer certificateTime;
-
+	@ApiModelProperty(value = "备注")
 	private String remark;
 
 	private Integer createUserId;
@@ -38,7 +40,29 @@ public class FddTempletCustomizeVO extends BaseVO {
 
 	private Date updateTime;
 
+	private String certificateTimeT;
+
+	private String createTimeT;
+
+	private String updateTimeT;
+
 	private static final long serialVersionUID = 1L;
+
+	public String getCertificateTimeT() {
+		if(certificateTime != null){
+			return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(certificateTime);
+		}
+		return null;
+	}
+
+	public String getCreateTimeT() {
+
+		return GetDate.date2Str(createTime, GetDate.datetimeFormat);
+	}
+
+	public String getUpdateTimeT() {
+		return GetDate.date2Str(updateTime, GetDate.datetimeFormat);
+	}
 
 	public Integer getId() {
 		return id;
@@ -147,6 +171,7 @@ public class FddTempletCustomizeVO extends BaseVO {
 	/**
 	 * 协议类型名称
 	 */
+	@ApiModelProperty(value = "协议类型名称")
 	private String protocolTypeName;
 
 	/**

@@ -15,6 +15,7 @@ import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoRecordMessageProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -53,9 +54,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
     private AutoIssueMessageProducer autoIssueMessageProducer;
     @Autowired
     private AutoRecordMessageProducer autoRecordMessageProducer;
-//    @Autowired
-//    @Qualifier("myAmqpTemplate")
-//    private RabbitTemplate rabbitTemplate;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -236,12 +234,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	private void changeOntimeOfRedis(BorrowWithBLOBs borrow) {
 		if (borrow.getVerifyStatus() == 3){
 			//定时发标 写定时发标时间 redis 有效期10天 
-			RedisUtils.set(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME, String.valueOf(borrow.getOntime()), 864000);
+			RedisUtils.set(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
 		} else{
 			//非定时发标 删redis
-			RedisUtils.del(borrow.getBorrowNid()+CustomConstants.UNDERLINE+
-					CustomConstants.REDIS_KEY_ONTIME);
+			RedisUtils.del(CustomConstants.REDIS_KEY_ONTIME+CustomConstants.COLON+borrow.getBorrowNid());
 		}
 	}
 
@@ -439,8 +435,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowIncomeDescription(borrowBean.getBorrowIncomeDescription());
 		// 发行人
 		borrow.setBorrowPublisher(borrowBean.getBorrowPublisher());
-		// 产品加息收益率
-		borrow.setBorrowExtraYield(new BigDecimal(StringUtils.isNotEmpty(borrowBean.getBorrowExtraYield()) ? borrowBean.getBorrowExtraYield() : "0"));
+		// del by liuyang 20180906
+//		// 产品加息收益率
+//		borrow.setBorrowExtraYield(new BigDecimal(StringUtils.isNotEmpty(borrowBean.getBorrowExtraYield()) ? borrowBean.getBorrowExtraYield() : "0"));
+		// del by liuyang 20180906
 		// ----------风险缓释金添加 end-------
 
 		/**************网站改版添加 ******************/
@@ -771,6 +769,25 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrowinfo.setEntrustedUserId(0);
 		}
 		borrowinfo.setTrusteePayTime(0);
+		// 产品加息 add by liuyang 20180730 start
+		// 根据项目编号查询项目类型配置
+		BorrowProjectType borrowProjectType = this.getBrrowProjectTpyeByProjectType(String.valueOf(borrowBean.getProjectType()));
+		if (borrowProjectType.getIncreaseInterestFlag() == 1 && !StringUtils.isEmpty(borrowBean.getBorrowExtraYield()) && new BigDecimal(borrowBean.getBorrowExtraYield()).compareTo(BigDecimal.ZERO) > 0) {
+			// 是否加息
+			borrowinfo.setIncreaseInterestFlag(1);
+			// 产品加息率
+			borrowinfo.setBorrowExtraYield(new BigDecimal(borrowBean.getBorrowExtraYield()));
+		} else {
+			// 是否加息
+			borrowinfo.setIncreaseInterestFlag(0);
+			// 产品加息率
+			if (!StringUtils.isEmpty(borrowBean.getBorrowExtraYield())) {
+				borrowinfo.setBorrowExtraYield(new BigDecimal(borrowBean.getBorrowExtraYield()));
+			} else {
+				borrowinfo.setBorrowExtraYield(new BigDecimal(0));
+			}
+		}
+		// 产品加息 add by liuyang 20180730 end
 		this.borrowInfoMapper.insert(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
@@ -792,8 +809,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 	/**
 	 * 更新
-	 * 
-	 * @param record
+	 *
+	 * @param borrowBean
+	 * @param adminUsername
+	 * @param adminId
 	 * @throws Exception
 	 */
 	@Override
@@ -816,10 +835,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					for (BorrowInfo borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
-						 BeanUtils.copyProperties(borrow,this.getBorrow(borrowNid));
+						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
-						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId);
+						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
 
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
@@ -875,8 +894,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId) throws Exception {
-
+	public void updateBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowMainNid,String adminUsername,int adminId,int infoId) throws Exception {
 		// 插入时间
 		int systemNowDateLong = GetDate.getNowTime10();
 		Date systemNowDate = GetDate.getDate(systemNowDateLong);
@@ -1217,7 +1235,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 根据此标的是否跑引擎来操作redis: 0:未使用引擎 , 1：使用引擎
 					if(borrow.getIsEngineUsed().equals(0)){
 						// borrowNid，借款的borrowNid,account借款总额
-						RedisUtils.set(borrowNid, borrow.getAccount().toString());
+						RedisUtils.set(RedisConstants.BORROW_NID+borrowNid, borrow.getAccount().toString());
 					}
 				}
 			}
@@ -1343,6 +1361,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setId(borrow.getInfoId());
 		BorrowInfo record=new BorrowInfo();
 		BeanUtils.copyProperties(borrow,record);
+		 record.setId(infoId);
 		this.borrowInfoMapper.updateByPrimaryKey(record);
 		// 个人信息
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
@@ -1581,7 +1600,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					|| StringUtils.isNotEmpty(borrowBean.getWtime()) || StringUtils.isNotEmpty(borrowBean.getUserCredit())) {
 
 				BorrowManinfo borrowManinfo = new BorrowManinfo();
-
 				borrowManinfo.setBorrowNid(borrowNid);
 				borrowManinfo.setBorrowPreNid(borrow.getBorrowPreNid());
 				// 姓名
@@ -1811,6 +1829,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				}else{
 					borrowManinfo.setIsPunished("暂无");
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 				this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			} else {
 			    BorrowManinfo borrowManinfo = new BorrowManinfo();
@@ -1908,6 +1927,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				if(borrowBean.getIsPunished() != null ){
 					borrowManinfo.setIsPunished(borrowBean.getIsPunished());
 				}
+				borrowManinfo.setAddress(borrowBean.getAddress());
 			    this.borrowManinfoMapper.insertSelective(borrowManinfo);
 			}
 		} else {
@@ -2170,6 +2190,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			} else {
 				borrowUsers.setIsPunished("暂无");
 			}
+			//20180705 add by NXL 添加企业组织机构代码和企业注册地 start
+			borrowUsers.setCorporateCode(borrowBean.getCorporateCode());
+			borrowUsers.setRegistrationAddress(borrowBean.getRegistrationAddress());
+			//20180705 add by NXL 添加企业组织机构代码和企业注册地 end
 			this.borrowUserMapper.insertSelective(borrowUsers);
 		}
 		return 0;
@@ -2432,7 +2456,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowAssetNumber(this.getValue(borrowWithBLOBs.getBorrowAssetNumber()));
 		// 新增协议期限字段
 		// 协议期限
-		borrowBean.setContractPeriod(this.getValue(borrowWithBLOBs.getContractPeriod() + ""));
+		if(borrowWithBLOBs.getContractPeriod()!=null) {
+			borrowBean.setContractPeriod(String.valueOf(borrowWithBLOBs.getContractPeriod()));
+		}
 		// 项目来源
 		borrowBean.setBorrowProjectSource(this.getValue(borrowWithBLOBs.getBorrowProjectSource()));
 		// 起息时间
@@ -2591,7 +2617,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 借款人信息数据获取
 	 * 
-	 * @param borrowManinfo
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -2836,6 +2862,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(个人) end */
+				if (StringUtils.isNotEmpty(record.getAddress())) {
+					borrowBean.setAddress(this.getValue(record.getAddress()));
+				} else {
+					borrowBean.setAddress(StringUtils.EMPTY);
+				}
 			}
 		}
 	}
@@ -2843,7 +2874,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 车辆信息数据获取
 	 * 
-	 * @param borrowManinfo
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -2955,7 +2986,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 用户信息数据获取
 	 * 
-	 * @param borrowUsers
+	 * @param borrowBean
 	 * @return
 	 * @author Administrator
 	 */
@@ -3125,6 +3156,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowBean.setComIsPunished(StringUtils.EMPTY);
 				}
 				/** 信批需求新增(企业) end */
+				/** add by nxl 添加企业注册地址和企业组织机构代码 Start */
+				borrowBean.setCorporateCode(this.getValue(record.getCorporateCode()));
+				borrowBean.setRegistrationAddress(this.getValue(record.getRegistrationAddress()));
+				/** add by nxl 添加企业注册地址和企业组织机构代码 end */
 			}
 		}
 	}
@@ -4049,7 +4084,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 画面的值放到Bean中
 	 * 
-	 * @param modelAndView
+	 * @param isExistsRecord
 	 * @param form
 	 */
 	@Override
@@ -4091,7 +4126,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 获取融资服务费率 & 账户管理费率 & 收益差率
 	 * 
-	 * @param request
+	 * @param borrowCommonRequest
 	 * @return
 	 */
 	@Override
@@ -4487,7 +4522,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	/**
 	 * 获取对应借款对象
 	 * 
-	 * @param record
+	 * @param borrowBean
 	 * @throws Exception
 	 */
 	@Override
@@ -5558,12 +5593,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoRecord() && hjhAssetBorrowType.getAutoRecord() == 1) {
 			// 遍历borrowNid
 			for (int i = 0; i < list.size(); i++) {
-				// TODO 三方资产录标的有发送MQ
-//				this.sendToMQ(list.get(i).getBorrowNid(), RabbitMQConstants.ROUTINGKEY_BORROW_RECORD);
                 logger.info(list.get(i).getBorrowNid()+" 发送自动备案消息到MQ ");
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", list.get(i).getBorrowNid());
+                    params.put("planId", list.get(i).getId());
                     autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
@@ -5961,4 +5995,21 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		return this.hjhAssetTypeMapper.selectByExample(example);
 	}
 
+
+	/**
+	 * 根据项目类型查询项目配置信息
+	 *
+	 * @param projectType
+	 * @return
+	 */
+	private BorrowProjectType getBrrowProjectTpyeByProjectType(String projectType) {
+		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
+		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
+		cra.andBorrowCdEqualTo(projectType);
+		List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
 }

@@ -57,6 +57,12 @@ public class WebProjectListCustomize {
     private String creditDiscount;
 
     private BigDecimal creditCapitalAssigned;
+    // 产品加息收益率（风险缓释金）
+    private String borrowExtraYield;
+    // add by nxl 20180730 产品加息标志位(0:不加息,1:加息)
+    private String increaseInterestFlag;
+    // add by nxl 20180730 是否为产品加息
+    private  String isIncrease;
     /**
      * 构造方法
      */
@@ -230,5 +236,29 @@ public class WebProjectListCustomize {
 
     public void setBorrowDesc(String borrowDesc) {
         this.borrowDesc = borrowDesc;
+    }
+
+    public String getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(String increaseInterestFlag) {
+        this.increaseInterestFlag = increaseInterestFlag;
+    }
+
+    public String isIncrease() {
+        return isIncrease;
+    }
+
+    public void setIncrease(String increase) {
+        isIncrease = increase;
+    }
+
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
     }
 }

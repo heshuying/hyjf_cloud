@@ -18,6 +18,7 @@ import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -50,9 +51,9 @@ public class AdminCouponUserController extends BaseController {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         String returnCode = Response.FAIL;
         Integer recordCount = adminCouponUserService.countCouponUser(request);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), recordCount, request.getLimit());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), recordCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), recordCount, request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), recordCount);
         }
         List<CouponUserCustomize> couponUserCustomizes = adminCouponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
         if (recordCount > 0) {
@@ -71,22 +72,21 @@ public class AdminCouponUserController extends BaseController {
     /**
      * 根据id删除一条优惠券
      *
-     * @param id
+     * @param couponUserBeanRequest
      * @return
      */
-    @RequestMapping("/deleteCouponUser/{id}/{remark}")
-    public CouponUserCustomizeResponse deleteCouponUser(@PathVariable int id, @PathVariable String remark, @PathVariable String userId) {
+    @RequestMapping("/deleteCouponUser")
+    public CouponUserCustomizeResponse deleteCouponUser(@RequestBody CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         try {
-            int count = adminCouponUserService.deleteCouponUserById(id, remark, userId);
+            int count = adminCouponUserService.deleteCouponUserById(couponUserBeanRequest);
             if (count > 0) {
-                response.setRtn("0");
+                response.setRtn(Response.SUCCESS);
+                response.setCount(count);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        response.setRtn("1");
-        response.setMessage("删除失败");
         return response;
     }
 
@@ -106,9 +106,9 @@ public class AdminCouponUserController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            response.setRtn("1");
+            response.setMessage("发放失败");
         }
-        response.setRtn("1");
-        response.setMessage("发放失败");
         return response;
     }
 
@@ -137,9 +137,11 @@ public class AdminCouponUserController extends BaseController {
     public CouponUserCustomizeResponse selectCouponUserById(@PathVariable Integer couponUserId) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         CouponUser couponUser = adminCouponUserService.selectCouponUserById(couponUserId);
-        CouponUserVO couponUserVO = new CouponUserVO();
         if (couponUser != null) {
+            CouponUserVO couponUserVO = new CouponUserVO();
             BeanUtils.copyProperties(couponUser,couponUserVO);
+            couponUserVO.setUpdateTime(GetDate.getTime10(couponUser.getUpdateTime()));
+            couponUserVO.setAddTime(GetDate.getTime10(couponUser.getCreateTime()));
             response.setCouponUser(couponUserVO);
         }
         return response;
@@ -156,8 +158,9 @@ public class AdminCouponUserController extends BaseController {
         Integer count = adminCouponUserService.auditRecord(couponUserRequestBean);
         if (count > 0) {
             response.setCount(count);
-            response.setRtn(Response.SUCCESS);
-            response.setMessage(Response.SUCCESS_MSG);
+        }else {
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
         }
         return response;
     }

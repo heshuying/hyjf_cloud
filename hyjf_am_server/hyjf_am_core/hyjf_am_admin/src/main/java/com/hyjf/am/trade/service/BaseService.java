@@ -6,16 +6,7 @@ package com.hyjf.am.trade.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.dao.model.auto.RUser;
+import com.hyjf.am.trade.dao.model.auto.*;
 
 /**
  * 资金服务: BaseService
@@ -110,4 +101,29 @@ public interface BaseService {
      * @return
      */
     BigDecimal getBankBalance(Integer userId, String accountId);
+
+    /**
+     * 根据借款编号查询资产信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid);
+
+    /**
+     * 根据借款机构编号和借款类型获取该机构流程配置
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType);
+
+    /**
+     *  判断是否属于线下充值类型.
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    boolean getIsRechargeTransType(String tranType);
 }

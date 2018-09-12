@@ -6,6 +6,7 @@ package com.hyjf.am.trade.controller.admin.borrow;
 import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/borrow_first")
-public class BorrowFirstController {
+public class BorrowFirstController extends BaseController {
     @Autowired
     BorrowFirstService borrowFirstService;
 
@@ -81,6 +82,15 @@ public class BorrowFirstController {
     public BorrowFirstCustomizeResponse insertBorrowBail(@PathVariable String borrowNid, @PathVariable String currUserId) {
         BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
         boolean flag = borrowFirstService.insertBorrowBail(borrowNid, currUserId);
+        if (flag) {
+            // 根据流程配置判断是否发送mq到自动初审
+            try {
+                borrowFirstService.sendToMQAutoPreAudit(borrowNid);
+            } catch (Exception e) {
+                logger.error("发送MQ到自动初审失败、借款编号:" + borrowNid);
+                e.printStackTrace();
+            }
+        }
         response.setFlag(flag);
         return response;
     }

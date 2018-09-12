@@ -28,7 +28,7 @@
         u.username
         FROM
         ht_account a
-        LEFT JOIN ht_users u ON u.user_id = a.user_id
+        LEFT JOIN ht_r_user u ON u.user_id = a.user_id
         WHERE 1 = 1
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}

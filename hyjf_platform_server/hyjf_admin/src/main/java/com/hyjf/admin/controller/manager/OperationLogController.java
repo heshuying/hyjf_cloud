@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.beans.request.OperationLogRequestBean;
+import com.hyjf.admin.beans.response.OperationLogResponseBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -26,10 +28,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,14 +60,26 @@ public class OperationLogController  extends BaseController {
         // 封装查询条件
         Map<String, Object> conditionMap = setCondition(adminRequest);
         AdminOperationLogResponse response =operationLogService.selectOperationLogList(conditionMap,-1,-1);
+        OperationLogResponseBean responseBean = new OperationLogResponseBean();
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
-
         }
-        return new AdminResult<ListResult<FeerateModifyLogVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        responseBean.setResultList(response.getResultList());
+        responseBean.setRecordTotal(response.getRecordTotal());
+        // 资产来源  inst_code机构编号 inst_name机构名称
+        List<HjhInstConfigVO> hjhInstConfigs=this.operationLogService.getHjhInstConfig();
+        responseBean.setHjhInstConfigList(hjhInstConfigs);
+        //产品类型   asset_type  asset_type_name资产类型名称
+        List<HjhAssetTypeVO> hjhAssetTypes = this.operationLogService.getHjhAssetType();
+        responseBean.setHjhAssetTypes(hjhAssetTypes);
+        //修改类型
+        Map<String,String> map =updateTypeList();
+        List<DropDownVO> listBorrowTypes = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(map);
+        responseBean.setUpdateType(listBorrowTypes);
+        return new AdminResult<OperationLogResponseBean>(responseBean) ;
     }
 
     @ApiOperation(value = "查询配置中心操作日志配置详情", notes = "查询配置中心操作日志配置详情")
@@ -85,7 +96,7 @@ public class OperationLogController  extends BaseController {
         //产品类型   asset_type  asset_type_name资产类型名称
         List<HjhAssetTypeVO> hjhAssetTypes = this.operationLogService.getHjhAssetType();
         response.setHjhAssetTypes(hjhAssetTypes);
-        response.setUpdateTypes( updateTypeList());
+        response.setUpdateTypes( updateTypesList());
         // 封装查询条件
         Map<String, Object> conditionMap = setCondition(adminRequest);
         conditionMap.put("paginatorPage",adminRequest.getPaginatorPage());
@@ -99,8 +110,6 @@ public class OperationLogController  extends BaseController {
         }
         return new AdminResult<ListResult<FeerateModifyLogVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
-
-
 
     /**
      * 数据导出
@@ -204,14 +213,6 @@ public class OperationLogController  extends BaseController {
                     else if (celLength == 11) {
                         cell.setCellValue(accountEsbStates(record.getModifyType()));
                     }
-////                    // 操作人
-//                    else if (celLength == 12) {
-//                        cell.setCellValue(record.getName());
-//                    }
-//                    // 操作时间
-//                    else if (celLength == 13) {
-//                        cell.setCellValue(record.getCreateTimeString());
-//                    }
                 }
             }
         }
@@ -233,8 +234,8 @@ public class OperationLogController  extends BaseController {
         String borrowPeriodSrch = StringUtils.isNotEmpty(form.getBorrowPeriodSrch()) ? form.getBorrowPeriodSrch() : null;
         String modifyTypeSrch = StringUtils.isNotEmpty(form.getModifyTypeSrch()) ? form.getModifyTypeSrch() : null;
         String userNameSrch = StringUtils.isNotEmpty(form.getUserNameSrch()) ? form.getUserNameSrch() : null;
-        String recieveTimeStartSrch = StringUtils.isNotEmpty(form.getRecieveTimeStartSrch()) ? form.getRecieveTimeStartSrch() : null;
-        String recieveTimeEndSrch = StringUtils.isNotEmpty(form.getRecieveTimeEndSrch()) ? form.getRecieveTimeEndSrch() : null;
+        String recieveTimeStartSrch = StringUtils.isNotEmpty(form.getRecieveTimeStartSrch()) ? form.getRecieveTimeStartSrch()+" 00:00:00" : null;
+        String recieveTimeEndSrch = StringUtils.isNotEmpty(form.getRecieveTimeEndSrch()) ? form.getRecieveTimeEndSrch()+" 23:59:59" : null;
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("instCodeSrch", instCodeSrch);
         conditionMap.put("assetTypeSrch", assetTypeSrch);
@@ -243,14 +244,16 @@ public class OperationLogController  extends BaseController {
         conditionMap.put("userNameSrch", userNameSrch);
         conditionMap.put("recieveTimeStartSrch", recieveTimeStartSrch);
         conditionMap.put("recieveTimeEndSrch", recieveTimeEndSrch);
-        conditionMap.put("paginatorPage",form.getPaginatorPage());
+        conditionMap.put("pageSize",form.getPageSize()==0?10:form.getPageSize());
+        conditionMap.put("currPage",form.getCurrPage());
         return conditionMap;
     }
+
     /**
      * 修改类型
      * @return list
      */
-    public List<Map<String,String>> updateTypeList(){
+    public List<Map<String,String>> updateTypesList(){
 
         List list=new ArrayList();
         Integer i = 0;
@@ -282,6 +285,17 @@ public class OperationLogController  extends BaseController {
 
 
 
+    }
+    /**
+     * 修改类型
+     * @return list
+     */
+    public Map<String,String> updateTypeList(){
+        Map<String,String> map=new HashMap();
+        map.put( "增加","1");
+        map.put( "修改","2");
+        map.put( "删除","3");
+        return map;
     }
     //判断修改类型表
     public String accountEsbStates(Integer string) {

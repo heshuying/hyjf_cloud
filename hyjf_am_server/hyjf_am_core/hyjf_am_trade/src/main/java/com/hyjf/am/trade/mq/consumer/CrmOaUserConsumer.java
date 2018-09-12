@@ -32,7 +32,7 @@ import java.util.List;
  * @Author sunss
  * @Date 2018/7/26 10:25
  */
-@Component
+//@Component  // 注释掉因为改成了otter同步
 public class CrmOaUserConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(CrmOaUserConsumer.class);

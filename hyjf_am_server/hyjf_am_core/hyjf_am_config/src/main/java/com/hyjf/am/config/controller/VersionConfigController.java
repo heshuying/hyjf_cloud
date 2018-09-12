@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.service.VersionConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminVersionResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -118,7 +120,7 @@ public class VersionConfigController extends BaseConfigController{
      * @param id
      */
     @RequestMapping("/delete")
-    public AdminVersionResponse deleteVersionConfig(@RequestBody Integer id) {
+    public AdminVersionResponse deleteVersionConfig(@RequestBody List<Integer> id) {
         AdminVersionResponse resp = new AdminVersionResponse();
         try{
             this.versionConfigService.deleteVersionConfig(id);
@@ -142,6 +144,22 @@ public class VersionConfigController extends BaseConfigController{
             return response;
         }
         return  null;
+    }
+
+
+    /**
+     * 获取最新版本信息
+     * @author zhangyk
+     * @date 2018/9/5 11:57
+     */
+    @GetMapping("/getLastestVersion")
+    public VersionConfigBeanResponse  getLastestVersion(){
+        VersionConfigBeanResponse response = new VersionConfigBeanResponse();
+        Version version = versionConfigService.getLastestVersion();
+        if (version != null){
+            response.setResult(CommonUtils.convertBean(version, com.hyjf.am.vo.config.VersionVO.class));
+        }
+        return response;
     }
 
 

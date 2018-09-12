@@ -1,11 +1,9 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.hyjf.am.config.dao.model.auto.BankInterface;
 import com.hyjf.am.config.dao.model.auto.BankInterfaceExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BankInterfaceMapper {
     int countByExample(BankInterfaceExample example);

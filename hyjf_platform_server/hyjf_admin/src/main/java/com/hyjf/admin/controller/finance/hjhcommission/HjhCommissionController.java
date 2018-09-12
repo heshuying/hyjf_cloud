@@ -210,11 +210,11 @@ public class HjhCommissionController extends BaseController{
      * @param form
      * @return
      */
-	@ApiOperation(value = "发提成跳转展示页面(跳转详情画面)", notes = "发提成跳转展示页面(跳转详情画面)")
+/*	@ApiOperation(value = "发提成跳转展示页面(跳转详情画面)", notes = "发提成跳转展示页面(跳转详情画面)")
 	@PostMapping(value = "/showpage")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public JSONObject showPageAction(HttpServletRequest request , @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)*/
+/*	public JSONObject showPageAction(HttpServletRequest request , @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("ids", viewRequest.getIds());
 		jsonObject.put("planOrderId", viewRequest.getPlanOrderId());
@@ -229,8 +229,11 @@ public class HjhCommissionController extends BaseController{
 		jsonObject.put("commission", viewRequest.getCommission());
 		jsonObject.put("expectApr", viewRequest.getExpectApr());
 		jsonObject.put("countInterestTime", viewRequest.getCountInterestTime());
+		
+		jsonObject.put("status", SUCCESS);
+		
 		return jsonObject;
-	}
+	}*/
 	
 	/**
 	 * 带条件导出
@@ -467,8 +470,10 @@ public class HjhCommissionController extends BaseController{
     public JSONObject confirmPushMoneyAction(HttpServletRequest request, @RequestBody HjhCommissionViewRequest viewRequest) {
 		// 调用基类方法获取登录者userid
 		int loginUserId = Integer.valueOf(this.getUser(request).getId());
+		/*int loginUserId = 5274;*/
 		// 调用基类方法获取登录者userName
 		String loginUserName = this.getUser(request).getUsername();
+		/*String loginUserName = "hyjf288535";*/
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 将画面检索参数request赋值给原子层 request
@@ -489,7 +494,7 @@ public class HjhCommissionController extends BaseController{
 			boolean reslut = RedisUtils.tranactionSet(RedisConstants.PUSH_MONEY_ + id, 5);
 			// 如果没有设置成功，说明有请求来设置过
 			if(!reslut){
-				ret.put("status", "error");
+				ret.put("status", FAIL);
 				ret.put("result", "数据已发生变化,请刷新页面!");
 				return ret;
 			}
@@ -502,9 +507,10 @@ public class HjhCommissionController extends BaseController{
             Integer cuttype = this.hjhCommissionService.queryCrmCuttype(userId);
             if (usersInfo.getAttribute() != null && usersInfo.getAttribute() > 1) {
                 if (!usersInfo.getAttribute().equals(cuttype)) {
-                    ret.put("status", "error");
+                    ret.put("status", FAIL);
                     ret.put("result", "该用户属性异常！");
-                    logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]"));              
+                    /*logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]")); */  
+                    logger.error("汇计划提成列表汇计划发提成/confirmpushmoney" + "该用户平台属性与CRM 不符！[userId=" + userId + "]");
 /*                    原LogUtil.errorLog(THIS_CLASS, PushMoneyManageHjhDefine.CONFIRM_PUSHMONEY, new Exception(
                             "该用户平台属性与CRM 不符！[userId=" + userId + "]"));*/
                     return ret;
@@ -525,14 +531,14 @@ public class HjhCommissionController extends BaseController{
                     // 检查余额是否充足
                     if (bankBalance.compareTo(tenderCommission.getCommission()) < 0) {
                     	logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("推广提成子账户余额不足,请先充值或向该子账户转账"));
-                    	ret.put("status", "error");
+                    	ret.put("status", FAIL);
                         ret.put("result", "推广提成子账户余额不足,请先充值或向该子账户转账");
                         return ret;
                     }
                 } else {
                     logger.info("没有查询到商户可用余额");
                     logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("调用银行接口发生错误"));
-                    ret.put("status", "error");
+                    ret.put("status", FAIL);
                     ret.put("result", "没有查询到商户可用余额");
                     return ret;
                 }
@@ -562,13 +568,13 @@ public class HjhCommissionController extends BaseController{
                     resultBean = BankCallUtils.callApiBg(bean);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ret.put("status", "error");
+                    ret.put("status", FAIL);
                     ret.put("result", "请求红包接口失败");
                     return ret;
                 }
                 if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                 	logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("调用红包接口发生错误"));
-                    ret.put("status", "error");
+                    ret.put("status", FAIL);
                     ret.put("result", "调用红包接口发生错误");
                     return ret;
                 }
@@ -598,18 +604,18 @@ public class HjhCommissionController extends BaseController{
                 }
                 // 返现成功
                 if (cnt > 0) {
-                    ret.put("status", "success");
+                    ret.put("status", SUCCESS);
                     ret.put("result", "发提成操作成功!");
                     logger.info("提成发放成功，用户id：" + userId + " 金额:"  + tenderCommission.getCommission().toString());
                 } else {
-                    ret.put("status", "error");
+                    ret.put("status", FAIL);
                     ret.put("result", "发提成时发生错误,请重新操作!");
                     logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("发提成时发生错误,请重新操作!"));
                 }
                 /*LogUtil.endLog(this.getClass().getName(), PushMoneyManageHjhDefine.CONFIRM_PUSHMONEY);*/
                 return ret;
             }else {
-                ret.put("status", "error");
+                ret.put("status", FAIL);
                 ret.put("result", "该用户未开户");
                 logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("参数不正确[userId="
                         + userId + "]"));

@@ -102,16 +102,11 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeVO getRecord(BorrowProjectTypeVO record){
-        BorrowProjectTypeVO result = new BorrowProjectTypeVO();
-        BorrowProjectTypeExample example = new BorrowProjectTypeExample();
-        BorrowProjectTypeExample.Criteria cra = example.createCriteria();
-        cra.andBorrowCdEqualTo(record.getBorrowCd());
-        List<BorrowProjectType> BorrowTypeList = borrowProjectTypeMapper.selectByExample(example);
-        if (BorrowTypeList != null && BorrowTypeList.size() > 0) {
-            BeanUtils.copyProperties(BorrowTypeList.get(0),result);
-            return result;
+        BorrowProjectTypeVO borrowProjectType = borrowProjectTypeCustomizeMapper.selectByBorrowCd(record);
+        if (borrowProjectType != null ) {
+            return borrowProjectType;
         }
-        return result;
+        return null;
     }
     /**
      * 根据项目编号查询还款方式
@@ -160,10 +155,10 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         record.setBorrowProjectType(form.getBorrowProjectType());
         record.setStatus(0);
         record.setCreateTime(sysDate);
-        record.setCreateUserId(12);//测试用，联调需改 todo
-       // record.setCreateGroupId(userId);//测试用，联调需改 todo
+        record.setCreateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
+//        record.setCreateGroupId(userId);//测试用，联调需改 todo
         record.setUpdateTime(sysDate);
-        record.setUpdateUserId(12);//测试用，联调需改 todo
+        record.setUpdateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
         // record.setUpdateGroupId(userId)(userId);//测试用，联调需改 todo
         borrowProjectTypeMapper.insertSelective(record);
         String  methodName = form.getMethodName();
@@ -225,6 +220,8 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BorrowProjectType record = new BorrowProjectType();
         BeanUtils.copyProperties(form, record);
         Date sysDate = new Date();
+        record.setUpdateUserId(Integer.valueOf(form.getUpdateUserId()));
+        record.setStatus(Integer.valueOf(form.getStatus()));
         record.setUpdateTime(sysDate);
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
@@ -266,10 +263,8 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         cra.andInstCodeEqualTo(CustomConstants.INST_CODE_HYJF);
 
         HjhAssetType record = new HjhAssetType();
-//        String userId = ShiroUtil.getLoginUserId();
         //更新用户id
-//        record.setUpdateUser(Integer.parseInt(userId));
-        int nowTime = GetDate.getNowTime10();
+        record.setUpdateUser(form.getUpdateUserId());
         //更新时间
         record.setUpdateTime(new Date());
         //名称

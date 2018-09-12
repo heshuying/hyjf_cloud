@@ -4,13 +4,12 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.bean.app.NewAgreementResultBean;
-import com.hyjf.am.response.config.AppReapyCalendarResponse;
+import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.trade.service.front.config.NewAgreementService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -30,8 +29,8 @@ public class NewAgreementController {
      * @return
      */
     @RequestMapping(value = "/setProtocolImg/{aliasName}")
-    public AppReapyCalendarResponse setProtocolImg(@PathVariable String aliasName){
-        AppReapyCalendarResponse response = new AppReapyCalendarResponse();
+    public AppNewAgreementResponse setProtocolImg(@PathVariable String aliasName){
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
         NewAgreementResultBean newAgreenmentServiceList = newAgreenmentService.setProtocolImg(aliasName);
         if (newAgreenmentServiceList != null){
             BeanUtils.copyProperties(newAgreenmentServiceList, response);

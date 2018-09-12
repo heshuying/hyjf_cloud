@@ -97,6 +97,7 @@ public class AdminAccountDetailController {
         //
         mapParam.put("userName", userRequest.getUsername());
         mapParam.put("referrerName", userRequest.getReferrerName());
+        mapParam.put("referrerId", userRequest.getReferrerId());
         mapParam.put("nid", userRequest.getNid());
         mapParam.put("accountId", userRequest.getAccountId());
         mapParam.put("seqNo", userRequest.getSeqNo());

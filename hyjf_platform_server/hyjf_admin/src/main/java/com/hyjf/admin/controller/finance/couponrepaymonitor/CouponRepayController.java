@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.couponrepaymonitor;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.CouponRepayService;
@@ -107,7 +108,7 @@ public class CouponRepayController extends BaseController {
         Map<String,Object> result = new HashMap<>();
         AdminCouponRepayMonitorCustomizeResponse response = couponRepayService.couponRepayMonitorCreatePage(form);
         if(response == null||response.getRecordTotal()==0) {
-            return new AdminResult<>();
+            return new AdminResult<>(ListResult.build(null,0));
         }
         List<AdminCouponRepayMonitorCustomizeVO> recordList = response.getResultList();
         result.put("recordList", recordList);

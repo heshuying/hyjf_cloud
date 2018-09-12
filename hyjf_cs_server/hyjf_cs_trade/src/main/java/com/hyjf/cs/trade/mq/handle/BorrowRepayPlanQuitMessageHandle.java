@@ -11,7 +11,6 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BatchHjhBorrowRepayClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ import java.util.List;
  */
 @Component
 public class BorrowRepayPlanQuitMessageHandle {
-
-    @Autowired
-    BatchHjhBorrowRepayClient batchHjhBorrowRepayClient;
 
     @Autowired
     AmTradeClient amTradeClient;
@@ -61,7 +57,7 @@ public class BorrowRepayPlanQuitMessageHandle {
 
             } else if (orderStatus == 5 && creditCompleteFlag == 1) {
                 //退出计划 计划退出中并且清算标示完成
-                batchHjhBorrowRepayClient.updateForQuit(accedeOrderId);
+                amTradeClient.updateForQuit(accedeOrderId);
             }
         } catch (Exception e) {
             // 消息队列指令不消费
@@ -93,7 +89,7 @@ public class BorrowRepayPlanQuitMessageHandle {
             }
             BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
             List<UserInfoCustomizeVO> userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
-            batchHjhBorrowRepayClient.updateForLock(accedeOrderId,inverestUserInfo,commissioUserInfoVO,bankOpenAccountVO,userInfoCustomizeVOS);
+            amTradeClient.updateForLock(accedeOrderId,inverestUserInfo,commissioUserInfoVO,bankOpenAccountVO,userInfoCustomizeVOS);
         }
 
     }

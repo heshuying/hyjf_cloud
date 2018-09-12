@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.BorrowStyleClient;
 import com.hyjf.admin.service.BorrowStyleService;
 import com.hyjf.am.response.admin.AdminBorrowStyleResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowStyleRequest;

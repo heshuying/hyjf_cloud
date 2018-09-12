@@ -112,6 +112,13 @@ public interface AccountService {
     AccountWithdraw queryAccountwithdrawByNid(String nid, Integer userId);
 
     /**
+     * 查询提现订单号数量
+     * @param ordId
+     * @return
+     */
+    int countAccountWithdraw(String ordId);
+
+    /**
      * 提现成功后,更新用户账户信息,提现记录
      * @param param
      * @return
@@ -125,4 +132,12 @@ public interface AccountService {
      * @return
      */
     boolean updateAccountAfterWithdrawFail(Integer userId, String nid) throws Exception;
+
+    /**
+     * 开户成功修改电子账户号
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    Integer updateAccountNumberByUserId(Integer userId, String accountId);
 }

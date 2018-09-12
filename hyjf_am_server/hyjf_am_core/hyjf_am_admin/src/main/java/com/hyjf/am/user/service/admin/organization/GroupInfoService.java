@@ -5,7 +5,7 @@ package com.hyjf.am.user.service.admin.organization;
 
 import java.util.List;
 
-import com.hyjf.am.user.dao.model.auto.ROaDepartment;
+import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 
 /**
  * @author: sunpeikai
