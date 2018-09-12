@@ -45,6 +45,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1141,5 +1143,211 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         jsonObject.put("status", BaseResultBeanFrontEnd.SUCCESS);
         jsonObject.put("statusDesc", BaseResultBeanFrontEnd.SUCCESS_MSG);
         return jsonObject;
+    }
+
+
+    /**
+     * 已持有债权列表去转让接口
+     * @author zhangyk
+     * @date 2018/9/12 13:57
+     */
+    @Override
+    public JSONObject tenderToCreditDetail(HttpServletRequest request, Integer userId) {
+        String tenderNid = request.getParameter("tenderId");
+        String borrowId = request.getParameter("borrowId");
+
+        CheckUtil.check(StringUtils.isNotBlank(tenderNid) && StringUtils.isNotBlank(borrowId) ,MsgEnum.ERR_OBJECT_REQUIRED,"借款编号");
+        JSONObject projectInfo = new JSONObject();
+        JSONObject result = new JSONObject();
+        // 获取当前时间
+        Integer nowTime = GetDate.getNowTime10();
+        // 获取债转详情信息
+        TenderCreditCustomizeVO appTenderToCreditDetail =amTradeClient.selectTenderToCreditDetail(userId,borrowId,tenderNid);
+        //债转费率配置 开始
+        // TODO: 2018/9/12  后续处理折让率配置
+        /*List<DebtConfig> config = debtConfigService.selectDebtConfigList();
+        if(!CollectionUtils.isEmpty(config)){
+            projectInfo.put("attornRate",config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("concessionRateUp",config.get(0).getConcessionRateUp().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("concessionRateDown",config.get(0).getConcessionRateDown().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("toggle",config.get(0).getToggle());
+            projectInfo.put("closeDes",config.get(0).getCloseDes());
+            projectInfo.put("serviceRate", config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));//原来逻辑的字段
+        }*/
+        //债转费率配置 开始
+        if (appTenderToCreditDetail != null){
+
+            int lastdays = 0;
+            String borrowNid = appTenderToCreditDetail.getBorrowNid();
+            // 根据borrowNid判断是否分期
+            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            String borrowStyle = borrowVO.getBorrowStyle();
+            if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
+                try {
+                    lastdays = GetDate
+                            .daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(Integer.parseInt(appTenderToCreditDetail.getRecoverTime())));
+                } catch (ParseException e) {
+                    logger.error("格式化时间处理错误");
+                }
+            }
+            // 等额本息和等额本金和先息后本
+            if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
+                List<BorrowRepayPlanVO> list  = amTradeClient.getBorrowRepayPlansByPeriod(borrowNid,borrowVO.getBorrowPeriod());
+                if (list != null && list.size() > 0) {
+                    try {
+                        lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
+                    } catch (ParseException e) {
+                        logger.error("格式化时间处理错误");
+                    }
+                }
+            }
+            appTenderToCreditDetail.setLastDays(lastdays + "");
+
+            Map<String, BigDecimal> creditCreateMap = this.selectAssignInterestForBigDecimal(borrowId,
+                    tenderNid, "0.0", nowTime.intValue());
+            if (creditCreateMap != null) {
+                projectInfo.put("assignInterestAdvance", creditCreateMap.get("assignInterestAdvance"));
+                projectInfo.put("expectHoldProfit", creditCreateMap.get("assignInterestAdvance"));// 预期持有收益
+            }
+
+            projectInfo.put("borrowApr", appTenderToCreditDetail.getBorrowApr());
+            projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriod());
+            projectInfo.put("borrowPeriodUnit", "endday".equals(borrowVO.getBorrowStyle())?"天":"个月");
+            projectInfo.put("account", creditCreateMap.get("creditCapital"));
+            projectInfo.put("borrowId", appTenderToCreditDetail.getBorrowNid());
+            projectInfo.put("tenderPeriod", appTenderToCreditDetail.getTenderPeriod());
+            projectInfo.put("lastDays", appTenderToCreditDetail.getLastDays());
+
+            result.put("status", BaseResultBeanFrontEnd.SUCCESS);
+            result.put("statusDesc", BaseResultBeanFrontEnd.SUCCESS_MSG);
+            result.put("projectInfo",projectInfo);
+        }else {
+            result.put("status", BaseResultBeanFrontEnd.FAIL);
+            result.put("statusDesc","获取债转数据失败");
+            result.put("projectInfo",projectInfo);
+        }
+        return result;
+    }
+
+    /**
+     * 获取债转垫付利息
+     * @author zhangyk
+     * @date 2018/9/12 15:19
+     */
+    private Map<String, BigDecimal> selectAssignInterestForBigDecimal(String borrowNid, String tenderNid, String creditDiscount, int nowTime) {
+
+        Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
+
+        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowRecoverVO borrowRecoverVO = amTradeClient.getBorrowRecoverByTenderNidBidNid(tenderNid,borrowNid);
+        // 债转本息
+        BigDecimal creditAccount = BigDecimal.ZERO;
+        // 债转期全部利息
+        BigDecimal creditInterest = BigDecimal.ZERO;
+        // 垫付利息 垫息总额=债权本金*年化收益÷360*融资期限-债权本金*年化收益÷360*剩余期限
+        BigDecimal assignInterestAdvance = BigDecimal.ZERO;
+        // 债转利息
+        BigDecimal assignPayInterest = BigDecimal.ZERO;
+        // 实付金额 承接本金*（1-折价率）+应垫付利息
+        BigDecimal assignPay = BigDecimal.ZERO;
+        // 预计收益 承接人债转本息—实付金额
+        BigDecimal assignInterest = BigDecimal.ZERO;
+        // 可转本金
+        BigDecimal creditCapital = BigDecimal.ZERO;
+        // 折后价格
+        BigDecimal creditPrice = BigDecimal.ZERO;
+
+        if (borrowVO != null){
+            String borrowStyle = borrowVO.getBorrowStyle();
+            if (borrowRecoverVO != null){
+                // 可转本金
+                creditCapital = borrowRecoverVO.getRecoverCapital().subtract(borrowRecoverVO.getRecoverCapitalYes()).subtract(borrowRecoverVO.getCreditAmount());
+                // 折后价格
+                creditPrice = creditCapital.multiply(new BigDecimal(1).subtract(new BigDecimal(creditDiscount).divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_DOWN);
+                // 年利率
+                BigDecimal yearRate = borrowVO.getBorrowApr().divide(new BigDecimal("100"));
+                // 到期还本还息和按天计息，到期还本还息
+                if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
+                    int lastDays = 0;
+                    try {
+                        lastDays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRecoverVO.getRecoverTime()));
+                    } catch (NumberFormatException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                    // 剩余天数
+                    if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {// 按天
+                        // 债转本息
+                        creditAccount = DuePrincipalAndInterestUtils.getDayPrincipalInterest(creditCapital, yearRate, borrowVO.getBorrowPeriod());
+                        // 债转期全部利息
+                        creditInterest = DuePrincipalAndInterestUtils.getDayInterest(creditCapital, yearRate, borrowVO.getBorrowPeriod());
+                        // 垫付利息 垫息总额=债权本金*年化收益÷360*融资期限-债权本金*年化收益÷360*剩余期限
+                        assignInterestAdvance = DuePrincipalAndInterestUtils.getDayAssignInterestAdvance(creditCapital, yearRate, borrowVO.getBorrowPeriod(), new BigDecimal(lastDays + ""));
+                        // 债转利息
+                        assignPayInterest = creditInterest;
+                        // 实付金额 承接本金*（1-折价率）+应垫付利息
+                        assignPay = creditPrice.add(assignInterestAdvance);
+                        // 预计收益 承接人债转本息—实付金额
+                        assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                    } else {// 按月
+                        // 债转本息
+                        creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrowVO.getBorrowPeriod());
+                        // 债转期全部利息
+                        creditInterest = DuePrincipalAndInterestUtils.getMonthInterest(creditCapital, yearRate, borrowVO.getBorrowPeriod());
+                        // 垫付利息 垫息总额=债权本金*年化收益÷12*融资期限-债权本金*年化收益÷360*剩余天数
+                        assignInterestAdvance = DuePrincipalAndInterestUtils.getMonthAssignInterestAdvance(creditCapital, yearRate, borrowVO.getBorrowPeriod(), new BigDecimal(lastDays + ""));
+                        // 债转利息
+                        assignPayInterest = creditInterest;
+                        // 实付金额 承接本金*（1-折价率）+应垫付利息
+                        assignPay = creditPrice.add(assignInterestAdvance);
+                        // 预计收益 承接人债转本息—实付金额
+                        assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                    }
+                }
+
+                // 等额本息和等额本金和先息后本
+                if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
+                    String bidNid = borrowVO.getBorrowNid();
+
+                    int borrowPeriod = borrowVO.getBorrowPeriod() - borrowRecoverVO.getRecoverPeriod() + 1;
+                    List<BorrowRepayPlanVO> borrowRepayPlanList = amTradeClient.getBorrowRepayPlansByPeriod(bidNid,borrowPeriod);
+
+                    int lastDays = 0;
+                    if (borrowRepayPlanList != null && borrowRepayPlanList.size() > 0) {
+                        try {
+                            String nowDate = GetDate.getDateTimeMyTimeInMillis(nowTime);
+                            String recoverDate = GetDate.getDateTimeMyTimeInMillis(Integer.valueOf(borrowRepayPlanList.get(0).getRepayTime()));
+                            lastDays = GetDate.daysBetween(nowDate, recoverDate);
+                        } catch (NumberFormatException | ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // 债转本息
+                    creditAccount = BeforeInterestAfterPrincipalUtils.getPrincipalInterestCount(creditCapital, yearRate, borrowVO.getBorrowPeriod(), borrowRecoverVO.getRecoverPeriod());
+                    // 每月应还利息
+                    BigDecimal interest = BeforeInterestAfterPrincipalUtils.getPerTermInterest(creditCapital, borrowVO.getBorrowApr().divide(new BigDecimal(100)), borrowVO.getBorrowPeriod(),
+                            borrowVO.getBorrowPeriod());
+                    // 债转期全部利息
+                    creditInterest = BeforeInterestAfterPrincipalUtils.getInterestCount(creditCapital, yearRate, borrowVO.getBorrowPeriod(), borrowRecoverVO.getRecoverPeriod());
+                    // 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+                    assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(creditCapital, creditCapital, yearRate, interest, new BigDecimal(lastDays + ""));
+                    // 债转利息
+                    assignPayInterest = creditInterest;
+                    // 实付金额 承接本金*（1-折价率）+应垫付利息
+                    assignPay = creditPrice.add(assignInterestAdvance);
+                    // 预计收益 承接人债转本息—实付金额
+                    assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                }
+            }
+        }
+
+        resultMap.put("creditAccount", creditAccount.setScale(2, BigDecimal.ROUND_DOWN));// 债转本息
+        resultMap.put("creditInterest", creditInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计收益
+        resultMap.put("assignInterestAdvance", assignInterestAdvance.setScale(2, BigDecimal.ROUND_DOWN));// 垫付利息
+        resultMap.put("assignPayInterest", assignPayInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转利息
+        resultMap.put("assignPay", assignPay.setScale(2, BigDecimal.ROUND_DOWN));// 实付金额
+        resultMap.put("assignInterest", assignInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转期全部利息
+        resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
+        resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
+        return resultMap;
     }
 }

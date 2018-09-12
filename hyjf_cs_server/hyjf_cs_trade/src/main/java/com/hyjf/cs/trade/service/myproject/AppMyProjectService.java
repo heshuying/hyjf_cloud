@@ -58,4 +58,11 @@ public interface AppMyProjectService extends BaseTradeService {
      * @date 2018/8/30 13:54
      */
     JSONObject getMyCreditDetail(String transfId, HttpServletRequest request, Integer userId);
+
+    /**
+     * 已持有债权列表去转让接口
+     * @author zhangyk
+     * @date 2018/9/12 13:55
+     */
+    JSONObject tenderToCreditDetail(HttpServletRequest request , Integer userId);
 }
