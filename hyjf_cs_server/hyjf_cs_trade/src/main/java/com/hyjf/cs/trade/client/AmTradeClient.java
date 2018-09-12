@@ -2000,4 +2000,12 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO);
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int selectUserTenderCount(Integer userId);
 }

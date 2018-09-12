@@ -4592,4 +4592,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
         restTemplate.getForEntity(url,IntegerResponse.class).getBody();
     }
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int selectUserTenderCount(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/webPandect/selectUserTenderCount/"+userId;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
 }
