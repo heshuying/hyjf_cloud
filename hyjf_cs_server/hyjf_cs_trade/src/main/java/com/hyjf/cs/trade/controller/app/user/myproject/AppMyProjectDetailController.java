@@ -70,7 +70,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
      */
     @ApiOperation(value = "App端：已持有列表前往债转接口" , notes = "App端：已持有列表前往债转接口")
     @GetMapping(value = "/transfer/setting", produces = "application/json; charset=utf-8")
-    public Object tenderToCreditDetail(HttpServletRequest request, @RequestHeader(value = "userId",required = false) Integer userId){
+    public Object tenderToCreditDetail(HttpServletRequest request, @RequestHeader(value = "userId",required = true) Integer userId){
         JSONObject result = appMyProjectService.tenderToCreditDetail( request, userId);
         return result;
     }
