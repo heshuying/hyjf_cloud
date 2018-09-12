@@ -32,8 +32,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring.cloud.version>Finchley.SR1</spring.cloud.version>
-        <spring.cloud.sleuth.version>2.0.0.RC2</spring.cloud.sleuth.version>
-        <spring.boot.admin.vesion>2.0.0</spring.boot.admin.vesion>
+        <spring.cloud.sleuth.version>2.0.1.RELEASE</spring.cloud.sleuth.version>
+        <spring.boot.admin.vesion>2.0.2</spring.boot.admin.vesion>
         <spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
         <druid.version>1.1.10</druid.version>
         <fastjson.version>1.2.47</fastjson.version>
@@ -43,8 +43,8 @@
         <commons.lang3.version>3.7</commons.lang3.version>
         <commons.io.version>2.6</commons.io.version>
         <jwt.version>3.3.0</jwt.version>
-        <google.coll.version>1.0-rc2</google.coll.version>
-        <springfox.swagger.version>2.7.0</springfox.swagger.version>
+        <google.coll.version>1.0</google.coll.version>
+        <springfox.swagger.version>2.9.2</springfox.swagger.version>
     </properties>
 
     <dependencies>
