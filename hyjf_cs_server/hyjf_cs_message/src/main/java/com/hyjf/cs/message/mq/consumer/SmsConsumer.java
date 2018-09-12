@@ -36,7 +36,7 @@ public class SmsConsumer extends Consumer {
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-		//defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup(MQConstant.SMS_CODE_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.SMS_CODE_TOPIC, "*");
@@ -44,7 +44,8 @@ public class SmsConsumer extends Consumer {
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
-		//defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        // MQ默认集群消费
+		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
 		defaultMQPushConsumer.start();

@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.user.bean.ApiAutoPlusResultBean;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
@@ -135,10 +136,12 @@ public interface AutoPlusService extends BaseUserService {
 
     /**
      * 前导发送短信验证码
+     *
+     * @param userId
      * @param autoPlusRequestBean
      * @return
      */
-    String checkApiSmsParam(AutoPlusRequestBean autoPlusRequestBean);
+    ApiAutoPlusResultBean sendCode(Integer userId, AutoPlusRequestBean autoPlusRequestBean);
 
     /**
      * app组装发往江西银行参数

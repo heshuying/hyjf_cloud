@@ -118,7 +118,7 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                         // 如果接口调用成功
                         if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
                             //如果接口返回的账户结果串不为空
-                            if (StringUtils.isNotBlank(resultBean.getAcctDetails())) {
+                            if (resultBean!=null&&StringUtils.isNotBlank(resultBean.getAcctDetails())) {
                                 try {
                                     BigDecimal amount = new BigDecimal(transferAmount);
                                     if(amount.compareTo(BigDecimal.ZERO) > 0){
@@ -213,7 +213,7 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                     // 如果接口调用成功
                                     if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
                                         //如果接口返回的账户结果串不为空
-                                        if (StringUtils.isNotBlank(resultBean.getAcctDetails())) {
+                                        if (resultBean!=null&&StringUtils.isNotBlank(resultBean.getAcctDetails())) {
                                             try {
                                                 BigDecimal transferAmount = form.getTransferAmount();
                                                 if(transferAmount.compareTo(BigDecimal.ZERO)>0){
@@ -232,7 +232,7 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
                                                         BigDecimal avlBal = StringUtils.isBlank(acctObject.getString("AvlBal")) ? new BigDecimal("0") : acctObject.getBigDecimal("AvlBal");
                                                         if(StringUtils.isNotBlank(accType)&&StringUtils.isNotBlank(accCode)&&accType.equals(outSubAccountType)&&accCode.equals(outSubAccountCode)){
                                                             outFlag = true;
-                                                            if(avlBal.compareTo(transferAmount)==-1){
+                                                            if(avlBal.compareTo(transferAmount) < 0){
                                                                 ret.put("99","转出账户余额不足!");
                                                                 //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.balance","转出账户余额不足!");
                                                             }
