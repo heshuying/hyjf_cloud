@@ -6,8 +6,6 @@ package com.hyjf.am.trade.mq.consumer;
 import java.util.List;
 import java.util.UUID;
 
-import com.hyjf.am.trade.dao.model.auto.NifaContractEssence;
-import com.hyjf.am.trade.mq.producer.nifa.NifaContractEssenceMessageProducer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -31,6 +29,7 @@ import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.mq.producer.nifa.NifaContractEssenceMessageProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
