@@ -2271,6 +2271,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    @Override
+    public int selectRepaymentListTotalWeb(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectRepaymentListTotalWeb";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getRepayMentCount();
+        }
+        return 0;
+    }
+
+    /**
      * 获取用户债权转让列表总数
      * @param request
      * @return
@@ -4576,5 +4591,56 @@ public class AmTradeClientImpl implements AmTradeClient {
     public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
         String url = "http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
         restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+    }
+
+    /**
+     * 借款人还款表 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_repay_info/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 合同状态变更数据生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_contract_status/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 出借人回款记录生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_received_payments/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 }

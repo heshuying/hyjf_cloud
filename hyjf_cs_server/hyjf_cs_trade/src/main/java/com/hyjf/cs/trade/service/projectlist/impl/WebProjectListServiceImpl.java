@@ -309,9 +309,18 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if ("13".equals(borrow.getType())) {
+/*        if ("13".equals(borrow.getType())) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+        }*/
+        // add by nxl 设置项目加息收益
+        BigDecimal borrowExtraYield = new BigDecimal(StringUtils.isNotBlank(borrow.getBorrowExtraYield())?borrow.getBorrowExtraYield():"0");
+        int intFlg = Integer.parseInt(StringUtils.isNotBlank(borrow.getIncreaseInterestFlag())?borrow.getIncreaseInterestFlag():"0");
+        boolean isIncrease = Validator.isIncrease(intFlg,borrowExtraYield);
+        if(isIncrease){
+            borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+            borrow.setIncreaseInterestFlag(String.valueOf(isIncrease));
         }
+        // mod by nxl 设置项目加息收益 End
 
         switch (borrowStyle) {
             case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“

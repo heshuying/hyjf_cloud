@@ -32,6 +32,7 @@ public class BankTenderCancelServiceImpl implements BankTenderCancelService {
 
     @Override
     public List<BorrowTenderTmp> getBorrowTenderTmpsForTenderCancel() {
+        //获取当天的开始时间
         Date dayStart10 = GetDate.getDayStartOfSomeDay(new Date());//当天开始时间
         BorrowTenderTmpExample example = new BorrowTenderTmpExample();
         example.createCriteria().andIsBankTenderEqualTo(1).andCreateTimeLessThan(dayStart10).andStatusNotEqualTo(3);//除上次处理异常数据
@@ -43,20 +44,20 @@ public class BankTenderCancelServiceImpl implements BankTenderCancelService {
 
 
     @Override
-    public boolean updateBidCancelRecord(TenderCancelRequest request) {
+    public void updateBidCancelRecord(TenderCancelRequest request) {
         BorrowTenderTmpVO tenderTmp= request.getBorrowTenderTmpVO();
         String username= request.getUserName();
 
         if (tenderTmp==null || StringUtils.isBlank(username)){
             logger.info("传入参数为空,撤销投资操作失败!");
-            return false;
+            throw new RuntimeException("传入参数为空,撤销投资操作失败!");
         }
 
         Integer userId = tenderTmp.getUserId();
         boolean tenderTmpFlag = this.borrowTenderTmpMapper.deleteByPrimaryKey(tenderTmp.getId()) > 0 ? true : false;
         if (!tenderTmpFlag) {
             logger.info("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
-            return false;
+            throw new RuntimeException("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
         }
         FreezeHistory freezeHistory = new FreezeHistory();
         freezeHistory.setTrxId(tenderTmp.getNid());
@@ -66,9 +67,8 @@ public class BankTenderCancelServiceImpl implements BankTenderCancelService {
         boolean freezeHisLog = this.freezeHistoryMapper.insert(freezeHistory) > 0 ? true : false;
         if (!freezeHisLog) {
             logger.info("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
-            return false;
+            throw new RuntimeException("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
         }
-        return true;
     }
 
 

@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.controller.nifa;
 
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
 import com.hyjf.am.response.trade.NifaContractEssenceResponse;
