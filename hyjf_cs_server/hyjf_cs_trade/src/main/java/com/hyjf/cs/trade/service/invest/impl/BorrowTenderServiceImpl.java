@@ -744,17 +744,19 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
             }
             investInfo.setCouponConfig(couponConfig);
+
+            // 产品加息预期收益
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                if (couponConfig != null && couponConfig.getCouponType() == 3){
+                    money = new BigDecimal(money).subtract(couponConfig.getCouponQuota()).toString();
+                }
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
+                //BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
+                investInfo.setEarnings(df.format(incEarnings.add(earnings)));
+            }
         }
 
-        // 产品加息预期收益
-        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
-            if (couponConfig != null && couponConfig.getCouponType() == 3){
-                money = new BigDecimal(money).subtract(couponConfig.getCouponQuota()).toString();
-            }
-            BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
-            BigDecimal oldEarnings = new BigDecimal(investInfo.getEarnings());
-            investInfo.setEarnings(df.format(incEarnings.add(oldEarnings)));
-        }
+
 
         WebResult<TenderInfoResult> result = new WebResult();
         result.setData(investInfo);

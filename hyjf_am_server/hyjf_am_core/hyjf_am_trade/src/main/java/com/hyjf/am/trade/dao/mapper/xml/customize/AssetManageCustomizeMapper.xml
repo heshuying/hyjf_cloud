@@ -896,9 +896,25 @@
 		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiil.borrow_nid
 		INNER JOIN ht_borrow_info borrowinfo ON borrow.borrow_nid = borrowinfo.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
+		LEFT JOIN(
+		SELECT
+		*
+		FROM
+		ht_increase_interest_loan_detail
+		WHERE
+		user_id = #{userId}
+		) hiild ON hiild.invest_order_id = hiil.invest_order_id
 		WHERE borrow.`status` = 5
 		AND hiil.user_id= #{userId}
 		AND borrow.plan_nid IS NULL
+		AND
+			CASE
+				WHEN borrow.borrow_style = 'end'
+				OR borrow.borrow_style = 'endday' THEN
+				hiil.repay_status = 1
+			ELSE
+				hiild.repay_status = 1
+			END
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
 			ORDER BY t.orderby_repay_orddate desc,t.account
