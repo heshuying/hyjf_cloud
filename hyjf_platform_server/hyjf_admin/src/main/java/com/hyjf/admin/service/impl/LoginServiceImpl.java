@@ -5,7 +5,6 @@ import java.util.List;
 import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.hyjf.admin.client.LoginClient;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;

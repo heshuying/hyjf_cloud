@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.AdminRoleCustomizeMapper">
+	<resultMap id="selectRoleMenuMap" type="com.hyjf.am.config.dao.model.customize.AdminRoleCustomize">
+		<result column="menu_puuid" property="menuPuuid" jdbcType="VARCHAR" />
+		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
+		<result column="menu_pname" property="menuPname" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRoleMenu" resultMap="selectRoleMenuMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminRoleCustomize">
+		SELECT DISTINCT 
+		    m.menu_puuid,
+		    m.menu_uuid,
+	    	CASE WHEN pm.menu_name IS NULL THEN '' ELSE pm.menu_name END AS menu_pname,
+		  	m.menu_name
+		FROM
+		  	ht_admin_menu m LEFT JOIN ht_admin_menu pm ON m.menu_puuid = pm.menu_uuid
+		WHERE
+		  	m.menu_uuid != '0'
+		ORDER BY 
+		  	pm.menu_sort ASC, m.menu_sort ASC
+	</select>
+	
+	<resultMap id="selectRoleMenuPermissionsMap" type="com.hyjf.am.config.dao.model.customize.AdminRoleCustomize">
+		<result column="menu_puuid" property="menuPuuid" jdbcType="VARCHAR" />
+		<result column="menu_uuid" property="menuUuid" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="menu_icon" property="menuIcon" jdbcType="VARCHAR" />
+		<result column="menu_sort" property="menuSort" jdbcType="VARCHAR" />
+		<result column="permission_uuid" property="permissionUuid" jdbcType="VARCHAR" />
+		<result column="permission_name" property="permissionName" jdbcType="VARCHAR" />
+		<result column="role_id" property="roleId" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectRoleMenuPermissions" resultMap="selectRoleMenuPermissionsMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminRoleCustomize">
+		SELECT
+			menu.menu_puuid,
+			menu.menu_uuid,
+			menu.menu_name,
+			menu.menu_icon,
+			menu.menu_sort,
+			perm.permission_uuid,
+			perm.permission_name
+			<if test="roleId != null" >
+			,armp.role_id
+			</if>
+			<if test="roleId == null" >
+			,'' as role_id
+			</if>
+		FROM
+			ht_admin_menu menu
+			LEFT JOIN ht_admin_menu_permssions amp ON menu.menu_uuid = amp.menu_id
+			LEFT JOIN ht_admin_permissions perm ON perm.permission_uuid = amp.permission_id AND perm.del_flag = '0'
+			<if test="roleId != null" >
+				LEFT JOIN ht_admin_role_menu_permissions armp ON menu.menu_uuid = armp.menu_uuid
+				AND perm.permission_uuid = armp.permission_uuid
+				AND armp.role_id = #{roleId, jdbcType=VARCHAR}
+				AND armp.del_flag = '0'
+			</if>
+		WHERE
+			menu.del_flag = '0'
+		ORDER BY
+			menu.menu_puuid,
+			menu.menu_sort,
+			menu.menu_uuid,
+			perm.permission_uuid
+	</select>
+</mapper>

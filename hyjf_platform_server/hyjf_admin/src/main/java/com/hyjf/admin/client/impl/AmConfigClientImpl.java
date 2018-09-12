@@ -1315,7 +1315,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<AdminSystemVO> getUserPermission(String userName) {
         AdminSystemResponse adminSystemResponse = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/adminSystem/getpermissions/" + userName,
+                .getForEntity("http://AM-ADMIN/am-config/adminSystem/getpermissions/" + userName,
                         AdminSystemResponse.class)
                 .getBody();
         if (adminSystemResponse != null) {
@@ -1340,7 +1340,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<TreeVO> selectLeftMenuTree2(String userId) {
         TreeResponse treeResponse = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/adminSystem/selectLeftMenuTree/" + userId, TreeResponse.class)
+                .getForEntity("http://AM-ADMIN/am-config/adminSystem/selectLeftMenuTree/" + userId, TreeResponse.class)
                 .getBody();
         if (treeResponse != null) {
             return treeResponse.getResultList();
