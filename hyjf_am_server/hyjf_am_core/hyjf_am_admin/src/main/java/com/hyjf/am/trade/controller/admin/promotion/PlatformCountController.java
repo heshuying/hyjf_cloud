@@ -36,13 +36,13 @@ public class PlatformCountController extends BaseController {
      */
     @RequestMapping("/search_action")
     public PlatformCountCustomizeResponse searchAction(@RequestBody PlatformCountRequest request) {
-        PlatformCountCustomizeResponse response = new PlatformCountCustomizeResponse();
-        List<PlatformCountCustomize> list = platformCountService.searchAction(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<PlatformCountCustomizeVO> voList = CommonUtils.convertBeanList(list, PlatformCountCustomizeVO.class);
-            response.setResultList(voList);
-        }
-        return response;
+            PlatformCountCustomizeResponse response = new PlatformCountCustomizeResponse();
+            List<PlatformCountCustomize> list = platformCountService.searchAction(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                    List<PlatformCountCustomizeVO> voList = CommonUtils.convertBeanList(list, PlatformCountCustomizeVO.class);
+                    response.setResultList(voList);
+            }
+            return response;
     }
 }
 

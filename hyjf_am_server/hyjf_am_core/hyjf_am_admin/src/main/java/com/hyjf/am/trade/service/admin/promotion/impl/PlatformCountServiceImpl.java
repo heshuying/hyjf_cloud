@@ -25,4 +25,14 @@ public class PlatformCountServiceImpl implements PlatformCountService {
     public List<PlatformCountCustomize> searchAction(PlatformCountRequest request) {
         return customizeMapper.selectList(request);
     }
+
+    @Override
+    public List<PlatformCountCustomize> searchRegistNumber(PlatformCountRequest request) {
+        return customizeMapper.selectRegistNumber(request);
+    }
+
+    @Override
+    public List<PlatformCountCustomize> searchAccountNumber(PlatformCountRequest request) {
+        return customizeMapper.selectAccountNumber(request);
+    }
 }
