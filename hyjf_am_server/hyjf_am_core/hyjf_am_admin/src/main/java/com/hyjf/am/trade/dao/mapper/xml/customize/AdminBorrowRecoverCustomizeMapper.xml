@@ -131,7 +131,7 @@
 		CASE WHEN bt.`status` = 1 THEN bt.loan_amount ELSE '0.00' END AS recover_price_over,
 		bt.`status` AS is_recover,
 		bt.create_time AS time_recover,
-		br.create_time AS create_time,
+		DATE_FORMAT(br.create_time, '%Y-%c-%d %H:%i:%s') AS create_time,
 		br.loan_batch_no AS loan_batch_no,
 		b.plan_nid
 		FROM
