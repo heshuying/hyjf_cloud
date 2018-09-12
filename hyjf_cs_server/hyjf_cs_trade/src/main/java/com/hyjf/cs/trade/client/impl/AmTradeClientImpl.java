@@ -2779,7 +2779,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         UtmPlatResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
                 .getBody();
-        if (Response.isSuccess(response) && response.getResult().getAttornFlag()==0) {
+        if (Response.isSuccess(response) && response.getResult() != null && response.getResult().getAttornFlag()==0) {
             return false;
         }
         return true;
