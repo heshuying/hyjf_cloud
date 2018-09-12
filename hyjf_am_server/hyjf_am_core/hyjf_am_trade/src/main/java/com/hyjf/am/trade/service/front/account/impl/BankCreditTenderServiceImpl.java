@@ -48,6 +48,8 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 /**
@@ -880,6 +882,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	public CreditPageVO selectCreditPageMoneyTotal(Integer userId) {
 		Map<String, Object> params = new HashedMap();
 		params.put("userId",userId);
+		params.put("nowTime",LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
 		BigDecimal canCreditMoney = tenderCreditCustomizeMapper.selectCanCreditMoneyTotal(params);
 		BigDecimal inCreditMoney = tenderCreditCustomizeMapper.selectInCreditMoneyTotal(params);
 		BigDecimal creditSuccessMoney = tenderCreditCustomizeMapper.selectCreditSuccessMoneyTotal(params);
