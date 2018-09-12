@@ -404,12 +404,14 @@ public class CategoryController extends BaseConfigController {
      * @return
      */
     @RequestMapping("/chancontenthelp/{contentId}/{status}/{zhiChiStatus}")
-    public CategoryResponse chanContentHelp(@PathVariable Integer contentId,@PathVariable Integer status,@PathVariable Integer zhiChiStatus) {
+    public CategoryResponse chanContentHelp(@PathVariable Integer contentId,@PathVariable String status,@PathVariable String zhiChiStatus) {
         logger.info("修改问题......");
         CategoryResponse response = new CategoryResponse();
         ContentHelp con = this.categoryService.queryContentById(contentId);
-        con.setStatus(status);
-        if(null != zhiChiStatus){
+        if(status != null){
+            con.setStatus(Integer.parseInt(status));
+        }
+        if(null != zhiChiStatus && "null".equals(zhiChiStatus)){
             //con.setZhiChiStatus(zhiChiStatus);
         }
         // 更新
