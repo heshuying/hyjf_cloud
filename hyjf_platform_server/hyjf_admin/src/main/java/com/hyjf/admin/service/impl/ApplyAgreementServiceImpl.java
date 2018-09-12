@@ -196,85 +196,164 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                         || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                         || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
                 String planNid = borrow.getPlanNid();//为空时，为直投，否则为计划
-                //承接人都是垫付机构
-                int repayOrgUserId = borrowInfo.getRepayOrgUserId();//垫付机构用户ID
                 if (StringUtils.isEmpty(planNid)) {//直投
-                    if(isMonth) {//分期
+                    /**
+                     * huiyingdai_borrow_recover(标的放款记录（投资人） 总表)
+                     * huiyingdai_borrow_recover_plan(标的放款记录分期（投资人）)-borrow_nid,repay_period
+                     */
+                    List<BorrowRecoverVO> borrowRecoverPlist = amTradeClient.selectBorrowRecoverList(borrow_nid);
+                    if (borrowRecoverPlist == null || borrowRecoverPlist.size()==0) {
+                        return result;
+                    }
+                    for (BorrowRecoverVO borrowRecoverP : borrowRecoverPlist) {
+
                         /**
-                         * huiyingdai_borrow_recover(标的放款记录（投资人） 总表)
-                         * huiyingdai_borrow_recover_plan(标的放款记录分期（投资人）)-borrow_nid,repay_period
+                         * 1：已债转金额(creditAmountp)不为0并且等于应还本金（recoverCapitalp）--全部承接债转
+                         * 2：已债转金额(creditAmountp)不为0并且小于应还本金（recoverCapitalp）--部分承接债转
+                         * 3：已债转金额(creditAmountp)为0--非承接债转
                          */
-                        List<BorrowRecoverVO> borrowRecoverPlist = amTradeClient.selectBorrowRecoverList(borrow_nid);
-                        if (borrowRecoverPlist == null || borrowRecoverPlist.size()==0) {
-                            return result;
-                        }
-                        for (BorrowRecoverVO borrowRecoverP : borrowRecoverPlist) {
-                            //已承接债转本金
-                            BigDecimal creditAmountp = borrowRecoverP.getCreditAmount();
-                            //应还本金
-                            BigDecimal recoverCapitalp = borrowRecoverP.getRecoverCapital();
-                            /**
-                             * 1：已债转金额(creditAmountp)不为0并且等于应还本金（recoverCapitalp）--全部承接债转
-                             * 2：已债转金额(creditAmountp)不为0并且小于应还本金（recoverCapitalp）--部分承接债转
-                             * 3：已债转金额(creditAmountp)为0--非承接债转
-                             */
+                        if(isMonth) {//分期
                             List<BorrowRecoverPlanVO> borrowRecoverList = amTradeClient.selectBorrowRecoverPlanList(borrowRecoverP.getNid(),repay_period);
                             if (borrowRecoverList == null || borrowRecoverList.size()==0) {
                                 break;
                             }
                             for (BorrowRecoverPlanVO borrowRecover : borrowRecoverList) {
-                                //债转投标单号
-                                String nid = borrowRecover.getNid();
-                                //已承接债转本金-当期
-                                BigDecimal creditAmount = borrowRecover.getCreditAmount();
-                                //应还本金-当期
-                                BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
-                                List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
-                                if(creditRepayList!=null && creditRepayList.size()>0){//债转
-                                    boolean creditRepayAll = (creditAmountp.compareTo(new BigDecimal("0.00"))==1) && (creditAmountp.compareTo(recoverCapitalp)==0);//是否是全部债转
-                                    BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
-                                        //填充所有债转信息
-                                    for (CreditRepayVO creditRepay : creditRepayList) {
-                                        if(!creditRepayAll) {//部分债转
-                                            assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
-                                        }
-                                        FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
-                                        JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
-                                        bean.setParamter(paramter);
-                                        bean.setTeString(DF);
-                                        //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
-                                        agreements++;
-                                    }
-                                    if(!creditRepayAll) {
-                                        /***************计算剩余部分********/
-                                        //垫付协议申请-协议生成详情
-                                        FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,borrowRecover.getNid()+"_"+repay_period,repayOrgUserId,2,5);
-                                        BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
-                                        assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
-                                        borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
-                                        borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
-                                        JSONObject paramter = getNocreditParamterPlan(borrowRecover,bean,borrow);
-                                        bean.setParamter(paramter); bean.setTeString(DF);
-                                        //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
-                                        agreements++;
-
-                                    }
-                                }else {//非债转
-                                }
+                                convertAndSendPlan(borrow,borrowInfo,borrowRecoverP,borrowRecover,agreements);
                             }
+                        }else{//不分期
+                            convertAndSend(borrow,borrowInfo,borrowRecoverP,agreements);
                         }
-                    }else{//不分期
-
                     }
-
-                } else {//计划
                 }
-
+            } else {//计划
             }
         }
         return null;
     }
 
+    /**
+     * 处理分期债转
+     * @param borrow
+     * @param borrowInfo
+     * @param borrowRecoverP
+     * @param borrowRecover
+     * @param agreements
+     */
+    private void convertAndSendPlan(BorrowVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover,int agreements){
+        String borrow_nid = borrow.getBorrowNid();
+        //承接人都是垫付机构
+        int repayOrgUserId = borrowInfo.getRepayOrgUserId();//垫付机构用户ID
+        //已承接债转本金
+        BigDecimal creditAmountp = borrowRecoverP.getCreditAmount();
+        //应还本金
+        BigDecimal recoverCapitalp = borrowRecoverP.getRecoverCapital();
+        //债转投标单号
+        String nid = borrowRecoverP.getNid();
+        //已承接债转本金-当期
+        BigDecimal creditAmount = borrowRecover.getCreditAmount();
+        //应还本金-当期
+        BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
+        //当前期数
+        int repay_period = borrowRecoverP.getRecoverPeriod();
+        int recoverUserId= borrowRecover.getUserId();
+        List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
+        if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
+            boolean creditRepayAll = (creditAmountp.compareTo(new BigDecimal("0.00"))==1) && (creditAmountp.compareTo(recoverCapitalp)==0);//是否是全部债转
+            BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
+            //填充所有债转信息
+            for (CreditRepayVO creditRepay : creditRepayListPlan) {
+                if(!creditRepayAll) {//部分债转
+                    assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
+                }
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
+                JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
+                bean.setParamter(paramter);
+                bean.setTeString(DF);
+                //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+                agreements++;
+            }
+            if(!creditRepayAll) {
+                /***************计算剩余部分********/
+                //垫付协议申请-协议生成详情
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+                borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
+                borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
+                JSONObject paramter = getNocreditParamterPlan(borrowRecover,bean,borrow);
+                bean.setParamter(paramter); bean.setTeString(DF);
+                //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+                agreements++;
+
+            }
+        }else {//非债转
+            //垫付协议申请-协议生成详情
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+            JSONObject paramter = getNocreditParamterPlan(borrowRecover,bean,borrow);
+            bean.setParamter(paramter); bean.setTeString(DF);
+            //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+            agreements++;
+        }
+    }
+
+    /**
+     * 处理不分期债转
+     * @param borrow
+     * @param borrowInfo
+     * @param borrowRecover
+     * @param agreements
+     */
+    private void convertAndSend(BorrowVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover, int agreements){
+        String borrow_nid = borrow.getBorrowNid();
+        //承接人都是垫付机构
+        int repayOrgUserId = borrowInfo.getRepayOrgUserId();//垫付机构用户ID
+        //已承接债转本金
+        BigDecimal creditAmount = borrowRecover.getCreditAmount();
+        //应还本金
+        BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
+        //当前期数
+        int repay_period = borrowRecover.getRecoverPeriod();
+        //债转投标单号
+        String nid = borrowRecover.getNid();
+        List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
+        if(creditRepayList!=null && creditRepayList.size()>0){//债转
+            boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(creditAmount)==0);//是否是全部债转
+            BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
+            //填充所有债转信息
+            for (CreditRepayVO creditRepay : creditRepayList) {
+                if(!creditRepayAll) {//部分债转
+                    assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
+                }
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
+                JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
+                bean.setParamter(paramter);
+                bean.setTeString(DF);
+                //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+                agreements++;
+            }
+            if(!creditRepayAll) {
+                /***************计算剩余部分********/
+                //垫付协议申请-协议生成详情
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+                borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
+                borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
+                JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
+                bean.setParamter(paramter); bean.setTeString(DF);
+                //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+                agreements++;
+
+            }
+        }else {//非债转
+            //垫付协议申请-协议生成详情
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+            JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
+            bean.setParamter(paramter); bean.setTeString(DF);
+            //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+            agreements++;
+        }
+    }
     /**
      * 查询相应的债转还款记录
      * @param nid
@@ -312,7 +391,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         return bean;
     }
 
-    /**转让债转参数集合*/
+    /**非转让债转参数集合-分期*/
     private JSONObject getNocreditParamterPlan(BorrowRecoverPlanVO borrowRecover,FddGenerateContractBean bean,BorrowVO borrow) {
         JSONObject paramter = new JSONObject();
 
@@ -414,6 +493,139 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 出让人相关 start-repay_org_user_id
         UserInfoVO creditUsersInfo = amUserClient.findUsersInfoById(borrowRecover.getUserId());
 
+        paramter.put("CreditTruename", creditUsersInfo.getTruename());
+        // 出让人身份证号
+        paramter.put("CreditIdcard", creditUsersInfo.getIdcard());
+        int tenderUserId = bean.getTenderUserId();
+        // 承接人用户 start
+        UserInfoVO tenderUserInfo = amUserClient.findUsersInfoById(tenderUserId);
+        // 获取承接人平台信息
+        UserVO tenderUser = amUserClient.getUserByUserId(tenderUserId);
+        String tenderTrueName = tenderUserInfo.getTruename();
+        String tenderIdCard = tenderUserInfo.getIdcard();
+        if(tenderUser.getUserType() == 1){
+            CorpOpenAccountRecordVO info = amUserClient.selectCorpOpenAccountRecordByUserId(bean.getTenderUserId()+"");
+            tenderTrueName = info.getBusiName();
+            tenderIdCard = info.getBusiCode();
+        }
+        // 承接人用户 start
+        // 承接人真实姓名
+        paramter.put("truename", tenderTrueName);
+        // 承接人身份证号
+        paramter.put("idcard", tenderIdCard);
+        // 承接人用户 end
+
+        // 获取融资方平台信息
+        UserVO borrowUsers = amUserClient.getUserByUserId(borrow.getUserId());
+        // 借款人用户名
+
+        paramter.put("BorrowUsername",borrowUsers.getUsername());
+        bean.setTenderUserId(tenderUserId);
+        bean.setTenderUserName(tenderUser.getUsername());
+        bean.setOrdid(borrowRecover.getNid());//承接订单号
+        bean.setAssignOrderId(borrowRecover.getNid());
+        bean.setCreditNid(borrowRecover.getNid());//债转编号
+        bean.setCreditTenderNid(borrowRecover.getNid());//债转原始订单号
+        return paramter;
+    }
+    /**非转让债转参数集合-不分期*/
+    public JSONObject getNocreditParamter(BorrowRecoverVO borrowRecover,FddGenerateContractBean bean,BorrowVO borrow) {
+        JSONObject paramter = new JSONObject();
+       /* paramter.put("assignCapital",borrowRecover.getRecoverCapital());
+        paramter.put("assignPay",borrowRecover.getCreditAmount());*/
+
+        /** 标的基本数据 */
+        String borrowStyle = borrow.getBorrowStyle();// 还款方式
+        Integer borrowPeriod = borrow.getBorrowPeriod();
+        String borrowDate = "";
+        // 是否分期(true:分期, false:不分期)
+        boolean isPlan = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+        String  recoverTime = "0";//还款时间
+        if(isPlan){//分期repay_last_time-huiyingdai_borrow
+            recoverTime = borrow.getRepayLastTime();
+        }else{//不分期
+            recoverTime = borrowRecover.getRecoverTime()+"";
+        }
+        if(CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ||CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)){//到期还本付息的
+            /**转让本金为借款本金，转让价款为本息之和。剩余期限为0*/
+            // 转让债权本金
+            paramter.put("assignCapital", borrowRecover.getRecoverCapital()+"");//已承接债转本金recover_capital
+            //转让价款
+            paramter.put("assignPay",  borrowRecover.getRecoverCapital().add(borrowRecover.getRecoverInterestYes())+"");//已承接垫付利息recover_interest
+            // 债转期限
+            paramter.put("creditTerm", 0+"天");
+
+        }else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {//先息后本时
+            /**还某一期（非最后一期）转让本金是0，转让价款是该期利息金额。剩余转让期间是债权的剩余期限（应还时间-还款时间）。
+             还最后一期转让本金是借款本金，转让价款是借款本金+最后一期利息金额。剩余转让期间为0*/
+            if(borrowRecover.getRecoverPeriod()!=borrow.getBorrowPeriod()){//非最后一期
+                // 转让债权本金
+                paramter.put("assignCapital", 0+"");//已承接债转本金
+                //转让价款
+                paramter.put("assignPay",  borrowRecover.getRecoverInterestYes()+"");//已承接垫付利息recover_interest
+                // 债转期限
+                paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime, borrowRecover.getRecoverYestime()+"")+"天");
+            }else{//最后一期
+                // 转让债权本金
+                paramter.put("assignCapital", borrowRecover.getRecoverCapital()+"");//已承接债转本金
+                //转让价款
+                paramter.put("assignPay",  borrowRecover.getRecoverCapital().add(borrowRecover.getRecoverInterestYes())+"");//已承接垫付利息recover_interest
+                // 债转期限
+                paramter.put("creditTerm", 0+"天");
+            }
+
+        }else if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)) {//等额本息时
+            /**转让期限是原债权的剩余期限，转让本金为本期借款本金，转让价款为本期应还本息之和*/
+            // 转让债权本金
+            paramter.put("assignCapital", borrowRecover.getRecoverCapital()+"");//已承接债转本金recover_capital
+            //转让价款
+            paramter.put("assignPay",  borrowRecover.getRecoverCapital().add(borrowRecover.getRecoverInterestYes())+"");//已承接垫付利息recover_interest
+            // 债转期限
+            paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
+
+        }else{
+            // 转让债权本金
+            paramter.put("assignCapital", borrowRecover.getRecoverCapital()+"");//已承接债转本金recover_capital
+            //转让价款
+            paramter.put("assignPay", borrowRecover.getRecoverInterestYes()+"");//已承接垫付利息recover_interest
+            // 债转期限
+            paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
+        }
+        String recoverYestime = borrowRecover.getRecoverYestime()+"";
+        if(StringUtils.isEmpty(recoverYestime)){
+            recoverYestime = "0";
+        }
+        // 签署时间
+        paramter.put("addTime", GetDate.getDateMyTimeInMillisYYYYMMDD(Integer.valueOf(recoverYestime)));
+        //转让日期
+        paramter.put("creditTime", GetDate.getDateMyTimeInMillisYYYYMMDD(Integer.valueOf(recoverYestime)));
+
+        // 是否月标(true:月标, false:天标)
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle);
+        if(isMonth){//月表
+            borrowDate = borrowPeriod + "个月";
+        }else{
+            borrowDate = borrowPeriod + "天";
+        }
+
+        // 标的编号
+        paramter.put("borrowNid", borrow.getBorrowNid());
+        //编号
+        paramter.put("NID", borrowRecover.getNid());//原始标的投资订单号
+        //借款本金总额
+        paramter.put("borrowAccount", borrow.getAccount().toString());
+        // 借款利率
+        paramter.put("borrowApr", borrow.getBorrowApr() + "%");
+        // 还款方式
+        paramter.put("borrowStyle", this.getBorrowStyle(borrow.getBorrowStyle()));
+        // 借款期限
+        paramter.put("borrowPeriod", borrowDate);
+
+        // 出让人相关 start-repay_org_user_id
+        UserInfoVO creditUsersInfo = amUserClient.findUsersInfoById(borrowRecover.getUserId());
         paramter.put("CreditTruename", creditUsersInfo.getTruename());
         // 出让人身份证号
         paramter.put("CreditIdcard", creditUsersInfo.getIdcard());
@@ -575,6 +787,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
         return paramter;
     }
+
 
     /**
      * 获取还款方式

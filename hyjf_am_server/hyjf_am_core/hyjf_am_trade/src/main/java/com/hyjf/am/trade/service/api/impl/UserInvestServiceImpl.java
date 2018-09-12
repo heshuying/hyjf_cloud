@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.trade.service.api.UserInvest.UserInvestService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @version UserInvestServiceImpl, v0.1 2018/9/1 15:02
  * @Author: Zha Daojian
  */
+@Service
 public class UserInvestServiceImpl  extends BaseServiceImpl implements UserInvestService {
     /**
      * 获取回款记录信息

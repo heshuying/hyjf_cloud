@@ -61,16 +61,14 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequestBean requestBean) {
+    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
         // 初始化原子层请求实体
-        PushMoneyRequest form = new PushMoneyRequest();
         // 初始化返回LIST
         List<PushMoneyVO> pushMoneyList = null;
         // 将画面请求request赋值给原子层 request
-        BeanUtils.copyProperties(requestBean, form);
         // 根据删选条件获取计划列表
 
-        PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(form);
+        PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(request);
         if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
