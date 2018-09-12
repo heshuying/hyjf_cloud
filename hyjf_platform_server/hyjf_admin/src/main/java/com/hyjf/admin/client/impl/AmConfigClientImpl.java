@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -905,12 +906,11 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     @Override
     public List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO) {
-        CategoryResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", categoryVO,
-                CategoryResponse.class);
-        if (null != response) {
-            return response.getRecordList();
-        }
-        return null;
+            ParameterizedTypeReference<CategoryResponse<ContentHelpVO>> typeRef = new ParameterizedTypeReference<CategoryResponse<ContentHelpVO>>() {
+            };
+            ResponseEntity<CategoryResponse<ContentHelpVO>> responseEntity = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/getlistbypcateidandcateid", HttpMethod.POST, new HttpEntity<>(categoryVO), typeRef);
+            CategoryResponse<ContentHelpVO> responseBean = responseEntity.getBody();
+            return responseBean.getRecordList();
     }
 
     @Override
