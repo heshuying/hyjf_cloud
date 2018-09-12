@@ -302,7 +302,15 @@ public class BankExceptionController extends BaseController {
      */
     @PostMapping("/updateBidCancelRecord")
     public boolean updateBidCancelRecord(@RequestBody TenderCancelRequest request){
-        return this.bankTenderCancelService.updateBidCancelRecord(request);
+       boolean ret = true;
+        try {
+            this.bankTenderCancelService.updateBidCancelRecord(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ret = false;
+        }
+        return ret;
+
     }
 
 
