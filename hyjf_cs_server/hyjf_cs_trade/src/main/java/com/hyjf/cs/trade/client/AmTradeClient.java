@@ -2008,4 +2008,31 @@ public interface AmTradeClient {
      * @return
      */
     int selectUserTenderCount(Integer userId);
+
+    /**
+     * 借款人还款表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 合同状态变更数据生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 出借人回款记录生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod);
 }

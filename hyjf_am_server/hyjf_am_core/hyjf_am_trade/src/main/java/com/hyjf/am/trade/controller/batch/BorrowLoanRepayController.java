@@ -33,13 +33,13 @@ public class BorrowLoanRepayController extends BaseController {
 
     @GetMapping("/taskAssign")
     public String taskAssign() {
-        
+       
        borrowLoanRepayToMQService.taskAssign();
         
        return "ok";
     }
 
-    @GetMapping("/testRedis")
+//    @GetMapping("/testRedis")
     public Map testRedis() {
         
     	return CacheUtil.getParamNameMap("ACCOUNT_STATUS");

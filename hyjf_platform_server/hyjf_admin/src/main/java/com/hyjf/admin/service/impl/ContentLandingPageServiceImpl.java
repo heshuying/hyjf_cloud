@@ -6,8 +6,6 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ContentJobClient;
-import com.hyjf.admin.client.ContentLandingPageClient;
 import com.hyjf.admin.service.ContentJobService;
 import com.hyjf.admin.service.ContentLandingPageService;
 import com.hyjf.am.response.config.JobResponse;

@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.FeeConfigClient;
 import com.hyjf.admin.service.FeeConfigService;
 import com.hyjf.am.response.admin.AdminFeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;

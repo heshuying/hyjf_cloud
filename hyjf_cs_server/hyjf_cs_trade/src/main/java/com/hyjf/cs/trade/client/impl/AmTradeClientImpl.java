@@ -2779,7 +2779,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         UtmPlatResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
                 .getBody();
-        if (Response.isSuccess(response) && response.getResult().getAttornFlag()==0) {
+        if (Response.isSuccess(response) && response.getResult() != null && response.getResult().getAttornFlag()==0) {
             return false;
         }
         return true;
@@ -4604,5 +4604,56 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/webPandect/selectUserTenderCount/"+userId;
         Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
         return response;
+    }
+
+    /**
+     * 借款人还款表 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_repay_info/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 合同状态变更数据生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_contract_status/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 出借人回款记录生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_received_payments/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 }

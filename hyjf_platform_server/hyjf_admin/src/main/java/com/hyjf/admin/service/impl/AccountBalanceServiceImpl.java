@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AccountBalanceClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AccountBalanceService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AccountBalanceServiceImpl implements AccountBalanceService {
 
     @Autowired
-    private AccountBalanceClient client;
+    private AmTradeClient client;
 
     /**
      * 查询月度

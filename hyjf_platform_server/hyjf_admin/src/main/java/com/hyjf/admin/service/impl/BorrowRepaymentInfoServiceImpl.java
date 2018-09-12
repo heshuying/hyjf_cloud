@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentInfoService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;

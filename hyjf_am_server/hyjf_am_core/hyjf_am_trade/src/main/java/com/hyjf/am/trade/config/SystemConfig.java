@@ -124,6 +124,14 @@ public class SystemConfig {
     @Value("${tender.newcontract.ftl.name}")
     private String tenderNewContractFtlName;
 
+    /**
+     * #平台商户红包账户
+     */
+    @Value("${hyjf.bank.merrp.account}")
+    private String merrpAccount;
+    
+    
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -419,4 +427,14 @@ public class SystemConfig {
     public void setTenderNewContractFtlName(String tenderNewContractFtlName) {
         this.tenderNewContractFtlName = tenderNewContractFtlName;
     }
+
+	public String getMerrpAccount() {
+		return merrpAccount;
+	}
+
+	public void setMerrpAccount(String merrpAccount) {
+		this.merrpAccount = merrpAccount;
+	}
+    
+    
 }

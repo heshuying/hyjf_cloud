@@ -1,10 +1,13 @@
 package com.hyjf.admin.client;
 
+import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
+import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -14,6 +17,7 @@ import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -289,4 +293,19 @@ public interface AmAdminClient {
      * @return
      */
     List<PoundageDetailVO> searchPoundageDetailList(AdminPoundageDetailRequest request);
+
+
+	List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+
+
+	List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+
+
+	String getActivityTitle(Integer activityId);
+
+
+	List<DataCenterCouponCustomizeVO> getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
+
+
+	PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean);
 }

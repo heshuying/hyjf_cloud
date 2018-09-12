@@ -3107,7 +3107,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			try {
 				smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
 			} catch (MQException e2) {
-				logger.error("发送邮件失败..", e2);
+				logger.error("发送短信失败..", e2);
 			}
 		}
 	}
