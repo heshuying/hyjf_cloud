@@ -348,7 +348,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean){
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
-        requestBean.setRepayBeanData(JSON.toJSONString(requestBean));
+        requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
 
         return amTradeClient.repayRequestUpdate(requestBean);
