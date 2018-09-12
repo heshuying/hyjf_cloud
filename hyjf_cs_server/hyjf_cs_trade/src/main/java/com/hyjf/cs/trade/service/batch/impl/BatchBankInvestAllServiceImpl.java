@@ -139,7 +139,9 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 					continue;
 				}else {
 					//更新渠道统计用户累计投资
-					if (Validator.isNotNull(request.getLogUser()) && request.getBorrowInfo().getProjectType()!=8){
+					if (Validator.isNotNull(request.getLogUser())
+							&& Validator.isNotNull(request.getBorrowInfo())
+							&& request.getBorrowInfo().getProjectType()!=8){
 						//发送mq
 						AppChannelStatisticsDetailVO appChannelStatisticsDetailVO =
 								this.amMongoClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));

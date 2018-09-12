@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -306,6 +307,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      */
     private Integer saveCardNoToBank(BankCallBean bean) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("保存用户银行卡信息  userId {}   ",userId);
         UserVO user = this.getUsersById(userId);
         // 调用江西银行接口查询用户绑定的银行卡
         BankCallBean cardBean = new BankCallBean(userId, BankCallConstant.TXCODE_CARD_BIND_DETAILS_QUERY, bean.getLogClient());
@@ -316,6 +318,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 调用江西银行查询银行卡
         BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
+        logger.info("保存用户银行卡信息  银行返回码  {}   ",respCode);
         // 如果调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
@@ -352,11 +355,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
                     String bankId = amConfigClient.getBankIdByCardNo(bank.getCardNo());
+                    logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
-                        BanksConfigVO banksConfigVO = amConfigClient.getBankNameByBankId(bankId);
+                        JxBankConfigVO banksConfigVO = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
                         if (banksConfigVO != null) {
                             bank.setBank(banksConfigVO.getBankName());
+                            logger.info("保存用户银行卡所属银行  banksConfigVO.getBankName()  {}   ",banksConfigVO.getBankName());
                             // 如果联行号为空  则更新联行号
                             if (StringUtils.isEmpty(payAllianceCode)) {
                                 payAllianceCode = banksConfigVO.getPayAllianceCode();

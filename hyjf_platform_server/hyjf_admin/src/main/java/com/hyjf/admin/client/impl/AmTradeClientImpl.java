@@ -329,7 +329,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectList() {
-        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_project";
+        String url = "http://AM-ADMIN/am-trade/borrow_regist/select_borrow_project";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url, BorrowProjectTypeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -1915,7 +1915,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/select_borrow_recover/" + userId + "/" + borrowNid + "/" + nid;
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/select_borrow_recover/" + userId + "/" + borrowNid + "/" + nid;
         BorrowRecoverResponse response = restTemplate.getForEntity(url, BorrowRecoverResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -1997,7 +1997,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BorrowListCustomizeVO> selectBorrowList(String borrowNid) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/select_borrow_list/" + borrowNid;
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/select_borrow_list/" + borrowNid;
         BorrowListCustomizeResponse response = restTemplate.getForEntity(url, BorrowListCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2013,7 +2013,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<WebUserInvestListCustomizeVO> selectUserInvestList(BorrowInvestRequest borrowInvestRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/select_user_invest_list";
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/select_user_invest_list";
         WebUserInvestListCustomizeResponse response =
                 restTemplate.postForEntity(url, borrowInvestRequest, WebUserInvestListCustomizeResponse.class).getBody();
         if (response != null) {
@@ -2030,7 +2030,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer countProjectRepayPlanRecordTotal(BorrowInvestRequest borrowInvestRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/count_project_repay";
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/count_project_repay";
         WebProjectRepayListCustomizeResponse response =
                 restTemplate.postForEntity(url, borrowInvestRequest, WebProjectRepayListCustomizeResponse.class).getBody();
         if (response != null) {
@@ -2047,7 +2047,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(BorrowInvestRequest borrowInvestRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/select_project_repay";
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/select_project_repay";
         WebProjectRepayListCustomizeResponse response =
                 restTemplate.postForEntity(url, borrowInvestRequest, WebProjectRepayListCustomizeResponse.class).getBody();
         if (response != null) {
@@ -2064,7 +2064,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer updateBorrowRecover(BorrowInvestRequest borrowInvestRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_invest/update_borrow_recover";
+        String url = "http://AM-ADMIN/am-trade/borrow_invest/update_borrow_recover";
         WebProjectRepayListCustomizeResponse response =
                 restTemplate.postForEntity(url, borrowInvestRequest, WebProjectRepayListCustomizeResponse.class).getBody();
         if (response != null) {
@@ -5486,7 +5486,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhInstConfigVO> selectCommonHjhInstConfigList() {
-        String url = "http://AM-TRADE/am-trade/admin_common/select_inst_config";
+        String url = "http://AM-ADMIN/am-trade/admin_common/select_inst_config";
         HjhInstConfigResponse response = restTemplate.getForEntity(url, HjhInstConfigResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();

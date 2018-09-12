@@ -113,10 +113,10 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      * @param id
      */
     @Override
-    public void deleteVersionConfig( Integer id) {
+    public void deleteVersionConfig( List<Integer> id) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
-        cra.andIdEqualTo(id);
+        cra.andIdIn(id);
         versionMapper.deleteByExample(example);
     }
 

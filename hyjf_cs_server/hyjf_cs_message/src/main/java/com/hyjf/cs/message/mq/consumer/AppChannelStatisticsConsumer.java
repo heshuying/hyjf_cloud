@@ -45,6 +45,7 @@ public class AppChannelStatisticsConsumer extends Consumer {
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
+        // MQ默认集群消费
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         defaultMQPushConsumer.registerMessageListener(new AppChannelStatisticsConsumer.MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>

@@ -18,8 +18,8 @@ public interface MQConstant {
 	/**
 	 * 发送短信的 group topic
 	 */
-	String SMS_CODE_GROUP = "SMS_CODE_GROUP_JUN";
-	String SMS_CODE_TOPIC = "SMS_CODE_TOPIC_JUN";
+	String SMS_CODE_GROUP = "SMS_CODE_GROUP";
+	String SMS_CODE_TOPIC = "SMS_CODE_TOPIC";
 
 	/**
 	 * 发送邮件的 group topic
