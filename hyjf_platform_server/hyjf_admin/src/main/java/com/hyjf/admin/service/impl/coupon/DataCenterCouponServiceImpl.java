@@ -4,7 +4,7 @@
 package com.hyjf.admin.service.impl.coupon;
 
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
-import com.hyjf.admin.client.DataCenterCouponClient;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class DataCenterCouponServiceImpl implements DataCenterCouponService {
     @Autowired
-    private DataCenterCouponClient client;
+    private AmAdminClient client;
 
     @Override
     public DataCenterCouponResponse searchAction(DadaCenterCouponRequestBean requestBean, String type) {

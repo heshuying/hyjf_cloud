@@ -1,5 +1,7 @@
 package com.hyjf.admin.client.impl;
 
+import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
+import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.BooleanResponse;
@@ -14,11 +16,13 @@ import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.AdminPermissionsVO;
 import com.hyjf.am.vo.admin.PoundageCustomizeVO;
 import com.hyjf.am.vo.admin.PoundageDetailVO;
 import com.hyjf.am.vo.admin.PoundageLedgerVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -537,6 +541,61 @@ public class AmAdminClientImpl implements AmAdminClient {
         AdminPoundageDetailResponse response = restTemplate.postForEntity(url,request,AdminPoundageDetailResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<DataCenterCouponCustomizeVO> getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type) {
+        if (requestBean != null) {
+            requestBean.setType(type);
+        }
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/datacenter/coupon/getdatacentercouponlist",
+                requestBean, DataCenterCouponResponse.class).getResultList();
+    }
+
+    @Override
+    public String getActivityTitle(Integer activityId) {
+        CouponTenderResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-admin/datacenter/coupon/hztgetactivitytitle/" + activityId,
+                        CouponTenderResponse.class)
+                .getBody();
+        if (response != null) {
+            return response.getAttrbute();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_dj", dataCenterCouponCustomize,
+                DataCenterCouponCustomizeResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_jx", request,
+                DataCenterCouponCustomizeResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {
+        // 获取投资信息
+        PlatformCountCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-admin/platform_count/search_action", requestBean,
+                PlatformCountCustomizeResponse.class);
+        if (response != null) {
+            return response;
         }
         return null;
     }

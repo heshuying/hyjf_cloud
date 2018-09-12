@@ -54,62 +54,6 @@ public class LateAndCreditServiceImpl extends BaseServiceImpl implements LateAnd
     }
 
     /**
-     * 获取用户投资信息
-     *
-     * @param borrowNid
-     * @return
-     * @author PC-LIUSHOUYI
-     */
-    @Override
-    public List<BorrowTender> selectBorrowTenderListByBorrowNid(String borrowNid) {
-        BorrowTenderExample example = new BorrowTenderExample();
-        BorrowTenderExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
-        if (null == borrowTenderList || borrowTenderList.size() <= 0) {
-            return null;
-        }
-        return borrowTenderList;
-    }
-
-
-    /**
-     * 获取还款信息详情
-     *
-     * @param borrowNid
-     * @return
-     * @author PC-LIUSHOUYI
-     */
-    @Override
-    public BorrowRepay selectBorrowRepay(String borrowNid) {
-        BorrowRepayExample example = new BorrowRepayExample();
-        BorrowRepayExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowRepay> borrowRepayList = this.borrowRepayMapper.selectByExample(example);
-        if (null != borrowRepayList && borrowRepayList.size() > 0) {
-            return borrowRepayList.get(0);
-        }
-        return null;
-    }
-
-    /**
-     * 根据订单编号获取互金合同信息
-     *
-     * @param nid
-     * @return
-     */
-    @Override
-    public NifaContractStatus selectNifaContractStatusByNid(String nid) {
-        NifaContractStatusExample example = new NifaContractStatusExample();
-        example.createCriteria().andContractNoEqualTo(nid);
-        List<NifaContractStatus> nifaContractStatusList = this.nifaContractStatusMapper.selectByExample(example);
-        if (null != nifaContractStatusList && nifaContractStatusList.size() > 0) {
-            return nifaContractStatusList.get(0);
-        }
-        return null;
-    }
-
-    /**
      * 插入合同信息
      *
      * @param thisMessName

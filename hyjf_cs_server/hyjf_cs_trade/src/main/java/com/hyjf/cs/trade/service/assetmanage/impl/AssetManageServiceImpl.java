@@ -253,7 +253,8 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         int currentHoldObligatoryRightCount = amTradeClient.selectCurrentHoldObligatoryRightListTotal(request);
         result.setCurrentHoldObligatoryRightCount(currentHoldObligatoryRightCount);
         // 获取用户已回款债权列表总数
-        int repaymentCount = amTradeClient.selectRepaymentListTotal(request);
+        //int repaymentCount = amTradeClient.selectRepaymentListTotal(request);
+        int repaymentCount = this.amTradeClient.selectRepaymentListTotalWeb(request);
         result.setRepayMentCount(repaymentCount);
         // 获取用户转让记录总数
         int tenderCreditDetailCount = amTradeClient.countCreditRecordTotal(request);

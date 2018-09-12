@@ -34,7 +34,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * APP首页service
@@ -368,6 +370,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setBorrowName(listCustomize.getBorrowNid());
                 homePageCustomize.setBorrowDesc("散标");
             }
+            // 产品加息
+            homePageCustomize.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
             homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
@@ -408,6 +412,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         // 从配置文件中加载配置信息
         String noticeStatus = systemConfig.noticeStatus;
         String noticeUrlIOS = systemConfig.iosNoticeRequestUrl;
+        String iosVersion = systemConfig.iosNoticeVersion;
         noticeUrlIOS = HOST + ProjectConstant.REQUEST_HOME + "/" + noticeUrlIOS+"?version="+version;
 
         boolean isNeedUpdate = false;
@@ -417,7 +422,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             version = version.substring(0, 5);
         }
 
-        if( version != null && version.compareTo("3.0.6")<0){
+        if( version != null && version.compareTo(iosVersion)<0){
             isNeedUpdate = true;
         }
 
@@ -639,21 +644,35 @@ public class AppHomeServiceImpl implements AppHomeService {
         String host = HOST + ProjectConstant.REQUEST_HOME + ProjectConstant.REQUEST_MAPPING
                 + ProjectConstant.PROJECT_DETAIL_ACTION;
         List<AppProjectListCustomizeVO> projectList = searchProjectNew(host);
+        Integer userId = info.getInteger("userId");
+        boolean isNewUser = this.checkNewUser(userId);
 
-        if (!CollectionUtils.isEmpty(projectList)) {
-            AppProjectListCustomizeVO project = projectList.get(0);
-            if (list.size() == 0) {
-                list.add(project);
+        if(isNewUser){
+            if(!CollectionUtils.isEmpty(projectList)){
+                AppProjectListCustomizeVO project = projectList.get(0);
+                if (list.size() == 0) {
+                    list.add(project);
+                }
+                info.put("sprogExist", "1");
+                info.put("sprogBorrowApr", project.getBorrowApr());
+                info.put("sprogBorrowPeriod", project.getBorrowPeriod());
+                String balance = project.getBorrowAccountWait();//add by cwyang 根据borrowNid 获取项目可投金额
+                info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是投资总额 add by cwyang
+                info.put("sprogBorrowNid", project.getBorrowNid());
+                info.put("sprogBorrowUrl", project.getBorrowUrl());
+                info.put("sprogTime", project.getOnTime());
+                info.put("borrowExtraYield", project.getBorrowExtraYield());
+            }else {
+                info.put("sprogExist", "0");
+                info.put("sprogBorrowApr", "");
+                info.put("sprogBorrowPeriod", "");
+                info.put("sprogBorrowMoney", "");
+                info.put("sprogBorrowNid", "");
+                info.put("sprogBorrowUrl", "");
+                info.put("sprogTime", "");
+                info.put("borrowExtraYield", "");
             }
-            info.put("sprogExist", "1");
-            info.put("sprogBorrowApr", project.getBorrowApr());
-            info.put("sprogBorrowPeriod", project.getBorrowPeriod());
-            String balance = project.getBorrowAccountWait();//add by cwyang 根据borrowNid 获取项目可投金额
-            info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是投资总额 add by cwyang
-            info.put("sprogBorrowNid", project.getBorrowNid());
-            info.put("sprogBorrowUrl", project.getBorrowUrl());
-            info.put("sprogTime", project.getOnTime());
-        } else {
+        }else {
             info.put("sprogExist", "0");
             info.put("sprogBorrowApr", "");
             info.put("sprogBorrowPeriod", "");
@@ -661,10 +680,27 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("sprogBorrowNid", "");
             info.put("sprogBorrowUrl", "");
             info.put("sprogTime", "");
+            info.put("borrowExtraYield", "");
         }
 
     }
+    /**
+     *
+     * 检查是否是新手(未登录或已登录未投资)
+     * @author sunpeikai
+     * @param
+     * @return
+     */
+    private boolean checkNewUser(Integer userId){
+        //未登录则认为是新用户
+        if(userId == null || userId <= 0){
+            return true;
+        }
 
+        int tenderCount = amTradeClient.selectUserTenderCount(userId);
+
+        return tenderCount <= 0;
+    }
 
     private List<AppProjectListCustomizeVO> searchProjectNew(String host) {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();

@@ -417,7 +417,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	@Override
     public List<BorrowTenderTmp> getBorrowTenderTmpList() {
 		BorrowTenderTmpExample bexample = new BorrowTenderTmpExample();
-		bexample.createCriteria().andStatusEqualTo(0).andIsBankTenderEqualTo(1);
+		BorrowTenderTmpExample.Criteria cra = bexample.createCriteria();
+		cra.andStatusEqualTo(0);
+		cra.andIsBankTenderEqualTo(1);
 		List<BorrowTenderTmp> borrowTenderTmpList = this.borrowTenderTmpMapper.selectByExample(bexample);
 		return borrowTenderTmpList;
 	}

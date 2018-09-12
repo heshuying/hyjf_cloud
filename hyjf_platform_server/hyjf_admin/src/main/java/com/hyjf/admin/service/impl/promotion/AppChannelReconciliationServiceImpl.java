@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl.promotion;
 
-import com.hyjf.admin.client.AdminUtmReadPermissionsClient;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;

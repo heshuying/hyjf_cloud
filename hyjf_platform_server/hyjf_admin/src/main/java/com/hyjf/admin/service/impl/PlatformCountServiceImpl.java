@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.admin.client.PlatformCountClient;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.PlatformCountService;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 
@@ -18,7 +18,7 @@ import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
 @Service
 public class PlatformCountServiceImpl implements PlatformCountService {
     @Autowired
-    private PlatformCountClient platformCountClient;
+    private AmAdminClient platformCountClient;
 
     @Override
     public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {

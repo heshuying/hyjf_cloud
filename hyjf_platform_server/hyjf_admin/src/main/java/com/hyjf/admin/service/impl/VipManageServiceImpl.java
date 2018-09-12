@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.VipManageClient;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.response.admin.VipDetailListResponse;

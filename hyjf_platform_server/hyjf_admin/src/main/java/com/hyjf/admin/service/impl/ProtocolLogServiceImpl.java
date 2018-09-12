@@ -1,7 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ProtocolLogClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.ProtocolLogService;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
@@ -20,10 +20,8 @@ import java.util.List;
 @Service
 public class ProtocolLogServiceImpl implements ProtocolLogService {
 
-
-    @Autowired
-    private ProtocolLogClient client;
-
+	@Autowired
+	AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
 
@@ -36,13 +34,13 @@ public class ProtocolLogServiceImpl implements ProtocolLogService {
     public ProtocolLogResponse searchPage(ProtocolLogRequest request) {
         ProtocolLogResponse response = new ProtocolLogResponse();
         List<ProtocolLogVO> recordList = null;
-        Integer count = client.countRecordLog(request);
+        Integer count = amTradeClient.countRecordLog(request);
         response.setCount(count);
         if (count.intValue()>0) {
             Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
-            recordList = client.getProtocolLogVOAll(request);
+            recordList = amTradeClient.getProtocolLogVOAll(request);
 
             if(recordList.size()>0){
                 ProtocolLogVO vo = null;

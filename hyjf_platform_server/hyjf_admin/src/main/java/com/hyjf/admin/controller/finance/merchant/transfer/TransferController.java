@@ -182,7 +182,7 @@ public class TransferController extends BaseController {
                         }
                     } else {
                         String  respDesc = "";
-                        if(StringUtils.isNotEmpty(resultBean.getRespDesc())){
+                        if(resultBean != null&&StringUtils.isNotEmpty(resultBean.getRespDesc())){
                             respDesc = URLDecoder.decode(resultBean.getRespDesc(), "UTF-8");
                         }
                         boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,2,"转账失败，失败原因:"+respDesc)>0?true:false;

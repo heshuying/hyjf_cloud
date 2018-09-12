@@ -25,7 +25,8 @@ public class TenderInfoResult extends BaseResultBean {
 	private String capitalInterest;
 	/**真实优惠券投资预期收益*/
     private String couponCapitalInterest;
-
+    /**产品加息利息*/
+    private String borrowExtraYield;
     //app用--------------------------------
     private String borrowNid;
 
@@ -444,5 +445,13 @@ public class TenderInfoResult extends BaseResultBean {
 
     public void setDesc1(String desc1) {
         this.desc1 = desc1;
+    }
+
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
     }
 }

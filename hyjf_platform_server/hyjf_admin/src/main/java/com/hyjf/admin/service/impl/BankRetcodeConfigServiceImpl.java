@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.BankRetcodeConfigClient;
 import com.hyjf.admin.service.BankRetcodeConfigService;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;

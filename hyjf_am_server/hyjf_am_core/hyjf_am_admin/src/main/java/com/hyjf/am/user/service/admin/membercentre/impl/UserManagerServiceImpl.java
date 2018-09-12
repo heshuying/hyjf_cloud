@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
 import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -49,6 +50,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
     @Autowired
     private SpreadsUserMapper spreadsUserMapper;
+    @Autowired
+    private UserChangeLogMapper userChangeLogMapper;
 
     /**
      * 根据筛选条件查找会员列表
@@ -561,7 +564,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     public List<UserChangeLog> queryChangeLogList(Map<String, Object> mapParam) {
-        return userManagerCustomizeMapper.queryChangeLogList(mapParam);
+        UserChangeLogExample example = new UserChangeLogExample();
+        if(null!=mapParam.get("userId")){
+            example.createCriteria().andUserIdEqualTo((int)mapParam.get("userId"));
+        }
+        if(null!=mapParam.get("changeType")){
+            example.createCriteria().andUpdateTypeEqualTo((int)mapParam.get("changeType"));
+        }
+        List<UserChangeLog> userChangeLogs =userChangeLogMapper.selectByExample(example);
+        return userChangeLogs;
+//        return userManagerCustomizeMapper.queryChangeLogList(mapParam);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AppBorrowImageClient;
 import com.hyjf.admin.service.mobileclient.AppBorrowImageService;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
-import com.hyjf.admin.client.PushMoneyClient;
 import com.hyjf.admin.service.PushMoneyService;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 

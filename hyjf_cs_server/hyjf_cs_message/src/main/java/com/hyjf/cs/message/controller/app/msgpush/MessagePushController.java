@@ -124,7 +124,7 @@ public class MessagePushController extends BaseController {
 		ret.put("statusDesc", "成功");
 		// 获取标签信息
 		// 查询列表数量
-		int count = msgPushService.countMsgHistoryRecord(0, userId, null);
+		//int count = msgPushService.countMsgHistoryRecord(0, userId, null);
 
 		// 返回列表
 		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();

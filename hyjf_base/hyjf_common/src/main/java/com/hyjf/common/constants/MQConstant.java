@@ -18,8 +18,8 @@ public interface MQConstant {
 	/**
 	 * 发送短信的 group topic
 	 */
-	String SMS_CODE_GROUP = "SMS_CODE_GROUP_JUN";
-	String SMS_CODE_TOPIC = "SMS_CODE_TOPIC_JUN";
+	String SMS_CODE_GROUP = "SMS_CODE_GROUP";
+	String SMS_CODE_TOPIC = "SMS_CODE_TOPIC";
 
 	/**
 	 * 发送邮件的 group topic
@@ -426,4 +426,9 @@ public interface MQConstant {
 	 */
 	String CONTRACT_ESSENCE_GROUP = "CONTRACT_ESSENCE_GROUP";
 	String CONTRACT_ESSENCE_TOPIC = "CONTRACT_ESSENCE_TOPIC";
+	/**
+	 * 互金还款更新合同信息和还款信息
+	 */
+	String NIFA_REPAY_INFO_GROUP = "NIFA_REPAY_INFO_GROUP";
+	String NIFA_REPAY_INFO_TOPIC = "NIFA_REPAY_INFO_TOPIC";
 }

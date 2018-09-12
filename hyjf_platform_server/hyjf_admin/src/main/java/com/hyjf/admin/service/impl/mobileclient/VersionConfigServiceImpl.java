@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.admin.service.mobileclient.VersionConfigService;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;

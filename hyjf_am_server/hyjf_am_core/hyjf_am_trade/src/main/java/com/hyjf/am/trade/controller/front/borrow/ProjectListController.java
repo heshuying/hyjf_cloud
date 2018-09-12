@@ -29,6 +29,7 @@ import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,10 +62,10 @@ public class ProjectListController extends BaseController {
         // add by nxl 判断是否为产品加息 start
         if(null!=list&&list.size()>0){
             for(WebProjectListCustomize webProjectListCustomize:list){
-                int intFlg = Integer.parseInt(webProjectListCustomize.getIncreaseInterestFlag());
-                BigDecimal dbYield=new BigDecimal(webProjectListCustomize.getBorrowExtraYield());
+                int intFlg = Integer.parseInt(StringUtils.isNotBlank(webProjectListCustomize.getIncreaseInterestFlag())?webProjectListCustomize.getIncreaseInterestFlag():"0");
+                BigDecimal dbYield=new BigDecimal(StringUtils.isNotBlank(webProjectListCustomize.getBorrowExtraYield())?webProjectListCustomize.getBorrowExtraYield():"0");
                 boolean booleanVal = Validator.isIncrease(intFlg,dbYield);
-                webProjectListCustomize.setIncrease(booleanVal);
+                webProjectListCustomize.setIncrease(String.valueOf(booleanVal));
             }
         }
         // add by nxl 判断是否为产品加息 end
@@ -97,6 +98,14 @@ public class ProjectListController extends BaseController {
     public ProjectDetailResponse getProjectDetail(@RequestBody @Valid Map map){
         ProjectDetailResponse response = new ProjectDetailResponse();
         ProjectCustomeDetailVO vo = projectListService.getProjectDetail(map);
+        // add by nxl 判断是否为产品加息 start
+        if (null != vo) {
+            int intFlg = Integer.parseInt(StringUtils.isNotBlank(vo.getIncreaseInterestFlag())?vo.getIncreaseInterestFlag():"0");
+            BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(vo.getBorrowExtraYield())?vo.getBorrowExtraYield():"0");
+            boolean booleanVal = Validator.isIncrease(intFlg, dbYield);
+            vo.setIncrease(String.valueOf(booleanVal));
+        }
+        // add by nxl 判断是否为产品加息 end
         response.setResult(vo);
         return response;
     }

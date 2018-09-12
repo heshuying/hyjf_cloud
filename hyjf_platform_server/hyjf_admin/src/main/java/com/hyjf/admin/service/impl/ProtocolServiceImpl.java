@@ -2,7 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.ProtocolClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
@@ -40,7 +40,7 @@ import java.util.*;
 public class ProtocolServiceImpl implements ProtocolService {
 
     @Autowired
-    private ProtocolClient client;
+    private AmTradeClient client;
 
     @Autowired
     private AmConfigClient amConfigClient;
