@@ -50,6 +50,8 @@ public class AppHomePageCustomize implements Serializable {
 	private Integer borrowPeriodInt;
 	// 项目期限计量单位
 	private String borrowPeriodType;
+	// 产品加息
+	private String borrowExtraYield;
 
 	public String getBorrowApr() {
 		return borrowApr;
@@ -201,5 +203,13 @@ public class AppHomePageCustomize implements Serializable {
 
 	public void setBorrowPeriodType(String borrowPeriodType) {
 		this.borrowPeriodType = borrowPeriodType;
+	}
+
+	public String getBorrowExtraYield() {
+		return borrowExtraYield;
+	}
+
+	public void setBorrowExtraYield(String borrowExtraYield) {
+		this.borrowExtraYield = borrowExtraYield;
 	}
 }

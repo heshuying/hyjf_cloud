@@ -498,5 +498,11 @@ public class AutoMapper {
 
     @Resource
     protected NifaFieldDefinitionMapper nifaFieldDefinitionMapper;
+
+    @Resource
+    protected NifaRepayInfoMapper nifaRepayInfoMapper;
+
+    @Resource
+    protected NifaReceivedPaymentsMapper nifaReceivedPaymentsMapper;
 }
 

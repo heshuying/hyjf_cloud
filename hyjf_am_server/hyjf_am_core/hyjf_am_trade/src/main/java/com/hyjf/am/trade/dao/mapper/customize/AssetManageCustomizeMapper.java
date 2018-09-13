@@ -53,6 +53,13 @@ public interface AssetManageCustomizeMapper {
      */
     int selectRepaymentListTotal(Map<String, Object> params);
     /**
+     * @Description 获取用户已回款债权列表数量(产品加息需求迁移时添加)
+     * @Author sunpeikai
+     * @Version v0.1
+     * @Date
+     */
+    int selectRepaymentListTotalWeb(Map<String, Object> params);
+    /**
      * @Description 获取用户转让列表数量
      * @Author pangchengchao
      * @Version v0.1

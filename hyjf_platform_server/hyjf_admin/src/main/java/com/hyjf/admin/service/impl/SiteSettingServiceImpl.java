@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.beans.request.SiteSettingRequestBean;
-import com.hyjf.admin.client.SiteSettingClient;
 import com.hyjf.admin.service.SiteSettingService;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 

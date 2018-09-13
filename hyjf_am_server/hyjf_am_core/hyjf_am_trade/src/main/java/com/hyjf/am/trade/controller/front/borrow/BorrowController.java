@@ -144,6 +144,10 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 查询逾期的标的列表
+	 * @return
+	 */
 	@GetMapping("/selectOverdueBorrowList")
 	public BorrowResponse selectOverdueBorrowList(){
 		BorrowResponse response = new BorrowResponse();

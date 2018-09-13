@@ -36,4 +36,16 @@ public class PlatformCountClientImpl implements PlatformCountClient {
         }
         return null;
     }
+
+    @Override
+    public PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean) {
+        // 获取投资信息
+        PlatformUserCountCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/platform_count/get_info", requestBean,
+                PlatformUserCountCustomizeResponse.class);
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

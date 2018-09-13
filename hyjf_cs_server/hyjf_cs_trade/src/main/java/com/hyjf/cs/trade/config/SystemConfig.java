@@ -52,6 +52,9 @@ public class SystemConfig {
     @Value("hyjf.notice.requesturl.ios")
     public String iosNoticeRequestUrl;
 
+    @Value("${hyjf.notice.ios.version}")
+    public String iosNoticeVersion;
+
     @Value("${hyjf.pay.fdd.nofify.url}")
     private String hyjfPayFddNotifyUrl;
 
@@ -458,5 +461,11 @@ public class SystemConfig {
         this.appHost = appHost;
     }
 
+    public String getIosNoticeVersion() {
+        return iosNoticeVersion;
+    }
 
+    public void setIosNoticeVersion(String iosNoticeVersion) {
+        this.iosNoticeVersion = iosNoticeVersion;
+    }
 }

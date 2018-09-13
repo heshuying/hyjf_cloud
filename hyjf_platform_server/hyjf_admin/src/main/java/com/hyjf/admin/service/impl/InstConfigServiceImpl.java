@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.InstConfigClient;
 import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;

@@ -127,7 +127,7 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO getSpreadsUsersByUserId(Integer userId) {
 		String url = urlBase + "user/findReffer/" + userId;
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
-		if (response != null) {
+		if (Response.isSuccess(response)) {
 			return response.getResult();
 		}
 		return null;

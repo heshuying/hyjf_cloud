@@ -5,6 +5,7 @@ package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 
 /**
  * @author fq
@@ -17,4 +18,6 @@ public interface PlatformCountClient {
      * @return
      */
     PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean);
+
+    PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean);
 }

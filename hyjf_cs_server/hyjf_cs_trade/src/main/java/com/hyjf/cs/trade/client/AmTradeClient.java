@@ -918,6 +918,12 @@ public interface AmTradeClient {
      */
     int selectRepaymentListTotal(AssetManageBeanRequest request);
     /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotalWeb(AssetManageBeanRequest request);
+    /**
      * 获取用户债权转让列表总数
      * @param request
      * @return
@@ -1994,4 +2000,39 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO);
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int selectUserTenderCount(Integer userId);
+
+    /**
+     * 借款人还款表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 合同状态变更数据生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 出借人回款记录生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod);
 }
