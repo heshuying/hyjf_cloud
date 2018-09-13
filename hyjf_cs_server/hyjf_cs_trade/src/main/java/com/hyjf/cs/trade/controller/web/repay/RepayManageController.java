@@ -371,7 +371,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         /** redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet("repay_borrow_nid" + requestBean.getBorrowNid(), 60);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);
         if(!reslut){
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("项目正在还款中...");
