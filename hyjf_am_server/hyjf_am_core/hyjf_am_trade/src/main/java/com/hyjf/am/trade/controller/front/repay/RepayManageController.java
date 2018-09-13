@@ -5,7 +5,6 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.response.trade.RepayBeanResponse;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -60,6 +59,9 @@ public class RepayManageController extends BaseController {
     public Response<BigDecimal> orgRepayFeeWaitTotal(@PathVariable Integer userId) {
         Response<BigDecimal> response = new Response<>();
         BigDecimal waitTotal = repayManageService.selectOrgRepayFeeWaitTotal(userId);
+        if(null==waitTotal){
+            response.setResult(new BigDecimal(0));
+        }
         response.setResult(waitTotal);
         return response;
     }
