@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.AdminSubConfigResponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
@@ -308,4 +309,7 @@ public interface AmAdminClient {
 
 
 	PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean);
+
+
+    PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean);
 }

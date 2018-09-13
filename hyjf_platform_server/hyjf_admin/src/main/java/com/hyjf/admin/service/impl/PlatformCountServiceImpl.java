@@ -3,6 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
+import com.hyjf.am.vo.admin.PlatformUserCountCustomizeVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +14,8 @@ import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.PlatformCountService;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -21,7 +27,17 @@ public class PlatformCountServiceImpl implements PlatformCountService {
     private AmAdminClient platformCountClient;
 
     @Override
-    public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {
-        return platformCountClient.searchAction(requestBean);
+    public List<PlatformCountCustomizeVO>  searchAction(PlatformCountRequestBean requestBean) {
+        List<PlatformCountCustomizeVO> resultList1 = platformCountClient.searchAction(requestBean).getResultList();
+        List<PlatformUserCountCustomizeVO> resultList = platformCountClient.searchRegistAcount(requestBean).getResultList();
+        for (PlatformUserCountCustomizeVO CustomizeVO : resultList) {
+            for (PlatformCountCustomizeVO platformUser : resultList1) {
+                if (StringUtils.equals(CustomizeVO.getClient(), platformUser.getClient())) {
+                    platformUser.setAccountNumber(CustomizeVO.getAccountNumber());
+                    platformUser.setRegistNumber(CustomizeVO.getRegistNumber());
+                }
+            }
+        }
+        return resultList1;
     }
 }

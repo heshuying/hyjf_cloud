@@ -82,14 +82,26 @@ public class SystemConfig {
 	public String chinapnrCallBack;
 
 
+	@Value("${hyjf.chinapnr.return.url}")
+    public  String chinapnrReturnUrl;
+
+    @Value("${hyjf.chinapnr.bindreturn.url}")
+    public  String chinapnrBindreturnUrl;
+
+
+
+
 	/** 商户客户号 **/
+	//@Value("${hyjf.chinapnr.merid}")
 	public static String chinapnrMerId;
 
 	/** 商户私钥文件地址 **/
+	//@Value("${hyjf.chinapnr.mer.prikey.path}")
 	public static  String chinapnrPrikey;
 
 
 	/** 商户公钥文件地址 **/
+//	@Value("${hyjf.chinapnr.mer.pubkey.path}")
 	public static String chinapnrPubkey;
 
 
@@ -266,5 +278,48 @@ public class SystemConfig {
 
 	public void setCallbackSuccessUrl(String callbackSuccessUrl) {
 		this.callbackSuccessUrl = callbackSuccessUrl;
+	}
+
+	public String getChinapnrReturnUrl() {
+		return chinapnrReturnUrl;
+	}
+
+	public void setChinapnrReturnUrl(String chinapnrReturnUrl) {
+		this.chinapnrReturnUrl = chinapnrReturnUrl;
+	}
+
+	public String getChinapnrBindreturnUrl() {
+		return chinapnrBindreturnUrl;
+	}
+
+	public void setChinapnrBindreturnUrl(String chinapnrBindreturnUrl) {
+		this.chinapnrBindreturnUrl = chinapnrBindreturnUrl;
+	}
+
+	public static String getChinapnrMerId() {
+		return chinapnrMerId;
+	}
+
+	@Value("${hyjf.chinapnr.merid}")
+	public  void setChinapnrMerId(String chinapnrMerId) {
+		SystemConfig.chinapnrMerId = chinapnrMerId;
+	}
+
+	public static String getChinapnrPrikey() {
+		return chinapnrPrikey;
+	}
+
+	@Value("${hyjf.chinapnr.mer.prikey.path}")
+	public  void setChinapnrPrikey(String chinapnrPrikey) {
+		SystemConfig.chinapnrPrikey = chinapnrPrikey;
+	}
+
+	public static String getChinapnrPubkey() {
+		return chinapnrPubkey;
+	}
+
+	@Value("${hyjf.chinapnr.mer.pubkey.path}")
+	public  void setChinapnrPubkey(String chinapnrPubkey) {
+		SystemConfig.chinapnrPubkey = chinapnrPubkey;
 	}
 }

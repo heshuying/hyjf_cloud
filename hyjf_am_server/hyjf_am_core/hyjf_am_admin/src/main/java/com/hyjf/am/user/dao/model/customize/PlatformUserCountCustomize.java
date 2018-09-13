@@ -16,9 +16,9 @@ public class PlatformUserCountCustomize implements Serializable {
     /** 平台 */
     private String client;
     /** 注册数 */
-    private Integer registNumber;
+    private String registNumber;
     /** 开户数 */
-    private Integer accountNumber;
+    private String accountNumber;
 
     public String getClient() {
         return client;
@@ -28,19 +28,19 @@ public class PlatformUserCountCustomize implements Serializable {
         this.client = client;
     }
 
-    public Integer getRegistNumber() {
+    public String getRegistNumber() {
         return registNumber;
     }
 
-    public void setRegistNumber(Integer registNumber) {
+    public void setRegistNumber(String registNumber) {
         this.registNumber = registNumber;
     }
 
-    public Integer getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(Integer accountNumber) {
+    public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
 }

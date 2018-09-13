@@ -39,7 +39,7 @@
 		hydal.id,
 		#{roleId,jdbcType=VARCHAR} AS roleId,
 		#{trade,jdbcType=VARCHAR} AS trade,
-		hydal.create_time AS time,
+		DATE_FORMAT(hydal.create_time,'%Y-%m-%d %H:%i:%s') AS time,
 		CASE
 		WHEN hydal.`type` = 1 THEN
 		'+'
@@ -107,7 +107,7 @@
 	<select id="searchUserRechargeList" resultMap="UserRechargeListMap" parameterType="Map" >
 		SELECT
 		hydar.id,
-		hydar.create_time AS time,
+		DATE_FORMAT(hydar.create_time,'%Y-%m-%d %H:%i:%s') AS time,
 		hydar.money AS money,
 		hydar.balance AS balance,
 		hydar.fee AS fee,
@@ -154,7 +154,7 @@
 	<select id="selectUserWithdrawList" resultMap="UserWithdrawListMap" parameterType="Map" >
 		SELECT
 		hydaw.id,
-		hydaw.create_time AS time,
+		DATE_FORMAT(hydaw.create_time,'%Y-%m-%d %H:%i:%s') AS time,
 		hydaw.total AS money,
 		hydaw.fee AS fee,
 		hydaw.credited AS balance,

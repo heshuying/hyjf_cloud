@@ -2,15 +2,12 @@ package com.hyjf.pay.lib.anrong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.common.http.HttpDealBank;
-import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.pay.lib.anrong.bean.AnRongApiBean;
 import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 
 /**
  * 

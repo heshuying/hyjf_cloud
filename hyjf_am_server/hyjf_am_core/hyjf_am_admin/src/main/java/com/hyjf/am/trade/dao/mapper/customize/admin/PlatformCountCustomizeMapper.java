@@ -19,4 +19,8 @@ public interface PlatformCountCustomizeMapper {
      * @return
      */
     List<PlatformCountCustomize> selectList(PlatformCountRequest platformCountCustomize);
+
+    List<PlatformCountCustomize> selectRegistNumber(PlatformCountRequest platformCountCustomize);
+
+    List<PlatformCountCustomize> selectAccountNumber(PlatformCountRequest platformCountCustomize);
 }

@@ -16,10 +16,10 @@ import com.hyjf.pay.entity.ChinapnrLog;
 import com.hyjf.pay.lib.PnrApiBean;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
 import com.hyjf.pay.service.ChinapnrService;
 import com.hyjf.pay.service.PnrApi;
 import com.hyjf.pay.service.impl.ChinaPnrApiImpl;
+import com.hyjf.pay.utils.ChinaPnrSignUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +34,8 @@ import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/chinapnr")
@@ -64,10 +66,12 @@ public class ChinapnrController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/callapi.json")
-    public ModelAndView callApi(@RequestBody ChinapnrBean bean) throws Exception {
+    @ResponseBody
+    public Map<String,Object> callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
         logger.info(THIS_CLASS, methodName, "[调用接口开始]");
-        ModelAndView modelAndView = new ModelAndView("/chinapnr/chinapnr_send");
+        //ModelAndView modelAndView = new ModelAndView("/chinapnr/chinapnr_send");
+        Map<String,Object> result = new HashMap<>();
         try {
             // 参数转换成Map
             bean.convert();
@@ -83,15 +87,17 @@ public class ChinapnrController extends BaseController {
                 // 设置返回URL
                 if (Validator.isNotNull(bean.getRetUrl())) {
                     if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
-                        bean.setRetUrl(ChinapnrUtil.getBindRetUrl());
+                       // bean.setRetUrl(ChinapnrUtil.getBindRetUrl());
+                        bean.setRetUrl(systemConfig.getChinapnrBindreturnUrl());
                     } else {
-                        bean.setRetUrl(ChinapnrUtil.getRetUrl());
+                        //bean.setRetUrl(ChinapnrUtil.getRetUrl());
+                        bean.setRetUrl(systemConfig.getChinapnrReturnUrl());
                     }
                     bean.set(ChinaPnrConstant.PARAM_RETURL, bean.getRetUrl());
                 }
                 //定向绑定用户不设置私有域
                 if (!ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(bean.get(ChinaPnrConstant.PARAM_CMDID))) {
-                    ChinapnrUtil.setUUID(bean, id);
+                    ChinaPnrSignUtils.setUUID(bean, id);
                 }
                 // 得到接口API对象
              //   PnrApi api = new ChinaPnrApiImpl();
@@ -105,16 +111,16 @@ public class ChinapnrController extends BaseController {
                     try {
                         this.chinapnrService.insertChinapnrSendLog(bean, pnrApiBean);
                     } catch (Exception e) {
-                        modelAndView.setViewName(CommonConstant.JSP_CHINAPNR_RESULT);
-                        modelAndView.addObject("content", "保存发送日志失败！");
+                        result.put("viewName",CommonConstant.JSP_CHINAPNR_RESULT);
+                        result.put("content", "保存发送日志失败！");
                     }
                     // 跳转到汇付天下画面
                     pnrApiBean.setAction(systemConfig.getChinapnrUrl());
-                    modelAndView.addObject(CommonConstant.CHINAPNR_FORM, pnrApiBean);
+                    result.put(CommonConstant.CHINAPNR_FORM, pnrApiBean);
                 }
             } else {
-                modelAndView.setViewName(CommonConstant.JSP_CHINAPNR_RESULT);
-                modelAndView.addObject("content", "保存发送日志失败！");
+                result.put("viewName",CommonConstant.JSP_CHINAPNR_RESULT);
+                result.put("content", "保存发送日志失败！");
             }
         } catch (Exception e) {
             logger.error(THIS_CLASS, methodName, e);
@@ -122,7 +128,7 @@ public class ChinapnrController extends BaseController {
         } finally {
             logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
-        return modelAndView;
+        return result;
     }
 
     /**

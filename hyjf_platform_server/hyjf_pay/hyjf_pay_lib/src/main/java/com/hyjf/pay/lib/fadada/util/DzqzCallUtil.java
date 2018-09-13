@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.pay.lib.config.FddSystemConfig;
+import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,8 @@ public class DzqzCallUtil {
 
    private static Logger log = LoggerFactory.getLogger(DzqzCallUtil.class);
 
-    private static FddSystemConfig fddSystemConfig = SpringUtils.getBean(FddSystemConfig.class);
+    //private static FddSystemConfig fddSystemConfig = SpringUtils.getBean(FddSystemConfig.class);
+    private static URLSystemConfig urlSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
     private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
     public static DzqzCallBean callApiBg(DzqzCallBean bean){
@@ -38,7 +39,7 @@ public class DzqzCallUtil {
             bean.setLogordid(orderId);
             bean.convert();
 
-            String payUrl = fddSystemConfig.getFddPayUrl();
+            String payUrl = urlSystemConfig.getFddPayUrl();
             log.info("payUrl:[{}]",payUrl);
             if (Validator.isNull(payUrl)) {
                 throw new Exception("接口工程URL不能为空");

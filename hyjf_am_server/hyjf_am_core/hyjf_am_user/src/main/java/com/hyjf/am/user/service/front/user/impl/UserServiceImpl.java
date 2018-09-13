@@ -175,17 +175,21 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findUserByRecommendName(String reffer) {
-		UserExample usersExample = new UserExample();
-		UserExample.Criteria criteria = usersExample.createCriteria();
-		if (Validator.isMobile(reffer)) {
-			criteria.andMobileEqualTo(reffer);
-		} else {
-			criteria.andUserIdEqualTo(Integer.valueOf(reffer));
-		}
-		List<User> usersList = userMapper.selectByExample(usersExample);
-		if (!CollectionUtils.isEmpty(usersList)) {
-			return usersList.get(0);
+	public User findReffer(Integer userId) {
+		//查推荐人ID
+		SpreadsUserExample spreadsUsersExample = new SpreadsUserExample();
+		SpreadsUserExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
+		spreadsUsersExampleCriteria.andUserIdEqualTo(userId);
+		List<SpreadsUser> sList = spreadsUserMapper.selectByExample(spreadsUsersExample);
+		//根据推荐人ID查用户
+		if(!CollectionUtils.isEmpty(sList)){
+			UserExample usersExample = new UserExample();
+			UserExample.Criteria criteria = usersExample.createCriteria();
+			criteria.andUserIdEqualTo(Integer.valueOf(sList.get(0).getSpreadsUserId()));
+			List<User> usersList = userMapper.selectByExample(usersExample);
+			if (!CollectionUtils.isEmpty(usersList)) {
+				return usersList.get(0);
+			}
 		}
 		return null;
 	}

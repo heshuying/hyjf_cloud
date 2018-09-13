@@ -8,6 +8,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
@@ -594,6 +595,17 @@ public class AmAdminClientImpl implements AmAdminClient {
         PlatformCountCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-admin/platform_count/search_action", requestBean,
                 PlatformCountCustomizeResponse.class);
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+    @Override
+    public PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean) {
+        // 获取投资信息
+        PlatformUserCountCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/platform_count/get_info", requestBean,
+                PlatformUserCountCustomizeResponse.class);
         if (response != null) {
             return response;
         }

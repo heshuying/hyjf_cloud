@@ -13,7 +13,7 @@
 				AND b.borrow_period=#{borrowPeriod}
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND ( ui.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
+				AND ( u.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
@@ -42,6 +42,7 @@
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
+		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 
