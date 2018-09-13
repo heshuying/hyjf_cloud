@@ -193,12 +193,12 @@ public class BorrowCommonController extends BaseController {
 		BigDecimal increaseMoney = new BigDecimal("100");
 		if (account.compareTo(increaseMoney) < 0) {
 			// 发标金额应大于递增金额
-			return new AdminResult<>(FAIL, "借款金额应该是整百金额");
+			return new AdminResult<>(FAIL, "借款金额应大于递增金额");
 		}
 		// 不是100的整数倍
 		if (account.divideAndRemainder(increaseMoney)[1].compareTo(BigDecimal.ZERO) != 0) {
 			// 发标金额应大于递增金额
-			return new AdminResult<>(FAIL, "借款金额应大于递增金额");
+			return new AdminResult<>(FAIL, "借款金额应该是整百金额");
 		}
 		return new AdminResult();
 	}
