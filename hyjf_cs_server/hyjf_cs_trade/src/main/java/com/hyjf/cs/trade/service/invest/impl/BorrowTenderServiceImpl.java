@@ -937,6 +937,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 money = new BigDecimal(balanceWait).intValue() + "";
             }
 
+            // 设置产品加息 显示收益率
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                investInfo.setBorrowExtraYield(df.format(borrow.getBorrowExtraYield())+"%");
+            }
+
             BigDecimal earnings = new BigDecimal("0");
 
             if (!StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
@@ -1000,8 +1005,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setCouponType("");
 
             investInfo.setDesc("历史年回报率: " + borrow.getBorrowApr() + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
+            /**
+             * 产品加息
+             */
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "% + "
+                        + borrow.getBorrowExtraYield() + "%");
+            }else{
+                investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
+            }
+            // 产品加息预期收益
+            if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow.getBorrowExtraYield())) {
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrow.getBorrowExtraYield());
+                borrowInterest = incEarnings.add(borrowInterest);
+            }
+
+
             investInfo.setDesc1("历史回报: " + CommonUtils.formatAmount(null, borrowInterest.add(couponInterest)) + "元");
-            investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "%");
+            //investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "%");
             investInfo.setConfirmRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
             investInfo.setRealAmount("投资金额: " + CommonUtils.formatAmount(money) + "元");
             investInfo.setBorrowInterest(CommonUtils.formatAmount(borrowInterest) + "元");

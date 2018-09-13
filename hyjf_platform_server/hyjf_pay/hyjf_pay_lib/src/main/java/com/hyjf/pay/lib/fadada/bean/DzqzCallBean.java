@@ -1,7 +1,5 @@
 package com.hyjf.pay.lib.fadada.bean;
 
-import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.pay.lib.config.FddSystemConfig;
 
 import java.io.File;
 import java.io.Serializable;

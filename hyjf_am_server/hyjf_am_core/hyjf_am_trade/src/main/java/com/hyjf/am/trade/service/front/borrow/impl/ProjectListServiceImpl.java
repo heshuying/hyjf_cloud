@@ -7,6 +7,8 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
 import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppTenderCreditInvestListCustomize;
@@ -377,9 +379,41 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(borrowCreditExample);
         return borrowCreditList;
     }
-
-
-    // ----------------------------------------app end ----------------------------------------------------
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvest getIncreaseInterestInvestByOrdId(String orderId) {
+        IncreaseInterestInvestExample example = new IncreaseInterestInvestExample();
+        IncreaseInterestInvestExample.Criteria cra = example.createCriteria();
+        cra.andOrderIdEqualTo(orderId);
+        List<IncreaseInterestInvest> list = increaseInterestInvestMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvest getIncreaseInterestInvestByTenderNid(String tenderNid) {
+        IncreaseInterestInvestExample example = new IncreaseInterestInvestExample();
+        IncreaseInterestInvestExample.Criteria cra = example.createCriteria();
+        cra.andTenderNidEqualTo(tenderNid);
+        List<IncreaseInterestInvest> list = increaseInterestInvestMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+// ----------------------------------------app end ----------------------------------------------------
 
 
     //  -----------------------------------------wechat start ----------------------------------------------
