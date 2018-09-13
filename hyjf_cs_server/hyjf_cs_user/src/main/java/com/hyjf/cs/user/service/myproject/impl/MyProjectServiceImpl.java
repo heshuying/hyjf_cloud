@@ -56,6 +56,12 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                         customize.setData("");
                     }
                 }
+                //判断type是否为4（4加息），将couponType设置为4
+                if("4".equals(customize.getType())){
+                    customize.setCouponType("4");
+                    //将"borrowExtraYield": 替换为 "data":
+                    customize.setData(customize.getBorrowExtraYield());
+                }
             }
             vo.getLstProject().addAll(lst);
         }
