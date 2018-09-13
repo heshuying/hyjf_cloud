@@ -1021,7 +1021,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private boolean isTenderBorrow(Integer userId, String borrowNid,
                                    String borrowType) {
         //根据borrowNid查询borrow表
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow.getPlanNid() != null && borrow.getPlanNid().length() > 1) {
             return true;
         }
@@ -1156,7 +1156,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 borrowRepay = borrowRepayVOList.get(0);
             }
             // 2.根据项目标号获取相应的项目信息
-            BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
             //借款人企业消息
             BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
             //借款人信息

@@ -19,7 +19,7 @@ import com.hyjf.am.vo.trade.borrow.AccountBorrowVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -736,7 +736,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    // 当前日期
 	    Integer nowTime = GetDate.getNowTime10();
 	    // 查询borrow 和 BorrowRecover
-	    BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+	    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
 	    if (borrow == null) {
 	        throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
 	    }
@@ -888,7 +888,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @param nowTime
      * @return
      */
-    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
+    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowAndInfoVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
         // 债转本息
@@ -1223,7 +1223,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             int lastdays = 0;
             String borrowNid = appTenderToCreditDetail.getBorrowNid();
             // 根据borrowNid判断是否分期
-            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
             String borrowStyle = borrowVO.getBorrowStyle();
             if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
                 try {
@@ -1281,7 +1281,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
-        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowRecoverVO borrowRecoverVO = amTradeClient.getBorrowRecoverByTenderNidBidNid(tenderNid,borrowNid);
         // 债转本息
         BigDecimal creditAccount = BigDecimal.ZERO;

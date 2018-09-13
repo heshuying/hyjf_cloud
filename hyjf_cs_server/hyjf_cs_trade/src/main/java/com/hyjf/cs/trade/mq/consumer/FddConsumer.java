@@ -49,6 +49,7 @@ public class FddConsumer extends Consumer {
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
+		// MQ默认集群消费
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
@@ -94,7 +95,7 @@ public class FddConsumer extends Consumer {
 
 					} catch (Exception e) {
 						logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e.getMessage()	+ "=============");
-						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 					}
 					logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
 
@@ -118,7 +119,7 @@ public class FddConsumer extends Consumer {
 						fddHandle.updateAutoSignData(bean);
 					}catch (Exception e1){
 						logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
-						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 					}
 					logger.info("--------------------------------------法大大自动签署异步处理任务结束，订单号：" + ordid + "=============");
 
@@ -168,7 +169,7 @@ public class FddConsumer extends Consumer {
 					}catch (Exception e1){
 						logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
 						e1.printStackTrace();
-						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
 					}
 					logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");
 					return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

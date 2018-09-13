@@ -13,7 +13,7 @@ import java.util.Date;
  * @author fuqiang
  * @version BorrowVO, v0.1 2018/6/12 18:58
  */
-public class BorrowVO extends BaseVO implements Serializable {
+public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer userId;

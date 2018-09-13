@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -441,7 +441,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 承接人账户信息
             AccountVO assignAccount = this.amTradeClient.getAccount(userId);
             // 项目详情
-            BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
             // 还款方式
             String borrowStyle = borrow.getBorrowStyle();
             // 项目总期数
@@ -1180,7 +1180,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             creditTenderLog.setTenderMoney(borrowRecover.getRecoverCapital());
         }
         // 获取借款数据
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowCredit.getBidNid());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowCredit.getBidNid());
         if (borrow == null) {
             // 标的信息不存在  当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_BORROW);

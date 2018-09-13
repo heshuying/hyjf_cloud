@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 /**
  * @author fuqiang
@@ -17,7 +17,7 @@ public interface AutoRecordClient {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
      * 更新相应的标的状态为备案中

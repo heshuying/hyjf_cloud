@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -210,7 +210,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
@@ -261,7 +261,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(!user.isBankOpenAccount()){
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
