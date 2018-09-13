@@ -356,20 +356,21 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     @Override
     public WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId) {
-        UserVO user = amUserClient.findUserById(userId);
-        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        // 短信验证码
-        String code = request.getTelcode();
-        // 手机号码(必须,数字,最大长度)
-        String mobile = user.getMobile();
-        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
-        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
-        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-        if (result == 0) {
-            throw new CheckException(MsgEnum.STATUS_ZC000015);
-        }
+    	
+//        UserVO user = amUserClient.findUserById(userId);
+//        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+//        // 短信验证码
+//        String code = request.getTelcode();
+//        // 手机号码(必须,数字,最大长度)
+//        String mobile = user.getMobile();
+//        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
+//        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
+//        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
+//        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
+//        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+//        if (result == 0) {
+//            throw new CheckException(MsgEnum.STATUS_ZC000015);
+//        }
         return new WebResult();
     }
 
