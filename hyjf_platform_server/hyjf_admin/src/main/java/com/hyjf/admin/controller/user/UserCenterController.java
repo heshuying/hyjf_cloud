@@ -390,6 +390,7 @@ public class UserCenterController extends BaseController {
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
+        managerRequest.setLimitFlg(true);
         UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
         if(null!=userManagerResponse){
             List<UserManagerVO>recordList = userManagerResponse.getResultList();

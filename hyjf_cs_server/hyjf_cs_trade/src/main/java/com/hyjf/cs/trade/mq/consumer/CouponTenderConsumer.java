@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.BorrowClient;
 import com.hyjf.cs.trade.mq.base.Consumer;
@@ -83,7 +83,7 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setLogUserId(userId);
                 bean.setLogClient(Integer.parseInt(platform));
                 bean.setTxAmount(money);
-                BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+                BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
 
                 couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

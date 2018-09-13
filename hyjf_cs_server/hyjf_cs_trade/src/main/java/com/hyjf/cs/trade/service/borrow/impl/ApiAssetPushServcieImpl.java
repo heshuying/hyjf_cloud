@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
@@ -353,7 +353,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
 
     @Override
-    public HjhLabelVO getLabelId(BorrowVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
+    public HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
 
         HjhLabelVO resultLabel = null;
 

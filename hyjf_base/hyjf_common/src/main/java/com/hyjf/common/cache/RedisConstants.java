@@ -343,4 +343,9 @@ public class RedisConstants {
      * 线下充值类型
      */
     public static final String UNDER_LINE_RECHARGE_TYPE = "under_line_recharge_type:";
+
+    /**
+     * 还款申请防并发key
+     */
+    public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 }

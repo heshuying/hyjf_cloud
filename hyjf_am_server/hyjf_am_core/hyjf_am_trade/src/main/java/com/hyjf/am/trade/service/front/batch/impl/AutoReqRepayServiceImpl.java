@@ -91,7 +91,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 获取还款的标的信息
         Borrow borrow = this.repayManageService.searchRepayProject(userId, userName, roleId, borrowNid);
         /** redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet("repay_borrow_nid" + borrowNid, 60);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + borrowNid, 60);
         if(!reslut){
             logger.info("项目正在还款中...");
             return false;

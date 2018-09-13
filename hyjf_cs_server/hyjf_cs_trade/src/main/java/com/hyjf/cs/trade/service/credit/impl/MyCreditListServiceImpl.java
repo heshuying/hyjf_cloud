@@ -14,7 +14,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -185,7 +185,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         int lastdays = 0;
         String borrowNid = tenderToCreditDetail.getBorrowNid();
         // 根据borrowNid判断是否分期
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         String borrowStyle = borrow.getBorrowStyle();
         if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
             try {
@@ -299,7 +299,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 当前日期
         Integer nowTime = GetDate.getNowTime10();
         // 查询borrow 和 BorrowRecover
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -356,20 +356,21 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     @Override
     public WebResult checkCode(TenderBorrowCreditCustomize request, Integer userId) {
-        UserVO user = amUserClient.findUserById(userId);
-        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        // 短信验证码
-        String code = request.getTelcode();
-        // 手机号码(必须,数字,最大长度)
-        String mobile = user.getMobile();
-        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
-        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
-        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-        if (result == 0) {
-            throw new CheckException(MsgEnum.STATUS_ZC000015);
-        }
+    	
+//        UserVO user = amUserClient.findUserById(userId);
+//        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+//        // 短信验证码
+//        String code = request.getTelcode();
+//        // 手机号码(必须,数字,最大长度)
+//        String mobile = user.getMobile();
+//        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.STATUS_CE000001);
+//        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.STATUS_CE000001);
+//        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
+//        CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
+//        int result = amUserClient.onlyCheckMobileCode(mobile, code, verificationType, request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+//        if (result == 0) {
+//            throw new CheckException(MsgEnum.STATUS_ZC000015);
+//        }
         return new WebResult();
     }
 
@@ -419,7 +420,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 当前日期
         Integer nowTime = GetDate.getNowTime10();
         // 查询borrow 和 BorrowRecover
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -571,7 +572,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * @param nowTime
      * @return
      */
-    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
+    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowAndInfoVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
         // 债转本息
