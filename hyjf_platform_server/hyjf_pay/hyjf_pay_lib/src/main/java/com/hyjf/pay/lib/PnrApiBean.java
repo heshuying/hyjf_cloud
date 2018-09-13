@@ -16,7 +16,6 @@ import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.util.MD5Util2;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,137 +160,137 @@ public class PnrApiBean implements Serializable {
         return paramMap;
     }
 
-    /**
-     * 取得组合后的签名
-     *
-     * @param keys
-     * @return
-     */
-    public String getChkValueMerged(String... keys) {
-        return getChkValueMerged(true, keys);
-    }
-
-    /**
-     * 取得组合后的签名 先MD5加密然后加签
-     *
-     * @param keys
-     * @return
-     */
-    public String getChkValueMergedMD5(String... keys) {
-        return getChkValueMergedMD5(true, keys);
-    }
-
-    /**
-     * 取得组合后的签名
-     *
-     * @param isEntrypt
-     *            是否加签(true:加签,false:不加签)
-     * @param keys
-     * @return
-     */
-    public String getChkValueMerged(boolean isEntrypt, String... keys) {
-        String methodName = "getChkValueMerged";
-        String chkValue = null;
-        StringBuffer sb = new StringBuffer();
-        if (paramMap != null && paramMap.size() > 0) {
-            if (keys != null && keys.length > 0) {
-                for (String key : keys) {
-                    // 防止重复追加签名
-                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(key) || !paramMap.containsKey(key)) {
-                        continue;
-                    }
-
-                    // hbz ,RespExt要先decode解码后再拼接进去
-                    if (!ChinaPnrConstant.PARAM_RESPEXT.equals(key)) {
-                        sb.append(StringUtils.trimToEmpty(paramMap.get(key)));
-                    } else {
-                        try {
-                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-            } else {
-                for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-                    // 防止重复追加签名
-                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(entry.getKey())) {
-                        continue;
-                    }
-                    sb.append(StringUtils.trimToEmpty(entry.getValue()));
-                }
-            }
-
-            try {
-                // 加签
-                if (isEntrypt) {
-                    chkValue = ChinaPnrSignUtils.encryptByRSA(sb.toString());
-                } else {
-                    chkValue = sb.toString();
-                }
-            } catch (Exception e) {
-                log.error(String.valueOf(e));
-            }
-        }
-        return chkValue;
-    }
-
-    /**
-     * 取得组合后的签名MD5
-     *
-     * @param isEntrypt
-     *            是否加签(true:加签,false:不加签)
-     * @param keys
-     * @return
-     */
-    public String getChkValueMergedMD5(boolean isEntrypt, String... keys) {
-        String methodName = "getChkValueMerged";
-        String chkValue = null;
-        StringBuffer sb = new StringBuffer();
-        if (paramMap != null && paramMap.size() > 0) {
-            if (keys != null && keys.length > 0) {
-                for (String key : keys) {
-                    // 防止重复追加签名
-                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(key) || !paramMap.containsKey(key)) {
-                        continue;
-                    }
-
-                    // hbz ,RespExt要先decode解码后再拼接进去
-                    if (!ChinaPnrConstant.PARAM_RESPEXT.equals(key)) {
-                        sb.append(StringUtils.trimToEmpty(paramMap.get(key)));
-                    } else {
-                        try {
-                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }
-            } else {
-                for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-                    // 防止重复追加签名
-                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(entry.getKey())) {
-                        continue;
-                    }
-                    sb.append(StringUtils.trimToEmpty(entry.getValue()));
-                }
-            }
-            try {
-                //进行MD5加密
-                // 加签
-                if (isEntrypt) {
-                    chkValue = ChinaPnrSignUtils.encryptByRSA(MD5Util2.getMD5String(sb.toString()));
-                } else {
-                    chkValue = sb.toString();
-                }
-            } catch (Exception e) {
-                log.error(String.valueOf(e));
-            }
-        }
-        return chkValue;
-    }
+//    /**
+//     * 取得组合后的签名  待删除  zyk
+//     *
+//     * @param keys
+//     * @return
+//     */
+//    public String getChkValueMerged(String... keys) {
+//        return getChkValueMerged(true, keys);
+//    }
+//
+//    /**
+//     * 取得组合后的签名 先MD5加密然后加签
+//     *
+//     * @param keys
+//     * @return
+//     */
+//    public String getChkValueMergedMD5(String... keys) {
+//        return getChkValueMergedMD5(true, keys);
+//    }
+//
+//    /**
+//     * 取得组合后的签名
+//     *
+//     * @param isEntrypt
+//     *            是否加签(true:加签,false:不加签)
+//     * @param keys
+//     * @return
+//     */
+//    public String getChkValueMerged(boolean isEntrypt, String... keys) {
+//        String methodName = "getChkValueMerged";
+//        String chkValue = null;
+//        StringBuffer sb = new StringBuffer();
+//        if (paramMap != null && paramMap.size() > 0) {
+//            if (keys != null && keys.length > 0) {
+//                for (String key : keys) {
+//                    // 防止重复追加签名
+//                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(key) || !paramMap.containsKey(key)) {
+//                        continue;
+//                    }
+//
+//                    // hbz ,RespExt要先decode解码后再拼接进去
+//                    if (!ChinaPnrConstant.PARAM_RESPEXT.equals(key)) {
+//                        sb.append(StringUtils.trimToEmpty(paramMap.get(key)));
+//                    } else {
+//                        try {
+//                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
+//                        } catch (UnsupportedEncodingException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            } else {
+//                for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+//                    // 防止重复追加签名
+//                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(entry.getKey())) {
+//                        continue;
+//                    }
+//                    sb.append(StringUtils.trimToEmpty(entry.getValue()));
+//                }
+//            }
+//
+//            try {
+//                // 加签
+//                if (isEntrypt) {
+//                    chkValue = ChinaPnrSignUtils.encryptByRSA(sb.toString());
+//                } else {
+//                    chkValue = sb.toString();
+//                }
+//            } catch (Exception e) {
+//                log.error(String.valueOf(e));
+//            }
+//        }
+//        return chkValue;
+//    }
+//
+//    /**
+//     * 取得组合后的签名MD5
+//     *
+//     * @param isEntrypt
+//     *            是否加签(true:加签,false:不加签)
+//     * @param keys
+//     * @return
+//     */
+//    public String getChkValueMergedMD5(boolean isEntrypt, String... keys) {
+//        String methodName = "getChkValueMerged";
+//        String chkValue = null;
+//        StringBuffer sb = new StringBuffer();
+//        if (paramMap != null && paramMap.size() > 0) {
+//            if (keys != null && keys.length > 0) {
+//                for (String key : keys) {
+//                    // 防止重复追加签名
+//                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(key) || !paramMap.containsKey(key)) {
+//                        continue;
+//                    }
+//
+//                    // hbz ,RespExt要先decode解码后再拼接进去
+//                    if (!ChinaPnrConstant.PARAM_RESPEXT.equals(key)) {
+//                        sb.append(StringUtils.trimToEmpty(paramMap.get(key)));
+//                    } else {
+//                        try {
+//                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
+//                        } catch (UnsupportedEncodingException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            } else {
+//                for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+//                    // 防止重复追加签名
+//                    if (ChinaPnrConstant.PARAM_CHKVALUE.equals(entry.getKey())) {
+//                        continue;
+//                    }
+//                    sb.append(StringUtils.trimToEmpty(entry.getValue()));
+//                }
+//            }
+//            try {
+//                //进行MD5加密
+//                // 加签
+//                if (isEntrypt) {
+//                    chkValue = ChinaPnrSignUtils.encryptByRSA(MD5Util2.getMD5String(sb.toString()));
+//                } else {
+//                    chkValue = sb.toString();
+//                }
+//            } catch (Exception e) {
+//                log.error(String.valueOf(e));
+//            }
+//        }
+//        return chkValue;
+//    }
 
     /**
      * 参数转换
@@ -359,5 +358,13 @@ public class PnrApiBean implements Serializable {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Map<String, String> getParamMap() {
+        return paramMap;
+    }
+
+    public void setParamMap(Map<String, String> paramMap) {
+        this.paramMap = paramMap;
     }
 }

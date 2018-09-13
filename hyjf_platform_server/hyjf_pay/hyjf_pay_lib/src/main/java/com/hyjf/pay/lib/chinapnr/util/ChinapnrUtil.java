@@ -3,12 +3,13 @@ package com.hyjf.pay.lib.chinapnr.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.chinapnr.MerPriv;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
-import com.hyjf.pay.lib.config.PaySystemConfig;
+import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class ChinapnrUtil {
     /** THIS_CLASS */
     private static final String THIS_CLASS = ChinapnrUtil.class.getName();
 
-    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+    private static URLSystemConfig urlSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
 
     /** 跳转的jsp页面 */
     private static final String SEND_JSP = "/chinapnr/chinapnr_send";
@@ -63,7 +64,7 @@ public class ChinapnrUtil {
 
         try {
             // 取出调用汇付接口的url
-            String payurl = paySystemConfig.getPayUrl();
+            String payurl = urlSystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -105,7 +106,7 @@ public class ChinapnrUtil {
         log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         try {
             // 取出调用汇付接口的url
-            String payurl = paySystemConfig.getPayUrl();
+            String payurl = urlSystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -121,7 +122,7 @@ public class ChinapnrUtil {
             // 将返回字符串转换成Map
             if (Validator.isNotNull(result)) {
                 Map<String, ?> map = JSONObject.parseObject(result, Map.class);
-                Map<String, ?> bankForm = (Map)map.get("bankForm");
+                Map<String, ?> bankForm = (Map)map.get(CommonConstant.CHINAPNR_FORM);
                 JSONObject allParam = JSONObject.parseObject((String)bankForm.get("json"),JSONObject.class);
                 Map<String, Object> retMap = new HashedMap();
                 retMap.put("allParams",allParam);
@@ -159,7 +160,7 @@ public class ChinapnrUtil {
                 }
             }
             // 取出调用汇付接口的url
-            String payurl = paySystemConfig.getPayUrl();
+            String payurl = urlSystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -197,7 +198,7 @@ public class ChinapnrUtil {
             bean.convert();
 
             // 取出调用汇付接口的url
-            String payurl = paySystemConfig.getPayUrl();
+            String payurl = urlSystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -217,27 +218,27 @@ public class ChinapnrUtil {
         return jsonObject;
     }
 
-    /**
-     * 取得页面返回 URL
-     */
-    public static String getRetUrl() {
-        return paySystemConfig.getChinapnrReturnUril();
-    }
-
-    /**
-     * 企业用户绑定取得页面返回 URL
-     */
-    public static String getBindRetUrl() {
-        return paySystemConfig.getChinapnrBindreturnUrl();
-    }
-
-    
-    /**
-     * 取得商户后台应答地址
-     */
-    public static String getBgRetUrl() {
-        return paySystemConfig.getChinapnrCallBack();
-    }
+//    /**
+//     * 取得页面返回 URL
+//     */
+//    public static String getRetUrl() {
+//        return paySystemConfig.getChinapnrReturnUril();
+//    }
+//
+//    /**
+//     * 企业用户绑定取得页面返回 URL
+//     */
+//    public static String getBindRetUrl() {
+//        return paySystemConfig.getChinapnrBindreturnUrl();
+//    }
+//
+//
+//    /**
+//     * 取得商户后台应答地址
+//     */
+//    public static String getBgRetUrl() {
+//        return paySystemConfig.getChinapnrCallBack();
+//    }
 
     /**
      * 设置UUID
@@ -245,7 +246,7 @@ public class ChinapnrUtil {
      * @param bean
      * @param id 
      */
-    public static String setUUID(ChinapnrBean bean, long id) {
+   /* public static String setUUID(ChinapnrBean bean, long id) {
         MerPriv merPrivPo = bean.getMerPrivPo();
         if (null == merPrivPo) {
             merPrivPo = new MerPriv();
@@ -262,12 +263,12 @@ public class ChinapnrUtil {
         return merPriv;
     }
 
-    /**
+    *//**
      * 设置UUID
      *
      * @param bean
      * @param mongId
-     */
+     *//*
     public static String setUUID(ChinapnrBean bean, String mongId) {
         MerPriv merPrivPo = bean.getMerPrivPo();
         if (null == merPrivPo) {
@@ -285,19 +286,19 @@ public class ChinapnrUtil {
         return merPriv;
     }
 
-    /**
+    *//**
      * 取得UUID
      *
      * @param bean
      * @return
-     */
+     *//*
     public static String getUUID(ChinapnrBean bean) {
         String uuid = bean.getMerPriv();
         bean.setMerPriv("");
         bean.set(ChinaPnrConstant.PARAM_MERPRIV, "");
         // 取得商户私有域
         return uuid;
-    }
+    }*/
 
     public static void main(String[] args) {
         ChinapnrBean bean = new ChinapnrBean();
