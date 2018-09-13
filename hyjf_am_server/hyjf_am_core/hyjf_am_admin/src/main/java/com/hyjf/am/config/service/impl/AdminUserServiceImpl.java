@@ -53,8 +53,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Autowired
     AdminAndRoleMapper adminAndRoleMapper;
     @Autowired
-    ROaDepartmentMapper rOaDepartmentMapper;
-    @Autowired
     AdminRoleMapper adminRoleMapper;
     
     /**
@@ -300,13 +298,6 @@ public class AdminUserServiceImpl implements AdminUserService {
 		}
 	}
 
-	@Override
-	public List<ROaDepartment> getDepartmentList() {
-		ROaDepartmentExample example = new ROaDepartmentExample();
-		example.createCriteria().andNameNotLike("%居间人%").andNameNotLike("%借款人%").andNameNotLike("%无主单%");
-		example.setOrderByClause(" pid, sort ");
-		return rOaDepartmentMapper.selectByExample(example);
-	}
 
 	@Override
 	public List<AdminRole> getAdminRoleList() {

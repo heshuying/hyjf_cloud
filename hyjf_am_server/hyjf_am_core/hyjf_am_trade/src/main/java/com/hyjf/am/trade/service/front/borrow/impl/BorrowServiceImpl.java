@@ -608,6 +608,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria.andVerifyStatusEqualTo(3);
         criteria.andOntimeGreaterThan(0);
         criteria.andOntimeLessThan(nowtime);
+        List<Borrow> list = borrowMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
         return null;
     }
 

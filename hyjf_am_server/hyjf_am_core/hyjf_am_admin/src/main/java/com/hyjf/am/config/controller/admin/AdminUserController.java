@@ -15,6 +15,7 @@ import com.hyjf.am.config.service.AdminUserService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUserResponse;
 import com.hyjf.am.resquest.config.AdminRequest;
+import com.hyjf.am.user.service.admin.adminuser.DepartmentService;
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.ROaDepartmentVO;
@@ -33,6 +34,8 @@ import com.hyjf.common.validator.Validator;
 public class AdminUserController {
 	@Autowired
 	private AdminUserService adminService;
+	@Autowired
+	private DepartmentService baseService;
 
 	/**
 	 * 画面查询
@@ -65,6 +68,7 @@ public class AdminUserController {
 					adminRequest.getPageSize());
 			adminCustomize.setLimitStart(paginator.getOffset());
 			adminCustomize.setLimitEnd(paginator.getLimit());
+			adminCustomize.setDelFlag(0);
 			recordList = this.adminService.getRecordList(adminCustomize);
 			ar.setResultList(CommonUtils.convertBeanList(recordList, AdminCustomizeVO.class));
 			return ar;
@@ -107,7 +111,7 @@ public class AdminUserController {
 
 		// 设置部门列表
 		bean.setDepartmentList(
-				CommonUtils.convertBeanList(this.adminService.getDepartmentList(), ROaDepartmentVO.class));
+				CommonUtils.convertBeanList(this.baseService.getDepartmentList(), ROaDepartmentVO.class));
 		// 设置角色列表
 		bean.setAdminRoleList(CommonUtils.convertBeanList(this.adminService.getAdminRoleList(), AdminRoleVO.class));
 
