@@ -681,6 +681,14 @@ public interface AmTradeClient {
      */
     BorrowVO getBorrowByNid(String borrowId);
 
+
+    /**
+     * 获取正确的额borrowVo对象
+     * @author zhangyk
+     * @date 2018/9/13 17:35
+     */
+    RightBorrowVO getRightBorrowByNid(String borrowId) ;
+
     /**
      * 投资之前插入tmp表
      * @param request
@@ -1813,6 +1821,13 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateBorrowByBorrowNid(BorrowVO borrow);
+
+    /**
+     * 更新借款主表
+     * @author zhangyk
+     * @date 2018/9/13 17:39
+     */
+    boolean updateRightBorrowByBorrowNid(RightBorrowVO borrow);
 
     /**
      * 获取系统配置 add by liushouyi

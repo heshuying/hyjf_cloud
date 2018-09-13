@@ -15,8 +15,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
+import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
-import com.hyjf.am.vo.admin.NifaFieldDefinitionVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -49,6 +49,9 @@ public class BorrowController extends BaseController {
 
 	@Autowired
 	BorrowService borrowService;
+
+	@Autowired
+	BorrowStyleService borrowStyleService;
 
 	/**
 	 * 根据项目类型，期限，获取借款利率
@@ -183,6 +186,21 @@ public class BorrowController extends BaseController {
 		Borrow borrow = borrowService.getBorrow(borrowId);
 		if (Validator.isNotNull(borrow)){
 			response.setResult(CommonUtils.convertBean(borrow,BorrowVO.class));
+		}
+		return response;
+	}
+
+	/**
+	 * 获取正确的borrowvo
+	 * @author zhangyk
+	 * @date 2018/9/13 17:28
+	 */
+	@GetMapping("/getRightBorrowByNid/{borrowId}")
+	public RightBorrowResponse getRightBorrowByNid(@PathVariable String borrowId){
+		RightBorrowResponse response = new RightBorrowResponse();
+		Borrow borrow = borrowService.getBorrow(borrowId);
+		if (Validator.isNotNull(borrow)){
+			response.setResult(CommonUtils.convertBean(borrow,RightBorrowVO.class));
 		}
 		return response;
 	}
@@ -378,6 +396,22 @@ public class BorrowController extends BaseController {
 		}
 		return response;
 	}
+
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+	@GetMapping("/getBorrowStyle/{borrowStyle}")
+    public BorrowStyleResponse getBorrowStyle(@PathVariable String borrowStyle){
+        BorrowStyleResponse response = new BorrowStyleResponse();
+		BorrowStyle bs=borrowStyleService.getBorrowStyle(borrowStyle);
+		if (Validator.isNotNull(bs)){
+			response.setResult(CommonUtils.convertBean(bs,BorrowStyleVO.class));
+		}
+		return response;
+
+    }
 
 
 }
