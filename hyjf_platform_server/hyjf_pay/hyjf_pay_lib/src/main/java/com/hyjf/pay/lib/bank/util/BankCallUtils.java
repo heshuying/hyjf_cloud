@@ -58,7 +58,7 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static ModelAndView callApi(BankCallBean bean) throws Exception {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		try {
@@ -113,7 +113,7 @@ public class BankCallUtils implements Serializable {
 	}
 
 	public static Map<String, Object> callApiMap(BankCallBean bean) throws Exception {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		try {
 			// 取出调用汇付接口的url
@@ -179,7 +179,7 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static BankCallBean callApiBg(BankCallBean bean) {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		BankCallBean ret = null;
 		try {
 			// bean转换成参数

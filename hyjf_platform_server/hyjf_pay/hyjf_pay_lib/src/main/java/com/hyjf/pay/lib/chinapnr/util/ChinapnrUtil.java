@@ -57,7 +57,7 @@ public class ChinapnrUtil {
     @SuppressWarnings({ "unchecked" })
     public static ModelAndView callApi(ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
-        log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        log.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
 
         // 跳转页面
         ModelAndView modelAndView = new ModelAndView(SEND_JSP);
@@ -103,7 +103,7 @@ public class ChinapnrUtil {
     @SuppressWarnings({ "unchecked" })
     public static Map<String, Object> callApiMap(ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
-        log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        log.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         try {
             // 取出调用汇付接口的url
             String payurl = urlSystemConfig.getPayUrl();
@@ -148,7 +148,7 @@ public class ChinapnrUtil {
      */
     public static ChinapnrBean callApiBg(ChinapnrBean bean) {
         String methodName = "callApiBg";
-        log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        log.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
 
         ChinapnrBean ret = null;
         try {
@@ -191,7 +191,7 @@ public class ChinapnrUtil {
      */
     public static JSONObject callApiBgForYuE(ChinapnrBean bean) {
         String methodName = "callApiBg";
-        log.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        log.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         JSONObject jsonObject = new JSONObject();
         try {
             // bean转换成参数
@@ -218,87 +218,6 @@ public class ChinapnrUtil {
         return jsonObject;
     }
 
-//    /**
-//     * 取得页面返回 URL
-//     */
-//    public static String getRetUrl() {
-//        return paySystemConfig.getChinapnrReturnUril();
-//    }
-//
-//    /**
-//     * 企业用户绑定取得页面返回 URL
-//     */
-//    public static String getBindRetUrl() {
-//        return paySystemConfig.getChinapnrBindreturnUrl();
-//    }
-//
-//
-//    /**
-//     * 取得商户后台应答地址
-//     */
-//    public static String getBgRetUrl() {
-//        return paySystemConfig.getChinapnrCallBack();
-//    }
-
-    /**
-     * 设置UUID
-     *
-     * @param bean
-     * @param id 
-     */
-   /* public static String setUUID(ChinapnrBean bean, long id) {
-        MerPriv merPrivPo = bean.getMerPrivPo();
-        if (null == merPrivPo) {
-            merPrivPo = new MerPriv();
-        }
-        merPrivPo.setUuid(String.valueOf(id));
-        String merPriv = "";
-        try {
-            merPriv = URLEncoder.encode(JSON.toJSONString(merPrivPo), CustomConstants.UTF8);
-            bean.setMerPriv(merPriv);
-            bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return merPriv;
-    }
-
-    *//**
-     * 设置UUID
-     *
-     * @param bean
-     * @param mongId
-     *//*
-    public static String setUUID(ChinapnrBean bean, String mongId) {
-        MerPriv merPrivPo = bean.getMerPrivPo();
-        if (null == merPrivPo) {
-            merPrivPo = new MerPriv();
-        }
-        merPrivPo.setUuid(String.valueOf(mongId));
-        String merPriv = "";
-        try {
-            merPriv = URLEncoder.encode(JSON.toJSONString(merPrivPo), CustomConstants.UTF8);
-            bean.setMerPriv(merPriv);
-            bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return merPriv;
-    }
-
-    *//**
-     * 取得UUID
-     *
-     * @param bean
-     * @return
-     *//*
-    public static String getUUID(ChinapnrBean bean) {
-        String uuid = bean.getMerPriv();
-        bean.setMerPriv("");
-        bean.set(ChinaPnrConstant.PARAM_MERPRIV, "");
-        // 取得商户私有域
-        return uuid;
-    }*/
 
     public static void main(String[] args) {
         ChinapnrBean bean = new ChinapnrBean();
@@ -314,17 +233,5 @@ public class ChinapnrUtil {
         }
     }
 
-    public static void setUUIDFeeFrom(ChinapnrBean bean) {
-        String temp = bean.getMerPriv();
-        // 设置商户私有域
-        String uuid = bean.getUuid();
-        if (!"".equals(temp)) {
-            bean.setMerPriv(uuid + "," + temp);
-            bean.set(ChinaPnrConstant.PARAM_MERPRIV, uuid + "," + temp);
-        } else {
-            bean.setMerPriv(uuid);
-            bean.set(ChinaPnrConstant.PARAM_MERPRIV, uuid);
-        }
-    }
 
 }
