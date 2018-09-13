@@ -190,6 +190,21 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 获取正确的borrowvo
+	 * @author zhangyk
+	 * @date 2018/9/13 17:28
+	 */
+	@GetMapping("/getRightBorrowByNid/{borrowId}")
+	public RightBorrowResponse getRightBorrowByNid(@PathVariable String borrowId){
+		RightBorrowResponse response = new RightBorrowResponse();
+		Borrow borrow = borrowService.getBorrow(borrowId);
+		if (Validator.isNotNull(borrow)){
+			response.setResult(CommonUtils.convertBean(borrow,RightBorrowVO.class));
+		}
+		return response;
+	}
+
 	@GetMapping("/getBorrowInfoByNid/{borrowNid}")
 	public BorrowInfoResponse getBorrowInfoByNid(@PathVariable String borrowNid) {
 		BorrowInfoResponse response = new BorrowInfoResponse();

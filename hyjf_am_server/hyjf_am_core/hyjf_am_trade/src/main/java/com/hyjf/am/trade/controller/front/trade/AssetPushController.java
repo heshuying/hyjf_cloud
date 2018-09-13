@@ -10,13 +10,10 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.BorrowBailVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
@@ -235,6 +232,22 @@ public class AssetPushController extends BaseController {
         if (borrowVO != null){
             Borrow borrow = new Borrow();
             BeanUtils.copyProperties(borrowVO, borrow);
+            result = this.assetPushService.updateBorrowByBorrowNid(borrow);
+        }
+        return new IntegerResponse(result);
+    }
+
+    /**
+     * 更新borrow对象
+     * @author zhangyk
+     * @date 2018/9/13 17:36
+     */
+    @RequestMapping("/updateRightBorrowByBorrowNid")
+    public IntegerResponse updateBorrowByBorrowNid(@RequestBody RightBorrowVO rightBorrowVO){
+        Integer result = -1;
+        if (rightBorrowVO != null){
+            Borrow borrow = new Borrow();
+            BeanUtils.copyProperties(rightBorrowVO, borrow);
             result = this.assetPushService.updateBorrowByBorrowNid(borrow);
         }
         return new IntegerResponse(result);

@@ -1652,6 +1652,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 获取正确的borrowVo
+     * @author zhangyk
+     * @date 2018/9/13 17:33
+     */
+    @Override
+    public RightBorrowVO getRightBorrowByNid(String borrowId) {
+        String url = "http://AM-TRADE/am-trade/borrow/getRightBorrowByNid/"+borrowId;
+        RightBorrowResponse response = restTemplate.getForEntity(url,RightBorrowResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 投资之前插入tmp表
      *
      * @param request
@@ -4294,6 +4309,18 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateBorrowByBorrowNid(BorrowVO borrow) {
         String url = urlBase + "/assetPush/update_borrow_by_borrow_nid";
+        IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
+        return result.getResultInt() > 0 ? true : false;
+    }
+
+    /**
+     * 更新借款主表
+     * @author zhangyk
+     * @date 2018/9/13 17:38
+     */
+    @Override
+    public boolean updateRightBorrowByBorrowNid(RightBorrowVO borrow) {
+        String url = urlBase + "/assetPush/updateRightBorrowByBorrowNid";
         IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
         return result.getResultInt() > 0 ? true : false;
     }

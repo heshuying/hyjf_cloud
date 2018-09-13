@@ -660,7 +660,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         // 当前时间
         int nowTime = GetDate.getNowTime10();
-        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(borrowNid);
         // DB验证
         // 有投资金额发生异常
         BigDecimal zero = new BigDecimal("0");
@@ -677,10 +677,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 状态
         borrow.setStatus(2);
         // 初审时间
-        borrow.setVerifyTime(String.valueOf(nowTime));
+        borrow.setVerifyTime(nowTime);
         // 剩余可投资金额
         borrow.setBorrowAccountWait(borrow.getAccount());
-        boolean flag = amTradeClient.updateBorrowByBorrowNid(borrow);
+        boolean flag = amTradeClient.updateRightBorrowByBorrowNid(borrow);
         if (flag) {
             // 写入redis
             RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
