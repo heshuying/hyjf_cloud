@@ -4,7 +4,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -40,14 +40,14 @@ public interface AmBorrowClient {
      * 检索正在还款中的标的
      * @return
      */
-    List<BorrowVO> selectBorrowList();
+    List<BorrowAndInfoVO> selectBorrowList();
 
     /**
      * 获取borrow对象
      * @param borrowId
      * @return
      */
-    BorrowVO getBorrowByNid(String borrowId);
+    BorrowAndInfoVO getBorrowByNid(String borrowId);
 
 
     /**

@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -87,9 +87,9 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 * @return
 	 */
 	@Override
-	public BorrowVO getBorrowByNid(String borrowNid) {
+	public BorrowAndInfoVO getBorrowByNid(String borrowNid) {
 		// 借款详情
-		BorrowVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
         if (borrow != null) {
             return borrow;
         }

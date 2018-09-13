@@ -227,7 +227,7 @@ public class AssetPushController extends BaseController {
      * @return
      */
     @RequestMapping("/update_borrow_by_borrow_nid")
-    public IntegerResponse selectBorrowByBorrowNid(@RequestBody BorrowVO borrowVO){
+    public IntegerResponse selectBorrowByBorrowNid(@RequestBody BorrowAndInfoVO borrowVO){
         Integer result = -1;
         if (borrowVO != null){
             Borrow borrow = new Borrow();

@@ -53,7 +53,7 @@ public class NifaContractEssenceMessageServiceImpl extends BaseServiceImpl imple
      * @return
      */
     @Override
-    public BorrowVO selectBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid) {
         return amTradeClient.getBorrowByNid(borrowNid);
     }
 

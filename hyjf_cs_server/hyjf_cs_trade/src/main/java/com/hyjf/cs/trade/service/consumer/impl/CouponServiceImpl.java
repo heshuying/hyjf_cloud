@@ -8,7 +8,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderUsedVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -446,7 +446,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param bean
      */
     @Override
-    public void borrowTenderCouponUse(String couponGrantId, BorrowVO borrow, BankCallBean bean) {
+    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean) {
         boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY, 300);
         // TODO: 2018/6/27  计划优惠券使用也会被锁定
         if (!isUsed) {

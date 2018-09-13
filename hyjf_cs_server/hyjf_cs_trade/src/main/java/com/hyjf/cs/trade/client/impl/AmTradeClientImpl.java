@@ -321,7 +321,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         String url = urlBase + "borrow/getBorrow/" + borrowNid;
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
@@ -1626,7 +1626,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public List<BorrowVO> selectBorrowList() {
+    public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
                 BorrowResponse.class).getBody();
@@ -1642,7 +1642,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BorrowVO getBorrowByNid(String borrowId) {
+    public BorrowAndInfoVO getBorrowByNid(String borrowId) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
         BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
         if (response!=null){
@@ -4307,7 +4307,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public boolean updateBorrowByBorrowNid(BorrowVO borrow) {
+    public boolean updateBorrowByBorrowNid(BorrowAndInfoVO borrow) {
         String url = urlBase + "/assetPush/update_borrow_by_borrow_nid";
         IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
         return result.getResultInt() > 0 ? true : false;
@@ -4364,7 +4364,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public List<BorrowVO> selectOverdueBorrowList() {
+    public List<BorrowAndInfoVO> selectOverdueBorrowList() {
         String url = "http://AM-TRADE/am-trade/borrow/selectOverdueBorrowList";
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
@@ -4425,7 +4425,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/9/3 16:41
      */
     @Override
-    public BorrowVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
+    public BorrowAndInfoVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
         String url = "http://AM-TRADE/am-trade/borrow/getByNidAndNowTime/"+borrowNid + "/" + nowTime;
         BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
         if (Response.isSuccess(response)){

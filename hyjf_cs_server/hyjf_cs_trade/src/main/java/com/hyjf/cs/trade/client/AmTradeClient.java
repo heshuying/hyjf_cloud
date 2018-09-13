@@ -112,7 +112,7 @@ public interface AmTradeClient {
      */
     HjhUserAuthVO getUserAuthByUserId(Integer userId);
 
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
      * 取得自动投资用加入计划列表
@@ -672,14 +672,14 @@ public interface AmTradeClient {
      * 检索正在还款中的标的
      * @return
      */
-    List<BorrowVO> selectBorrowList();
+    List<BorrowAndInfoVO> selectBorrowList();
 
     /**
      * 获取borrow对象
      * @param borrowId
      * @return
      */
-    BorrowVO getBorrowByNid(String borrowId);
+    BorrowAndInfoVO getBorrowByNid(String borrowId);
 
 
     /**
@@ -1820,7 +1820,7 @@ public interface AmTradeClient {
      * @param borrow
      * @return
      */
-    boolean updateBorrowByBorrowNid(BorrowVO borrow);
+    boolean updateBorrowByBorrowNid(BorrowAndInfoVO borrow);
 
     /**
      * 更新借款主表
@@ -1870,7 +1870,7 @@ public interface AmTradeClient {
      * 获取逾期的标的
      * @return
      */
-    List<BorrowVO> selectOverdueBorrowList();
+    List<BorrowAndInfoVO> selectOverdueBorrowList();
 
     /**
      * 计划锁定
@@ -1902,7 +1902,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/9/3 16:40
      */
-    BorrowVO getBorrowByNidAndNowTime(String borrowNid,Integer nowTime);
+    BorrowAndInfoVO getBorrowByNidAndNowTime(String borrowNid,Integer nowTime);
 
     /**
      * 查询提现订单号数量

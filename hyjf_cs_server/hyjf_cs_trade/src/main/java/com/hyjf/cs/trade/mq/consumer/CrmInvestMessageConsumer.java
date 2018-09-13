@@ -8,7 +8,7 @@ import com.hyjf.am.bean.crmtender.HjhAccedeMsgBean;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.vo.task.autoissue.AutoIssueMsg;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -147,7 +147,7 @@ public class CrmInvestMessageConsumer extends Consumer {
         if (obj instanceof BorrowTenderMsgBean) {
             BorrowTenderMsgBean bt = (BorrowTenderMsgBean) obj;
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
-            BorrowVO borrowInfo = amTradeClient.getBorrowByNid(bt.getBorrowNid());
+            BorrowAndInfoVO borrowInfo = amTradeClient.getBorrowByNid(bt.getBorrowNid());
             String borrowStyle = borrowInfo.getBorrowStyle();
 
             map.put("idNum", userInfo.getIdcard());

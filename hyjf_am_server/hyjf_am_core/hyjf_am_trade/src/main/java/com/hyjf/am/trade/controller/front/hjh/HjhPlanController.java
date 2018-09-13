@@ -19,7 +19,7 @@ import com.hyjf.am.trade.dao.model.customize.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.DebtPlanBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
@@ -174,7 +174,7 @@ public class HjhPlanController extends BaseController {
     @RequestMapping("/getPlanBorrowList")
     public BorrowResponse getPlanBorrowList(@RequestBody Map<String,Object> params){
         BorrowResponse response = new BorrowResponse();
-        List<BorrowVO> list =  hjhPlanService.getPlanBorrowList(params);
+        List<BorrowAndInfoVO> list =  hjhPlanService.getPlanBorrowList(params);
         response.setResultList(list);
         return response;
     }

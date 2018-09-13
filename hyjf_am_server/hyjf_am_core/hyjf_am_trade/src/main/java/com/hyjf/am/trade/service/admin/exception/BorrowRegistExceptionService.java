@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public interface BorrowRegistExceptionService {
      * @param
      * @return
      */
-    BorrowVO searchBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid);
 
     /**
      * 根据受托支付userId查询stAccountId
@@ -71,7 +71,7 @@ public interface BorrowRegistExceptionService {
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type);
+    Boolean updateBorrowRegistByType(BorrowAndInfoVO borrowVO,Integer type);
 
     /**
      * 更新标的资产信息如果关联计划的话
@@ -79,5 +79,5 @@ public interface BorrowRegistExceptionService {
      * @param status 状态  受托支付传4，非受托支付传5
      * @return
      */
-    Boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+    Boolean updateBorrowAsset(BorrowAndInfoVO borrowVO,Integer status);
 }

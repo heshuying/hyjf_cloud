@@ -1,10 +1,10 @@
 package com.hyjf.am.vo.task.issuerecover;
 
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.io.Serializable;
 
-public class BorrowWithBLOBs extends BorrowVO implements Serializable {
+public class BorrowWithBLOBs extends BorrowAndInfoVO implements Serializable {
     private String accountContents;
 
     private String borrowContents;
