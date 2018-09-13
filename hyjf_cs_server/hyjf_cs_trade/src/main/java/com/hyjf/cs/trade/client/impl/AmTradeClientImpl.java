@@ -4656,4 +4656,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return false;
     }
+
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId) {
+        String url = urlBase + "projectlist/app/getIncreaseInterestInvestByOrdId/" + orderId;
+        IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvestVO getIncreaseInterestInvestByTenderNid(String tenderNid) {
+        String url = urlBase + "projectlist/app/getIncreaseInterestInvestByTenderNid/" + tenderNid;
+        IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResult();
+        }
+        return null;
+    }
 }

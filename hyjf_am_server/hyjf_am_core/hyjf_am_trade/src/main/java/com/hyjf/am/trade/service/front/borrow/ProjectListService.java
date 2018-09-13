@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.front.borrow;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.AppTenderCreditInvestListCustomize;
@@ -170,7 +171,20 @@ public interface ProjectListService {
     List<AppTenderCreditInvestListCustomize> searchTenderCreditInvestList(Map<String,Object> params);
 
     List<BorrowCredit> selectBorrowCreditByNid(String transferId);
-
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    IncreaseInterestInvest getIncreaseInterestInvestByOrdId(String orderId);
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    IncreaseInterestInvest getIncreaseInterestInvestByTenderNid(String tenderNid);
     // --------------------------app end --------------------------------------------------
 
     // -----------------------------wechat  start ------------------------------------------

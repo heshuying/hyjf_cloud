@@ -2035,4 +2035,20 @@ public interface AmTradeClient {
      * @return
      */
     boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId);
+
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    IncreaseInterestInvestVO getIncreaseInterestInvestByTenderNid(String tenderNid);
 }

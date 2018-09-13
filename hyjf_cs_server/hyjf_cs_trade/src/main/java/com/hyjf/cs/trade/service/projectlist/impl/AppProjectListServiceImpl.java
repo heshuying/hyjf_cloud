@@ -254,6 +254,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 borrowProjectInfoBean.setTag("");
             }
             borrowProjectInfoBean.setRepayStyle(borrow.getRepayStyle());
+
+            /**
+             * 产品加息
+             */
+            BigDecimal borrowExtraYield = new BigDecimal(borrow.getBorrowExtraYield()==null?"0":borrow.getBorrowExtraYield());
+            if (Validator.isIncrease(Integer.valueOf(borrow.getIncreaseInterestFlag()), borrowExtraYield)) {
+                borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
+            }else{
+                borrowProjectInfoBean.setBorrowExtraYield("");
+            }
+
             jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
