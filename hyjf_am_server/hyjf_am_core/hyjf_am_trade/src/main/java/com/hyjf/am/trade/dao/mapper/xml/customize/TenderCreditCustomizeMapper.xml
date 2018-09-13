@@ -218,11 +218,9 @@
 		FROM
 			ht_borrow_credit hbc
 		<where>
+			to_days(hbc.create_time) = to_days(now())
 			<if test="userId != null and userId != '' and userId != 0">
 				AND hbc.credit_user_id = #{userId}
-			</if>
-			<if test="nowDate != null and nowDate != '' and nowDate !=0">
-				AND hbc.create_date = #{nowDate}
 			</if>
 		</where>
 	</select>
