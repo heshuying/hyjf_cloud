@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1489,7 +1489,7 @@
         </table>
 
         <table tableName="ht_admin_permissions" domainObjectName="AdminPermissions">
-            <generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />
+            <!--<generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />-->
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
