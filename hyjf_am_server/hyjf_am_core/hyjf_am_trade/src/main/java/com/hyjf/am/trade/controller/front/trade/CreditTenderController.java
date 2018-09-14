@@ -217,13 +217,13 @@ public class CreditTenderController extends BaseController {
      * @return
      */
     @PostMapping("/save_credit_tender")
-    public Integer saveCreditTender(@RequestBody @Valid BorrowCreditVO request){
-        try{
-            bankCreditTenderService.saveCreditTender(request);
-            return 1;
-        }catch (Exception e){
-            return 0;
-        }
+    public IntegerResponse saveCreditTender(@RequestBody @Valid BorrowCreditVO request){
+        IntegerResponse response = new IntegerResponse();
+
+        Integer creditNid =  bankCreditTenderService.saveCreditTender(request);
+        response.setResultInt(creditNid);
+        return response;
+
     }
 
     /**

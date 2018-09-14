@@ -355,7 +355,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(HttpServletRequest request,  @RequestBody String mobile) {
+    public AdminResult checkAction(HttpServletRequest request,  @RequestParam (value = "mobile")  String mobile) {
         // 检查手机号码唯一性
         int cnt = userCenterService.countUserByMobile(mobile);
         if (cnt > 0) {

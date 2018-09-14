@@ -1726,12 +1726,16 @@ public class BorrowCommonController extends BaseController {
 		List<BorrowCustomizeVO> vo = bcr.getResultList();
 		List<BorrowCustomizeVO> vo2=new ArrayList<BorrowCustomizeVO>();
 		Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
-		for (BorrowCustomizeVO borrowCustomizeVO : vo) {
-			BorrowCustomizeVO bvo=new BorrowCustomizeVO();
-			bvo=borrowCustomizeVO;
-			bvo.setStatus(map.get(bvo.getStatus()));
-			vo2.add(bvo);
+		bcr.setBs(map);
+		if(vo!=null) {
+			for (BorrowCustomizeVO borrowCustomizeVO : vo) {
+				BorrowCustomizeVO bvo=new BorrowCustomizeVO();
+				bvo=borrowCustomizeVO;
+				bvo.setStatus(map.get(bvo.getStatus()));
+				vo2.add(bvo);
+			}
 		}
+
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
 		bcr.setResultList(vo2);
 		return new AdminResult<BorrowCustomizeResponse>(bcr);

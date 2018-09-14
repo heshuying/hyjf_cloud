@@ -385,7 +385,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
     @Override
     public List<NifaReportLog> selectNifaReportLogDownloadPath() {
         NifaReportLogExample example = new NifaReportLogExample();
-        example.createCriteria().andFeedbackResultNotEqualTo(1);
+        example.createCriteria().andFeedbackResultNotEqualTo(1).andUploadTimeLessThan(GetDate.getDayStart10(new Date()));
         List<NifaReportLog> nifaReportLogList = this.nifaReportLogMapper.selectByExample(example);
         if (null != nifaReportLogList && nifaReportLogList.size() > 0) {
             return nifaReportLogList;

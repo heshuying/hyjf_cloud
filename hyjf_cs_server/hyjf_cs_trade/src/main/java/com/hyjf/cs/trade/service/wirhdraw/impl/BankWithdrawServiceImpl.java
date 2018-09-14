@@ -207,6 +207,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             BigDecimal feeAmt = new BigDecimal(fee);
                             // 总的交易金额
                             BigDecimal total = transAmt.add(feeAmt);
+                            logger.info("总的交易金额:"+total+";提现手续费:"+feeAmt+";transAmt:"+transAmt);
                             //构建提现保存信息
                             BankWithdrawBeanRequest bankWithdrawBeanRequest=createBankWithdrawBeanRequest(accountWithdraw,transAmt,fee,feeAmt,total,userId,ordId,nowTime,bean.getAccountId(),params.get("ip"));
 
@@ -788,7 +789,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
-        successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;//
+        successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;
         // 路由代码
         String routeCode = "";
         // 调用汇付接口(4.2.2 用户绑卡接口)
