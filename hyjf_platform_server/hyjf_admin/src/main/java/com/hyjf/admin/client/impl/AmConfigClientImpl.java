@@ -1002,6 +1002,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    @Override
+    public CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest) {
+        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getzhichiinit", contentHelpBeanRequest,
+                CategoryResponse.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
 
     @Override
     public ContentEnvironmentResponse searchAction(ContentEnvironmentRequestBean requestBean) {
