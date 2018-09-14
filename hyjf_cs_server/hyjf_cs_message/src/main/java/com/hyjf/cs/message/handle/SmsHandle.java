@@ -1,30 +1,29 @@
 package com.hyjf.cs.message.handle;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.SmsNoticeConfigVO;
+import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.mc.SmsLogDao;
-import com.hyjf.am.vo.config.SmsNoticeConfigVO;
-import com.hyjf.am.vo.config.SmsTemplateVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
-import com.hyjf.common.util.CustomConstants;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class SmsHandle {
@@ -127,16 +126,21 @@ public class SmsHandle {
 			parmMap.put("message", title + messageStr);
 		}
 
-		String result = HttpDeal.post(smsSendUrl, parmMap).trim();
-		logger.info("短信发送结果: {}", result);
-		if (StringUtils.isBlank(result)) {
-			logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(parmMap));
-			return 0;
+		String result = null;
+		int status = 0;
+		if (!envTest) {
+			result = HttpDeal.post(smsSendUrl, parmMap).trim();
+			logger.info("短信发送结果: {}", result);
+			if (StringUtils.isBlank(result)) {
+				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(parmMap));
+				return 0;
+			}
+			XStream xStream = new XStream();
+			xStream.alias("response", SmsResponse.class);
+			status = ((SmsResponse) xStream.fromXML(result)).getError();
+		} else {
+			status = 1;
 		}
-
-		XStream xStream = new XStream();
-		xStream.alias("response", SmsResponse.class);
-		int status = ((SmsResponse) xStream.fromXML(result)).getError();
 
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);

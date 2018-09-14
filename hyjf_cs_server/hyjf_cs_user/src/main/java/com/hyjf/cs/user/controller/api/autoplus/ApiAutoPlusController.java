@@ -4,19 +4,18 @@
 package com.hyjf.cs.user.controller.api.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.bean.ApiAutoPlusResultBean;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,10 +35,15 @@ import java.util.Map;
 
 @Api(tags = "api端-用户授权自动投资自动授权接口")
 @RestController
-@RequestMapping("/hyjf-api/user/auto")
+@RequestMapping("/hyjf-api/server/autoPlus")
 public class ApiAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiAutoPlusController.class);
+
+    /**
+     * 请求失败页面路径 /bank/user/trusteePay/error
+     */
+    public static final String PATH_TRUSTEE_PAY_ERROR = "/bank/user/trusteePay/error";
 
     @Autowired
     AutoPlusService autoPlusService;
@@ -51,34 +54,13 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/sendcode", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sendcode.do", produces = "application/json; charset=utf-8")
     @ApiOperation(value = "前导发送短信验证码",notes = "前导发送短信验证码")
-    public ApiResult sendCode(@RequestHeader(value = "userId") Integer userId,@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
+    public ApiAutoPlusResultBean sendCode(@RequestHeader(value = "userId") Integer userId,@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
-        ApiResult result = new ApiResult();
-        String mobile = autoPlusRequestBean.getMobile();
-        String channel = autoPlusRequestBean.getChannel();
-        String srvTxCode = autoPlusService.checkApiSmsParam(autoPlusRequestBean);
-        // 调用短信发送接口
-        BankCallBean bankBean = null;
-        try {
-            bankBean = autoPlusService.callSendCode(userId,mobile,srvTxCode, channel,null);
-        } catch (Exception e) {
-            logger.error("请求验证码接口发生异常", e);
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
-        CheckUtil.check(null!=bankBean,MsgEnum.STATUS_CE999999);
-        // 短信发送返回结果码
-        String retCode = bankBean.getRetCode();
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)
-                && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
-            logger.info("短信验证码发送失败，请稍后再试！");
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
-        if (Validator.isNull(bankBean.getSrvAuthCode()) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
-            logger.info("短信验证码发送失败，请稍后再试！");
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
+        ApiAutoPlusResultBean result = autoPlusService.sendCode(userId,autoPlusRequestBean);
+        result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+        result.setStatusDesc("发送短信验证码成功");
         return result;
     }
 
@@ -90,19 +72,31 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Return:
      */
     @ApiOperation(value = "自动投资授权", notes = "自动投资授权")
-    @PostMapping(value = "/userAuthInves", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
-        ApiResult<Object> result = new ApiResult<Object>();
-        Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
-        if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
-            Map<String,Object> resultMap = new HashMap<>();
-            resultMap.put("callBackForm", paramMap);
-            result.setData(resultMap);
+    @PostMapping(value = "/userAuthInves")
+    @ResponseBody
+    public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
+        ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
+        Map<String,Object> map  = autoPlusService.checkParam(payRequestBean,modelAndView,BankCallConstant.QUERY_TYPE_1);
+        if (null!=map.get("modelAndView")) {
+            return modelAndView;
         }else {
-            Map<String, Object> map = autoPlusService.apiUserAuth(ClientConstants.INVES_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
-            result.setData(map);
+            String smsSeq = map.get("smsSeq").toString();
+            UserVO user = (UserVO) map.get("user");
+            BankCallBean bean = autoPlusService.apiUserAuth(ClientConstants.INVES_AUTO_TYPE,smsSeq ,user, payRequestBean);
+            // 插入日志
+            autoPlusService.insertUserAuthLog(user, bean, 1, BankCallConstant.QUERY_TYPE_1);
+            try {
+                modelAndView = BankCallUtils.callApi(bean);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("调用银行接口失败:"+e.getMessage());
+                Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
+                payRequestBean.doNotify(params);
+                autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+                return modelAndView;
+            }
         }
-        return result;
+        return modelAndView;
     }
 
     /**
@@ -113,19 +107,30 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Return:
      */
     @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
-    @PostMapping(value = "/userAuthCredit", produces = "application/json; charset=utf-8")
-    public ApiResult<Object> userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
-        ApiResult<Object> result = new ApiResult<Object>();
-        Map<String, String> paramMap = autoPlusService.checkParam(payRequestBean);
-        if (ClientConstants.FAIL.equals(paramMap.get("isSuccess"))) {
-            Map<String,Object> resultMap = new HashMap<>();
-            resultMap.put("callBackForm", paramMap);
-            result.setData(resultMap);
+    @PostMapping(value = "/userCreditAuthInves.do", produces = "application/json; charset=utf-8")
+    public ModelAndView userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
+        ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
+        Map<String, Object> map = autoPlusService.checkParam(payRequestBean, modelAndView, BankCallConstant.QUERY_TYPE_2);
+        if (null!=map.get("modelAndView")) {
+            return modelAndView;
         }else {
-            Map<String,Object> map = autoPlusService.apiUserAuth(ClientConstants.CREDIT_AUTO_TYPE, paramMap.get("smsSeq"), payRequestBean);
-            result.setData(map);
+            String smsSeq = map.get("smsSeq").toString();
+            UserVO user = (UserVO) map.get("user");
+            BankCallBean bean = autoPlusService.apiUserAuth(ClientConstants.CREDIT_AUTO_TYPE,smsSeq ,user, payRequestBean);
+            // 插入日志
+            autoPlusService.insertUserAuthLog(user, bean, 1, BankCallConstant.QUERY_TYPE_2);
+            try {
+                modelAndView = BankCallUtils.callApi(bean);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("调用银行接口失败:"+e.getMessage());
+                Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
+                payRequestBean.doNotify(params);
+                autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+                return modelAndView;
+            }
         }
-        return result;
+        return modelAndView;
     }
 
     /**
@@ -137,15 +142,17 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Return:
      */
     @ApiOperation(value = "自动投资授权同步回调",notes = "自动投资授权同步回调")
-    @PostMapping(value = "/userAuthInvesReturn", produces = "application/json; charset=utf-8")
-    public ModelAndView userAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
+    @GetMapping(value = "/userAuthInvesReturn")
+    public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_1);
+        if (repwdResult.get("flag").equals("1")){
+            modelAndView.addObject("statusDesc", "自动债转授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+        }
         modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
-
     }
 
     /**
@@ -157,12 +164,15 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Return:
      */
     @ApiOperation(value = "自动债转授权同步回调",notes = "自动债转授权同步回调")
-    @PostMapping(value = "/userCreditAuthInvesReturn", produces = "application/json; charset=utf-8")
-    public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
+    @GetMapping(value = "/userCreditAuthInvesReturn")
+    public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_2);
+        if (repwdResult.get("flag").equals("1")){
+            modelAndView.addObject("statusDesc", "自动债转授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+        }
         modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
 
@@ -175,9 +185,9 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "异步回调",notes = "异步回调")
-    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
-    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
+    @ApiOperation(value = "授权自动投资异步回调",notes = "授权自动投资异步回调")
+    @PostMapping(value = "/userAuthInvesBgreturn")
+    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
@@ -191,9 +201,9 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "异步回调",notes = "异步回调")
-    @PostMapping(value = "/userCreditAuthInvesBgreturn", produces = "application/json; charset=utf-8")
-    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody @Valid  BankCallBean bean) {
+    @ApiOperation(value = "授权自动债转异步回调",notes = "授权自动债转异步回调")
+    @PostMapping(value = "/userCreditAuthInvesBgreturn")
+    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);

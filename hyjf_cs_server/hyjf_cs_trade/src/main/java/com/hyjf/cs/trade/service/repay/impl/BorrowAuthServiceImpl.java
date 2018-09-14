@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.service.repay.impl;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -75,7 +75,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
             throw  new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
-        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
         if(borrow == null){
             throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
@@ -120,7 +120,7 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
         // 交易成功跳转链接
         String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
 
-        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
         STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrow.getEntrustedUserId());
         UserInfoVO userInfoVO = amUserClient.findUsersInfoById(user.getUserId());
 

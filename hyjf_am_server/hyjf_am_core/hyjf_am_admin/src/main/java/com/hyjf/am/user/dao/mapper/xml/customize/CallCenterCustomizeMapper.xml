@@ -82,13 +82,13 @@
 		<!-- #有投资是在还款中 此处跨库关联 -->
 		AND EXISTS (
 		SELECT
-		  tender.user_id
+		  	tender.user_id
 		FROM
-		  ht_borrow_tender tender
+			hyjf_trade.ht_borrow_tender tender
 		JOIN
-		  ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
 		JOIN
-		  ht_user  hydu ON tender.user_id = hydu.user_id
+		  	ht_user  hydu ON tender.user_id = hydu.user_id
 		WHERE  borrow.`status` = 4
 		)
 		<if test="limitStart != null and limitSize !=null">
@@ -107,7 +107,7 @@
 		<!-- #关联用户信息 -->
 		JOIN ht_user_info info ON hydu.user_id = info.user_id 
 		<!-- #关联用户账户的信息 -->
-		JOIN ht_account  account ON account.user_id = hydu.user_id
+		JOIN hyjf_trade.ht_account  account ON account.user_id = hydu.user_id
 		WHERE
 			NOT EXISTS (
 				SELECT
@@ -127,11 +127,11 @@
 	    SELECT
 	      tender.user_id
 	    FROM
-	      ht_borrow_tender tender
+			hyjf_trade.ht_borrow_tender tender
 		JOIN
-	      ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
+			hyjf_trade.ht_borrow borrow ON tender.borrow_nid = borrow.borrow_nid
 		JOIN
-		  ht_user  hydu ON tender.user_id = hydu.user_id
+		  	ht_user  hydu ON tender.user_id = hydu.user_id
 	    WHERE  borrow.`status` = 4
 		) 
 		<!-- #累计投资金额≥5000 -->
@@ -139,7 +139,7 @@
 			SELECT
 				SUM(t.account)
 			FROM
-				ht_borrow_tender t
+				hyjf_trade.ht_borrow_tender t
 			WHERE
 				t.user_id = hydu.user_id
 		) <![CDATA[>=]]> 5000

@@ -23,8 +23,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 资金服务:BaseService实现类
@@ -473,6 +476,155 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         List<BorrowConfig> borrowConfigList = this.borrowConfigMapper.selectByExample(example);
         if (null != borrowConfigList && borrowConfigList.size() > 0 ) {
             return borrowConfigList.get(0).getConfigValue();
+        }
+        return null;
+    }
+
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    @Override
+    public boolean writeZip(StringBuffer sb, String zipName) {
+        try {
+            String[] files = sb.toString().split(",");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
+            ZipOutputStream zos = new ZipOutputStream(os);
+            byte[] buf = new byte[8192];
+            int len;
+            for (int i = 0; i < files.length; i++) {
+                File file = new File(files[i]);
+                if (!file.isFile()) {
+                    continue;
+                }
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                while ((len = bis.read(buf)) > 0) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }
+            zos.closeEntry();
+            zos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 获取还款信息详情
+     *
+     * @param borrowNid
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    @Override
+    public BorrowRepay selectBorrowRepay(String borrowNid) {
+        BorrowRepayExample example = new BorrowRepayExample();
+        BorrowRepayExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> borrowRepayList = this.borrowRepayMapper.selectByExample(example);
+        if (null != borrowRepayList && borrowRepayList.size() > 0) {
+            return borrowRepayList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户投资信息
+     *
+     * @param borrowNid
+     * @return
+     * @author PC-LIUSHOUYI
+     */
+    @Override
+    public List<BorrowTender> selectBorrowTenderListByBorrowNid(String borrowNid) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
+        if (null == borrowTenderList || borrowTenderList.size() <= 0) {
+            return null;
+        }
+        return borrowTenderList;
+    }
+
+    /**
+     * 根据订单号获取用户放款信息
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public BorrowRecover selectBorrowRecoverByNid(String nid) {
+        // 获取用户放款信息
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        example.createCriteria().andNidEqualTo(nid);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
+        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
+            return borrowRecoverList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据订单编号获取互金合同信息
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public NifaContractStatus selectNifaContractStatusByNid(String nid) {
+        NifaContractStatusExample example = new NifaContractStatusExample();
+        example.createCriteria().andContractNoEqualTo(nid);
+        List<NifaContractStatus> nifaContractStatusList = this.nifaContractStatusMapper.selectByExample(example);
+        if (null != nifaContractStatusList && nifaContractStatusList.size() > 0) {
+            return nifaContractStatusList.get(0);
+        }
+        return null;
+    }
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, Integer repayPeriod) {
+        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+        BorrowRecoverPlanExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andRecoverPeriodEqualTo(repayPeriod);
+        List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(example);
+        if (null != borrowRecoverPlanList && borrowRecoverPlanList.size() > 0) {
+            return borrowRecoverPlanList;
+        }
+        return null;
+    }
+
+    /**
+     * 根据借款编号和还款期次查询放款信息总表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public List<BorrowRecover> selectBorrowRecoverList(String borrowNid, Integer repayPeriod) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andRecoverPeriodEqualTo(repayPeriod);
+        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
+        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
+            return borrowRecoverList;
         }
         return null;
     }

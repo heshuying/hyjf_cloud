@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.CouponTenderClient;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;

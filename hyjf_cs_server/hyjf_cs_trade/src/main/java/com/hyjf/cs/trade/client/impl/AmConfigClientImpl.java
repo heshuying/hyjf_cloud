@@ -3,7 +3,9 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
+import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
@@ -12,6 +14,7 @@ import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
+import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -75,7 +78,22 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
-	/**
+    /**
+     * 根据银行Code查询银行配置
+     * @return
+     */
+    @Override
+    public BankConfigVO selectBankConfigByCode(String code){
+		BankConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByCode/"+ code, BankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
 	 * 查询江西银行配置（快捷支付）
 	 * @return
 	 */
@@ -170,6 +188,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public VersionVO getLastestVersion() {
 		String url = "http://AM-CONFIG/am-config/config/versionconfig/getLastestVersion";
 		VersionConfigBeanResponse response = restTemplate.getForEntity(url,VersionConfigBeanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过网站设置获取公司信息
+	 *
+	 * @return
+	 */
+	@Override
+	public SiteSettingsVO selectSiteSetting() {
+		String url = "http://AM-CONFIG/am-config/siteSettings/select_site_setting";
+		SiteSettingsResponse response = restTemplate.getForEntity(url,SiteSettingsResponse.class).getBody();
 		if (Response.isSuccess(response)){
 			return response.getResult();
 		}

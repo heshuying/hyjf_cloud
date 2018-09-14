@@ -13,7 +13,7 @@
 				AND b.borrow_period=#{borrowPeriod}
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND ( ui.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
+				AND ( u.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
 				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
@@ -38,10 +38,11 @@
 		LEFT JOIN ht_borrow_info bi ON
 			b.borrow_nid = bi.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
+		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 
@@ -77,7 +78,7 @@
 			CASE WHEN b.ontime IS NULL OR b.ontime = 0 THEN '' ELSE FROM_UNIXTIME( b.ontime, '%Y-%m-%d %H:%i:%s' ) END ontime,
 			DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 			b.verify_status,
-			bi.project_type,
+			b.project_type,
 			hic.inst_name
 		FROM
 			ht_borrow b
@@ -86,7 +87,7 @@
 		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
@@ -105,7 +106,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			b.borrow_nid = bi.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1

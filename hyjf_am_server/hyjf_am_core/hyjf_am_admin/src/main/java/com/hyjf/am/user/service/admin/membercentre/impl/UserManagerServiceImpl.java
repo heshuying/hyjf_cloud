@@ -8,6 +8,8 @@ import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.mapper.auto.SpreadsUserLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
 import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -46,6 +48,10 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     private EmployeeCustomizeMapper employeeCustomizeMapper;
     @Autowired
     private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
+    @Autowired
+    private SpreadsUserMapper spreadsUserMapper;
+    @Autowired
+    private UserChangeLogMapper userChangeLogMapper;
 
     /**
      * 根据筛选条件查找会员列表
@@ -338,9 +344,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int countUserByMobile(int userId, String mobile) {
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
-        if (Validator.isNotNull(userId)) {
-            criteria.andUserIdEqualTo(userId);
-        }
         criteria.andMobileEqualTo(mobile);
         int cnt = userMapper.countByExample(example);
         return cnt;
@@ -370,14 +373,17 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample.Criteria criteria = ue.createCriteria();
         criteria.andUsernameEqualTo(recommendName);
         List<User> userRecommends = userMapper.selectByExample(ue);
-        if (userRecommends != null && userRecommends.size() == 1) {
+        if (null!=userRecommends && userRecommends.size()==1) {
+            logger.info("===============userRecommends size:"+userRecommends.size());
             User user = userRecommends.get(0);
+            logger.info("===============userId:"+userId+"recommendUserId"+user.getUserId()+" ====================");
             if (user.getUserId() == userId) {
                 return 2;
             } else {
                 return 0;
             }
         } else {
+            logger.info("===============userRecommends size :0 ====================");
             return 1;
         }
     }
@@ -558,7 +564,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     public List<UserChangeLog> queryChangeLogList(Map<String, Object> mapParam) {
-        return userManagerCustomizeMapper.queryChangeLogList(mapParam);
+        UserChangeLogExample example = new UserChangeLogExample();
+        if(null!=mapParam.get("userId")){
+            example.createCriteria().andUserIdEqualTo((int)mapParam.get("userId"));
+        }
+        if(null!=mapParam.get("changeType")){
+            example.createCriteria().andUpdateTypeEqualTo((int)mapParam.get("changeType"));
+        }
+        List<UserChangeLog> userChangeLogs =userChangeLogMapper.selectByExample(example);
+        return userChangeLogs;
+//        return userManagerCustomizeMapper.queryChangeLogList(mapParam);
     }
 
     /**
@@ -1213,5 +1228,20 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         } else {
             return null;
         }
+    }
+    /**
+     * 根据推荐人id查找用信息
+     * @param spreadUserId
+     * @return
+     */
+    @Override
+    public List<SpreadsUser> selectSpreadBySpreadUserId(Integer spreadUserId){
+        SpreadsUserExample example = new SpreadsUserExample();
+        example.createCriteria().andSpreadsUserIdEqualTo(spreadUserId);
+        List<SpreadsUser> spreadsUserList =spreadsUserMapper.selectByExample(example);
+        if(null!=spreadsUserList&&spreadsUserList.size()>0){
+            return  spreadsUserList;
+        }
+        return null;
     }
 }

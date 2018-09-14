@@ -20,6 +20,7 @@ import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -208,7 +209,7 @@ public interface AmTradeClient {
      * @param borrowNid 借款编号
      * @return
      */
-    BorrowVO searchBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid);
 
     /**
      * 根据受托支付userId查询stAccountId
@@ -225,7 +226,7 @@ public interface AmTradeClient {
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    boolean updateBorrowRegist(BorrowVO borrowVO, Integer type);
+    boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type);
 
     /**
      * 备案成功看标的是否关联计划，如果关联则更新对应资产表
@@ -233,7 +234,7 @@ public interface AmTradeClient {
      * @param borrowVO 标信息
      * @return
      */
-    boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+    boolean updateBorrowAsset(BorrowAndInfoVO borrowVO,Integer status);
 
     /**
      * 转账列表
@@ -687,7 +688,7 @@ public interface AmTradeClient {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
      * 根据标的编号查询borrowInfo
@@ -2907,6 +2908,104 @@ public interface AmTradeClient {
      * @date 2018/9/4 10:30
      */
     String selectTenderCreditAssignPay(Map<String,String> map);
+
+    /**
+     * 取得新规的模板编号
+     * @param protocolType
+     * @return
+     */
+    String getNewTempletId(Integer protocolType);
+
+    /**
+     * 协议管理-画面迁移
+     *
+     * @param id
+     * @return
+     */
+    FddTempletCustomizeResponse getRecordInfoById(Integer id);
+    int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request);
+
+    int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
+
+    List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
+
+    int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
+
+    List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);
+
+	List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
+
+	Integer countRecordLog(ProtocolLogRequest request);
+
+    /**
+     * 统计全部个数
+     *
+     * @return
+     */
+    Integer countRecord(AdminProtocolRequest request);
+
+    List<ProtocolTemplateCommonVO> getRecordList(AdminProtocolRequest request);
+
+    /**
+     * 根据协议id查询协议和版本
+     *
+     * @return
+     */
+    ProtocolTemplateCommonVO getProtocolTemplateById(AdminProtocolRequest request);
+
+    /**
+     * 查询协议模板数量
+     *
+     * @return
+     */
+    Integer getProtocolTemplateNum(AdminProtocolRequest request);
+
+    /**
+     * 判断删除的协议中是否存在当前协议模板名称Agreement006
+     *
+     * @return
+     */
+    ProtocolTemplateVO getProtocolTemplateByProtocolName(AdminProtocolRequest request);
+
+    /**
+     * 保存 协议模板、协议版本、协议日志
+     *
+     * @return
+     */
+    Integer insert(AdminProtocolRequest request);
+
+    /**
+     * 修改 协议模板
+     *
+     * @return
+     */
+    Integer updateProtocolTemplate(AdminProtocolRequest request);
+
+    /**
+     * 修改 之前的版本的启用状态改成不启用
+     *
+     * @return
+     */
+    Integer updateDisplayFlag(AdminProtocolRequest request);
+
+    /**
+     * 删除协议模板
+     *
+     * @return
+     */
+    AdminProtocolResponse deleteProtocolTemplate(AdminProtocolRequest request);
+
+    List<ProtocolTemplateVO> getNewInfo();
+
+    ProtocolVersionVO byIdProtocolVersion(Integer id);
+
+    ProtocolTemplateVO byIdTemplateBy(String protocolId);
+
+    int getProtocolVersionSize(AdminProtocolRequest adminProtocolRequest);
+
+    boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest);
+
+    Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 
     /** 加息接口开始*/
     /** 枚举类型 */

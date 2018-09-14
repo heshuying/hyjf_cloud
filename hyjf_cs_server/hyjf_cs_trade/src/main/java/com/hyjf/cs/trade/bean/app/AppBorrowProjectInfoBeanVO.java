@@ -123,6 +123,11 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	 * example: 等额本息
 	 */
 	private String repayStyle;
+
+	/**
+	 * 产品加息率
+	 */
+	private String borrowExtraYield;
 	public AppBorrowProjectInfoBeanVO() {
 		super();
 	}
@@ -213,6 +218,5 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 
 	public String getBorrowExtraYield() { return borrowExtraYield; }
 	public void setBorrowExtraYield(String borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
-
-
+	
 }

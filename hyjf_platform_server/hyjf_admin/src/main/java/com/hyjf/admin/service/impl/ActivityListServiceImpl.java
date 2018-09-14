@@ -3,29 +3,17 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BorrowCommonImage;
-import com.hyjf.admin.client.ActivityListClient;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.file.UploadFileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author yaoy

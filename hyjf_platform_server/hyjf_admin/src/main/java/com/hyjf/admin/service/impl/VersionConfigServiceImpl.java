@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.admin.service.VersionConfigService;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
@@ -88,7 +87,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      * @return
      */
     @Override
-    public AdminVersionResponse deleteVersionConfig(Integer id){
+    public AdminVersionResponse deleteVersionConfig(List<Integer> id){
         return amConfigClient.deleteVersionConfig(id);
     }
     /**

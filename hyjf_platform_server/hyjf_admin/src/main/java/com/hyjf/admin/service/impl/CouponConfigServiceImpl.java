@@ -5,7 +5,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.CouponConfigClient;
 import com.hyjf.admin.service.CouponConfigService;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;

@@ -399,7 +399,9 @@
 		<!-- 项目申请人 -->
 		<result column="applicant" property="applicant" jdbcType="VARCHAR" />
 		<!-- 信用评级  -->
-		<result column="borrow_level" property="borrowLevel" jdbcType="VARCHAR" />	
+		<result column="borrow_level" property="borrowLevel" jdbcType="VARCHAR" />
+		<!-- 是否产品加息-->
+		<result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="INTEGER" />
 	</resultMap>
 	<!-- 查询相应的项目的公共部分 -->
 	<select id="selectProjectDetail" resultMap="AppProjectDetailMap" parameterType="Map">
@@ -525,7 +527,8 @@
 		re.create_time,
 		'%Y-%m-%d %H:%i'
 		) verify_over_time,
-		hydb.borrow_level
+		hydb.borrow_level,
+		hydb.increase_interest_flag increase_interest_flag
 		FROM
 			ht_borrow hydb
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid

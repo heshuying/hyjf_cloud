@@ -309,9 +309,18 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if ("13".equals(borrow.getType())) {
+/*        if ("13".equals(borrow.getType())) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+        }*/
+        // add by nxl 设置项目加息收益
+        BigDecimal borrowExtraYield = new BigDecimal(StringUtils.isNotBlank(borrow.getBorrowExtraYield())?borrow.getBorrowExtraYield():"0");
+        int intFlg = Integer.parseInt(StringUtils.isNotBlank(borrow.getIncreaseInterestFlag())?borrow.getIncreaseInterestFlag():"0");
+        boolean isIncrease = Validator.isIncrease(intFlg,borrowExtraYield);
+        if(isIncrease){
+            borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
+            borrow.setIncreaseInterestFlag(String.valueOf(isIncrease));
         }
+        // mod by nxl 设置项目加息收益 End
 
         switch (borrowStyle) {
             case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“
@@ -591,7 +600,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             RedisUtils.set(onTimeStatusKey, "1", 300);
 
             //该标的非自动发标标的或者未到发标时间(DB验证)
-            BorrowVO borrowVO = amTradeClient.getBorrowByNidAndNowTime(borrowNid,GetDate.getNowTime10()); // this.borrowService.getOntimeIdByNid(borrowNid, GetDate.getNowTime10());
+            BorrowAndInfoVO borrowVO = amTradeClient.getBorrowByNidAndNowTime(borrowNid,GetDate.getNowTime10()); // this.borrowService.getOntimeIdByNid(borrowNid, GetDate.getNowTime10());
             if (borrowVO == null) {
                 //删除 redis的标的定时独占锁
                 RedisUtils.del(onTimeLockKey);
@@ -651,7 +660,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         // 当前时间
         int nowTime = GetDate.getNowTime10();
-        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(borrowNid);
         // DB验证
         // 有投资金额发生异常
         BigDecimal zero = new BigDecimal("0");
@@ -668,10 +677,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 状态
         borrow.setStatus(2);
         // 初审时间
-        borrow.setVerifyTime(String.valueOf(nowTime));
+        borrow.setVerifyTime(nowTime);
         // 剩余可投资金额
         borrow.setBorrowAccountWait(borrow.getAccount());
-        boolean flag = amTradeClient.updateBorrowByBorrowNid(borrow);
+        boolean flag = amTradeClient.updateRightBorrowByBorrowNid(borrow);
         if (flag) {
             // 写入redis
             RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
@@ -696,7 +705,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow != null) {
             info.setInvestTotal(df.format(borrow.getBorrowAccountYes()));
             info.setInvestTimes(String.valueOf(borrow.getTenderTimes()));
@@ -793,7 +802,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         String borrowNid = creditDetail.getBorrowNid();
 
         BorrowResponse res = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrow/" + borrowNid, BorrowResponse.class);//borrowClient.selectBorrowByNid(borrowNid);
-        BorrowVO borrow = res.getResult();
+        BorrowAndInfoVO borrow = res.getResult();
         if (Validator.isNull(borrow)) {
             throw new RuntimeException("标的详情不存在");
         }
@@ -1317,7 +1326,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params.put("limitStart", page.getOffset());
             params.put("limitEnd", page.getLimit());
             BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL, params, BorrowResponse.class);
-            List<BorrowVO> list = res.getResultList();
+            List<BorrowAndInfoVO> list = res.getResultList();
             formatUserName(list);
             List<WebPlanBorrowBean> resultList = CommonUtils.convertBeanList(list,WebPlanBorrowBean.class);
             result.setData(resultList);
@@ -1389,8 +1398,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      * @author zhangyk
      * @date 2018/7/23 14:49
      */
-    private void formatUserName(List<BorrowVO> list) {
-        for (BorrowVO planAccede : list) {
+    private void formatUserName(List<BorrowAndInfoVO> list) {
+        for (BorrowAndInfoVO planAccede : list) {
             String borrowNid = planAccede.getBorrowNid();
             if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
                 BorrowUserVO borrowUser = amTradeClient.getBorrowUser(borrowNid);

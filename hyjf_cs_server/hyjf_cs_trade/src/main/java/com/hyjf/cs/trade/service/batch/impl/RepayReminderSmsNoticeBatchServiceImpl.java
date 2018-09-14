@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -64,7 +64,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
     SmsProducer smsProducer;
 
     @Override
-    public List<BorrowVO> selectBorrowList() {
+    public List<BorrowAndInfoVO> selectBorrowList() {
         return this.amBorrowClient.selectBorrowList();
     }
 

@@ -6,6 +6,7 @@ import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.client.BorrowClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author wenxin
+ * @author xiasq
  * @version BorrowClientImpl, v0.1 2018/6/19 15:33
  */
 @Service
@@ -24,7 +25,7 @@ public class BorrowClientImpl implements BorrowClient {
     private RestTemplate restTemplate;
 
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/borrow/getBorrow/" + borrowNid,
                 BorrowResponse.class).getBody();

@@ -5,6 +5,9 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -16,5 +19,5 @@ public interface PlatformCountService {
      * @param requestBean
      * @return
      */
-    PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean);
+    List<PlatformCountCustomizeVO>  searchAction(PlatformCountRequestBean requestBean);
 }

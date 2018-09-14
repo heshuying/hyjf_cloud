@@ -26,6 +26,17 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	
     public int limit;
     
+	private int paginatorPage = 1;
+	public int getPaginatorPage() {
+		if (paginatorPage == 0) {
+			paginatorPage = 1;
+		}
+		return paginatorPage;
+	}
+	public void setPaginatorPage(int paginatorPage) {
+		this.paginatorPage = paginatorPage;
+	}
+    
     @ApiModelProperty(value = "标签编号")
     private String labelId; 
     

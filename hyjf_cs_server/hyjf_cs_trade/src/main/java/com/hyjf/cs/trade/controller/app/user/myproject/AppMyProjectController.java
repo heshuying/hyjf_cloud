@@ -3,9 +3,6 @@ package com.hyjf.cs.trade.controller.app.user.myproject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -27,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -72,7 +71,7 @@ public class AppMyProjectController extends BaseTradeController {
         AssetManageBeanRequest  params = buildQueryParameter(request);
         params.setUserId(userId);
         // 构建分页查询条件
-        this.buildQueryParameter(request);
+        //this.buildQueryParameter(request);
         // 这2个不用了，在返回的时候拼接
         params.setHost("");
         params.setSign(sign);
@@ -173,7 +172,12 @@ public class AppMyProjectController extends BaseTradeController {
                     }
                     investStatusDesc = "现金投资".equals(entity.getData()) ? "还款中" : entity.getData();
             }
-
+            // 加息收益
+            if("4".equals(entity.getType())){
+                vo.setLabel(entity.getData());
+                investStatusDesc = "未回款";
+                vo.setCouponType("4");
+            }
             vo.setBorrowName(entity.getBorrowNid());
             vo.setBorrowTheFirst(CommonUtils.formatAmount(entity.getCapital()) + "元");
             vo.setBorrowTheFirstDesc("投资金额");
@@ -193,12 +197,16 @@ public class AppMyProjectController extends BaseTradeController {
             String borrowUrl = this.concatInvestDetailUrl(entity.getBorrowNid(),  nid,
                     request.getParameter("type"), entity.getCouponType(), assignNid, investStatusDesc);
             //vo.setBorrowUrl(CommonUtils.concatReturnUrl(request, borrowUrl));
+            // 如果是产品加息
+            if ("4".equals(entity.getType())) {
+                borrowUrl += "&isIncrease=1";
+            }
             vo.setBorrowUrl(borrowUrl);
 
             // 判断债权能否债转
             if (canDoTransfer(entity.getBorrowNid(), nid, userId)) {
                 vo.setIsDisplay("1");
-                String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/transfer/" +assignNid + "?borrowId=" + entity.getBorrowNid()
+                String url = super.getFrontHost(systemConfig,CommonConstant.CLIENT_ANDROID)+"/user/borrow/transfer/setting?borrowId=" + entity.getBorrowNid()
                         + "&tenderId=" + nid;
                 vo.setUrl(url);
             } else {
@@ -244,6 +252,11 @@ public class AppMyProjectController extends BaseTradeController {
             String borrowUrl = this.concatInvestDetailUrl(entity.getBorrowNid(), entity.getOrderId(),
                     request.getParameter("type"), entity.getCouponType(), assignNid, "已还款");
             //vo.setBorrowUrl(CommonUtils.concatReturnUrl(request, borrowUrl));
+            // 产品加息
+            if ("3".equals(entity.getInvestType())) {
+                borrowUrl += "&isIncrease=1&isCalendar=1";
+                vo.setCouponType("4");
+            }
             vo.setBorrowUrl(borrowUrl);
             CommonUtils.convertNullToEmptyString(vo);
             vos.add(vo);
@@ -324,6 +337,7 @@ public class AppMyProjectController extends BaseTradeController {
         params.setNowTime((int)(System.currentTimeMillis() / 1000));
         params.setLimitStart(0);
         params.setLimitEnd(1);
+        params.setNowDate(GetDate.getNowTime());
         Integer count = appMyProjectService.selectTenderToCreditListCount(params);
         if (count>0) {
             return true;

@@ -173,16 +173,16 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 根据推荐人手机号或userId 查询推荐人
+     * 根据userId 查询推荐人
      *
-     * @param reffer
+     * @param userId
      * @return
      */
-    @RequestMapping("/findReffer/{reffer}")
-    public UserResponse findUserByRecommendName(@PathVariable String reffer) {
-        logger.info("findUserByRecommendName run...reffer is :{}", reffer);
+    @RequestMapping("/findReffer/{userId}")
+    public UserResponse findReffer(@PathVariable Integer userId) {
+        logger.info("findReffer run...userId is :{}", userId);
         UserResponse response = new UserResponse();
-        User user = userService.findUserByRecommendName(reffer);
+        User user = userService.findReffer(userId);
         if (user != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(user, userVO);
@@ -560,15 +560,20 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/isCompAccount/{userId}")
-    public int isCompAccount(@PathVariable Integer userId) {
+    public IntegerResponse isCompAccount(@PathVariable Integer userId) {
         int count = userService.isCompAccount(userId);
-        return count;
+        return new IntegerResponse(count);
     }
 
     @RequestMapping("/insertUserEvalationBehavior/{userId}/{behavior}")
-    public Integer insertUserEvalationBehavior(@PathVariable Integer userId,@PathVariable String behavior) {
+    public IntegerResponse insertUserEvalationBehavior(@PathVariable Integer userId,@PathVariable String behavior) {
         UserEvalationBehavior userEvalationBehavior = userService.insertUserEvalationBehavior(userId,behavior);
-        return userEvalationBehavior.getId();
+        Integer count = userEvalationBehavior.getId();
+        if (count==null){
+            return new IntegerResponse(0);
+        }else{
+            return new IntegerResponse(count);
+        }
     }
 
     @RequestMapping("/updateUserEvalationBehavior")

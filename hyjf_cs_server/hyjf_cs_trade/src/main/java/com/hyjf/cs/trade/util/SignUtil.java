@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.util;
 
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.BaseBean;
+import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
@@ -52,6 +53,11 @@ public class SignUtil {
         	//自动投资
         	AutoTenderRequestBean bean = (AutoTenderRequestBean) paramBean;
         	sign = bean.getInstCode() + bean.getAccountId() + bean.getBorrowNid() + bean.getTimestamp();
+        }else if (Objects.equals("/tradelist", methodName)){
+            //同步交易明细
+            TransactionDetailsResultBean bean = (TransactionDetailsResultBean) paramBean;
+            //暂定四个参数
+            sign = bean.getInstCode() + bean.getTimestamp() + bean.getPhone() + bean.getAccountId();
         }
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }

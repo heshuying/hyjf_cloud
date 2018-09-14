@@ -18,6 +18,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +29,7 @@ import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
+import com.hyjf.am.trade.mq.producer.nifa.NifaContractEssenceMessageProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
@@ -45,6 +47,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @version BorrowLoanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Component
+@Profile("test")
 public class BorrowLoanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanRealTimeConsumer.class);
@@ -58,18 +61,21 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 	@Autowired
 	MailProducer mailProducer;
 
+	@Autowired
+	NifaContractEssenceMessageProducer nifaContractEssenceMessageProducer;
+
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
+		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
-		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 		
 		// 设置并发数
 		defaultMQPushConsumer.setConsumeThreadMin(1);
@@ -162,6 +168,14 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				        }catch (MQException e){
 				            logger.error("发送运营数据更新MQ失败,放款标的:" + borrowApicron.getBorrowNid());
 				        }
+				        // 发送mq到生成互金合同要素信息
+						try {
+							JSONObject param = new JSONObject();
+							param.put("borrowNid", borrowApicron.getBorrowNid());
+				        	nifaContractEssenceMessageProducer.messageSend(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+						} catch (Exception e) {
+							logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+						}
 					}
 				}
 			} catch (Exception e) {

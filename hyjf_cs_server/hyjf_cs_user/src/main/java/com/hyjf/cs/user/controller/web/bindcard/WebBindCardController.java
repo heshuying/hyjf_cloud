@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -80,12 +81,12 @@ public class WebBindCardController extends BaseUserController {
 			return result;
 		}
 
-		BankConfigVO bankConfigVO = bindCardService.getBankConfigById(bankCardVO.getBankId());
+		JxBankConfigVO bankConfigVO = bindCardService.getBankConfigById(bankCardVO.getBankId());
 		//已绑卡
 		resultMap.put("bindType", 1);
 		if(bankConfigVO != null){
-            resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
-            resultMap.put("bankname", bankConfigVO.getName());
+            resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getBankLogo());
+            resultMap.put("bankname", bankConfigVO.getBankName());
         }else{
             resultMap.put("bankicon", systemConfig.getWebHost() + "/data/upfiles/filetemp/image/bank_log.png");
             resultMap.put("bankname", StringUtils.isBlank(bankCardVO.getBank())?"":bankCardVO.getBank());

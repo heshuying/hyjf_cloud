@@ -1029,6 +1029,7 @@ public class Validator {
             b = m.matches();
             return b;
         }
+
     /**
      *
      * 是否为产品加息
@@ -1046,6 +1047,7 @@ public class Validator {
         }
         return true;
     }
+
         private static final int _CHAR_LOWER_CASE_BEGIN = 97;
 
         private static final int _CHAR_LOWER_CASE_END = 122;

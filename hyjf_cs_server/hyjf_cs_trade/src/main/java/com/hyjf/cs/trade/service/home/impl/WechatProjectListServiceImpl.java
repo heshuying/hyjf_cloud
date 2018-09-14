@@ -1041,7 +1041,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private boolean isTenderBorrow(Integer userId, String borrowNid,
                                    String borrowType) {
         //根据borrowNid查询borrow表
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow.getPlanNid() != null && borrow.getPlanNid().length() > 1) {
             return true;
         }

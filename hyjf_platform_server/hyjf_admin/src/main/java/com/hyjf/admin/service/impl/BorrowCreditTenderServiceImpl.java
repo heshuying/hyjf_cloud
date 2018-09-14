@@ -32,7 +32,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -306,7 +306,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         CheckUtil.check(!org.apache.commons.lang3.StringUtils.isAnyBlank(borrowNid, assignNid, creditTenderNid, creditNid,userId), MsgEnum.ERR_OBJECT_REQUIRED, "各项");
         String borrowUrl = BORROW_URL + borrowNid;
         BorrowResponse response = baseClient.getExe(borrowUrl,BorrowResponse.class);
-        BorrowVO borrowVO = response.getResult();
+        BorrowAndInfoVO borrowVO = response.getResult();
         if (borrowVO == null) {
             throw new CheckException("原始标的信息不存在");
         }

@@ -69,6 +69,7 @@ CS-MARKET页面：http://47.104.203.75:8083/swagger-ui.html
 CS-MESSAGE页面:http://47.104.203.75:8084/swagger-ui.html
 CS-TRADE页面:http://47.104.203.75:8082/swagger-ui.html
 CS-USER页面:http://47.104.203.75:8081/swagger-ui.html
+BATCH页面：http://47.104.203.75:9091
 ```
 ### 微服务架构
    ![调用链](pic2.png)    

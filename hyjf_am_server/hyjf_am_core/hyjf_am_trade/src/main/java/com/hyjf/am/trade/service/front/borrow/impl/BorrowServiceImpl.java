@@ -23,7 +23,7 @@ import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
@@ -73,6 +73,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Autowired
     private BankOpenAccountMapper bankOpenAccountMapper;
 
+
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
         BorrowFinmanNewChargeExample example = new BorrowFinmanNewChargeExample();
@@ -117,7 +118,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Override
     public int updateBorrowRegist(BorrowRegistRequest request) {
-        BorrowVO borrowVO = request.getBorrowVO();
+        BorrowAndInfoVO borrowVO = request.getBorrowVO();
         int status = request.getStatus();
         int registStatus = request.getRegistStatus();
         Date nowDate = new Date();
@@ -625,6 +626,29 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria.andVerifyStatusEqualTo(3);
         criteria.andOntimeGreaterThan(0);
         criteria.andOntimeLessThan(nowtime);
+        List<Borrow> list = borrowMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取还款计算公式 add by liushouyi
+     *
+     * @param borrowStyle
+     * @return
+     */
+    @Override
+    public List<BorrowStyleWithBLOBs> selectBorrowStyleWithBLOBs(String borrowStyle) {
+        BorrowStyleExample example = new BorrowStyleExample();
+        BorrowStyleExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(CustomConstants.FLAG_STATUS_ENABLE);
+        cra.andNidEqualTo(borrowStyle);
+        List<BorrowStyleWithBLOBs> borrowStyleWithBLOBsList = borrowStyleMapper.selectByExampleWithBLOBs(example);
+        if (null != borrowStyleWithBLOBsList && borrowStyleWithBLOBsList.size() > 0) {
+            return borrowStyleWithBLOBsList;
+        }
         return null;
     }
 

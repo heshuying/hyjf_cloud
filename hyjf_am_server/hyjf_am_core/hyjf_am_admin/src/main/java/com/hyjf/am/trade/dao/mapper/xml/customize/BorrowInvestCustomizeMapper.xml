@@ -154,7 +154,7 @@
 		INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = bt.nid
 	    <include refid="Where_Clause" />
 		  ORDER BY
@@ -302,7 +302,7 @@
 			ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		INNER JOIN ht_borrow_info bi ON bt.borrow_nid = bi.borrow_nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_r_user u ON u.user_id = bt.user_id
 		LEFT JOIN ht_r_user spu ON spu.user_id = u.spreads_user_id
@@ -410,7 +410,7 @@
 		CONCAT(TRUNCATE((b.borrow_account_yes/b.account)*100,2), '%') borrow_account_scale,
 		b.borrow_style,
 		bs.`name` AS borrow_style_name,
-		bi.project_type,
+		b.project_type,
 		bpt.borrow_name AS project_type_name,
 		CASE WHEN borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
 		CONCAT(b.borrow_apr, '%') borrow_apr,
@@ -433,7 +433,7 @@
 		FROM ht_borrow b
 	  	INNER JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		where b.borrow_nid = #{borrowNid}
 		ORDER BY
 		b.create_time DESC, b.id DESC

@@ -48,8 +48,6 @@ public class FinmanChargeNewController extends BaseController {
                 response.setRecordTotal(total);
                 return response;
             }
-            response.setRtn(Response.SUCCESS);
-            response.setMessage("数据为空！");
             return response;
         }
         return null;
@@ -68,13 +66,10 @@ public class FinmanChargeNewController extends BaseController {
             BorrowFinmanNewCharge charge = this.finmanChargeNewService.getRecordInfo(manChargeCd);
             if (null != charge) {
                 BorrowFinmanNewChargeVO chargeVO = CommonUtils.convertBean(charge, BorrowFinmanNewChargeVO.class);
-                chargeVO.setManChargeTimeType("month");
                 response.setResult(chargeVO);
                 response.setRtn(Response.SUCCESS);
                 return response;
             }
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
             return response;
         }
         return null;

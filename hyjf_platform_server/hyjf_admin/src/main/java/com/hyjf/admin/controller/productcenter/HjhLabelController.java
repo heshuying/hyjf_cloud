@@ -6,11 +6,13 @@ package com.hyjf.admin.controller.productcenter;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhLabelViewRequest;
 import com.hyjf.admin.beans.vo.AdminHjhLabelCustomizeVO;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.admin.service.HjhLabelService;
 import com.hyjf.am.response.Response;
@@ -54,6 +56,8 @@ public class HjhLabelController extends BaseController{
 	private HjhLabelService labelService;
 	@Autowired
 	private AssetListService assetListService;
+    @Autowired
+    private AdminCommonService adminCommonService;
 	// 权限名称
 	private static final String PERMISSIONS = "label";
 
@@ -70,14 +74,19 @@ public class HjhLabelController extends BaseController{
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
-		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+		//List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+        // 资产来源
+        List<DropDownVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
 		// 2.产品类型(可复用)
 		/*List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());*/
 		/*jsonObject.put("assetTypeList", assetTypeList);*/
 		// 3.项目类型(可复用)
-		List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
+		//List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
+		List<DropDownVO> borrowProjectTypeList = adminCommonService.selectProjectType();
 		// 4.还款方式(可复用)
-		List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
+		//List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
+        // 还款方式
+        List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
 		if(CollectionUtils.isEmpty(hjhInstConfigList) && CollectionUtils.isEmpty(borrowProjectTypeList) && CollectionUtils.isEmpty(borrowStyleList)){
 			jsonObject.put("status", FAIL);
 		} else {

@@ -4486,6 +4486,66 @@ public class BorrowExample {
             return (Criteria) this;
         }
 
+        public Criteria andIncreaseInterestFlagIsNull() {
+            addCriterion("increase_interest_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagIsNotNull() {
+            addCriterion("increase_interest_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagEqualTo(Boolean value) {
+            addCriterion("increase_interest_flag =", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotEqualTo(Boolean value) {
+            addCriterion("increase_interest_flag <>", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagGreaterThan(Boolean value) {
+            addCriterion("increase_interest_flag >", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("increase_interest_flag >=", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagLessThan(Boolean value) {
+            addCriterion("increase_interest_flag <", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagLessThanOrEqualTo(Boolean value) {
+            addCriterion("increase_interest_flag <=", value, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagIn(List<Boolean> values) {
+            addCriterion("increase_interest_flag in", values, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotIn(List<Boolean> values) {
+            addCriterion("increase_interest_flag not in", values, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagBetween(Boolean value1, Boolean value2) {
+            addCriterion("increase_interest_flag between", value1, value2, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIncreaseInterestFlagNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("increase_interest_flag not between", value1, value2, "increaseInterestFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andRepayOrgUserIdEqualTo(Integer value) {
             addCriterion("repay_org_user_id =", value, "repayOrgUserId");
             return (Criteria) this;

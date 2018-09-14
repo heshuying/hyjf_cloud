@@ -118,4 +118,12 @@ public interface BaseService {
      * @return
      */
     HjhAssetBorrowtype selectAssetBorrowType(String instCode, int assetType);
+
+    /**
+     *  判断是否属于线下充值类型.
+     * @param tranType
+     * @return
+     * @Author : huanghui
+     */
+    boolean getIsRechargeTransType(String tranType);
 }

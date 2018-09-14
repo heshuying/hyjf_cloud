@@ -92,15 +92,15 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
     private String isBank;
 
     @ApiModelProperty(value = "电子账号")
-    private String accountId;
+    private String account;
 
     @ApiModelProperty(value = "交易流水号")
     private String seqNo;
 
-    @ApiModelProperty(value = "银行总资产")
+    @ApiModelProperty(value = "资产总额")
     private String bankTotal;
 
-    @ApiModelProperty(value = "银行存管余额")
+    @ApiModelProperty(value = "银行可用金额")
     private BigDecimal bankBalance;
 
     @ApiModelProperty(value = "银行存管冻结金额")
@@ -117,6 +117,21 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
 
     @ApiModelProperty(value = "对账结束时间")
     private String endTime;
+
+    @ApiModelProperty(value = "银行待收")
+    private BigDecimal bankAwait;
+
+    @ApiModelProperty(value = "计划代收金额")
+    private BigDecimal planAccountWait;
+
+    @ApiModelProperty(value = "江西银行可提现金额")
+    private BigDecimal bankBalanceCash;
+
+    @ApiModelProperty(value = "江西银行冻结金额")
+    private BigDecimal bankFrostCash;
+
+    @ApiModelProperty(value = "银行待还")
+    private BigDecimal bankWaitRepay;
 
     public String getDepartmentName() {
         return departmentName;
@@ -286,12 +301,12 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
         this.isBank = isBank;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getSeqNo() {
@@ -356,5 +371,45 @@ public class BankAccountManageCustomizeVO extends BaseVO implements Serializable
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public BigDecimal getBankAwait() {
+        return bankAwait;
+    }
+
+    public void setBankAwait(BigDecimal bankAwait) {
+        this.bankAwait = bankAwait;
+    }
+
+    public BigDecimal getPlanAccountWait() {
+        return planAccountWait;
+    }
+
+    public void setPlanAccountWait(BigDecimal planAccountWait) {
+        this.planAccountWait = planAccountWait;
+    }
+
+    public BigDecimal getBankBalanceCash() {
+        return bankBalanceCash;
+    }
+
+    public void setBankBalanceCash(BigDecimal bankBalanceCash) {
+        this.bankBalanceCash = bankBalanceCash;
+    }
+
+    public BigDecimal getBankFrostCash() {
+        return bankFrostCash;
+    }
+
+    public void setBankFrostCash(BigDecimal bankFrostCash) {
+        this.bankFrostCash = bankFrostCash;
+    }
+
+    public BigDecimal getBankWaitRepay() {
+        return bankWaitRepay;
+    }
+
+    public void setBankWaitRepay(BigDecimal bankWaitRepay) {
+        this.bankWaitRepay = bankWaitRepay;
     }
 }

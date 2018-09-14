@@ -38,7 +38,9 @@ public class ShareNewsController extends BaseMarketController {
             try {
                 response.setLinkUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", userId+""));
             } catch (Exception e) {
-                response.setLinkUrl(systemConfig.getWechatQrcodeUrl());
+                response.setStatus("708");
+                response.setStatusDesc("获取分享信息失败");
+                return response;
             }
             response.setStatus("0");
             response.setStatusDesc("成功");

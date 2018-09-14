@@ -63,8 +63,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
                 UserVO user =this.amUserClient.findUserById(info.getUserId());
                 TenderCancelRequest request = new TenderCancelRequest();
                 request.setBorrowTenderTmpVO(info);
-                request.setUserName(user.getUsername());
-
+                request.setUserName(user==null?"":user.getUsername());
                 try {
                     BankOpenAccountVO bankAccount = this.getBankOpenAccount(info.getUserId());
                     if (bankAccount==null){

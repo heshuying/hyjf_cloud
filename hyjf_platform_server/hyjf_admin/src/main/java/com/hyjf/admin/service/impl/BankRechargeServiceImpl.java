@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.BankRechargeConfigClient;
 import com.hyjf.admin.service.BankRechargeService;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;

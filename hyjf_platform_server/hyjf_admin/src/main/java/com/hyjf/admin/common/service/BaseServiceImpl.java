@@ -5,11 +5,8 @@ package com.hyjf.admin.common.service;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.BankAccountManageClient;
-import com.hyjf.admin.controller.BaseController;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.util.CustomConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

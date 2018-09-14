@@ -8,7 +8,6 @@ import com.hyjf.admin.excel.ReadExcel;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.CouponCheckClient;
 import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponCheckResponse;
@@ -57,8 +56,6 @@ import java.util.*;
 public class CouponCheckServiceImpl implements CouponCheckService {
     private static final Logger logger = LoggerFactory.getLogger(CouponCheckServiceImpl.class);
 
-    @Autowired
-    CouponCheckClient couponCheckClient;
     @Autowired
     AmConfigClient amConfigClient;
     @Autowired

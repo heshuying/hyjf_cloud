@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tree implements Serializable {
+import com.hyjf.am.config.dao.model.auto.AdminMenu;
+
+public class Tree extends AdminMenu implements Serializable {
 
 	/**
 	 * serialVersionUID
@@ -55,13 +57,7 @@ public class Tree implements Serializable {
 		this.icon = icon;
 	}
 
-	public String getMenuSort() {
-		return menuSort;
-	}
 
-	public void setMenuSort(String menuSort) {
-		this.menuSort = menuSort;
-	}
 
 	public boolean isSelected() {
 		return selected;
@@ -81,7 +77,6 @@ public class Tree implements Serializable {
 
 	private String icon;
 
-	private String menuSort;
 
 	private List<Tree> children = new ArrayList<Tree>();
 

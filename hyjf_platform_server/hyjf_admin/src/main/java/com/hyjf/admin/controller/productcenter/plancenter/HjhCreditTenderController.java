@@ -26,7 +26,7 @@ import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -379,7 +379,7 @@ public class HjhCreditTenderController extends BaseController{
 			return ret;
         }
         // 查询标的详情
-        BorrowVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
+        BorrowAndInfoVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
         if (borrow == null) {
             ret.put("result", "标的不存在");
             ret.put("status", FAIL);

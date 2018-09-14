@@ -92,11 +92,10 @@ public interface UserCenterService {
 
     /**
      * 校验手机号
-     * @param userId
      * @param mobile
      * @return
      */
-    int countUserByMobile(int userId, String mobile);
+    int countUserByMobile(String mobile);
 
     /**
      * 校验推荐人
@@ -189,4 +188,10 @@ public interface UserCenterService {
      * @exception:
      */
     String getAreaByIdCard(String idCard);
+    /**
+     * 根据推荐人id查找用信息
+     * @param userId
+     * @return
+     */
+    List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
 }

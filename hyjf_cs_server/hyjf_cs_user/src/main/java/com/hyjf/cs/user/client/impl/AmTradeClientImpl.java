@@ -31,7 +31,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -473,7 +473,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public BorrowVO selectBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrow/"+borrowNid;
         BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
         if (response!=null){
@@ -791,5 +791,22 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 根据用户ID修改account表的电子账户
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public Integer updateAccountNumberByUserId(int userId, String accountId) {
+        String url = tradeService + "/account/updateAccountNumberByUserId/" + userId+"/"+accountId;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(IntegerResponse.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
     }
 }

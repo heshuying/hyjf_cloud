@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.SendTypeClient;
 import com.hyjf.admin.service.SendTypeService;
 import com.hyjf.am.response.admin.BorrowSendTypeResponse;
 import com.hyjf.am.resquest.admin.BorrowSendTypeRequest;

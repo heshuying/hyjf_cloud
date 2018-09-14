@@ -5,7 +5,6 @@ import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;

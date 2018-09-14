@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -37,7 +37,7 @@ public class BorrowTenderTmpRequest extends Request {
     
     private BankOpenAccountVO accountChinapnrBorrower;
 
-    private BorrowVO borrow;
+    private BorrowAndInfoVO borrow;
 
     private BorrowInfoVO borrowInfo;
 
@@ -79,11 +79,11 @@ public class BorrowTenderTmpRequest extends Request {
         this.borrowInfo = borrowInfo;
     }
 
-    public BorrowVO getBorrow() {
+    public BorrowAndInfoVO getBorrow() {
         return borrow;
     }
 
-    public void setBorrow(BorrowVO borrow) {
+    public void setBorrow(BorrowAndInfoVO borrow) {
         this.borrow = borrow;
     }
 

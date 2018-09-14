@@ -9,7 +9,6 @@ import com.hyjf.admin.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.CouponTenderClient;
 import com.hyjf.admin.service.coupon.CouponTenderHztService;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;

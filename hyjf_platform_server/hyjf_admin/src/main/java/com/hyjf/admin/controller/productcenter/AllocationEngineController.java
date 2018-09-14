@@ -335,6 +335,8 @@ public class AllocationEngineController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
     	HjhAllocationEngineResponse response = new HjhAllocationEngineResponse();
+		// 初始化返回LIST
+		List<HjhAllocationEngineVO> volist = null;
     	// 计划引擎配置列表无过滤条件直接查询
     	// 根据计划专区传入的计划编号获取计划名称返回前台展示
     	if(StringUtils.isNotEmpty(form.getPlanNidSrch())){
@@ -349,7 +351,13 @@ public class AllocationEngineController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-        return new AdminResult<ListResult<HjhAllocationEngineVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), HjhAllocationEngineVO.class);
+			return new AdminResult<ListResult<HjhAllocationEngineVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<HjhAllocationEngineVO>>(ListResult.build(volist, 0));
+		}
     }
 	
 	

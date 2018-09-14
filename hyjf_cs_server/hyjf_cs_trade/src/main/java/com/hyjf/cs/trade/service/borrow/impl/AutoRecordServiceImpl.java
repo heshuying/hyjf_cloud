@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -122,7 +122,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
      * @author PC-LIUSHOUYI
      */
     @Override
-    public boolean updateRecordBorrow(BorrowVO borrow) {
+    public boolean updateRecordBorrow(BorrowAndInfoVO borrow) {
 
         // 备案，需要更新资产表
         JSONObject jsonObject = debtRegist(borrow.getBorrowNid());
@@ -170,7 +170,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
      * @param borrowPreauditGroup
      */
     @Override
-    public void sendToMQ(BorrowVO borrowVO, String borrowPreauditGroup) {
+    public void sendToMQ(BorrowAndInfoVO borrowVO, String borrowPreauditGroup) {
         // 加入到消息队列
         JSONObject params = new JSONObject();
         params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -198,7 +198,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
         borrowCra.andBorrowNidEqualTo(borrowNid);
         List<BorrowWithBLOBsVO> borrowList = this.borrowMapper.selectByExampleWithBLOBs(borrowExample);// 获取相应的标的信息*/
-        BorrowVO borrowVO = autoRecordClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = autoRecordClient.selectBorrowByNid(borrowNid);
         if (borrowVO != null) {
             // 检查是否备案失败，如果是，跳过
             if (borrowVO.getStatus() == 0 && borrowVO.getRegistStatus() == 4) {

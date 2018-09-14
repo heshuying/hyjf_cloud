@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -417,7 +418,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	@Override
     public List<BorrowTenderTmp> getBorrowTenderTmpList() {
 		BorrowTenderTmpExample bexample = new BorrowTenderTmpExample();
-		bexample.createCriteria().andStatusEqualTo(0).andIsBankTenderEqualTo(1);
+		BorrowTenderTmpExample.Criteria cra = bexample.createCriteria();
+		cra.andStatusEqualTo(0);
+		cra.andIsBankTenderEqualTo(1);
 		List<BorrowTenderTmp> borrowTenderTmpList = this.borrowTenderTmpMapper.selectByExample(bexample);
 		return borrowTenderTmpList;
 	}
@@ -564,7 +567,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				} else {
 					logger.info("==============变更borrowTenderTmp表状态失败!==============");
 				}
-				throw new Exception("====================投资信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
+				logger.info("====================投资信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
 			}
 		} else {
 			throw new Exception("=====================投资全部掉单处理没有找到匹配的标的信息,订单号: " + orderId + ", 请手动处理!==============");
@@ -988,6 +991,18 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				}
 				logger.info("用户:" + userId + "***********************************插入borrowTender，订单号：" + orderId);
 
+
+				// 插入产品加息
+				if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow1.getBorrowExtraYield())) {
+					boolean increaseFlag = insertIncreaseInterest(borrow,bean,borrowTender) > 0;
+					if (!increaseFlag) {
+						result.put("message", "投资失败！");
+						result.put("status", 0);
+						throw new Exception("插入产品加息表失败！");
+					}
+					logger.info("用户:" + userId + "***********************************插入产品加息，订单号：" + orderId);
+				}
+
 				// 更新用户账户余额表
 				Account accountBean = new Account();
 				accountBean.setUserId(userId);
@@ -1150,6 +1165,89 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		return result;
 	}
 
+	private Integer insertIncreaseInterest(Borrow borrow, BankCallBean bean , BorrowTender tender) {
+		BorrowInfoExample borrowInfoExample = new BorrowInfoExample();
+		borrowInfoExample.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid());
+		List<BorrowInfo> borrowInfoList = borrowInfoMapper.selectByExample(borrowInfoExample);
+		BorrowInfo borrowInfo = new BorrowInfo();
+		if(!CollectionUtils.isEmpty(borrowInfoList)){
+			borrowInfo = borrowInfoList.get(0);
+		}
+
+		if (!Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+			logger.error("不需要插入产品加息,投资订单号:" + bean.getOrderId());
+			return 0;
+		}
+
+
+
+		// 操作ip
+		String ip = bean.getLogIp();
+		// 操作平台
+		int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;
+		// 投资人id
+		Integer userId = Integer.parseInt(bean.getLogUserId());
+		// 借款金额
+		String account = bean.getTxAmount();
+		// 订单id
+		String tenderOrderId = bean.getOrderId();
+		// 项目编号
+		String borrowNid = borrow.getBorrowNid();
+		// 项目的还款方式
+		String borrowStyle = borrow.getBorrowStyle();
+		BorrowStyle borrowStyleMain = this.getborrowStyleByNid(borrowStyle);
+		String borrowStyleName = borrowStyleMain.getName();
+		// 借款期数
+		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
+		//Users users = this.getUsers(userId);
+		// 生成额外利息订单
+		String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+		if (tender != null) {
+			IncreaseInterestInvest increaseInterestInvest = new IncreaseInterestInvest();
+			increaseInterestInvest.setUserId(userId);
+			increaseInterestInvest.setInvestUserName(tender.getUserName());
+			increaseInterestInvest.setTenderId(tender.getId());
+			increaseInterestInvest.setTenderNid(tenderOrderId);
+			increaseInterestInvest.setBorrowNid(borrowNid);
+			increaseInterestInvest.setBorrowApr(borrow.getBorrowApr());
+			increaseInterestInvest.setBorrowExtraYield(borrowInfo.getBorrowExtraYield());
+			increaseInterestInvest.setBorrowPeriod(borrowPeriod);
+			increaseInterestInvest.setBorrowStyle(borrowStyle);
+			increaseInterestInvest.setBorrowStyleName(borrowStyleName);
+			increaseInterestInvest.setOrderId(orderId);
+			increaseInterestInvest.setOrderDate(GetDate.getServerDateTime(10, new Date()));
+			increaseInterestInvest.setAccount(new BigDecimal(account));
+			increaseInterestInvest.setStatus(0);
+			increaseInterestInvest.setWeb(0);
+			increaseInterestInvest.setClient(client);
+			increaseInterestInvest.setAddIp(ip);
+			increaseInterestInvest.setRemark("加息收益");
+			increaseInterestInvest.setInvestType(0);
+			increaseInterestInvest.setCreateTime(GetDate.getNowTime());
+			increaseInterestInvest.setCreateUserId(userId);
+			increaseInterestInvest.setCreateUserName(tender.getUserName());
+
+			// 设置推荐人之类的
+			increaseInterestInvest.setTenderUserAttribute(tender.getTenderUserAttribute());
+			increaseInterestInvest.setInviteRegionId(tender.getInviteRegionId());
+			increaseInterestInvest.setInviteRegionName(tender.getInviteRegionName());
+			increaseInterestInvest.setInviteBranchId(tender.getInviteBranchId());
+			increaseInterestInvest.setInviteBranchName(tender.getInviteBranchName());
+			increaseInterestInvest.setInviteDepartmentId(tender.getInviteDepartmentId());
+			increaseInterestInvest.setInviteDepartmentName(tender.getInviteDepartmentName());
+			increaseInterestInvest.setInviteUserId(tender.getInviteUserId());
+			increaseInterestInvest.setInviteUserName(tender.getInviteUserName());
+
+			boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
+			if (!incinvflag) {
+				logger.error("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+				throw new RuntimeException("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+			}
+			return 1;
+		} else {
+			throw new RuntimeException("产品加息投资额外利息投资失败，borrowtender为空，投资订单号:" + tenderOrderId);
+		}
+	}
 	
 	private boolean redisRecover(int userId, String borrowNid, String account) {
 		JedisPool pool = RedisUtils.getPool();

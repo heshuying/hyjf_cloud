@@ -177,18 +177,61 @@ public interface BorrowService extends BaseService {
 	 */
 	public Borrow selectBorrowByNidAndNowTime(String borrowNid, Integer nowtime);
 
+	/**
+	 * 获取还款计算公式 add by liushouyi
+	 *
+	 * @param borrowStyle
+	 * @return
+	 */
+    List<BorrowStyleWithBLOBs> selectBorrowStyleWithBLOBs(String borrowStyle);
+    /**
+     * 合计
+     *
+     * @param batchCenterCustomize
+     * @return
+     */
 	public Long countBatchCenter(BatchCenterCustomizeRequest batchCenterCustomize);
-
+    /**
+     * 列表
+     *
+     * @param batchCenterCustomize
+     * @return
+     */
 	public List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomizeRequest batchCenterCustomize);
-
+    /**
+     * 查询
+     *
+     * @param params
+     * @return
+     */
 	public String getborrowIdByProductId(Map<String, Object> params);
-
+    /**
+     * 还款列表
+     *
+     * @param params
+     * @return
+     */
 	public List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params);
-
+    /**
+     * 还款列表
+     *
+     * @param params
+     * @return
+     */
 	public List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
-
+    /**
+     * 还款明细
+     *
+     * @param form
+     * @return
+     */
 	public ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
-
+    /**
+     * 合计
+     *
+     * @param bankAccount
+     * @return
+     */
 	public BankOpenAccountVO getBankOpenAccount(String bankAccount);
 
 }

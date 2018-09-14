@@ -8,7 +8,7 @@ import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
@@ -70,14 +70,14 @@ public interface AutoTenderExceptionService extends BaseService{
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
     /**
      * 更新投资数据
      *
      * @return
      * @author nxl
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(BorrowAndInfoVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
     /**
      * 更新
      * @param status

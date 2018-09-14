@@ -6,7 +6,7 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -445,7 +445,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         String borrowNid = borrowTenderCpn.getBorrowNid();
         /** 标的基本数据 */
         // 取得标的详情
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
 
         Map<String, String> msg = null;
         // 借款期数

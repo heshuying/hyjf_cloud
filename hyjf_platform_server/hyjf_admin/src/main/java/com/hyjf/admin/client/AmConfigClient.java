@@ -480,7 +480,7 @@ public interface AmConfigClient {
 	 * @Param cid
 	 * @return
 	 */
-	List<ContentHelpVO> getListByPcateIdAndcateId(Integer pid, Integer cid);
+	List<ContentHelpVO> getListByPcateIdAndcateId(CategoryVO categoryVO);
 
 	/**
 	 * @Author walter.limeng
@@ -1046,7 +1046,7 @@ public interface AmConfigClient {
 	 * 删除保证金配置
 	 * @return
 	 */
-	public AdminVersionResponse deleteVersionConfig(Integer id);
+	public AdminVersionResponse deleteVersionConfig(List<Integer> id);
 	/**
 	 * 校验版本号是否唯一
 	 * @return
@@ -1398,4 +1398,17 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	SmsTemplateVO findSmsTemById(Integer id);
+	AdminUserResponse adminUserSearch(AdminRequest adminRequest);
+
+	AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserInsertAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserUpdateAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUserResetPwdAction(AdminRequest adminRequest);
+	
+	AdminUserResponse adminUsercCheckAction(AdminRequest adminRequest);
 }

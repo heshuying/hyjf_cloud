@@ -122,30 +122,29 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_borrow_finman_new_charge (man_charge_type, man_charge_time, man_charge_time_type, 
-      project_type, inst_code, asset_type, 
-      auto_borrow_apr, charge_mode, charge_rate, 
-      man_charge_rate, return_rate, late_interest, 
-      service_fee_total, late_free_days, auto_repay, 
-      repayer_type, `status`, remark, 
-      create_time, update_time)
-    values (#{manChargeType,jdbcType=VARCHAR}, #{manChargeTime,jdbcType=INTEGER}, #{manChargeTimeType,jdbcType=VARCHAR}, 
-      #{projectType,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
-      #{autoBorrowApr,jdbcType=VARCHAR}, #{chargeMode,jdbcType=TINYINT}, #{chargeRate,jdbcType=VARCHAR}, 
-      #{manChargeRate,jdbcType=VARCHAR}, #{returnRate,jdbcType=VARCHAR}, #{lateInterest,jdbcType=VARCHAR}, 
-      #{serviceFeeTotal,jdbcType=DECIMAL}, #{lateFreeDays,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, 
-      #{repayerType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_borrow_finman_new_charge (man_charge_cd, man_charge_type, man_charge_time, 
+      man_charge_time_type, project_type, inst_code, 
+      asset_type, auto_borrow_apr, charge_mode, 
+      charge_rate, man_charge_rate, return_rate, 
+      late_interest, service_fee_total, late_free_days, 
+      auto_repay, repayer_type, `status`, 
+      remark, create_time, update_time
+      )
+    values (#{manChargeCd,jdbcType=VARCHAR}, #{manChargeType,jdbcType=VARCHAR}, #{manChargeTime,jdbcType=INTEGER}, 
+      #{manChargeTimeType,jdbcType=VARCHAR}, #{projectType,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, 
+      #{assetType,jdbcType=TINYINT}, #{autoBorrowApr,jdbcType=VARCHAR}, #{chargeMode,jdbcType=TINYINT}, 
+      #{chargeRate,jdbcType=VARCHAR}, #{manChargeRate,jdbcType=VARCHAR}, #{returnRate,jdbcType=VARCHAR}, 
+      #{lateInterest,jdbcType=VARCHAR}, #{serviceFeeTotal,jdbcType=DECIMAL}, #{lateFreeDays,jdbcType=TINYINT}, 
+      #{autoRepay,jdbcType=TINYINT}, #{repayerType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge" >
-    <selectKey resultType="java.lang.String" keyProperty="manChargeCd" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_borrow_finman_new_charge
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        man_charge_cd,
+      </if>
       <if test="manChargeType != null" >
         man_charge_type,
       </if>
@@ -208,6 +207,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manChargeCd != null" >
+        #{manChargeCd,jdbcType=VARCHAR},
+      </if>
       <if test="manChargeType != null" >
         #{manChargeType,jdbcType=VARCHAR},
       </if>

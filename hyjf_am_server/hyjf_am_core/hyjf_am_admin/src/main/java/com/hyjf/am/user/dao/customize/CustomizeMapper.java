@@ -3,6 +3,7 @@ package com.hyjf.am.user.dao.customize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.auto.AutoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
@@ -139,4 +140,6 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
+    @Autowired
+    protected ROaDepartmentMapper rOaDepartmentMapper;
 }

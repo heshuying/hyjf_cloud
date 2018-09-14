@@ -41,7 +41,8 @@ public class MyProjectVo implements Serializable{
     private String url = "";
 
     private String statusName = "";
-
+    /** 优惠券类型*/
+    private String couponType ;
     public String getType() {
         return type;
     }
@@ -152,5 +153,13 @@ public class MyProjectVo implements Serializable{
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(String couponType) {
+        this.couponType = couponType;
     }
 }

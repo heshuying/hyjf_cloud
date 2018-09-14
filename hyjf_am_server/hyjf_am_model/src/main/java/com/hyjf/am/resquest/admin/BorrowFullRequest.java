@@ -4,8 +4,6 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 
 import java.io.Serializable;
 
@@ -31,10 +29,6 @@ public class BorrowFullRequest extends BasePage implements Serializable {
     private String currUserId;
 
     private String currUserName;
-
-    private BorrowVO borrowVO;
-
-    private BorrowInfoVO borrowInfoVO;
 
     private String accountId;
 
@@ -108,22 +102,6 @@ public class BorrowFullRequest extends BasePage implements Serializable {
 
     public void setCurrUserName(String currUserName) {
         this.currUserName = currUserName;
-    }
-
-    public BorrowVO getBorrowVO() {
-        return borrowVO;
-    }
-
-    public void setBorrowVO(BorrowVO borrowVO) {
-        this.borrowVO = borrowVO;
-    }
-
-    public BorrowInfoVO getBorrowInfoVO() {
-        return borrowInfoVO;
-    }
-
-    public void setBorrowInfoVO(BorrowInfoVO borrowInfoVO) {
-        this.borrowInfoVO = borrowInfoVO;
     }
 
     public String getAccountId() {
