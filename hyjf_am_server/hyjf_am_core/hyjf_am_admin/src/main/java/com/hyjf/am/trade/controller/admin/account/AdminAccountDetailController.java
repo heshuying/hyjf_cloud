@@ -97,7 +97,6 @@ public class AdminAccountDetailController {
         //
         mapParam.put("userName", userRequest.getUsername());
         mapParam.put("referrerName", userRequest.getReferrerName());
-        mapParam.put("referrerId", userRequest.getReferrerId());
         mapParam.put("nid", userRequest.getNid());
         mapParam.put("accountId", userRequest.getAccountId());
         mapParam.put("seqNo", userRequest.getSeqNo());
@@ -109,7 +108,6 @@ public class AdminAccountDetailController {
         mapParam.put("startDate", userRequest.getStartDate());
         mapParam.put("endDate", userRequest.getEndDate());
         mapParam.put("remarkSrch", userRequest.getRemarkSrch());
-        //mapParam.put("limit",userRequest.getPageSize());
 
         return mapParam;
     }
