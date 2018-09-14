@@ -374,13 +374,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         criteria.andUsernameEqualTo(recommendName);
         List<User> userRecommends = userMapper.selectByExample(ue);
         if (null!=userRecommends && userRecommends.size()==1) {
+            logger.info("===============userRecommends size:"+userRecommends.size());
             User user = userRecommends.get(0);
+            logger.info("===============userId:"+userId+"recommendUserId"+user.getUserId()+" ====================");
             if (user.getUserId() == userId) {
                 return 2;
             } else {
                 return 0;
             }
         } else {
+            logger.info("===============userRecommends size :0 ====================");
             return 1;
         }
     }

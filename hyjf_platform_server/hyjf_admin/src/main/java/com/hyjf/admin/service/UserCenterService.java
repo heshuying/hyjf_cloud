@@ -92,11 +92,10 @@ public interface UserCenterService {
 
     /**
      * 校验手机号
-     * @param userId
      * @param mobile
      * @return
      */
-    int countUserByMobile(int userId, String mobile);
+    int countUserByMobile(String mobile);
 
     /**
      * 校验推荐人
