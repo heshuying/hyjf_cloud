@@ -280,6 +280,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 债转保存
         try{
             insertTenderToCredit(userId, request);
+            Map data = new HashedMap();
+            // 结束日期
+            data.put("creditEndTime", request.getCreditEndTime());
+            // 转让价格
+            data.put("creditPrice",request.getCreditPrice());
+            // 转让本金
+            data.put("creditCapital",request.getCreditCapital());
+            result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
