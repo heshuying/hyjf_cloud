@@ -1,6 +1,10 @@
 spring:
   application:
     name: CONFIG-SERVER
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
 #  profiles:
 #    active: native
   cloud:

@@ -505,16 +505,16 @@ WHERE
 		    AND b.recover_last_time <![CDATA[<=]]> unix_timestamp(#{recoverTimeEndSrch})+86399
 		   </if>
 		   <if test="timeStartSrch != null and timeStartSrch != ''">
-		    AND b.addtime <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+		    AND unix_timestamp(b.create_time) <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
 		   </if>
 		   <if test="timeEndSrch != null and timeEndSrch != ''">
-		    AND b.addtime <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+		    AND unix_timestamp(b.create_time) <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
 		   </if>
 		   <if test="planNidSrch != null and planNidSrch != ''">
 		    AND b.plan_nid = #{planNidSrch}
 		   </if>
 		   <if test="instCodeSrch != null and instCodeSrch != ''">
-		    AND b.inst_code = #{instCodeSrch}
+		    AND bb.inst_code = #{instCodeSrch}
 		   </if>
 		   <if test="labelNameSrch != null and labelNameSrch != ''">
 		    AND label.label_name LIKE CONCAT('%', #{labelNameSrch}, '%')
