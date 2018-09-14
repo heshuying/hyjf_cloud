@@ -321,7 +321,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         String url = urlBase + "borrow/getBorrow/" + borrowNid;
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
@@ -1626,7 +1626,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public List<BorrowVO> selectBorrowList() {
+    public List<BorrowAndInfoVO> selectBorrowList() {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
                 BorrowResponse.class).getBody();
@@ -1642,9 +1642,24 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BorrowVO getBorrowByNid(String borrowId) {
+    public BorrowAndInfoVO getBorrowByNid(String borrowId) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
         BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取正确的borrowVo
+     * @author zhangyk
+     * @date 2018/9/13 17:33
+     */
+    @Override
+    public RightBorrowVO getRightBorrowByNid(String borrowId) {
+        String url = "http://AM-TRADE/am-trade/borrow/getRightBorrowByNid/"+borrowId;
+        RightBorrowResponse response = restTemplate.getForEntity(url,RightBorrowResponse.class).getBody();
         if (response!=null){
             return response.getResult();
         }
@@ -2271,6 +2286,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    @Override
+    public int selectRepaymentListTotalWeb(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectRepaymentListTotalWeb";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getRepayMentCount();
+        }
+        return 0;
+    }
+
+    /**
      * 获取用户债权转让列表总数
      * @param request
      * @return
@@ -2764,7 +2794,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         UtmPlatResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
                 .getBody();
-        if (Response.isSuccess(response) && response.getResult().getAttornFlag()==0) {
+        if (Response.isSuccess(response) && response.getResult() != null && response.getResult().getAttornFlag()==0) {
             return false;
         }
         return true;
@@ -4277,8 +4307,20 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public boolean updateBorrowByBorrowNid(BorrowVO borrow) {
+    public boolean updateBorrowByBorrowNid(BorrowAndInfoVO borrow) {
         String url = urlBase + "/assetPush/update_borrow_by_borrow_nid";
+        IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
+        return result.getResultInt() > 0 ? true : false;
+    }
+
+    /**
+     * 更新借款主表
+     * @author zhangyk
+     * @date 2018/9/13 17:38
+     */
+    @Override
+    public boolean updateRightBorrowByBorrowNid(RightBorrowVO borrow) {
+        String url = urlBase + "/assetPush/updateRightBorrowByBorrowNid";
         IntegerResponse result = restTemplate.postForEntity(url,borrow,  IntegerResponse.class).getBody();
         return result.getResultInt() > 0 ? true : false;
     }
@@ -4322,7 +4364,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public List<BorrowVO> selectOverdueBorrowList() {
+    public List<BorrowAndInfoVO> selectOverdueBorrowList() {
         String url = "http://AM-TRADE/am-trade/borrow/selectOverdueBorrowList";
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
@@ -4383,7 +4425,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/9/3 16:41
      */
     @Override
-    public BorrowVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
+    public BorrowAndInfoVO getBorrowByNidAndNowTime(String borrowNid, Integer nowTime) {
         String url = "http://AM-TRADE/am-trade/borrow/getByNidAndNowTime/"+borrowNid + "/" + nowTime;
         BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -4576,5 +4618,100 @@ public class AmTradeClientImpl implements AmTradeClient {
     public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
         String url = "http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
         restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+    }
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int selectUserTenderCount(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/webPandect/selectUserTenderCount/"+userId;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 借款人还款表 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_repay_info/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 合同状态变更数据生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_contract_status/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 出借人回款记录生成 add by liushouyi
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    @Override
+    public boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod) {
+        BooleanResponse response = restTemplate
+                .getForEntity( urlBase + "nifa_repay_info/insert_nifa_received_payments/" + borrowNid + "/" + repayPeriod, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId) {
+        String url = urlBase + "projectlist/app/getIncreaseInterestInvestByOrdId/" + orderId;
+        IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    @Override
+    public IncreaseInterestInvestVO getIncreaseInterestInvestByTenderNid(String tenderNid) {
+        String url = urlBase + "projectlist/app/getIncreaseInterestInvestByTenderNid/" + tenderNid;
+        IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            response.getResult();
+        }
+        return null;
     }
 }

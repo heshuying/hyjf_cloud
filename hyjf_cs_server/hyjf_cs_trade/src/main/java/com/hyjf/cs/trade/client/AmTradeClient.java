@@ -112,7 +112,7 @@ public interface AmTradeClient {
      */
     HjhUserAuthVO getUserAuthByUserId(Integer userId);
 
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
      * 取得自动投资用加入计划列表
@@ -672,14 +672,22 @@ public interface AmTradeClient {
      * 检索正在还款中的标的
      * @return
      */
-    List<BorrowVO> selectBorrowList();
+    List<BorrowAndInfoVO> selectBorrowList();
 
     /**
      * 获取borrow对象
      * @param borrowId
      * @return
      */
-    BorrowVO getBorrowByNid(String borrowId);
+    BorrowAndInfoVO getBorrowByNid(String borrowId);
+
+
+    /**
+     * 获取正确的额borrowVo对象
+     * @author zhangyk
+     * @date 2018/9/13 17:35
+     */
+    RightBorrowVO getRightBorrowByNid(String borrowId) ;
 
     /**
      * 投资之前插入tmp表
@@ -917,6 +925,12 @@ public interface AmTradeClient {
      * @return
      */
     int selectRepaymentListTotal(AssetManageBeanRequest request);
+    /**
+     * 获取用户已回款债权列表总数(产品加息需求迁移时添加)
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotalWeb(AssetManageBeanRequest request);
     /**
      * 获取用户债权转让列表总数
      * @param request
@@ -1806,7 +1820,14 @@ public interface AmTradeClient {
      * @param borrow
      * @return
      */
-    boolean updateBorrowByBorrowNid(BorrowVO borrow);
+    boolean updateBorrowByBorrowNid(BorrowAndInfoVO borrow);
+
+    /**
+     * 更新借款主表
+     * @author zhangyk
+     * @date 2018/9/13 17:39
+     */
+    boolean updateRightBorrowByBorrowNid(RightBorrowVO borrow);
 
     /**
      * 获取系统配置 add by liushouyi
@@ -1849,7 +1870,7 @@ public interface AmTradeClient {
      * 获取逾期的标的
      * @return
      */
-    List<BorrowVO> selectOverdueBorrowList();
+    List<BorrowAndInfoVO> selectOverdueBorrowList();
 
     /**
      * 计划锁定
@@ -1881,7 +1902,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/9/3 16:40
      */
-    BorrowVO getBorrowByNidAndNowTime(String borrowNid,Integer nowTime);
+    BorrowAndInfoVO getBorrowByNidAndNowTime(String borrowNid,Integer nowTime);
 
     /**
      * 查询提现订单号数量
@@ -1994,4 +2015,55 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO);
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int selectUserTenderCount(Integer userId);
+
+    /**
+     * 借款人还款表
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 合同状态变更数据生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 出借人回款记录生成
+     *
+     * @param borrowNid
+     * @param repayPeriod
+     * @return
+     */
+    boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod);
+
+    /**
+     * 根据订单号查询产品加息信息
+     * @auth sunpeikai
+     * @param orderId 订单id
+     * @return
+     */
+    IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId);
+
+    /**
+     * 查询产品加息信息
+     * @auth sunpeikai
+     * @param tenderNid 对应tender表里的nid
+     * @return
+     */
+    IncreaseInterestInvestVO getIncreaseInterestInvestByTenderNid(String tenderNid);
 }

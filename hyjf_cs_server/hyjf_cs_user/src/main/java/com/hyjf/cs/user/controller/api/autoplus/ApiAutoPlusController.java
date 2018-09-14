@@ -5,11 +5,7 @@ package com.hyjf.cs.user.controller.api.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.ApiAutoPlusResultBean;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.AutoPlusRetBean;
@@ -62,30 +58,7 @@ public class ApiAutoPlusController extends BaseUserController {
     @ApiOperation(value = "前导发送短信验证码",notes = "前导发送短信验证码")
     public ApiAutoPlusResultBean sendCode(@RequestHeader(value = "userId") Integer userId,@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
-        ApiAutoPlusResultBean result = new ApiAutoPlusResultBean();
-        String mobile = autoPlusRequestBean.getMobile();
-        String channel = autoPlusRequestBean.getChannel();
-        String srvTxCode = autoPlusService.checkApiSmsParam(autoPlusRequestBean);
-        // 调用短信发送接口
-        BankCallBean bankBean = null;
-        try {
-            bankBean = autoPlusService.callSendCode(userId,mobile,srvTxCode, channel,null);
-        } catch (Exception e) {
-            logger.error("请求验证码接口发生异常", e);
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
-        CheckUtil.check(null!=bankBean,MsgEnum.STATUS_CE999999);
-        // 短信发送返回结果码
-        String retCode = bankBean.getRetCode();
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)
-                && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
-            logger.info("短信验证码发送失败，请稍后再试！");
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
-        if (Validator.isNull(bankBean.getSrvAuthCode()) && !BankCallConstant.RESPCODE_MOBILE_REPEAT.equals(retCode)) {
-            logger.info("短信验证码发送失败，请稍后再试！");
-            throw new CheckException(MsgEnum.STATUS_CE999999);
-        }
+        ApiAutoPlusResultBean result = autoPlusService.sendCode(userId,autoPlusRequestBean);
         result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         result.setStatusDesc("发送短信验证码成功");
         return result;

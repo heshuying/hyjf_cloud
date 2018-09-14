@@ -1,25 +1,5 @@
 package com.hyjf.am.user.controller.admin.anrong;
 
-import static com.hyjf.am.response.Response.FAIL;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.utils.AnRongDefine;
@@ -28,31 +8,28 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspApply;
-import com.hyjf.am.user.dao.model.auto.MspApplydetails;
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetail;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.admin.anrong.MspApplyService;
-import com.hyjf.am.vo.user.MspAbnormalBeanVO;
-import com.hyjf.am.vo.user.MspAnliinfosVO;
-import com.hyjf.am.vo.user.MspApplyVO;
-import com.hyjf.am.vo.user.MspApplydetailsVO;
-import com.hyjf.am.vo.user.MspBlackdataVO;
-import com.hyjf.am.vo.user.MspConfigureVO;
-import com.hyjf.am.vo.user.MspFqzVO;
-import com.hyjf.am.vo.user.MspNormalcreditdetailVO;
-import com.hyjf.am.vo.user.MspQuerydetailVO;
-import com.hyjf.am.vo.user.MspRegionVO;
-import com.hyjf.am.vo.user.MspShixininfosVO;
-import com.hyjf.am.vo.user.MspTitleVO;
-import com.hyjf.am.vo.user.MspZhixinginfosVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 import com.hyjf.pay.lib.anrong.util.AnRongCallUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.hyjf.am.response.Response.FAIL;
 
 /**
  * 

@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 
 @Api(value = "产品中心-汇转让-承接信息" , tags = "产品中心-汇转让-承接信息")
 @RestController
-@RequestMapping("/borrow/creditTender")
+@RequestMapping("/hyjf-admin/borrow/creditTender")
 public class AdminBorrowCreditTenderController extends BaseController {
 
 

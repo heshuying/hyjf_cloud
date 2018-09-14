@@ -200,30 +200,35 @@ public class CategoryController extends BaseController {
 			CategoryResponse responses = categoryService.infoTypeAction(id);
 			CategoryVO category = (CategoryVO) responses.getData();
 			List<ContentHelpVO> contentHelpVOList = null;
-			if (category.getPid() == 0) {
-				// 如果PID=0表示是一级菜单
-                CategoryVO request = new CategoryVO();
-                request.setPid(category.getPid());
-				contentHelpVOList = categoryService.getListByPcateIdAndcateId(request);
-			} else {
-				contentHelpVOList = categoryService.getListByPcateIdAndcateId(category);
-			}
+			if(null != category){
+                if (category.getPid() == 0) {
+                    // 如果PID=0表示是一级菜单
+                    CategoryVO request = new CategoryVO();
+                    request.setPid(category.getPid());
+                    contentHelpVOList = categoryService.getListByPcateIdAndcateId(request);
+                } else {
+                    contentHelpVOList = categoryService.getListByPcateIdAndcateId(category);
+                }
 
-			if (categoryBeanRequest.getDelType() == null || categoryBeanRequest.getDelType() == 0) {
-				// 分类和问题全删除
-				for (ContentHelpVO help : contentHelpVOList) {
-					categoryService.delContentHelp(help.getId());
-				}
-				categoryService.delCategory(category.getId());
-			} else if (categoryBeanRequest.getDelType() == 1) {
-				// 删除分类,问题转移
-				for (ContentHelpVO help : contentHelpVOList) {
-					help.setPcateId(categoryBeanRequest.getNewpid());
-					help.setCateId(categoryBeanRequest.getNewid());
-					categoryService.updateContentHelp(help);
-				}
-				categoryService.delCategory(category.getId());
-			}
+                if (categoryBeanRequest.getDelType() == null || categoryBeanRequest.getDelType() == 0) {
+                    // 分类和问题全删除
+                    for (ContentHelpVO help : contentHelpVOList) {
+                        categoryService.delContentHelp(help.getId());
+                    }
+                    categoryService.delCategory(category.getId());
+                } else if (categoryBeanRequest.getDelType() == 1) {
+                    // 删除分类,问题转移
+                    for (ContentHelpVO help : contentHelpVOList) {
+                        help.setPcateId(categoryBeanRequest.getNewpid());
+                        help.setCateId(categoryBeanRequest.getNewid());
+                        categoryService.updateContentHelp(help);
+                    }
+                    categoryService.delCategory(category.getId());
+                }
+            }else {
+                response.setRtn(Response.ERROR);
+                response.setMessage("删除对象不存在！");
+            }
 		} else {
 			response.setRtn(Response.ERROR);
 			response.setMessage("删除ID不可为空！");
@@ -301,8 +306,7 @@ public class CategoryController extends BaseController {
 		logger.info("查询内容中心-帮助中心-删除问题开始......");
 		CategoryResponse response = new CategoryResponse();
 		if (null != contentHelpBeanRequest.getId()) {
-
-			categoryService.delContentHelp(contentHelpBeanRequest.getId());
+            categoryService.delContentHelp(contentHelpBeanRequest.getId());
 			response = categoryService.getHelpPage(contentHelpBeanRequest);
 		} else {
 			response.setRtn(Response.ERROR);
@@ -310,6 +314,22 @@ public class CategoryController extends BaseController {
 		}
 		return response;
 	}
+
+    @ApiOperation(value = "内容中心-帮助中心-移除常见列表", notes = "帮助中心-移除常见列表")
+    @RequestMapping(value = "/oftenMoveAction", method = RequestMethod.POST)
+    public CategoryResponse moveAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
+        logger.info("查询内容中心-帮助中心-移除问题开始......");
+        CategoryResponse response = new CategoryResponse();
+        if (null != contentHelpBeanRequest.getId()) {
+
+            categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, null);
+            response = categoryService.getHelpPage(contentHelpBeanRequest);
+        } else {
+            response.setRtn(Response.ERROR);
+            response.setMessage("请选择移除的问题！");
+        }
+        return response;
+    }
 
 	@ApiOperation(value = "内容中心-帮助中心-启用智齿常见问题", notes = "帮助中心-启用智齿常见问题")
 	@RequestMapping(value = "/movezhichiaction", method = RequestMethod.POST)

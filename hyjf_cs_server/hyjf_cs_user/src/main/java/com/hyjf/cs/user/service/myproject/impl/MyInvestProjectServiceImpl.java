@@ -14,7 +14,7 @@ import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.http.HttpClientUtils;
@@ -67,7 +67,7 @@ public class MyInvestProjectServiceImpl extends BaseUserServiceImpl implements M
     }
 
     @Override
-    public BorrowVO selectBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid) {
         return amTradeClient.selectBorrowByBorrowNid(borrowNid);
     }
 

@@ -24,9 +24,7 @@ public class PlatformCountServiceImpl implements PlatformCountService {
 
     @Override
     public List<PlatformUserCountCustomize> getUserInfo(PlatformCountRequest request) {
-        if (request.getTimeStartSrch() != null && request.getTimeEndSrch() != null) {
             return customizeMapper.getUserInfo(request.getTimeStartSrch(), request.getTimeEndSrch());
-        }
-        return null;
+
     }
 }

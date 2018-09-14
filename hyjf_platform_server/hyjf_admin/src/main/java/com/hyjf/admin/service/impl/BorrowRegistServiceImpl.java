@@ -16,7 +16,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -90,7 +90,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         BorrowRegistUpdateRequest request = new BorrowRegistUpdateRequest();
         // 因为跨库原因，部分逻辑写在组合层
         // 查询标的信息
-        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
 
         // 标的信息为空时，返回错误

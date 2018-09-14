@@ -399,17 +399,19 @@ public class CategoryController extends BaseConfigController {
      * @Description  修改问题
      * @Date 14:36 2018/7/24
      * @Param contentId  问题ID
-     * @Param status  0:关闭   1：开启
+     * @Param status  0:关闭   1：开启    2：常见问题
      * @Param zhiChiStatus  0:关闭   1：开启
      * @return
      */
     @RequestMapping("/chancontenthelp/{contentId}/{status}/{zhiChiStatus}")
-    public CategoryResponse chanContentHelp(@PathVariable Integer contentId,@PathVariable Integer status,@PathVariable Integer zhiChiStatus) {
+    public CategoryResponse chanContentHelp(@PathVariable Integer contentId,@PathVariable String status,@PathVariable String zhiChiStatus) {
         logger.info("修改问题......");
         CategoryResponse response = new CategoryResponse();
         ContentHelp con = this.categoryService.queryContentById(contentId);
-        con.setStatus(status);
-        if(null != zhiChiStatus){
+        if(status != null){
+            con.setStatus(Integer.parseInt(status));
+        }
+        if(null != zhiChiStatus && "null".equals(zhiChiStatus)){
             //con.setZhiChiStatus(zhiChiStatus);
         }
         // 更新

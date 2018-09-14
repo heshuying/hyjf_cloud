@@ -13,7 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -178,7 +178,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      * @date 2018/7/23 10:43
      */
     @Override
-    public List<BorrowVO> getPlanBorrowList(Map<String, Object> params) {
+    public List<BorrowAndInfoVO> getPlanBorrowList(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.getPlanBorrowList(params);
     }
 

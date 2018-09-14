@@ -32,26 +32,6 @@ public interface LateAndCreditService extends BaseService {
     List<BorrowRecover> selectBorrowRecoverCredit();
 
     /**
-     * 获取用户投资信息
-     *
-     * @param borrowNid
-     * @return
-     * @author PC-LIUSHOUYI
-     */
-    List<BorrowTender> selectBorrowTenderListByBorrowNid(String borrowNid);
-
-    /**
-     * 获取还款信息详情
-     *
-     * @param borrowNid
-     * @return
-     * @author PC-LIUSHOUYI
-     */
-    BorrowRepay selectBorrowRepay(String borrowNid);
-
-    NifaContractStatus selectNifaContractStatusByNid(String nid);
-
-    /**
      * 插入合同信息
      *
      * @param thisMessName

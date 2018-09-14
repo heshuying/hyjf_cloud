@@ -13,6 +13,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.customize.AdminAccountListCustomize;
 
 import java.util.List;
@@ -398,4 +399,12 @@ public interface AdminAccountCustomizeMapper {
 	 * @return
 	 */
     int updateBankTotalForLockPlan(Account accountTender);
+
+	/**
+	 * 退出计划更新计划相关金额
+	 * add by cwyang 20180821
+	 * @param hjhPlan
+	 * @return
+	 */
+	int updateHjhPlanForQuit(HjhPlan hjhPlan);
 }

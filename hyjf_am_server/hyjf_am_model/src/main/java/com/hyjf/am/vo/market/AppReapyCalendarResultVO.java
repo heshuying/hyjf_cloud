@@ -22,6 +22,8 @@ public class AppReapyCalendarResultVO {
     private String borrowNid;
     private String borrowName;
 
+    /**优惠券类型*/
+    private String couponType;
     // 0-月 1-明细数据  适应app的字段
     private String isMonth;
     // 月份标题
@@ -121,5 +123,13 @@ public class AppReapyCalendarResultVO {
 
     public void setBorrowName(String borrowName) {
         this.borrowName = borrowName;
+    }
+
+    public String getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(String couponType) {
+        this.couponType = couponType;
     }
 }

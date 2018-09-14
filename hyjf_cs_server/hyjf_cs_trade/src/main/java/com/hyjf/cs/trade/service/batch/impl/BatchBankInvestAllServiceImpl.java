@@ -20,7 +20,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -104,7 +104,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
                     if(StringUtils.isNotBlank(borrowId)){
-                        BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowId);
+                        BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowId);
                         request.setBorrow(borrow);
                         BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
                         request.setBorrowInfo(borrowInfo);
@@ -139,7 +139,9 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 					continue;
 				}else {
 					//更新渠道统计用户累计投资
-					if (Validator.isNotNull(request.getLogUser()) && request.getBorrowInfo().getProjectType()!=8){
+					if (Validator.isNotNull(request.getLogUser())
+							&& Validator.isNotNull(request.getBorrowInfo())
+							&& request.getBorrowInfo().getProjectType()!=8){
 						//发送mq
 						AppChannelStatisticsDetailVO appChannelStatisticsDetailVO =
 								this.amMongoClient.getAppChannelStatisticsDetailByUserId(Integer.parseInt(bean.getLogUserId()));

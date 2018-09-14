@@ -4,7 +4,9 @@
 package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
+import java.util.UUID;
 
+import com.hyjf.am.trade.mq.producer.nifa.NifaRepayInfoMessageProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -57,6 +59,9 @@ public class BorrowRepayZTConsumer extends Consumer{
     
 	@Autowired
 	private MailProducer mailProducer;
+
+	@Autowired
+	NifaRepayInfoMessageProducer nifaRepayInfoMessageProducer;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -174,6 +179,14 @@ public class BorrowRepayZTConsumer extends Consumer{
 					logger.info("标的编号："+borrowNid+"，查询批次交易明细，进行后续操作，操作结果："+batchDetailFlag);
 					if (!batchDetailFlag) {
 						throw new Exception("还款成功后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+					}
+					try {
+						JSONObject param = new JSONObject();
+						param.put("borrowNid", borrowApicron.getBorrowNid());
+						param.put("borrowNid", borrowApicron.getPeriodNow());
+						nifaRepayInfoMessageProducer.messageSend(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(param)));
+					} catch (Exception e) {
+						logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
 					}
 					logger.info("标的编号："+borrowNid+"，还款成功！");
 				}

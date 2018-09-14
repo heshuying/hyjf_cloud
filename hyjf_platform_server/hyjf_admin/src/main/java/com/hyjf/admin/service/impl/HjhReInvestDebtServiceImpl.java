@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.HjhReInvestDebtClient;
 import com.hyjf.admin.service.HjhReInvestDebtService;
 import com.hyjf.am.response.admin.HjhReInvestDebtResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;

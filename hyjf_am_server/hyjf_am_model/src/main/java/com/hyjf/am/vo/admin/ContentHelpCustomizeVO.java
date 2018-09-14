@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @Date: 2018/7/20 15:41
  * @Description: ContentHelpCustomizeVO
  */
-public class ContentHelpCustomizeVO extends BaseVO implements Serializable {
+public class ContentHelpCustomizeVO extends ContentHelpVO implements Serializable {
     /**
      * serialVersionUID:
      */

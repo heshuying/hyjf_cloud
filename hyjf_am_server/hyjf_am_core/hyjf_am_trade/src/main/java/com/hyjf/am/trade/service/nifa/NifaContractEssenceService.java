@@ -3,12 +3,10 @@
  */
 package com.hyjf.am.trade.service.nifa;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.NifaContractEssence;
 import com.hyjf.am.trade.dao.model.auto.NifaContractTemplate;
 import com.hyjf.am.trade.dao.model.auto.NifaFieldDefinition;
 import com.hyjf.am.trade.service.BaseService;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
 
 import java.util.List;
 

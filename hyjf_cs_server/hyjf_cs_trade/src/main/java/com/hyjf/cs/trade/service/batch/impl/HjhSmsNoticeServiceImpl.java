@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -41,13 +41,13 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 	@Override
 	public void overdueSmsNotice() {
 		logger.info("-------------------逾期未还款标的统计发短信任务开始------------------");
-		List<BorrowVO> borrowList = amTradeClient.selectOverdueBorrowList();
+		List<BorrowAndInfoVO> borrowList = amTradeClient.selectOverdueBorrowList();
 		if (CollectionUtils.isEmpty(borrowList)) {
 			logger.info("当前没有逾期的标的信息");
 			return;
 		}
 
-		for (BorrowVO record : borrowList) {
+		for (BorrowAndInfoVO record : borrowList) {
 			logger.info("逾期未还款标的：" + record.getBorrowNid());
 
 			try {

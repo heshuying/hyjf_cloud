@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.client.BorrowClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class BorrowClientImpl implements BorrowClient {
     private RestTemplate restTemplate;
 
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/borrow/getBorrow/" + borrowNid,
                 BorrowResponse.class).getBody();

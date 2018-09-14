@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.user.controller.BaseController;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminPreRegistListResponse;
 import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
-import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 import com.hyjf.am.user.service.admin.membercentre.PreRegistService;
 import com.hyjf.am.vo.user.AdminPreRegistListVO;
