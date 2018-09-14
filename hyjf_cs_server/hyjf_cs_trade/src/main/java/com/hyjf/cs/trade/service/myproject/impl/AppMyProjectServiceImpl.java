@@ -668,7 +668,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
-        result.put("resultUrl",systemConfig.getFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult?creditNid=" + (creditNid != null ? creditNid : ""));
+        result.put("resultUrl",systemConfig.getAppFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult?creditNid=" + (creditNid != null ? creditNid : ""));
         return result;
 	}
 	
