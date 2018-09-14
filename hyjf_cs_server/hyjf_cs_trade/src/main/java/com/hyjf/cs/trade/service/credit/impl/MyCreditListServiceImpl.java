@@ -281,6 +281,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         try{
             insertTenderToCredit(userId, request);
         }catch (Exception e){
+        	e.printStackTrace();
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         return result;
@@ -397,17 +398,17 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             }
         }
         // 验证手机验证码
-        if (StringUtils.isEmpty(request.getTelcode())) {
-            // 手机验证码不能为空
-            throw  new CheckException(MsgEnum.STATUS_ZC000010);
-        } else {
-            UserVO user = amUserClient.findUserById(userId);
-            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
-                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-            if (result == 0) {
-                throw new CheckException(MsgEnum.STATUS_ZC000015);
-            }
-        }
+//        if (StringUtils.isEmpty(request.getTelcode())) {
+//            // 手机验证码不能为空
+//            throw  new CheckException(MsgEnum.STATUS_ZC000010);
+//        } else {
+//            UserVO user = amUserClient.findUserById(userId);
+//            int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
+//                    , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+//            if (result == 0) {
+//                throw new CheckException(MsgEnum.STATUS_ZC000015);
+//            }
+//        }
     }
 
     /**
@@ -454,7 +455,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             try {
                 String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
                 String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
                 lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
                 holddays = GetDate.daysBetween(hodeDate, nowDateStr);
             } catch (Exception e) {

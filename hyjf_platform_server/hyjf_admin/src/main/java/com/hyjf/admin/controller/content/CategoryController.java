@@ -306,7 +306,7 @@ public class CategoryController extends BaseController {
 		logger.info("查询内容中心-帮助中心-删除问题开始......");
 		CategoryResponse response = new CategoryResponse();
 		if (null != contentHelpBeanRequest.getId()) {
-            categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, null);
+            categoryService.delContentHelp(contentHelpBeanRequest.getId());
 			response = categoryService.getHelpPage(contentHelpBeanRequest);
 		} else {
 			response.setRtn(Response.ERROR);
