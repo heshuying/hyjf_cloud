@@ -720,9 +720,10 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        UserVO user = amUserClient.findUserById(userId);
 	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getCode(), CommonConstant.PARAM_TPL_ZHUCE
 	                , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-	        if (result == 0) {
+            // TODO: 2018/9/14  zyk  债转验证码不好用 暂时注释掉  跑流程  后期打开
+	        /*if (result == 0) {
 	            throw new CheckException(MsgEnum.STATUS_ZC000015);
-	        }
+	        }*/
 	    }
 	}
 	
@@ -770,7 +771,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        try {
 	            String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
 	            String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-	            String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+	            String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
 	            lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
 	            holddays = GetDate.daysBetween(hodeDate, nowDateStr);
 	        } catch (Exception e) {
