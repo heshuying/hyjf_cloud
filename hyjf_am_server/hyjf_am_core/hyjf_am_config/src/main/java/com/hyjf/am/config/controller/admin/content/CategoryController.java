@@ -399,7 +399,7 @@ public class CategoryController extends BaseConfigController {
      * @Description  修改问题
      * @Date 14:36 2018/7/24
      * @Param contentId  问题ID
-     * @Param status  0:关闭   1：开启
+     * @Param status  0:关闭   1：开启    2：常见问题
      * @Param zhiChiStatus  0:关闭   1：开启
      * @return
      */

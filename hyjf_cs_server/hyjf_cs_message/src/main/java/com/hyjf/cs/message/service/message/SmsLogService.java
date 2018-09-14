@@ -40,4 +40,11 @@ public interface SmsLogService {
      * @return
      */
     List<SmsLog> findSmsLogList();
+
+    /**
+     * 查询符合条件的定时短信的条数
+     * @param request
+     * @return
+     */
+    int queryOntimeCount(SmsLogRequest request);
 }
