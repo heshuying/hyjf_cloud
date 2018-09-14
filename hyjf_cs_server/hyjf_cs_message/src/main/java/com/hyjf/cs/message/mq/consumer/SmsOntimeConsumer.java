@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
@@ -18,6 +19,7 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,9 +57,11 @@ public class SmsOntimeConsumer extends Consumer {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
             MessageExt msg = msgs.get(0);
-            SmsOntime smsOntime = JSONObject.parseObject(msg.getBody(), SmsOntime.class);
-            logger.info("SmsOntimeConsumer 收到消息，开始处理....smsOntime is :{}", smsOntime);
-            if (null != smsOntime) {
+            SmsOntimeVO smsOntimeVO = JSONObject.parseObject(msg.getBody(), SmsOntimeVO.class);
+            logger.info("SmsOntimeConsumer 收到消息，开始处理....smsOntimeVO is :{}", smsOntimeVO);
+            if (null != smsOntimeVO) {
+                SmsOntime smsOntime = new SmsOntime();
+                BeanUtils.copyProperties(smsOntimeVO, smsOntime);
                 smsOntimeMongoDao.save(smsOntime);
             }
             // 如果没有return success ，consumer会重新消费该消息，直到return success
