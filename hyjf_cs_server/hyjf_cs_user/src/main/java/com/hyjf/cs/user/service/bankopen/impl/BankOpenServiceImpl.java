@@ -278,7 +278,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        user.setBankAccount("1");
+        user.setBankOpenAccount(true);
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
         // 查询银行卡绑定信息
