@@ -108,7 +108,7 @@ public class AdminAccountDetailController {
         mapParam.put("tradeTypeSearch", userRequest.getTradeTypeSearch());
         mapParam.put("startDate", userRequest.getStartDate());
         mapParam.put("endDate", userRequest.getEndDate());
-        mapParam.put("remarkSrch", userRequest.getRemark());
+        mapParam.put("remarkSrch", userRequest.getRemarkSrch());
         //mapParam.put("limit",userRequest.getPageSize());
 
         return mapParam;

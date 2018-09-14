@@ -68,7 +68,7 @@
 		LEFT JOIN ht_account_trade t ON l.trade = t.`value`
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
-		<!--ORDER BY l.create_time DESC, l.id DESC-->
+		ORDER BY l.create_time DESC, l.id DESC
 		<if test="limitStart >= 0 and limitEnd > 0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
@@ -93,9 +93,6 @@
 		<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
 			AND t.id = #{tradeTypeSearch}
 		</if>
-		<!--<if test="username != null and username != ''">
-			AND u.username = #{username}
-		</if>-->
 		<if test="nid != null and nid != ''">
 			AND l.nid = #{nid}
 		</if>
