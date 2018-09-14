@@ -453,7 +453,7 @@ ORDER BY
 		))t
 		) AS t
 	</select>
-    <resultMap id="planBorrowList" type="com.hyjf.am.vo.trade.borrow.BorrowVO">
+    <resultMap id="planBorrowList" type="com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO">
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
