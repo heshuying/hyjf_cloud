@@ -367,6 +367,24 @@ public class ProtocolServiceImpl implements ProtocolService {
                 errorMessage="上传的文件不能是空";
             }
             try {
+                String templetId = multipartRequest.getParameter("templetId");
+                // ======上传校验=======
+                if (templetId.isEmpty()){
+                    errorMessage="协议类型必须选择";
+                }
+                //从request中取得MultipartFile列表
+                List<MultipartFile> multipartFileList = getMultipartFileList(multipartRequest);
+                if (multipartFileList == null || multipartFileList.size() <= 0){
+                    errorMessage="获取上传文件失败";
+                }
+                if (multipartFileList.size() > 1){
+                    errorMessage="不可同时上传多个文件";
+                }
+                //从MultipartFile列表中取得唯一的Multipart
+                MultipartFile file = multipartFileList.get(0);
+                if (file == null){
+                    errorMessage="获取上传模板失败";
+                }
                 //判断上传文件是否是Pdf格式的
                 if(!suf.equalsIgnoreCase(".pdf")){
                     errorMessage="上传的文件必须是pdf格式";
@@ -551,4 +569,25 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         return json;
     }
+
+    /**
+     * 从request中取得MultipartFile列表
+     * @param multipartRequest
+     * @return
+     */
+    public List<MultipartFile> getMultipartFileList(MultipartHttpServletRequest multipartRequest) {
+        List<MultipartFile> multipartFileList = new ArrayList<MultipartFile>();
+
+        Iterator<String> itr = multipartRequest.getFileNames();
+        MultipartFile multipartFile = null;
+
+        while (itr.hasNext()) {
+            multipartFile = multipartRequest.getFile(itr.next());
+            if (multipartFile != null){
+                multipartFileList.add(multipartFile);
+            }
+        }
+        return multipartFileList;
+    }
+
 }

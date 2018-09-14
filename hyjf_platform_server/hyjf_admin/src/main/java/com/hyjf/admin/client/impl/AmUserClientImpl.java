@@ -2304,6 +2304,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 校验手机号
+	 * @auther: nxl
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public int countByMobile(String mobile){
+		int checkFlg = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/countByMobile/"+ mobile, Integer.class).
+				getBody();
+		return checkFlg;
+	}
 
 }

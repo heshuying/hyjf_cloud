@@ -2926,7 +2926,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer insertCredit(BorrowCreditVO borrowCredit) {
         String url = "http://AM-TRADE/am-trade/creditTender/save_credit_tender";
-        return restTemplate.postForEntity(url, borrowCredit, Integer.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, borrowCredit, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return null;
     }
 
     /**

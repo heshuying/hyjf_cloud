@@ -41,7 +41,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
@@ -81,14 +81,14 @@
 			bpt.borrow_name AS project_type_name,
 			DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 			b.regist_status,
-			bi.project_type
+			b.project_type
 		FROM
 			ht_borrow b
 			LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 			LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1
@@ -107,7 +107,7 @@
 		LEFT JOIN ht_borrow_info bi ON
 			bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_hjh_asset_borrowtype habt ON
-			bi.project_type = habt.borrow_cd
+			b.project_type = habt.borrow_cd
 			AND bi.inst_code = habt.inst_code
 			AND bi.asset_type = habt.asset_type
 			AND habt.is_open = 1

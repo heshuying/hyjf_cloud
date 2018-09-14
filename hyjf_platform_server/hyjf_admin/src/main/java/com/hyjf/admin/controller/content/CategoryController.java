@@ -322,7 +322,7 @@ public class CategoryController extends BaseController {
         CategoryResponse response = new CategoryResponse();
         if (null != contentHelpBeanRequest.getId()) {
 
-            categoryService.delContentHelp(contentHelpBeanRequest.getId());
+            categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, null);
             response = categoryService.getHelpPage(contentHelpBeanRequest);
         } else {
             response.setRtn(Response.ERROR);

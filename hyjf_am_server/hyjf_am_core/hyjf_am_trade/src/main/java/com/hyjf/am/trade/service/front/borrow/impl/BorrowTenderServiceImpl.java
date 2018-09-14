@@ -219,7 +219,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     @Override
     public List<BorrowTender> getBorrowTenderListByBorrowNid(String borrowNid) {
         BorrowTenderExample example = new BorrowTenderExample();
-        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        example.createCriteria().andBorrowNidEqualTo(borrowNid).andStatusEqualTo(1);
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         return tenderList;
     }
