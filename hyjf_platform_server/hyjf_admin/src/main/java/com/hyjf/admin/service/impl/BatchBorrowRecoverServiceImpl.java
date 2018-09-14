@@ -97,6 +97,23 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         for (BatchBorrowRecoverVo vo:
              listAccountDetail) {
             vo.setStatusStr(paramNameMap.get(vo.getStatus()));
+            if("0".equals(vo.getIncreaseInterestFlag())){//不加息
+                vo.setIncreaseInterestFlag("不加息");
+                vo.setExtraYieldStatus("");
+                vo.setExtraYieldRepayStatus("");
+            }else if("1".equals(vo.getIncreaseInterestFlag())){
+                vo.setIncreaseInterestFlag("加息");
+                if("0".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("待放款");
+                }else if("1".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("放款完成");
+                }
+                if("0".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("待还款");
+                }else if("1".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("还款完成");
+                }
+            }
         }
     }
 

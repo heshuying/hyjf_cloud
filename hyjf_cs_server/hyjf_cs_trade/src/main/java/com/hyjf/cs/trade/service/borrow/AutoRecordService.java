@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.service.borrow;
 
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -37,7 +37,7 @@ public interface AutoRecordService extends BaseTradeService {
      * @param borrowVO
      * @param borrowPreauditGroup
      */
-    void sendToMQ(BorrowVO borrowVO, String borrowPreauditGroup);
+    void sendToMQ(BorrowAndInfoVO borrowVO, String borrowPreauditGroup);
 
     /**
      * 标的自动备案-自动初审 add by liushouyi
@@ -45,5 +45,5 @@ public interface AutoRecordService extends BaseTradeService {
      * @param borrow
      * @return
      */
-    boolean updateRecordBorrow(BorrowVO borrow);
+    boolean updateRecordBorrow(BorrowAndInfoVO borrow);
 }

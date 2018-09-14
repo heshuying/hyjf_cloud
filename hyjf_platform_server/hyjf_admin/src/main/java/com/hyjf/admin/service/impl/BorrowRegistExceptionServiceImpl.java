@@ -15,7 +15,7 @@ import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -113,7 +113,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Transactional(rollbackFor = Exception.class)
     public JSONObject handleBorrowRegistException(String borrowNid, Integer loginUserId) {
         JSONObject result = new JSONObject();
-        BorrowVO borrowVO = amTradeClient.searchBorrowByBorrowNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.searchBorrowByBorrowNid(borrowNid);
         if(null != borrowVO){
             AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
             // 操作用户id
@@ -373,7 +373,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public BankCallBean borrowRegist(BorrowVO borrow, boolean isMonth, String accountId, int loginUserId) {
+    public BankCallBean borrowRegist(BorrowAndInfoVO borrow, boolean isMonth, String accountId, int loginUserId) {
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(loginUserId);
@@ -436,7 +436,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateBorrowRegist(BorrowVO borrow, int status, int registStatus,Integer type){
+    public boolean updateBorrowRegist(BorrowAndInfoVO borrow, int status, int registStatus,Integer type){
         Date nowDate = new Date();
         borrow.setRegistStatus(registStatus);
         borrow.setStatus(status);

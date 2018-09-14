@@ -119,7 +119,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                 }
 
                 // 获取借款详情
-                BorrowVO borrow = nifaContractEssenceMessageService.selectBorrowByBorrowNid(borrowNid);
+                BorrowAndInfoVO borrow = nifaContractEssenceMessageService.selectBorrowByBorrowNid(borrowNid);
                 BorrowInfoVO borrowInfo = nifaContractEssenceMessageService.selectBorrowInfoByBorrowNid(borrowNid);
 
                 // 根据放款编号获取该标的的投资信息

@@ -251,7 +251,7 @@
 		hydb.borrow_account_scale AS borrow_schedule,
 		CONCAT(#{host},'?borrowNid=',hydb.borrow_nid,'&amp;tenderNid=',hiii.tender_nid,'&amp;investType=3') AS borrow_url,
 		'产品加息' label,
-		'' as coupon_type,
+		'4' as coupon_type,
 		hiil.repay_action_time AS recover_time_sort,
 		'3' AS invest_type,
 		hydbpt.borrow_class project_type,

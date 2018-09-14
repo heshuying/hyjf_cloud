@@ -71,7 +71,7 @@ public class AppMyProjectController extends BaseTradeController {
         AssetManageBeanRequest  params = buildQueryParameter(request);
         params.setUserId(userId);
         // 构建分页查询条件
-        this.buildQueryParameter(request);
+        //this.buildQueryParameter(request);
         // 这2个不用了，在返回的时候拼接
         params.setHost("");
         params.setSign(sign);
@@ -172,7 +172,12 @@ public class AppMyProjectController extends BaseTradeController {
                     }
                     investStatusDesc = "现金投资".equals(entity.getData()) ? "还款中" : entity.getData();
             }
-
+            // 加息收益
+            if("4".equals(entity.getType())){
+                vo.setLabel(entity.getData());
+                investStatusDesc = "未回款";
+                vo.setCouponType("4");
+            }
             vo.setBorrowName(entity.getBorrowNid());
             vo.setBorrowTheFirst(CommonUtils.formatAmount(entity.getCapital()) + "元");
             vo.setBorrowTheFirstDesc("投资金额");
@@ -192,6 +197,10 @@ public class AppMyProjectController extends BaseTradeController {
             String borrowUrl = this.concatInvestDetailUrl(entity.getBorrowNid(),  nid,
                     request.getParameter("type"), entity.getCouponType(), assignNid, investStatusDesc);
             //vo.setBorrowUrl(CommonUtils.concatReturnUrl(request, borrowUrl));
+            // 如果是产品加息
+            if ("4".equals(entity.getType())) {
+                borrowUrl += "&isIncrease=1";
+            }
             vo.setBorrowUrl(borrowUrl);
 
             // 判断债权能否债转
@@ -243,6 +252,11 @@ public class AppMyProjectController extends BaseTradeController {
             String borrowUrl = this.concatInvestDetailUrl(entity.getBorrowNid(), entity.getOrderId(),
                     request.getParameter("type"), entity.getCouponType(), assignNid, "已还款");
             //vo.setBorrowUrl(CommonUtils.concatReturnUrl(request, borrowUrl));
+            // 产品加息
+            if ("3".equals(entity.getInvestType())) {
+                borrowUrl += "&isIncrease=1&isCalendar=1";
+                vo.setCouponType("4");
+            }
             vo.setBorrowUrl(borrowUrl);
             CommonUtils.convertNullToEmptyString(vo);
             vos.add(vo);

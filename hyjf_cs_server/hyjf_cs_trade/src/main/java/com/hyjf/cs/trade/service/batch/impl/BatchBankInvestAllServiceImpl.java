@@ -20,7 +20,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -104,7 +104,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
                     if(StringUtils.isNotBlank(borrowId)){
-                        BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowId);
+                        BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowId);
                         request.setBorrow(borrow);
                         BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
                         request.setBorrowInfo(borrowInfo);

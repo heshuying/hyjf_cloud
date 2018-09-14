@@ -198,4 +198,28 @@ public class SmsOntime implements Serializable {
 	public void setCreateTime(Integer createTime) {
 		this.createTime = createTime;
 	}
+
+	@Override
+	public String toString() {
+		return "SmsOntime{" +
+				"id='" + id + '\'' +
+				", channelType='" + channelType + '\'' +
+				", mobile='" + mobile + '\'' +
+				", content='" + content + '\'' +
+				", starttime=" + starttime +
+				", endtime=" + endtime +
+				", status=" + status +
+				", openAccount=" + openAccount +
+				", addMoneyCount=" + addMoneyCount +
+				", addTimeBegin='" + addTimeBegin + '\'' +
+				", addTimeEnd='" + addTimeEnd + '\'' +
+				", reTimeBegin='" + reTimeBegin + '\'' +
+				", reTimeEnd='" + reTimeEnd + '\'' +
+				", ip='" + ip + '\'' +
+				", remark='" + remark + '\'' +
+				", createUserId=" + createUserId +
+				", createUserName='" + createUserName + '\'' +
+				", createTime=" + createTime +
+				'}';
+	}
 }

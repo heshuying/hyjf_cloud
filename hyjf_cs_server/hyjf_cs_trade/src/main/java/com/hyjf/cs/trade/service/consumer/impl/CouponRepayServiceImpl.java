@@ -13,7 +13,7 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.user.*;
@@ -388,7 +388,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         int nowTime = GetDate.getNowTime10();
         /** 标的基本数据 */
         // 取得借款详情
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
         // 还款期数
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
         // 剩余还款期数

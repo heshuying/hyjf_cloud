@@ -2493,7 +2493,7 @@
 		4 AS type,
 		0 coupon_type,
 		hiii.repay_interest_wait AS total_wait,
-		'' AS coupon_name,
+		'加息收益' AS coupon_name,
 		CASE WHEN borrow.borrow_style = 'endday' THEN CONCAT(borrow.borrow_period, '天')
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,

@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.service.batch;
 
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface RepayReminderSmsNoticeBatchService extends BaseTradeService {
      * 检索正在还款中的标的
      * @return
      */
-    List<BorrowVO> selectBorrowList();
+    List<BorrowAndInfoVO> selectBorrowList();
 
     /**
      * 根据标的编号检索还款计划

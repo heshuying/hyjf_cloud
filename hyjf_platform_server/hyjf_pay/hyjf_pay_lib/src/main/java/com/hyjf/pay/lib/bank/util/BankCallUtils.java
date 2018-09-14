@@ -13,6 +13,7 @@ package com.hyjf.pay.lib.bank.util;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.hyjf.pay.lib.config.URLSystemConfig;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +25,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.config.PaySystemConfig;
 
 public class BankCallUtils implements Serializable {
 	private static Logger logger = LoggerFactory.getLogger(BankCallUtils.class);
@@ -46,7 +46,7 @@ public class BankCallUtils implements Serializable {
 	/** 接口路径(后台)查询用 */
 	private static final String REQUEST_MAPPING_CALLAPIBG_FORQUERY = "/callApiBgForQuery.json";
 	
-	private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
+	private static URLSystemConfig URLSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
 	
 	private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
@@ -58,12 +58,12 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static ModelAndView callApi(BankCallBean bean) throws Exception {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		try {
 			// 取出调用汇付接口的url
-			String payurl =  paySystemConfig.getBankUrl();
+			String payurl =  URLSystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}
@@ -113,11 +113,11 @@ public class BankCallUtils implements Serializable {
 	}
 
 	public static Map<String, Object> callApiMap(BankCallBean bean) throws Exception {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		// 跳转页面
 		try {
 			// 取出调用汇付接口的url
-			String payurl =  paySystemConfig.getBankUrl();
+			String payurl =  URLSystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}
@@ -179,13 +179,13 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static BankCallBean callApiBg(BankCallBean bean) {
-		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		BankCallBean ret = null;
 		try {
 			// bean转换成参数
 			bean.convert();
 			// 取出调用汇付接口的url
-			String payurl = paySystemConfig.getBankUrl();
+			String payurl = URLSystemConfig.getBankUrl();
 			if (Validator.isNull(payurl)) {
 				throw new Exception("接口工程URL不能为空");
 			}

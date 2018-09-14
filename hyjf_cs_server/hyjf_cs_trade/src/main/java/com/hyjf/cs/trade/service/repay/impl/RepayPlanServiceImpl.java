@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.service.repay.impl;
 
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.InterestInfo;
@@ -23,7 +23,7 @@ public class RepayPlanServiceImpl implements RepayPlanService {
 
     @Override
     public List<BorrowRepayPlanCsVO> getRepayPlan(String borrowNid) {
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
         String borrowStyle = borrow.getBorrowStyle();
         Integer projectType = borrow.getProjectType();
         BigDecimal yearRate = borrow.getBorrowApr();

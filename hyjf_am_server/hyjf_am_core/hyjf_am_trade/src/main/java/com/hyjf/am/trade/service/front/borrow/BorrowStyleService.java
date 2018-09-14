@@ -50,4 +50,10 @@ public interface BorrowStyleService {
      */
     public void deleteBorrowStyleById(Integer id);
 
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+    BorrowStyle getBorrowStyle(String borrowStyle);
 }

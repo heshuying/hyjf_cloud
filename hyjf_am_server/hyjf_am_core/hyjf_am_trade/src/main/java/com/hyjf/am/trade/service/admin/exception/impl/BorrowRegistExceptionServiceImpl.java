@@ -15,7 +15,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AutoPreAuditProducer;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -122,12 +122,12 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
-    public BorrowVO searchBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
         // 返回结果
-        BorrowVO borrowVO = new BorrowVO();
+        BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
         // 获取相应的标的详情
         Borrow borrow = this.getBorrow(borrowNid);
-        borrowVO = CommonUtils.convertBean(borrow,BorrowVO.class);
+        borrowVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
         return borrowVO;
     }
 
@@ -158,7 +158,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type) {
+    public Boolean updateBorrowRegistByType(BorrowAndInfoVO borrowVO,Integer type) {
         Borrow borrow = CommonUtils.convertBean(borrowVO,Borrow.class);
         BorrowExample example = new BorrowExample();
         if(type == 1){
@@ -180,7 +180,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
+    public Boolean updateBorrowAsset(BorrowAndInfoVO borrowVO, Integer status) {
         boolean borrowFlag = false;
 
         HjhPlanAsset hjhPlanAsset = this.selectAssetByBorrow(borrowVO);
@@ -221,7 +221,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      *
      * @return
      */
-    private HjhPlanAsset selectAssetByBorrow(BorrowVO borrow) {
+    private HjhPlanAsset selectAssetByBorrow(BorrowAndInfoVO borrow) {
         HjhPlanAssetExample example = new HjhPlanAssetExample();
         HjhPlanAssetExample.Criteria cra = example.createCriteria();
         cra.andInstCodeEqualTo(borrow.getInstCode());
