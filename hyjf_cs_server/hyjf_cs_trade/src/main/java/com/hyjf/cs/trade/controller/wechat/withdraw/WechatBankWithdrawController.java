@@ -194,9 +194,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
         CheckUtil.check(1==userVO.getBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed?sign="+sign;
+        String retUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/failed";
         String bgRetUrl = systemConfig.getWechatHost()+"/hyjf-wechat/wx/bank/withdraw/bgreturn.do";
-        String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success?sign="+sign;
+        String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/success";
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip, retUrl, bgRetUrl, successfulUrl);
         Map<String,Object> map = new HashMap<>();
         try {
