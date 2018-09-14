@@ -280,6 +280,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 债转保存
         try{
             insertTenderToCredit(userId, request);
+            Map data = new HashedMap();
+            // 结束日期
+            data.put("creditEndTime", request.getCreditEndTime());
+            // 转让价格
+            data.put("creditPrice",request.getCreditPrice());
+            // 转让本金
+            data.put("creditCapital",request.getCreditCapital());
+            result.setData(data);
         }catch (Exception e){
         	e.printStackTrace();
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
@@ -455,7 +463,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             try {
                 String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
                 String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
                 lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
                 holddays = GetDate.daysBetween(hodeDate, nowDateStr);
             } catch (Exception e) {

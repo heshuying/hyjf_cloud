@@ -713,12 +713,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        }
 	    }
 	    // 验证手机验证码
-	    if (StringUtils.isEmpty(request.getTelcode())) {
+	    if (StringUtils.isEmpty(request.getCode())) {
 	        // 手机验证码不能为空
 	        throw  new CheckException(MsgEnum.STATUS_ZC000010);
 	    } else {
 	        UserVO user = amUserClient.findUserById(userId);
-	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
+	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getCode(), CommonConstant.PARAM_TPL_ZHUCE
 	                , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
 	        if (result == 0) {
 	            throw new CheckException(MsgEnum.STATUS_ZC000015);
