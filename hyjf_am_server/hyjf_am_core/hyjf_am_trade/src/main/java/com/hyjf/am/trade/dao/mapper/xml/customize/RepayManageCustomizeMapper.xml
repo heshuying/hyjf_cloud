@@ -36,7 +36,7 @@
 		SELECT
 		hbap.suc_amount,
 		hbap.batch_service_fee,
-		FROM_UNIXTIME(
+		DATE_FORMAT(
 		hbap.update_time,
 		'%Y-%m-%d'
 		) AS suc_time,

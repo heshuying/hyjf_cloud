@@ -324,6 +324,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // add by cwyang 在只使用代金券和体验金,并且没有本金的情况下,不进行投资递增金额的判断,在投资金额等于最大可投金额时也不做递增金额的判断
         if (!(cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1) && accountInt == 0)) {
             // 投资递增金额须为" + borrowDetail.getIncreaseMoney() + " 元的整数倍
+            logger.info("borrow.getBorrowIncreaseMoney():{} accountInt {} - min {} accountBigDecimal {}  balance  {}  getTenderAccountMax {} ,"
+            ,borrow.getBorrowIncreaseMoney(),accountInt,min,accountBigDecimal,balance,borrow.getTenderAccountMax());
             if (borrow.getBorrowIncreaseMoney() != null && (accountInt - min) % borrow.getBorrowIncreaseMoney() != 0
                     && accountBigDecimal.compareTo(new BigDecimal(balance)) == -1 && accountInt < borrow.getTenderAccountMax()) {
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_INCREMENTING,borrow.getBorrowIncreaseMoney());
