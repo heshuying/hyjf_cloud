@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.customize.DebtPlanAccedeCustomize;
 import com.hyjf.am.trade.dao.model.customize.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.UserHjhInvistDetailCustomize;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -103,7 +103,7 @@ public interface HjhPlanService {
      * @author zhangyk
      * @date 2018/7/23 10:42
      */
-    List<BorrowVO> getPlanBorrowList(Map<String,Object> params);
+    List<BorrowAndInfoVO> getPlanBorrowList(Map<String,Object> params);
 
     /**
      * 加入总数和接入金额总计

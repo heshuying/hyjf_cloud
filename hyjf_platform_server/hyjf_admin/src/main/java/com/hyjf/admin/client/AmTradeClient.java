@@ -208,7 +208,7 @@ public interface AmTradeClient {
      * @param borrowNid 借款编号
      * @return
      */
-    BorrowVO searchBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid);
 
     /**
      * 根据受托支付userId查询stAccountId
@@ -225,7 +225,7 @@ public interface AmTradeClient {
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    boolean updateBorrowRegist(BorrowVO borrowVO, Integer type);
+    boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type);
 
     /**
      * 备案成功看标的是否关联计划，如果关联则更新对应资产表
@@ -233,7 +233,7 @@ public interface AmTradeClient {
      * @param borrowVO 标信息
      * @return
      */
-    boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+    boolean updateBorrowAsset(BorrowAndInfoVO borrowVO,Integer status);
 
     /**
      * 转账列表
@@ -687,7 +687,7 @@ public interface AmTradeClient {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
      * 根据标的编号查询borrowInfo

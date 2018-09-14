@@ -16,7 +16,7 @@ import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.vo.admin.BorrowFullCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang.StringUtils;
@@ -156,7 +156,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         }
 
         //标的信息、状态
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());
         if(borrow == null){
             return "标的信息不存在！";
         } else if(borrow.getStatus() == 16) {
@@ -169,7 +169,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         // 借款编号
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         //查询标的信息
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
 
         if (borrow == null || borrowInfo == null) {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.BorrowBailVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
@@ -122,7 +122,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
      * @return
      */
     @Override
-    public boolean updateRecordBorrow(BorrowVO borrows) {
+    public boolean updateRecordBorrow(BorrowAndInfoVO borrows) {
 
         //检查是否交过保证金
         String borrowNid = borrows.getBorrowNid();
@@ -137,7 +137,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
         // 插入时间
         int systemNowDateLong = GetDate.getNowTime10();
         Date systemNowDate = GetDate.getDate(systemNowDateLong);
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow != null) {
             // 剩余的金额
             borrow.setBorrowAccountWait(borrow.getAccount());
@@ -172,7 +172,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
         // 借款编号存在
         if (StringUtils.isNotEmpty(borrowPreNid)) {
 
-            BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowPreNid);
+            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowPreNid);
             if (borrow != null) {
                 // 该借款编号没有交过保证金
                 BorrowBailVO borrowBailVO = amTradeClient.selectBorrowBail(borrow.getBorrowNid());
@@ -230,7 +230,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
         // 插入时间
         int systemNowDateLong = GetDate.getNowTime10();
         Date systemNowDate = GetDate.getDate(systemNowDateLong);
-        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrowVO != null) {
             // 剩余的金额
             borrowVO.setBorrowAccountWait(borrowVO.getAccount());

@@ -344,9 +344,6 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int countUserByMobile(int userId, String mobile) {
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
-        if (Validator.isNotNull(userId)) {
-            criteria.andUserIdEqualTo(userId);
-        }
         criteria.andMobileEqualTo(mobile);
         int cnt = userMapper.countByExample(example);
         return cnt;
@@ -376,14 +373,17 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample.Criteria criteria = ue.createCriteria();
         criteria.andUsernameEqualTo(recommendName);
         List<User> userRecommends = userMapper.selectByExample(ue);
-        if (userRecommends != null && userRecommends.size() == 1) {
+        if (null!=userRecommends && userRecommends.size()==1) {
+            logger.info("===============userRecommends size:"+userRecommends.size());
             User user = userRecommends.get(0);
+            logger.info("===============userId:"+userId+"recommendUserId"+user.getUserId()+" ====================");
             if (user.getUserId() == userId) {
                 return 2;
             } else {
                 return 0;
             }
         } else {
+            logger.info("===============userRecommends size :0 ====================");
             return 1;
         }
     }

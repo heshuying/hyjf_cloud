@@ -396,7 +396,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public BorrowVO searchBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow_regist_exception/search_borrow_by_borrownid/" + borrowNid;
         BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
         if (response != null) {
@@ -429,7 +429,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public boolean updateBorrowRegist(BorrowVO borrowVO, Integer type) {
+    public boolean updateBorrowRegist(BorrowAndInfoVO borrowVO, Integer type) {
         String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
         Boolean response = restTemplate.postForEntity(url, borrowVO, Boolean.class).getBody();
         return response;
@@ -443,7 +443,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @auth sunpeikai
      */
     @Override
-    public boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
+    public boolean updateBorrowAsset(BorrowAndInfoVO borrowVO, Integer status) {
         String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
         Boolean response = restTemplate.postForEntity(url, borrowVO, Boolean.class).getBody();
         return response;
@@ -1590,7 +1590,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BorrowVO selectBorrowByNid(String borrowNid) {
+    public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-ADMIN/am-trade/borrow/getBorrow/" + borrowNid, BorrowResponse.class).getBody();
         if (response != null) {

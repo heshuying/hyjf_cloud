@@ -6,7 +6,7 @@ package com.hyjf.admin.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface TenderCancelExceptionService {
      * @param borrowNid 项目编号
      * @return
      */
-    BorrowVO getBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO getBorrowByBorrowNid(String borrowNid);
 
     /**
      * 投资撤销异常处理

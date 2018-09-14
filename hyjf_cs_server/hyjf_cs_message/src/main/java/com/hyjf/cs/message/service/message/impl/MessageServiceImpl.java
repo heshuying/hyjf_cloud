@@ -21,7 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +52,13 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
-		//todo
+		Criteria criteria = new Criteria();
+		criteria.and("status").is(statusWait);
+		Query query = new Query(criteria);
+		List<SmsOntime> list = smsOntimeMongoDao.find(query);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list;
+		}
 		return null;
 	}
 

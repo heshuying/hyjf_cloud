@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -50,7 +50,7 @@ public interface NewAgreementService extends BaseTradeService{
 	 * @return
 	 */
     @Override
-    BorrowVO getBorrowByNid(String borrowNid);
+    BorrowAndInfoVO getBorrowByNid(String borrowNid);
 	
 	/**
 	 * 根据creditNid获取债转信息

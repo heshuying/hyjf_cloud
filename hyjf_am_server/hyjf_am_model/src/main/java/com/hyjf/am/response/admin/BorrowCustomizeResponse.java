@@ -24,6 +24,7 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	private List<BorrowProjectTypeVO> borrowProjectType;
 	private List<BorrowStyleVO> borrowStyle;
 	private Map<String, String> st;
+	private Map<String, String> bs;
 	private List<BorrowCommonCustomizeVO> borrowCommonCustomizeList;
 	
 	public List<BorrowCommonCustomizeVO> getBorrowCommonCustomizeList() {
@@ -56,4 +57,11 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	public void setBorrowStyle(List<BorrowStyleVO> borrowStyle) {
 		this.borrowStyle = borrowStyle;
 	}
+	public Map<String, String> getBs() {
+		return bs;
+	}
+	public void setBs(Map<String, String> bs) {
+		this.bs = bs;
+	}
+	
 }

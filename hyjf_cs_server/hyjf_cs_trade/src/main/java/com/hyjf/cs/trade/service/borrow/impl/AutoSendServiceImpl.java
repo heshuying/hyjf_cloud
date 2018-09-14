@@ -188,7 +188,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         // borrow_class
         String beforeFix = borrowFinmanNewChargeVO.getProjectType();
 
-        BorrowVO borrowVO = this.setBorrowCommonData(hjhPlanAssetVO, hjhAssetBorrowTypeVO, borrowFinmanNewChargeVO);
+        BorrowAndInfoVO borrowVO = this.setBorrowCommonData(hjhPlanAssetVO, hjhAssetBorrowTypeVO, borrowFinmanNewChargeVO);
 
 
         // 获取标签ID
@@ -281,7 +281,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
      * @param hjhPlanAssetVO
      * @param borrowVO
      */
-    private int insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowVO borrowVO) {
+    private int insertBorrowManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAssetVO, BorrowAndInfoVO borrowVO) {
         BorrowManinfoVO borrowManinfo = new BorrowManinfoVO();
 
         borrowManinfo.setBorrowNid(borrowNid);
@@ -482,7 +482,7 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
      * @param borrow
      * @return
      */
-    public int insertBorrowCompanyManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAsset, BorrowVO borrow) {
+    public int insertBorrowCompanyManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAsset, BorrowAndInfoVO borrow) {
         _log.info("插入企业信息", JSONObject.toJSON(hjhPlanAsset));
         // 公司信息
         BorrowUserVO borrowUsers = new BorrowUserVO();
@@ -620,11 +620,11 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
      * @return
      * @throws Exception
      */
-    private BorrowVO setBorrowCommonData(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO, BorrowFinmanNewChargeVO borrowFinmanNewChargeVO)
+    private BorrowAndInfoVO setBorrowCommonData(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO, BorrowFinmanNewChargeVO borrowFinmanNewChargeVO)
             throws Exception {
 
         // 插入huiyingdai_borrow
-        BorrowVO borrow = new BorrowVO();
+        BorrowAndInfoVO borrow = new BorrowAndInfoVO();
 
         // 关联计划
         borrow.setIsShow(1); // 默认不展示

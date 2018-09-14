@@ -1193,9 +1193,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			if (!isUpdateFlag) {
 				throw new RuntimeException("更新huiyingdai_borrow_recover表数据失败~!");
 			}
-			return 1;
+			return borrowCredit.getCreditNid();
 		}
-		return 0;
+		return null;
 	}
 
 	/**

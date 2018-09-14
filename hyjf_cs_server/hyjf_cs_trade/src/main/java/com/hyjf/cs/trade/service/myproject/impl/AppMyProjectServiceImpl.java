@@ -19,7 +19,7 @@ import com.hyjf.am.vo.trade.borrow.AccountBorrowVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -45,7 +45,6 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.util.HomePageDefine;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -623,7 +622,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * App端:发送短信验证码(ajax请求)短信验证码数据保存(取自web)
      */
 	@Override
-	public AppResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId) {
+	public AppResult sendCreditCode(HttpServletRequest request, Integer userId) {
 		UserVO user = amUserClient.findUserById(userId);
         if(user.getMobile()==null){
             throw new CheckException(MsgEnum.STATUS_ZC000001);
@@ -654,16 +653,25 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @return
      */
 	@Override
-	public AppResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
-		AppResult result = new AppResult();
+	public JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
+	    JSONObject result = new JSONObject();
+        result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        Integer creditNid = null;
         // 检查是否能债转
         checkCanCredit(request,userId);
         checkTenderToCreditParam(request,userId);
         // 债转保存
         try{
-            insertTenderToCredit(userId, request);
+          creditNid = insertTenderToCredit(userId, request);
         }catch (Exception e){
-            result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
+            result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL);
+        }
+        if (creditNid != null){
+            result.put("resultUrl",systemConfig.getAppFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult?creditNid=" + (creditNid != null ? creditNid : ""));
+        }else{
+            result.put("resultUrl","");
         }
         return result;
 	}
@@ -713,16 +721,17 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        }
 	    }
 	    // 验证手机验证码
-	    if (StringUtils.isEmpty(request.getTelcode())) {
+	    if (StringUtils.isEmpty(request.getCode())) {
 	        // 手机验证码不能为空
 	        throw  new CheckException(MsgEnum.STATUS_ZC000010);
 	    } else {
 	        UserVO user = amUserClient.findUserById(userId);
-	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getTelcode(), CommonConstant.PARAM_TPL_ZHUCE
+	        int result = amUserClient.checkMobileCode(user.getMobile(), request.getCode(), CommonConstant.PARAM_TPL_ZHUCE
 	                , request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
-	        if (result == 0) {
+            // TODO: 2018/9/14  zyk  债转验证码不好用 暂时注释掉  跑流程  后期打开
+	        /*if (result == 0) {
 	            throw new CheckException(MsgEnum.STATUS_ZC000015);
-	        }
+	        }*/
 	    }
 	}
 	
@@ -736,7 +745,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    // 当前日期
 	    Integer nowTime = GetDate.getNowTime10();
 	    // 查询borrow 和 BorrowRecover
-	    BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
+	    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
 	    if (borrow == null) {
 	        throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
 	    }
@@ -762,6 +771,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    borrowCredit.setCreditNid(Integer.parseInt(creditNid));
 	    // 转让用户id
 	    borrowCredit.setCreditUserId(userId);
+	    UserVO userVO  = amUserClient.findUserById(userId);
+	    borrowCredit.setCreditUserName(userVO != null ? userVO.getUsername(): "");
 	    int lastdays = 0;
 	    int holddays = 0;
 	    String borrowStyle = borrow.getBorrowStyle();
@@ -770,7 +781,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	        try {
 	            String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
 	            String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-	            String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+	            String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
 	            lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
 	            holddays = GetDate.daysBetween(hodeDate, nowDateStr);
 	        } catch (Exception e) {
@@ -888,7 +899,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @param nowTime
      * @return
      */
-    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
+    public Map<String, BigDecimal> selectExpectCreditFeeForBigDecimal(BorrowAndInfoVO borrow, BorrowRecoverVO borrowRecover, String creditDiscount, int nowTime) {
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
         // 债转本息
@@ -1223,7 +1234,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             int lastdays = 0;
             String borrowNid = appTenderToCreditDetail.getBorrowNid();
             // 根据borrowNid判断是否分期
-            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
             String borrowStyle = borrowVO.getBorrowStyle();
             if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
                 try {
@@ -1281,7 +1292,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
-        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowRecoverVO borrowRecoverVO = amTradeClient.getBorrowRecoverByTenderNidBidNid(tenderNid,borrowNid);
         // 债转本息
         BigDecimal creditAccount = BigDecimal.ZERO;
