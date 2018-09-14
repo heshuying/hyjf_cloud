@@ -35,7 +35,7 @@
         </if>
         <!-- 资产来源 -->
         <if test="instCodeSrch != null and instCodeSrch != ''">
-            AND b.inst_code = #{instCodeSrch}
+            AND bi.inst_code = #{instCodeSrch}
         </if>
         <if test="batchNo != null and batchNo != ''">
             AND hba.batch_no = #{batchNo}
@@ -62,6 +62,7 @@
         FROM
         ht_borrow_apicron hba
         LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON b.borrow_nid = bi.borrow_nid
         <include refid="Where_Clause"/>
     </select>
 
