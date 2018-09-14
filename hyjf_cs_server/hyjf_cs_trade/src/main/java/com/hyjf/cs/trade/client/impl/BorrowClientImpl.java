@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
