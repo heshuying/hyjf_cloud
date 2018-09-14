@@ -389,12 +389,12 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(ckcodeYiyan);
 		request.setUpdateStatus(ckcodeYiyan1);
 
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, Integer.class)
+		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", request, IntegerResponse.class)
 				.getBody();
-		if (result == null) {
-			return 0;
+		if (Response.isSuccess(response)) {
+			return response.getResultInt();
 		}
-		return result;
+		return 0;
 	}
 
 	/**
