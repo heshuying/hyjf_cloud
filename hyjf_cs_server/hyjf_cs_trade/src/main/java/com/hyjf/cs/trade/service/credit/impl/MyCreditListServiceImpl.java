@@ -455,7 +455,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             try {
                 String nowDateStr = GetDate.getDateTimeMyTimeInMillis(nowTime);
                 String recoverDate = GetDate.getDateTimeMyTimeInMillis(recover.getRecoverTime());
-                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
+                String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getCreateTime());
                 lastdays = GetDate.daysBetween(nowDateStr, recoverDate);
                 holddays = GetDate.daysBetween(hodeDate, nowDateStr);
             } catch (Exception e) {
