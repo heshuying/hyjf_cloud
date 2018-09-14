@@ -124,10 +124,6 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	 */
 	private String repayStyle;
 
-	/**
-	 * 产品加息率
-	 */
-	private String borrowExtraYield;
 	public AppBorrowProjectInfoBeanVO() {
 		super();
 	}
