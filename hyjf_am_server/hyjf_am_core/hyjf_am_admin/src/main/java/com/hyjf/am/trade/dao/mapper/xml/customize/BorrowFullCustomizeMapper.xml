@@ -191,7 +191,7 @@
 		FROM ht_borrow b
 			LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		WHERE
 		    b.borrow_nid = #{borrowNid}
 	</select>	
