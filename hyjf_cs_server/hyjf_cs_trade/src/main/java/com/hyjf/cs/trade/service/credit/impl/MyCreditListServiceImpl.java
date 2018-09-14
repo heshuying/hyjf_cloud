@@ -281,6 +281,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         try{
             insertTenderToCredit(userId, request);
         }catch (Exception e){
+        	e.printStackTrace();
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         return result;
