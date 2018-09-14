@@ -45,7 +45,6 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.util.HomePageDefine;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -623,7 +622,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * App端:发送短信验证码(ajax请求)短信验证码数据保存(取自web)
      */
 	@Override
-	public AppResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId) {
+	public AppResult sendCreditCode(HttpServletRequest request, Integer userId) {
 		UserVO user = amUserClient.findUserById(userId);
         if(user.getMobile()==null){
             throw new CheckException(MsgEnum.STATUS_ZC000001);
@@ -654,17 +653,22 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @return
      */
 	@Override
-	public AppResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
-		AppResult result = new AppResult();
+	public JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
+	    JSONObject result = new JSONObject();
+        result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        Integer creditNid = null;
         // 检查是否能债转
         checkCanCredit(request,userId);
         checkTenderToCreditParam(request,userId);
         // 债转保存
         try{
-            insertTenderToCredit(userId, request);
+          creditNid = insertTenderToCredit(userId, request);
         }catch (Exception e){
-            result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
+            result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
+        result.put("resultUrl",systemConfig.getFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult??creditNid=" + creditNid != null ? creditNid : "");
         return result;
 	}
 	
