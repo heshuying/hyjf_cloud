@@ -668,7 +668,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
-        result.put("resultUrl",systemConfig.getFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult??creditNid=" + creditNid != null ? creditNid : "");
+        result.put("resultUrl",systemConfig.getFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult?creditNid=" + (creditNid != null ? creditNid : ""));
         return result;
 	}
 	
@@ -767,6 +767,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    borrowCredit.setCreditNid(Integer.parseInt(creditNid));
 	    // 转让用户id
 	    borrowCredit.setCreditUserId(userId);
+	    UserVO userVO  = amUserClient.findUserById(userId);
+	    borrowCredit.setCreditUserName(userVO != null ? userVO.getUsername(): "");
 	    int lastdays = 0;
 	    int holddays = 0;
 	    String borrowStyle = borrow.getBorrowStyle();
