@@ -10,7 +10,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.TenderCancelExceptionService;
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +65,7 @@ public class TenderCancelExceptionController extends BaseController {
             return new AdminResult(FAIL,"参数错误，请稍后再试");
         }
         String borrowNid = request.getBorrowNid();
-        BorrowVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
+        BorrowAndInfoVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
         Integer status = borrow.getStatus();
         if (status!=null && status == 2) {//投资中标的
             return new AdminResult(SUCCESS,"投资中标的,可撤销！");

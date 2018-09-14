@@ -237,13 +237,12 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     /**
      * 校验手机号
      *
-     * @param userId
      * @param mobile
      * @return
      */
     @Override
-    public int countUserByMobile(int userId, String mobile) {
-        int checkFlg = userCenterClient.countUserByMobile(userId, mobile);
+    public int countUserByMobile(String mobile) {
+        int checkFlg = userCenterClient.countByMobile(mobile);
         return checkFlg;
     }
 

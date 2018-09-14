@@ -1133,4 +1133,12 @@ public interface AmUserClient {
      * @return
      */
     List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
+
+    /**
+     * 校验手机号
+     * @param mobile
+     * @return
+     * @auth nxl
+     */
+    int countByMobile(String mobile);
 }

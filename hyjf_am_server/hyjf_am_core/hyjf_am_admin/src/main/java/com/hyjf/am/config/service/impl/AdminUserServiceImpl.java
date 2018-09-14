@@ -176,7 +176,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 			if (cnt == 0) {
 				adminAndRoleMapper.insertSelective(adminAndRole);
 			} else {
-				adminAndRoleMapper.updateByExample(adminAndRole, example);
+				adminAndRoleMapper.updateByExampleSelective(adminAndRole, example);
 			}
 			if (form.getAdminId()==record.getId()) {
 				// 更新权限

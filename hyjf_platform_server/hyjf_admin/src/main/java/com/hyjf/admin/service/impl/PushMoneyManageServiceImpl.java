@@ -13,7 +13,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -96,7 +96,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
 
         // 根据项目编号取得borrow表
 
-        BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
 
         // 根据项目编号取得borrowTender表
         List<BorrowTenderVO> borrowTenderList = this.amTradeClient.getBorrowTenderListByNid(borrowNid);

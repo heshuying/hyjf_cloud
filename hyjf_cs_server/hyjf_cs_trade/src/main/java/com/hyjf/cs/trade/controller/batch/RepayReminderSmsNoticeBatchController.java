@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.service.batch.RepayReminderSmsNoticeBatchService;
@@ -48,10 +48,10 @@ public class RepayReminderSmsNoticeBatchController {
 
         try {
             // 检索正在还款中的标的
-            List<BorrowVO> borrows = this.repayReminderService.selectBorrowList();
+            List<BorrowAndInfoVO> borrows = this.repayReminderService.selectBorrowList();
             // 循环还款中的标的
             if (borrows != null && borrows.size() > 0) {
-                for (BorrowVO borrow : borrows) {
+                for (BorrowAndInfoVO borrow : borrows) {
                     // 还款前三天短信提醒
                     List<Map<String, String>> msgList = new ArrayList<Map<String, String>>();
                     // 还款当天短息提醒

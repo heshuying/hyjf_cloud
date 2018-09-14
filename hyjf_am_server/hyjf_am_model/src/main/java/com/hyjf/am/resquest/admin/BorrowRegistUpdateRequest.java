@@ -4,7 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.io.Serializable;
 
@@ -16,7 +16,7 @@ public class BorrowRegistUpdateRequest implements Serializable {
     /**
      * 标的
      */
-    private BorrowVO borrowVO;
+    private BorrowAndInfoVO borrowVO;
 
     /**
      * 标的信息
@@ -43,11 +43,11 @@ public class BorrowRegistUpdateRequest implements Serializable {
      */
     private String bailAccountId;
 
-    public BorrowVO getBorrowVO() {
+    public BorrowAndInfoVO getBorrowVO() {
         return borrowVO;
     }
 
-    public void setBorrowVO(BorrowVO borrowVO) {
+    public void setBorrowVO(BorrowAndInfoVO borrowVO) {
         this.borrowVO = borrowVO;
     }
 

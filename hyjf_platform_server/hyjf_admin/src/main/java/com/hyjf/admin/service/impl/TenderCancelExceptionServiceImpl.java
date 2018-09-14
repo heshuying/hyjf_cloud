@@ -9,7 +9,7 @@ import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.vo.admin.FreezeHistoryVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
@@ -69,7 +69,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @return
      */
     @Override
-    public BorrowVO getBorrowByBorrowNid(String borrowNid) {
+    public BorrowAndInfoVO getBorrowByBorrowNid(String borrowNid) {
         return amTradeClient.searchBorrowByBorrowNid(borrowNid);
     }
 
