@@ -226,6 +226,10 @@ public class CategoryServiceImpl implements CategoryService {
         if (contentHelpBeanRequest.getStatus() != null) {
             conCriteria.andStatusEqualTo(contentHelpBeanRequest.getStatus());
         }
+        //智齿客服状态
+        if (contentHelpBeanRequest.getZhiChiStatus() != null) {
+            conCriteria.andZhiChiStatusEqualTo(contentHelpBeanRequest.getZhiChiStatus());
+        }
 
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
             conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(contentHelpBeanRequest.getPost_time_begin(),GetDate.datetimeFormat));
