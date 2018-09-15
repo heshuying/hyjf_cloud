@@ -276,6 +276,7 @@ public class UserManagerController extends BaseController {
     public int countByMobile(@PathVariable String mobile){
         logger.info("---countByMobile---  "  + mobile);
         int checkFlg = userManagerService.countByMobile(mobile);
+        logger.info("============checkFlg"+checkFlg+"============");
         return checkFlg;
     }
 

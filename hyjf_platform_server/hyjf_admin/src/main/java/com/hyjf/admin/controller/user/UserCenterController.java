@@ -348,14 +348,16 @@ public class UserCenterController extends BaseController {
     /**
      * 检查手机号码或用户名唯一性
      *
-     * @param userId
-     * @param mobile
      * @return
      */
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(@RequestBody String mobile) {
+    public AdminResult checkAction(@RequestBody Map<String,Object> params) {
+        logger.info("===========校验手机号===========");
+        logger.info("===========params:"+ JSONObject.toJSONString(params)+"===========");
+        String mobile = params.get("mobile").toString();
+        logger.info("===========mobile:"+mobile+"===========");
         // 检查手机号码唯一性
         int cnt = userCenterService.countUserByMobile(mobile);
         if (cnt > 0) {
