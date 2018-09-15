@@ -1,17 +1,11 @@
 package com.hyjf.cs.message.client.impl;
 
-import java.util.List;
-
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.vo.market.EventsVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.response.config.*;
+import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
+import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmConfigClient;
@@ -121,6 +115,25 @@ public class AmConfigClientImpl implements AmConfigClient {
 				.getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
+		}
+		return null;
+	}
+	@Override
+	public  List<ContentHelpCustomizeVO> queryContentCustomize(){
+		CategoryResponse response =  restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/help/contenthelps/", CategoryResponse.class).getBody();
+		if (response != null) {
+			return (List<ContentHelpCustomizeVO>)response.getRecordList();
+		}
+		return null;
+
+	}
+	@Override
+	public ContentHelpVO help(Integer id){
+		CategoryResponse response =  restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/help/help/"+id, CategoryResponse.class).getBody();
+		if (response != null) {
+			return response.getContentHelpVO();
 		}
 		return null;
 	}
