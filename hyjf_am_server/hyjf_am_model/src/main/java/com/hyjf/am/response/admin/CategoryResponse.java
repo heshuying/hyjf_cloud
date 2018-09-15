@@ -1,7 +1,7 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import org.apache.poi.ss.formula.functions.T;
+import com.hyjf.am.vo.admin.ContentHelpVO;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class CategoryResponse<T> extends Response {
 
     //返回数据
     private T data;
-
+    private ContentHelpVO contentHelpVO;
     //返回List
     private List<T> recordList;
 
@@ -108,5 +108,13 @@ public class CategoryResponse<T> extends Response {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public ContentHelpVO getContentHelpVO() {
+        return contentHelpVO;
+    }
+
+    public void setContentHelpVO(ContentHelpVO contentHelpVO) {
+        this.contentHelpVO = contentHelpVO;
     }
 }
