@@ -373,8 +373,9 @@ public class CouponIssuanceController extends BaseController {
     @PostMapping("/auditUpdateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_AUDIT)
     public AdminResult updateAudit(HttpServletRequest request, @RequestBody CouponConfigRequest couponConfigRequest) {
-        AdminSystemVO user = getUser(request);
-        String userId = user.getId();
+//        AdminSystemVO user = getUser(request);
+//        String userId = user.getId();
+        String userId = "3";
         couponConfigRequest.setAuditUser(userId);
         CouponConfigResponse ccfr = couponConfigService.updatrAudit(couponConfigRequest);
         if (ccfr == null) {

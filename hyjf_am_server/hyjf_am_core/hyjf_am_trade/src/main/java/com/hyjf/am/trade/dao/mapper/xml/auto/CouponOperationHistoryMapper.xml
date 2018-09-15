@@ -144,6 +144,7 @@
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
     insert into ht_coupon_operation_history
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      uuid,
       <if test="couponCode != null" >
         coupon_code,
       </if>
@@ -164,6 +165,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{uuid,jdbcType=VARCHAR},
       <if test="couponCode != null" >
         #{couponCode,jdbcType=VARCHAR},
       </if>
