@@ -142,9 +142,6 @@
       #{operationContentTo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs" >
-    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_coupon_operation_history
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="couponCode != null" >
@@ -186,6 +183,9 @@
         #{operationContentTo,jdbcType=LONGVARCHAR},
       </if>
     </trim>
+    <selectKey resultType="java.lang.String" keyProperty="uuid" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryExample" resultType="java.lang.Integer" >
     select count(*) from ht_coupon_operation_history

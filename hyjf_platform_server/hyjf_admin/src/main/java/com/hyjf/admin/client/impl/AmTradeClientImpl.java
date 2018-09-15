@@ -6233,6 +6233,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 查询优惠券发行导出列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/getExportConfigList";
+        CouponConfigExportCustomizeResponse response = restTemplate.postForEntity(url,request,CouponConfigExportCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 产品中心-加息投资明细（总计）
      * @param request
      * @auth wenxin
