@@ -793,4 +793,12 @@ public class UserManagerController extends BaseController {
         response.setRtn(returnCode);
         return response;
     }
+    @RequestMapping("/countByMobileList/{mobile}")
+    public int countByMobileList(@PathVariable String mobile){
+        logger.info("---countByMobileList---  "  + mobile);
+        int mobileCount = userManagerService.countByMobileList(mobile);
+        logger.info("------------mobileCount :  "+mobileCount+"---------");
+        return mobileCount;
+    }
+
 }
