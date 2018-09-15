@@ -61,6 +61,7 @@
         count(1)
         FROM
         ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
         /*LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid*/
         LEFT JOIN ht_borrow_info bi ON hba.borrow_nid = bi.borrow_nid
         <include refid="Where_Clause"/>
@@ -128,9 +129,72 @@
         SUM(hba.fail_counts) AS fail_counts
         FROM
         ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_info bi ON hba.borrow_nid = bi.borrow_nid
         <include refid="Where_Clause"/>
     </select>
 
+    <select id="countBatchCenter" resultType="java.lang.Long" parameterType="com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest">
+        SELECT
+        count(1)
+        FROM
+        ht_borrow_apicron hba
+        <!-- add by LSY START -->
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON b.borrow_nid = bi.borrow_nid
+        <!-- add by LSY END -->
+        <include refid="Where_Clause"/>
+    </select>
+
+    <select id="selectBatchCenterList" resultMap="batchCenterMap" parameterType="com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest">
+        SELECT
+        hba.id,
+        hba.borrow_nid borrow_nid,
+        <!-- add by LSY START -->
+        hic.inst_name,
+        <!-- add by LSY END -->
+        hba.batch_no batch_no,
+        hba.user_id user_id,
+        hba.user_name user_name,
+        hba.period_now period_now,
+        hba.borrow_period borrow_period,
+        hba.borrow_account borrow_account,
+        hba.batch_amount batch_amount,
+        hba.batch_service_fee batch_service_fee,
+        hba.batch_counts batch_counts,
+        hba.suc_amount suc_amount,
+        hba.suc_counts suc_counts,
+        hba.fail_amount fail_amount,
+        hba.fail_counts fail_counts,
+        hba.`status`,
+        <!-- hpn.`name` status_str, -->
+        from_unixtime(
+        hba.create_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS create_time,
+        from_unixtime(
+        hba.update_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS update_time,
+        hba.is_repay_org_flag is_repay_org_flag,
+        hba.data,
+        b.increase_interest_flag,
+        hba.extra_yield_status,
+        hba.extra_yield_repay_status
+        FROM
+        ht_borrow_apicron hba
+        <!-- LEFT JOIN ht_param_name hpn ON cast(hba.`status` AS CHAR)  = hpn.name_cd
+        AND hpn.name_class = #{nameClass} -->
+        <!-- add by LSY START -->
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON b.borrow_nid = bi.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = o.inst_code
+        <!-- add by LSY END -->
+        <include refid="Where_Clause"/>
+        ORDER BY hba.create_time DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
 </mapper>
 

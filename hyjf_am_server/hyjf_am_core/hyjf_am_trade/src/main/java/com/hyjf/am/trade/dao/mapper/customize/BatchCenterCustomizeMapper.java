@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
+import com.hyjf.am.trade.dao.model.auto.BatchCenterCustomize;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 
 import java.util.List;
@@ -33,5 +35,7 @@ public interface BatchCenterCustomizeMapper {
      */
     BatchBorrowRecoverVo sumBatchCenter(BatchBorrowRecoverRequest request);
 
+    Long countBatchCenter (BatchCenterCustomizeRequest batchCenterCustomize);
 
+    List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomizeRequest batchCenterCustomize);
 }

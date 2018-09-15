@@ -3,6 +3,7 @@ package com.hyjf.am.vo.task.issuerecover;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class BorrowWithBLOBs extends BorrowAndInfoVO implements Serializable {
     private String accountContents;
@@ -40,7 +41,8 @@ public class BorrowWithBLOBs extends BorrowAndInfoVO implements Serializable {
     private String borrowCompanyInstruction;
 
     private String borrowOperatingProcess;
-
+    private BigDecimal borrowExtraYield;
+    private Integer increaseInterestFlag;
     private static final long serialVersionUID = 1L;
 
     public String getAccountContents() {
@@ -186,4 +188,14 @@ public class BorrowWithBLOBs extends BorrowAndInfoVO implements Serializable {
     public void setBorrowOperatingProcess(String borrowOperatingProcess) {
         this.borrowOperatingProcess = borrowOperatingProcess;
     }
+
+    @Override
+    public BigDecimal getBorrowExtraYield() { return borrowExtraYield; }
+
+    @Override
+    public void setBorrowExtraYield(BigDecimal borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
+
+    public Integer getIncreaseInterestFlag() { return increaseInterestFlag; }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) { this.increaseInterestFlag = increaseInterestFlag; }
 }

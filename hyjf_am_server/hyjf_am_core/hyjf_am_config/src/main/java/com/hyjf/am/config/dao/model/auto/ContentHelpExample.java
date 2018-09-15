@@ -519,7 +519,10 @@ public class ContentHelpExample {
             addCriterion("`status` =", value, "status");
             return (Criteria) this;
         }
-
+        public Criteria andZhiChiStatusEqualTo(Integer value) {
+            addCriterion("`zhichi_status` =", value, "zhiChiStatus");
+            return (Criteria) this;
+        }
         public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("`status` <>", value, "status");
             return (Criteria) this;

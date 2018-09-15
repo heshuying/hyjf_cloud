@@ -94,6 +94,7 @@
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
         select t.*,
+        t.account_id as account,
         `od3`.`name` AS `regionName`,
         `od2`.`name` AS `branchName`,
         `od`.`name` AS `departmentName`,

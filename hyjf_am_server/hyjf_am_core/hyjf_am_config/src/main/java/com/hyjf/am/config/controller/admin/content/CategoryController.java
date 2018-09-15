@@ -462,4 +462,40 @@ public class CategoryController extends BaseConfigController {
         }
         return response;
     }
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  智齿客服列表初始化
+     * @Date 14:59 2018/7/24
+     * @Param contentHelpBeanRequest
+     * @return
+     */
+    @RequestMapping("/getzhichiinit")
+    public CategoryResponse getZhiChiInit(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
+        logger.info("查询帮助中心问题列表开始......");
+        CategoryResponse response = new CategoryResponse();
+        CategoryBeanRequest bean = new CategoryBeanRequest();
+        bean.setPid(contentHelpBeanRequest.getPcateId());
+
+        //父级菜单
+        List<Category> parentCategoryList = categoryService.searchParentCategorys(bean, true);
+        response.setParentList(parentCategoryList);
+        //子级菜单
+        List<Category> childCategoryList = categoryService.searchChildCategorys(bean, true);
+        response.setChildList(childCategoryList);
+        contentHelpBeanRequest.setStatus(1);
+        contentHelpBeanRequest.setZhiChiStatus(1);
+        //查询总数
+        Integer count = this.categoryService.getContentHelpCount(contentHelpBeanRequest);
+        response.setCount(count);
+        if (count >= 0) {
+            List<ContentHelp> conhelp = this.categoryService.getContentHelpList(contentHelpBeanRequest);
+
+            List<CategoryVO> categoryVOList = categoryService.getCategoryListByParam(0);
+            response.setHelpList(categoryVOList);
+            response.setRecordList(conhelp);
+        }
+        return response;
+    }
 }

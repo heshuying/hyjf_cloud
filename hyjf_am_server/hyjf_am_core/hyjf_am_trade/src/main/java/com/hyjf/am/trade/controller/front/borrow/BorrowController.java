@@ -7,10 +7,13 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
@@ -21,6 +24,8 @@ import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
@@ -30,6 +35,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -414,4 +420,77 @@ public class BorrowController extends BaseController {
     }
 
 
+	@PostMapping("/countBatchCenter")
+	public Long countBatchCenter(@RequestBody BatchCenterCustomizeRequest batchCenterCustomize) {
+		 Long borrow = borrowService.countBatchCenter(batchCenterCustomize);
+		if (borrow != null) {
+			return borrow;
+		}
+		return null;
+	}
+
+	 @PostMapping("/selectBatchCenterList")
+	 public BatchCenterCustomizeResponse selectBatchCenterList(@RequestBody BatchCenterCustomizeRequest batchCenterCustomize) {
+		 BatchCenterCustomizeResponse response = new BatchCenterCustomizeResponse();
+		 List<BatchCenterCustomize> ustomize = borrowService.selectBatchCenterList(batchCenterCustomize);
+		 if (Validator.isNotNull(ustomize)){
+			 List<BatchCenterCustomizeVO> borrowVO = new ArrayList<BatchCenterCustomizeVO>();
+			 BeanUtils.copyProperties(ustomize, borrowVO);
+			 response.setResultList(borrowVO);
+		 }
+		 return response;
+	 }
+
+	 @PostMapping("/getborrowIdByProductId")
+	 public String getborrowIdByProductId(@PathVariable Map<String, Object> params) {
+		 String borrowNid = borrowService.getborrowIdByProductId(params);
+		 if (Validator.isNotNull(borrowNid)){
+			 return borrowNid;
+		 }
+		 return null;
+	 }
+
+	@PostMapping("/selectOrgRepayProjectList")
+	public  WebUserRepayProjectListCustomizeResponse  selectOrgRepayProjectList(@PathVariable Map<String, Object> params) {
+		WebUserRepayProjectListCustomizeResponse  response = new WebUserRepayProjectListCustomizeResponse();
+		List<WebUserRepayProjectListCustomizeVO> list = borrowService.selectOrgRepayProjectList(params);
+		if (Validator.isNotNull(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/selectUserRepayProjectList")
+	public  WebUserRepayProjectListCustomizeResponse  selectUserRepayProjectList(@PathVariable Map<String, Object> params) {
+		WebUserRepayProjectListCustomizeResponse  response = new WebUserRepayProjectListCustomizeResponse();
+		List<WebUserRepayProjectListCustomizeVO> list = borrowService.selectUserRepayProjectList(params);
+		if (Validator.isNotNull(list)){
+			response.setResultList(list);
+		}
+		return response;
+	}
+
+	@PostMapping("/searchRepayProjectDetail")
+	public ProjectBean searchRepayProjectDetail(@RequestBody ProjectBean form) {
+		ProjectBean projectbean = null;
+		try {
+			projectbean = borrowService.searchRepayProjectDetail(form);
+			if (Validator.isNotNull(projectbean)){
+				return projectbean;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@PostMapping("/getBankOpenAccount")
+	public BankOpenAccountResponse getBankOpenAccount(String bankAccount) {
+		BankOpenAccountResponse  response = new BankOpenAccountResponse();
+		BankOpenAccountVO list = borrowService.getBankOpenAccount(bankAccount);
+		if (Validator.isNotNull(list)){
+			response.setResult(list);
+		}
+		return response;
+	}
 }
