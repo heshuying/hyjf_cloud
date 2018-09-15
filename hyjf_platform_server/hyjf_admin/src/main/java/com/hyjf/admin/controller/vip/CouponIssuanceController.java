@@ -403,8 +403,8 @@ public class CouponIssuanceController extends BaseController {
 
 
     @ApiOperation(value = "导出", notes = "导出")
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
-    public void exportAction(HttpServletResponse response, CouponConfigRequest request) throws Exception {
+    @RequestMapping(value = "/export", method = RequestMethod.POST)
+    public void exportAction(HttpServletResponse response, @RequestBody CouponConfigRequest request) throws Exception {
         //表格sheet名称
         String sheetName = "优惠券发行列表";
         // 文件名称
