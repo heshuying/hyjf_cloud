@@ -610,6 +610,7 @@ public class AllocationEngineController extends BaseController{
 		BeanUtils.copyProperties(viewRequest, form);
 		String labelSort = form.getLabelSort();
 		String planNid = form.getPlanNid();
+		String addOrModify = form.getAddOrModify();
 		
 		if(StringUtils.isEmpty(labelSort)){
 			jsonObject.put("info", "请输入标签排序");
@@ -621,26 +622,34 @@ public class AllocationEngineController extends BaseController{
 			jsonObject.put("status", "99");
 			return jsonObject;
 		}
-		form.setPlanNidSrch(planNid);
-		hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
-		List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
-	
-		if (hjhAllocationEngineList != null) {
-			for(HjhAllocationEngineVO object : hjhAllocationEngineList){
-				//取自DB的LabelSort
-				Integer planLabelSort = object.getLabelSort();
-				//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
-				if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
-					jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
-					jsonObject.put("status", "99");
-					return jsonObject;
-				}
-			}
-		} else{
-			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
+		if(StringUtils.isEmpty(addOrModify)){
+			jsonObject.put("info", "前端未传此行为是修改还是添加标识！");
 			jsonObject.put("status", "99");
 			return jsonObject;
 		}
+		form.setPlanNidSrch(planNid);
+		//如果是修改则需要校验引擎表里面的排序，如果是添加则不需要  0 添加；1修改
+		if(form.getAddOrModify() == "1"){
+			hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
+			List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
+			if (hjhAllocationEngineList != null) {
+				for(HjhAllocationEngineVO object : hjhAllocationEngineList){
+					//取自DB的LabelSort
+					Integer planLabelSort = object.getLabelSort();
+					//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
+					if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
+						jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
+						jsonObject.put("status", "99");
+						return jsonObject;
+					}
+				}
+			} else{
+				jsonObject.put("info", "修改此标签排序时查询引擎发现此计划编号不存在于引擎中！");
+				jsonObject.put("status", "99");
+				return jsonObject;
+			}
+		} 
+		// else 属于 0 添加时，此时该计划还未添加到引擎中，不需要校验
 		jsonObject.put("status", "000");
 		return jsonObject;
 	}
@@ -662,12 +671,8 @@ public class AllocationEngineController extends BaseController{
 		AllocationEngineRuquest form = new AllocationEngineRuquest();
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		
 		// 获取当前登陆者id
-		/*int userId = Integer.valueOf(this.getUser(request).getId());*/
-		
-		int userId = 2;
-		
+		int userId = Integer.valueOf(this.getUser(request).getId());
 		// 校验已经在前面异步校验了
 		// (1).从专区表中查出必要信息
 		HjhRegionVO record = this.allocationEngineService.getHjhRegionRecordByPlanNid(form.getPlanNid());
