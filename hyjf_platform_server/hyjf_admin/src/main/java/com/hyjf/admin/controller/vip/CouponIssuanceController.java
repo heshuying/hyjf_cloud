@@ -96,7 +96,6 @@ public class CouponIssuanceController extends BaseController {
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateCouponConfig(@RequestBody CouponConfigRequest request) {
-        CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
         CouponConfigResponse response = new CouponConfigResponse();
         CouponConfigVO configVO = new CouponConfigVO();
         //操作平台
@@ -119,7 +118,7 @@ public class CouponIssuanceController extends BaseController {
         StringBuffer selectedProjectDisplayBuffer = new StringBuffer();
 
         if (request.getId() != null) {
-            response = couponConfigService.getCouponConfig(couponConfigRequest);
+            response = couponConfigService.getCouponConfig(request);
             if (response != null) {
                 configVO = response.getResult();
                 if (configVO.getAuditUser() != null) {
@@ -261,7 +260,7 @@ public class CouponIssuanceController extends BaseController {
     @ApiOperation(value = "审核页面信息", notes = "审核页面信息")
     @RequestMapping(value = "/auditInfo/{id}", method = RequestMethod.GET)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_AUDIT)
-    public AdminResult<CouponConfigVO> auditInfo(@PathVariable String id) {
+    public AdminResult auditInfo(@PathVariable String id) {
         CouponConfigRequest ccfr = new CouponConfigRequest();
 
         //操作平台
@@ -365,7 +364,7 @@ public class CouponIssuanceController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<CouponConfigVO>(response.getResult());
+        return new AdminResult<>(response);
     }
 
 
@@ -404,8 +403,8 @@ public class CouponIssuanceController extends BaseController {
 
 
     @ApiOperation(value = "导出", notes = "导出")
-    @RequestMapping(value = "/export", method = RequestMethod.POST)
-    public void exportAction(HttpServletResponse response, @RequestBody CouponConfigRequest request) throws Exception {
+    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    public void exportAction(HttpServletResponse response, CouponConfigRequest request) throws Exception {
         //表格sheet名称
         String sheetName = "优惠券发行列表";
         // 文件名称

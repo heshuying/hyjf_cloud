@@ -40,7 +40,7 @@ public class CouponConfigCustomize implements Serializable {
     //发行时间
     private String addTime;
     //发行时间
-    private int status;
+    private Integer status;
 
     /**
      * 检索条件 时间开始
@@ -205,11 +205,11 @@ public class CouponConfigCustomize implements Serializable {
         this.couponCode = couponCode;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
