@@ -3007,6 +3007,13 @@ public interface AmTradeClient {
 
     Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 
+    /**
+     * 查询优惠券发行导出列表
+     * @param request
+     * @return
+     */
+    CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request);
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}

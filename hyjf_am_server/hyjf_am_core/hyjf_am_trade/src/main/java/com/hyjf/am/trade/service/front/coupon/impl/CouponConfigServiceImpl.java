@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.mapper.customize.CouponConfigCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponTenderCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
@@ -302,6 +303,11 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		map.put("limitEnd",-1);
 		map.put("status",CustomConstants.COUPON_STATUS_PUBLISHED);
         return couponConfigCustomizeMapper.selectCouponConfigList(map);
+    }
+
+    @Override
+    public List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize) {
+        return couponConfigCustomizeMapper.exportCouponConfigList(configCustomize);
     }
 
 }

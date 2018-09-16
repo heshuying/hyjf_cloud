@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -80,4 +81,11 @@ public interface CouponConfigCustomizeMapper {
      * @return
      */
     List<CouponTenderCustomizeVO> getCouponTenderListHjh(Map<String,Object> paramMap);
+
+	/**
+	 * 查询导出列表
+	 * @param configCustomize
+	 * @return
+	 */
+	List<CouponConfigExportCustomize> exportCouponConfigList(CouponConfigCustomize configCustomize);
 }

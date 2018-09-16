@@ -1244,4 +1244,22 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         return null;
     }
+
+    /**
+     * 根据手机号查找
+     * @param mobile
+     * @return
+     */
+    @Override
+    public int countByMobileList(String mobile) {
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        criteria.andMobileEqualTo(mobile);
+        List<User> userList = userMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(userList)){
+            return userList.size();
+        }
+        return 0;
+    }
+
 }
