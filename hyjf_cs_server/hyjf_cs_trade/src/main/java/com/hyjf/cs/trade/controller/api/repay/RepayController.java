@@ -317,7 +317,7 @@ public class RepayController extends BaseController {
         if(!this.verifyRequestSign(info, METHOD_REPAY_RESULT)){
             throw new RuntimeException("验签失败!");
         }
-        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
+        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(Integer.valueOf(info.getAccountId()));
         if (bankOpenAccount == null) {
             throw new RuntimeException("该用户没有在平台开户!");
         }
