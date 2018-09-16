@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.api.repay;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.ApiSignUtil;
@@ -284,8 +285,8 @@ public class RepayController extends BaseController {
         batchCenterCustomize.setApiType(1);
         Long count = this.batchBorrowRepayService.countBatchCenter(batchCenterCustomize);
         if (count != null && count > 0) {
-            List<BatchCenterCustomize> recordList = this.batchBorrowRepayService.selectBatchCenterList(batchCenterCustomize);
-            BatchCenterCustomize info = recordList.get(0);
+            List<BatchCenterCustomizeVO> recordList = this.batchBorrowRepayService.selectBatchCenterList(batchCenterCustomize);
+            BatchCenterCustomizeVO info = recordList.get(0);
             resultBean.setStatus(BaseResultBean.STATUS_SUCCESS);
             resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
             resultBean.setBorrowNid(info.getBorrowNid());
