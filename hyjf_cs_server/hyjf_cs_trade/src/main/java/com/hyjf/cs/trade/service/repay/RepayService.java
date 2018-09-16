@@ -60,9 +60,9 @@ public interface RepayService extends BaseService {
 	/**
 	 * 获取开户信息
 	 *
-	 * @param bankAccount
+	 * @param accountId
 	 * @return
 	 */
-	public BankOpenAccountVO getBankOpenAccount(Integer bankAccount);
+	public BankOpenAccountVO getBankOpenAccount(String accountId);
 
 }

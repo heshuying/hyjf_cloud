@@ -18,7 +18,7 @@ public interface BorrowClient {
 
     ProjectBean searchRepayProjectDetail(ProjectBean form);
 
-    BankOpenAccountVO getBankOpenAccount(Integer bankAccount);
+    BankOpenAccountVO getBankOpenAccount(String accountId);
 
     List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
 

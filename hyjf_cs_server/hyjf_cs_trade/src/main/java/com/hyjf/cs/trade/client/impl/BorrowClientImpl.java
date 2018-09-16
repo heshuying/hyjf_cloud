@@ -46,9 +46,9 @@ public class BorrowClientImpl implements BorrowClient {
     }
 
     @Override
-    public BankOpenAccountVO getBankOpenAccount(Integer bankAccount) {
-        BankOpenAccountVO response = restTemplate.postForEntity(
-                "http://AM-USER/am-user/bankAccountManage/getbankopenaccount/" , bankAccount,
+    public BankOpenAccountVO getBankOpenAccount(String accountId) {
+        BankOpenAccountVO response = restTemplate.getForEntity(
+                "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId,
                 BankOpenAccountVO.class).getBody();
         if (response != null) {
             return response.getResult();

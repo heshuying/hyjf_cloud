@@ -18,8 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.hyjf.cs.trade.bean.BaseBean;
@@ -249,10 +247,10 @@ public class RepayController extends BaseController {
             throw new RuntimeException("参数非法,ProductId或accountId或instCode不得为空!");
         }
         //验签(测试暂时关闭验签功能)
-        if(!this.verifyRequestSign(info, METHOD_REPAY_INFO)){
+       /* if(!this.verifyRequestSign(info, METHOD_REPAY_INFO)){
             throw new RuntimeException("验签失败!");
-        }
-        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(Integer.valueOf(info.getAccountId()));
+        }*/
+        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             throw new RuntimeException("该用户没有在平台开户!");
         }
@@ -317,7 +315,7 @@ public class RepayController extends BaseController {
         if(!this.verifyRequestSign(info, METHOD_REPAY_RESULT)){
             throw new RuntimeException("验签失败!");
         }
-        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(Integer.valueOf(info.getAccountId()));
+        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             throw new RuntimeException("该用户没有在平台开户!");
         }
