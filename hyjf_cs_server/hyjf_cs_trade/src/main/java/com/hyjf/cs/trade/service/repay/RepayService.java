@@ -63,6 +63,6 @@ public interface RepayService extends BaseService {
 	 * @param bankAccount
 	 * @return
 	 */
-	public BankOpenAccountVO getBankOpenAccount(String bankAccount);
+	public BankOpenAccountVO getBankOpenAccount(Integer bankAccount);
 
 }

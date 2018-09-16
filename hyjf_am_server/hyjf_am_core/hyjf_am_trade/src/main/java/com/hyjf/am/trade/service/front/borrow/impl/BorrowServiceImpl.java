@@ -70,9 +70,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
 
-    @Autowired
-    private BankOpenAccountMapper bankOpenAccountMapper;
-
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -4531,15 +4528,4 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     }
 
-    @Override
-    public BankOpenAccountVO getBankOpenAccount(String bankAccount){
-       BankOpenAccountExample accountExample = new BankOpenAccountExample();
-        BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
-        crt.andAccountEqualTo(bankAccount);
-        List<BankOpenAccountVO> bankAccounts = this.bankOpenAccountMapper.selectByExample(accountExample);
-        if (bankAccounts != null && bankAccounts.size() == 1) {
-            return bankAccounts.get(0);
-        }
-        return null;
-    }
 }

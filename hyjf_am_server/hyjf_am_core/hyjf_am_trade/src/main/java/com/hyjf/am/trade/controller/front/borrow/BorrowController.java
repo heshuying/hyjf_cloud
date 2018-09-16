@@ -484,13 +484,4 @@ public class BorrowController extends BaseController {
 		return null;
 	}
 
-	@PostMapping("/getBankOpenAccount")
-	public BankOpenAccountResponse getBankOpenAccount(String bankAccount) {
-		BankOpenAccountResponse  response = new BankOpenAccountResponse();
-		BankOpenAccountVO list = borrowService.getBankOpenAccount(bankAccount);
-		if (Validator.isNotNull(list)){
-			response.setResult(list);
-		}
-		return response;
-	}
 }
