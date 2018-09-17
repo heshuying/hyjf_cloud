@@ -11,6 +11,9 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -130,12 +133,15 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 	@Override
 	public ContentHelpVO help(Integer id){
-		CategoryResponse response =  restTemplate
+	/*	CategoryResponse response =  restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/content/help/help/"+id, CategoryResponse.class).getBody();
 		if (response != null) {
 			return response.getContentHelpVO();
-		}
-		return null;
+		}*/
+		ParameterizedTypeReference<ContentHelpVO> responseType = new ParameterizedTypeReference<ContentHelpVO>(){};
+		ResponseEntity<ContentHelpVO> user = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/help/"+id,
+				HttpMethod.GET, null, responseType);
+		return user.getBody();
 	}
 
 	@Override
