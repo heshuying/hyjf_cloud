@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -18,9 +19,7 @@ import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 

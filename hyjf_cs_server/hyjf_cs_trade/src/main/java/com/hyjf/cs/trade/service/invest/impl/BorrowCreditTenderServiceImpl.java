@@ -302,7 +302,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital) {
-        String money = tender.getMoney();
+        tender.setAssignCapital(assignCapital);
+        String money = assignCapital;
         String investType = tender.getBorrowNid().substring(0, 3);
         AppInvestInfoResultVO result = new AppInvestInfoResultVO();
         // 查询债转信息
@@ -327,9 +328,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
             result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
             // 待承接垫付利息
-            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignPayInterest());
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance());
             // 待承接金额
-            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital());
+            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
             result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
             result.setCouponDescribe("");
             result.setCouponId("");
