@@ -90,19 +90,19 @@
 				'%Y-%m-%d'
 			) AS suc_time,
 			hydb.borrow_nid,
-			hydb.`name` AS borrow_name,
+			o.name as borrow_name,
 			hydbpt.borrow_name AS project_type_name,
 			hydb.project_type,
 			hydb.borrow_style,
 			hydb.borrow_apr AS borrow_interest,
-			hydb.borrow_asset_number as borrow_asset_number,
+		    o.borrow_asset_number as borrow_asset_number,
 			CASE
 				WHEN hydb.borrow_style = 'endday' 
 					THEN CONCAT(hydb.borrow_period, '天')
 				ELSE
 					CONCAT(hydb.borrow_period,'个月')
 				END AS borrow_period,
-				hydb.company_or_personal AS com_or_per,
+			o.company_or_personal AS com_or_per,
 			FROM_UNIXTIME(
 				hydb.verify_time,'%Y-%m-%d'
 				) AS loan_time,
@@ -112,7 +112,7 @@
         		WHEN ( hydb.`status` = 4 AND hydb.repay_full_status = 0 ) THEN
    					CASE
    						<!--还款中  -->
-						WHEN EXISTS ( SELECT 1 FROM huiyingdai_borrow_apicron hydba WHERE hydba.borrow_nid = hydb.borrow_nid AND hydba.api_type = 1 AND hydba.`status` <![CDATA[<>]]> 6) THEN '2'
+						WHEN EXISTS ( SELECT 1 FROM ht_borrow_apicron hydba WHERE hydba.borrow_nid = hydb.borrow_nid AND hydba.api_type = 1 AND hydba.`status` <![CDATA[<>]]> 6) THEN '2'
 						<!--未还款  -->
 						ELSE '0'
 					END
@@ -150,6 +150,7 @@
 			hydbr.repay_fee AS all_repay_fee
 		FROM
 			ht_borrow hydb
+		left join ht_borrow_info o on hydb.borrow_nid = o.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
@@ -173,18 +174,18 @@
 	<select id="selectOrgRepayProjectList" resultMap="UserRepayListMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
-		hydb.`name` AS borrow_name,
+		o.name as borrow_name,
 		hydbpt.borrow_name AS project_type,
 		hydb.borrow_style,
 		hydb.borrow_apr AS borrow_interest,
-		hydb.borrow_asset_number AS borrow_asset_number,
+		o.borrow_asset_number as borrow_asset_number,
 		CASE
 		WHEN hydb.borrow_style = 'endday'
 		THEN CONCAT(hydb.borrow_period, '天')
 		ELSE
 		CONCAT(hydb.borrow_period,'个月')
 		END AS borrow_period,
-		hydb.company_or_personal AS com_or_per,
+		o.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
 		hydb.verify_time,'%Y-%m-%d'
 		) AS loan_time,
@@ -194,7 +195,7 @@
 		WHEN ( hydb.`status` = 4 AND hydb.repay_full_status = 0 ) THEN
 		CASE
 		<!--还款中  -->
-		WHEN EXISTS ( SELECT 1 FROM huiyingdai_borrow_apicron hydba WHERE hydba.borrow_nid = hydb.borrow_nid AND hydba.api_type = 1 AND hydba.status <![CDATA[<>]]> 6) THEN '2'
+		WHEN EXISTS ( SELECT 1 FROM ht_borrow_apicron hydba WHERE hydba.borrow_nid = hydb.borrow_nid AND hydba.api_type = 1 AND hydba.status <![CDATA[<>]]> 6) THEN '2'
 		<!--未还款  -->
 		ELSE '0'
 		END
@@ -245,6 +246,7 @@
 		FROM
 		ht_borrow hydb
 		<!-- INNER JOIN ht_users u ON hydb.repay_org_user_id= u.user_id -->
+		left join ht_borrow_info o on hydb.borrow_nid = o.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6

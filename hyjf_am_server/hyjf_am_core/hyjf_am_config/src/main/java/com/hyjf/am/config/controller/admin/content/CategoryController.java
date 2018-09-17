@@ -428,12 +428,10 @@ public class CategoryController extends BaseConfigController {
      * @return
      */
     @GetMapping("/help/{id}")
-    public CategoryResponse contentHelp(@PathVariable Integer id) {
-        CategoryResponse response = new CategoryResponse();
+    public ContentHelpVO contentHelp(@PathVariable Integer id) {
         ContentHelp con = this.categoryService.queryContentById(id);
         ContentHelpVO vo = CommonUtils.convertBean(con,ContentHelpVO.class);
-        response.setContentHelpVO(vo);
-        return response;
+        return vo;
     }
     /**
      * @Author walter.tanyy

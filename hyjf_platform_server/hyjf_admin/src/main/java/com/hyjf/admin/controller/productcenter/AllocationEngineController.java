@@ -737,7 +737,7 @@ public class AllocationEngineController extends BaseController{
 		
 		int count = this.allocationEngineService.insertHjhAllocationEngineRecord(newForm);
 		if(count > 0){
-			jsonObject.put("status ", SUCCESS);
+			jsonObject.put("status", SUCCESS);
 			jsonObject.put("msg", SUCCESS_DESC);
 		}
 		return jsonObject;

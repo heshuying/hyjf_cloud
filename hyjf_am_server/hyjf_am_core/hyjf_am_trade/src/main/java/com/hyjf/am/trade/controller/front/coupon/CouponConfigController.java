@@ -101,7 +101,7 @@ public class CouponConfigController extends BaseController {
      * @return
      */
     @PostMapping("/getCouponConfig")
-    public CouponConfigResponse getCouponConfig(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+    public CouponConfigResponse getCouponConfig(@RequestBody CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
         if (!StringUtils.isEmpty(couponConfigRequest.getId())) {
             CouponConfig ccf = couponConfigService.getCouponConfig(Integer.parseInt(couponConfigRequest.getId()));

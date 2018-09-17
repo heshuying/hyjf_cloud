@@ -70,9 +70,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
 
-    @Autowired
-    private BankOpenAccountMapper bankOpenAccountMapper;
-
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -717,7 +714,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 设置相应的项目名称
             // 之前取borrow表的Name，现在取borrow表的projectName
             // form.setBorrowName(borrow.getName());
-            form.setBorrowName(borrow.getProjectName());
+            //form.setBorrowName(borrow.getProjectName());
 
             // 获取相应的项目还款方式
             String borrowStyle = StringUtils.isNotEmpty(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
@@ -4531,15 +4528,4 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     }
 
-    @Override
-    public BankOpenAccountVO getBankOpenAccount(String bankAccount){
-       BankOpenAccountExample accountExample = new BankOpenAccountExample();
-        BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
-        crt.andAccountEqualTo(bankAccount);
-        List<BankOpenAccountVO> bankAccounts = this.bankOpenAccountMapper.selectByExample(accountExample);
-        if (bankAccounts != null && bankAccounts.size() == 1) {
-            return bankAccounts.get(0);
-        }
-        return null;
-    }
 }

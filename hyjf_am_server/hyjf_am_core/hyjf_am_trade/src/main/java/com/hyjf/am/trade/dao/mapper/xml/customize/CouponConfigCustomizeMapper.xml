@@ -200,11 +200,11 @@
 							WHEN 2 THEN  '已发行'
 							WHEN 3 THEN  '审核不通过'
 							END  AS status,
-			FROM_UNIXTIME(c.add_time,'%Y-%m-%d %H:%i:%s') AS add_time,
+		DATE_FORMAT(c.create_time,'%Y-%m-%d %H:%i:%s') AS add_time,
 			c.coupon_code
 			from ht_coupon_config c
 			<include refid="Where_Clause" />
-			ORDER BY c.status,c.add_time DESC
+			ORDER BY c.status,c.create_time DESC
 
 	</select>
 	

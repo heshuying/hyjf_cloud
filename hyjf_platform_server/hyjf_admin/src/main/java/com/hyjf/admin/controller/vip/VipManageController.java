@@ -159,56 +159,6 @@ public class VipManageController extends BaseController {
         } else {
             fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
         }
-        // 需要输出的结果列表
-//        //封装查询条件
-//        Map<String, Object> userMap = new HashMap<String, Object>();
-//        String regionName = StringUtils.isNotEmpty(vipManageRequest.getRegionName()) ? form.getRegionName() : null;
-//        String branchName = StringUtils.isNotEmpty(form.getBranchName()) ? form.getBranchName() : null;
-//        String departmentName = StringUtils.isNotEmpty(form.getDepartmentName()) ? form.getDepartmentName() : null;
-//        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-//        String realName = StringUtils.isNotEmpty(form.getRealName()) ? form.getRealName() : null;
-//        String mobile = StringUtils.isNotEmpty(form.getMobile()) ? form.getMobile() : null;
-//        String recommendName = StringUtils.isNotEmpty(form.getRecommendName()) ? form.getRecommendName() : null;
-//        String userRole = StringUtils.isNotEmpty(form.getUserRole()) ? form.getUserRole() : null;
-//        String userProperty = StringUtils.isNotEmpty(form.getUserProperty()) ? form.getUserProperty() : null;
-//        String accountStatusStr = StringUtils.isNotEmpty(form.getAccountStatus()) ? form.getAccountStatus() : null;
-//        String userStatusStr = StringUtils.isNotEmpty(form.getUserStatus()) ? form.getUserStatus() : null;
-//        String registPlatStr = StringUtils.isNotEmpty(form.getRegistPlat()) ? form.getRegistPlat() : null;
-//        String is51Str = StringUtils.isNotEmpty(form.getIs51()) ? form.getIs51() : null;
-//        String regTimeStart = StringUtils.isNotEmpty(form.getRegTimeStart()) ? form.getRegTimeStart() : null;
-//        String regTimeEnd = StringUtils.isNotEmpty(form.getRegTimeEnd()) ? form.getRegTimeEnd() : null;
-//        // 部门
-//        String[] list = new String[] {};
-//        if (Validator.isNotNull(form.getCombotreeSrch())) {
-//            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-//                list = form.getCombotreeSrch().split(StringPool.COMMA);
-//                form.setCombotreeListSrch(list);
-//            } else {
-//                list = new String[] { form.getCombotreeSrch() };
-//                form.setCombotreeListSrch(list);
-//            }
-//        }
-//        String[] combotreeListSrchStr = form.getCombotreeListSrch();
-//        if (form.getRegTimeStart() != null) {
-//            userMap.put("regTimeStart", regTimeStart);
-//        }
-//        if (form.getRegTimeEnd() != null) {
-//            userMap.put("regTimeEnd", regTimeEnd);
-//        }
-//        userMap.put("regionName", regionName);
-//        userMap.put("branchName", branchName);
-//        userMap.put("departmentName", departmentName);
-//        userMap.put("userName", userName);
-//        userMap.put("realName", realName);
-//        userMap.put("mobile", mobile);
-//        userMap.put("recommendName", recommendName);
-//        userMap.put("userRole", userRole);
-//        userMap.put("userProperty", userProperty);
-//        userMap.put("accountStatus", accountStatusStr);
-//        userMap.put("userStatus", userStatusStr);
-//        userMap.put("registPlat", registPlatStr);
-//        userMap.put("is51", is51Str);
-//        userMap.put("combotreeListSrch", combotreeListSrchStr);
         List<VipManageVO> recordList = new ArrayList<>();
         VipManageResponse vipManageResponse = vipManageService.searchList(vipManageRequest);
         if (vipManageResponse != null) {
