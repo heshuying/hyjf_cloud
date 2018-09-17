@@ -674,13 +674,13 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
                 result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "error").replace("{status}",e.getCode()).replace("{statusDesc}",e.getMessage()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",e.getCode()).replace("{statusDesc}",e.getMessage()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
             }
             //  未处理的异常
         }catch (Exception e){
             result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
             result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
-            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "error").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "failed").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
         }
         result.put("resultUrl",resultUrl);
         return result;
