@@ -44,7 +44,7 @@
 		<commons.lang3.version>3.7</commons.lang3.version>
 		<commons.io.version>2.6</commons.io.version>
 		<jwt.version>3.3.0</jwt.version>
-		<google.coll.version>1.0</google.coll.version>
+		<guava.version>23.0</guava.version>
 		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 
 		<redis.version>2.9.0</redis.version>
@@ -116,10 +116,11 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.google.collections</groupId>
-				<artifactId>google-collections</artifactId>
-				<version>${google.coll.version}</version>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
+
 
 			<dependency>
 				<groupId>commons-io</groupId>
