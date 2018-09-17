@@ -919,4 +919,107 @@ WHERE
 		ORDER BY
 		  b.create_time DESC, b.id DESC
 	</select>
+
+    <resultMap id="selectBorrowByNidListMap" type="com.hyjf.am.vo.admin.BorrowCustomizeVO" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <result column="project_type" property="projectType" jdbcType="TINYINT" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="account" property="account" jdbcType="DECIMAL" />
+        <result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
+        <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+        <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+        <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
+        <result column="label_id" property="labelId" jdbcType="INTEGER" />
+        <result column="is_show" property="isShow" jdbcType="TINYINT" />
+        <result column="is_engine_used" property="isEngineUsed" jdbcType="TINYINT" />
+        <result column="is_installment" property="isInstallment" jdbcType="TINYINT" />
+        <result column="is_month" property="isMonth" jdbcType="TINYINT" />
+        <result column="regist_status" property="registStatus" jdbcType="TINYINT" />
+        <result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+        <result column="regist_user_id" property="registUserId" jdbcType="INTEGER" />
+        <result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
+        <result column="verify_status" property="verifyStatus" jdbcType="TINYINT" />
+        <result column="verify_over_time" property="verifyOverTime" jdbcType="INTEGER" />
+        <result column="verify_time" property="verifyTime" jdbcType="INTEGER" />
+        <result column="verify_userid" property="verifyUserid" jdbcType="VARCHAR" />
+        <result column="verify_user_name" property="verifyUserName" jdbcType="VARCHAR" />
+        <result column="verify_remark" property="verifyRemark" jdbcType="VARCHAR" />
+        <result column="verify_contents" property="verifyContents" jdbcType="VARCHAR" />
+        <result column="borrow_status" property="borrowStatus" jdbcType="TINYINT" />
+        <result column="ontime" property="ontime" jdbcType="INTEGER" />
+        <result column="borrow_end_time" property="borrowEndTime" jdbcType="VARCHAR" />
+        <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+        <result column="borrow_full_status" property="borrowFullStatus" jdbcType="TINYINT" />
+        <result column="borrow_full_time" property="borrowFullTime" jdbcType="INTEGER" />
+        <result column="tender_times" property="tenderTimes" jdbcType="INTEGER" />
+        <result column="borrow_account_yes" property="borrowAccountYes" jdbcType="DECIMAL" />
+        <result column="borrow_account_wait" property="borrowAccountWait" jdbcType="DECIMAL" />
+        <result column="borrow_account_scale" property="borrowAccountScale" jdbcType="DECIMAL" />
+        <result column="borrow_service" property="borrowService" jdbcType="VARCHAR" />
+        <result column="reverify_status" property="reverifyStatus" jdbcType="TINYINT" />
+        <result column="reverify_time" property="reverifyTime" jdbcType="INTEGER" />
+        <result column="reverify_userid" property="reverifyUserid" jdbcType="VARCHAR" />
+        <result column="reverify_user_name" property="reverifyUserName" jdbcType="VARCHAR" />
+        <result column="reverify_remark" property="reverifyRemark" jdbcType="VARCHAR" />
+        <result column="reverify_contents" property="reverifyContents" jdbcType="VARCHAR" />
+        <result column="recover_last_time" property="recoverLastTime" jdbcType="INTEGER" />
+        <result column="repay_last_time" property="repayLastTime" jdbcType="INTEGER" />
+        <result column="repay_next_time" property="repayNextTime" jdbcType="INTEGER" />
+        <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
+        <result column="repay_full_status" property="repayFullStatus" jdbcType="TINYINT" />
+        <result column="repay_fee_normal" property="repayFeeNormal" jdbcType="DECIMAL" />
+        <result column="repay_account_all" property="repayAccountAll" jdbcType="DECIMAL" />
+        <result column="repay_account_interest" property="repayAccountInterest" jdbcType="DECIMAL" />
+        <result column="repay_account_capital" property="repayAccountCapital" jdbcType="DECIMAL" />
+        <result column="repay_account_yes" property="repayAccountYes" jdbcType="DECIMAL" />
+        <result column="repay_account_interest_yes" property="repayAccountInterestYes" jdbcType="DECIMAL" />
+        <result column="repay_account_capital_yes" property="repayAccountCapitalYes" jdbcType="DECIMAL" />
+        <result column="repay_account_wait" property="repayAccountWait" jdbcType="DECIMAL" />
+        <result column="repay_account_interest_wait" property="repayAccountInterestWait" jdbcType="DECIMAL" />
+        <result column="repay_account_capital_wait" property="repayAccountCapitalWait" jdbcType="DECIMAL" />
+        <result column="borrow_manager" property="borrowManager" jdbcType="VARCHAR" />
+        <result column="service_fee_rate" property="serviceFeeRate" jdbcType="VARCHAR" />
+        <result column="manage_fee_rate" property="manageFeeRate" jdbcType="VARCHAR" />
+        <result column="differential_rate" property="differentialRate" jdbcType="VARCHAR" />
+        <result column="late_interest_rate" property="lateInterestRate" jdbcType="VARCHAR" />
+        <result column="late_free_days" property="lateFreeDays" jdbcType="TINYINT" />
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+        <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+        <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="BIT" />
+        <result column="repay_org_user_id" property="repayOrgUserId" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectBorrowByNidList" resultMap="selectBorrowByNidListMap"  parameterType="com.hyjf.am.vo.admin.BorrowCustomizeVO">
+        SELECT
+        borrow.id, borrow.borrow_nid, borrow.project_type, borrow.user_id, borrow.borrow_user_name, borrow.status, borrow.account, borrow.borrow_valid_time,
+        borrow.borrow_style, borrow.borrow_period, borrow.borrow_apr, borrow.label_id, borrow.is_show, borrow.is_engine_used, borrow.is_installment,
+        borrow.is_month, borrow.regist_status, borrow.regist_time, borrow.regist_user_id, borrow.regist_user_name, borrow.verify_status,
+        borrow.verify_over_time, borrow.verify_time, borrow.verify_userid, borrow.verify_user_name, borrow.verify_remark, borrow.verify_contents,
+        borrow_status, ontime, borrow_end_time, plan_nid, borrow_full_status, borrow_full_time,
+        borrow.tender_times, borrow.borrow_account_yes, borrow.borrow_account_wait, borrow.borrow_account_scale, borrow.borrow_service,
+        borrow.reverify_status, borrow.reverify_time, borrow.reverify_userid, borrow.reverify_user_name, borrow.reverify_remark,
+        borrow.reverify_contents, borrow.recover_last_time, borrow.repay_last_time, borrow.repay_next_time, borrow.repay_status,
+        borrow.repay_full_status, borrow.repay_fee_normal, borrow.repay_account_all, borrow.repay_account_interest, borrow.repay_account_capital,
+        borrow.repay_account_yes, borrow.repay_account_interest_yes, borrow.repay_account_capital_yes, borrow.repay_account_wait,
+        borrow.repay_account_interest_wait, borrow.repay_account_capital_wait, borrow.borrow_manager, borrow.service_fee_rate,
+        borrow.manage_fee_rate, borrow.differential_rate, borrow.late_interest_rate, borrow.late_free_days, borrow.create_user_name,
+        borrow.add_ip, borrow.create_time, borrow.updatetime, borrow.increase_interest_flag
+        FROM ht_borrow borrow
+        LEFT JOIN ht_borrow_info info ON borrow.borrow_nid = info.borrow_nid
+        <where>
+            <if test="borrowNid != null and borrowNid != ''">
+                AND borrow.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+            </if>
+            <if test="userId != null and userId != ''">
+                AND borrow.user_id LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="repayOrgUserId != null and repayOrgUserId != ''">
+                AND info.repay_org_user_id LIKE CONCAT('%', #{repayOrgUserId}, '%')
+            </if>
+        </where>
+	</select>
 </mapper>
