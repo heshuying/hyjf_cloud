@@ -1256,9 +1256,11 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample.Criteria criteria = example.createCriteria();
         criteria.andMobileEqualTo(mobile.trim());
         List<User> userList = userMapper.selectByExample(example);
-        if(CollectionUtils.isNotEmpty(userList)){
+        if(null!=userList&&userList.size()>0){
+            logger.info("======== userMapper.selectMobile size="+userList.size()+"======== ");
             return userList.size();
         }
+        logger.info("========no mobile size======== ");
         return 0;
     }
 
