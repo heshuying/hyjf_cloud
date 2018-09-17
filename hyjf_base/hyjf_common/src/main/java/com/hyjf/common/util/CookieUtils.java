@@ -115,9 +115,9 @@ public class CookieUtils {
 	 */
 	public static void addCookie(HttpServletRequest request, HttpServletResponse response, String name, String value,
 								 Integer maxAge, String path, String domain, Boolean secure) {
-		Assert.notNull(request);
-		Assert.notNull(response);
-		Assert.hasText(name);
+		Assert.notNull(request, "request must be null...");
+		Assert.notNull(response, "response must be null...");
+		Assert.hasText(name, "name must has a text...");
 		try {
 			name = URLEncoder.encode(name, "UTF-8");
 			value = URLEncoder.encode(URLEncoder.encode(value, "UTF-8"), "UTF-8");
@@ -206,8 +206,8 @@ public class CookieUtils {
 	 * @return 若不存在则返回null
 	 */
 	public static String getCookie(HttpServletRequest request, String name) {
-		Assert.notNull(request);
-		Assert.hasText(name);
+		Assert.notNull(request, "request must be null...");
+		Assert.hasText(name, "name must has a text...");
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			try {
@@ -234,8 +234,8 @@ public class CookieUtils {
 	 * @return 若不存在则返回null
 	 */
 	public static String getCookie(HttpServletRequest request, String name, String domain) {
-		Assert.notNull(request);
-		Assert.hasText(name);
+		Assert.notNull(request , "request must be null...");
+		Assert.hasText(name, "name must has a text");
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			try {
@@ -268,9 +268,9 @@ public class CookieUtils {
 	 */
 	public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String name, String path,
 									String domain) {
-		Assert.notNull(request);
-		Assert.notNull(response);
-		Assert.hasText(name);
+		Assert.notNull(request, "request must be null...");
+		Assert.notNull(response, "response must be null...");
+		Assert.hasText(name, "name must has a text...");
 		try {
 			name = URLEncoder.encode(name, "UTF-8");
 			Cookie cookie = new Cookie(name, null);

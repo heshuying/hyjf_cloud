@@ -12,6 +12,7 @@ import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
@@ -27,7 +28,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -699,7 +699,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         crt.andBorrowNidEqualTo(borrowNid);
         if (StringUtils.isNotEmpty(form.getRoleId()) && "3".equals(form.getRoleId())) {
             // 垫付机构
-            crt.andRepayOrgUserIdEqualTo(Integer.parseInt(userId));
+
+            // todo  repay_org_user_id从borrow表迁移到borrow_info了
+            // crt.andRepayOrgUserIdEqualTo(Integer.parseInt(userId));
         } else {
             // 普通借款人
             crt.andUserIdEqualTo(Integer.parseInt(userId));

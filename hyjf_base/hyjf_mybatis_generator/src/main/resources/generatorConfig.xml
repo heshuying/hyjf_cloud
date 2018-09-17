@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -779,7 +779,6 @@
         </table>
 
         <table tableName="ht_coupon_operation_history" domainObjectName="CouponOperationHistory">
-            <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="operation_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
