@@ -86,6 +86,34 @@ public class PushMoneyRequestBean extends PushMoneyVO implements Serializable{
 		return paginatorPage;
 	}
 
+	/**
+	 * 当前页码
+	 */
+	@ApiModelProperty(value = "当前页")
+	private int currPage;
+
+	/**
+	 * 当前页条数
+	 */
+	@ApiModelProperty(value = "当前页条数")
+	private int pageSize = 10;
+
+	public int getCurrPage() {
+		return currPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
