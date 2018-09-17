@@ -302,6 +302,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital) {
+        tender.setAssignCapital(assignCapital);
         String money = assignCapital;
         String investType = tender.getBorrowNid().substring(0, 3);
         AppInvestInfoResultVO result = new AppInvestInfoResultVO();
