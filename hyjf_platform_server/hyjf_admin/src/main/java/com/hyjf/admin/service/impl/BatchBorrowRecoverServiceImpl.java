@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -249,6 +250,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                     continue;
                 }
             }
+            logger.info("查询银行result:【{}】", JSON.toJSONString(results));
             if(results.size() > 0){
                 bankInfoVOList = getRepayDetailList(results);
             }

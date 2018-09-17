@@ -20,7 +20,10 @@
 			ad.`status` = 1
 		<if test="code != null and code != ''">
 			and adt.`code` = #{code}
-		</if>	
+		</if>
+		<if test="platformType != null and platformType!= ''">
+			and ad.platform_type = #{platformType}
+		</if>
 		AND unix_timestamp(ad.start_time) <![CDATA[<=]]> unix_timestamp(NOW())
 		AND unix_timestamp(ad.end_time) <![CDATA[>=]]> unix_timestamp(NOW())
 		ORDER BY
