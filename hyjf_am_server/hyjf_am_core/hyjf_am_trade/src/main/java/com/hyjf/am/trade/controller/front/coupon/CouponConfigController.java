@@ -235,6 +235,8 @@ public class CouponConfigController extends BaseController {
     public CouponConfigResponse updateAuditInfo(@RequestBody @Valid CouponConfigRequest request) {
         CouponConfigResponse configResponse = new CouponConfigResponse();
         CouponConfig couponConfig = new CouponConfig();
+        BeanUtils.copyProperties(request,couponConfig);
+        couponConfig.setId(Integer.parseInt(request.getId()));
         long nowTime = System.currentTimeMillis() / 1000;
         couponConfig.setAuditUser(request.getAuditUser());
         couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
@@ -245,6 +247,7 @@ public class CouponConfigController extends BaseController {
             configResponse.setRtn(Response.SUCCESS);
         } else {
             configResponse.setRtn(Response.FAIL);
+            configResponse.setMessage(Response.FAIL_MSG);
         }
         return configResponse;
     }
