@@ -1,5 +1,4 @@
 package com.hyjf.cs.trade.client;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -26,6 +25,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -1772,6 +1772,33 @@ public interface AmTradeClient {
 	 * @author Administrator
 	 * @throws Exception
 	 */
+    /**
+     * api: 查询投资记录列表
+     * @author zhangyk
+     * @date 2018/8/27 13:59
+     */
+    List<InvestListCustomizeVO> searchInvestListNew(Map<String,Object> params);
+
+    /**
+     * 獲取銀行開戶信息(根据投资信息查询)
+     * @author wenxin
+     * @date 2018/8/27 13:00
+     */
+    List<BankOpenAccountVO> sarchInvestOfBankOpenAccount(List<Integer> userId);
+
+    /**
+     *
+     * 投资预插入
+     *
+     * @param borrowNid
+     * @param orderId
+     * @param userId
+     * @param account
+     * @param ip
+     * @return
+     * @author Administrator
+     * @throws Exception
+     */
     boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest);
 
     /**
@@ -1781,12 +1808,12 @@ public interface AmTradeClient {
      */
     Integer deleteBorrowTenderTmp(String orgOrderId);
 
-	/**
-	 * 投资失败,删除投资临时表
-	 * @param borrowNid
-	 * @param userId
-	 * @param orderId
-	 */
+    /**
+     * 投资失败,删除投资临时表
+     * @param borrowNid
+     * @param userId
+     * @param orderId
+     */
     int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId);
 
     /**

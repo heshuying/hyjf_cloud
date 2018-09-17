@@ -27,4 +27,6 @@ public interface BankOpenAccountMapper {
     int updateByPrimaryKeySelective(BankOpenAccount record);
 
     int updateByPrimaryKey(BankOpenAccount record);
+
+    List<BankOpenAccount> selectByListExample(List<Integer> user);
 }

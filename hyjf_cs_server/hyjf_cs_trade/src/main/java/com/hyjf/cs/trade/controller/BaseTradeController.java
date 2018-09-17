@@ -33,4 +33,5 @@ public class BaseTradeController extends BaseController {
         }
         return null;
     }
+
 }

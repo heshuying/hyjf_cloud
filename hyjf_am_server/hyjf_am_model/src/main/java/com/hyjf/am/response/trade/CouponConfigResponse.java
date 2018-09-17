@@ -4,7 +4,12 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+
+import java.util.List;
 
 /**
  * @author yaoy
@@ -16,6 +21,12 @@ public class CouponConfigResponse extends Response<CouponConfigVO> {
     private String selectedClientDisplay;
 
     private String selectedProjectDisplay;
+
+    private List<ParamNameVO> clients;
+
+    private List<ParamNameVO> expType;
+
+    private List<BorrowProjectTypeVO> projectTypes;
 
     public int getCount() {
         return count;
@@ -39,5 +50,29 @@ public class CouponConfigResponse extends Response<CouponConfigVO> {
 
     public void setSelectedProjectDisplay(String selectedProjectDisplay) {
         this.selectedProjectDisplay = selectedProjectDisplay;
+    }
+
+    public List<ParamNameVO> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<ParamNameVO> clients) {
+        this.clients = clients;
+    }
+
+    public List<ParamNameVO> getExpType() {
+        return expType;
+    }
+
+    public void setExpType(List<ParamNameVO> expType) {
+        this.expType = expType;
+    }
+
+    public List<BorrowProjectTypeVO> getProjectTypes() {
+        return projectTypes;
+    }
+
+    public void setProjectTypes(List<BorrowProjectTypeVO> projectTypes) {
+        this.projectTypes = projectTypes;
     }
 }

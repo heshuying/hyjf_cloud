@@ -9,6 +9,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BaseBean;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -134,6 +135,8 @@ public class ProjectConstant {
 
     public static final String API_METHOD_BORROW_LIST = "getBorrowList";
 
+    public static final String  API_METHOD_INVEST_LIST = "getInvestList";
+
     public static final String API_METHOD_BORROW_DETAIL = "getBorrowDetail";
 
     /*  -----------------------------api端 结束------------------------------------*/
@@ -160,6 +163,10 @@ public class ProjectConstant {
         }else if(API_METHOD_BORROW_DETAIL.equals(methodName)){
             ApiBorrowReqBean bean = (ApiBorrowReqBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
+        }else if (API_METHOD_INVEST_LIST.equals(methodName)){
+            ApiInvestListReqBean bean = (ApiInvestListReqBean) paramBean;
+            sign =  bean.getInstCode() + bean.getStartTime() + bean.getEndTime() + bean.getTimestamp();
+
         }
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

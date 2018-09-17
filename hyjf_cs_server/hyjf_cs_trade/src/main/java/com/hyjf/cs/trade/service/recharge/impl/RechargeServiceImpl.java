@@ -171,6 +171,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setTxAmount(bean.getTxAmount());
 						accountRecharge.setTxDate(Integer.parseInt(null==bean.getTxDate()?"0":bean.getTxDate()));
 						accountRecharge.setTxTime(Integer.parseInt(null==bean.getTxTime()?"0":bean.getTxTime()));
+						accountRecharge.setSeqNo(seqNo);
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
 						bankAccountBeanRequest.setIp(ip);

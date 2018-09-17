@@ -11,13 +11,16 @@
 
 package com.hyjf.am.vo.trade.repay;
 
+import com.hyjf.am.response.Response;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author 王坤
  */
 
-public class WebUserRepayProjectListCustomizeVO implements Serializable {
+public class WebUserRepayProjectListCustomizeVO  extends Response<List<WebUserRepayProjectListCustomizeVO>> implements Serializable {
 
 	/**
 	 * serialVersionUID

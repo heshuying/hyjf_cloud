@@ -194,6 +194,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
         BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
+        List<BatchBorrowRepayBankInfoVO> bankInfoVOList = new ArrayList<>();
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             int txCounts = apicron.getTxCounts();// 总交易笔数
@@ -249,12 +250,12 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 }
             }
             if(results.size() > 0){
-                List<BatchBorrowRepayBankInfoVO> bankInfoVOList = getRepayDetailList(results);
+                bankInfoVOList = getRepayDetailList(results);
             }
         }
+        //TODO 银行环境不通，测试数据，环境顺畅后删除下面所有代码，然后返回bankInfoVOList即可
         List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
         String subPacks;
-        //TODO 银行环境不通，测试数据，环境顺畅后删除
         subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
                 "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
                 "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +

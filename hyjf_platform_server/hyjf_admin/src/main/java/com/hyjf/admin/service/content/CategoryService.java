@@ -196,4 +196,14 @@ public interface CategoryService {
      * @return
      */
     CategoryResponse getOftenInitPage(ContentHelpBeanRequest contentHelpBeanRequest);
+
+    /**
+     * @Author walter.tanyy
+     * @user walter.tanyy
+     * @Description  智齿客服初始化
+     * @Date 14:57 2018/7/24
+     * @Param contentHelpBeanRequest
+     * @return
+     */
+    CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest);
 }

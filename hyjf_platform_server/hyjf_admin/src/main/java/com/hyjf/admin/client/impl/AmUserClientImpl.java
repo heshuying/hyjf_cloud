@@ -2313,7 +2313,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int countByMobile(String mobile){
 		int checkFlg = restTemplate.
-				getForEntity("http://AM-ADMIN/am-user/userManager/countByMobile/"+ mobile, Integer.class).
+				getForEntity("http://AM-ADMIN/am-user/userManager/countByMobileList/"+ mobile, Integer.class).
 				getBody();
 		return checkFlg;
 	}
