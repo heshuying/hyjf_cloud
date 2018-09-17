@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecov
 
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
     @PostMapping("/getList")
     public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
+        logger.info("BatchBorrowRecoverRequest:::::::[{}]", JSON.toJSONString(request));
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
@@ -66,6 +68,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
         List<BatchBorrowRecoverVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
         reponse.setRecordTotal(total);
         reponse.setResultList(list);
+        reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
 
