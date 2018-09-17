@@ -789,7 +789,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         retUrl = retUrl+"?logOrdId="+orderId;
-        successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;
+        if(platform.equals(ClientConstants.WEB_CLIENT)){
+            successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;
+        }else {
+            successfulUrl = successfulUrl+"?amount=" + transAmt+ "&charge=" + fee;
+        }
+
         // 路由代码
         String routeCode = "";
         // 调用汇付接口(4.2.2 用户绑卡接口)

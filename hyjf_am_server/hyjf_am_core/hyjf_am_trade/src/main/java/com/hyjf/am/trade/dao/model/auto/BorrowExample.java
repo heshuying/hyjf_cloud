@@ -4545,6 +4545,11 @@ public class BorrowExample {
             addCriterion("increase_interest_flag not between", value1, value2, "increaseInterestFlag");
             return (Criteria) this;
         }
+
+        public Criteria andRepayOrgUserIdEqualTo(Integer value) {
+            addCriterion("repay_org_user_id =", value, "repayOrgUserId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

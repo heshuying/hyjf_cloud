@@ -90,6 +90,16 @@ public class ProjectBean extends BaseVO implements Serializable {
 	// 看正在还款的是否  只能全部结清（1为 是，以外则全否）
 	private String onlyAllRepay;
 
+	private boolean isAllRepay;
+
+	public boolean isAllRepay() {
+		return isAllRepay;
+	}
+
+	public void setAllRepay(boolean allRepay) {
+		isAllRepay = allRepay;
+	}
+
 	/** 用户还款详情 */
 	private List<ProjectRepayBean> userRepayList;
 

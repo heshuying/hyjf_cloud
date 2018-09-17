@@ -8,6 +8,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.CouponConfigService;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
@@ -153,5 +154,16 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     public String getAdminInfoByUserId(String userId) {
         CouponTenderResponse response = amConfigClient.getAdminUserByUserId(userId);
         return response.getAttrbute();
+    }
+
+    /**
+     * 查询导出列表
+     * @param request
+     * @return
+     */
+    @Override
+    public CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request) {
+        CouponConfigExportCustomizeResponse response = amTradeClient.getExportConfigList(request);
+        return response;
     }
 }

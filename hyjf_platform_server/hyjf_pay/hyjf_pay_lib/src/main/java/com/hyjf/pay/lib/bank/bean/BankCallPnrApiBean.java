@@ -10,27 +10,25 @@
  */
 package com.hyjf.pay.lib.bank.bean;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Administrator
@@ -139,7 +137,7 @@ public class BankCallPnrApiBean implements Serializable {
 	 */
 	public BigDecimal getBigDecimal(String key) {
 		String val = paramMap.get(key);
-		if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
+		if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
 			return new BigDecimal(val);
 		}
 		return BigDecimal.ZERO;

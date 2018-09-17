@@ -8,14 +8,12 @@ import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author PC-LIUSHOUYI

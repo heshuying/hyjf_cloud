@@ -510,7 +510,12 @@
 		hydb.borrow_safeguard_way,
 		hydb.borrow_income_description,
 		hydb.borrow_publisher,
-		hydb.borrow_extra_yield,
+		case when borrowInfo.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('+',borrowInfo.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield,
 		hydb.contract_period,
 		truncate(hydb.account/10000,2) AS borrow_account_wan,
  		truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
@@ -526,6 +531,7 @@
 		hydb.increase_interest_flag increase_interest_flag
 		FROM
 			ht_borrow hydb
+		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
 		LEFT JOIN ht_borrow_repay re ON re.borrow_nid = hydb.borrow_nid

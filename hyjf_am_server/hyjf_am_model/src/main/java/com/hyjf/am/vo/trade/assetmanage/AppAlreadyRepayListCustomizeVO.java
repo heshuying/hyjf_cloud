@@ -42,7 +42,8 @@ public class AppAlreadyRepayListCustomizeVO extends BaseVO implements Serializab
     private String orderId;
     // 项目期限
     private String period;
-
+    //加息收益率
+    private String borrowExtraYield;
     public String getPeriod() {
         return period;
     }
@@ -163,5 +164,8 @@ public class AppAlreadyRepayListCustomizeVO extends BaseVO implements Serializab
     public void setLabel(String label) {
         this.label = label;
     }
+    public String getBorrowExtraYield() { return borrowExtraYield; }
+
+    public void setBorrowExtraYield(String borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
 
 }
