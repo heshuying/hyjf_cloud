@@ -40,7 +40,7 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	private String FILEDOMAILURL;
 	@Value("${file.physical.path}")
 	private String FILEPHYSICALPATH;
-	@Value("${file.upload.activity.img.path}")
+	@Value("${file.upload.whereabouts.page.path}")
 	private String FILEUPLOADTEMPPATH;
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
