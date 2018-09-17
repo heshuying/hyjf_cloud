@@ -10,10 +10,10 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,8 +103,12 @@ public class WhereaboutsPageController extends BaseController {
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
 	@GetMapping("/uploadFile")
-	public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		WhereaboutsPictureResponse files = this.whereaboutsPageService.uploadFile(request, response);
-		return files;
+	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String files = whereaboutsPageService.uploadFile(request, response);
+		if (StringUtils.isNotBlank(files)) {
+			return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+		} else {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
 	}
 }

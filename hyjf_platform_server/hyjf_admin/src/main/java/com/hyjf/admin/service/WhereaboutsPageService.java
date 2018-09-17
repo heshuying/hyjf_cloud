@@ -5,7 +5,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,5 +57,5 @@ public interface WhereaboutsPageService {
 	 *
 	 *
 	 */
-	WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

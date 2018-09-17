@@ -95,8 +95,8 @@
 		<if test="referrerName != null and referrerName != ''">
 			AND hu2.username = #{referrerName}
 		</if>
-		<if test="username != null and username != ''">
-			AND hu.username = #{username}
+		<if test="userName != null and userName != ''">
+			AND hu.username = #{userName}
 		</if>
 		<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
 			AND t.id = #{tradeTypeSearch}
