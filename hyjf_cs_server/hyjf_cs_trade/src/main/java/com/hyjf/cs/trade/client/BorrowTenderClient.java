@@ -75,9 +75,4 @@ public interface BorrowTenderClient {
 	 */
     List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);
 
-	/**
-	 * 体验金按受益期限还款
-	 * @param recoverNidList
-	 */
-	void couponOnlyRepay(List<String> recoverNidList);
 }
