@@ -655,24 +655,34 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	@Override
 	public JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
 	    JSONObject result = new JSONObject();
+        String accountStr = "{account}";  //转让本金替换字符
+        String priceStr = "{price}";    //转让价格替换字符
+        String endTimeStr = "{endTime}";  //结束时间替换字符
         result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         Integer creditNid = null;
         // 检查是否能债转
-        checkCanCredit(request,userId);
-        checkTenderToCreditParam(request,userId);
-        // 债转保存
-        try{
-          creditNid = insertTenderToCredit(userId, request);
+        String resultUrl = systemConfig.getAppFrontHost() + "/transfer/{borrowNid}/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
+        try {
+            try{
+                checkCanCredit(request,userId);
+                checkTenderToCreditParam(request,userId);
+                // 债转保存
+                creditNid = insertTenderToCredit(userId, request);
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}","success").replace("{status}",CustomConstants.APP_STATUS_SUCCESS).replace("{statusDesc}",CustomConstants.APP_STATUS_DESC_SUCCESS).replace(accountStr,request.getCreditCapital()).replace(priceStr,request.getCreditPrice()).replace(endTimeStr,String.valueOf(request.getCreditEndTime()));
+                // 业务手动抛出的异常
+            }catch (CheckException e){
+                result.put(CustomConstants.APP_STATUS, e.getCode());
+                result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
+                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "error").replace("{status}",e.getCode()).replace("{statusDesc}",e.getMessage()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
+            }
+            //  未处理的异常
         }catch (Exception e){
-            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
-            result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL);
+            result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
+            result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
+            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid()).replace("{state}", "error").replace("{status}",CustomConstants.APP_STATUS_FAIL).replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg()).replace(accountStr,"").replace(priceStr,"").replace(endTimeStr,"");
         }
-        if (creditNid != null){
-            result.put("resultUrl",systemConfig.getAppFrontHost()+ "/hyjf-app/user/borrow/tenderToCreditResult?creditNid=" + (creditNid != null ? creditNid : ""));
-        }else{
-            result.put("resultUrl","");
-        }
+        result.put("resultUrl",resultUrl);
         return result;
 	}
 	
