@@ -41,7 +41,7 @@ public class PushMoneyController extends BaseController {
 		List<PushMoney> list = pushMoneyService.getRecordList();
 		response.setCount(list.size());
 		if (list != null) {
-			Paginator paginator = new Paginator(requestBean.getCurrPage(), requestBean.getPageSize(), list.size());
+			Paginator paginator = new Paginator(requestBean.getCurrPage(), list.size(), requestBean.getPageSize() == 0 ? 10 : requestBean.getPageSize());
 			List<PushMoney> pushMoneyList = this.pushMoneyService.getRecordList(paginator.getOffset(),paginator.getLimit());
 			if (!CollectionUtils.isEmpty(pushMoneyList)) {
 				List<PushMoneyVO> voList = CommonUtils.convertBeanList(pushMoneyList, PushMoneyVO.class);
