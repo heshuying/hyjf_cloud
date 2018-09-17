@@ -1415,40 +1415,54 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	@Override
 	public void saveCreditBgData(CreditTenderBgVO request) {
 		// 删除tmp表
+		logger.info("债转异步处理  删除tmp表");
 		deleteByOrderIdAndUserId(request.getCreditTenderLog().getLogOrderId(),request.getCreditTenderLog().getUserId());
 		CreditTender creditTender = CommonUtils.convertBean(request.getCreditTender(),CreditTender.class);
 		// 插入credit_tender
+		logger.info("插入credit_tender");
 		creditTenderMapper.insertSelective(creditTender);
 		// 处理承接人account表和account_list表
+		logger.info("处理承接人account表");
 		Account assignAccountNew = CommonUtils.convertBean(request.getAssignAccountNew(),Account.class);
 		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(assignAccountNew) ;
+		logger.info("处理承接人account_list表");
 		AccountList assignAccountList = CommonUtils.convertBean(request.getAssignAccountList(),AccountList.class);
 		this.accountListMapper.insertSelective(assignAccountList);
 
 		// 处理出让人的 account表和account_list表
+		logger.info("处理出让人的 account表");
 		Account sellerAccountNew = CommonUtils.convertBean(request.getSellerAccountNew(),Account.class);
 		this.adminAccountCustomizeMapper.updateCreditAssignSuccess(sellerAccountNew) ;
+		logger.info("处理出让人的 account_list表");
 		AccountList sellerAccountList = CommonUtils.convertBean(request.getSellerAccountList(),AccountList.class);
 		this.accountListMapper.insertSelective(sellerAccountList);
 
 		// 插入 creditRepay
 		if(request.getCreditRepayVO()!=null){
+			logger.info("插入 creditRepay");
 			CreditRepay creditRepay = CommonUtils.convertBean(request.getCreditRepayVO(),CreditRepay.class);
 			creditRepayMapper.insertSelective(creditRepay);
 		}
 
 		// 更新Borrow_recover
+		logger.info("更新Borrow_recover");
 		BorrowRecover borrowRecover = CommonUtils.convertBean(request.getBorrowRecover(),BorrowRecover.class);
 		this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) ;
 
 		// 更新Borrow_recover_plan
+		logger.info("更新Borrow_recover_plan");
 		if(request.getBorrowRecoverPlan()!=null){
 			BorrowRecoverPlan borrowRecoverPlan = CommonUtils.convertBean(request.getBorrowRecoverPlan(),BorrowRecoverPlan.class);
 			this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan);
 		}
 
 		// 调用银行结束债转接口
-		this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
+		BorrowCredit borrowCredit = CommonUtils.convertBean(request.getBorrowCredit(),BorrowCredit.class);
+		logger.info("borrowCredit:{}",borrowCredit);
+		if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+			logger.info("调用银行结束债转接口");
+			this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
+		}
 	}
 
 	/**
