@@ -143,7 +143,6 @@ public class Borrow implements Serializable {
 
     private Date updatetime;
 
-    private String  projectName;
     private Integer increaseInterestFlag;
 
     private static final long serialVersionUID = 1L;
@@ -706,13 +705,5 @@ public class Borrow implements Serializable {
 
     public void setIncreaseInterestFlag(Integer increaseInterestFlag) {
         this.increaseInterestFlag = increaseInterestFlag;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName == null ? null : projectName.trim();
     }
 }

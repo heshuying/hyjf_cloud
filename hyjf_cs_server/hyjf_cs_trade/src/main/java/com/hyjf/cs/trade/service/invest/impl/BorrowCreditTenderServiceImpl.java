@@ -185,13 +185,17 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 承接成功
                 // 查询相应的债转承接记录
                 List<CreditTenderLogVO> creditTenderLog = this.amTradeClient.getCreditTenderLogs(logOrderId,userId);
+                logger.info("查询相应的债转承接记录.{}",creditTenderLog);
                 // 如果已经查询到相应的债转承接log表
                 if (Validator.isNotNull(creditTenderLog)) {
                     // 此次查询的授权码
                     String authCode = tenderQueryBean.getAuthCode();
+                    logger.info("此次查询的授权码.{}",authCode);
                     if (StringUtils.isNotBlank(authCode)) {
                         // 更新债转交易成功后的相关信息
+                        logger.info("开始更新债转信息-----");
                         boolean tenderFlag = this.updateTenderCreditInfo(logOrderId, userId, authCode,creditTenderLog.get(0));
+                        logger.info("更新债转信息完毕-----{}",tenderFlag);
                         if(!tenderFlag){
                             // 更新债转数据异常
                             throw new CheckException(MsgEnum.ERROR_CREDIT_UPDATE_ERROR);

@@ -714,7 +714,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 设置相应的项目名称
             // 之前取borrow表的Name，现在取borrow表的projectName
             // form.setBorrowName(borrow.getName());
-            form.setBorrowName(borrow.getProjectName());
+            //form.setBorrowName(borrow.getProjectName());
 
             // 获取相应的项目还款方式
             String borrowStyle = StringUtils.isNotEmpty(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
