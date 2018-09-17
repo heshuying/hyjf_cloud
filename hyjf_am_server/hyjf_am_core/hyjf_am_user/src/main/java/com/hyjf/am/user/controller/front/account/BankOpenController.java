@@ -257,7 +257,7 @@ public class BankOpenController extends BaseController {
 	/**
 	 * 根据UsetList获取用户账户信息
 	 * @auth wenxin
-	 * @param List<accountId>
+	 * @param <accountId>
 	 * @return
 	 */
 	@RequestMapping("/selectByListId")

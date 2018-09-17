@@ -192,7 +192,7 @@ public class RepayServiceImpl implements RepayService {
      * 查询用户的还款详情
      */
     @Override
-    public BankOpenAccountVO getBankOpenAccount(String bankAccount) {
-        return borrowClient.getBankOpenAccount(bankAccount);
+    public BankOpenAccountVO getBankOpenAccount(String accountId) {
+        return borrowClient.getBankOpenAccount(accountId);
     }
 }

@@ -27,6 +27,7 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private String url;
 
+    @ApiModelProperty(value = "调用代码")
     private String code;
 
     private String content;
@@ -37,6 +38,7 @@ public class AdsVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer order;
 
+    @ApiModelProperty(value = "点击次数")
     private Integer hits;
 
     @ApiModelProperty(value = "广告状态 1-启用,0-关闭")
@@ -65,12 +67,16 @@ public class AdsVO extends BaseVO implements Serializable {
 
     private String shareContent;
 
+    @ApiModelProperty(value = "客户端类型 0为pc广告  1为手机广告")
     private Integer clientType;
 
+    @ApiModelProperty(value = "是否限制新手 1：限制 2：不限制")
     private Integer newUserShow;
 
+    @ApiModelProperty(value = "创建用户")
     private Integer createUserId;
 
+    @ApiModelProperty(value = "修改用户")
     private Integer updateUserId;
 
     @ApiModelProperty(value = "添加时间")

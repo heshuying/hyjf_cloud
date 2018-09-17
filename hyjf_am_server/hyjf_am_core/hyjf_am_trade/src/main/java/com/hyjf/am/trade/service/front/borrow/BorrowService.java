@@ -226,12 +226,5 @@ public interface BorrowService extends BaseService {
      * @return
      */
 	public ProjectBean searchRepayProjectDetail(ProjectBean form) throws Exception;
-    /**
-     * 合计
-     *
-     * @param bankAccount
-     * @return
-     */
-	public BankOpenAccountVO getBankOpenAccount(String bankAccount);
 
 }

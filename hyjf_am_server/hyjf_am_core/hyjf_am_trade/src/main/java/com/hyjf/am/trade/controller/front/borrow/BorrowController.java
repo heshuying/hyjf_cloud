@@ -442,7 +442,7 @@ public class BorrowController extends BaseController {
 	 }
 
 	 @PostMapping("/getborrowIdByProductId")
-	 public String getborrowIdByProductId(@PathVariable Map<String, Object> params) {
+	 public String getborrowIdByProductId(@RequestBody Map<String, Object> params) {
 		 String borrowNid = borrowService.getborrowIdByProductId(params);
 		 if (Validator.isNotNull(borrowNid)){
 			 return borrowNid;
@@ -451,7 +451,7 @@ public class BorrowController extends BaseController {
 	 }
 
 	@PostMapping("/selectOrgRepayProjectList")
-	public  WebUserRepayProjectListCustomizeResponse  selectOrgRepayProjectList(@PathVariable Map<String, Object> params) {
+	public  WebUserRepayProjectListCustomizeResponse  selectOrgRepayProjectList(@RequestBody Map<String, Object> params) {
 		WebUserRepayProjectListCustomizeResponse  response = new WebUserRepayProjectListCustomizeResponse();
 		List<WebUserRepayProjectListCustomizeVO> list = borrowService.selectOrgRepayProjectList(params);
 		if (Validator.isNotNull(list)){
@@ -461,7 +461,7 @@ public class BorrowController extends BaseController {
 	}
 
 	@PostMapping("/selectUserRepayProjectList")
-	public  WebUserRepayProjectListCustomizeResponse  selectUserRepayProjectList(@PathVariable Map<String, Object> params) {
+	public  WebUserRepayProjectListCustomizeResponse  selectUserRepayProjectList(@RequestBody Map<String, Object> params) {
 		WebUserRepayProjectListCustomizeResponse  response = new WebUserRepayProjectListCustomizeResponse();
 		List<WebUserRepayProjectListCustomizeVO> list = borrowService.selectUserRepayProjectList(params);
 		if (Validator.isNotNull(list)){
@@ -484,13 +484,4 @@ public class BorrowController extends BaseController {
 		return null;
 	}
 
-	@PostMapping("/getBankOpenAccount")
-	public BankOpenAccountResponse getBankOpenAccount(String bankAccount) {
-		BankOpenAccountResponse  response = new BankOpenAccountResponse();
-		BankOpenAccountVO list = borrowService.getBankOpenAccount(bankAccount);
-		if (Validator.isNotNull(list)){
-			response.setResult(list);
-		}
-		return response;
-	}
 }

@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -18,7 +19,7 @@ public interface BorrowClient {
 
     ProjectBean searchRepayProjectDetail(ProjectBean form);
 
-    BankOpenAccountVO getBankOpenAccount(String bankAccount);
+    BankOpenAccountVO getBankOpenAccount(String accountId);
 
     List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
 
@@ -26,7 +27,7 @@ public interface BorrowClient {
 
     Long countBatchCenter (BatchCenterCustomize batchCenterCustomize);
 
-    List<BatchCenterCustomize> selectBatchCenterList (BatchCenterCustomize batchCenterCustomize);
+    List<BatchCenterCustomizeVO> selectBatchCenterList (BatchCenterCustomize batchCenterCustomize);
 
     String getborrowIdByProductId (Map<String, Object> params);
 }

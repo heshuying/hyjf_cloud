@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.trade.BatchCenterCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.WebUserRepayProjectListCustomizeResponse;
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -46,9 +49,9 @@ public class BorrowClientImpl implements BorrowClient {
     }
 
     @Override
-    public BankOpenAccountVO getBankOpenAccount(String bankAccount) {
+    public BankOpenAccountVO getBankOpenAccount(String accountId) {
         BankOpenAccountVO response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrow/getBankOpenAccount/" + bankAccount,
+                "http://AM-USER/am-user/bankopen/getBankOpenAccountByAccountId/" + accountId,
                 BankOpenAccountVO.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -58,22 +61,22 @@ public class BorrowClientImpl implements BorrowClient {
 
     @Override
     public List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params){
-        WebUserRepayProjectListCustomizeVO result =  restTemplate.postForEntity(
+        WebUserRepayProjectListCustomizeResponse result =  restTemplate.postForEntity(
             "http://AM-TRADE/am-trade/borrow/selectUserRepayProjectList/", params,
-                WebUserRepayProjectListCustomizeVO.class).getBody();
+                WebUserRepayProjectListCustomizeResponse.class).getBody();
         if (result != null) {
-            return result.getResult();
+            return result.getResultList();
         }
         return null;
     }
 
     @Override
     public List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params){
-        WebUserRepayProjectListCustomizeVO result =  restTemplate.postForEntity(
+        WebUserRepayProjectListCustomizeResponse result =  restTemplate.postForEntity(
             "http://AM-TRADE/am-trade/borrow/selectOrgRepayProjectList/", params,
-                WebUserRepayProjectListCustomizeVO.class).getBody();
+                WebUserRepayProjectListCustomizeResponse.class).getBody();
         if (result != null) {
-            return result.getResult();
+            return result.getResultList();
         }
         return null;
     }
@@ -90,12 +93,12 @@ public class BorrowClientImpl implements BorrowClient {
     }
 
     @Override
-    public List<BatchCenterCustomize> selectBatchCenterList (BatchCenterCustomize batchCenterCustomize){
-        BatchCenterCustomize result =  restTemplate.postForEntity(
+    public List<BatchCenterCustomizeVO> selectBatchCenterList (BatchCenterCustomize batchCenterCustomize){
+        BatchCenterCustomizeResponse result =  restTemplate.postForEntity(
         "http://AM-TRADE/am-trade/borrow/selectBatchCenterList/", batchCenterCustomize,
-                BatchCenterCustomize.class).getBody();
+                BatchCenterCustomizeResponse.class).getBody();
         if (result != null) {
-        return result.getResult();
+            return result.getResultList();
         }
         return null;
         }
