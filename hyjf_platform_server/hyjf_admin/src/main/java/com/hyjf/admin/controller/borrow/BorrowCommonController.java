@@ -122,9 +122,9 @@ public class BorrowCommonController extends BaseController {
 		borrowCommonRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
 		borrowCommonRequest.setAdminUsername(this.getUser(request).getUsername());
 		BorrowCommonResponse bcr = borrowCommonService.insertAction(borrowCommonRequest);
-		if(bcr==null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+//		if(bcr==null) {
+//			return new AdminResult<>(FAIL, FAIL_DESC);
+//		}
 		if (!Response.isSuccess(bcr)) {
 			return new AdminResult<>(FAIL, bcr.getMessage());
 
