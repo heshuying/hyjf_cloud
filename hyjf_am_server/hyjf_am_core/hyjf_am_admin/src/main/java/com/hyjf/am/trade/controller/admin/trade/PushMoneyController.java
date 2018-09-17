@@ -45,6 +45,7 @@ public class PushMoneyController extends BaseController {
 			List<PushMoney> pushMoneyList = this.pushMoneyService.getRecordList(paginator.getOffset(),paginator.getLimit());
 			if (!CollectionUtils.isEmpty(pushMoneyList)) {
 				List<PushMoneyVO> voList = CommonUtils.convertBeanList(pushMoneyList, PushMoneyVO.class);
+				response.setPaginator(paginator);
 				response.setResultList(voList);
 			}
 		}
