@@ -972,11 +972,30 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     this.amTradeClient.saveCreditBgData(creditTenderBg);
 
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
-
+                    logger.info("开始更新运营数据等 updateUtm ");
+                    updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
+                    // 网站累计投资追加
+                    // 投资、收益统计表
+                    JSONObject params = new JSONObject();
+                    params.put("tenderSum", creditTenderLog.getAssignCapital());
+                    params.put("nowTime", GetDate.getDate(GetDate.getNowTime10()));
+                    // 投资修改mongodb运营数据
+                    params.put("type", 1);
+                    params.put("money", creditTenderLog.getAssignCapital());
+                    try {
+                        // 网站累计投资追加
+                        // 投资修改mongodb运营数据
+                        logger.info("网站累计投资追加 mq ");
+                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        // 满标发短信在原子层
+                    } catch (MQException e) {
+                        e.printStackTrace();
+                    }
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
                         // 插入网站收支明细记录
+                        logger.info("网站收支明细记录 mq ");
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
@@ -997,75 +1016,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     }
-                    // 更新渠道统计用户累计投资
-                    //发送mq
-                    AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = this.amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
-                    if (Validator.isNotNull(appChannelStatisticsDetailVO)) {
-                        Map<String, Object> params = new HashMap<String, Object>();
-                        // 认购本金
-                        params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                        // 投资时间
-                        params.put("investTime", nowTime);
-                        // 项目类型
-                        params.put("projectType", "汇转让");
-                        // 首次投标项目期限
-                        String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-                        params.put("investProjectPeriod", investProjectPeriod);
-                        //根据investFlag标志位来决定更新哪种投资
-                        params.put("investFlag", checkIsNewUserCanInvest(userId));
-                        //压入消息队列
-                        try {
-                            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        } catch (MQException e) {
-                            logger.error("渠道统计用户累计投资推送消息队列失败！logOrdId:{},userId:{}",logOrderId,userId);
-                        }
-                    } else {
-                        // 更新huiyingdai_utm_reg的首投信息
-                        UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
-                        if (utmReg != null) {
-                            Map<String, Object> params = new HashMap<String, Object>();
-                            params.put("id", utmReg.getId());
-                            params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                            // 投资时间
-                            params.put("investTime", nowTime);
-                            // 项目类型
-                            params.put("projectType", "汇转让");
-                            // 首次投标项目期限
-                            String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-                            // 首次投标项目期限
-                            params.put("investProjectPeriod", investProjectPeriod);
-                            // 更新渠道统计用户累计投资
-                            //if (users.getInvestflag() == 0) {
-                            // 更新huiyingdai_utm_reg的首投信息
-                            try {
-                                if(this.checkIsNewUserCanInvest(userId)){
-                                    utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                                }
-                            } catch (MQException e) {
-                                logger.error("更新huiyingdai_utm_reg的首投信息失败! logOrdId:{},userId:{}",logOrderId,userId);
-                            }
-                        }
-                    }
-
-                    // 网站累计投资追加
-                    // 投资、收益统计表
-                    //
-                    JSONObject params = new JSONObject();
-                    params.put("tenderSum", creditTenderLog.getAssignCapital());
-                    params.put("nowTime", GetDate.getDate(nowTime));
-                    // 投资修改mongodb运营数据
-                    params.put("type", 1);
-                    params.put("money", creditTender.getAssignCapital());
-                    try {
-                        // 网站累计投资追加
-                        // 投资修改mongodb运营数据
-                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        // 推送app消息 和满标发短信
-                        this.sendCreditSuccessMessage(creditTender,borrowCredit);
-                    } catch (MQException e) {
-                        e.printStackTrace();
-                    }
                     return true;
                 }
             }else{
@@ -1074,6 +1024,31 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         }
         return true;
+    }
+
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, String investProjectPeriod) {
+        //更新汇计划列表成功的前提下
+        // 更新渠道统计用户累计投资
+        // 投资人信息
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        // 认购本金
+        params.put("accountDecimal", accountDecimal);
+        // 投资时间
+        params.put("investTime", nowTime);
+        // 项目类型
+        params.put("projectType", "汇转让");
+        // 首次投标项目期限
+        params.put("investProjectPeriod", investProjectPeriod);
+        //压入消息队列
+        try {
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+        }
+
+        /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
 
     /**
