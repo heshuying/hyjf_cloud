@@ -130,4 +130,6 @@ public interface BorrowCustomizeMapper {
 	 */
 	List<BorrowCustomizeVO> selectUnDealBorrowBeforeLiquidate();
 	List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
+
+    List<BorrowCustomizeVO>  selectBorrowByNidList(BorrowCustomizeVO borrowCustomizeVO);
 }

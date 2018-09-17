@@ -151,12 +151,6 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 		return null;
 	}
 
-    // TODO: 2018/8/9  优惠券按收益期限还款
-	@Override
-	public void couponOnlyRepay(List<String> recoverNidList) {
-        
-	}
-	
 }
 
 
