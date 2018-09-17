@@ -1254,7 +1254,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int countByMobileList(String mobile) {
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
-        criteria.andMobileEqualTo(mobile);
+        criteria.andMobileLike(mobile.trim());
         List<User> userList = userMapper.selectByExample(example);
         if(CollectionUtils.isNotEmpty(userList)){
             return userList.size();

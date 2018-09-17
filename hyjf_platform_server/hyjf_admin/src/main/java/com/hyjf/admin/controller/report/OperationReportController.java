@@ -8,7 +8,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
@@ -320,8 +319,12 @@ public class OperationReportController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping("/uploadFile")
-    public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        WhereaboutsPictureResponse files = whereaboutsPageService.uploadFile(request, response);
-        return files;
+    public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String files = whereaboutsPageService.uploadFile(request, response);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(files)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
     }
 }

@@ -5187,7 +5187,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public Integer queryCrmCuttype(Integer userId) {
 		TenderCommissionResponse response = restTemplate
-	            .getForEntity("http:// AM-ADMIN/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
+	            .getForEntity("http://AM-ADMIN/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
 	    if (response != null) {
 	        return response.getType();
 	    }

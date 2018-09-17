@@ -3,13 +3,13 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
-import com.hyjf.am.vo.config.WhereaboutsPagePictureVo;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +21,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -37,7 +35,12 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 
 	@Autowired
 	SystemConfig systemConfig;
-	@Value("${file.upload.activity.img.path}")
+
+	@Value("${file.domain.url}")
+	private String FILEDOMAILURL;
+	@Value("${file.physical.path}")
+	private String FILEPHYSICALPATH;
+	@Value("${file.upload.whereabouts.page.path}")
 	private String FILEUPLOADTEMPPATH;
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
@@ -71,9 +74,8 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	 * @throws Exception
 	 */
 	@Override
-	public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		WhereaboutsPictureResponse checkResponse = new WhereaboutsPictureResponse();
-		String errorMessage = "";
+	public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		/*String errorMessage = "";
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
 		String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
@@ -119,7 +121,55 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 			files.add(fileMeta);
 
 		}
-		checkResponse.setResultList(files);
-		return checkResponse;
+		checkResponse.setResultList(files);*/
+
+		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+
+		String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
+		String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
+		String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
+		String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+
+		File logoSaveFile = new File(logoRealPathDir);
+		if (!logoSaveFile.exists()) {
+			logoSaveFile.mkdirs();
+		}
+		BorrowCommonImage fileMeta = null;
+		LinkedList<BorrowCommonImage> files = new LinkedList<BorrowCommonImage>();
+		Iterator<String> itr = multipartRequest.getFileNames();
+		MultipartFile multipartFile = null;
+		while (itr.hasNext()) {
+			multipartFile = multipartRequest.getFile(itr.next());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
+			String originalFilename = multipartFile.getOriginalFilename();
+			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
+
+			// 文件大小
+			String errorMessage = null;
+			try {
+				errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			fileMeta = new BorrowCommonImage();
+			int index = originalFilename.lastIndexOf(".");
+			if (index != -1) {
+				fileMeta.setImageName(originalFilename.substring(0, index));
+			} else {
+				fileMeta.setImageName(originalFilename);
+			}
+
+			fileMeta.setImageRealName(fileRealName);
+			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
+			fileMeta.setImageType(multipartFile.getContentType());
+			fileMeta.setErrorMessage(errorMessage);
+			// 获取文件路径
+			fileMeta.setImagePath(fileUploadTempPath + fileRealName);
+			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
+			files.add(fileMeta);
+		}
+		return JSONObject.toJSONString(files, true);
 	}
 }
