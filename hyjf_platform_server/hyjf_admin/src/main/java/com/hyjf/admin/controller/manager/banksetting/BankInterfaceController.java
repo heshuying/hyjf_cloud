@@ -77,10 +77,8 @@ public class BankInterfaceController extends BaseController {
         BankInterfaceResponse prs =null;
         if(adminRequest.getId() != null){
             bankInterface.setId(adminRequest.getId());
-            if(adminRequest.getIsUsable() == 0){
-                bankInterface.setIsUsable(1);
-            }else {
-                bankInterface.setIsUsable(0);
+            if(adminRequest.getIsUsable() != null){
+                bankInterface.setIsUsable(adminRequest.getIsUsable());
             }
             bankInterface.setUpdateTime(new Date());
             bankInterface.setUpdateUserName(user.getUsername());
