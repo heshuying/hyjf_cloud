@@ -276,7 +276,7 @@ public class UserManagerController extends BaseController {
     public int countByMobile(@PathVariable String mobile){
         logger.info("---countByMobile---  "  + mobile);
         int checkFlg = userManagerService.countByMobile(mobile);
-        logger.info("============checkFlg"+checkFlg+"============");
+        logger.info("------------checkFlg :  "+checkFlg+"---------");
         return checkFlg;
     }
 
@@ -793,4 +793,12 @@ public class UserManagerController extends BaseController {
         response.setRtn(returnCode);
         return response;
     }
+    @RequestMapping("/countByMobileList/{mobile}")
+    public int countByMobileList(@PathVariable String mobile){
+        logger.info("---countByMobileList---  "  + mobile);
+        int mobileCount = userManagerService.countByMobileList(mobile);
+        logger.info("------------mobileCount :  "+mobileCount+"---------");
+        return mobileCount;
+    }
+
 }

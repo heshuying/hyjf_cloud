@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.repay.impl;
 
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.client.BorrowClient;
@@ -29,7 +30,7 @@ public class BatchHjhBorrowRepayApiServiceImpl extends BaseServiceImpl implement
 	 * selectBatchCenterList
 	 */
 	@Override
-	public List<BatchCenterCustomize> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize) {
+	public List<BatchCenterCustomizeVO> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize) {
 		return borrowClient.selectBatchCenterList(batchCenterCustomize);
 	}
 

@@ -272,4 +272,11 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     List<SpreadsUser> selectSpreadBySpreadUserId(Integer spreadUserId);
+
+    /**
+     * 根据手机号查找
+     * @param mobile
+     * @return
+     */
+   int countByMobileList(String mobile);
 }

@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.controller.api.repay;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.trade.borrow.BatchCenterCustomizeVO;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.ApiSignUtil;
@@ -18,8 +19,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.hyjf.cs.trade.bean.BaseBean;
@@ -248,7 +247,7 @@ public class RepayController extends BaseController {
         if (StringUtils.isBlank(info.getAccountId()) || StringUtils.isBlank(info.getProductId()) || StringUtils.isBlank(info.getInstCode())) {
             throw new RuntimeException("参数非法,ProductId或accountId或instCode不得为空!");
         }
-        //验签
+        //验签(测试暂时关闭验签功能)
         if(!this.verifyRequestSign(info, METHOD_REPAY_INFO)){
             throw new RuntimeException("验签失败!");
         }
@@ -286,8 +285,8 @@ public class RepayController extends BaseController {
         batchCenterCustomize.setApiType(1);
         Long count = this.batchBorrowRepayService.countBatchCenter(batchCenterCustomize);
         if (count != null && count > 0) {
-            List<BatchCenterCustomize> recordList = this.batchBorrowRepayService.selectBatchCenterList(batchCenterCustomize);
-            BatchCenterCustomize info = recordList.get(0);
+            List<BatchCenterCustomizeVO> recordList = this.batchBorrowRepayService.selectBatchCenterList(batchCenterCustomize);
+            BatchCenterCustomizeVO info = recordList.get(0);
             resultBean.setStatus(BaseResultBean.STATUS_SUCCESS);
             resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
             resultBean.setBorrowNid(info.getBorrowNid());

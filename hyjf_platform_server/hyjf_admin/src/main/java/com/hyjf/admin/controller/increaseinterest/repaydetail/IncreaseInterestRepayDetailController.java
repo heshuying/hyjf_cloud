@@ -146,7 +146,7 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 					}
 					// 应还加息收益
 					else if (celLength == 7) {
-						cell.setCellValue(increaseInterestRepay.getRepayInterest().toString());
+						cell.setCellValue(increaseInterestRepay.getRepayInterest() == null ? "" : increaseInterestRepay.getRepayInterest());
 					}
 					// 应还时间
 					else if (celLength == 8) {
