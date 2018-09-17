@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.am.trade.dao.model.auto;
+package com.hyjf.am.trade.dao.model.customize;
 
 import com.hyjf.am.response.Response;
 
