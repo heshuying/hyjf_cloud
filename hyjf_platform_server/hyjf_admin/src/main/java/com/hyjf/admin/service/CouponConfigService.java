@@ -80,4 +80,11 @@ public interface CouponConfigService {
      * @return
      */
     CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request);
+
+    /**
+     * 根据用户名获取用户id
+     * @param auditUser
+     * @return
+     */
+    Integer getUserId(String auditUser);
 }

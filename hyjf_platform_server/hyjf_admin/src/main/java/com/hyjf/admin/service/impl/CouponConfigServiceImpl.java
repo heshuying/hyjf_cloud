@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.CouponConfigService;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
@@ -15,6 +16,8 @@ import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.sun.corba.se.spi.ior.IdentifiableFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,8 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     AmTradeClient amTradeClient;
     @Autowired
     AmConfigClient amConfigClient;
+    @Autowired
+    AmUserClient amUserClient;
     /**
      * 获取优惠券发行列表
      * @param couponConfigRequest
@@ -165,5 +170,14 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     public CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request) {
         CouponConfigExportCustomizeResponse response = amTradeClient.getExportConfigList(request);
         return response;
+    }
+
+    @Override
+    public Integer getUserId(String auditUser) {
+        UserVO userVO = amUserClient.getUserByUserName(auditUser);
+        if (userVO != null) {
+            return userVO.getUserId();
+        }
+        return null;
     }
 }

@@ -153,6 +153,8 @@ public class CouponConfigController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ccr.setRtn(Response.FAIL);
+            ccr.setMessage(Response.FAIL_MSG);
         }
         return ccr;
     }
@@ -169,6 +171,9 @@ public class CouponConfigController extends BaseController {
         try {
             CouponConfig couponConfig = new CouponConfig();
             BeanUtils.copyProperties(couponConfigRequest, couponConfig);
+            couponConfig.setStatus(1);
+            couponConfig.setUpdateTime(GetDate.getDate());
+            couponConfig.setCreateTime(GetDate.getDate());
             int result = couponConfigService.insertAction(couponConfig);
             if (result > 0) {
                 ccr.setRtn(Response.SUCCESS);
