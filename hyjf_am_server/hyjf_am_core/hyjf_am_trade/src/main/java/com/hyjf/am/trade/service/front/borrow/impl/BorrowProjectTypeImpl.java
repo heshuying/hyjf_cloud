@@ -154,12 +154,13 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         record.setBorrowCd(form.getBorrowCd());
         record.setBorrowProjectType(form.getBorrowProjectType());
         record.setStatus(0);
+        record.setInvestUserType(Integer.valueOf(form.getInvestUserType()));
         record.setCreateTime(sysDate);
-        record.setCreateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
-//        record.setCreateGroupId(userId);//测试用，联调需改 todo
+        record.setCreateUserId(Integer.valueOf(form.getCreateUserId()));
+//        record.setCreateGroupId(userId);
         record.setUpdateTime(sysDate);
-        record.setUpdateUserId(Integer.valueOf(form.getCreateUserId()));//测试用，联调需改 todo
-        // record.setUpdateGroupId(userId)(userId);//测试用，联调需改 todo
+        record.setUpdateUserId(Integer.valueOf(form.getCreateUserId()));
+        // record.setUpdateGroupId(userId)(userId);
         borrowProjectTypeMapper.insertSelective(record);
         String  methodName = form.getMethodName();
         // 直接插入
@@ -221,6 +222,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BeanUtils.copyProperties(form, record);
         Date sysDate = new Date();
         record.setUpdateUserId(Integer.valueOf(form.getUpdateUserId()));
+        record.setInvestUserType(Integer.valueOf(form.getInvestUserType()));
         record.setStatus(Integer.valueOf(form.getStatus()));
         record.setUpdateTime(sysDate);
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
