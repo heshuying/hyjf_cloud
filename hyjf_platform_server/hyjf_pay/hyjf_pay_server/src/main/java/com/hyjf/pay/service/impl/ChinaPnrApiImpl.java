@@ -17,8 +17,8 @@ import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.PnrApiBean;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrSignUtils;
 import com.hyjf.pay.service.PnrApi;
+import com.hyjf.pay.utils.ChinaPnrSignUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +91,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         String result = null;
         // 未签名时,进行签名
         if (Validator.isNull(bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
-            bean.set(ChinaPnrConstant.PARAM_CHKVALUE, bean.getChkValueMerged());
+            bean.set(ChinaPnrConstant.PARAM_CHKVALUE, ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap()));
         }
         // 签名为空时,返回空字符串
         if (Validator.isNull(bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
@@ -128,7 +128,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BGRETURL,
                         ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_USRID, ChinaPnrConstant.PARAM_USRNAME,
                         ChinaPnrConstant.PARAM_IDTYPE, ChinaPnrConstant.PARAM_IDNO, ChinaPnrConstant.PARAM_USRMP,
@@ -155,7 +155,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(), ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_BGRETURL, ChinaPnrConstant.PARAM_MERPRIV,
                         ChinaPnrConstant.PARAM_PAGETYPE);
@@ -194,7 +194,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_CARDID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -218,7 +218,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                         ChinaPnrConstant.PARAM_GATEBUSIID, ChinaPnrConstant.PARAM_OPENBANKID,
@@ -247,7 +247,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_SUBACCTTYPE, ChinaPnrConstant.PARAM_SUBACCTID,
                         ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
@@ -273,7 +273,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                         ChinaPnrConstant.PARAM_TRXID, ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_BGRETURL,
                         ChinaPnrConstant.PARAM_MERPRIV);
@@ -300,7 +300,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_MAXTENDERRATE,
@@ -310,7 +310,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_MAXTENDERRATE,
@@ -341,7 +341,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         // 签名
         // 接口 2.0
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                         ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_MAXTENDERRATE, ChinaPnrConstant.PARAM_BORROWERDETAILS,
@@ -370,7 +370,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_RETURL,
@@ -379,7 +379,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_ISUNFREEZE,
@@ -411,7 +411,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                             ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_FEE,
@@ -423,7 +423,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                             ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_FEE,
@@ -457,7 +457,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                             ChinaPnrConstant.PARAM_SUBORDID, ChinaPnrConstant.PARAM_SUBORDDATE,
@@ -469,7 +469,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else if (ChinaPnrConstant.VERSION_20.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                             ChinaPnrConstant.PARAM_SUBORDID, ChinaPnrConstant.PARAM_SUBORDDATE,
@@ -482,7 +482,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 3.0
             String chkValue =
-                    bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID,
                             ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                             ChinaPnrConstant.PARAM_OUTCUSTID, ChinaPnrConstant.PARAM_SUBORDID,
@@ -521,7 +521,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_OUTCUSTID,
                         ChinaPnrConstant.PARAM_OUTACCTID, ChinaPnrConstant.PARAM_TRANSAMT,
                         ChinaPnrConstant.PARAM_INCUSTID, ChinaPnrConstant.PARAM_INACCTID,
@@ -549,7 +549,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_OPENACCTID, ChinaPnrConstant.PARAM_RETURL,
@@ -559,7 +559,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                             ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRANSAMT,
                             ChinaPnrConstant.PARAM_SERVFEE, ChinaPnrConstant.PARAM_SERVFEEACCTID,
@@ -588,7 +588,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                         ChinaPnrConstant.PARAM_QUERYTRANSTYPE);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -608,7 +608,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
         return bean;
@@ -627,7 +627,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_TENDERPLANTYPE, ChinaPnrConstant.PARAM_TRANSAMT,
                         ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_PAGETYPE);
@@ -648,7 +648,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_PAGETYPE);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -669,7 +669,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
         return bean;
@@ -691,7 +691,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_TRANSAMT,
                         ChinaPnrConstant.PARAM_INACCTID, ChinaPnrConstant.PARAM_INACCTTYPE,
@@ -720,7 +720,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_30.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 3.0以上使用
             chkValue =
-                    bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_SELLCUSTID,
                             ChinaPnrConstant.PARAM_CREDITAMT, ChinaPnrConstant.PARAM_CREDITDEALAMT,
                             ChinaPnrConstant.PARAM_BIDDETAILS, ChinaPnrConstant.PARAM_FEE,
@@ -733,7 +733,7 @@ public class ChinaPnrApiImpl implements PnrApi {
 
         } else {
             chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_SELLCUSTID,
                             ChinaPnrConstant.PARAM_CREDITAMT, ChinaPnrConstant.PARAM_CREDITDEALAMT,
                             ChinaPnrConstant.PARAM_BIDDETAILS, ChinaPnrConstant.PARAM_FEE,
@@ -766,7 +766,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_30.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 3.0以上使用
             chkValue =
-                    bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_SELLCUSTID,
                             ChinaPnrConstant.PARAM_CREDITAMT, ChinaPnrConstant.PARAM_CREDITDEALAMT,
                             ChinaPnrConstant.PARAM_BIDDETAILS, ChinaPnrConstant.PARAM_FEE,
@@ -779,7 +779,7 @@ public class ChinaPnrApiImpl implements PnrApi {
 
         } else {
             chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_SELLCUSTID,
                             ChinaPnrConstant.PARAM_CREDITAMT, ChinaPnrConstant.PARAM_CREDITDEALAMT,
                             ChinaPnrConstant.PARAM_BIDDETAILS, ChinaPnrConstant.PARAM_FEE,
@@ -809,7 +809,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_RETURL,
                         ChinaPnrConstant.PARAM_BGRETURL, ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_REQEXT);
@@ -832,7 +832,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
 
@@ -853,7 +853,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
 
@@ -874,7 +874,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                         ChinaPnrConstant.PARAM_QUERYTRANSTYPE);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -896,7 +896,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BEGINDATE,
                         ChinaPnrConstant.PARAM_ENDDATE, ChinaPnrConstant.PARAM_PAGENUM,
                         ChinaPnrConstant.PARAM_PAGESIZE, ChinaPnrConstant.PARAM_QUERYTRANSTYPE);
@@ -919,7 +919,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BEGINDATE,
                         ChinaPnrConstant.PARAM_ENDDATE, ChinaPnrConstant.PARAM_PAGENUM, ChinaPnrConstant.PARAM_PAGESIZE);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -943,7 +943,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         if (ChinaPnrConstant.VERSION_10.equals(bean.get(ChinaPnrConstant.PARAM_VERSION))) {
             // 接口 1.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BEGINDATE,
                             ChinaPnrConstant.PARAM_ENDDATE, ChinaPnrConstant.PARAM_PAGENUM,
                             ChinaPnrConstant.PARAM_PAGESIZE);
@@ -951,7 +951,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         } else {
             // 接口 2.0
             String chkValue =
-                    bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                    ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                             ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BEGINDATE,
                             ChinaPnrConstant.PARAM_ENDDATE, ChinaPnrConstant.PARAM_PAGENUM,
                             ChinaPnrConstant.PARAM_PAGESIZE);
@@ -975,7 +975,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_BEGINDATE,
                         ChinaPnrConstant.PARAM_ENDDATE, ChinaPnrConstant.PARAM_PAGENUM, ChinaPnrConstant.PARAM_PAGESIZE);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -997,7 +997,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_CARDID);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -1019,7 +1019,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_CERTID, ChinaPnrConstant.PARAM_REQEXT);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
 
@@ -1036,7 +1036,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID, ChinaPnrConstant.PARAM_BIDTYPE,
                         ChinaPnrConstant.PARAM_BORRTOTAMT, ChinaPnrConstant.PARAM_YEARRATE,
                         ChinaPnrConstant.PARAM_RETINTEREST, ChinaPnrConstant.PARAM_LASTRETDATE,
@@ -1067,7 +1067,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID, ChinaPnrConstant.PARAM_RETURL,
                         ChinaPnrConstant.PARAM_BGRETURL, ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_REQEXT);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -1084,7 +1084,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         setCommonItems(bean);
         // 签名
         String chkValue =
-                bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID, ChinaPnrConstant.PARAM_REQEXT,
                         ChinaPnrConstant.PARAM_MERPRIV);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -1110,7 +1110,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRID, ChinaPnrConstant.PARAM_USRNAME,
                         ChinaPnrConstant.PARAM_INSTUCODE, ChinaPnrConstant.PARAM_BUSICODE,
                         ChinaPnrConstant.PARAM_TAXCODE, ChinaPnrConstant.PARAM_MERPRIV,
@@ -1137,7 +1137,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                         ChinaPnrConstant.PARAM_INUSRCUSTID, ChinaPnrConstant.PARAM_AUTHAMT,
                         ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_REQEXT);
@@ -1164,7 +1164,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMerged(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                         ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_INUSRCUSTID,
                         ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_RETURL,
@@ -1191,7 +1191,7 @@ public class ChinaPnrApiImpl implements PnrApi {
         bean.set(ChinaPnrConstant.PARAM_BGRETURL, _bgRetUrl);
         // 签名
         String chkValue =
-                bean.getChkValueMergedMD5(ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
+                ChinaPnrSignUtils.getChkValueMergedMD5(bean.getParamMap(),ChinaPnrConstant.PARAM_VERSION, ChinaPnrConstant.PARAM_CMDID,
                         ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_OPENBANKID,
                         ChinaPnrConstant.PARAM_GATEBUSIID, ChinaPnrConstant.PARAM_REQEXT);
         bean.set(ChinaPnrConstant.PARAM_CHKVALUE, chkValue);
@@ -1240,7 +1240,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 企业开户
             if (ChinaPnrConstant.CMDID_CORP_REGISTER.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRID,
                                 ChinaPnrConstant.PARAM_USRNAME, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_AUDITSTAT, ChinaPnrConstant.PARAM_TRXID,
@@ -1253,7 +1253,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 企业用户绑定接口
             if (ChinaPnrConstant.CMDID_DIRECT_TRF_AUTH.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_INUSRCUSTID, ChinaPnrConstant.PARAM_AUTHAMT,
                                 ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_REQEXT);
@@ -1263,7 +1263,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 定向转账
             if (ChinaPnrConstant.CMDID_DIRECT_TRF.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_INUSRCUSTID,
                                 ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_RETURL,
@@ -1276,7 +1276,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 用户开户
             if (ChinaPnrConstant.CMDID_USER_REGISTER.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRID,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_BGRETURL,
                                 ChinaPnrConstant.PARAM_TRXID, ChinaPnrConstant.PARAM_RETURL,
@@ -1287,7 +1287,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 用户绑卡接口
             else if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_OPENACCTID,
                                 ChinaPnrConstant.PARAM_OPENBANKID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_TRXID, ChinaPnrConstant.PARAM_BGRETURL,
@@ -1298,7 +1298,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 用户解绑卡接口
             else if (ChinaPnrConstant.CMDID_BG_UNBIND_CARD.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_CUSTID,
                                 ChinaPnrConstant.PARAM_TRXID, ChinaPnrConstant.PARAM_BANKID,
                                 ChinaPnrConstant.PARAM_CARDID, ChinaPnrConstant.PARAM_EXPRESSFLAG,
@@ -1309,7 +1309,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 充值
             else if (ChinaPnrConstant.CMDID_NET_SAVE.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                                 ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_TRXID,
@@ -1320,7 +1320,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 资金（货款）冻结
             else if (ChinaPnrConstant.CMDID_USR_FREEZE_BG.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_SUBACCTTYPE, ChinaPnrConstant.PARAM_SUBACCTID,
                                 ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
@@ -1332,7 +1332,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 资金（货款）解冻
             else if (ChinaPnrConstant.CMDID_USR_UN_FREEZE.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRXID,
                                 ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_BGRETURL,
@@ -1342,7 +1342,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 查询预约授权状态
             else if (ChinaPnrConstant.CMDID_QUERY_TENDER_PLAN.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_RESPDESC, ChinaPnrConstant.PARAM_MERCUSTID,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRANSSTAT);
                 retResult = bean.get(ChinaPnrConstant.PARAM_TRANSSTAT);
@@ -1350,7 +1350,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 开启预约授权
             else if (ChinaPnrConstant.CMDID_AUTO_TENDER_PLAN.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_TENDERPLANTYPE, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_MERPRIV);
@@ -1359,7 +1359,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 关闭预约授权
             else if (ChinaPnrConstant.CMDID_AUTO_TENDER_PLAN_CLOSE.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_MERPRIV);
                 retResult = bean.get(ChinaPnrConstant.PARAM_RESPCODE);
@@ -1368,7 +1368,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_INITIATIVE_TENDER.equals(cmdId)) {
                 // 1.0 返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRXID,
@@ -1379,7 +1379,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                     // 2.0 返回参数验证
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                                     ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_USRCUSTID,
@@ -1394,7 +1394,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_AUTO_TENDER.equals(cmdId)) {
                 // 2.0 返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRXID,
@@ -1408,7 +1408,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_TENDER_CANCLE.equals(cmdId)) {
                 // 1.0 返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_RETURL,
@@ -1418,7 +1418,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                     // 2.0 返回参数验证
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                                     ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_USRCUSTID,
@@ -1434,7 +1434,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_LOANS.equals(cmdId)) {
                 // 1.0 返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                                 ChinaPnrConstant.PARAM_OUTACCTID, ChinaPnrConstant.PARAM_TRANSAMT,
@@ -1448,7 +1448,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                     // 2.0 返回参数验证
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                                     ChinaPnrConstant.PARAM_OUTCUSTID, ChinaPnrConstant.PARAM_OUTACCTID,
@@ -1466,7 +1466,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_REPAYMENT.equals(cmdId)) {
                 // 1.0 返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
                                 ChinaPnrConstant.PARAM_SUBORDID, ChinaPnrConstant.PARAM_SUBORDDATE,
@@ -1479,7 +1479,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                     // 3.0 返回参数验证
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_PROID, ChinaPnrConstant.PARAM_ORDID,
                                     ChinaPnrConstant.PARAM_ORDDATE, ChinaPnrConstant.PARAM_OUTCUSTID,
@@ -1497,7 +1497,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 自动扣款转账（商户用）
             else if (ChinaPnrConstant.CMDID_TRANSFER.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_RESPDESC, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_OUTCUSTID, ChinaPnrConstant.PARAM_OUTACCTID,
                                 ChinaPnrConstant.PARAM_TRANSAMT, ChinaPnrConstant.PARAM_INCUSTID,
@@ -1510,7 +1510,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 System.out.println("-----取现（页面）[同步异步返回参数列表],cmdId/respType=" + cmdId + respType);
                 // 2.0 异步返回参数验证
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_RESPTYPE, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_RESPTYPE, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_ORDID,
                                 ChinaPnrConstant.PARAM_USRCUSTID, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_OPENACCTID, ChinaPnrConstant.PARAM_OPENBANKID,
@@ -1521,7 +1521,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                 if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                     // 2.0 同步返回参数验证
                     forEncryptionStr =
-                            bean.getChkValueMerged(
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),
                                     false,
                                     ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, // ChinaPnrConstant.PARAM_RESPDESC,
@@ -1542,7 +1542,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 用户账户支付
             else if (ChinaPnrConstant.CMDID_USR_ACCT_PAY.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_TRANSAMT,
                                 ChinaPnrConstant.PARAM_INACCTID, ChinaPnrConstant.PARAM_INACCTTYPE,
@@ -1554,7 +1554,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_CREDIT_ASSIGN.equals(cmdId)) {
                 if (ChinaPnrConstant.RESPCODE_YUE2_FAIL.equals(bean.get(ChinaPnrConstant.PARAM_RESPCODE))) {
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                     ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1564,7 +1564,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     // RSA方式验签失败时
                     if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                         forEncryptionStr =
-                                bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                         ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                         ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                         ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1577,7 +1577,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     }
                 } else {
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                     ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1589,7 +1589,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     // RSA方式验签失败时
                     if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                         forEncryptionStr =
-                                bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                         ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                         ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                         ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1607,7 +1607,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             else if (ChinaPnrConstant.CMDID_AUTO_CREDIT_ASSIGN.equals(cmdId)) {
                 if (ChinaPnrConstant.RESPCODE_YUE2_FAIL.equals(bean.get(ChinaPnrConstant.PARAM_RESPCODE))) {
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                     ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1617,7 +1617,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     // RSA方式验签失败时
                     if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                         forEncryptionStr =
-                                bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                         ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                         ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                         ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1630,7 +1630,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     }
                 } else {
                     forEncryptionStr =
-                            bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                            ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                     ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                     ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                     ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1642,7 +1642,7 @@ public class ChinaPnrApiImpl implements PnrApi {
                     // RSA方式验签失败时
                     if (!ChinaPnrSignUtils.verifyByRSA(forEncryptionStr, bean.get(ChinaPnrConstant.PARAM_CHKVALUE))) {
                         forEncryptionStr =
-                                bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID,
+                                ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID,
                                         ChinaPnrConstant.PARAM_RESPCODE, ChinaPnrConstant.PARAM_MERCUSTID,
                                         ChinaPnrConstant.PARAM_SELLCUSTID, ChinaPnrConstant.PARAM_CREDITAMT,
                                         ChinaPnrConstant.PARAM_CREDITDEALAMT, ChinaPnrConstant.PARAM_FEE,
@@ -1660,7 +1660,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 生利宝交易接口
             else if (ChinaPnrConstant.CMDID_FSS_TRANS.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),false, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_USRCUSTID,
                                 ChinaPnrConstant.PARAM_ORDID, ChinaPnrConstant.PARAM_ORDDATE,
                                 ChinaPnrConstant.PARAM_TRANSTYPE, ChinaPnrConstant.PARAM_TRANSAMT,
@@ -1671,7 +1671,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 标的信息录入接口
             else if (ChinaPnrConstant.CMDID_ADD_BID_INFO.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID,
                                 ChinaPnrConstant.PARAM_AUDITSTAT, ChinaPnrConstant.PARAM_BGRETURL,
                                 ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_RESPEXT);
@@ -1681,7 +1681,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 标的信息补录输入接口
             else if (ChinaPnrConstant.CMDID_ADD_BID_INFO.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID,
                                 ChinaPnrConstant.PARAM_RETURL, ChinaPnrConstant.PARAM_BGRETURL,
                                 ChinaPnrConstant.PARAM_MERPRIV, ChinaPnrConstant.PARAM_RESPEXT);
@@ -1691,7 +1691,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 标的审核状态查询接口
             else if (ChinaPnrConstant.CMDID_QUERY_BID_INFO.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_PROID,
                                 ChinaPnrConstant.PARAM_BORRTOTAMT, ChinaPnrConstant.PARAM_BORRCUSTID,
                                 ChinaPnrConstant.PARAM_STATUS, ChinaPnrConstant.PARAM_RESPEXT);
@@ -1701,7 +1701,7 @@ public class ChinaPnrApiImpl implements PnrApi {
             // 快捷充值限额查询接口
             else if (ChinaPnrConstant.CMDID_QUERY_PAY_QUOTA.equals(cmdId)) {
                 forEncryptionStr =
-                        bean.getChkValueMerged(true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
+                        ChinaPnrSignUtils.getChkValueMerged(bean.getParamMap(),true, ChinaPnrConstant.PARAM_CMDID, ChinaPnrConstant.PARAM_RESPCODE,
                                 ChinaPnrConstant.PARAM_MERCUSTID, ChinaPnrConstant.PARAM_RESPEXT);
                 forEncryptionStr = MD5Util2.getMD5String(forEncryptionStr);
                 retResult = bean.get(ChinaPnrConstant.PARAM_TRXID);

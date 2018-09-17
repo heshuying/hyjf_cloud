@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -371,7 +371,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         /** redis 锁 */
-        boolean reslut = RedisUtils.tranactionSet("repay_borrow_nid" + requestBean.getBorrowNid(), 60);
+        boolean reslut = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_REPAY_REQUEST + requestBean.getBorrowNid(), 60);
         if(!reslut){
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("项目正在还款中...");
@@ -626,7 +626,7 @@ public class RepayManageController extends BaseTradeController {
                 RepayListCustomizeVO repayInfo = list.get(i);
                 String borrowNid = repayInfo.getBorrowNid();
                 try {
-                    BorrowVO borrow = repayManageService.getBorrowByNid(borrowNid);
+                    BorrowAndInfoVO borrow = repayManageService.getBorrowByNid(borrowNid);
                     RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, false);
                     Integer repayUserId = borrow.getUserId();
                     int isOrg = 1;//垫付机构不校验单笔标的的冻结余额

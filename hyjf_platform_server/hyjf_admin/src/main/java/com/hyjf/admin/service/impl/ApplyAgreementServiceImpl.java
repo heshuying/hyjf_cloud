@@ -120,7 +120,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         // 根据标的编号查询标的详情
-        BorrowVO borrowVO = amTradeClient.searchBorrowByBorrowNid(request.getBorrowNidSrch());
+        BorrowAndInfoVO borrowVO = amTradeClient.searchBorrowByBorrowNid(request.getBorrowNidSrch());
         if (borrowVO == null) {
             throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + request.getBorrowNidSrch() + "].");
         }else{
@@ -184,7 +184,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 String borrow_nid = paemStrings[0];//借款编号
                 int repay_period = Integer.valueOf(paemStrings[1]);//期数
                 // 获取标的信息
-                BorrowVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
+                BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
                 if (borrow == null || borrowInfo == null) {
                     return new AdminResult(BaseResult.FAIL, "标的不存在");
@@ -313,7 +313,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     }
 
     /**转让债转参数集合*/
-    private JSONObject getNocreditParamterPlan(BorrowRecoverPlanVO borrowRecover,FddGenerateContractBean bean,BorrowVO borrow) {
+    private JSONObject getNocreditParamterPlan(BorrowRecoverPlanVO borrowRecover,FddGenerateContractBean bean,BorrowAndInfoVO borrow) {
         JSONObject paramter = new JSONObject();
 
         /** 标的基本数据 */
@@ -451,7 +451,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     }
 
     /**转让债转参数集合*/
-    private JSONObject getAllcreditParamter(CreditRepayVO creditRepay,FddGenerateContractBean bean,BorrowVO borrow) {
+    private JSONObject getAllcreditParamter(CreditRepayVO creditRepay,FddGenerateContractBean bean,BorrowAndInfoVO borrow) {
         JSONObject paramter = new JSONObject();
         /** 标的基本数据 */
         String borrowStyle = borrow.getBorrowStyle();// 还款方式

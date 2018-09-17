@@ -97,6 +97,23 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         for (BatchBorrowRecoverVo vo:
              listAccountDetail) {
             vo.setStatusStr(paramNameMap.get(vo.getStatus()));
+            if("0".equals(vo.getIncreaseInterestFlag())){//不加息
+                vo.setIncreaseInterestFlag("不加息");
+                vo.setExtraYieldStatus("");
+                vo.setExtraYieldRepayStatus("");
+            }else if("1".equals(vo.getIncreaseInterestFlag())){
+                vo.setIncreaseInterestFlag("加息");
+                if("0".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("待放款");
+                }else if("1".equals(vo.getExtraYieldStatus())){
+                    vo.setExtraYieldStatus("放款完成");
+                }
+                if("0".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("待还款");
+                }else if("1".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("还款完成");
+                }
+            }
         }
     }
 
@@ -177,6 +194,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
         BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
+        List<BatchBorrowRepayBankInfoVO> bankInfoVOList = new ArrayList<>();
         if(reponse != null){
             BorrowApicronVO apicron = reponse.getResult();
             int txCounts = apicron.getTxCounts();// 总交易笔数
@@ -232,44 +250,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 }
             }
             if(results.size() > 0){
-                List<BatchBorrowRepayBankInfoVO> bankInfoVOList = getRepayDetailList(results);
+                bankInfoVOList = getRepayDetailList(results);
             }
         }
-        List<BatchBorrowRepayBankInfoVO> detailList = new ArrayList<>();
-        String subPacks;
-        //TODO 银行环境不通，测试数据，环境顺畅后删除
-        subPacks = "[{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211150446498937\"," +
-                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656009391711616\",\"failMsg\":\"\"," +
-                "\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"},{\"accountId\":" +
-                "\"6212461890000001181\",\"authCode\":\"20161211125545497983\",\"productId\":\"HJD180300000017\"," +
-                "\"orderId\":\"15205656009951111618\",\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":" +
-                "\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\",\"authCode\":" +
-                "\"20161211150447498941\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656010081711674\"," +
-                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000751140\",\"txAmount\":\"0\"}," +
-                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211105946497425\",\"productId\":" +
-                "\"HJD180300000017\",\"orderId\":\"15205656010301111941\",\"failMsg\":\"\",\"txState\":\"S\"," +
-                "\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"},{\"accountId\":\"6212461890000001181\"," +
-                "\"authCode\":\"20161211125546497987\",\"productId\":\"HJD180300000017\",\"orderId\":\"15205656011151111709\"," +
-                "\"failMsg\":\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}," +
-                "{\"accountId\":\"6212461890000001181\",\"authCode\":\"20161211125547497991\"," +
-                "\"productId\":\"HJD180300000017\",\"orderId\":\"15205656012191111568\",\"failMsg\":" +
-                "\"\",\"txState\":\"S\",\"forAccountId\":\"6212461890000954686\",\"txAmount\":\"0\"}]";
-        if (StringUtils.isNotBlank(subPacks)) {
-            JSONArray loanDetails = JSONObject.parseArray(subPacks);
-            for (int j = 0; j < loanDetails.size(); j++) {
-                JSONObject loanDetail = loanDetails.getJSONObject(j);
-                BatchBorrowRepayBankInfoVO info = new BatchBorrowRepayBankInfoVO();
-                info.setAuthCode(loanDetail.getString(BankCallConstant.PARAM_AUTHCODE));// 授权码
-                info.setTxState(loanDetail.getString(BankCallConstant.PARAM_TXSTATE));// 交易状态
-                info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));// 订单号
-                info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));// 操作金额
-                info.setForAccountId(loanDetail.getString(BankCallConstant.PARAM_FORACCOUNTID));// 借款人银行账户
-                info.setProductId(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));// 标的号
-                info.setFileMsg(loanDetail.getString(BankCallConstant.PARAM_FAILMSG));//错误提示
-                detailList.add(info);
-            }
-        }
-        return detailList;
+        return bankInfoVOList;
     }
 
     /**

@@ -15,7 +15,7 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -185,13 +185,17 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 承接成功
                 // 查询相应的债转承接记录
                 List<CreditTenderLogVO> creditTenderLog = this.amTradeClient.getCreditTenderLogs(logOrderId,userId);
+                logger.info("查询相应的债转承接记录.{}",creditTenderLog);
                 // 如果已经查询到相应的债转承接log表
                 if (Validator.isNotNull(creditTenderLog)) {
                     // 此次查询的授权码
                     String authCode = tenderQueryBean.getAuthCode();
+                    logger.info("此次查询的授权码.{}",authCode);
                     if (StringUtils.isNotBlank(authCode)) {
                         // 更新债转交易成功后的相关信息
+                        logger.info("开始更新债转信息-----");
                         boolean tenderFlag = this.updateTenderCreditInfo(logOrderId, userId, authCode,creditTenderLog.get(0));
+                        logger.info("更新债转信息完毕-----{}",tenderFlag);
                         if(!tenderFlag){
                             // 更新债转数据异常
                             throw new CheckException(MsgEnum.ERROR_CREDIT_UPDATE_ERROR);
@@ -298,7 +302,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public AppInvestInfoResultVO getInterestInfoApp(TenderRequest tender, String creditNid, String assignCapital) {
-        String money = tender.getMoney();
+        tender.setAssignCapital(assignCapital);
+        String money = assignCapital;
         String investType = tender.getBorrowNid().substring(0, 3);
         AppInvestInfoResultVO result = new AppInvestInfoResultVO();
         // 查询债转信息
@@ -323,9 +328,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
             result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
             // 待承接垫付利息
-            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignPayInterest());
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance());
             // 待承接金额
-            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital());
+            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
             result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
             result.setCouponDescribe("");
             result.setCouponId("");
@@ -441,7 +446,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 承接人账户信息
             AccountVO assignAccount = this.amTradeClient.getAccount(userId);
             // 项目详情
-            BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
             // 还款方式
             String borrowStyle = borrow.getBorrowStyle();
             // 项目总期数
@@ -968,11 +973,30 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     this.amTradeClient.saveCreditBgData(creditTenderBg);
 
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
-
+                    logger.info("开始更新运营数据等 updateUtm ");
+                    updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
+                    // 网站累计投资追加
+                    // 投资、收益统计表
+                    JSONObject params = new JSONObject();
+                    params.put("tenderSum", creditTenderLog.getAssignCapital());
+                    params.put("nowTime", GetDate.getDate(GetDate.getNowTime10()));
+                    // 投资修改mongodb运营数据
+                    params.put("type", 1);
+                    params.put("money", creditTenderLog.getAssignCapital());
+                    try {
+                        // 网站累计投资追加
+                        // 投资修改mongodb运营数据
+                        logger.info("网站累计投资追加 mq ");
+                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        // 满标发短信在原子层
+                    } catch (MQException e) {
+                        e.printStackTrace();
+                    }
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
                         // 插入网站收支明细记录
+                        logger.info("网站收支明细记录 mq ");
                         AccountWebListVO accountWebList = new AccountWebListVO();
                         accountWebList.setOrdid(logOrderId);
                         accountWebList.setBorrowNid(creditTender.getBidNid());
@@ -993,75 +1017,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     }
-                    // 更新渠道统计用户累计投资
-                    //发送mq
-                    AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = this.amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
-                    if (Validator.isNotNull(appChannelStatisticsDetailVO)) {
-                        Map<String, Object> params = new HashMap<String, Object>();
-                        // 认购本金
-                        params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                        // 投资时间
-                        params.put("investTime", nowTime);
-                        // 项目类型
-                        params.put("projectType", "汇转让");
-                        // 首次投标项目期限
-                        String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-                        params.put("investProjectPeriod", investProjectPeriod);
-                        //根据investFlag标志位来决定更新哪种投资
-                        params.put("investFlag", checkIsNewUserCanInvest(userId));
-                        //压入消息队列
-                        try {
-                            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        } catch (MQException e) {
-                            logger.error("渠道统计用户累计投资推送消息队列失败！logOrdId:{},userId:{}",logOrderId,userId);
-                        }
-                    } else {
-                        // 更新huiyingdai_utm_reg的首投信息
-                        UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
-                        if (utmReg != null) {
-                            Map<String, Object> params = new HashMap<String, Object>();
-                            params.put("id", utmReg.getId());
-                            params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                            // 投资时间
-                            params.put("investTime", nowTime);
-                            // 项目类型
-                            params.put("projectType", "汇转让");
-                            // 首次投标项目期限
-                            String investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-                            // 首次投标项目期限
-                            params.put("investProjectPeriod", investProjectPeriod);
-                            // 更新渠道统计用户累计投资
-                            //if (users.getInvestflag() == 0) {
-                            // 更新huiyingdai_utm_reg的首投信息
-                            try {
-                                if(this.checkIsNewUserCanInvest(userId)){
-                                    utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                                }
-                            } catch (MQException e) {
-                                logger.error("更新huiyingdai_utm_reg的首投信息失败! logOrdId:{},userId:{}",logOrderId,userId);
-                            }
-                        }
-                    }
-
-                    // 网站累计投资追加
-                    // 投资、收益统计表
-                    //
-                    JSONObject params = new JSONObject();
-                    params.put("tenderSum", creditTenderLog.getAssignCapital());
-                    params.put("nowTime", GetDate.getDate(nowTime));
-                    // 投资修改mongodb运营数据
-                    params.put("type", 1);
-                    params.put("money", creditTender.getAssignCapital());
-                    try {
-                        // 网站累计投资追加
-                        // 投资修改mongodb运营数据
-                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                        // 推送app消息 和满标发短信
-                        this.sendCreditSuccessMessage(creditTender,borrowCredit);
-                    } catch (MQException e) {
-                        e.printStackTrace();
-                    }
                     return true;
                 }
             }else{
@@ -1070,6 +1025,31 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         }
         return true;
+    }
+
+    private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, String investProjectPeriod) {
+        //更新汇计划列表成功的前提下
+        // 更新渠道统计用户累计投资
+        // 投资人信息
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        // 认购本金
+        params.put("accountDecimal", accountDecimal);
+        // 投资时间
+        params.put("investTime", nowTime);
+        // 项目类型
+        params.put("projectType", "汇转让");
+        // 首次投标项目期限
+        params.put("investProjectPeriod", investProjectPeriod);
+        //压入消息队列
+        try {
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+        }
+
+        /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
     }
 
     /**
@@ -1180,7 +1160,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             creditTenderLog.setTenderMoney(borrowRecover.getRecoverCapital());
         }
         // 获取借款数据
-        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowCredit.getBidNid());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowCredit.getBidNid());
         if (borrow == null) {
             // 标的信息不存在  当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_BORROW);

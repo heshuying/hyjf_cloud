@@ -459,6 +459,20 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
+	<!-- 计划退出时更新相关计划金额-->
+	<update id="updateHjhPlanForQuit" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
+		UPDATE ht_hjh_plan
+		SET repay_wait_all = IFNULL(repay_wait_all , 0) - #{repayWaitAll,jdbcType=DECIMAL},
+		plan_wait_captical = IFNULL(plan_wait_captical , 0) - #{planWaitCaptical,jdbcType=DECIMAL},
+		plan_wait_interest = IFNULL(plan_wait_interest , 0) - #{planWaitInterest,jdbcType=DECIMAL},
+		repay_total = IFNULL(repay_total , 0) + #{repayTotal,jdbcType=DECIMAL},
+		plan_repay_capital = IFNULL(plan_repay_capital , 0) + #{planRepayCapital,jdbcType=DECIMAL},
+		plan_repay_interest = IFNULL(plan_repay_interest , 0) + #{planRepayInterest,jdbcType=DECIMAL}
+		WHERE
+		plan_nid = #{planNid,jdbcType=VARCHAR}
+
+	</update>
+
 	<!-- *****************************************银行存管****************************************************** -->
 
 	<sql id="Bank_Where_Clause">

@@ -3,7 +3,7 @@ package com.hyjf.cs.user.service.trusteepay.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -108,7 +108,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         }
 
         // 检查标的是否存在
-        BorrowVO borrow = amTradeClient.selectBorrowByBorrowNid(payRequestBean.getProductId());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByBorrowNid(payRequestBean.getProductId());
         if (borrow == null) {
             logger.info("-------------------标的不存在！" + payRequestBean.getAccountId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_HK000001, "标的不存在！");
@@ -407,7 +407,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         }
 
         // 检查标的是否存在
-        BorrowVO borrow = amTradeClient.selectBorrowByBorrowNid(payRequestBean.getProductId());
+        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByBorrowNid(payRequestBean.getProductId());
         if (borrow == null) {
             logger.info("-------------------标的不存在！" + payRequestBean.getAccountId() + "！--------------------");
             result = payRequestBean.getErrorJson(ErrorCodeConstant.STATUS_HK000001, "标的不存在！");

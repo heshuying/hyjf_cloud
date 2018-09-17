@@ -1002,6 +1002,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+    @Override
+    public CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest) {
+        CategoryResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/help/getzhichiinit", contentHelpBeanRequest,
+                CategoryResponse.class).getBody();
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
 
     @Override
     public ContentEnvironmentResponse searchAction(ContentEnvironmentRequestBean requestBean) {
@@ -2128,7 +2138,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
    	@Override
    	public AdminUserResponse adminUserMoveToInfoAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/moveToInfoAction";
+           String url = "http://AM-ADMIN/am-config/admin/infoAction";
            AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
            if (response != null) {
                return response;
@@ -2158,7 +2168,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 
    	@Override
    	public AdminUserResponse adminUserDeleteRecordAction(AdminRequest adminRequest) {
-           String url = "http://AM-ADMIN/am-config/admin/deleteRecordAction";
+           String url = "http://AM-ADMIN/am-config/admin/deleteAction";
            AdminUserResponse response = restTemplate.postForEntity(url, adminRequest, AdminUserResponse.class).getBody();
            if (response != null) {
                return response;

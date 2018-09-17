@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
+import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponTenderCustomizeResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -14,11 +15,13 @@ import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigExportCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigExportCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
@@ -98,7 +101,7 @@ public class CouponConfigController extends BaseController {
      * @return
      */
     @PostMapping("/getCouponConfig")
-    public CouponConfigResponse getCouponConfig(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
+    public CouponConfigResponse getCouponConfig(@RequestBody CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
         if (!StringUtils.isEmpty(couponConfigRequest.getId())) {
             CouponConfig ccf = couponConfigService.getCouponConfig(Integer.parseInt(couponConfigRequest.getId()));
@@ -150,6 +153,8 @@ public class CouponConfigController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ccr.setRtn(Response.FAIL);
+            ccr.setMessage(Response.FAIL_MSG);
         }
         return ccr;
     }
@@ -166,6 +171,9 @@ public class CouponConfigController extends BaseController {
         try {
             CouponConfig couponConfig = new CouponConfig();
             BeanUtils.copyProperties(couponConfigRequest, couponConfig);
+            couponConfig.setStatus(1);
+            couponConfig.setUpdateTime(GetDate.getDate());
+            couponConfig.setCreateTime(GetDate.getDate());
             int result = couponConfigService.insertAction(couponConfig);
             if (result > 0) {
                 ccr.setRtn(Response.SUCCESS);
@@ -232,6 +240,8 @@ public class CouponConfigController extends BaseController {
     public CouponConfigResponse updateAuditInfo(@RequestBody @Valid CouponConfigRequest request) {
         CouponConfigResponse configResponse = new CouponConfigResponse();
         CouponConfig couponConfig = new CouponConfig();
+        BeanUtils.copyProperties(request,couponConfig);
+        couponConfig.setId(Integer.parseInt(request.getId()));
         long nowTime = System.currentTimeMillis() / 1000;
         couponConfig.setAuditUser(request.getAuditUser());
         couponConfig.setUpdateUserId(Integer.parseInt(request.getAuditUser()));
@@ -242,6 +252,7 @@ public class CouponConfigController extends BaseController {
             configResponse.setRtn(Response.SUCCESS);
         } else {
             configResponse.setRtn(Response.FAIL);
+            configResponse.setMessage(Response.FAIL_MSG);
         }
         return configResponse;
     }
@@ -480,6 +491,24 @@ public class CouponConfigController extends BaseController {
         if (!CollectionUtils.isEmpty(couponConfigCustomizes)) {
             List<CouponConfigCustomizeVO> couponConfigCustomizeVOS = CommonUtils.convertBeanList(couponConfigCustomizes, CouponConfigCustomizeVO.class);
             response.setResultList(couponConfigCustomizeVOS);
+        }
+        return response;
+    }
+
+    /**
+     * 查询导出列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/getExportConfigList")
+    public CouponConfigExportCustomizeResponse getExportConfigList(@RequestBody CouponConfigRequest request) {
+        CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
+        CouponConfigCustomize configCustomize = new CouponConfigCustomize();
+        BeanUtils.copyProperties(request,configCustomize);
+        List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
+        if (!CollectionUtils.isEmpty(configExportCustomizes)) {
+            List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
+            response.setResultList(configExportCustomizeVOS);
         }
         return response;
     }

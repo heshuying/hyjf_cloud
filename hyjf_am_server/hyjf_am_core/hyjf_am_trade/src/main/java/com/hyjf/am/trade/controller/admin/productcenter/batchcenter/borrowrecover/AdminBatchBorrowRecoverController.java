@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecover;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
@@ -88,6 +89,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);
         BorrowApicronVO result = (BorrowApicronVO)ConvertUtils.convertBeanToObject(apicron,BorrowApicronVO.class);
         reponse.setResult(result);
+        reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
 

@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -121,7 +121,7 @@ public class AutoTenderServer extends BaseTradeController{
 		
 		// 根据借款Id检索标的信息
 		/*原BorrowWithBLOBs borrow = this.tenderService.getBorrowByNid(borrowNid);*/
-		BorrowVO borrow = this.tenderService.getBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = this.tenderService.getBorrowByNid(borrowNid);
 		if (borrow == null || borrow.getBorrowNid() == null) {
 			resultBean.setStatusForResponse("TZ000001");
 			resultBean.setStatusDesc("标的编号不存在！");

@@ -17,8 +17,8 @@
     <result column="frost" property="frost" jdbcType="DECIMAL" />
     <result column="purpose" property="purpose" jdbcType="VARCHAR" />
     <result column="sort" property="sort" jdbcType="SMALLINT" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -130,8 +130,8 @@
       #{transferIntoFlg,jdbcType=TINYINT}, #{transferOutFlg,jdbcType=TINYINT}, #{balanceLowerLimit,jdbcType=DECIMAL}, 
       #{autoTransferOut,jdbcType=TINYINT}, #{autoTransferInto,jdbcType=TINYINT}, #{transferIntoRatio,jdbcType=INTEGER}, 
       #{accountBalance,jdbcType=DECIMAL}, #{availableBalance,jdbcType=DECIMAL}, #{frost,jdbcType=DECIMAL}, 
-      #{purpose,jdbcType=VARCHAR}, #{sort,jdbcType=SMALLINT}, #{createTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER})
+      #{purpose,jdbcType=VARCHAR}, #{sort,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.MerchantAccount" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -232,10 +232,10 @@
         #{sort,jdbcType=SMALLINT},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -294,10 +294,10 @@
         sort = #{record.sort,jdbcType=SMALLINT},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -321,8 +321,8 @@
       frost = #{record.frost,jdbcType=DECIMAL},
       purpose = #{record.purpose,jdbcType=VARCHAR},
       sort = #{record.sort,jdbcType=SMALLINT},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -373,10 +373,10 @@
         sort = #{sort,jdbcType=SMALLINT},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -397,8 +397,8 @@
       frost = #{frost,jdbcType=DECIMAL},
       purpose = #{purpose,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=SMALLINT},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

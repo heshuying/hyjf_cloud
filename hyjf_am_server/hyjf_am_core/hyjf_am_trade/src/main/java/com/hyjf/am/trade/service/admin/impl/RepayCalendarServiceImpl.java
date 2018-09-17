@@ -153,7 +153,13 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             result.setBorrowTheThird(customize.getRepayTime());
             //result.setBorrowTheThirdDesc("回款时间");
             result.setLabel(customize.getCouponName());
-
+            // 优惠券类型
+            result.setCouponType(customize.getCouponType());
+            // 产品加息的返回4
+            if(customize.getType().equals("4")){
+                result.setCouponType("4");
+                customize.setCouponType("4");
+            }
             // 拼接详情url borrowUrl
             // type = 6,5 是计划详情 其他是散标详情
             if (Arrays.asList("6", "5").contains(customize.getType())) {
@@ -165,6 +171,10 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
             } else {
                 String borrowUrl = "hyjf.web.host/user/borrow" + "/" + customize.getBorrowNid()
                         + "?couponType=" + customize.getCouponType();
+                // 如果是产品加息  特殊展示
+                if(customize.getType().equals("4")){
+                    borrowUrl += "&isIncrease=1&isCalendar=1";
+                }
                 String assignNid =  customize.getAssignNid();
                 if (StringUtils.isNotBlank(assignNid)) {
                     // 这里的orderId是assignNid

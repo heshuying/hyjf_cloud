@@ -6,7 +6,7 @@ package com.hyjf.am.resquest.api;
 import java.io.Serializable;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 
 /**
  * @author libin
@@ -58,7 +58,7 @@ public class AutoTenderComboRequest extends BasePage implements Serializable{
 	/**
 	 * borrow
 	 */
-	private BorrowVO borrow;
+	private BorrowAndInfoVO borrow;
 	
 	/*以下是BankCallBean中涉及到的字段*/
 	/** 操作用户ip */
@@ -153,11 +153,11 @@ public class AutoTenderComboRequest extends BasePage implements Serializable{
 		this.tenderUserName = tenderUserName;
 	}
 
-	public BorrowVO getBorrow() {
+	public BorrowAndInfoVO getBorrow() {
 		return borrow;
 	}
 
-	public void setBorrow(BorrowVO borrow) {
+	public void setBorrow(BorrowAndInfoVO borrow) {
 		this.borrow = borrow;
 	}
 

@@ -74,42 +74,6 @@ public class AccountDetailController extends BaseController {
     @ResponseBody
     public AdminResult<ListResult<AccountDetailCustomizeVO>> queryAccountDetail(@RequestBody AccountDetailRequestBean accountDetailRequestBean) {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
-        //根据用户名查找
-        if(StringUtils.isNotBlank(accountDetailRequestBean.getUsername())){
-            UserVO userVO = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getUsername());
-            if(null!=userVO){
-                requestAccountDetail.setUserId(userVO.getUserId());
-            }else{
-                return new AdminResult<>(FAIL,"用户不存在!");
-            }
-        }
-        //根据推荐人查找
-        if(StringUtils.isNotBlank(accountDetailRequestBean.getReferrerName())){
-            //根据推荐人姓名查找推荐人id
-            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getReferrerName());
-            //根据推人id查找用户id
-            List<SpreadsUserVO> spreadsUserVOList = userCenterService.selectSpreadsUserBySpreadUserId(userReferrerSearch.getUserId());
-            if(CollectionUtils.isNotEmpty(spreadsUserVOList)){
-                List<Integer> listSpreadUserId = new ArrayList<Integer>();
-                StringBuffer spreadUserIds = new StringBuffer();
-                for(SpreadsUserVO ss:spreadsUserVOList){
-                    //如果两种情况共存的情况下(推荐人姓名&用户姓名)
-                    if(StringUtils.isNotBlank(accountDetailRequestBean.getUsername())){
-                        UserVO userVO = userCenterService.selectUserByRecommendName(accountDetailRequestBean.getUsername());
-                        if(ss.getUserId().equals(userVO.getUserId())){
-                            listSpreadUserId.add(ss.getUserId());
-                        }else{
-                            listSpreadUserId.add(0);
-                        }
-                    }else{
-                        listSpreadUserId.add(ss.getUserId());
-                    }
-                }
-                requestAccountDetail.setReferrerId(listSpreadUserId);
-            }else{
-                return new AdminResult<>(FAIL,"推荐人不存在!");
-            }
-        }
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
         if(accountDetailResponse==null) {
@@ -119,25 +83,6 @@ public class AccountDetailController extends BaseController {
             return new AdminResult<>(FAIL, accountDetailResponse.getMessage());
         }
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-        if (null != listAccountDetail && listAccountDetail.size() > 0) {
-            for (AccountDetailVO accountDetailVO : listAccountDetail) {
-                //根据用户id获取用户信息
-                UserVO userVO = userCenterService.selectUserByUserId(accountDetailVO.getUserId().toString());
-                //根据用户id获取推荐人信息
-                SpreadsUserVO spreadsUserVO = userCenterService.selectSpreadsUsersByUserId(accountDetailVO.getUserId().toString());
-                if (null != userVO) {
-                    accountDetailVO.setUsername(userVO.getUsername());
-                }
-                if (null != spreadsUserVO) {
-                    //设置推荐人id
-                    accountDetailVO.setReferrerId(spreadsUserVO.getSpreadsUserId().toString());
-                    //根据推荐人id查找姓名
-                    UserVO userSpreads = userCenterService.selectUserByUserId(spreadsUserVO.getSpreadsUserId().toString());
-                    accountDetailVO.setReferrerName(userSpreads.getUsername());
-                    accountDetailVO.setReferrerId(userSpreads.getUserId().toString());
-                }
-            }
-        }
         List<AccountDetailCustomizeVO> accountDetailCustomizeVOList = new ArrayList<AccountDetailCustomizeVO>();
         if(null!=listAccountDetail&&listAccountDetail.size()>0){
             accountDetailCustomizeVOList = CommonUtils.convertBeanList(listAccountDetail, AccountDetailCustomizeVO.class);

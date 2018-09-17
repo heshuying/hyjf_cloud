@@ -327,8 +327,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
-    public AdminResult checkReAction(HttpServletRequest request,@RequestBody String userName) {
-        String userId = getUser(request).getId();
+    public AdminResult checkReAction(@RequestParam(value = "userId") String userId,HttpServletRequest request,@RequestParam(value = "userName") String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
             if (StringUtils.isNotEmpty(userName)) {
@@ -349,17 +348,15 @@ public class UserCenterController extends BaseController {
     /**
      * 检查手机号码或用户名唯一性
      *
-     * @param userId
-     * @param mobile
      * @return
      */
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(HttpServletRequest request,  @RequestBody String mobile) {
-        String userId = getUser(request).getId();
+    public AdminResult checkAction(@RequestBody String mobile) {
+        logger.info("===========mobile : "+mobile+"===========");
         // 检查手机号码唯一性
-        int cnt = userCenterService.countUserByMobile(Integer.parseInt(userId), mobile);
+        int cnt = userCenterService.countUserByMobile(mobile);
         if (cnt > 0) {
             return new AdminResult<>(FAIL, "手机号已经存在！");
         }
@@ -390,6 +387,7 @@ public class UserCenterController extends BaseController {
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
+        managerRequest.setLimitFlg(true);
         UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
         if(null!=userManagerResponse){
             List<UserManagerVO>recordList = userManagerResponse.getResultList();

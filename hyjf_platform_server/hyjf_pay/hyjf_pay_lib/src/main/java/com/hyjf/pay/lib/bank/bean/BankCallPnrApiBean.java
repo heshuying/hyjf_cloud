@@ -10,29 +10,25 @@
  */
 package com.hyjf.pay.lib.bank.bean;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallSignUtils;
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Administrator
@@ -141,7 +137,7 @@ public class BankCallPnrApiBean implements Serializable {
 	 */
 	public BigDecimal getBigDecimal(String key) {
 		String val = paramMap.get(key);
-		if (Validator.isNotNull(val) && StringUtils.isNumeric(val)) {
+		if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
 			return new BigDecimal(val);
 		}
 		return BigDecimal.ZERO;
@@ -174,73 +170,73 @@ public class BankCallPnrApiBean implements Serializable {
 		return paramMap;
 	}
 
-	/**
-	 * 取得组合后的签名
-	 *
-	 * @param是否加签(true:加签,false:不加签)
-	 * @param keys
-	 * @return
-	 */
-	public String getChkValueMergedCall(String... keys) {
-		String methodName = "getChkValueMergedCall";
-		String sign = "";
-		TreeMap<String, String> signParams = new TreeMap<String, String>();
-		// 如果参数不是空
-		if (paramMap != null && paramMap.size() > 0) {
-			try {
-				// 拼接参数不是空
-				if (keys != null && keys.length > 0) {
-					for (String key : keys) {
-						signParams.put(key, StringUtils.trimToEmpty(paramMap.get(key)));
-					}
-				} else {
-					throw new Exception("未指定加签字符串");
-				}
-				// 加签
-				sign = BankCallSignUtils.encryptByRSA(signParams);
-			} catch (Exception e) {
-				log.error(String.valueOf(e));
-			}
-		}
-		return sign;
-	}
+//	/**  整合pay_lib无调用 删除  zyk
+//	 * 取得组合后的签名
+//	 *
+//	 * @param是否加签(true:加签,false:不加签)
+//	 * @param keys
+//	 * @return
+//	 */
+//	public String getChkValueMergedCall(String... keys) {
+//		String methodName = "getChkValueMergedCall";
+//		String sign = "";
+//		TreeMap<String, String> signParams = new TreeMap<String, String>();
+//		// 如果参数不是空
+//		if (paramMap != null && paramMap.size() > 0) {
+//			try {
+//				// 拼接参数不是空
+//				if (keys != null && keys.length > 0) {
+//					for (String key : keys) {
+//						signParams.put(key, StringUtils.trimToEmpty(paramMap.get(key)));
+//					}
+//				} else {
+//					throw new Exception("未指定加签字符串");
+//				}
+//				// 加签
+//				sign = BankCallSignUtils.encryptByRSA(signParams);
+//			} catch (Exception e) {
+//				log.error(String.valueOf(e));
+//			}
+//		}
+//		return sign;
+//	}
 
 	/**
-	 * 取得组合后的签名
+	 * 取得组合后的签名   整合pay_lib无调用 删除  zyk
 	 *
 	 * @param是否加签(true:加签,false:不加签)
 	 * @param keys
 	 * @return
 	 */
-	public String getChkValueMergedBack(String... keys) {
-		String methodName = "getChkValueMergedBack";
-		String requestMerged = "";
-		TreeMap<String, String> signParams = new TreeMap<String, String>();
-		// 如果参数不是空
-		if (paramMap != null && paramMap.size() > 0) {
-			try {
-				// 拼接参数不是空
-				if (keys != null && keys.length > 0) {
-					for (String key : keys) {
-						signParams.put(key, StringUtils.defaultIfEmpty(paramMap.get(key),StringUtils.EMPTY));
-					}
-					StringBuffer buff = new StringBuffer();
-					Iterator<Map.Entry<String, String>> iter = signParams.entrySet().iterator();
-					Map.Entry<String, String> entry;
-					while (iter.hasNext()) {
-						entry = iter.next();
-						buff.append(String.valueOf(entry.getValue()));
-					}
-					requestMerged = buff.toString();
-				} else {
-					throw new Exception("未指定加签字符串");
-				}
-			} catch (Exception e) {
-				log.error(String.valueOf(e));
-			}
-		}
-		return requestMerged;
-	}
+//	public String getChkValueMergedBack(String... keys) {
+//		String methodName = "getChkValueMergedBack";
+//		String requestMerged = "";
+//		TreeMap<String, String> signParams = new TreeMap<String, String>();
+//		// 如果参数不是空
+//		if (paramMap != null && paramMap.size() > 0) {
+//			try {
+//				// 拼接参数不是空
+//				if (keys != null && keys.length > 0) {
+//					for (String key : keys) {
+//						signParams.put(key, StringUtils.defaultIfEmpty(paramMap.get(key),StringUtils.EMPTY));
+//					}
+//					StringBuffer buff = new StringBuffer();
+//					Iterator<Map.Entry<String, String>> iter = signParams.entrySet().iterator();
+//					Map.Entry<String, String> entry;
+//					while (iter.hasNext()) {
+//						entry = iter.next();
+//						buff.append(String.valueOf(entry.getValue()));
+//					}
+//					requestMerged = buff.toString();
+//				} else {
+//					throw new Exception("未指定加签字符串");
+//				}
+//			} catch (Exception e) {
+//				log.error(String.valueOf(e));
+//			}
+//		}
+//		return requestMerged;
+//	}
 
 	/**
 	 * 参数转换

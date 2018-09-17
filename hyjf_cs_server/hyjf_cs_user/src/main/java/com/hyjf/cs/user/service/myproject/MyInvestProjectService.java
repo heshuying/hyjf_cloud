@@ -21,7 +21,7 @@ import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.common.service.BaseService;
@@ -64,7 +64,7 @@ public interface MyInvestProjectService extends BaseService {
 
 	int countRepayPlanListRecordTotal(AppRepayPlanListBeanRequest params);
 
-	BorrowVO selectBorrowByBorrowNid(String borrowNid);
+	BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
 	BorrowStyleVO selectBorrowStyleByStyle(String borrowStyle);
 

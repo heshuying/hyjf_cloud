@@ -39,6 +39,10 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 	 */
 	private String telcode;
 	/**
+	 * 手机验证码 (和前端核对过  android 和ios都是传的code，但是老系统确实是用telcode接受的的，暂时问题原因不明，增加code字段)
+	 */
+	private String code;
+	/**
 	 * 持有天数
 	 */
 	private String tenderPeriod;
@@ -50,6 +54,14 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 
 	// 转让本金
 	private String creditCapital;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	public String getCreditDiscount() {
 		return creditDiscount;

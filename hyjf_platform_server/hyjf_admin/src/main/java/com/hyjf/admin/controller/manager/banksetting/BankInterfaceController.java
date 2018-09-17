@@ -9,12 +9,16 @@ import com.hyjf.admin.service.BankInterfaceService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.resquest.admin.BankInterfaceRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -69,8 +73,7 @@ public class BankInterfaceController extends BaseController {
     @PostMapping("/useAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult updateUseAction(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
-        //todo 联调时候需要放开
-//        AdminSystemVO user = getUser(request);
+        AdminSystemVO user = getUser(request);
         BankInterfaceVO bankInterface = new BankInterfaceVO();
         BankInterfaceResponse prs =null;
         if(adminRequest.getId() != null){
@@ -81,9 +84,8 @@ public class BankInterfaceController extends BaseController {
                 bankInterface.setIsUsable(0);
             }
             bankInterface.setUpdateTime(new Date());
-            //todo 联调时候需要放开
-//            bankInterface.setUpdateUserName(user.getUsername());
-//            bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
+            bankInterface.setUpdateUserName(user.getUsername());
+            bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
             prs = bankInterfaceService.updateBankIntefaceAction(bankInterface);
         }
         if(prs==null) {
@@ -99,16 +101,14 @@ public class BankInterfaceController extends BaseController {
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankRechargeConfig(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
-        //todo 联调时候需要放开
-//        AdminSystemVO user = getUser(request);
+        AdminSystemVO user = getUser(request);
         BankInterfaceResponse prs = null;
         BankInterfaceVO bankInterfaceVO = new BankInterfaceVO();
         if(adminRequest.getId() != null) {
             BeanUtils.copyProperties(adminRequest,bankInterfaceVO);
             bankInterfaceVO.setUpdateTime(new Date());
-            //todo 联调时候需要放开
-//           bankInterface.setUpdateUserName(user.getUsername());
-//           bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
+            bankInterfaceVO.setUpdateUserName(user.getUsername());
+            bankInterfaceVO.setUpdateUserId(Integer.valueOf(user.getId()));
             prs = bankInterfaceService.updateBankIntefaceAction(bankInterfaceVO);
         }
         if(prs==null) {
@@ -123,18 +123,16 @@ public class BankInterfaceController extends BaseController {
     @ApiOperation(value = "快捷充值限额删除", notes = "快捷充值限额删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteBankInterfaceConfig(@RequestBody BankInterfaceRequest adminRequest)  {
-        //todo 联调时候需要放开
-//        AdminSystemVO user = getUser(request);
+    public AdminResult deleteBankInterfaceConfig(@RequestBody BankInterfaceRequest adminRequest, HttpServletRequest request)  {
+        AdminSystemVO user = getUser(request);
         BankInterfaceResponse  response= null;
         BankInterfaceVO bankInterface = new BankInterfaceVO();
         if(adminRequest.getId() != null){
             bankInterface.setIsDelete(1);
             bankInterface.setId(Integer.valueOf(adminRequest.getId()));
             bankInterface.setUpdateTime(new Date());
-//        //todo 联调时候需要放开
-//           bankInterface.setUpdateUserName(user.getUsername());
-//           bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
+            bankInterface.setUpdateUserName(user.getUsername());
+            bankInterface.setUpdateUserId(Integer.valueOf(user.getId()));
             response=bankInterfaceService.deleteBankInterfaceConfig(bankInterface);
         }
         if(response==null) {

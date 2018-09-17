@@ -22,6 +22,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,15 +48,12 @@ public class PlatformCountController extends BaseController {
 
     @ApiOperation(value = "数据中心-平台统计列表查询", notes = "数据中心-平台统计列表查询")
     @PostMapping("/searchaction")
-    public AdminResult<ListResult<PlatformCountCustomizeVO>> searchAction(@RequestBody PlatformCountRequestBean requestBean) {
-        PlatformCountCustomizeResponse response = platformCountService.searchAction(requestBean);
-        if (response == null) {
+    public AdminResult<List<PlatformCountCustomizeVO>> searchAction(@RequestBody PlatformCountRequestBean requestBean) {
+        List<PlatformCountCustomizeVO> response = platformCountService.searchAction(requestBean);
+        if (CollectionUtils.isEmpty(response)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+        return new AdminResult<>(response);
     }
 
     /**
@@ -73,11 +71,7 @@ public class PlatformCountController extends BaseController {
 
         PlatformCountCustomizeVO platformCountCustomize = new PlatformCountCustomizeVO();
 
-        List<PlatformCountCustomizeVO> recordList = new ArrayList<>();
-        PlatformCountCustomizeResponse countCustomizeResponse = platformCountService.searchAction(form);
-        if (countCustomizeResponse != null) {
-            recordList = countCustomizeResponse.getResultList();
-        }
+        List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 

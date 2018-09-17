@@ -16,7 +16,7 @@ import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -125,7 +125,7 @@ public class BorrowRegistExceptionController extends BaseController {
     public BorrowResponse searchBorrowByBorrowNid(@PathVariable String borrowNid){
         logger.info("handleBorrowRegistException::::::::::borrowNid=[{}]",borrowNid);
         BorrowResponse borrowResponse = new BorrowResponse();
-        BorrowVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
+        BorrowAndInfoVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
         if(borrowVO != null){
             borrowResponse.setResult(borrowVO);
         }
@@ -152,7 +152,7 @@ public class BorrowRegistExceptionController extends BaseController {
      */
     @ApiOperation(value = "更新标", notes = "更新标")
     @PostMapping(value = "/update_borrowregist_by_type/{type}")
-    public Boolean updateBorrowRegistByType(@RequestBody BorrowVO borrowVO,@PathVariable Integer type){
+    public Boolean updateBorrowRegistByType(@RequestBody BorrowAndInfoVO borrowVO,@PathVariable Integer type){
         return  borrowRegistExceptionService.updateBorrowRegistByType(borrowVO,type);
     }
 
@@ -164,7 +164,7 @@ public class BorrowRegistExceptionController extends BaseController {
      */
     @ApiOperation(value = "更新标的资产信息如果关联计划的话", notes = "更新标的资产信息如果关联计划的话")
     @PostMapping(value = "/update_borrowasset/{status}")
-    public Boolean updateBorrowAsset(@RequestBody BorrowVO borrowVO,@PathVariable Integer status){
+    public Boolean updateBorrowAsset(@RequestBody BorrowAndInfoVO borrowVO,@PathVariable Integer status){
         return  borrowRegistExceptionService.updateBorrowAsset(borrowVO,status);
     }
 

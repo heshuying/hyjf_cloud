@@ -39,7 +39,7 @@
 		hydal.id,
 		#{roleId,jdbcType=VARCHAR} AS roleId,
 		#{trade,jdbcType=VARCHAR} AS trade,
-		hydal.create_time AS time,
+		DATE_FORMAT(hydal.create_time,'%Y-%m-%d %H:%i:%s') AS time,
 		CASE
 		WHEN hydal.`type` = 1 THEN
 		'+'

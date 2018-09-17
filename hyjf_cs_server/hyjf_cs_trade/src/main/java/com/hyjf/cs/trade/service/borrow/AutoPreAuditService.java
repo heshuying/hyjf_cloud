@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.service.borrow;
 
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.MQBorrow;
@@ -36,5 +36,5 @@ public interface AutoPreAuditService extends BaseTradeService {
      * @param borrow
      * @return
      */
-    boolean updateRecordBorrow(BorrowVO borrow);
+    boolean updateRecordBorrow(BorrowAndInfoVO borrow);
 }

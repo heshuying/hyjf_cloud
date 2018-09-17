@@ -54,7 +54,8 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
 	private String creditUserId;
 	/**法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功*/
 	private int fddStatus;
-    
+    /**产品加息收益率*/
+    private String borrowExtraYield;
     
     public int getFddStatus() {
         return fddStatus;
@@ -181,5 +182,6 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
 	public void setCreditUserId(String creditUserId) {
 		this.creditUserId = creditUserId;
 	}
-    
+	public String getBorrowExtraYield() { return borrowExtraYield; }
+    public void setBorrowExtraYield(String borrowExtraYield) { this.borrowExtraYield = borrowExtraYield; }
 }

@@ -124,7 +124,7 @@ public class FddHandle {
 			throw new Exception("标的编号为空.");
 		}
 		// 借款详情
-		BorrowVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+		BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
 		if (borrow == null) {
 			throw new Exception("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 		}
@@ -771,7 +771,7 @@ public class FddHandle {
 
 
             // 获取借款标的信息
-            BorrowVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+            BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
             if (borrow == null) {
                 logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
                 throw new Exception("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
@@ -992,7 +992,7 @@ public class FddHandle {
 			logger.error("开始生成计划债转协议失败-----------汇计划债转投资表中无该记录----------承接订单号:" + bean.getAssignNid());
 		}
 
-		BorrowVO borrow = (BorrowVO) resultMap.get("borrow");
+		BorrowAndInfoVO borrow = (BorrowAndInfoVO) resultMap.get("borrow");
 		UserInfoVO creditUsersInfo = (UserInfoVO) resultMap.get("usersInfoCredit");
 		UserVO creditUser = (UserVO) resultMap.get("usersCredit");
 		UserInfoVO tenderUserInfo = (UserInfoVO) resultMap.get("usersInfo");
@@ -1157,7 +1157,7 @@ public class FddHandle {
 
 
 			// 获取借款标的信息
-			BorrowVO borrow=this.amBorrowClient.getBorrowByNid(creditTender.getBorrowNid());
+			BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(creditTender.getBorrowNid());
 
 			// 获取债转信息(新表)
 			HjhDebtCreditRequest request1 = new HjhDebtCreditRequest();
@@ -1277,7 +1277,7 @@ public class FddHandle {
 				BorrowTenderVO borrowTender = tenderList.get(0);
 				userId = borrowTender.getUserId(); //投资人
 				borrowNid = borrowTender.getBorrowNid();//标的号
-				BorrowVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow = this.amBorrowClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();//机构编号
 				//判断是否为企业借款
 				boolean result = this.isCompanyUser(borrow);
@@ -1335,7 +1335,7 @@ public class FddHandle {
 				CreditTenderVO creditTender = creditTenderList.get(0);
 				userId = creditTender.getUserId();// 承接人
 				borrowNid = creditTender.getBidNid();// 原标的号
-				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = creditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
@@ -1347,7 +1347,7 @@ public class FddHandle {
 				HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
 				userId = hjhCreditTender.getUserId();// 承接人
 				borrowNid = hjhCreditTender.getBorrowNid();// 标的号
-				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
@@ -1460,7 +1460,7 @@ public class FddHandle {
 	 * @param borrow
 	 * @return
 	 */
-	private boolean isCompanyUser(BorrowVO borrow) {
+	private boolean isCompanyUser(BorrowAndInfoVO borrow) {
 		String planNid = borrow.getPlanNid();
 		if(org.apache.commons.lang.StringUtils.isNotBlank(planNid)){//计划标的
 			Integer userId = borrow.getUserId();
@@ -1519,7 +1519,7 @@ public class FddHandle {
 			TenderAgreementVO tenderAgrementInfo = this.amTradeClient.getTenderAgreementInfoByPrimaryKey(tenderAgreementID);
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
-				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
+				BorrowAndInfoVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
 				String planNid = borrow.getPlanNid();
 				if(StringUtils.isNotBlank(planNid)){//计划标的
 					Integer borrowUserId = borrow.getUserId();

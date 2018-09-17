@@ -7,7 +7,7 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -76,7 +76,7 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 	 * @return
 	 */
 	@Override
-	public List<BorrowVO> selectBorrowList() {
+	public List<BorrowAndInfoVO> selectBorrowList() {
 		BorrowResponse response = restTemplate.getForEntity(
 				"http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
 				BorrowResponse.class).getBody();
@@ -92,7 +92,7 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 	 * @return
 	 */
 	@Override
-	public BorrowVO getBorrowByNid(String borrowId) {
+	public BorrowAndInfoVO getBorrowByNid(String borrowId) {
 		String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
 		BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
 		if (response!=null){

@@ -306,7 +306,7 @@ public class CategoryController extends BaseController {
 		logger.info("查询内容中心-帮助中心-删除问题开始......");
 		CategoryResponse response = new CategoryResponse();
 		if (null != contentHelpBeanRequest.getId()) {
-            categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, null);
+            categoryService.delContentHelp(contentHelpBeanRequest.getId());
 			response = categoryService.getHelpPage(contentHelpBeanRequest);
 		} else {
 			response.setRtn(Response.ERROR);
@@ -322,7 +322,7 @@ public class CategoryController extends BaseController {
         CategoryResponse response = new CategoryResponse();
         if (null != contentHelpBeanRequest.getId()) {
 
-            categoryService.delContentHelp(contentHelpBeanRequest.getId());
+            categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, null);
             response = categoryService.getHelpPage(contentHelpBeanRequest);
         } else {
             response.setRtn(Response.ERROR);
@@ -331,6 +331,29 @@ public class CategoryController extends BaseController {
         return response;
     }
 
+	@ApiOperation(value = "内容中心-帮助中心-移除智齿客服问题", notes = "帮助中心-移除智齿客服问题")
+	@RequestMapping(value = "/zhiChiMoveAction", method = RequestMethod.POST)
+	public CategoryResponse zhiChiMoveAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
+		logger.info("查询内容中心-帮助中心-移除智齿客服......");
+		CategoryResponse response = new CategoryResponse();
+		if (null != contentHelpBeanRequest.getId()) {
+
+			categoryService.chanContentHelp(contentHelpBeanRequest.getId(), 1, 0);
+			response = categoryService.getZhiChiInit(contentHelpBeanRequest);
+		} else {
+			response.setRtn(Response.ERROR);
+			response.setMessage("请选择移除的智齿客服问题！");
+		}
+		return response;
+	}
+
+	@ApiOperation(value = "内容中心-帮助中心-智齿客服问题列表页面初始化", notes = "智齿客服问题列表页面初始化")
+	@RequestMapping(value = "/zhichiinit", method = RequestMethod.POST)
+	public CategoryResponse zhiChiInit(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
+		logger.info("查询内容中心-帮助中心-启用智齿常见问题开始......");
+		CategoryResponse response = categoryService.getZhiChiInit(contentHelpBeanRequest);
+		return response;
+	}
 	@ApiOperation(value = "内容中心-帮助中心-启用智齿常见问题", notes = "帮助中心-启用智齿常见问题")
 	@RequestMapping(value = "/movezhichiaction", method = RequestMethod.POST)
 	public CategoryResponse moveZhiChiAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {

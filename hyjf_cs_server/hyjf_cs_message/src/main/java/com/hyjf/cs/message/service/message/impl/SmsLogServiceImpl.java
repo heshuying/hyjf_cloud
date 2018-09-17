@@ -12,6 +12,7 @@ import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -42,15 +43,10 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(mobile)) {
 			criteria.and("mobile").is(mobile);
 		}
-		if (StringUtils.isNotBlank(postTimeBegin)) {
+		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			criteria.and("posttime").gte(begin);
-		}
-		if (StringUtils.isNotBlank(postTimeEnd)) {
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
-			Criteria criteria2 = new Criteria();
-			criteria2.and("posttime").lte(end);
-			query.addCriteria(criteria2);
+			criteria.and("posttime").gte(begin).lte(end);
 		}
 		if (status != null) {
 			criteria.and("status").is(status);
@@ -58,9 +54,12 @@ public class SmsLogServiceImpl implements SmsLogService {
 		query.addCriteria(criteria);
 		int currPage = request.getCurrPage();
 		int pageSize = request.getPageSize();
-		int limitStart = (currPage - 1) * pageSize;
-		int limitEnd = limitStart + pageSize;
-		query.skip(limitStart).limit(limitEnd);
+		if (currPage > 0) {
+			int limitStart = (currPage - 1) * pageSize;
+			int limitEnd = limitStart + pageSize;
+			query.skip(limitStart).limit(limitEnd);
+		}
+		query.with(new Sort(Sort.Direction.DESC, "posttime"));
 		return smsLogDao.find(query);
 	}
 
@@ -81,15 +80,18 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("posttime").gte(begin).lte(end);
 		}
 
-		if (status != null) {
+		if (status != null && status != 2) {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);
 		int currPage = request.getCurrPage();
 		int pageSize = request.getPageSize();
-		int limitStart = (currPage - 1) * pageSize;
-		int limitEnd = limitStart + pageSize;
-		query.skip(limitStart).limit(limitEnd);
+		if (currPage > 0) {
+			int limitStart = (currPage - 1) * pageSize;
+			int limitEnd = limitStart + pageSize;
+			query.skip(limitStart).limit(limitEnd);
+		}
+		query.with(new Sort(Sort.Direction.DESC, "posttime"));
 		return smsOntimeMongoDao.find(query);
 	}
 
@@ -104,15 +106,12 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(mobile)) {
 			criteria.and("mobile").regex(mobile);
 		}
-		if (StringUtils.isNotBlank(postTimeBegin)) {
+		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin);
-			criteria.and("posttime").gte(begin);
-		}
-		if (StringUtils.isNotBlank(postTimeEnd)) {
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd);
-			criteria.and("posttime").lte(end);
+			criteria.and("posttime").gte(begin).lte(end);
 		}
-		if (status != 2) {
+		if (status != null && status != 2) {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);
@@ -127,5 +126,15 @@ public class SmsLogServiceImpl implements SmsLogService {
 	@Override
 	public List<SmsLog> findSmsLogList() {
 		return smsLogDao.findAll();
+	}
+
+	@Override
+	public int queryOntimeCount(SmsLogRequest request) {
+		request.setCurrPage(0);
+		List<SmsOntime> list = queryTime(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }

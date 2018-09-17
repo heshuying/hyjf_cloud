@@ -86,7 +86,7 @@ public class AdminUserController extends BaseController {
 	@ResponseBody
 	public AdminResult insertAction(HttpServletRequest request,@RequestBody AdminRequest adminRequest) {
 		adminRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
-		AdminUserResponse ap = adminService.moveToInfoAction(adminRequest);
+		AdminUserResponse ap = adminService.insertAction(adminRequest);
 		if (Response.isSuccess(ap)) {
 			return new AdminResult<>();
 		}

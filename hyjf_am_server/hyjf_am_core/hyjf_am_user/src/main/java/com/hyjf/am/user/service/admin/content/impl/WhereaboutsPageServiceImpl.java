@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.content.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
@@ -49,27 +50,26 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 
 		WhereaboutsPageConfig whereaboutsPageConfig=createWhereaboutsPageConfig(form);
 		whereaboutsPageConfigMapper.insertSelective(whereaboutsPageConfig);
-//      todo-----有问题
-//		List<WhereaboutsPagePicture> imageJsonList1 = JSONArray.parseArray(form.getImageJson1(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList1) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,1,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
-//
-//		List<WhereaboutsPagePicture> imageJsonList2 = JSONArray.parseArray(form.getImageJson2(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList2) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,2,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
-//
-//		List<WhereaboutsPagePicture> imageJsonList3 = JSONArray.parseArray(form.getImageJson3(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList3) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,3,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
+		List<WhereaboutsPagePicture> imageJsonList1 = JSONArray.parseArray(form.getImageJson1(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList1) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,1,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
+
+		List<WhereaboutsPagePicture> imageJsonList2 = JSONArray.parseArray(form.getImageJson2(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList2) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,2,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
+
+		List<WhereaboutsPagePicture> imageJsonList3 = JSONArray.parseArray(form.getImageJson3(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture WhereaboutsPagePicture : imageJsonList3) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(WhereaboutsPagePicture,3,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
 	}
 
 	@Override
@@ -85,26 +85,26 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		example.createCriteria().andWhereaboutsIdEqualTo(whereaboutsPageConfig.getId());
 		whereaboutsPagePictureMapper.deleteByExample(example);
 
-//		List<WhereaboutsPagePicture> imageJsonList1 = JSONArray.parseArray(form.getImageJson1(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList1) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,1,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
-//
-//		List<WhereaboutsPagePicture> imageJsonList2 = JSONArray.parseArray(form.getImageJson2(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList2) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,2,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
-//
-//		List<WhereaboutsPagePicture> imageJsonList3 = JSONArray.parseArray(form.getImageJson3(), WhereaboutsPagePicture.class);
-//
-//		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList3) {
-//			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,3,whereaboutsPageConfig.getId());
-//			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
-//		}
+		List<WhereaboutsPagePicture> imageJsonList1 = JSONArray.parseArray(form.getImageJson1(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList1) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,1,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
+
+		List<WhereaboutsPagePicture> imageJsonList2 = JSONArray.parseArray(form.getImageJson2(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList2) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,2,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
+
+		List<WhereaboutsPagePicture> imageJsonList3 = JSONArray.parseArray(form.getImageJson3(), WhereaboutsPagePicture.class);
+
+		for (WhereaboutsPagePicture whereaboutsPageImage : imageJsonList3) {
+			WhereaboutsPagePicture whereaboutsPagePicture = createWhereaboutsPagePicture(whereaboutsPageImage,3,whereaboutsPageConfig.getId());
+			whereaboutsPagePictureMapper.insertSelective(whereaboutsPagePicture);
+		}
 	}
 
 	@Override
