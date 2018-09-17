@@ -1,14 +1,10 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
-import com.hyjf.am.vo.datacollect.OperationReportVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author tanyy
@@ -101,6 +97,15 @@ public interface OperationReportService {
      * @return
      */
     public OperationReportResponse halfPreview(OperationReportRequest request);
+
+
+    /**
+     * 资料上传
+     * @param request
+     * @param response
+     * @return
+     */
+    String uploadFile(HttpServletRequest request, HttpServletResponse response);
 
 
 }

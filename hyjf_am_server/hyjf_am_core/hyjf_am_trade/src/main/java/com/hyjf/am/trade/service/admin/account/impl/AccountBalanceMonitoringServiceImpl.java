@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,7 +91,6 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
     @Override
     public int updateMerchantAccountList(List<AdminAccountBalanceMonitoringRequest> updateList){
         int ret = 0;
-        int nowTime = GetDate.getNowTime10();
         if (updateList != null && updateList.size() > 0) {
             for (int i = 0; i < updateList.size(); i++) {
                 AdminAccountBalanceMonitoringRequest record = updateList.get(i);
@@ -98,7 +98,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
                 // 如果数据有更新
                 if (record.isUpdateFlg()) {
                     BeanUtils.copyProperties(record, merchantAccount);
-                    merchantAccount.setUpdateTime(nowTime);
+                    merchantAccount.setUpdateTime(new Date());
                     merchantAccount.setBalanceLowerLimit(merchantAccount.getBalanceLowerLimit() == null ? 0
                             : merchantAccount.getBalanceLowerLimit());
                     merchantAccount.setTransferIntoRatio(merchantAccount.getTransferIntoRatio() == null ? 0

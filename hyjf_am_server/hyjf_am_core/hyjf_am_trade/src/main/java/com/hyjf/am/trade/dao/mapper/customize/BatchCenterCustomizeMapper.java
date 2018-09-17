@@ -2,7 +2,7 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
-import com.hyjf.am.trade.dao.model.auto.BatchCenterCustomize;
+import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 
 import java.util.List;
