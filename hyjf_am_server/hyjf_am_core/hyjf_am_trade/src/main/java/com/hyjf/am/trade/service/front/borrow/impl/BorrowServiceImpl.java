@@ -699,7 +699,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         crt.andBorrowNidEqualTo(borrowNid);
         if (StringUtils.isNotEmpty(form.getRoleId()) && "3".equals(form.getRoleId())) {
             // 垫付机构
-            crt.andRepayOrgUserIdEqualTo(Integer.parseInt(userId));
+
+            // todo  repay_org_user_id从borrow表迁移到borrow_info了
+            // crt.andRepayOrgUserIdEqualTo(Integer.parseInt(userId));
         } else {
             // 普通借款人
             crt.andUserIdEqualTo(Integer.parseInt(userId));
