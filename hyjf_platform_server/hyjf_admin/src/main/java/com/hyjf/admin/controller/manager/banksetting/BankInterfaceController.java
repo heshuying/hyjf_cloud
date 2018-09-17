@@ -1,7 +1,6 @@
 package com.hyjf.admin.controller.manager.banksetting;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -47,7 +46,7 @@ public class BankInterfaceController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<BankInterfaceVO>>(ListResult.build(response.getResultList(), response.getFlag())) ;
+        return new AdminResult<BankInterfaceResponse>(response) ;
     }
 
     @ApiOperation(value = "查询配置中心接口切换详情页面", notes = "查询配置中心接口切换详情页面")
@@ -97,7 +96,7 @@ public class BankInterfaceController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "快捷充值限额修改", notes = "快捷充值限额修改")
+    @ApiOperation(value = "接口切换修改", notes = "接口切换修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankRechargeConfig(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
@@ -120,7 +119,7 @@ public class BankInterfaceController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "快捷充值限额删除", notes = "快捷充值限额删除")
+    @ApiOperation(value = "接口切换删除", notes = "接口切换删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankInterfaceConfig(@RequestBody BankInterfaceRequest adminRequest, HttpServletRequest request)  {
