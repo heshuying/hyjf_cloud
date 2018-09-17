@@ -39,7 +39,7 @@ public class UserManagerCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "推荐人名称")
     public String recommendName;
     //开户状态
-    @ApiModelProperty(value = "开户状态")
+//    @ApiModelProperty(value = "开户状态")
     public String accountStatus;
     //用户状态
     @ApiModelProperty(value = "用户状态")
@@ -67,7 +67,7 @@ public class UserManagerCustomizeVO extends BaseVO implements Serializable {
     public String idcard;
     @ApiModelProperty(value = "开户行")
     private String openAccount;
-
+    @ApiModelProperty(value = "开户状态 是否银行开户,0未开户,1已开户")
     private String bankOpenAccount;
 
     private String bankOpenTime;
