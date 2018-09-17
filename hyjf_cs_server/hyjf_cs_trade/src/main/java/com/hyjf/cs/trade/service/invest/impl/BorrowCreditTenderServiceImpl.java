@@ -327,9 +327,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
             result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
             // 待承接垫付利息
-            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignPayInterest());
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance());
             // 待承接金额
-            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital());
+            BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
             result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
             result.setCouponDescribe("");
             result.setCouponId("");
