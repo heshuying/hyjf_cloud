@@ -175,6 +175,7 @@ public class CouponConfigController extends BaseController {
             couponConfig.setCouponCode(GetCode.getCouponCode(couponConfigRequest
                     .getCouponType()));
             couponConfig.setStatus(1);
+            couponConfig.setDelFlag(0);
             couponConfig.setUpdateTime(GetDate.getDate());
             couponConfig.setCreateTime(GetDate.getDate());
             int result = couponConfigService.insertAction(couponConfig);
