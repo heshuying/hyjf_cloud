@@ -102,7 +102,7 @@ public class WhereaboutsPageController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
-	@GetMapping("/uploadFile")
+	@PostMapping("/uploadFile")
 	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String files = whereaboutsPageService.uploadFile(request, response);
 		if (StringUtils.isNotBlank(files)) {
