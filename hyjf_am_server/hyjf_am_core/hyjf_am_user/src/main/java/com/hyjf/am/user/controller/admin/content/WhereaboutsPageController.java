@@ -5,28 +5,19 @@ package com.hyjf.am.user.controller.admin.content;
 
 
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.admin.ContentQualifyResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
 import com.hyjf.am.user.service.admin.content.WhereaboutsPageService;
-import com.hyjf.am.vo.config.ContentQualifyVO;
-import com.hyjf.am.vo.config.LandingPageVo;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
-import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author tanyy
@@ -122,6 +113,16 @@ public class WhereaboutsPageController extends BaseController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
-
+	/**
+	 * 修改详情
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getwhereaboutspageconfig")
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(@RequestBody WhereaboutsPageRequest request) {
+		WhereaboutsPageResponse response = whereaboutsPageService.getWhereaboutsPageConfigById(request);
+		return response;
+	}
 
 }
