@@ -12,8 +12,6 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.pandect.PandectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +31,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/hyjf-web/user")
 public class PandectController extends BaseUserController{
-    private static final Logger logger = LoggerFactory.getLogger(PandectController.class);
 
     @Autowired
     PandectService pandectService;
@@ -53,7 +50,6 @@ public class PandectController extends BaseUserController{
             JSONObject map = pandectService.pandect(user);
             result.setData(map);
             model.addAttribute("datas",result);
-            logger.info("pandect:"+result);
         return "pandect";
     }
 }

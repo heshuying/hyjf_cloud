@@ -11,11 +11,13 @@ import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 import com.hyjf.am.vo.market.AppBannerVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 广告管理
@@ -33,7 +37,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBannerController, v0.1 2018/7/11 11:27
  */
-@Api(tags = "admin移动客户端-广告管理")
+@Api(tags = "移动客户端-广告管理")
 @RestController
 @RequestMapping("/hyjf-admin/app/maintenance/banner")
 public class AppBannerController extends BaseController {
@@ -46,18 +50,21 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
     @ResponseBody
-    public AdminResult<ListResult<AdsVO>> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
+    public AdminResult<AppBannerResponse> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
         try {
             AppBannerRequest aprlr = new AppBannerRequest();
             BeanUtils.copyProperties(appBannerRequestBean, aprlr);
             AppBannerResponse prs = appBannerService.getRecordList(aprlr);
+            List<AdsTypeVO> adsTypeList = prs.getAdsTypeList();
             if (prs == null) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }
             if (!Response.isSuccess(prs)) {
                 return new AdminResult<>(FAIL, prs.getMessage());
             }
-            return new AdminResult<ListResult<AdsVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
+            AdminResult adminResult = new AdminResult();
+            adminResult.setData(prs);
+            return adminResult;
         } catch (Exception e) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -151,5 +158,6 @@ public class AppBannerController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
     }
+
 
 }

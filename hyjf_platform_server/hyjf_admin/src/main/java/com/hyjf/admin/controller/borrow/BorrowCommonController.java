@@ -122,9 +122,9 @@ public class BorrowCommonController extends BaseController {
 		borrowCommonRequest.setAdminId(Integer.valueOf(this.getUser(request).getId()));
 		borrowCommonRequest.setAdminUsername(this.getUser(request).getUsername());
 		BorrowCommonResponse bcr = borrowCommonService.insertAction(borrowCommonRequest);
-		if(bcr==null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+//		if(bcr==null) {
+//			return new AdminResult<>(FAIL, FAIL_DESC);
+//		}
 		if (!Response.isSuccess(bcr)) {
 			return new AdminResult<>(FAIL, bcr.getMessage());
 
@@ -1726,12 +1726,16 @@ public class BorrowCommonController extends BaseController {
 		List<BorrowCustomizeVO> vo = bcr.getResultList();
 		List<BorrowCustomizeVO> vo2=new ArrayList<BorrowCustomizeVO>();
 		Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
-		for (BorrowCustomizeVO borrowCustomizeVO : vo) {
-			BorrowCustomizeVO bvo=new BorrowCustomizeVO();
-			bvo=borrowCustomizeVO;
-			bvo.setStatus(map.get(bvo.getStatus()));
-			vo2.add(bvo);
+		bcr.setBs(map);
+		if(vo!=null) {
+			for (BorrowCustomizeVO borrowCustomizeVO : vo) {
+				BorrowCustomizeVO bvo=new BorrowCustomizeVO();
+				bvo=borrowCustomizeVO;
+				bvo.setStatus(map.get(bvo.getStatus()));
+				vo2.add(bvo);
+			}
 		}
+
 		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
 		bcr.setResultList(vo2);
 		return new AdminResult<BorrowCustomizeResponse>(bcr);

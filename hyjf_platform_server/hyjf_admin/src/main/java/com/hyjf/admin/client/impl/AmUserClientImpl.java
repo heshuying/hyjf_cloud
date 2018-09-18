@@ -6,6 +6,7 @@ import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
@@ -1335,7 +1336,12 @@ public class AmUserClientImpl implements AmUserClient {
 		return  amUserResponse;
 
 	}
-
+	@Override
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+				form, WhereaboutsPageResponse.class);
+		return  amUserResponse;
+	}
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",
@@ -1368,7 +1374,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public StringResponse checkUtmId(Integer utmId){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkutmid/" + utmId;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 
+	@Override
+	public StringResponse checkReferrer(String referrer){
+		String url = "http://AM-USER/am-user/content/whereaboutspage/checkreferrer/" + referrer;
+		StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+		return response;
+	}
 	@Override
 	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
 		ChangeLogResponse response = restTemplate
@@ -2304,6 +2322,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 * 校验手机号
+	 * @auther: nxl
+	 * @param mobile
+	 * @return
+	 */
+	@Override
+	public int countByMobile(String mobile){
+		int checkFlg = restTemplate.
+				getForEntity("http://AM-ADMIN/am-user/userManager/countByMobileList/"+ mobile, Integer.class).
+				getBody();
+		return checkFlg;
+	}
 
 }

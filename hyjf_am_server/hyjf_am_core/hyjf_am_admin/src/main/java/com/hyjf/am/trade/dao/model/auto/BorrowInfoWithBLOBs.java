@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class BorrowInfoWithBLOBs extends BorrowInfo implements Serializable {
     private String accountContents;
@@ -22,7 +23,8 @@ public class BorrowInfoWithBLOBs extends BorrowInfo implements Serializable {
     private String borrowCompanyInstruction;
 
     private String borrowOperatingProcess;
-
+    private BigDecimal borrowExtraYield;
+    private Integer increaseInterestFlag;
     private static final long serialVersionUID = 1L;
 
     public String getAccountContents() {
@@ -104,4 +106,19 @@ public class BorrowInfoWithBLOBs extends BorrowInfo implements Serializable {
     public void setBorrowOperatingProcess(String borrowOperatingProcess) {
         this.borrowOperatingProcess = borrowOperatingProcess == null ? null : borrowOperatingProcess.trim();
     }
+    @Override
+    public BigDecimal getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    @Override
+    public void setBorrowExtraYield(BigDecimal borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
+    }
+
+    public Integer getIncreaseInterestFlag() {
+        return increaseInterestFlag;
+    }
+
+    public void setIncreaseInterestFlag(Integer increaseInterestFlag) { this.increaseInterestFlag = increaseInterestFlag; }
 }

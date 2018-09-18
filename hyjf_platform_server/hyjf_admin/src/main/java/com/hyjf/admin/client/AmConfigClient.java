@@ -574,6 +574,15 @@ public interface AmConfigClient {
 	CategoryResponse getOftenInitPage(ContentHelpBeanRequest contentHelpBeanRequest);
 
 	/**
+	 * @Author walter.limeng
+	 * @user walter.limeng
+	 * @Description  智齿客服列表初始化
+	 * @Date 14:57 2018/7/24
+	 * @Param contentHelpBeanRequest
+	 * @return
+	 */
+	CategoryResponse getZhiChiInit(ContentHelpBeanRequest contentHelpBeanRequest);
+	/**
 	 * 根据条件查询内容管理-办公环境
 	 *
 	 * @param requestBean

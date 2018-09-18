@@ -17,6 +17,7 @@ public class AdsTypeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "广告位")
     private String typeName;
 
+    @ApiModelProperty(value = "广告位代码")
     private String code;
 
     @ApiModelProperty(value = "排序")

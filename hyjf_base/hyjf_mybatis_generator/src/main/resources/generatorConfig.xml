@@ -779,7 +779,6 @@
         </table>
 
         <table tableName="ht_coupon_operation_history" domainObjectName="CouponOperationHistory">
-            <generatedKey column="uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="operation_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1489,7 +1488,7 @@
         </table>
 
         <table tableName="ht_admin_permissions" domainObjectName="AdminPermissions">
-            <generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />
+            <!--<generatedKey column="permission_uuid" sqlStatement="MySql" type="post" identity="true" />-->
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

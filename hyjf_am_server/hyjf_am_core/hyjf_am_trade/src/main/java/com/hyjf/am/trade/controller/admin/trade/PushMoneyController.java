@@ -10,9 +10,11 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.service.admin.PushMoneyService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,12 +37,37 @@ public class PushMoneyController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getrecordlist")
-	public PushMoneyResponse getRecordList() {
+	public PushMoneyResponse getRecordList(@RequestBody PushMoneyRequest requestBean) {
 		PushMoneyResponse response = new PushMoneyResponse();
-		List<PushMoney> list = pushMoneyService.getRecordList();
-		if (!CollectionUtils.isEmpty(list)) {
-			List<PushMoneyVO> voList = CommonUtils.convertBeanList(list, PushMoneyVO.class);
-			response.setResultList(voList);
+		List<PushMoney> list = pushMoneyService.getRecordList(-1, -1);
+		response.setCount(list.size());
+		if (list != null) {
+			Paginator paginator = new Paginator(requestBean.getCurrPage(), list.size(), requestBean.getPageSize() == 0 ? 10 : requestBean.getPageSize());
+			List<PushMoney> pushMoneyList = this.pushMoneyService.getRecordList(paginator.getOffset(), paginator.getLimit());
+			if (!CollectionUtils.isEmpty(pushMoneyList)) {
+				List<PushMoneyVO> voList = CommonUtils.convertBeanList(pushMoneyList, PushMoneyVO.class);
+				response.setPaginator(paginator);
+				response.setResultList(voList);
+			}
+		}
+		return response;
+	}
+
+	/**
+	 * 画面迁移(含有id更新，不含有id添加)
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/get_info_action/{id}")
+	public PushMoneyResponse getInfoAction(@PathVariable Integer id) {
+		PushMoneyResponse response = new PushMoneyResponse();
+		if(id != null){
+			PushMoney pushMoney = this.pushMoneyService.getRecordById(id);
+			if (pushMoney != null){
+				PushMoneyVO voList = CommonUtils.convertBean(pushMoney, PushMoneyVO.class);
+				response.setResult(voList);
+			}
 		}
 		return response;
 	}
@@ -75,6 +102,21 @@ public class PushMoneyController extends BaseController {
 		}
 		response.setRtn(PushMoneyResponse.FAIL);
 		response.setMessage("被修改id不存在");
+		return response;
+	}
+
+	/**
+	 * 删除配置信息
+	 *
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping("/delete_record")
+	public PushMoneyResponse deleteRecord(@RequestBody List<Integer> ids) {
+		PushMoneyResponse response = new PushMoneyResponse();
+		if(!CollectionUtils.isEmpty(ids)){
+			this.pushMoneyService.deleteRecord(ids);
+		}
 		return response;
 	}
 

@@ -40,7 +40,7 @@ public interface AppMyProjectService extends BaseTradeService {
      * @author libin
      * App端:发送短信验证码(ajax请求)短信验证码数据保存(取自web)
      */
-    AppResult sendCreditCode(TenderBorrowCreditCustomize request, Integer userId);
+    AppResult sendCreditCode(HttpServletRequest request, Integer userId);
     
 	/**
      * 债转提交保存
@@ -49,7 +49,7 @@ public interface AppMyProjectService extends BaseTradeService {
      * @param userId
      * @return
      */
-    AppResult saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
+    JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId);
 
 
     /**

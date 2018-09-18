@@ -34,7 +34,7 @@ public class UserManagerRequest extends BasePage {
     // 用户状态
     public String userStatus;
     // 部门
-    public String combotreeListSrch;
+    public String[]  combotreeListSrch;
     // 客户编号
     public String customerId;
     // 用户来源
@@ -130,11 +130,11 @@ public class UserManagerRequest extends BasePage {
         this.userStatus = userStatus;
     }
 
-    public String getCombotreeListSrch() {
+    public String[] getCombotreeListSrch() {
         return combotreeListSrch;
     }
 
-    public void setCombotreeListSrch(String combotreeListSrch) {
+    public void setCombotreeListSrch(String[] combotreeListSrch) {
         this.combotreeListSrch = combotreeListSrch;
     }
 

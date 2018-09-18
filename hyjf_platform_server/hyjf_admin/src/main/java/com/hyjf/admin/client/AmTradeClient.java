@@ -41,6 +41,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -2108,6 +2109,14 @@ public interface AmTradeClient {
     void deleteRecord(AdminBorrowFlowRequest adminRequest);
 
     /**
+     * 删除配置信息
+     *
+     * @param ids
+     * @return
+     */
+    PushMoneyResponse deleteRecord(List<Integer> ids);
+
+    /**
      *（条件）列表查询
      * @param adminRequest
      * @return
@@ -2276,7 +2285,7 @@ public interface AmTradeClient {
      *
      * @return
      */
-    PushMoneyResponse getRecordList();
+    PushMoneyResponse getRecordList(PushMoneyRequest requestBean);
 
     /**
      * 添加提成配置
@@ -3005,5 +3014,128 @@ public interface AmTradeClient {
     boolean startUseExistProtocol(AdminProtocolRequest adminProtocolRequest);
 
     Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
+
+    /**
+     * 查询优惠券发行导出列表
+     * @param request
+     * @return
+     */
+    CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request);
+
+    /**
+     * 画面迁移(含有id更新，不含有id添加)
+     *
+     * @param id
+     * @return
+     */
+    PushMoneyResponse getInfoAction(Integer id);
+
+    /** 加息接口开始*/
+    /** 枚举类型 */
+    enum IncreaseProperty {VO,STR,STR1}
+    /**
+     * 产品中心-加息投资明细（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    int getIncreaseInterestInvestDetaiCount(IncreaseInterestInvestDetailRequest request);
+    /**
+     * 产品中心-加息投资明细（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestInvestDetaiList(IncreaseInterestInvestDetailRequest request);
+    /**
+     * 产品中心-加息投资明细（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    String getSumAccount(IncreaseInterestInvestDetailRequest request);
+
+    /**
+     * 产品中心-加息还款信息（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    int getIncreaseInterestRepayCount(IncreaseInterestRepayRequest request);
+    /**
+     * 产品中心-加息还款信息（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayList(IncreaseInterestRepayRequest request);
+    /**
+     * 产品中心-加息还款信息（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    String getSumAccount(IncreaseInterestRepayRequest request);
+    /**
+     * 产品中心-加息还款明细（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+
+    int getIncreaseInterestRepayDetailCount(IncreaseInterestRepayDetailRequest request);
+    /**
+     * 产品中心-加息还款明细（列表/导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayDetailList(IncreaseInterestRepayDetailRequest request);
+    /**
+     * 产品中心-加息还款明细（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    AdminIncreaseInterestRepayCustomizeVO getSumBorrowRepaymentInfo(IncreaseInterestRepayDetailRequest request);
+
+    /**
+     * 产品中心-加息还款明细详情（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    int getIncreaseInterestRepayInfoListCount(IncreaseInterestRepayInfoListRequest request);
+    /**
+     * 产品中心-加息还款明细详情（列表导出）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestRepayInfoListList(IncreaseInterestRepayInfoListRequest request);
+    /**
+     * 产品中心-加息还款明细详情（合计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    AdminIncreaseInterestRepayCustomizeVO getSumBorrowLoanmentInfo(IncreaseInterestRepayInfoListRequest request);
+
+    /**
+     *  产品中心-加息还款计划（总计）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    int getIncreaseInterestRepayPlanCount(IncreaseInterestRepayPlanRequest request);
+
+    /**
+     *  产品中心-加息还款计划（列表）
+     * @param request
+     * @auth wenxin
+     * @return
+     */
+    List<IncreaseInterestRepayDetailVO> getIncreaseInterestRepayPlanList(IncreaseInterestRepayPlanRequest request);
+    /** 加息接口结束*/
 }
 

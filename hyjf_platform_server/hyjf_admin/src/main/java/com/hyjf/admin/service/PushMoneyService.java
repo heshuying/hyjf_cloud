@@ -5,6 +5,9 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.am.response.trade.PushMoneyResponse;
+import com.hyjf.am.resquest.admin.PushMoneyRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -16,7 +19,7 @@ public interface PushMoneyService {
 	 *
 	 * @return
 	 */
-	PushMoneyResponse getRecordList();
+	PushMoneyResponse getRecordList(PushMoneyRequest requestBean);
 
 	/**
 	 * 添加提成配置
@@ -33,4 +36,20 @@ public interface PushMoneyService {
 	 * @return
 	 */
 	PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean);
+
+	/**
+	 * 画面迁移(含有id更新，不含有id添加)
+	 *
+	 * @param id
+	 * @return
+	 */
+    PushMoneyResponse getInfoAction(Integer id);
+
+	/**
+	 * 删除配置信息
+	 *
+	 * @param ids
+	 * @return
+	 */
+    PushMoneyResponse deleteRecord(List<Integer> ids);
 }

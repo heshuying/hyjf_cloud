@@ -39,43 +39,35 @@ public class HomePageController extends BaseMarketController {
     @Value("file.domain.url")
     private String FILE_DOMAIN_URL;
 
-    /** @RequestMapping值 */
-    public static final String REQUEST_HOME = "/hyjf-app";
-    /** 首页接口  @RequestMapping值 */
-    public static final String REQUEST_MAPPING = "/homepage";
-    /** 首页项目列表  @RequestMapping值 */
-    public static final String START_PAGE_ACTION = "/getStartPage";
-
     /**
      * 获取起始页banner
      * @param
      * @param
      * @return
      */
-    @ResponseBody
     @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
-    @PostMapping(START_PAGE_ACTION)
-    public JSONObject getStartPage(/*@RequestHeader(value = "platform", required = false) String platform,
-                                    @RequestHeader(value = "realPlatform", required = false) String realPlatform*/) {
+    @PostMapping("/getStartPage")
+    public JSONObject getStartPage(@RequestHeader(value = "platform", required = false) String platform,
+                                    @RequestHeader(value = "realPlatform", required = false) String realPlatform) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();
-        /*String platformT = realPlatform;
+        String platformT = realPlatform;
         if (StringUtils.isBlank(platformT)) {
             platformT = platform;
-        }*/
-        result.put(CustomConstants.APP_REQUEST, REQUEST_HOME + REQUEST_MAPPING + START_PAGE_ACTION);
+        }
+        result.put("request", "/hyjf-app/homepage/getStartPage");
         try {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
             ads.put("host", FILE_DOMAIN_URL);
             ads.put("code", "startpage");
-            /*if (platformT.equals("2")) {
+            if (platformT.equals("2")) {
                 ads.put("platformType","1");
             } else if (platformT.equals("3")) {
                 ads.put("platformType","2");
-            }*/
+            }
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);
             if(CollectionUtils.isEmpty(picList)){
                 result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);

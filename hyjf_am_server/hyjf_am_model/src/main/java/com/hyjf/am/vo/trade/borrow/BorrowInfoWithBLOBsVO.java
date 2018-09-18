@@ -1,6 +1,5 @@
 package com.hyjf.am.vo.trade.borrow;
 
-import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 

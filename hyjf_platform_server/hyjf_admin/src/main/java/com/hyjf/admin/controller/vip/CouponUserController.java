@@ -564,28 +564,6 @@ public class CouponUserController extends BaseController {
     public AdminResult exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
         // 表格sheet名称
         String sheetName = "优惠券用户列表";
-
-//        Map<String, Object> paraMap = new HashMap<String, Object>();
-//        paraMap.put("userId", beanRequest.getUserId());
-//        paraMap.put("couponCode", beanRequest.getCouponCode());
-//        paraMap.put("couponUserCode", beanRequest.getCouponUserCode());
-//        paraMap.put("username", beanRequest.getUserName());
-//        paraMap.put("couponType", beanRequest.getCouponType());
-//        paraMap.put("usedFlag", beanRequest.getUsedFlag());
-//        paraMap.put("couponSource", beanRequest.getCouponSource());
-//        if(StringUtils.isNotEmpty(beanRequest.getTimeStartAddSrch())){
-//            paraMap.put("timeStartAddSrch", GetDate.getDayStart10(beanRequest.getTimeStartAddSrch()));
-//        }
-//        if(StringUtils.isNotEmpty(beanRequest.getTimeEndAddSrch())){
-//            paraMap.put("timeEndAddSrch", GetDate.getDayEnd10(beanRequest.getTimeEndAddSrch()));
-//        }
-//        if(StringUtils.isNotEmpty(beanRequest.getTimeStartSrch())){
-//            paraMap.put("timeStartSrch", GetDate.getDayStart10(beanRequest.getTimeStartSrch()));
-//        }
-//        if(StringUtils.isNotEmpty(beanRequest.getTimeEndSrch())){
-//            paraMap.put("timeEndSrch", GetDate.getDayEnd10(beanRequest.getTimeEndSrch()));
-//        }
-
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
         List<CouponUserCustomizeVO> resultList = customizeResponse.getResultList();
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;

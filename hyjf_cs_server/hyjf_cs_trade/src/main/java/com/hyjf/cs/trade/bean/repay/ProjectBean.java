@@ -1,11 +1,11 @@
 package com.hyjf.cs.trade.bean.repay;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.response.Response;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ProjectBean extends BaseVO implements Serializable {
+public class ProjectBean extends Response<ProjectBean> implements Serializable {
 
     /**
      * 此处为属性说明
@@ -83,6 +83,7 @@ public class ProjectBean extends BaseVO implements Serializable {
     //本期应还笔数
 	public String repayNum;
 
+	public boolean isAllRepay;
     /** 用户还款详情 */
     private List<ProjectRepayBean> userRepayList;
     
@@ -298,4 +299,7 @@ public class ProjectBean extends BaseVO implements Serializable {
 		this.userRepayList = userRepayList;
 	}
 
+	public boolean isAllRepay() { return isAllRepay; }
+
+	public void setAllRepay(boolean allRepay) { isAllRepay = allRepay; }
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.content;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
@@ -55,4 +56,20 @@ public interface WhereaboutsPageService extends BaseService{
      * @param id
      */
     void deleteById(Integer id);
+
+	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequest form);
+
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkUtmId(Integer utmId);
+
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkReferrer(String referrer);
 }

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -135,6 +134,7 @@ public class NifaFileDealController extends BaseController {
                     logger.info("【互金上传文件】上传状态：" + fileReadResult);
                     nifaReportLog.setFileUploadStatus(1);
                 }
+                nifaReportLog.setUploadTime(GetDate.getNowTime10());
                 // 更新上传结果
                 boolean result = nifaFileDealService.updateNifaReportLog(nifaReportLog);
                 if (!result) {
@@ -161,10 +161,6 @@ public class NifaFileDealController extends BaseController {
         logger.info("------【互金下载反馈文件】处理开始------");
         try {
 
-            SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
-
-            // 获取当天日期yyyyMMdd
-            String nowDay = yyyyMMdd.format(new Date());
             // 获取未成功下载日志的数据
             List<NifaReportLog> nifaReportLogList = nifaFileDealService.selectNifaReportLogDownloadPath();
             if (null == nifaReportLogList || nifaReportLogList.size() <= 0) {
@@ -177,10 +173,6 @@ public class NifaFileDealController extends BaseController {
                 // 记录更新时间
                 nifaReportLog.setUpdateTime(new Date());
                 String filePathDate = nifaReportLog.getUploadName().substring(18, 26);
-                // 当天上传的数据当天不下载反馈文件
-                if(filePathDate.equals(nowDay)){
-                    continue;
-                }
                 Integer downloadResult = this.nifaFileDealService.downloadFiles(filePathDate) ? 1 : 2;
                 // 更新结果
                 nifaReportLog.setFeedbackResult(downloadResult);

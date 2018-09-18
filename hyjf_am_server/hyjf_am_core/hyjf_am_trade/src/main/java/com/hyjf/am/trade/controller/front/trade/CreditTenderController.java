@@ -217,13 +217,13 @@ public class CreditTenderController extends BaseController {
      * @return
      */
     @PostMapping("/save_credit_tender")
-    public Integer saveCreditTender(@RequestBody @Valid BorrowCreditVO request){
-        try{
-            bankCreditTenderService.saveCreditTender(request);
-            return 1;
-        }catch (Exception e){
-            return 0;
-        }
+    public IntegerResponse saveCreditTender(@RequestBody @Valid BorrowCreditVO request){
+        IntegerResponse response = new IntegerResponse();
+
+        Integer creditNid =  bankCreditTenderService.saveCreditTender(request);
+        response.setResultInt(creditNid);
+        return response;
+
     }
 
     /**
@@ -260,13 +260,16 @@ public class CreditTenderController extends BaseController {
      * @return
      */
     @PostMapping("/saveCreditBgData")
-    public Integer saveCreditBgData(@RequestBody @Valid CreditTenderBgVO request){
+    public IntegerResponse saveCreditBgData(@RequestBody @Valid CreditTenderBgVO request){
+        IntegerResponse response = new IntegerResponse();
         try{
-            bankCreditTenderService.saveCreditBgData(request);
-            return 1;
+            bankCreditTenderService.insertCreditBgData(request);
+            response.setResultInt(1);
         }catch (Exception e){
-            return 0;
+            e.printStackTrace();
+            response.setResultInt(0);
         }
+        return response;
     }
 
     /**

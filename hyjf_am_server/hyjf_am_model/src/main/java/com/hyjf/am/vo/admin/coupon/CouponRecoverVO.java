@@ -7,11 +7,16 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CouponRecoverVO extends BaseVO implements Serializable {
+
+
     private Integer id;
 
-    private String tenderId;
-
+    /**
+     * 项目编号
+     */
     private String borrowNid;
+
+    private String tenderId;
 
     private String transferId;
 
@@ -19,7 +24,12 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Integer receivedFlg;
 
-    private Integer recoverPeriod;
+    /**
+     * 收益领取状态原始值
+     */
+    private String receivedFlgOrigin;
+
+    private String recoverPeriod;
 
     private Integer transferTime;
 
@@ -58,6 +68,57 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+    /**
+     * 优惠券投资编号
+     */
+    private String tenderNid;
+    /**
+     * 优惠券类别
+     */
+    private int couponType;
+    /**
+     * 操作ip
+     */
+    private String addip;
+    /**
+     * 用户优惠券编号
+     */
+    private String couponUserCode;
+    /**
+     * 检索条件 时间开始
+     */
+    private String timeStartSrch;
+
+    /**
+     * 检索条件 时间结束
+     */
+    private String timeEndSrch;
+
+
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+
+    /**
+     * 检索条件 用户id
+     */
+    private String  userId;
+
+    /**
+     * 检索条件 项目编号
+     */
+    private String  bNid;
+    /**
+     * 检索条件 订单id
+     */
+    private String orderId;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -101,11 +162,11 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
         this.receivedFlg = receivedFlg;
     }
 
-    public Integer getRecoverPeriod() {
+    public String getRecoverPeriod() {
         return recoverPeriod;
     }
 
-    public void setRecoverPeriod(Integer recoverPeriod) {
+    public void setRecoverPeriod(String recoverPeriod) {
         this.recoverPeriod = recoverPeriod;
     }
 
@@ -267,5 +328,101 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
+    }
+
+    public String getReceivedFlgOrigin() {
+        return receivedFlgOrigin;
+    }
+
+    public void setReceivedFlgOrigin(String receivedFlgOrigin) {
+        this.receivedFlgOrigin = receivedFlgOrigin;
+    }
+
+    public String getTenderNid() {
+        return tenderNid;
+    }
+
+    public void setTenderNid(String tenderNid) {
+        this.tenderNid = tenderNid;
+    }
+
+    public int getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(int couponType) {
+        this.couponType = couponType;
+    }
+
+    public String getAddip() {
+        return addip;
+    }
+
+    public void setAddip(String addip) {
+        this.addip = addip;
+    }
+
+    public String getCouponUserCode() {
+        return couponUserCode;
+    }
+
+    public void setCouponUserCode(String couponUserCode) {
+        this.couponUserCode = couponUserCode;
+    }
+
+    public String getTimeStartSrch() {
+        return timeStartSrch;
+    }
+
+    public void setTimeStartSrch(String timeStartSrch) {
+        this.timeStartSrch = timeStartSrch;
+    }
+
+    public String getTimeEndSrch() {
+        return timeEndSrch;
+    }
+
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getbNid() {
+        return bNid;
+    }
+
+    public void setbNid(String bNid) {
+        this.bNid = bNid;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

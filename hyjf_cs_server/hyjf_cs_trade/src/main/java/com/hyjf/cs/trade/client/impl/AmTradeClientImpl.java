@@ -15,6 +15,7 @@ import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.BankOpenAccountListResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
@@ -41,6 +42,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -77,6 +79,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.hyjf.am.vo.trade.InvestListCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -2018,8 +2021,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditBgData(CreditTenderBgVO creditTenderBg) {
         String url  = "http://AM-TRADE/am-trade/creditTender/saveCreditBgData";
-        Integer response = restTemplate.postForEntity(url,creditTenderBg,Integer.class).getBody();
-        return response;
+        IntegerResponse response = restTemplate.postForEntity(url,creditTenderBg,IntegerResponse.class).getBody();
+        if(IntegerResponse.isSuccess(response)){
+            return 1;
+        }
+        return 0;
     }
 
     @Override
@@ -2926,7 +2932,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer insertCredit(BorrowCreditVO borrowCredit) {
         String url = "http://AM-TRADE/am-trade/creditTender/save_credit_tender";
-        return restTemplate.postForEntity(url, borrowCredit, Integer.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, borrowCredit, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return null;
     }
 
     /**
@@ -4711,6 +4721,36 @@ public class AmTradeClientImpl implements AmTradeClient {
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
             response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询投资记录
+     * @author wenxin
+     * @date 2018/8/27 13:00
+     */
+    @Override
+    public List<InvestListCustomizeVO> searchInvestListNew(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/investList/api/getInvestList";
+        ApiInvestResponse response = restTemplate.postForEntity(url,params,ApiInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 獲取銀行開戶信息(根据投资信息查询)
+     * @author wenxin
+     * @date 2018/8/27 13:00
+     */
+    @Override
+    public List<BankOpenAccountVO> sarchInvestOfBankOpenAccount(List<Integer> userId) {
+        //BankOpenAccountListResponse response = restTemplate.getForEntity("http://AM-USER/am-user/bankopen/selectByListId/" + userId, BankOpenAccountListResponse.class).getBody();
+        BankOpenAccountListResponse response = restTemplate.postForEntity("http://AM-USER/am-user/bankopen/selectByListId/",userId,BankOpenAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
@@ -1133,4 +1134,34 @@ public interface AmUserClient {
      * @return
      */
     List<SpreadsUserVO> selectSpreadsUserBySpreadUserId(int userId);
+
+    /**
+     * 校验手机号
+     * @param mobile
+     * @return
+     * @auth nxl
+     */
+    int countByMobile(String mobile);
+
+    /**
+     * 着落页配置查询
+     * @param form
+     * @return
+     * @auth
+     */
+    WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form);
+
+    /**
+     * 检查渠道
+     *
+     *
+     */
+    public StringResponse checkUtmId(Integer utmId);
+
+    /**
+     * 检查渠道
+     *
+     *
+     */
+    public StringResponse checkReferrer(String referrer);
 }
