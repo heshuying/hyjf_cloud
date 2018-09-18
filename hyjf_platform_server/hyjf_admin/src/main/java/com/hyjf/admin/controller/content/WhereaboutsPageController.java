@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -16,12 +17,12 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -149,11 +150,9 @@ public class WhereaboutsPageController extends BaseController {
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
 	@PostMapping("/uploadFile")
 	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String files = whereaboutsPageService.uploadFile(request, response);
-		if (StringUtils.isNotBlank(files)) {
-			return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-		} else {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+        AdminResult adminResult = new AdminResult();
+        LinkedList<BorrowCommonImage> borrowCommonImages = whereaboutsPageService.uploadFile(request, response);
+        adminResult.setData(borrowCommonImages);
+        return adminResult;
 	}
 }
