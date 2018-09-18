@@ -74,10 +74,10 @@ public class FddCertificateConsumer extends Consumer {
                     fddCertificateAuthorityVO = JSONObject.parseObject(msgBody, FddCertificateAuthorityVO.class);
                     if (fddCertificateAuthorityVO == null || fddCertificateAuthorityVO.getUserId() == null || fddCertificateAuthorityVO.getUserId() == 0) {
                        logger.info("解析为空：" + msgBody);
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
                 } catch (Exception e) {
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
                 logger.info("法大大CA认证逻辑处理开始,用户ID:[" + fddCertificateAuthorityVO.getUserId() + "].");
@@ -88,12 +88,12 @@ public class FddCertificateConsumer extends Consumer {
                     User user = fddCertificateService.findUserByUserId(userId);
                     if (user == null) {
                         logger.info("根据用户ID获取用户信息失败,用户ID:[" + userId + "].");
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
                     UserInfo userInfo = fddCertificateService.findUsersInfo(userId);
                     if (userInfo == null) {
                         logger.info("根据用户ID获取用户详情信息失败,用户ID:[" + userId + "].");
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
                     // 调用法大大CA认证接口
                    fddCertificateService.updateUserCAInfo(userId,user,userInfo);
