@@ -526,8 +526,8 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @PostMapping(value = "/serchCompanyInfo")
     @ApiOperation(value = "查询企业开户信息", notes = "查询企业开户信息")
-    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(HttpServletRequest request,@RequestBody String accountId) {
-        String userId = getUser(request).getId();
+    public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(@RequestParam(value = "userId") String userId,@RequestParam(value = "accountId") String accountId) {
+//        String userId = getUser(request).getId();
         SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
         if (StringUtils.isBlank(userId)) {
             return new AdminResult<>(FAIL, "请先选择用户再进行操作!");
