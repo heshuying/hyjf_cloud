@@ -3979,6 +3979,18 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 删除配置信息
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    public PushMoneyResponse deleteRecord(List<Integer> ids) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/delete_record/", ids,
+                PushMoneyResponse.class);
+    }
+
+    /**
      * 查询列表
      *
      * @param adminRequest
@@ -4746,8 +4758,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public PushMoneyResponse getRecordList() {
-        return restTemplate.getForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", PushMoneyResponse.class);
+    public PushMoneyResponse getRecordList(PushMoneyRequest requestBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", requestBean, PushMoneyResponse.class);
     }
 
     @Override
@@ -6245,6 +6257,18 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 画面迁移(含有id更新，不含有id添加)
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public PushMoneyResponse getInfoAction(Integer id) {
+        return restTemplate.getForObject("http://AM-TRADE/am-trade/pushmoney/get_info_action/" + id,
+                PushMoneyResponse.class);
     }
 
     /**
