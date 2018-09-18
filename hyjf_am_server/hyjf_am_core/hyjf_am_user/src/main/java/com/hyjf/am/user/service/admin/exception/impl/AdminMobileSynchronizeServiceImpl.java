@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.exception.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.user.dao.mapper.customize.MobileSynchronizeCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserCustomizeMapper;
@@ -23,6 +24,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,8 @@ import java.util.List;
  */
 @Service
 public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implements AdminMobileSynchronizeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminMobileSynchronizeServiceImpl.class);
 
     @Autowired
     private MobileSynchronizeCustomizeMapper mobileSynchronizeCustomizeMapper;
@@ -79,7 +84,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
 
         String userId = request.getUserId();
         String accountId = request.getAccountId();
-
+        logger.info("开始同步手机号--------->>>>>>>>>userId:[{}],accountId:[{}]",userId,accountId);
         // 根据用户ID查询用户当前手机号
         User user = userMapper.selectByPrimaryKey(Integer.parseInt(userId));
         if (user == null) {
@@ -113,6 +118,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
         bean.setLogRemark("电子账户手机号查询");
         try {
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            logger.info("同步手机号-------->>>>>>银行返回信息:::::::::【{}】", JSON.toJSONString(resultBean));
             if (Validator.isNotNull(resultBean)) {
                 String retCode = StringUtils.isNotBlank(resultBean.getRetCode()) ? resultBean.getRetCode() : "";
                 // 如果返回是成功
@@ -123,6 +129,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                     if (!bankMobile.equals(mobile)) {
                         user.setMobile(bankMobile);
                         boolean isMobileUpdateFlag = this.usersMapper.updateByPrimaryKeySelective(user) > 0;
+                        logger.info("user表是否更新成功:[{}]",isMobileUpdateFlag);
                         if (!isMobileUpdateFlag) {
                             throw new Exception("更新用户手机号失败,用户ID:" + userId);
                         }
@@ -172,6 +179,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                             changeLog.setRemark("江西银行手机号同步");
                             changeLog.setUpdateTime(GetDate.getNowTime());
                             boolean isUsersChangeLogFlag = usersChangeLogMapper.insertSelective(changeLog) > 0;
+                            logger.info("user表是否更新成功:[{}]",isUsersChangeLogFlag);
                             if (!isUsersChangeLogFlag) {
                                 throw new Exception("插入修改日志失败");
                             }
