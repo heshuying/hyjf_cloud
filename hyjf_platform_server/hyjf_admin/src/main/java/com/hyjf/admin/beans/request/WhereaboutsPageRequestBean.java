@@ -94,6 +94,13 @@ public class WhereaboutsPageRequestBean extends BaseRequest {
     /**
      * 图片
      */
+    private String imageJson2;
+
+    /**
+     * 图片
+     */
+    private String imageJson3;
+
     private String topButton;
 
 
@@ -332,5 +339,21 @@ public class WhereaboutsPageRequestBean extends BaseRequest {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getImageJson2() {
+        return imageJson2;
+    }
+
+    public void setImageJson2(String imageJson2) {
+        this.imageJson2 = imageJson2;
+    }
+
+    public String getImageJson3() {
+        return imageJson3;
+    }
+
+    public void setImageJson3(String imageJson3) {
+        this.imageJson3 = imageJson3;
     }
 }
