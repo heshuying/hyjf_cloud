@@ -67,6 +67,7 @@ public class MobileSynchronizeController extends BaseController {
     public MobileSynchronizeResponse updateMobile(@RequestBody MobileSynchronizeRequest request) throws Exception {
         MobileSynchronizeResponse response = new MobileSynchronizeResponse();
         boolean update = adminMobileSynchronizeService.updateMobile(request);
+        logger.info("同步手机号是否成功:[{}]",update);
         response.setUpdate(update);
         response.setRtn(Response.SUCCESS);
         return response;
