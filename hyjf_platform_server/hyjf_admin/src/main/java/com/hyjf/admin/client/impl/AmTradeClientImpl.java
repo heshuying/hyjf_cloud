@@ -4746,8 +4746,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public PushMoneyResponse getRecordList() {
-        return restTemplate.getForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", PushMoneyResponse.class);
+    public PushMoneyResponse getRecordList(PushMoneyRequest requestBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", requestBean, PushMoneyResponse.class);
     }
 
     @Override

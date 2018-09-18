@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.PushMoneyVO;
@@ -408,7 +407,7 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	/**
 	 * 列表画面自定义标签上的用翻页对象：paginator
 	 */
-	private com.hyjf.common.paginator.Paginator paginator;
+	private Paginator paginator;
 
 	public int getPaginatorPage() {
 		if (paginatorPage == 0) {
@@ -420,4 +419,5 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
+
 }

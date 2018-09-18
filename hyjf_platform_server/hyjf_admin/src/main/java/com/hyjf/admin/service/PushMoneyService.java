@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.am.response.trade.PushMoneyResponse;
+import com.hyjf.am.resquest.admin.PushMoneyRequest;
 
 /**
  * @author fuqiang
@@ -16,7 +17,7 @@ public interface PushMoneyService {
 	 *
 	 * @return
 	 */
-	PushMoneyResponse getRecordList();
+	PushMoneyResponse getRecordList(PushMoneyRequest requestBean);
 
 	/**
 	 * 添加提成配置
