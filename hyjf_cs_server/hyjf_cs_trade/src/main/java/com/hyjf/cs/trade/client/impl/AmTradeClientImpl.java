@@ -2021,8 +2021,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer saveCreditBgData(CreditTenderBgVO creditTenderBg) {
         String url  = "http://AM-TRADE/am-trade/creditTender/saveCreditBgData";
-        Integer response = restTemplate.postForEntity(url,creditTenderBg,Integer.class).getBody();
-        return response;
+        IntegerResponse response = restTemplate.postForEntity(url,creditTenderBg,IntegerResponse.class).getBody();
+        if(IntegerResponse.isSuccess(response)){
+            return 1;
+        }
+        return 0;
     }
 
     @Override
