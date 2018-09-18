@@ -1414,7 +1414,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	 * @param request
 	 */
 	@Override
-	public void saveCreditBgData(CreditTenderBgVO request) {
+	public void insertCreditBgData(CreditTenderBgVO request) {
 		// 删除tmp表
 		logger.info("债转异步处理  删除tmp表{}",JSONObject.toJSONString(request));
 		deleteByOrderIdAndUserId(request.getCreditTenderLog().getLogOrderId(),request.getCreditTenderLog().getUserId());

@@ -1141,4 +1141,12 @@ public interface AmUserClient {
      * @auth nxl
      */
     int countByMobile(String mobile);
+
+    /**
+     * 着落页配置查询
+     * @param form
+     * @return
+     * @auth
+     */
+    WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form);
 }

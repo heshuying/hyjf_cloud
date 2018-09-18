@@ -35,7 +35,7 @@ public class WhereaboutsPageRequestBean extends BaseRequest {
     //样式：通用模板/大转盘
     @ApiModelProperty(value = "选择样式：通用模板/大转盘")
     private Integer style;
-
+    private String domain;
     //地址
     @ApiModelProperty(value = "地址")
     private String jumpPath;
@@ -355,5 +355,13 @@ public class WhereaboutsPageRequestBean extends BaseRequest {
 
     public void setImageJson3(String imageJson3) {
         this.imageJson3 = imageJson3;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 }

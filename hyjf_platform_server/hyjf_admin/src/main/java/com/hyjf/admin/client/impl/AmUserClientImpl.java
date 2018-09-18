@@ -1335,7 +1335,12 @@ public class AmUserClientImpl implements AmUserClient {
 		return  amUserResponse;
 
 	}
-
+	@Override
+	public WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/getwhereaboutspageconfig",
+				form, WhereaboutsPageResponse.class);
+		return  amUserResponse;
+	}
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",
