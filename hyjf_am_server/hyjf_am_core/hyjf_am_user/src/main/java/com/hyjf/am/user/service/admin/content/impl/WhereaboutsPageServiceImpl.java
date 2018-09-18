@@ -246,14 +246,14 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		StringResponse response = new StringResponse();
 		JSONObject ret = new JSONObject();
 		if(utmId==null || "".equals(utmId)){
-			ret.put("info", "渠道不能为空");
+			ret.put("success", "渠道不能为空");
 			response.setResult(ret);
 			return response;
 		}
 		Pattern pattern = Pattern.compile("[0-9]+");
 		Matcher matcher = pattern.matcher((CharSequence) String.valueOf(utmId));
 		if(!matcher.matches()){
-			ret.put("info", "请输入正确的渠道格式");
+			ret.put("success", "请输入正确的渠道格式");
 			response.setResult(ret);
 			return response;
 		}
@@ -263,7 +263,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 			response.setResult(ret);
 			return response;
 		}
-		ret.put("info", "渠道不存在");
+		ret.put("success", "渠道不存在");
 		response.setResult(ret);
 		return response;
 	}
@@ -273,7 +273,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		StringResponse response = new StringResponse();
 		JSONObject ret = new JSONObject();
 		if(StringUtils.isBlank(referrer)){
-			ret.put("info", "推荐人不能为空");
+			ret.put("success", "推荐人不能为空");
 			response.setResult(ret);
 			return response;
 		}
@@ -285,7 +285,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 			response.setResult(ret);
 			return response;
 		}
-		ret.put("info", "推荐人不存在");
+		ret.put("success", "推荐人不存在");
 		response.setResult(ret);
 		return response;
 	}
