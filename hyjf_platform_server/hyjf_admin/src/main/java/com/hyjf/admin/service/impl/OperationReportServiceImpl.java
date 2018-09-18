@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.OperationReportService;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -100,9 +98,8 @@ public class OperationReportServiceImpl implements OperationReportService {
 		return csMessageClient.halfPreview(request);
 	}
 	@Override
-	public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+	public LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response) {
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
 		String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
 		String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
@@ -151,6 +148,6 @@ public class OperationReportServiceImpl implements OperationReportService {
 			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
 			files.add(fileMeta);
 		}
-		return JSONObject.toJSONString(files, true);
+		return files;
 	}
 }

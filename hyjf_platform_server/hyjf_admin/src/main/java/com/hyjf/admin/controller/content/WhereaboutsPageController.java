@@ -148,7 +148,7 @@ public class WhereaboutsPageController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
-	@PostMapping("/uploadFile")
+	@PostMapping("/uploadfile")
 	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AdminResult adminResult = new AdminResult();
         LinkedList<BorrowCommonImage> borrowCommonImages = whereaboutsPageService.uploadFile(request, response);
