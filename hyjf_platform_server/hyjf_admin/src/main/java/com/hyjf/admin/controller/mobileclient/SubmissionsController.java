@@ -5,10 +5,15 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -84,6 +89,17 @@ public class SubmissionsController extends BaseController {
 
     }
 
+
+    @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
+    @PostMapping(value = "/searchinfo")
+    @ResponseBody
+    public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
+        try {
+            return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
+        }catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+    }
     /**
      * 意见反馈更新保存
      *

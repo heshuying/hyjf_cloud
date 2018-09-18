@@ -60,7 +60,24 @@ public class AppConfigController {
         appBannerResponse.setRecordTotal(count);
         return appBannerResponse;
     }
-
+    /**
+     * 根据id查询广告
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/getRecordById")
+    public AppBannerResponse getRecordById(@RequestBody AppBannerRequest request) {
+        AppBannerResponse appBannerResponse = new AppBannerResponse();
+        Ads ads = appConfigService.getRecordById(request.getId());
+        AdsVO adsVO = CommonUtils.convertBean(ads, AdsVO.class);
+        List<AdsType> adsTypeList = appConfigService.getAdsTypeList();
+        List<AdsTypeVO> adsTypeVOS = CommonUtils.convertBeanList(adsTypeList, AdsTypeVO.class);
+        List<AdsTypeVO> adsType = getAdsType(request.getPlatformType(), adsTypeVOS);
+        appBannerResponse.setAdsTypeList(adsType);
+        appBannerResponse.setResult(adsVO);
+        return appBannerResponse;
+    }
     /**
      * 插入广告列表
      *

@@ -3,6 +3,7 @@ package com.hyjf.admin.service.mobileclient;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.vo.config.SubmissionsVO;
 
 /**
  * @author lisheng
@@ -19,4 +20,6 @@ public interface SubmissionsService {
     SubmissionsResponse updateSubmissionStatus(SubmissionsRequest form);
 
     SubmissionsResponse getExportSubmissionList(SubmissionsRequest form);
+
+    SubmissionsVO getRecord(SubmissionsRequest request);
 }
