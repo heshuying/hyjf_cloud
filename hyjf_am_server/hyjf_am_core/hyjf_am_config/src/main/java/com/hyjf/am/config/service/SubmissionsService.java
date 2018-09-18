@@ -46,4 +46,10 @@ public interface SubmissionsService {
      int addSubmission(Submissions submissions);
 
 
+    /**
+     * 查询版本管理信息
+     * @param id
+     * @return
+     */
+    Submissions queryRecordById(Integer id);
 }

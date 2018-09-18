@@ -28,6 +28,11 @@ public class AppBannerServiceImpl  implements AppBannerService {
     }
 
     @Override
+    public AppBannerResponse getRecordById(AppBannerRequest request) {
+        return amMarketClient.getRecordById(request);
+    }
+
+    @Override
     public AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo) {
         return amMarketClient.insertAppBannerList(adsWithBLOBsVo);
     }

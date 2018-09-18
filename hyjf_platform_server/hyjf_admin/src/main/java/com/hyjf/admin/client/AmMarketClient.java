@@ -59,15 +59,15 @@ public interface AmMarketClient {
      */
     ActivityListResponse deleteActivity(ActivityListRequest request);
 
-    public AppBannerResponse findAppBannerList(AppBannerRequest request);
+     AppBannerResponse findAppBannerList(AppBannerRequest request);
 
-    public AppBannerResponse insertAppBannerList(AdsWithBLOBsVO ads);
+     AppBannerResponse insertAppBannerList(AdsWithBLOBsVO ads);
 
-    public AppBannerResponse updateAppBannerList(AdsWithBLOBsVO ads);
+     AppBannerResponse updateAppBannerList(AdsWithBLOBsVO ads);
 
-    public AppBannerResponse updateAppBannerStatus(AdsWithBLOBsVO ads);
+     AppBannerResponse updateAppBannerStatus(AdsWithBLOBsVO ads);
 
-    public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO ads);
+     AppBannerResponse deleteAppBanner(AdsWithBLOBsVO ads);
 
     ContentAdsResponse searchAction(ContentAdsRequest request);
 
@@ -147,4 +147,11 @@ public interface AmMarketClient {
      * @return
      */
     MessagePushTagResponse getTagList();
+
+    /**
+     * 根据id获取广告
+     * @param request
+     * @return
+     */
+    AppBannerResponse getRecordById(AppBannerRequest request);
 }
