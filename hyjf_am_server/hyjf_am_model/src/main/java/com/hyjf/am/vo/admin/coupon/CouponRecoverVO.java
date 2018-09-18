@@ -337,4 +337,92 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
     public void setReceivedFlgOrigin(String receivedFlgOrigin) {
         this.receivedFlgOrigin = receivedFlgOrigin;
     }
+
+    public String getTenderNid() {
+        return tenderNid;
+    }
+
+    public void setTenderNid(String tenderNid) {
+        this.tenderNid = tenderNid;
+    }
+
+    public int getCouponType() {
+        return couponType;
+    }
+
+    public void setCouponType(int couponType) {
+        this.couponType = couponType;
+    }
+
+    public String getAddip() {
+        return addip;
+    }
+
+    public void setAddip(String addip) {
+        this.addip = addip;
+    }
+
+    public String getCouponUserCode() {
+        return couponUserCode;
+    }
+
+    public void setCouponUserCode(String couponUserCode) {
+        this.couponUserCode = couponUserCode;
+    }
+
+    public String getTimeStartSrch() {
+        return timeStartSrch;
+    }
+
+    public void setTimeStartSrch(String timeStartSrch) {
+        this.timeStartSrch = timeStartSrch;
+    }
+
+    public String getTimeEndSrch() {
+        return timeEndSrch;
+    }
+
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getbNid() {
+        return bNid;
+    }
+
+    public void setbNid(String bNid) {
+        this.bNid = bNid;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 }
