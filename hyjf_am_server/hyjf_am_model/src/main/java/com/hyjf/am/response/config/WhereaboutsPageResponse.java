@@ -4,7 +4,7 @@
 package com.hyjf.am.response.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.config.LandingPageVo;
+import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 
 /**
@@ -13,7 +13,7 @@ import com.hyjf.am.vo.config.WhereaboutsPageVo;
  */
 public class WhereaboutsPageResponse extends Response<WhereaboutsPageVo> {
     private int count;
-
+    private WhereaboutsPageRequest form;
     public int getCount() {
         return count;
     }
@@ -21,4 +21,13 @@ public class WhereaboutsPageResponse extends Response<WhereaboutsPageVo> {
     public void setCount(int count) {
         this.count = count;
     }
+
+    public WhereaboutsPageRequest getForm() {
+        return form;
+    }
+
+    public void setForm(WhereaboutsPageRequest form) {
+        this.form = form;
+    }
+
 }

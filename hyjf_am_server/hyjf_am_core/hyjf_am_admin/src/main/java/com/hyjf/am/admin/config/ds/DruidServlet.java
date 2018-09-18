@@ -1,4 +1,4 @@
-package com.hyjf.am.config.config.ds;
+package com.hyjf.am.admin.config.ds;
 
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.content;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -10,6 +11,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author tanyy
@@ -92,6 +95,28 @@ public class WhereaboutsPageController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>();
+	}
+
+	/**
+	 * 迁移到更新画面
+	 *
+	 * @param
+	 * @param
+	 * @return
+	 */
+	@ApiOperation(value = "移动端着陆页修改获取信息", notes = "移动端着陆页修改获取信息")
+	@PostMapping("/updateinfoaction")
+	public AdminResult updateInfoAction(@RequestBody WhereaboutsPageRequestBean requestBean) {
+		//样式
+		AdminResult adminResult = new  AdminResult();
+		JSONObject jsonObject = new JSONObject();
+		List<ParamNameVO> pageStyles = this.whereaboutsPageService.getParamNameList("WHEREABOUTS_STYLE");
+		jsonObject.put("pageStyles",pageStyles);
+		if(requestBean.getId()!=null&&requestBean.getId()!=0){
+			WhereaboutsPageResponse response = 	whereaboutsPageService.getWhereaboutsPageConfigById(requestBean);
+			adminResult.setData(response.getForm());
+		}
+		return adminResult;
 	}
 
 	/**
