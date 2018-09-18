@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
@@ -29,7 +30,7 @@ import java.util.LinkedList;
  * @version WhereaboutsPageServiceImpl, v0.1 2018/7/16 14:14
  */
 @Service
-public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
+public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements WhereaboutsPageService {
 	@Autowired
 	private AmUserClient amUserClient;
 
@@ -172,4 +173,12 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 		}
 		return JSONObject.toJSONString(files, true);
 	}
+	@Override
+	public 	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
+		form.setDomain(UploadFileUtils.getDoPath(FILEDOMAILURL));
+		WhereaboutsPageResponse response = amUserClient.getWhereaboutsPageConfigById(form);
+		return response;
+
+	}
+
 }

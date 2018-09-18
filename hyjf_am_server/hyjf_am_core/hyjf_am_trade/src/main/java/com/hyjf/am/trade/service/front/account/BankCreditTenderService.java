@@ -130,7 +130,7 @@ public interface BankCreditTenderService {
      * 保存债转异步数据
      * @param request
      */
-    void saveCreditBgData(CreditTenderBgVO request);
+    void insertCreditBgData(CreditTenderBgVO request);
 
     /**
      * 修改债转结果

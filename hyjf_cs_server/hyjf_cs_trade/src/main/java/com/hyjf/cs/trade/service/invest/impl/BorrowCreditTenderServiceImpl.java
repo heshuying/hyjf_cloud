@@ -513,8 +513,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setAssignCapital(creditTenderLog.getAssignCapital());
                 // 用户名称
                 creditTender.setUserId(userId);
+                // 用户名
+                creditTender.setUserName(creditTenderLog.getUserName());
                 // 出让人id
                 creditTender.setCreditUserId(sellerUserId);
+                creditTender.setCreditUserName(creditTenderLog.getCreditUserName());
+                creditTender.setBorrowUserId(creditTenderLog.getBorrowUserId());
+                creditTender.setBorrowUserName(creditTenderLog.getBorrowUserName());
                 // 状态
                 creditTender.setStatus(0);
                 // 原标标号
@@ -797,6 +802,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         creditRepay.setManageFee(perManage);
                         // 授权码
                         creditRepay.setAuthCode(authCode);
+                        creditRepay.setUserName(creditTenderLog.getUserName());
+                        creditRepay.setCreditUserName(creditTender.getCreditUserName());
                         creditTenderBg.setCreditRepayVO(creditRepay);
                         // 插入
                     } else {
@@ -969,14 +976,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     creditTenderBg.setCreditTenderLog(creditTenderLog);
                     creditTenderBg.setBorrowRecover(borrowRecover);
                     creditTenderBg.setSellerBankAccount(sellerBankAccount);
-                    logger.info("保存债转主数据 assignAccountList {}" , JSONObject.toJSONString(assignAccountList));
-                    logger.info("保存债转主数据 assignAccountNew {}" , JSONObject.toJSONString(assignAccountNew));
-                    logger.info("保存债转主数据 borrowCredit {}" , JSONObject.toJSONString(borrowCredit));
-                    logger.info("保存债转主数据 sellerAccountList {}" , JSONObject.toJSONString(sellerAccountList));
-                    logger.info("保存债转主数据 sellerAccountNew {}" , JSONObject.toJSONString(sellerAccountNew));
-                    logger.info("保存债转主数据 creditTenderLog {}" , JSONObject.toJSONString(creditTenderLog));
-                    logger.info("保存债转主数据 borrowRecover {}" , JSONObject.toJSONString(borrowRecover));
-                    logger.info("保存债转主数据 sellerBankAccount {}" , JSONObject.toJSONString(sellerBankAccount));
                     // 保存债转主数据
                     logger.info("保存债转主数据  {}" , JSONObject.toJSONString(creditTenderBg));
                     this.amTradeClient.saveCreditBgData(creditTenderBg);
