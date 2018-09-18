@@ -10,6 +10,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.WhereaboutsPageService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,5 +181,12 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		return response;
 
 	}
-
+    @Override
+    public StringResponse checkUtmId(Integer utmId){
+        return amUserClient.checkUtmId(utmId);
+    }
+    @Override
+    public StringResponse checkReferrer(String referrer){
+        return amUserClient.checkReferrer(referrer);
+    }
 }

@@ -10,6 +10,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
@@ -96,6 +97,25 @@ public class WhereaboutsPageController extends BaseController {
 		}
 		return new AdminResult<>();
 	}
+
+
+    @ApiOperation(value = "检查渠道", notes = "检查渠道")
+    @GetMapping("/checkutmid/{utmId}")
+    public AdminResult checkUtmId(@PathVariable Integer utmId) {
+        AdminResult adminResult = new AdminResult();
+        StringResponse msg = this.whereaboutsPageService.checkUtmId(utmId);
+        adminResult.setData(msg.getResult());
+        return adminResult;
+    }
+
+    @ApiOperation(value = "检查推广人", notes = "检查推广人")
+    @GetMapping("/checkreferrer/{referrer}")
+    public AdminResult checkReferrer(@PathVariable String referrer) {
+        AdminResult adminResult = new AdminResult();
+        StringResponse msg = this.whereaboutsPageService.checkReferrer(referrer);
+        adminResult.setData(msg.getResult());
+        return adminResult;
+    }
 
 	/**
 	 * 迁移到更新画面

@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,4 +68,17 @@ public interface WhereaboutsPageService extends BaseService{
 	 */
 	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form);
 
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkUtmId(Integer utmId);
+
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkReferrer(String referrer);
 }
