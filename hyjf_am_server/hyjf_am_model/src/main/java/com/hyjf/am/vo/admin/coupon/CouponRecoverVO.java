@@ -11,6 +11,8 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private String tenderId;
 
+    private String borrowNid;
+
     private String transferId;
 
     private Integer recoverStatus;
@@ -257,5 +259,13 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }
