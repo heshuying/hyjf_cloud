@@ -976,14 +976,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     creditTenderBg.setCreditTenderLog(creditTenderLog);
                     creditTenderBg.setBorrowRecover(borrowRecover);
                     creditTenderBg.setSellerBankAccount(sellerBankAccount);
-                    logger.info("保存债转主数据 assignAccountList {}" , JSONObject.toJSONString(assignAccountList));
-                    logger.info("保存债转主数据 assignAccountNew {}" , JSONObject.toJSONString(assignAccountNew));
-                    logger.info("保存债转主数据 borrowCredit {}" , JSONObject.toJSONString(borrowCredit));
-                    logger.info("保存债转主数据 sellerAccountList {}" , JSONObject.toJSONString(sellerAccountList));
-                    logger.info("保存债转主数据 sellerAccountNew {}" , JSONObject.toJSONString(sellerAccountNew));
-                    logger.info("保存债转主数据 creditTenderLog {}" , JSONObject.toJSONString(creditTenderLog));
-                    logger.info("保存债转主数据 borrowRecover {}" , JSONObject.toJSONString(borrowRecover));
-                    logger.info("保存债转主数据 sellerBankAccount {}" , JSONObject.toJSONString(sellerBankAccount));
                     // 保存债转主数据
                     logger.info("保存债转主数据  {}" , JSONObject.toJSONString(creditTenderBg));
                     this.amTradeClient.saveCreditBgData(creditTenderBg);
