@@ -263,7 +263,7 @@ public class CreditTenderController extends BaseController {
     public IntegerResponse saveCreditBgData(@RequestBody @Valid CreditTenderBgVO request){
         IntegerResponse response = new IntegerResponse();
         try{
-            bankCreditTenderService.saveCreditBgData(request);
+            bankCreditTenderService.insertCreditBgData(request);
             response.setResultInt(1);
         }catch (Exception e){
             e.printStackTrace();

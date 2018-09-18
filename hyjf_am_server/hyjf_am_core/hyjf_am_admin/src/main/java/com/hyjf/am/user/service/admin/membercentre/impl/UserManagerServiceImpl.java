@@ -376,7 +376,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if (null!=userRecommends && userRecommends.size()==1) {
             logger.info("===============userRecommends size:"+userRecommends.size());
             User user = userRecommends.get(0);
-            logger.info("===============userId:"+userId+"recommendUserId"+user.getUserId()+" ====================");
+            logger.info("===============userId:"+userId+"&&recommendUserId"+user.getUserId()+" ====================");
             if (user.getUserId() == userId) {
                 return 2;
             } else {
