@@ -47,4 +47,11 @@ public interface PushMoneyService {
 	 * @return
 	 */
 	PushMoney getRecordById(Integer id);
+
+	/**
+	 * 修改校验
+	 *
+	 * @return
+	 */
+	void deleteRecord(List<Integer> ids);
 }
