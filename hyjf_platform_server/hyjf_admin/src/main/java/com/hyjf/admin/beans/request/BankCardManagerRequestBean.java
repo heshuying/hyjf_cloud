@@ -18,7 +18,7 @@ public class BankCardManagerRequestBean  extends BaseRequest implements Serializ
 	private String account;
 	@ApiModelProperty(value = "银行卡属性")
 	private String cardProperty;
-	@ApiModelProperty(value = "是否默认")
+	@ApiModelProperty(value = "是否默认 0:是,1:否")
 	private String cardType;
 	@ApiModelProperty(value = "添加时间/绑卡时间开始")
 	private String addTimeStart;
