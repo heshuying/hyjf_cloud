@@ -62,4 +62,12 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 		}
 		return pushMonies.get(0);
 	}
+
+	@Override
+	public void deleteRecord (List<Integer> ids) {
+		for (Integer id : ids) {
+			pushMoneyMapper.deleteByPrimaryKey(id);
+		}
+	}
+
 }

@@ -55,4 +55,6 @@ public interface WhereaboutsPageService extends BaseService{
      * @param id
      */
     void deleteById(Integer id);
+
+	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequest form);
 }

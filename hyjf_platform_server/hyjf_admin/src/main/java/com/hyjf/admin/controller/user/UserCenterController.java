@@ -579,7 +579,7 @@ public class UserCenterController extends BaseController {
      * 获取部门信息
      * @return
      */
-    /*@ResponseBody
+    @ResponseBody
     @PostMapping(value = "/getDepartmentList")
     @ApiOperation(value = "获取部门信息", notes = "获取部门信息")
     public JSONObject getCrmDepartmentListAction() {
@@ -587,13 +587,13 @@ public class UserCenterController extends BaseController {
         // 部门
         String[] list = new String[] {};
         //ids 刷新时可用,暂不删除 保留
-        *//*if (Validator.isNotNull(deptIds)) {
+        /*if (Validator.isNotNull(deptIds)) {
             if (deptIds.contains(StringPool.COMMA)) {
                 list = deptIds.split(StringPool.COMMA);
             } else {
                 list = new String[] { deptIds};
             }
-        }*//*
+        }*/
         JSONArray ja = smsCountService.getCrmDepartmentList(list);
         if (ja != null) {
             //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
@@ -611,7 +611,7 @@ public class UserCenterController extends BaseController {
             return ret;
         }
         return jsonObject;
-    }*/
+    }
 
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
