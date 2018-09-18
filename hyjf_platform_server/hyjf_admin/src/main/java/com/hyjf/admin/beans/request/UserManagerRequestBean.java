@@ -47,7 +47,7 @@ public class UserManagerRequestBean extends BasePage {
     public String userStatus;
     // 部门
     @ApiModelProperty(value = "部门")
-    public String combotreeListSrch;
+    public String[]  combotreeListSrch;
     // 客户编号
     @ApiModelProperty(value = "客户编号")
     public String customerId;
@@ -144,11 +144,11 @@ public class UserManagerRequestBean extends BasePage {
         this.userStatus = userStatus;
     }
 
-    public String getCombotreeListSrch() {
+    public String[] getCombotreeListSrch() {
         return combotreeListSrch;
     }
 
-    public void setCombotreeListSrch(String combotreeListSrch) {
+    public void setCombotreeListSrch(String[] combotreeListSrch) {
         this.combotreeListSrch = combotreeListSrch;
     }
 
