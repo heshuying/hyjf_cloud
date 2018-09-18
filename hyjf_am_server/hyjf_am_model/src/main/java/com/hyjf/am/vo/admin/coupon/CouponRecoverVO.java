@@ -7,7 +7,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CouponRecoverVO extends BaseVO implements Serializable {
+
+
     private Integer id;
+
+    /**
+     * 项目编号
+     */
+    private String borrowNid;
 
     private String tenderId;
 
@@ -17,7 +24,12 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Integer receivedFlg;
 
-    private Integer recoverPeriod;
+    /**
+     * 收益领取状态原始值
+     */
+    private String receivedFlgOrigin;
+
+    private String recoverPeriod;
 
     private Integer transferTime;
 
@@ -56,6 +68,57 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+    /**
+     * 优惠券投资编号
+     */
+    private String tenderNid;
+    /**
+     * 优惠券类别
+     */
+    private int couponType;
+    /**
+     * 操作ip
+     */
+    private String addip;
+    /**
+     * 用户优惠券编号
+     */
+    private String couponUserCode;
+    /**
+     * 检索条件 时间开始
+     */
+    private String timeStartSrch;
+
+    /**
+     * 检索条件 时间结束
+     */
+    private String timeEndSrch;
+
+
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+
+    /**
+     * 检索条件 用户id
+     */
+    private String  userId;
+
+    /**
+     * 检索条件 项目编号
+     */
+    private String  bNid;
+    /**
+     * 检索条件 订单id
+     */
+    private String orderId;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -99,11 +162,11 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
         this.receivedFlg = receivedFlg;
     }
 
-    public Integer getRecoverPeriod() {
+    public String getRecoverPeriod() {
         return recoverPeriod;
     }
 
-    public void setRecoverPeriod(Integer recoverPeriod) {
+    public void setRecoverPeriod(String recoverPeriod) {
         this.recoverPeriod = recoverPeriod;
     }
 
@@ -257,5 +320,21 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getReceivedFlgOrigin() {
+        return receivedFlgOrigin;
+    }
+
+    public void setReceivedFlgOrigin(String receivedFlgOrigin) {
+        this.receivedFlgOrigin = receivedFlgOrigin;
     }
 }
