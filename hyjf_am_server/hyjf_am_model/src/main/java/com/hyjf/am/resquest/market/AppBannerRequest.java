@@ -29,6 +29,7 @@ public class AppBannerRequest extends BasePage {
 
     private String endCreate;
 
+    private Integer platformType;
     /*
 
     //创建时间
@@ -118,5 +119,13 @@ public class AppBannerRequest extends BasePage {
 
     public void setEndCreate(String endCreate) {
         this.endCreate = endCreate;
+    }
+
+    public Integer getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(Integer platformType) {
+        this.platformType = platformType;
     }
 }

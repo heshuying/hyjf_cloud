@@ -38,7 +38,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(tags = "admin移动客户端-意见反馈")
+@Api(tags = "移动客户端-意见反馈")
 @RestController
 @RequestMapping("/hyjf-admin/submissions")
 public class SubmissionsController extends BaseController {

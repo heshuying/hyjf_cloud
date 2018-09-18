@@ -111,7 +111,7 @@ public class DataSearchController {
         SmsConfigVO smsConfig = dataSearchService.initSmsConfig().getResult();
         String ip = GetCilentIP.getIpAddr(request);
         String ipCount = RedisUtils.get(ip + ":MaxIpCount");
-        if (ipCount==null||org.apache.commons.lang.StringUtils.isEmpty(ipCount)) {
+        if (StringUtils.isBlank(ipCount)) {
             ipCount = "0";
             RedisUtils.set(ip + ":MaxIpCount", "0");
         }
@@ -125,7 +125,7 @@ public class DataSearchController {
         }
         // 判断最大发送数max_phone_count
         String count = RedisUtils.get(mobile + ":MaxPhoneCount");
-        if (org.apache.commons.lang.StringUtils.isEmpty(count)) {
+        if (StringUtils.isBlank(count)) {
             count = "0";
             RedisUtils.set(mobile + ":MaxPhoneCount", "0");
         }
@@ -138,7 +138,7 @@ public class DataSearchController {
         }
         // 判断发送间隔时间
         String intervalTime = RedisUtils.get(mobile + ":IntervalTime");
-        if (!org.apache.commons.lang.StringUtils.isEmpty(intervalTime)) {
+        if (StringUtils.isNotBlank(intervalTime)) {
             webResult = new WebResult("111", "发送时间间隔太短");
             return webResult;
         }
@@ -163,12 +163,12 @@ public class DataSearchController {
         if (result) {
             // 累计IP次数
             String currentMaxIpCount = RedisUtils.get(ip + ":MaxIpCount");
-            if (org.apache.commons.lang.StringUtils.isEmpty(currentMaxIpCount)) {
+            if (StringUtils.isBlank(currentMaxIpCount)) {
                 currentMaxIpCount = "0";
             }
             // 累加手机次数
             String currentMaxPhoneCount = RedisUtils.get(mobile + ":MaxPhoneCount");
-            if (org.apache.commons.lang.StringUtils.isEmpty(currentMaxPhoneCount)) {
+            if (StringUtils.isBlank(currentMaxPhoneCount)) {
                 currentMaxPhoneCount = "0";
             }
             RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(currentMaxIpCount) + 1) + "", 24 * 60 * 60);

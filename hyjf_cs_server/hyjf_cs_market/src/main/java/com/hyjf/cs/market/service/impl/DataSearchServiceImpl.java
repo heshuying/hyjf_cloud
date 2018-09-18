@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author lisheng
  * @version DataSearchServiceImpl, v0.1 2018/8/21 9:39
@@ -38,6 +40,8 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
+        List<Integer> qianleUser = amUserClient.getQianleUser();
+        dataSearchRequest.setUserIds(qianleUser);
         String type = dataSearchRequest.getType();
         if (StringUtils.equals(type,"1")) {
             dataSearchCustomizeResponse= adminClient.queryQianleList(dataSearchRequest);

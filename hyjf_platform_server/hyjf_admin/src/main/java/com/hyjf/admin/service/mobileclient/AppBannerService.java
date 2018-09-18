@@ -2,10 +2,14 @@ package com.hyjf.admin.service.mobileclient;
 
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -13,14 +17,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public interface AppBannerService {
-    public AppBannerResponse getRecordList(AppBannerRequest request);
+     AppBannerResponse getRecordList(AppBannerRequest request);
 
-    public AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo);
 
-    public AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo);
 
-    public AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo);
 
-    public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo);
+     AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo);
+
 
 }

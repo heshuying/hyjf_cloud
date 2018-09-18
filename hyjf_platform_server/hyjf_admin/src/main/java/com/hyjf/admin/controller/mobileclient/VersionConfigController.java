@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lisheng
  * @version VersionConfigController, v0.1 2018/7/11 11:24
  */
-@Api(tags = "admin移动客户端-版本管理")
+@Api(tags = "移动客户端-版本管理")
 @RestController
 @RequestMapping("/hyjf-admin/config/versionconfig")
 public class VersionConfigController extends BaseController {

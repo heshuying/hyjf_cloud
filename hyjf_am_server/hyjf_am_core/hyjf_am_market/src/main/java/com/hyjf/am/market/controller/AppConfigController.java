@@ -1,17 +1,20 @@
 package com.hyjf.am.market.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.market.config.constant.AdsTypeEnum;
 import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsType;
 import com.hyjf.am.market.service.AppConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.market.AdsTypeVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 import com.hyjf.am.vo.market.AppBannerVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +54,9 @@ public class AppConfigController {
             appBannerResponse.setResultList(appBannerVos);
         }
         List<AdsType> adsTypeList = appConfigService.getAdsTypeList();
+        List<AdsTypeVO> adsTypeVOS = CommonUtils.convertBeanList(adsTypeList, AdsTypeVO.class);
+        List<AdsTypeVO> adsType = getAdsType(request.getPlatformType(), adsTypeVOS);
+        appBannerResponse.setAdsTypeList(adsType);
         appBannerResponse.setRecordTotal(count);
         return appBannerResponse;
     }
@@ -97,7 +104,6 @@ public class AppConfigController {
         return appBannerResponse;
     }
 
-
     /**
      * 修改状态
      *
@@ -128,7 +134,6 @@ public class AppConfigController {
         return appBannerResponse;
     }
 
-
     /**
      * 删除
      * @return
@@ -150,4 +155,82 @@ public class AppConfigController {
         return appBannerResponse;
     }
 
+    /**
+     * 获取广告类型列表
+     * @param platformType
+     * @param adsTypeList
+     * @return
+     */
+    private List<AdsTypeVO> getAdsType(Integer platformType,List<AdsTypeVO> adsTypeList) {
+        // 获取广告类型列表
+        List<AdsTypeVO> returnNewList = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(adsTypeList)){
+            if(platformType.intValue()==1){
+                for(AdsTypeVO type:adsTypeList){
+                    if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
+                        returnNewList.add(type);
+                    }/*else if(AdsTypeEnum.popup.toString().equals(type.getCode())){
+						returnNewList.add(type);
+					}*/else if(AdsTypeEnum.android_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_regist_888.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_open_888.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }
+                }
+            }else if(platformType.intValue()==2){
+                for(AdsTypeVO type:adsTypeList){
+                    if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
+                        returnNewList.add(type);
+                    }/*else if(AdsTypeEnum.popup.toString().equals(type.getCode())){
+						returnNewList.add(type);
+					}*/else if(AdsTypeEnum.ios_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_regist_888.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_open_888.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }
+                }
+            }else if(platformType.intValue()==3){
+                for(AdsTypeVO type:adsTypeList){
+                    if(AdsTypeEnum.startpage.toString().equals(type.getCode())) {
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.weixin.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_regist_888.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.wechat_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }
+                }
+            }
+        }
+        return returnNewList;
+    }
 }
