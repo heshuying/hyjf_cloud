@@ -396,7 +396,7 @@ public class BankAccountManageController extends BaseController {
 //		}
 	      List<BankAccountManageCustomizeVO> recordList = this.bankAccountManageService.queryAccountDetails(request);
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "用户ID", "用户名", "分公司", "分部", "团队", "资产总额", "电子账号", "会员等级", "可用金额", "冻结金额", "银行待收", "银行待还", "银行账户", "用户手机号", "用户属性（当前）", "用户角色", "一级分部（当前）", "二级分部（当前）",
 				"三级分部（当前）", "推荐人用户名（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属三级分部（当前）" };
