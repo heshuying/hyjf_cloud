@@ -3532,4 +3532,14 @@ public class BorrowCommonBean implements Serializable {
 	public void setRegistrationAddress(String registrationAddress) {
 		this.registrationAddress = registrationAddress;
 	}
+	private Integer labelId;
+
+	public Integer getLabelId() {
+		return labelId;
+	}
+
+	public void setLabelId(Integer labelId) {
+		this.labelId = labelId;
+	}
+	
 }

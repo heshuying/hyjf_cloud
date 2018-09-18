@@ -268,6 +268,7 @@ public class BorrowCommonController extends BaseController {
 				bcr.setMessage("该标的信息未能匹配到相应的标签，无法使用引擎进计划！");
 				return bcr;
 			}
+			form.setLabelId(label.getId());
 		}
 
 		// 初审的时候未打上标签的不允许再进计划
