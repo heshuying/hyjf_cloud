@@ -2109,6 +2109,14 @@ public interface AmTradeClient {
     void deleteRecord(AdminBorrowFlowRequest adminRequest);
 
     /**
+     * 删除配置信息
+     *
+     * @param ids
+     * @return
+     */
+    PushMoneyResponse deleteRecord(List<Integer> ids);
+
+    /**
      *（条件）列表查询
      * @param adminRequest
      * @return
@@ -3013,6 +3021,14 @@ public interface AmTradeClient {
      * @return
      */
     CouponConfigExportCustomizeResponse getExportConfigList(CouponConfigRequest request);
+
+    /**
+     * 画面迁移(含有id更新，不含有id添加)
+     *
+     * @param id
+     * @return
+     */
+    PushMoneyResponse getInfoAction(Integer id);
 
     /** 加息接口开始*/
     /** 枚举类型 */

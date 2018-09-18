@@ -11,6 +11,8 @@ import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author fuqiang
  * @version PushMoneyServiceImpl, v0.1 2018/7/10 11:00
@@ -33,5 +35,15 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 	@Override
 	public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
 		return amTradeClient.updatePushMoney(requestBean);
+	}
+
+	@Override
+	public PushMoneyResponse getInfoAction(Integer id) {
+		return amTradeClient.getInfoAction(id);
+	}
+
+	@Override
+	public PushMoneyResponse deleteRecord(List<Integer> ids) {
+		return amTradeClient.deleteRecord(ids);
 	}
 }
