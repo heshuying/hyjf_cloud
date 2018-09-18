@@ -2,6 +2,7 @@ package com.hyjf.am.config.dao.mapper.customize;
 
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +29,5 @@ public interface SubmissionsCustomizeMapper {
 
 
     int updateByPrimaryKeySelective(SubmissionsWithBLOBs record);
+
 }

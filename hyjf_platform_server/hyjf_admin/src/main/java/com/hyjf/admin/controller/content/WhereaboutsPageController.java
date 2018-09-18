@@ -4,23 +4,25 @@
 package com.hyjf.admin.controller.content;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -97,6 +99,25 @@ public class WhereaboutsPageController extends BaseController {
 		return new AdminResult<>();
 	}
 
+
+    @ApiOperation(value = "检查渠道", notes = "检查渠道")
+    @GetMapping("/checkutmid/{utmId}")
+    public AdminResult checkUtmId(@PathVariable Integer utmId) {
+        AdminResult adminResult = new AdminResult();
+        StringResponse msg = this.whereaboutsPageService.checkUtmId(utmId);
+        adminResult.setData(msg.getResult());
+        return adminResult;
+    }
+
+    @ApiOperation(value = "检查推广人", notes = "检查推广人")
+    @GetMapping("/checkreferrer/{referrer}")
+    public AdminResult checkReferrer(@PathVariable String referrer) {
+        AdminResult adminResult = new AdminResult();
+        StringResponse msg = this.whereaboutsPageService.checkReferrer(referrer);
+        adminResult.setData(msg.getResult());
+        return adminResult;
+    }
+
 	/**
 	 * 迁移到更新画面
 	 *
@@ -127,13 +148,11 @@ public class WhereaboutsPageController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
-	@PostMapping("/uploadFile")
+	@PostMapping("/uploadfile")
 	public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String files = whereaboutsPageService.uploadFile(request, response);
-		if (StringUtils.isNotBlank(files)) {
-			return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-		} else {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+        AdminResult adminResult = new AdminResult();
+        LinkedList<BorrowCommonImage> borrowCommonImages = whereaboutsPageService.uploadFile(request, response);
+        adminResult.setData(borrowCommonImages);
+        return adminResult;
 	}
 }

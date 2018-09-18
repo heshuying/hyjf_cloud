@@ -61,6 +61,11 @@ public class AppConfigServiceImpl implements AppConfigService {
         return adsMapper.selectByExample(example);
     }
 
+    @Override
+    public Ads getRecordById(Integer id) {
+        return adsMapper.selectByPrimaryKey(id);
+    }
+
 
     /**
      * 获取列表数

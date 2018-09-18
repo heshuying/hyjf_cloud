@@ -43,7 +43,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 	/**
 	 * 获取详细列表
 	 * 
-	 * @param DebtCreditCustomize
+	 * @param form
 	 * @return
 	 */
 	@Override

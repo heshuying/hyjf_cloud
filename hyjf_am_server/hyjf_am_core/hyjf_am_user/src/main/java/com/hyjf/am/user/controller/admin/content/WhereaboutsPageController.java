@@ -5,6 +5,7 @@ package com.hyjf.am.user.controller.admin.content;
 
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -12,12 +13,10 @@ import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
 import com.hyjf.am.user.service.admin.content.WhereaboutsPageService;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tanyy
@@ -113,6 +112,31 @@ public class WhereaboutsPageController extends BaseController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
+
+    /**
+     * 检查渠道
+     *
+     * @param utmId
+     * @return
+     */
+    @ApiOperation(value = "检查渠道", notes = "检查渠道")
+    @GetMapping("/checkutmid/{utmId}")
+    public StringResponse checkUtmId(@PathVariable Integer utmId) {
+        StringResponse msg = this.whereaboutsPageService.checkUtmId(utmId);
+        return msg;
+    }
+    /**
+     * 检查推广人
+     *
+     * @param referrer
+     * @return
+     */
+    @ApiOperation(value = "检查推广人", notes = "检查推广人")
+    @GetMapping("/checkreferrer/{referrer}")
+    public StringResponse checkReferrer(@PathVariable String referrer) {
+        StringResponse msg = this.whereaboutsPageService.checkReferrer(referrer);
+        return msg;
+    }
 	/**
 	 * 修改详情
 	 *

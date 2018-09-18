@@ -3,12 +3,15 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
 
 /**
  * @author tanyy
@@ -58,7 +61,7 @@ public interface WhereaboutsPageService extends BaseService{
 	 *
 	 *
 	 */
-	String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	/**
 	 * 通过条件查询着落页配置
@@ -67,4 +70,17 @@ public interface WhereaboutsPageService extends BaseService{
 	 */
 	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form);
 
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkUtmId(Integer utmId);
+
+	/**
+	 * 检查渠道
+	 *
+	 *
+	 */
+	public StringResponse checkReferrer(String referrer);
 }

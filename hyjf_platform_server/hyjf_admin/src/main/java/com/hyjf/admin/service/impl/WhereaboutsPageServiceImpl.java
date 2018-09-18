@@ -3,13 +3,13 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.WhereaboutsPageService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,57 +74,8 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 	 * @throws Exception
 	 */
 	@Override
-	public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		/*String errorMessage = "";
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-		String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		String today = format.format(date);
-
-		String logoRealPathDir = filePhysicalPath + today;
-		File logoSaveFile = new File(logoRealPathDir);
-		if (!logoSaveFile.exists()) {
-			logoSaveFile.mkdirs();
-		}
-		Iterator<String> itr = multipartRequest.getFileNames();
-		MultipartFile multipartFile = null;
-		WhereaboutsPagePictureVo fileMeta = null;
-		LinkedList<WhereaboutsPagePictureVo> files = new LinkedList<WhereaboutsPagePictureVo>();
-		while (itr.hasNext()) {
-			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(System.currentTimeMillis() / 1000);
-			String originalFilename = multipartFile.getOriginalFilename();
-			String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-			fileRealName = fileRealName + suffix;
-				try {
-					errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			fileMeta = new WhereaboutsPagePictureVo();
-			int index = originalFilename.lastIndexOf(".");
-			if (index != -1) {
-				fileMeta.setImageName(originalFilename.substring(0, index));
-			} else {
-				fileMeta.setImageName(originalFilename);
-			}
-			fileMeta.setImageRealName(fileRealName);
-			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-			fileMeta.setImageType(multipartFile.getContentType());
-			fileMeta.setErrorMessage(errorMessage);
-			// 获取文件路径
-			//
-			fileMeta.setImagePath(logoRealPathDir + "/" + fileRealName);
-			//fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-			files.add(fileMeta);
-
-		}
-		checkResponse.setResultList(files);*/
-
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+	public  LinkedList<BorrowCommonImage> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
 		String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
 		String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
@@ -171,7 +121,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 			fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
 			files.add(fileMeta);
 		}
-		return JSONObject.toJSONString(files, true);
+		return files;
 	}
 	@Override
 	public 	WhereaboutsPageResponse getWhereaboutsPageConfigById(WhereaboutsPageRequestBean form){
@@ -180,5 +130,12 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		return response;
 
 	}
-
+    @Override
+    public StringResponse checkUtmId(Integer utmId){
+        return amUserClient.checkUtmId(utmId);
+    }
+    @Override
+    public StringResponse checkReferrer(String referrer){
+        return amUserClient.checkReferrer(referrer);
+    }
 }
