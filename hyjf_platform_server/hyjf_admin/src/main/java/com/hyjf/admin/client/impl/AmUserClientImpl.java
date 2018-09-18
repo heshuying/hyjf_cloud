@@ -9,10 +9,12 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -1342,6 +1344,9 @@ public class AmUserClientImpl implements AmUserClient {
 				form, WhereaboutsPageResponse.class);
 		return  amUserResponse;
 	}
+
+
+
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",

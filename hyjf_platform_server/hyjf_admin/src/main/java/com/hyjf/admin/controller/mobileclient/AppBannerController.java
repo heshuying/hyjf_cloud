@@ -55,7 +55,28 @@ public class AppBannerController extends BaseController {
             AppBannerRequest aprlr = new AppBannerRequest();
             BeanUtils.copyProperties(appBannerRequestBean, aprlr);
             AppBannerResponse prs = appBannerService.getRecordList(aprlr);
-            List<AdsTypeVO> adsTypeList = prs.getAdsTypeList();
+            if (prs == null) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            if (!Response.isSuccess(prs)) {
+                return new AdminResult<>(FAIL, prs.getMessage());
+            }
+            AdminResult adminResult = new AdminResult();
+            adminResult.setData(prs);
+            return adminResult;
+        } catch (Exception e) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+    }
+
+    @ApiOperation(value = "广告管理修改转跳", notes = "广告管理修改转跳")
+    @PostMapping(value = "/infoAction")
+    @ResponseBody
+    public AdminResult<AppBannerResponse> infoAction(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
+        try {
+            AppBannerRequest aprlr = new AppBannerRequest();
+            BeanUtils.copyProperties(appBannerRequestBean, aprlr);
+            AppBannerResponse prs = appBannerService.getRecordById(aprlr);
             if (prs == null) {
                 return new AdminResult<>(FAIL, FAIL_DESC);
             }

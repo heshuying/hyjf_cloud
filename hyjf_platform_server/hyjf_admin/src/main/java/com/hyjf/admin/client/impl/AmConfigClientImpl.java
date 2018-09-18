@@ -2195,4 +2195,11 @@ public class AmConfigClientImpl implements AmConfigClient {
            }
            return null;
    	}
+
+    @Override
+    public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/submission/getSubmissionsRecord", request,
+                SubmissionsVO.class);
+
+    }
 }
