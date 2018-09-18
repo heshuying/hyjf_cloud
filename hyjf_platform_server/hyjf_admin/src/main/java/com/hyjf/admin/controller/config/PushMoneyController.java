@@ -3,9 +3,6 @@
  */
 package com.hyjf.admin.controller.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -13,10 +10,15 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PushMoneyService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.PushMoneyResponse;
+import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 提成设置
@@ -33,9 +35,9 @@ public class PushMoneyController extends BaseController {
 	private PushMoneyService pushMoneyService;
 
 	@ApiOperation(value = "获取提成配置列表", notes = "获取提成配置列表")
-	@GetMapping("/init")
-	public AdminResult<ListResult<PushMoneyVO>> getRecordList() {
-		PushMoneyResponse response = pushMoneyService.getRecordList();
+	@PostMapping("/init")
+	public AdminResult<ListResult<PushMoneyVO>> getRecordList(@RequestBody PushMoneyRequest requestBean) {
+		PushMoneyResponse response = pushMoneyService.getRecordList(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}

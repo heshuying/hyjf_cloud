@@ -26,6 +26,7 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -153,6 +154,8 @@ public class CouponConfigController extends BaseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ccr.setRtn(Response.FAIL);
+            ccr.setMessage(Response.FAIL_MSG);
         }
         return ccr;
     }
@@ -169,6 +172,12 @@ public class CouponConfigController extends BaseController {
         try {
             CouponConfig couponConfig = new CouponConfig();
             BeanUtils.copyProperties(couponConfigRequest, couponConfig);
+            couponConfig.setCouponCode(GetCode.getCouponCode(couponConfigRequest
+                    .getCouponType()));
+            couponConfig.setStatus(1);
+            couponConfig.setDelFlag(0);
+            couponConfig.setUpdateTime(GetDate.getDate());
+            couponConfig.setCreateTime(GetDate.getDate());
             int result = couponConfigService.insertAction(couponConfig);
             if (result > 0) {
                 ccr.setRtn(Response.SUCCESS);

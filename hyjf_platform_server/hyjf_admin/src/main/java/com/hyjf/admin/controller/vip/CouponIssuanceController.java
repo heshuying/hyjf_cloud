@@ -3,13 +3,9 @@
  */
 package com.hyjf.admin.controller.vip;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.service.CouponCheckService;
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
-import com.hyjf.admin.beans.request.CouponConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -20,8 +16,6 @@ import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
-import com.hyjf.am.resquest.admin.CouponUserRequest;
-import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -31,22 +25,18 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -215,6 +205,10 @@ public class CouponIssuanceController extends BaseController {
     @PostMapping("/saveAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
+        if (request.getAuditUser() != null) {
+            Integer userId = couponConfigService.getUserId(request.getAuditUser());
+            request.setAuditUser(String.valueOf(userId));
+        }
         CouponConfigResponse ccr = couponConfigService.saveCouponConfig(request);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -228,7 +222,11 @@ public class CouponIssuanceController extends BaseController {
     @ApiOperation(value = "发行优惠券", notes = "发行优惠券")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest) {
+    public AdminResult insertAction(@RequestBody CouponConfigRequest couponConfigRequest, HttpServletRequest request) {
+        AdminSystemVO user = getUser(request);
+        String userId = user.getId();
+        couponConfigRequest.setCreateUserId(Integer.parseInt(userId));
+        couponConfigRequest.setUpdateUserId(Integer.parseInt(userId));
         CouponConfigResponse ccr = couponConfigService.insertAction(couponConfigRequest);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

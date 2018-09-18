@@ -882,6 +882,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 	    // 还款状态 0还款中、1已还款、2还款失败
 	    borrowCredit.setRepayStatus(0);
 	    // 给前端展示用
+        request.setCreditCapital(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
 	    request.setCreditEndTime(borrowCredit.getEndTime());
 	    request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
 	    if (borrow != null) {

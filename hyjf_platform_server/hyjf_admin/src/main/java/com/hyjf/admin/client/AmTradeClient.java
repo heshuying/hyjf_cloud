@@ -2277,7 +2277,7 @@ public interface AmTradeClient {
      *
      * @return
      */
-    PushMoneyResponse getRecordList();
+    PushMoneyResponse getRecordList(PushMoneyRequest requestBean);
 
     /**
      * 添加提成配置
