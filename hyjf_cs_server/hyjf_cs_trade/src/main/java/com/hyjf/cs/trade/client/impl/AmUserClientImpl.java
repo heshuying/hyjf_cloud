@@ -154,8 +154,8 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
 		String url = urlBase + "invite/myInviteCount";
-		Integer response = restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
-		return response;
+		IntegerResponse response = restTemplate.postForEntity(url,requestBean,IntegerResponse.class).getBody();
+		return response.getResultInt();
 	}
 
 	/**
