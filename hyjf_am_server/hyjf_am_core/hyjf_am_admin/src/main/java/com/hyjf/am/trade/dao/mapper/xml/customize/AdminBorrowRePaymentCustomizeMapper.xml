@@ -553,7 +553,7 @@
 			b.borrow_nid,
 			b.user_id,
 			binfo.`name` AS borrow_name,
-			b.borrow_user_name,
+			b.borrow_user_name username,
 			FORMAT(b.account, 2) AS account,
 			b.borrow_style,
 			bs.`name` AS borrow_style_name,
