@@ -191,7 +191,9 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
             Calendar recoverTimeC = Calendar.getInstance();
             recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
             if(this.checkIsHoliday(recoverTimeC)){
-                result = result.add(new BigDecimal(interestMap.getRecoverInterest()));
+                if (interestMap.getRecoverInterest() != null) {
+                    result = result.add(new BigDecimal(interestMap.getRecoverInterest()));
+                }
             }
         }
 
