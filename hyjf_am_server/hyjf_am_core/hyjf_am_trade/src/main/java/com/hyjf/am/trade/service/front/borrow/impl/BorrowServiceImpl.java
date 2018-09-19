@@ -64,16 +64,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
-
-    @Autowired
-    private AccountCustomizeMapper accountCustomizeMapper;
-
-    @Autowired
-    private BorrowCustomizeMapper borrowCustomizeMapper;
-
-
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
         BorrowFinmanNewChargeExample example = new BorrowFinmanNewChargeExample();
