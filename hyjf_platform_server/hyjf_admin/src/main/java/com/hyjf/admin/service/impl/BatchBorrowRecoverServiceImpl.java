@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -358,26 +357,6 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
             // 交易状态
             detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals(resultBeans.getRetCode()) ? "成功" : "失败");
         }
-        //TODO 测试数据，待删除
-        // 借款人电子账户号
-        detailLists.setForAccountId("6212461890000001801");
-        // 借款人姓名
-        detailLists.setName("金子裕");
-        // 响应代码
-        detailLists.setRetCode("00000000");
-        // 错误描述
-        detailLists.setFileMsg("");
-        // 标的编号
-        detailLists.setProductId("WDD180503000007");
-        // 借款人入账金额
-        detailLists.setTxAmount("20000.00");
-        // 手续费金额
-        detailLists.setFeeAmount("160.00");
-        // 风险准备金
-        detailLists.setRiskAmount("0.00");
-        // 交易状态
-        detailLists.setTxState(BankCallConstant.RESPCODE_SUCCESS.equals("00000000") ? "成功" : "失败");
-
         detailList.add(detailLists);
         return detailList;
     }
