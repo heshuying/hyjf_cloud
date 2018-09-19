@@ -37,8 +37,8 @@
 	<!-- 根据用户id 查询其在crm的员工属性   提成发放方式（1线上2线下）   -->
 	<select id="queryCuttype" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
 		select case d.cuttype when 1 then 3 when 2 then 2 else 0 end as cuttype
-		from hyjf_crm.oa_users ou
-		inner join hyjf_crm.oa_department d on ou.departmentid= d.id
+		from ht_crm.oa_users ou
+		inner join ht_crm.oa_department d on ou.departmentid= d.id
 		where ou.hyd_id= #{userid}
 	</select>
 

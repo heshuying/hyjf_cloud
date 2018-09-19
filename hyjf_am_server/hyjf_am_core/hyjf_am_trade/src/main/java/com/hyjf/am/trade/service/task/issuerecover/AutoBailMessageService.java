@@ -23,10 +23,10 @@ public interface AutoBailMessageService {
      * @Author walter.limeng
      * @Description  根据ID查询对象
      * @Date 19:08 2018/7/11
-     * @Param id 主键
+     * @Param borrowNid
      * @return
      */
-    BorrowInfo getById(Integer id);
+    BorrowInfo getByBorrowNid(String borrowNid);
 
     /**
      * @Author walter.limeng

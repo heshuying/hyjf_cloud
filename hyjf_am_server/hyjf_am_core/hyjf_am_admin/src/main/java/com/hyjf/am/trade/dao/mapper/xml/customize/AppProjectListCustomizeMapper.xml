@@ -775,7 +775,7 @@
 			bh.houses_belong
 		FROM
 			ht_borrow_houses bh
-		LEFT JOIN hyjf_param_name pn ON bh.houses_type = pn.name_cd
+		LEFT JOIN ht_param_name pn ON bh.houses_type = pn.name_cd
 		AND pn.name_class = 'HOUSES_TYPE'
 		WHERE
 			bh.borrow_nid = #{borrowNid,jdbcType=VARCHAR}

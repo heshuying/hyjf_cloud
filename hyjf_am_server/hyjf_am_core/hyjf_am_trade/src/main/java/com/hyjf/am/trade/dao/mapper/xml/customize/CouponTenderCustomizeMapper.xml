@@ -382,14 +382,14 @@
 		LEFT JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
 		LEFT JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
-		-- LEFT JOIN huiyingdai_activity_list hal ON hcu.activity_id = hal.id
+		-- LEFT JOIN ht_activity_list hal ON hcu.activity_id = hal.id
 		LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
 		LEFT JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 		LEFT JOIN ht_borrow_style hbss ON hbss.nid = hhp.borrow_style
-		-- LEFT JOIN hyjf_admin ha ON hcu.add_user = ha.id
-		-- LEFT JOIN hyjf_vip_auth va ON hcu.coupon_code=va.coupon_code
-		-- LEFT JOIN hyjf_vip_info vi ON  va.vip_id=vi.id
+		-- LEFT JOIN ht_admin ha ON hcu.add_user = ha.id
+		-- LEFT JOIN ht_vip_auth va ON hcu.coupon_code=va.coupon_code
+		-- LEFT JOIN ht_vip_info vi ON  va.vip_id=vi.id
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_borrow_tender hbt1 ON hcrt.real_tender_id=hbt1.nid
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
@@ -435,7 +435,7 @@
 		INNER JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
 		INNER JOIN ht_coupon_recover hcr ON hbt.nid = hcr.tender_id
-		-- LEFT JOIN hyjf_param_name n ON n.name_class = 'COUPON_RECIVE_STATUS'
+		-- LEFT JOIN ht_param_name n ON n.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND hcr.received_flg = n.name_cd
 		<include refid="selectCouponRecoverCustomize_Where_Clause" />
 	</select>
@@ -563,8 +563,8 @@
 		-- (SELECT
 		-- pa2.`name`
 		-- FROM
-		-- hyjf_coupon_recover cr
-		-- INNER JOIN hyjf_param_name pa2 ON pa2.name_class = 'COUPON_RECIVE_STATUS'
+		-- ht_coupon_recover cr
+		-- INNER JOIN ht_param_name pa2 ON pa2.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND pa2.name_cd = cr.received_flg
 		-- WHERE
 		-- cr.tender_id = hbt.nid
@@ -578,13 +578,13 @@
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
 		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
 		INNER JOIN ht_r_user hu ON hbt.user_id = hu.user_id
-		-- LEFT JOIN hyjf_param_name pa ON pa.name_class = 'CLIENT'
+		-- LEFT JOIN ht_param_name pa ON pa.name_class = 'CLIENT'
 		-- AND pa.name_cd = hbt.client
 		INNER JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa1 ON pa1.name_class = 'COUPON_RECIVE_STATUS'
+		-- INNER JOIN ht_param_name pa1 ON pa1.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND pa1.name_cd = hcr.received_flg
 		<include refid="selectCouponTenderHjhList_Where_Clause" />
 		GROUP BY hct.order_id
@@ -786,12 +786,12 @@
 		LEFT JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
 		LEFT JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
-		-- LEFT JOIN huiyingdai_activity_list hal ON hcu.activity_id = hal.id
+		-- LEFT JOIN ht_activity_list hal ON hcu.activity_id = hal.id
 		INNER JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hhp.borrow_style
 		-- LEFT JOIN ht_admin ha ON hcu.add_user = ha.id
-		-- LEFT JOIN hyjf_vip_auth va ON hcu.coupon_code=va.coupon_code
-		-- LEFT JOIN hyjf_vip_info vi ON  va.vip_id=vi.id
+		-- LEFT JOIN ht_vip_auth va ON hcu.coupon_code=va.coupon_code
+		-- LEFT JOIN ht_vip_info vi ON  va.vip_id=vi.id
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
 		<include refid="selectCouponTenderDetailHjhList_Where_Clause" />
@@ -837,7 +837,7 @@
 		INNER JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
 		INNER JOIN ht_coupon_recover hcr ON hbt.nid = hcr.tender_id
-		-- LEFT JOIN hyjf_param_name n ON n.name_class = 'COUPON_RECIVE_STATUS'
+		-- LEFT JOIN ht_param_name n ON n.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND hcr.received_flg = n.name_cd
 		<include refid="selectCouponRecoverCustomizeHjh_Where_Clause" />
 	</select>
@@ -984,7 +984,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND pa.name_cd = hcr.received_flg
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
@@ -1071,7 +1071,7 @@
 		INNER JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND pa.name_cd = hcr.received_flg
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
@@ -1124,7 +1124,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
 		-- AND pa.name_cd = hcr.received_flg
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
@@ -1260,7 +1260,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=3
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
 
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
@@ -1281,7 +1281,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=3
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
 
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
@@ -1298,7 +1298,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=3
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
 
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
@@ -1351,7 +1351,7 @@
 		INNER JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
 		<include refid="selectCouponBackMoneyHjhList_Where_Clause" />
@@ -1403,7 +1403,7 @@
 		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=3
 		INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
 		INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-		-- INNER JOIN hyjf_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
+		-- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
 
 		LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
 		LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id

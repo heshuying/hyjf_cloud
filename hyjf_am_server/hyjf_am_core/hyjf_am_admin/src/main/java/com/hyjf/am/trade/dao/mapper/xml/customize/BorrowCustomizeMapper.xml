@@ -739,10 +739,10 @@ WHERE
 		<!-- union all
 	  SELECT b.borrow_nid, b.`status`
 	  FROM ht_borrow b
-	  INNER JOIN hyjf_debt_credit_tender dct ON b.borrow_nid = dct.borrow_nid
+	  INNER JOIN ht_debt_credit_tender dct ON b.borrow_nid = dct.borrow_nid
 	  WHERE EXISTS(
 		 SELECT hr.id
-		 FROM hyjf_hjh_repay hr
+		 FROM ht_hjh_repay hr
 		 WHERE DATE_ADD(FROM_UNIXTIME(UNIX_TIMESTAMP(NOW()), '%Y-%m-%d'), INTERVAL 1 DAY) = FROM_UNIXTIME(hr.repay_should_time,'%Y-%m-%d') AND hr.accede_order_id = dct.assign_plan_order_id
 	 )  and (b.`status` = 2 or b.`status` = 3) -->
 	</select>

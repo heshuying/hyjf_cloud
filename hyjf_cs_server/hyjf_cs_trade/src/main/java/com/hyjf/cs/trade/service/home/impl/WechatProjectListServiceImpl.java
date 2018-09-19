@@ -300,7 +300,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             // 信批需求新增(放款后才显示)
             if (Integer.parseInt(borrow.getStatus()) >= 4) {
                 //其他信息
-                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                String updateTime = ProjectConstant.getUpdateTime(GetDate.getTime10(borrowRepay.getCreateTime()), borrowRepay.getRepayYestime());
                 projectDetailList = this.dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
             }
 

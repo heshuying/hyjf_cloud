@@ -34,7 +34,7 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
- * 汇计划自动备案
+ * 自动备案
  * @author walter.limeng
  * @version AutoSendMessageConsumer, v0.1 2018/7/11 16:30
  */

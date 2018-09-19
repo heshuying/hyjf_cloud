@@ -188,9 +188,9 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
---         LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status
+--         LEFT JOIN ht_param_name pa ON pa.name_cd = dc.credit_status
 --         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
---         LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status
+--         LEFT JOIN ht_param_name par ON par.name_cd = dc.repay_status
 --         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
         <include refid="Where_Clause_New" />
     </select>

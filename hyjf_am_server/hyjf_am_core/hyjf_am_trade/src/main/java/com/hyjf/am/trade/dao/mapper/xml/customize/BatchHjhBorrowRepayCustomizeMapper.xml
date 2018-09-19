@@ -19,7 +19,7 @@
 
     <!-- 更新待收收益  -->
     <update id="updateHjhBorrowRepayInterest" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		update hyjf_hjh_accede
+		update ht_hjh_accede
 		set
 		wait_total = IFNULL(wait_total,0) + #{waitTotal,jdbcType=DECIMAL},
 		wait_captical = IFNULL(wait_captical,0) + #{waitCaptical,jdbcType=DECIMAL},
@@ -41,7 +41,7 @@
 	</update>
 
 	<update id="updateCalculateInvestByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest" >
-		update hyjf_calculate_invest_interest
+		update ht_calculate_invest_interest
 		<set >
 			<if test="tenderSum != null" >
 				tender_sum = tender_sum + #{tenderSum,jdbcType=DECIMAL},
