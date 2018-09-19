@@ -231,6 +231,8 @@
         <result column="project_status" property="projectStatus"></result>
         <!-- add by nxl 20180727 产品加息标志位-->
         <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
+
+        <result column="borrow_status" property="borrowStatus"></result>
     </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
@@ -312,6 +314,7 @@
         hydb.borrow_nid,
         hydbpt.borrow_project_type AS project_type,
         hydbpt.borrow_cd AS type,
+        hydb.status AS borrow_status,
         hydb.reverify_status AS project_status,
         hydbpt.borrow_name AS type_name,
         htbi.`name` AS borrow_name,
