@@ -191,6 +191,25 @@ public class UserController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据推荐人手机号或userId 查询推荐人
+     *
+     * @param reffer
+     * @return
+     */
+    @RequestMapping("/findUserByRecommendName/{reffer}")
+    public UserResponse findUserByRecommendName(@PathVariable String reffer) {
+        logger.info("findUserByRecommendName run...reffer is :{}", reffer);
+        UserResponse response = new UserResponse();
+        User user = userService.findUserByRecommendName(reffer);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            response.setResult(userVO);
+        }
+        return response;
+    }
+
     @RequestMapping("/updateLoginUser/{userId}/{ip}")
     public void updateLoginUser(@PathVariable int userId, @PathVariable String ip) {
         /**

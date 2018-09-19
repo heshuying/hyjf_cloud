@@ -76,13 +76,13 @@
                 ),'%Y-%m-%d %H:%i:%s')
             </if>
             <if test="nidSer != null and nidSer != ''">
-                AND Poundage.nid LIKE CONCAT('%', #{nidSer}, '%')
+                AND Poundage.nid LIKE CONCAT( #{nidSer}, '%')
             </if>
             <if test="seqNoSer != null and seqNoSer != ''">
-                AND Poundage.seq_no LIKE CONCAT('%', #{seqNoSer}, '%')
+                AND Poundage.seq_no LIKE CONCAT( #{seqNoSer}, '%')
             </if>
             <if test="bankSeqNoSer != null and bankSeqNoSer != ''">
-                AND concat(cast(Poundage.tx_date*1000000 +Poundage.tx_time as char),Poundage.seq_no) LIKE CONCAT('%', #{bankSeqNoSer}, '%')
+                AND concat(cast(Poundage.tx_date*1000000 +Poundage.tx_time as char),Poundage.seq_no) LIKE CONCAT( #{bankSeqNoSer}, '%')
             </if>
             <if test="createTimeSer != null and createTimeSer != ''">
                 AND Poundage.create_time = #{createTimeSer}
@@ -97,13 +97,13 @@
                 AND Poundage.updater = #{updaterSer}
             </if>
             <if test="userNameSer != null and userNameSer != ''">
-                AND hsclc.username LIKE CONCAT('%', #{userNameSer}, '%')
+                AND hsclc.username LIKE CONCAT( #{userNameSer}, '%')
             </if>
             <if test="realNameSer != null and realNameSer != ''">
-                AND hsclc.truename LIKE CONCAT('%', #{realNameSer}, '%')
+                AND hsclc.truename LIKE CONCAT( #{realNameSer}, '%')
             </if>
             <if test="accountSer != null and accountSer != ''">
-                AND hsclc.account LIKE CONCAT('%', #{accountSer}, '%')
+                AND hsclc.account LIKE CONCAT( #{accountSer}, '%')
             </if>
         </where>
     </sql>

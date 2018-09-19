@@ -50,16 +50,16 @@
 				AND admin.id = #{id}
 			</if>
 			<if test="usernameSrch != null and usernameSrch != ''">
-				AND admin.username like CONCAT('%', #{usernameSrch}, '%')
+				AND admin.username LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
 			<if test="truenameSrch != null and truenameSrch != ''">
-				AND admin.truename like CONCAT('%', #{truenameSrch}, '%')
+				AND admin.truename LIKE CONCAT( #{truenameSrch}, '%')
 			</if>
 			<if test="mobileSrch != null and mobileSrch != ''">
 				AND admin.mobile = #{mobileSrch}
 			</if>
 			<if test="departmentSrch != null and departmentSrch != ''">
-				AND dep.`name` like CONCAT('%', #{departmentSrch}, '%')
+				AND dep.`name` LIKE CONCAT( #{departmentSrch}, '%')
 			</if>
           	<if test="stateSrchOn != null and stateSrchOn != '' and stateSrchOff != null and stateSrchOff != ''" >
           		AND (admin.state = #{stateSrchOn} or admin.state = #{stateSrchOff})

@@ -58,16 +58,16 @@
         <where>
             1=1
             <if test="planOrderId != null and planOrderId != ''">
-                AND hhr.accede_order_id LIKE CONCAT('%', #{planOrderId}, '%')
+                AND hhr.accede_order_id LIKE CONCAT( #{planOrderId}, '%')
             </if>
             <if test="planNidSrch != null and planNidSrch != ''">
-                AND hhr.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+                AND hhr.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
             </if>
             <if test="userName != null and userName != ''">
-                AND hhr.user_name LIKE CONCAT('%', #{userName}, '%')
+                AND hhr.user_name LIKE CONCAT( #{userName}, '%')
             </if>
             <if test="refereeNameSrch != null and refereeNameSrch != ''">
-                AND hha.invite_user_name LIKE CONCAT('%', #{refereeNameSrch}, '%')
+                AND hha.invite_user_name LIKE CONCAT( #{refereeNameSrch}, '%')
             </if>
             <if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
                 AND hhr.lock_period = #{debtLockPeriodSrch}

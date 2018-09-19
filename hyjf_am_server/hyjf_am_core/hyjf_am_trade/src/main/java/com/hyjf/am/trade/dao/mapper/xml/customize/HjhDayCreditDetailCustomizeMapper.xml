@@ -108,7 +108,7 @@
             </if>
             <!-- 出让人计划订单号 -->
             <if test="planOrderId != null and planOrderId != ''">
-                AND dc.plan_order_id like  concat( '%', #{planOrderId} , '%')
+                AND dc.plan_order_id LIKE CONCAT( #{planOrderId} , '%')
             </if>
             <!-- 清算后计划编号 -->
             <if test="planNidNew != null and planNidNew != ''">
@@ -124,7 +124,7 @@
             </if>
             <!-- 用户名 -->
             <if test="userName != null and userName != ''">
-                AND dc.user_name like concat('%' , #{userName} , '%')
+                AND dc.user_name LIKE CONCAT( #{userName} , '%')
             </if>
             <!-- 还款方式 -->
             <if test="repayStyle != null and repayStyle != ''">
@@ -175,7 +175,7 @@
                 AND dc.actual_apr <![CDATA[ <= ]]> #{actualAprEndSrch}
             </if>
             <if test="labelName != null and labelName != ''">
-                AND dc.label_name  like concat('%',#{labelName},'%')
+                AND dc.label_name  LIKE CONCAT(#{labelName},'%')
             </if>
         </where>
     </sql>

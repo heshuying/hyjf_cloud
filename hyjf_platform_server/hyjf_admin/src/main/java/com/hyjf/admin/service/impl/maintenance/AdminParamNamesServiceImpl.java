@@ -152,4 +152,18 @@ public class AdminParamNamesServiceImpl extends BaseAdminServiceImpl implements 
             throw new CheckException("99","数据不存在");
         }
     }
+
+    /**
+     * 根据联合主键查询一条数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public ParamNameVO selectParamName(ParamNameVO paramNameVO) {
+        //检查联合主键参数
+        CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getNameClass()),MsgEnum.ERR_OBJECT_REQUIRED,"字典区分");
+        CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getNameCd()),MsgEnum.ERR_OBJECT_REQUIRED,"字典编号");
+        return amAdminClient.searchParamNameByKey(paramNameVO);
+    }
 }

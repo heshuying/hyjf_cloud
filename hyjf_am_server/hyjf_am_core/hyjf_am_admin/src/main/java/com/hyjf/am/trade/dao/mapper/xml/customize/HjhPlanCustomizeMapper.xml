@@ -190,10 +190,10 @@
     <sql id="Where_hjh_Clause">
 		<where>
 			<if test="planNidSrch != null and planNidSrch !='' ">
-				AND plan.plan_nid LIKE CONCAT('%', #{planNidSrch}, '%')
+				AND plan.plan_nid LIKE CONCAT( #{planNidSrch}, '%')
 			</if>
 			<if test="planNameSrch != null and planNameSrch !='' ">
-				AND plan.plan_name LIKE CONCAT('%', #{planNameSrch}, '%')
+				AND plan.plan_name LIKE CONCAT( #{planNameSrch}, '%')
 			</if>
 			<if test="lockPeriodSrch != null and lockPeriodSrch !=''">
 				AND plan.lock_period = #{lockPeriodSrch}

@@ -49,10 +49,10 @@
     <where>
       hydua.`del_flag` = 0
       <if test="userName != null and userName !='' ">
-        AND hydua.user_name LIKE CONCAT('%', #{userName}, '%')
+        AND hydua.user_name LIKE CONCAT( #{userName}, '%')
       </if>
       <if test="recommendName != null and recommendName !='' ">
-        AND hydur.username LIKE CONCAT('%', #{recommendName}, '%')
+        AND hydur.username LIKE CONCAT( #{recommendName}, '%')
       </if>
       <if test="autoInvesStatus != null and autoInvesStatus !='' and autoInvesStatus !='2'">
         AND hydua.auto_inves_status = #{autoInvesStatus,jdbcType=INTEGER}
@@ -88,13 +88,13 @@
     <where>
       1=1
       <if test="userName != null and userName !='' ">
-        AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
+        AND hydual.user_name LIKE CONCAT( #{userName}, '%')
       </if>
       <if test="authType != null and authType !='' ">
         AND hydual.auth_type = #{authType,jdbcType=INTEGER}
       </if>
       <if test="orderId != null and orderId !='' ">
-        AND hydual.order_id LIKE CONCAT('%', #{orderId}, '%')
+        AND hydual.order_id LIKE CONCAT( #{orderId}, '%')
       </if>
       <if test="addTimeStart != null and addTimeStart != '' ">
         AND FROM_UNIXTIME( hydual.auth_create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
@@ -235,10 +235,10 @@
     <where>
       hydual.user_id = bank.user_id
       <if test="userName != null and userName !='' ">
-        AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
+        AND hydual.user_name LIKE CONCAT( #{userName}, '%')
       </if>
       <if test="bankid != null and bankid !='' ">
-        AND bank.account  LIKE CONCAT('%', #{bankid}, '%')
+        AND bank.account  LIKE CONCAT( #{bankid}, '%')
       </if>
       <if test="authType != null and authType !='' and authType !=2 ">
         AND hydual.auto_payment_status = #{authType,jdbcType=INTEGER} and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='') 
@@ -280,10 +280,10 @@
     <where>
       hydual.user_id = bank.user_id
       <if test="userName != null and userName !='' ">
-        AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
+        AND hydual.user_name LIKE CONCAT( #{userName}, '%')
       </if>
       <if test="bankid != null and bankid !='' ">
-        AND bank.account  LIKE CONCAT('%', #{bankid}, '%')
+        AND bank.account  LIKE CONCAT( #{bankid}, '%')
       </if>
       <if test="authType != null and authType !='' and authType !=2 ">
 <!--         AND hydual.auto_repay_status = #{authType,jdbcType=INTEGER} -->

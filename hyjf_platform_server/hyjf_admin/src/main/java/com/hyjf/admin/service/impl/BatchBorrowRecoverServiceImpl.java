@@ -203,12 +203,14 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
             int status  = apicron.getStatus();
             int pageSize = 50;// 每页笔数
             int pageTotal = txCounts / pageSize + 1;// 总页数
+            logger.info("总页数:[{}]",pageTotal);
             List<BankCallBean> results = new ArrayList<>();
             // 获取共同参数
             String bankCode = systemConfig.getBANK_BANKCODE();
             String instCode = systemConfig.getBANK_INSTCODE();
             String channel = BankCallConstant.CHANNEL_PC;
             for (int i = 1; i <= pageTotal; i++) {
+                logger.info("正在循环调用,第[{}]次调用",i);
                 String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
                 String orderDate = GetOrderIdUtils.getOrderDate();
                 String txDate = GetOrderIdUtils.getTxDate();
@@ -239,6 +241,7 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 loanBean.setLogClient(0);
                 // 调用放款接口
                 BankCallBean loanResult = BankCallUtils.callApiBg(loanBean);
+                logger.info("查询银行报文:【{}】", JSON.toJSONString(loanResult));
                 if (Validator.isNotNull(loanResult)) {
                     String retCode = StringUtils.isNotBlank(loanResult.getRetCode()) ? loanResult.getRetCode() : "";
                     if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {

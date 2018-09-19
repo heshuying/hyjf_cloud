@@ -8,7 +8,7 @@
 				AND utm.source_id = #{sourceIdSrch}
 			</if>
 			<if test="utmTermSrch != null and utmTermSrch != ''">
-				AND utm.utm_term LIKE CONCAT('%', #{utmTermSrch}, '%')
+				AND utm.utm_term LIKE CONCAT( #{utmTermSrch}, '%')
 			</if>
 		</where>
 	</sql>

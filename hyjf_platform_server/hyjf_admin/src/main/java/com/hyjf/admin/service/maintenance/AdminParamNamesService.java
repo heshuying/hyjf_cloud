@@ -49,4 +49,12 @@ public interface AdminParamNamesService extends BaseAdminService {
      * @return
      */
     boolean deleteParamName(ParamNameVO paramNameVO);
+
+    /**
+     * 根据联合主键查询一条数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    ParamNameVO selectParamName(ParamNameVO paramNameVO);
 }
