@@ -38,6 +38,7 @@ import java.util.UUID;
  * @Auther: walter.limeng
  * @Date: 2018/7/11 18:52
  * @Description: AutoBailMessageConsumer
+ * 保证金审核
  */
 @Component
 public class AutoBailMessageConsumer extends Consumer {
@@ -89,7 +90,7 @@ public class AutoBailMessageConsumer extends Consumer {
                 // --> 消息处理
 
                 Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getById(borrow.getId());
+                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
                 try {
 
                     // 自动审核保证金
