@@ -194,10 +194,13 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
      */
     @Override
     public List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID) {
+        logger.info("获取批次还款的批次交易明细service entry");
         BorrowApicronResponse reponse = amAdminClient.getBorrowApicronByID(apicronID);
         List<BatchBorrowRepayBankInfoVO> bankInfoVOList = new ArrayList<>();
         if(reponse != null){
+            logger.info("queryBatchBorrowRepayBankInfoList::::::::::::::::    reponse != null");
             BorrowApicronVO apicron = reponse.getResult();
+            logger.info("queryBatchBorrowRepayBankInfoList::::::::::::::::    apicron ====[{}]",JSON.toJSONString(apicron));
             int txCounts = apicron.getTxCounts();// 总交易笔数
             String batchTxDate = String.valueOf(apicron.getTxDate());
             int status  = apicron.getStatus();
