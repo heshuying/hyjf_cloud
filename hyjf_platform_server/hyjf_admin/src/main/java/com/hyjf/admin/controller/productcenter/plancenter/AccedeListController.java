@@ -754,7 +754,7 @@ public class AccedeListController extends BaseController{
 					
 					// 将生成的PDF嵌入邮件模板中
 					// 需要产品提供邮件模板????---- CustomConstants.EMAILPARAM_TPL_LOANS
-					// mod by nxl 汇计划投资服务协议->智投服务协议
+						// mod by nxl 汇计划投资服务协议->智投服务协议
 //					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台汇计划投资服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台智投服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					// 发送邮件
