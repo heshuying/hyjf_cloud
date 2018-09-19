@@ -89,7 +89,7 @@ public class AutoBailMessageConsumer extends Consumer {
                 // --> 消息处理
 
                 Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getById(borrow.getId());
+                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
                 try {
 
                     // 自动审核保证金

@@ -91,7 +91,7 @@ public class AutoPreAuditMessageConsumer extends Consumer {
                 // --> 消息处理
 
                 Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-                BorrowInfo borrowInfo = autoBailMessageService.getById(borrow.getId());
+                BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
 
                 if(null != borrowNid){
                     // 自动初审
